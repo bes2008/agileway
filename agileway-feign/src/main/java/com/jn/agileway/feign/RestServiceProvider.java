@@ -121,23 +121,23 @@ public class RestServiceProvider implements Initializable {
     }
 
 
-    public <Service> Service getService(Class<Service> serviceClass) {
+    public <Service> Service getService(Class<Service> serviceInterface) {
         if (!inited) {
             init();
         }
         Preconditions.checkTrue(inited, "service provider is not inited");
-        Preconditions.checkArgument(serviceClass.isInterface(), new Supplier<Object[], String>() {
+        Preconditions.checkArgument(serviceInterface.isInterface(), new Supplier<Object[], String>() {
             @Override
             public String get(Object[] objects) {
                 return StringTemplates.formatWithPlaceholder("the service class {} is not interface");
             }
-        }, Reflects.getFQNClassName(serviceClass));
+        }, Reflects.getFQNClassName(serviceInterface));
 
-        boolean isNotSingleton = Reflects.isAnnotationPresent(serviceClass, Prototype.class);
+        boolean isNotSingleton = Reflects.isAnnotationPresent(serviceInterface, Prototype.class);
         if (isNotSingleton) {
-            return createService(serviceClass);
+            return createService(serviceInterface);
         }
-        return (Service) Maps.putIfAbsent(serviceMap, serviceClass, (Supplier<Class<Service>, Service>) new Supplier<Class<Service>, Service>() {
+        return (Service) Maps.putIfAbsent(serviceMap, serviceInterface, (Supplier<Class<Service>, Service>) new Supplier<Class<Service>, Service>() {
             @Override
             public Service get(Class<Service> clazz) {
                 return createService(clazz);
