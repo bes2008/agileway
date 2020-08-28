@@ -23,7 +23,7 @@ public class HttpConnectionProperties {
     /**
      * 当 node中的节点数大于1时，会使用该值
      */
-    private String loadbalancerHost = "licenseServer";
+    private String loadbalancerHost = "DEFAULT";
 
     /**
      * 注册中心启动后， url就是注册中心的地址
