@@ -27,6 +27,7 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
     private static final Logger logger = LoggerFactory.getLogger(GlobalSpringRestResponseBodyHandler.class);
     private GlobalRestResponseBodyHandlerConfiguration configuration = new GlobalRestResponseBodyHandlerConfiguration();
     private JSONFactory jsonFactory;
+
     @Override
     public void setConfiguration(GlobalRestResponseBodyHandlerConfiguration configuration) {
         this.configuration = configuration;
@@ -96,6 +97,7 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
         return 200;
     }
 
+    @Override
     public void setJsonFactory(JSONFactory jsonFactory) {
         this.jsonFactory = jsonFactory;
     }

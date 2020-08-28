@@ -19,6 +19,7 @@ import com.jn.langx.util.io.file.FileIOMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -31,16 +32,26 @@ import java.util.List;
 public class Servlets {
     private static final Logger logger = LoggerFactory.getLogger(Servlets.class);
 
+    /***********************************************************************
+     *      Header
+     ***********************************************************************/
+
+    /**
+     * Content-Length
+     *
+     * @param response
+     * @return
+     */
     public static long getContentLength(HttpServletResponse response) {
-        return Objects.useValueIfNull( getContentLength(response,true),0L);
+        return Objects.useValueIfNull(getContentLength(response, true), 0L);
     }
 
     public static Long getContentLength(HttpServletResponse response, boolean useZeroIfNull) {
         String contentLengthStr = response.getHeader(HttpHeaders.CONTENT_LENGTH);
-        if(useZeroIfNull) {
+        if (useZeroIfNull) {
             contentLengthStr = Strings.useValueIfBlank(contentLengthStr, "0");
         }
-        if(Emptys.isEmpty(contentLengthStr)){
+        if (Emptys.isEmpty(contentLengthStr)) {
             return null;
         }
         return Long.parseLong(contentLengthStr);
@@ -78,7 +89,21 @@ public class Servlets {
         return map;
     }
 
-    public static final void downloadFile(
+    /**
+     * 下载
+     */
+
+    /**
+     * 下载文件
+     *
+     * @param request
+     * @param response
+     * @param file
+     * @param maxPacketSize
+     * @param fileName
+     * @throws IOException
+     */
+    public static void downloadFile(
             HttpServletRequest request,
             HttpServletResponse response,
             File file,
@@ -215,5 +240,13 @@ public class Servlets {
             logger.error("Error occur when download file: {}", fileName);
             response.setStatus(500);
         }
+    }
+
+    public static void writeToResponse(@NonNull HttpServletResponse response, @Nullable String contentType, @NonNull String content) throws IOException {
+        ServletOutputStream outputStream = response.getOutputStream();
+        if (Emptys.isNotEmpty(contentType)) {
+            response.setContentType(contentType);
+        }
+        outputStream.write(content.getBytes(Charsets.UTF_8));
     }
 }
