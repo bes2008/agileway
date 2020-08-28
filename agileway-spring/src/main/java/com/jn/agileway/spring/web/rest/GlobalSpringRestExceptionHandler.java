@@ -1,6 +1,6 @@
-package com.bes.license.server.bootstrap.utils.web.rest.spring;
+package com.jn.agileway.spring.web.rest;
 
-import com.bes.license.server.bootstrap.utils.web.rest.GlobalRestExceptionHandler;
+import com.jn.agileway.web.rest.GlobalRestExceptionHandler;
 import com.jn.langx.util.reflect.Reflects;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.HandlerMethod;

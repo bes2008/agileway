@@ -1,4 +1,4 @@
-package com.bes.license.server.bootstrap.utils.web.rest.spring;
+package com.jn.agileway.spring.web.rest;
 
 import com.jn.langx.http.rest.RestRespBody;
 import org.springframework.beans.factory.annotation.Autowired;

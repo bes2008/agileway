@@ -1,7 +1,7 @@
-package com.bes.license.server.bootstrap.utils.web.rest.spring;
+package com.jn.agileway.spring.web.rest;
 
-import com.bes.license.server.bootstrap.utils.web.rest.GlobalRestResponseBodyHandler;
-import com.bes.license.server.bootstrap.utils.web.rest.GlobalRestResponseBodyHandlerConfiguration;
+import com.jn.agileway.web.rest.GlobalRestResponseBodyHandler;
+import com.jn.agileway.web.rest.GlobalRestResponseBodyHandlerConfiguration;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.langx.http.rest.RestRespBody;
 import org.slf4j.Logger;
