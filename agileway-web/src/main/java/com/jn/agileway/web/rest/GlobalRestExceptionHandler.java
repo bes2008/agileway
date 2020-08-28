@@ -21,7 +21,9 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 
-
+/**
+ * 通常在 Controller层调用
+ */
 public abstract class GlobalRestExceptionHandler implements Initializable, Lifecycle {
     private static Logger logger = LoggerFactory.getLogger(GlobalRestExceptionHandler.class);
     private JSONFactory jsonFactory;

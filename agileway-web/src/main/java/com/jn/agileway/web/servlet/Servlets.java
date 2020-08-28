@@ -31,6 +31,21 @@ import java.util.List;
 public class Servlets {
     private static final Logger logger = LoggerFactory.getLogger(Servlets.class);
 
+    public static long getContentLength(HttpServletResponse response) {
+        return Objects.useValueIfNull( getContentLength(response,true),0L);
+    }
+
+    public static Long getContentLength(HttpServletResponse response, boolean useZeroIfNull) {
+        String contentLengthStr = response.getHeader(HttpHeaders.CONTENT_LENGTH);
+        if(useZeroIfNull) {
+            contentLengthStr = Strings.useValueIfBlank(contentLengthStr, "0");
+        }
+        if(Emptys.isEmpty(contentLengthStr)){
+            return null;
+        }
+        return Long.parseLong(contentLengthStr);
+    }
+
     public static HttpHeaders getRequestHeaders(HttpServletResponse response) {
         return new HttpHeaders(headersToMultiValueMap(response));
     }
