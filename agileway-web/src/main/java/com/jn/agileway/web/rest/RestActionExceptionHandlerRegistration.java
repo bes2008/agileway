@@ -8,7 +8,7 @@ import com.jn.langx.util.reflect.Reflects;
 import java.util.List;
 
 public class RestActionExceptionHandlerRegistration {
-    private final List<RestActionExceptionHandlerRegistrationElement> exceptionClassConfigs = Collects.newArrayList();
+    private final List<RestActionExceptionHandlerDefinition> exceptionClassConfigs = Collects.newArrayList();
     private String name;
     @NonNull
     private RestActionExceptionHandler exceptionHandler;
@@ -29,25 +29,25 @@ public class RestActionExceptionHandlerRegistration {
         return exceptionHandler;
     }
 
-    public void addExceptionClass(RestActionExceptionHandlerRegistrationElement element) {
-        if (element != null && element.isValid()) {
-            exceptionClassConfigs.add(element);
+    public void addExceptionClass(RestActionExceptionHandlerDefinition definition) {
+        if (definition != null && definition.isValid()) {
+            exceptionClassConfigs.add(definition);
         }
     }
 
     public boolean isExtendsEnabled(){
-        return Collects.anyMatch(exceptionClassConfigs, new Predicate<RestActionExceptionHandlerRegistrationElement>() {
+        return Collects.anyMatch(exceptionClassConfigs, new Predicate<RestActionExceptionHandlerDefinition>() {
             @Override
-            public boolean test(RestActionExceptionHandlerRegistrationElement element) {
+            public boolean test(RestActionExceptionHandlerDefinition element) {
                 return element.isSupportExtends();
             }
         });
     }
 
-    public RestActionExceptionHandlerRegistrationElement findMatchedRegistration(final Throwable exception, final boolean causeScanEnabled){
-        return Collects.findFirst(exceptionClassConfigs, new Predicate<RestActionExceptionHandlerRegistrationElement>() {
+    public RestActionExceptionHandlerDefinition findMatchedRegistration(final Throwable exception, final boolean causeScanEnabled){
+        return Collects.findFirst(exceptionClassConfigs, new Predicate<RestActionExceptionHandlerDefinition>() {
             @Override
-            public boolean test(RestActionExceptionHandlerRegistrationElement element) {
+            public boolean test(RestActionExceptionHandlerDefinition element) {
 
                 Class exceptionClass = element.getExceptionClass();
 

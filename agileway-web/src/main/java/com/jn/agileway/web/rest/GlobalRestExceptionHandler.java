@@ -74,7 +74,7 @@ public abstract class GlobalRestExceptionHandler implements Initializable, Lifec
             if (restHandlerExceptionResolverRegistration != null) {
                 respBody = restHandlerExceptionResolverRegistration.getExceptionHandler().handle(request, response, action, ex);
                 if (respBody == null) {
-                    RestActionExceptionHandlerRegistrationElement element = restHandlerExceptionResolverRegistration.findMatchedRegistration(ex, causeScanEnabled);
+                    RestActionExceptionHandlerDefinition element = restHandlerExceptionResolverRegistration.findMatchedRegistration(ex, causeScanEnabled);
                     RestRespBody.error(element.getDefaultStatusCode(), element.getDefaultErrorCode(), element.getDefaultErrorMessage());
                 }
             }
@@ -144,7 +144,7 @@ public abstract class GlobalRestExceptionHandler implements Initializable, Lifec
                 Collects.forEach(restActionExceptions, new Consumer<RestActionException>() {
                     @Override
                     public void accept(RestActionException actionException) {
-                        RestActionExceptionHandlerRegistrationElement element = new RestActionExceptionHandlerRegistrationElement();
+                        RestActionExceptionHandlerDefinition element = new RestActionExceptionHandlerDefinition();
                         element.setSupportExtends(actionException.supportExtends());
                         element.setDefaultStatusCode(actionException.defaultStatusCode());
                         element.setDefaultErrorCode(actionException.defaultErrorCode());

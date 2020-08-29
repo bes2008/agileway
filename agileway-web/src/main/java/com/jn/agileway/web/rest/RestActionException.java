@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @see RestActionExceptionHandlerRegistrationElement
+ * @see RestActionExceptionHandlerDefinition
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})

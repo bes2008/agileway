@@ -7,7 +7,7 @@ import com.jn.langx.http.HttpStatus;
 /**
  * @see RestActionException
  */
-public class RestActionExceptionHandlerRegistrationElement {
+public class RestActionExceptionHandlerDefinition {
     @NonNull
     private Class exceptionClass;
 
