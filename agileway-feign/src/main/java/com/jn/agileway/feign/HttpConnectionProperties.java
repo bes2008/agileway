@@ -6,8 +6,11 @@ import com.jn.langx.util.Strings;
 public class HttpConnectionProperties {
     public static final String ACCESS_LOG_NAME = "access.log";
     private static final int DEFAULT_PORT = 6666;
-    private int defaultPort = DEFAULT_PORT;
+
     private String accessLoggerName = ACCESS_LOG_NAME;
+
+    private int defaultPort = DEFAULT_PORT;
+    private String pathPrefix = "";
 
     /**
      * 可取值： FULL, BASIC, HEADERS, NONE
@@ -92,7 +95,7 @@ public class HttpConnectionProperties {
     }
 
     public String getLoadbalancerHost() {
-        return Strings.useValueIfBlank(loadbalancerHost, "licenseServer");
+        return Strings.useValueIfBlank(loadbalancerHost, "DEFAULT");
     }
 
     public void setLoadbalancerHost(String loadbalancerHost) {
@@ -105,5 +108,18 @@ public class HttpConnectionProperties {
 
     public void setAccessLoggerName(String accessLoggerName) {
         this.accessLoggerName = accessLoggerName;
+    }
+
+    public String getPathPrefix() {
+        return Strings.useValueIfBlank(pathPrefix, "");
+    }
+
+    public void setPathPrefix(String pathPrefix) {
+        if(pathPrefix!=null){
+            while (pathPrefix.startsWith("/")){
+                pathPrefix = pathPrefix.substring(1);
+            }
+        }
+        this.pathPrefix = pathPrefix;
     }
 }

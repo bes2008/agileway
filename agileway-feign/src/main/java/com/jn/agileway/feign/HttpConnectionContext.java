@@ -33,7 +33,7 @@ public class HttpConnectionContext {
         return nodes;
     }
 
-    public String getNodesString(){
+    public String getNodesString() {
         return Strings.join(",", nodes);
     }
 
@@ -65,9 +65,16 @@ public class HttpConnectionContext {
     }
 
     public String getUrl() {
+        String url = null;
         if (Emptys.isNotEmpty(getNodes())) {
-            return StringTemplates.formatWithPlaceholder("http://{}", getNodes().size() > 1 ? configuration.getLoadbalancerHost() : getNodes().get(0).toString());
+            url = StringTemplates.formatWithPlaceholder("http://{}", getNodes().size() > 1 ? configuration.getLoadbalancerHost() : getNodes().get(0).toString());
+        } else {
+            url = "http://unknown";
         }
-        return "http://unknown";
+        String urlPrefix = this.configuration.getPathPrefix();
+        if (Strings.isBlank(urlPrefix)) {
+            return url;
+        }
+        return url + "/" + urlPrefix;
     }
 }

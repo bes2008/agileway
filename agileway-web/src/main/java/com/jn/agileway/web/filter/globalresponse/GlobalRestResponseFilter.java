@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
 
+/**
+ * 配置 该 filter的url pattern时，只能配置在那些 restful api上，不然会出现意想不到的彩蛋
+ */
 public class GlobalRestResponseFilter implements Filter {
     private static final Logger logger = LoggerFactory.getLogger(GlobalRestResponseFilter.class);
 
@@ -37,6 +40,8 @@ public class GlobalRestResponseFilter implements Filter {
     public void setRestResponseBodyHandler(GlobalFilterRestResponseHandler restResponseBodyHandler) {
         this.restResponseBodyHandler = restResponseBodyHandler;
     }
+
+
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

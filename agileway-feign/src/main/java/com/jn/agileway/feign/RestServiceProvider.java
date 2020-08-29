@@ -105,10 +105,10 @@ public class RestServiceProvider implements Initializable {
                 .logger(new Slf4jLogger(loggerName))
                 .logLevel(accessLogLevel)
                 .client(client)
-
                 .encoder(new FormEncoder(new EasyjsonEncoder()))
                 .decoder(new EasyjsonDecoder())
                 .errorDecoder(new EasyjsonErrorDecoder());
+
         if(unifiedRestResponseEnabled){
             UnifiedResponseInvocationHandlerFactory invocationHandlerFactory = new UnifiedResponseInvocationHandlerFactory();
             invocationHandlerFactory.setJsonFactory(jsonFactory);
