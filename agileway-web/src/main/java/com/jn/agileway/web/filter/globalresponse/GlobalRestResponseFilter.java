@@ -17,7 +17,7 @@ public class GlobalRestResponseFilter implements Filter {
     private static final Logger logger = LoggerFactory.getLogger(GlobalRestResponseFilter.class);
 
     private GlobalRestExceptionHandler exceptionHandler;
-    private GlobalRestResponseBodyHandler restResponseBodyHandler;
+    private GlobalFilterRestResponseHandler restResponseBodyHandler;
 
 
     @Override
@@ -30,7 +30,7 @@ public class GlobalRestResponseFilter implements Filter {
     }
 
 
-    public void setRestResponseBodyHandler(GlobalRestResponseBodyHandler restResponseBodyHandler) {
+    public void setRestResponseBodyHandler(GlobalFilterRestResponseHandler restResponseBodyHandler) {
         this.restResponseBodyHandler = restResponseBodyHandler;
     }
 

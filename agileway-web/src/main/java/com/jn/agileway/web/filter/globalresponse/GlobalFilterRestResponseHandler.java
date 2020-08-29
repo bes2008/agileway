@@ -4,6 +4,8 @@ import com.jn.agileway.web.rest.GlobalRestResponseBodyHandler;
 import com.jn.agileway.web.rest.GlobalRestResponseBodyHandlerConfiguration;
 import com.jn.agileway.web.servlet.Servlets;
 import com.jn.easyjson.core.JSONFactory;
+import com.jn.easyjson.core.factory.JsonFactorys;
+import com.jn.easyjson.core.factory.JsonScope;
 import com.jn.langx.http.HttpStatus;
 import com.jn.langx.http.mime.MediaType;
 import com.jn.langx.http.rest.RestRespBody;
@@ -20,7 +22,7 @@ public class GlobalFilterRestResponseHandler implements GlobalRestResponseBodyHa
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalFilterRestResponseHandler.class);
     private GlobalRestResponseBodyHandlerConfiguration configuration = new GlobalRestResponseBodyHandlerConfiguration();
-    private JSONFactory jsonFactory;
+    private JSONFactory jsonFactory = JsonFactorys.getJSONFactory(JsonScope.SINGLETON);
 
     @Override
     public void setConfiguration(GlobalRestResponseBodyHandlerConfiguration configuration) {
@@ -31,7 +33,14 @@ public class GlobalFilterRestResponseHandler implements GlobalRestResponseBodyHa
 
     @Override
     public void setJsonFactory(JSONFactory jsonFactory) {
-        this.jsonFactory = jsonFactory;
+        if (jsonFactory != null) {
+            this.jsonFactory = jsonFactory;
+        }
+    }
+
+    @Override
+    public JSONFactory getJsonFactory() {
+        return jsonFactory;
     }
 
     @Override

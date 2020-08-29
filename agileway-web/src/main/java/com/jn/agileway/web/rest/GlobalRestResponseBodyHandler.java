@@ -10,6 +10,7 @@ public interface GlobalRestResponseBodyHandler<ACTION> {
     void setConfiguration(GlobalRestResponseBodyHandlerConfiguration configuration);
 
     void setJsonFactory(JSONFactory jsonFactory);
+    JSONFactory getJsonFactory();
 
     RestRespBody handleResponseBody(HttpServletRequest request, HttpServletResponse response, ACTION action, Object actionReturnValue);
 }
