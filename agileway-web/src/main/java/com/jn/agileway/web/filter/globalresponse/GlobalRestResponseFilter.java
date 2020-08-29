@@ -2,6 +2,7 @@ package com.jn.agileway.web.filter.globalresponse;
 
 import com.jn.agileway.web.rest.GlobalRestExceptionHandler;
 import com.jn.agileway.web.rest.GlobalRestResponseBodyHandler;
+import com.jn.agileway.web.rest.GlobalRestResponseBodyHandlerConfiguration;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
@@ -17,18 +18,21 @@ public class GlobalRestResponseFilter implements Filter {
     private static final Logger logger = LoggerFactory.getLogger(GlobalRestResponseFilter.class);
 
     private GlobalRestExceptionHandler exceptionHandler;
-    private GlobalFilterRestResponseHandler restResponseBodyHandler;
+    private GlobalRestResponseBodyHandler<Method> restResponseBodyHandler;
 
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
+        GlobalFilterRestResponseHandler handler = new GlobalFilterRestResponseHandler();
+        GlobalRestResponseBodyHandlerConfiguration handlerConfiguration = new GlobalRestResponseBodyHandlerConfiguration();
+        handlerConfiguration.addAssignableType(GlobalRestResponseFilter.class);
+        handler.setConfiguration(handlerConfiguration);
+        setRestResponseBodyHandler(handler);
     }
 
     public void setExceptionHandler(GlobalRestExceptionHandler exceptionHandler) {
         this.exceptionHandler = exceptionHandler;
     }
-
 
     public void setRestResponseBodyHandler(GlobalFilterRestResponseHandler restResponseBodyHandler) {
         this.restResponseBodyHandler = restResponseBodyHandler;

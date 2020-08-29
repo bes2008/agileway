@@ -27,6 +27,10 @@ public class GlobalRestResponseBodyHandlerConfiguration {
         }
     }
 
+    public void addBasePackage(String basePackage){
+        this.basePackages.add(basePackage);
+    }
+
     public List<String> getExcludedBasePackages() {
         return excludedBasePackages;
     }
@@ -35,6 +39,10 @@ public class GlobalRestResponseBodyHandlerConfiguration {
         if (excludedBasePackages != null) {
             this.excludedBasePackages.addAll(excludedBasePackages);
         }
+    }
+
+    public void addExcludedBasePackage(String excludedBasePackage ){
+        this.excludedBasePackages.add(excludedBasePackage);
     }
 
     public List<Class> getAssignableTypes() {
@@ -47,6 +55,10 @@ public class GlobalRestResponseBodyHandlerConfiguration {
         }
     }
 
+    public void addAssignableType(Class clazz){
+        this.assignableTypes.add(clazz);
+    }
+
     public List<Class> getExcludedAssignableTypes() {
         return excludedAssignableTypes;
     }
@@ -55,6 +67,10 @@ public class GlobalRestResponseBodyHandlerConfiguration {
         if (excludedAssignableTypes != null) {
             this.excludedAssignableTypes.addAll(excludedAssignableTypes);
         }
+    }
+
+    public void addExcludedAssignableType(Class clazz){
+        this.excludedAssignableTypes.add(clazz);
     }
 
     public List<Class> getAnnotations() {
@@ -67,6 +83,10 @@ public class GlobalRestResponseBodyHandlerConfiguration {
         }
     }
 
+    public void addAnnotation(Class annotation){
+        this.annotations.add(annotation);
+    }
+
     public List<Class> getExcludedAnnotations() {
         return excludedAnnotations;
     }
@@ -75,6 +95,10 @@ public class GlobalRestResponseBodyHandlerConfiguration {
         if (excludedAnnotations != null) {
             this.excludedAnnotations.addAll(excludedAnnotations);
         }
+    }
+
+    public void addExcludedAnnotation(Class annotation){
+        this.excludedAnnotations.add(annotation);
     }
 
     public boolean isAcceptable(final Class clazz) {
