@@ -1,4 +1,4 @@
-package com.jn.agileway.spring.web.rest.springboot;
+package com.jn.agileway.springboot.web.rest;
 
 import org.springframework.context.annotation.Import;
 

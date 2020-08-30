@@ -1,4 +1,4 @@
-package com.jn.agileway.spring.web.rest.springboot;
+package com.jn.agileway.springboot.web.rest;
 
 import com.jn.agileway.spring.web.rest.GlobalSpringRestExceptionHandler;
 import com.jn.agileway.spring.web.rest.GlobalSpringRestResponseBodyHandler;
