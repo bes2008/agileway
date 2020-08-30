@@ -8,6 +8,7 @@ import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.lifecycle.Lifecycle;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,13 +17,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.jn.agileway.web.rest.GlobalRestHandlers.GLOBAL_REST_EXCEPTION_HANDLER;
+import static com.jn.agileway.web.rest.GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN;
+
 /**
  * 通常在 Controller层调用
  */
 public abstract class GlobalRestExceptionHandler implements RestActionExceptionHandler, Initializable, Lifecycle {
     private static Logger logger = LoggerFactory.getLogger(GlobalRestExceptionHandler.class);
     private JSONFactory jsonFactory = JsonFactorys.getJSONFactory(JsonScope.SINGLETON);
-    private static final String GLOBAL_REST_EXCEPTION_HANDLER = Reflects.getFQNClassName(GlobalRestExceptionHandler.class);
 
     /**
      * 是否根据 异常链扫描
@@ -62,7 +65,10 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
         if (exceptionHandler != null) {
             return null;
         }
-
+        Boolean globalRestResponseHadWritten = (Boolean) request.getAttribute(GLOBAL_REST_RESPONSE_HAD_WRITTEN);
+        if (globalRestResponseHadWritten != null && globalRestResponseHadWritten) {
+            return null;
+        }
         RestRespBody respBody = null;
 
         if (isSupportedRestAction(request, response, action, ex)) {
@@ -90,7 +96,10 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
                 try {
                     response.setStatus(respBody.getStatusCode());
                     String jsonstring = jsonFactory.get().toJson(respBody);
+                    response.setContentType(GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8);
+                    response.setCharacterEncoding(Charsets.UTF_8.name());
                     response.getWriter().write(jsonstring);
+                    request.setAttribute(GLOBAL_REST_RESPONSE_HAD_WRITTEN, true);
                 } catch (IOException ioe) {
                     logger.warn(ioe.getMessage(), ioe);
                 }
@@ -140,13 +149,13 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
     }
 
     public void setDefaultErrorCode(String defaultErrorCode) {
-        if(Strings.isNotBlank(defaultErrorCode)) {
+        if (Strings.isNotBlank(defaultErrorCode)) {
             this.defaultErrorCode = defaultErrorCode;
         }
     }
 
     public void setDefaultErrorMessage(String defaultErrorMessage) {
-        if(Strings.isNotBlank(defaultErrorMessage)) {
+        if (Strings.isNotBlank(defaultErrorMessage)) {
             this.defaultErrorMessage = defaultErrorMessage;
         }
     }

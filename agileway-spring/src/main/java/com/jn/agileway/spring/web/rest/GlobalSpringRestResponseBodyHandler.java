@@ -1,9 +1,11 @@
 package com.jn.agileway.spring.web.rest;
 
+import com.jn.agileway.web.rest.GlobalRestHandlers;
 import com.jn.agileway.web.rest.GlobalRestResponseBodyHandler;
 import com.jn.agileway.web.rest.GlobalRestResponseBodyHandlerConfiguration;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.langx.http.rest.RestRespBody;
+import com.jn.langx.util.io.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -50,7 +52,8 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
         }
         RestRespBody body = convertToRestRespBody(request, response, actionReturnValue);
         response.setStatus(body.getStatusCode());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setContentType(GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8);
+        response.setCharacterEncoding(Charsets.UTF_8.name());
         return body;
     }
 

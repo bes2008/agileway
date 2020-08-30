@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -34,6 +35,15 @@ import java.util.Map;
 
 public class Servlets {
     private static final Logger logger = LoggerFactory.getLogger(Servlets.class);
+
+    public static final String getUTF8ContentType(@NonNull String mediaType) {
+        return getContentType(mediaType,"UTF-8");
+    }
+
+    public static final String getContentType(@NonNull String mediaType,@Nullable String encoding) {
+        return mediaType + ";charset=" + encoding;
+    }
+
 
     /***********************************************************************
      *      Filters
@@ -265,6 +275,20 @@ public class Servlets {
     }
 
     public static void writeToResponse(@NonNull HttpServletResponse response, @Nullable String contentType, @NonNull String content) throws IOException {
+        writeToResponseUsingWriter(response, contentType, content);
+    }
+
+    public static void writeToResponseUsingOutputStream(@NonNull HttpServletResponse response, @Nullable String contentType, @NonNull String content) throws IOException {
+        response.setCharacterEncoding(Charsets.UTF_8.name());
+        ServletOutputStream writer = response.getOutputStream();
+        if (Emptys.isNotEmpty(contentType)) {
+            response.setContentType(contentType);
+        }
+        writer.write(content.getBytes(Charsets.UTF_8));
+    }
+
+    public static void writeToResponseUsingWriter(@NonNull HttpServletResponse response, @Nullable String contentType, @NonNull String content) throws IOException {
+        response.setCharacterEncoding(Charsets.UTF_8.name());
         PrintWriter writer = response.getWriter();
         if (Emptys.isNotEmpty(contentType)) {
             response.setContentType(contentType);

@@ -1,5 +1,6 @@
 package com.jn.agileway.web.filter.globalresponse;
 
+import com.jn.agileway.web.rest.GlobalRestHandlers;
 import com.jn.agileway.web.rest.GlobalRestResponseBodyHandler;
 import com.jn.agileway.web.rest.GlobalRestResponseBodyHandlerConfiguration;
 import com.jn.agileway.web.servlet.Servlets;
@@ -7,7 +8,6 @@ import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
 import com.jn.easyjson.core.factory.JsonScope;
 import com.jn.langx.http.HttpStatus;
-import com.jn.langx.http.mime.MediaType;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.Throwables;
 import org.slf4j.Logger;
@@ -47,18 +47,23 @@ public class GlobalFilterRestResponseHandler implements GlobalRestResponseBodyHa
     public RestRespBody handleResponseBody(HttpServletRequest request, HttpServletResponse response, Method method, Object actionReturnValue) {
         int statusCode = response.getStatus();
         long contentLength = Servlets.getContentLength(response);
+        // 这个==0的判断其实没啥用
         if (contentLength == 0) {
             boolean error = HttpStatus.is4xxClientError(statusCode) || HttpStatus.is5xxServerError(statusCode);
-            RestRespBody respBody = new RestRespBody(!error, statusCode, "", null, null);
-            String json = jsonFactory.get().toJson(respBody);
-            try {
-                Servlets.writeToResponse(response, MediaType.APPLICATION_JSON_VALUE, json);
-            } catch (IOException ex) {
-                Throwables.throwAsRuntimeException(ex);
+            if (error) {
+                Boolean responseBodyWritten= (Boolean) request.getAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN);
+                if(responseBodyWritten==null || !responseBodyWritten) {
+                    RestRespBody respBody = new RestRespBody(!error, statusCode, "", null, null);
+                    String json = jsonFactory.get().toJson(respBody);
+                    try {
+                        Servlets.writeToResponse(response, GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8, json);
+                    } catch (IOException ex) {
+                        Throwables.throwAsRuntimeException(ex);
+                    }
+                    return respBody;
+                }
             }
-            return respBody;
-        } else {
-            return null;
         }
+        return null;
     }
 }
