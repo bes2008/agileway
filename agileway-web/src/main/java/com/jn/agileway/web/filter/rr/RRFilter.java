@@ -13,11 +13,11 @@ public class RRFilter implements Filter {
 
 
     public void init(final FilterConfig filterConfig) throws ServletException {
-        logger.info("Initial BaseWebFilter with config : {}", (Object) filterConfig);
+        logger.info("Initial Base Web Filter (RRFilter) with config : {}", (Object) filterConfig);
     }
 
     public void destroy() {
-        logger.info("Destroy BaseWebFilter");
+        logger.info("Destroy RRFilter");
     }
 
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) {

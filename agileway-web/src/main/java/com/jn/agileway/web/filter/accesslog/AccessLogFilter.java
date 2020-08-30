@@ -1,6 +1,7 @@
 package com.jn.agileway.web.filter.accesslog;
 
 import com.jn.agileway.web.servlet.Servlets;
+import com.jn.easyjson.core.JSONBuilderProvider;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.enums.Enums;
@@ -22,6 +23,7 @@ public class AccessLogFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        logger.info("initial web filter {} with init parameters: {}, custom config: {}", filterConfig.getFilterName(), Servlets.extractFilterInitParameters(filterConfig), JSONBuilderProvider.simplest().toJson(this.config));
         if (logger.isDebugEnabled()) {
             String level = filterConfig.getInitParameter("logLevel");
             if (Emptys.isNotEmpty(level)) {

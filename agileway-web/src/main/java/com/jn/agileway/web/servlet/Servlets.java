@@ -13,12 +13,14 @@ import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.collection.multivalue.LinkedMultiValueMap;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.function.Function;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.io.file.FileIOMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.FilterConfig;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,9 +30,29 @@ import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.List;
+import java.util.Map;
 
 public class Servlets {
     private static final Logger logger = LoggerFactory.getLogger(Servlets.class);
+
+    /***********************************************************************
+     *      Filters
+     ***********************************************************************/
+
+    public static Map<String, String> extractFilterInitParameters(final FilterConfig filterConfig) {
+        return Pipeline.<String>of(filterConfig.getInitParameterNames()).collect(Collects.toHashMap(new Function<String, String>() {
+            @Override
+            public String apply(String name) {
+                return name;
+            }
+        }, new Function<String, String>() {
+            @Override
+            public String apply(String name) {
+                return filterConfig.getInitParameter(name);
+            }
+        }, true));
+    }
+
 
     /***********************************************************************
      *      Header
