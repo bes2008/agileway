@@ -2,6 +2,7 @@ package com.jn.agileway.web.filter.accesslog;
 
 
 import com.jn.langx.util.Objects;
+import com.jn.langx.util.collection.Collects;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class WebAccessLogProperties {
     }
 
     public List<String> getUrlPatterns() {
-        return urlPatterns;
+        return Objects.useValueIfEmpty(urlPatterns, Collects.newArrayList("/*"));
     }
 
     public void setUrlPatterns(List<String> urlPatterns) {

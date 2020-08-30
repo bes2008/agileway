@@ -4,11 +4,14 @@ import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Maps;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.reflect.Reflects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.ServiceLoader;
@@ -18,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 同一个web应用中，可能有多级的GlobalRestExceptionHandler，例如 Spring Controller级别的，有 javax.servlet.Filter级别的
  */
 public class GlobalRestExceptionHandlerRegistry implements Initializable {
+    private static final Logger logger = LoggerFactory.getLogger(GlobalRestExceptionHandlerRegistry.class);
     private volatile boolean inited = false;
     /**
      * Key: Exception 类
@@ -30,7 +34,7 @@ public class GlobalRestExceptionHandlerRegistry implements Initializable {
     public void init() throws InitializationException {
         if (!inited) {
             inited = true;
-
+            logger.info("Initial global rest exception handler registry");
             ServiceLoader<RestActionExceptionHandler> serviceLoader = ServiceLoader.load(RestActionExceptionHandler.class);
             Collects.forEach(serviceLoader, new Consumer<RestActionExceptionHandler>() {
                 @Override
@@ -44,16 +48,18 @@ public class GlobalRestExceptionHandlerRegistry implements Initializable {
 
     public void register(String name, RestActionExceptionHandlerRegistration registration) {
         RestActionExceptionHandler exceptionHandler = registration.getExceptionHandler();
-        Preconditions.checkNotNull(exceptionHandler,"exception handler is null for registration {}", name);
+        name = Strings.useValueIfBlank(name, registration.getName());
+        Preconditions.checkNotNull(name, "the exception handler names is null");
+        Preconditions.checkNotNull(exceptionHandler, "exception handler is null for registration {}", name);
         Preconditions.checkTrue(!(exceptionHandler instanceof GlobalRestExceptionHandler), "can't register a global exception handler to registration");
-        this.registrationMap.put(name, registration);
+        RestActionExceptionHandlerRegistration old = Maps.putIfAbsent(this.registrationMap, name, registration);
+        if (old == null) {
+            logger.info("register exception handler {} successful", name);
+        }
     }
 
     public void register(RestActionExceptionHandlerRegistration registration) {
-        RestActionExceptionHandler exceptionHandler = registration.getExceptionHandler();
-        Preconditions.checkNotNull(exceptionHandler,"exception handler is null for registration {}", registration.getName());
-        Preconditions.checkTrue(!(exceptionHandler instanceof GlobalRestExceptionHandler), "can't register a global exception handler to registration");
-        Maps.putIfAbsent(this.registrationMap, registration.getName(), registration);
+        register(registration.getName(), registration);
     }
 
     public void register(RestActionExceptionHandler exceptionHandler) {

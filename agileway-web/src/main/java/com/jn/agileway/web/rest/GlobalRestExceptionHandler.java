@@ -7,6 +7,7 @@ import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.lifecycle.Lifecycle;
+import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +42,7 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
     private RestErrorMessageHandler errorMessageHandler = NoopRestErrorMessageHandler.INSTANCE;
 
     public void setJsonFactory(JSONFactory jsonFactory) {
-        if(jsonFactory!=null) {
+        if (jsonFactory != null) {
             this.jsonFactory = jsonFactory;
         }
     }
@@ -98,6 +99,7 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
     @Override
     public void init() throws InitializationException {
         if (!inited) {
+            logger.info("initial global rest exception handler {}", Reflects.getFQNClassName(getClass()));
             inited = true;
             exceptionHandlerRegistry.init();
         }
