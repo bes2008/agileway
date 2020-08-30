@@ -17,7 +17,6 @@ import java.lang.annotation.Target;
 @Import({GlobalRestHandlersConfiguration.class})
 @EnableAgilewayWebFilters
 @ComponentScan(basePackageClasses = {
-        GlobalRestHandlersConfiguration.class,
         GlobalSpringRestResponseBodyAdvice.class
 })
 public @interface EnableGlobalRestHandlers {
