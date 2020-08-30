@@ -25,7 +25,7 @@ public class GlobalSpringRestExceptionHandler extends GlobalRestExceptionHandler
 
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object methodHandler, Exception ex) {
-        handleException(request, response, methodHandler, ex);
+        handle(request, response, methodHandler, ex);
         // 返回 empty ModelAndView 放置把异常写出
         return new ModelAndView();
     }

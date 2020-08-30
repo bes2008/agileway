@@ -20,8 +20,8 @@ import java.lang.reflect.Method;
 public class GlobalRestResponseFilter implements Filter {
     private static final Logger logger = LoggerFactory.getLogger(GlobalRestResponseFilter.class);
 
-    private GlobalRestExceptionHandler exceptionHandler;
-    private GlobalRestResponseBodyHandler<Method> restResponseBodyHandler;
+    private GlobalFilterRestExceptionHandler exceptionHandler;
+    private GlobalFilterRestResponseHandler restResponseBodyHandler;
 
 
     @Override
@@ -33,15 +33,13 @@ public class GlobalRestResponseFilter implements Filter {
         setRestResponseBodyHandler(handler);
     }
 
-    public void setExceptionHandler(GlobalRestExceptionHandler exceptionHandler) {
+    public void setExceptionHandler(GlobalFilterRestExceptionHandler exceptionHandler) {
         this.exceptionHandler = exceptionHandler;
     }
 
     public void setRestResponseBodyHandler(GlobalFilterRestResponseHandler restResponseBodyHandler) {
         this.restResponseBodyHandler = restResponseBodyHandler;
     }
-
-
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -51,9 +49,9 @@ public class GlobalRestResponseFilter implements Filter {
             RestRespBody restRespBody = null;
             try {
                 chain.doFilter(request, response);
-            } catch (Throwable ex) {
+            } catch (Exception ex) {
                 if (exceptionHandler != null) {
-                    restRespBody = exceptionHandler.handleException(req, resp, null, null);
+                    restRespBody = exceptionHandler.handle(req, resp, doFilterMethod, ex);
                 }
             } finally {
                 if (restResponseBodyHandler != null) {
@@ -70,5 +68,5 @@ public class GlobalRestResponseFilter implements Filter {
 
     }
 
-    private static final Method doFilterMethod = Reflects.getPublicMethod(GlobalRestResponseFilter.class, "doFilter", ServletRequest.class, ServletResponse.class, FilterChain.class);
+    public static final Method doFilterMethod = Reflects.getPublicMethod(GlobalRestResponseFilter.class, "doFilter", ServletRequest.class, ServletResponse.class, FilterChain.class);
 }

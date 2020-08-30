@@ -1,5 +1,6 @@
 package com.jn.agileway.web.filter.rr;
 
+import com.jn.langx.util.Throwables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +28,7 @@ public class RRFilter implements Filter {
             chain.doFilter(request, response);
         } catch (Throwable t) {
             logger.error(t.getMessage(), t);
+            Throwables.throwAsRuntimeException(t);
         } finally {
             RRHolder.remove();
         }

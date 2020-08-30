@@ -1,5 +1,6 @@
 package com.jn.agileway.web.filter.accesslog;
 
+import com.jn.agileway.web.servlet.Servlets;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.enums.Enums;
@@ -167,6 +168,8 @@ public class AccessLogFilter implements Filter {
         StringBuilder builder = new StringBuilder(256);
         builder.append(request.getProtocol()).append(" ").append(request.getMethod()).append(" ").append(request.getRequestURI()).append("\n");
         builder.append("StatusCode: ").append(response.getStatus()).append("\n");
+        long contentLength = Servlets.getContentLength(response);
+        builder.append("Content-Length: ").append(contentLength).append("\n");
         return builder;
     }
 
