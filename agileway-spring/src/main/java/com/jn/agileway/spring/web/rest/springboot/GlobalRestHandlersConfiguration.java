@@ -72,6 +72,12 @@ public class GlobalRestHandlersConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean({RestErrorMessageHandler.class})
+    public RestErrorMessageHandler errorMessageHandler(){
+        return NoopRestErrorMessageHandler.INSTANCE;
+    }
+
+    @Bean
     @ConfigurationProperties(prefix = "agileway.rest.global-exception-handler")
     @ConditionalOnMissingBean({GlobalRestExceptionHandlerProperties.class})
     public GlobalRestExceptionHandlerProperties globalRestExceptionHandlerProperties() {
@@ -91,15 +97,17 @@ public class GlobalRestHandlersConfiguration {
     public GlobalSpringRestExceptionHandler globalSpringRestExceptionHandler(
             JSONFactory jsonFactory,
             GlobalRestExceptionHandlerRegistry registry,
-            GlobalRestExceptionHandlerProperties globalRestExceptionHandlerProperties) {
+            GlobalRestExceptionHandlerProperties globalRestExceptionHandlerProperties,
+            RestErrorMessageHandler restErrorMessageHandler) {
         GlobalSpringRestExceptionHandler globalRestExceptionHandler = new GlobalSpringRestExceptionHandler();
 
-        globalRestExceptionHandler.setJsonFactory(jsonFactory);
         globalRestExceptionHandler.setDefaultErrorCode(globalRestExceptionHandlerProperties.getDefaultErrorCode());
         globalRestExceptionHandler.setDefaultErrorMessage(globalRestExceptionHandlerProperties.getDefaultErrorMessage());
         globalRestExceptionHandler.setDefaultErrorStatusCode(globalRestExceptionHandlerProperties.getDefaultErrorStatusCode());
         globalRestExceptionHandler.setCauseScanEnabled(globalRestExceptionHandlerProperties.isCauseScanEnabled());
+        globalRestExceptionHandler.setWriteUnifiedResponse(globalRestExceptionHandlerProperties.isWriteUnifiedResponse());
 
+        globalRestExceptionHandler.setJsonFactory(jsonFactory);
         globalRestExceptionHandler.setExceptionHandlerRegistry(registry);
         globalRestExceptionHandler.startup();
         return globalRestExceptionHandler;
@@ -118,16 +126,20 @@ public class GlobalRestHandlersConfiguration {
     public GlobalFilterRestExceptionHandler globalFilterRestExceptionHandler(
             JSONFactory jsonFactory,
             GlobalRestExceptionHandlerRegistry registry,
-            GlobalRestExceptionHandlerProperties globalRestExceptionHandlerProperties) {
+            GlobalRestExceptionHandlerProperties globalRestExceptionHandlerProperties,
+            RestErrorMessageHandler restErrorMessageHandler) {
         GlobalFilterRestExceptionHandler globalRestExceptionHandler = new GlobalFilterRestExceptionHandler();
 
-        globalRestExceptionHandler.setJsonFactory(jsonFactory);
         globalRestExceptionHandler.setDefaultErrorCode(globalRestExceptionHandlerProperties.getDefaultErrorCode());
         globalRestExceptionHandler.setDefaultErrorMessage(globalRestExceptionHandlerProperties.getDefaultErrorMessage());
         globalRestExceptionHandler.setDefaultErrorStatusCode(globalRestExceptionHandlerProperties.getDefaultErrorStatusCode());
         globalRestExceptionHandler.setCauseScanEnabled(globalRestExceptionHandlerProperties.isCauseScanEnabled());
+        globalRestExceptionHandler.setWriteUnifiedResponse(globalRestExceptionHandlerProperties.isWriteUnifiedResponse());
 
+        globalRestExceptionHandler.setJsonFactory(jsonFactory);
         globalRestExceptionHandler.setExceptionHandlerRegistry(registry);
+        globalRestExceptionHandler.setErrorMessageHandler(restErrorMessageHandler);
+
         globalRestExceptionHandler.startup();
         return globalRestExceptionHandler;
     }

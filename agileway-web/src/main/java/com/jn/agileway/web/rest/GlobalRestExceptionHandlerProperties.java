@@ -1,11 +1,12 @@
 package com.jn.agileway.web.rest;
 
 public class GlobalRestExceptionHandlerProperties {
-    private boolean causeScanEnabled = false;
+    private boolean causeScanEnabled = true;
     private int defaultErrorStatusCode = 500;
-    private String defaultErrorCode;
-    private String defaultErrorMessage;
-    private boolean exceptionExtendsScanEnabled;
+    private String defaultErrorCode = "UNKNOWN";
+    private String defaultErrorMessage = "UNKNOWN";
+    private boolean exceptionExtendsScanEnabled = true;
+    private boolean writeUnifiedResponse = true;
 
     public boolean isCauseScanEnabled() {
         return causeScanEnabled;
@@ -45,5 +46,13 @@ public class GlobalRestExceptionHandlerProperties {
 
     public void setExceptionExtendsScanEnabled(boolean exceptionExtendsScanEnabled) {
         this.exceptionExtendsScanEnabled = exceptionExtendsScanEnabled;
+    }
+
+    public boolean isWriteUnifiedResponse() {
+        return writeUnifiedResponse;
+    }
+
+    public void setWriteUnifiedResponse(boolean writeUnifiedResponse) {
+        this.writeUnifiedResponse = writeUnifiedResponse;
     }
 }
