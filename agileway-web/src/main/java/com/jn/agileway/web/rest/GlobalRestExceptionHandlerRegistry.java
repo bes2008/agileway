@@ -52,10 +52,8 @@ public class GlobalRestExceptionHandlerRegistry implements Initializable {
         Preconditions.checkNotNull(name, "the exception handler names is null");
         Preconditions.checkNotNull(exceptionHandler, "exception handler is null for registration {}", name);
         Preconditions.checkTrue(!(exceptionHandler instanceof GlobalRestExceptionHandler), "can't register a global exception handler to registration");
-        RestActionExceptionHandlerRegistration old = Maps.putIfAbsent(this.registrationMap, name, registration);
-        if (old == null) {
-            logger.info("register exception handler {} successfully", name);
-        }
+        Maps.putIfAbsent(this.registrationMap, name, registration);
+        logger.info("Register exception handler {} successfully", name);
     }
 
     public void register(RestActionExceptionHandlerRegistration registration) {

@@ -115,7 +115,7 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
     @Override
     public void init() throws InitializationException {
         if (!inited) {
-            logger.info("initial global rest exception handler {}", Reflects.getFQNClassName(getClass()));
+            logger.info("Initial global rest exception handler {}", Reflects.getFQNClassName(getClass()));
             inited = true;
             exceptionHandlerRegistry.init();
         }
