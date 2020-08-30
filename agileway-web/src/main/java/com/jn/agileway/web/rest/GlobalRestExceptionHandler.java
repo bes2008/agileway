@@ -7,6 +7,7 @@ import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.lifecycle.Lifecycle;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,8 @@ import java.io.IOException;
 public abstract class GlobalRestExceptionHandler implements RestActionExceptionHandler, Initializable, Lifecycle {
     private static Logger logger = LoggerFactory.getLogger(GlobalRestExceptionHandler.class);
     private JSONFactory jsonFactory = JsonFactorys.getJSONFactory(JsonScope.SINGLETON);
+    private static final String GLOBAL_REST_EXCEPTION_HANDLER = Reflects.getFQNClassName(GlobalRestExceptionHandler.class);
+
     /**
      * 是否根据 异常链扫描
      * <p>
@@ -33,8 +36,8 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
      */
     private int defaultErrorStatusCode;
 
-    private String defaultErrorCode;
-    private String defaultErrorMessage;
+    private String defaultErrorCode = "UNKNOWN";
+    private String defaultErrorMessage = "UNKNOWN";
     private volatile boolean inited = false;
     private volatile boolean running = false;
     private boolean writeUnifiedResponse = true;
@@ -54,6 +57,10 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
     public RestRespBody handle(HttpServletRequest request, HttpServletResponse response, Object action, Exception ex) {
         if (!inited) {
             init();
+        }
+        Object exceptionHandler = request.getAttribute(GLOBAL_REST_EXCEPTION_HANDLER);
+        if (exceptionHandler != null) {
+            return null;
         }
 
         RestRespBody respBody = null;
@@ -76,7 +83,7 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
                 logger.error(ex.getMessage(), ex);
                 respBody = RestRespBody.error(defaultErrorStatusCode, defaultErrorCode, defaultErrorMessage);
             }
-
+            request.setAttribute(GLOBAL_REST_EXCEPTION_HANDLER, this);
             errorMessageHandler.handler(respBody);
 
             if (writeUnifiedResponse) {
@@ -133,11 +140,15 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
     }
 
     public void setDefaultErrorCode(String defaultErrorCode) {
-        this.defaultErrorCode = defaultErrorCode;
+        if(Strings.isNotBlank(defaultErrorCode)) {
+            this.defaultErrorCode = defaultErrorCode;
+        }
     }
 
     public void setDefaultErrorMessage(String defaultErrorMessage) {
-        this.defaultErrorMessage = defaultErrorMessage;
+        if(Strings.isNotBlank(defaultErrorMessage)) {
+            this.defaultErrorMessage = defaultErrorMessage;
+        }
     }
 
 

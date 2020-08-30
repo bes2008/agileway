@@ -26,6 +26,7 @@ public class GlobalRestResponseFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        logger.info("Initial global rest response filter");
         GlobalFilterRestResponseHandler handler = new GlobalFilterRestResponseHandler();
         GlobalRestResponseBodyHandlerConfiguration handlerConfiguration = new GlobalRestResponseBodyHandlerConfiguration();
         handlerConfiguration.addAssignableType(GlobalRestResponseFilter.class);

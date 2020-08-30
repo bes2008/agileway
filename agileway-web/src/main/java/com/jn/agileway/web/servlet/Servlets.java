@@ -21,11 +21,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -265,10 +265,10 @@ public class Servlets {
     }
 
     public static void writeToResponse(@NonNull HttpServletResponse response, @Nullable String contentType, @NonNull String content) throws IOException {
-        ServletOutputStream outputStream = response.getOutputStream();
+        PrintWriter writer = response.getWriter();
         if (Emptys.isNotEmpty(contentType)) {
             response.setContentType(contentType);
         }
-        outputStream.write(content.getBytes(Charsets.UTF_8));
+        writer.write(content);
     }
 }
