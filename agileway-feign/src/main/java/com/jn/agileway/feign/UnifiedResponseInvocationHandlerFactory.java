@@ -1,7 +1,7 @@
 package com.jn.agileway.feign;
 
+import com.jn.agileway.feign.codec.FeignRestRespBodyException;
 import com.jn.easyjson.core.JSONFactory;
-import com.jn.easyjson.supports.feign.codec.FeignRestRespBodyException;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.reflect.Reflects;
