@@ -1,7 +1,5 @@
 package com.jn.agileway.web.filter.globalresponse;
 
-import com.jn.agileway.web.rest.GlobalRestExceptionHandler;
-import com.jn.agileway.web.rest.GlobalRestResponseBodyHandler;
 import com.jn.agileway.web.rest.GlobalRestResponseBodyHandlerConfiguration;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.reflect.Reflects;
