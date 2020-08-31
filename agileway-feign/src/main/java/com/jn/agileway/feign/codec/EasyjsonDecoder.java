@@ -3,7 +3,6 @@ package com.jn.agileway.feign.codec;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
 import com.jn.easyjson.core.factory.JsonScope;
-import com.jn.langx.util.io.Charsets;
 import feign.FeignException;
 import feign.Response;
 import feign.codec.DecodeException;
