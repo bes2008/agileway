@@ -1,10 +1,10 @@
 package com.jn.agileway.feign;
 
+import com.jn.agileway.feign.codec.EasyjsonDecoder;
+import com.jn.agileway.feign.codec.EasyjsonEncoder;
+import com.jn.agileway.feign.codec.EasyjsonErrorDecoder;
 import com.jn.agileway.feign.loadbalancer.DynamicLBClientFactory;
 import com.jn.easyjson.core.JSONFactory;
-import com.jn.easyjson.supports.feign.codec.EasyjsonDecoder;
-import com.jn.easyjson.supports.feign.codec.EasyjsonEncoder;
-import com.jn.easyjson.supports.feign.codec.EasyjsonErrorDecoder;
 import com.jn.langx.annotation.Prototype;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.lifecycle.Initializable;

@@ -46,12 +46,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.fangjinuo.easyjson.supports</groupId>
-            <artifactId>easyjson-supports-feign</artifactId>
-            <version>${easyjson.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>com.github.fangjinuo.easyjson</groupId>
             <artifactId>easyjson-jackson</artifactId>
             <version>${easyjson.version}</version>
