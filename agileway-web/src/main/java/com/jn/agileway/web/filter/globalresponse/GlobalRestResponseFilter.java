@@ -1,5 +1,6 @@
 package com.jn.agileway.web.filter.globalresponse;
 
+import com.jn.agileway.web.filter.OncePerRequestFilter;
 import com.jn.agileway.web.rest.GlobalRestResponseBodyHandlerConfiguration;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.reflect.Reflects;
@@ -15,15 +16,15 @@ import java.lang.reflect.Method;
 /**
  * 配置 该 filter的url pattern时，只能配置在那些 restful api上，不然会出现意想不到的彩蛋
  */
-public class GlobalRestResponseFilter implements Filter {
+public class GlobalRestResponseFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(GlobalRestResponseFilter.class);
 
     private GlobalFilterRestExceptionHandler exceptionHandler;
     private GlobalFilterRestResponseHandler restResponseBodyHandler;
 
-
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        super.init(filterConfig);
         logger.info("Initial global rest response filter");
         GlobalFilterRestResponseHandler handler = new GlobalFilterRestResponseHandler();
         GlobalRestResponseBodyHandlerConfiguration handlerConfiguration = new GlobalRestResponseBodyHandlerConfiguration();
@@ -41,7 +42,7 @@ public class GlobalRestResponseFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilterInternal(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         if (request instanceof HttpServletRequest) {
             HttpServletRequest req = (HttpServletRequest) request;
             HttpServletResponse resp = (HttpServletResponse) response;
@@ -60,11 +61,6 @@ public class GlobalRestResponseFilter implements Filter {
         } else {
             chain.doFilter(request, response);
         }
-    }
-
-    @Override
-    public void destroy() {
-
     }
 
     public static final Method doFilterMethod = Reflects.getPublicMethod(GlobalRestResponseFilter.class, "doFilter", ServletRequest.class, ServletResponse.class, FilterChain.class);

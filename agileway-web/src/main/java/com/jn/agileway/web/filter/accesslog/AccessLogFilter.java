@@ -1,5 +1,6 @@
 package com.jn.agileway.web.filter.accesslog;
 
+import com.jn.agileway.web.filter.OncePerRequestFilter;
 import com.jn.agileway.web.servlet.Servlets;
 import com.jn.easyjson.core.JSONBuilderProvider;
 import com.jn.langx.util.Emptys;
@@ -17,12 +18,13 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
 
-public class AccessLogFilter implements Filter {
+public class AccessLogFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(AccessLogFilter.class);
     private WebAccessLogProperties config = new WebAccessLogProperties();
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        super.init(filterConfig);
         logger.info("Initial web filter {} with init parameters: {}, custom config: {}", filterConfig.getFilterName(), Servlets.extractFilterInitParameters(filterConfig), JSONBuilderProvider.simplest().toJson(this.config));
         if (logger.isDebugEnabled()) {
             String level = filterConfig.getInitParameter("logLevel");
@@ -41,7 +43,7 @@ public class AccessLogFilter implements Filter {
 
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilterInternal(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         // 记录请求
         if (request instanceof HttpServletRequest) {
             HttpServletRequest r = (HttpServletRequest) request;
