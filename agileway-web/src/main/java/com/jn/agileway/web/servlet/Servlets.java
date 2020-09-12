@@ -14,6 +14,7 @@ import com.jn.langx.util.collection.multivalue.LinkedMultiValueMap;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Function;
+import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.io.file.FileIOMode;
@@ -37,10 +38,10 @@ public class Servlets {
     private static final Logger logger = LoggerFactory.getLogger(Servlets.class);
 
     public static final String getUTF8ContentType(@NonNull String mediaType) {
-        return getContentType(mediaType,"UTF-8");
+        return getContentType(mediaType, "UTF-8");
     }
 
-    public static final String getContentType(@NonNull String mediaType,@Nullable String encoding) {
+    public static final String getContentType(@NonNull String mediaType, @Nullable String encoding) {
         return mediaType + ";charset=" + encoding;
     }
 
@@ -120,6 +121,36 @@ public class Servlets {
         });
         return map;
     }
+
+    private static List<String> clientIpHeadersInProxy = Collects.newArrayList(
+            "X-Real-IP", // nginx
+            "Proxy-Client-IP", // apache http server
+            "WL-Proxy-Client-IP", // WebLogic 服务代理
+            "X-Forwarded-For", // squid
+            "HTTP_CLIENT_IP"
+    );
+
+    public static String getClientIP(final HttpServletRequest request) {
+        String header = Collects.findFirst(clientIpHeadersInProxy, new Predicate<String>() {
+            @Override
+            public boolean test(String headerName) {
+                String ips = request.getHeader(headerName);
+                if (Emptys.isNotEmpty(ips) && !Strings.equalsIgnoreCase("unknown", ips)) {
+                    return true;
+                }
+                return false;
+            }
+        });
+        String ip = Strings.isEmpty(header) ? request.getRemoteAddr() : request.getHeader(header);
+        if (Strings.isNotEmpty(ip)) {
+            int index = ip.indexOf(",");
+            if (index != -1) {
+                return ip.substring(0, index);
+            }
+        }
+        return ip;
+    }
+
 
     /**
      * 下载
