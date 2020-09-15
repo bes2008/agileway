@@ -34,7 +34,6 @@ public class HikariDataSources {
         config.setMaximumPoolSize(props.getMaxPoolSize());
         config.setMinimumIdle(props.getMinIdle());
         config.setAutoCommit(props.isAutoCommit());
-        config.setDataSourceClassName(props.getDataSourceClassName());
         int txIsoLevel = -1;
         try {
             txIsoLevel = Jdbcs.getTransactionIsolation(props.getTransactionIsolationName());
