@@ -55,15 +55,19 @@ public class Dbcp2DataSources {
             props.setProperty(PROP_DEFAULT_SCHEMA, schema);
         }
 
-        props.setProperty(PROP_MIN_IDLE, ""+properties.getMinIdle());
-        props.setProperty(PROP_MAX_IDLE, ""+Maths.max(8,properties.getMinIdle()));
-        props.setProperty(PROP_MAX_TOTAL, ""+Maths.max(8, properties.getMaxPoolSize()));
+        props.setProperty(PROP_INITIAL_SIZE, ""+ properties.getInitialSize());
+        props.setProperty(PROP_MIN_IDLE, "" + properties.getMinIdle());
+        props.setProperty(PROP_MAX_IDLE, "" + Maths.max(8, properties.getMinIdle()));
+        props.setProperty(PROP_MAX_TOTAL, "" + Maths.max(8, properties.getMaxPoolSize()));
 
 
         String validationQuery = properties.getValidationQuery();
         if (validationQuery != null) {
             props.setProperty(PROP_VALIDATION_QUERY, validationQuery);
         }
+
+        props.setProperty(PROP_MAX_CONN_LIFETIME_MILLIS, ""+properties.getMaxLifetimeInMills());
+
 
         try {
             return BasicDataSourceFactory.createDataSource(props);

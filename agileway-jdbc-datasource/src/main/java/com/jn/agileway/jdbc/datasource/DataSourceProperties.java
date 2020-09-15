@@ -26,6 +26,7 @@ public class DataSourceProperties {
     private long idleTimeoutInMills;
     private long maxLifetimeInMills;
     private int maxPoolSize;
+    private int initialSize = 0;
     private int minIdle;
 
     private String dataSourceClassName;
@@ -60,6 +61,14 @@ public class DataSourceProperties {
 
     public void setLeakDetectionThresholdInMills(final long leakDetectionThresholdInMills) {
         this.leakDetectionThresholdInMills = leakDetectionThresholdInMills;
+    }
+
+    public int getInitialSize() {
+        return initialSize;
+    }
+
+    public void setInitialSize(int initialSize) {
+        this.initialSize = initialSize;
     }
 
     public long getConnectionTimeoutInMills() {
