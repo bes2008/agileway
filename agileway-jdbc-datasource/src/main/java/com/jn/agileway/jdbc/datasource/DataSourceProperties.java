@@ -29,8 +29,6 @@ public class DataSourceProperties {
     private int initialSize = 0;
     private int minIdle;
 
-    private String dataSourceClassName;
-
     private Properties driverProps;
 
     public DataSourceProperties() {
@@ -175,20 +173,12 @@ public class DataSourceProperties {
         this.isAutoCommit = autoCommit;
     }
 
-    public String getDataSourceClassName() {
-        return this.dataSourceClassName;
-    }
-
-    public void setDataSourceClassName(final String dataSourceClassName) {
-        this.dataSourceClassName = Strings.getNullIfEmpty(dataSourceClassName);
-    }
-
     public String getValidationQuery() {
         return this.validationQuery;
     }
 
     public void setValidationQuery(final String validationQuery) {
-        this.validationQuery = Strings.getNullIfEmpty(this.dataSourceClassName);
+        this.validationQuery = Strings.getNullIfEmpty(validationQuery);
     }
 
     public boolean isReadOnly() {
