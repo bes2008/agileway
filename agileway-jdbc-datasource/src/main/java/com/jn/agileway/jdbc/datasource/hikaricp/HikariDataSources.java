@@ -1,21 +1,21 @@
 package com.jn.agileway.jdbc.datasource.hikaricp;
 
 import com.jn.agileway.jdbc.datasource.DataSourceProperties;
+import com.jn.agileway.jdbc.Jdbcs;
+import com.jn.langx.util.Emptys;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import com.zaxxer.hikari.util.UtilityElf;
 
 import javax.sql.DataSource;
-import java.io.File;
+import java.util.Properties;
 
 public class HikariDataSources {
     public static DataSource createDataSource(final DataSourceProperties props) {
-        final String driverPropsFilePath = props.getDriverPropsFile();
+        Properties driverProps = props.getDriverProps();
         HikariConfig config = null;
-        if (driverPropsFilePath != null && new File(driverPropsFilePath).exists()) {
-            config = new HikariConfig(driverPropsFilePath);
-        }
-        else {
+        if (Emptys.isNotEmpty(driverProps)) {
+            config = new HikariConfig(driverProps);
+        } else {
             config = new HikariConfig();
         }
         config.setDriverClassName(props.getDriverClassName());
@@ -37,16 +37,16 @@ public class HikariDataSources {
         config.setDataSourceClassName(props.getDataSourceClassName());
         int txIsoLevel = -1;
         try {
-            txIsoLevel = UtilityElf.getTransactionIsolation(props.getTransactionIsolationName());
-        }
-        catch (Throwable t) {}
-        finally {
+            txIsoLevel = Jdbcs.getTransactionIsolation(props.getTransactionIsolationName());
+        } catch (Throwable t) {
+
+        } finally {
             if (txIsoLevel == -1) {
                 props.setTransactionIsolationName("TRANSACTION_READ_COMMITTED");
             }
         }
         config.setTransactionIsolation(props.getTransactionIsolationName());
         config.setReadOnly(props.isReadOnly());
-        return (DataSource)new HikariDataSource(config);
+        return new HikariDataSource(config);
     }
 }

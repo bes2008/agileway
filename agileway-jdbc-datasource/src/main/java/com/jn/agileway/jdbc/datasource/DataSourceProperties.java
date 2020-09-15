@@ -2,6 +2,8 @@ package com.jn.agileway.jdbc.datasource;
 
 import com.jn.langx.util.Strings;
 
+import java.util.Properties;
+
 public class DataSourceProperties {
     private String driverClassName;
     private String url;
@@ -10,19 +12,25 @@ public class DataSourceProperties {
     private String name;
     private String catalog;
     private String schema;
+
+    private boolean isReadOnly;
+    private boolean isAutoCommit;
+    private String transactionIsolationName;
+
     private long leakDetectionThresholdInMills;
     private String validationQuery;
+
     private long connectionTimeoutInMills;
     private long validationTimeoutInMills;
+
     private long idleTimeoutInMills;
     private long maxLifetimeInMills;
     private int maxPoolSize;
     private int minIdle;
-    private boolean isAutoCommit;
+
     private String dataSourceClassName;
-    private boolean isReadOnly;
-    private String transactionIsolationName;
-    private String driverPropsFile;
+
+    private Properties driverProps;
 
     public DataSourceProperties() {
         this.leakDetectionThresholdInMills = 0L;
@@ -190,11 +198,12 @@ public class DataSourceProperties {
         this.transactionIsolationName = Strings.getNullIfEmpty(transactionIsolationName);
     }
 
-    public String getDriverPropsFile() {
-        return this.driverPropsFile;
+    public Properties getDriverProps() {
+        return driverProps;
     }
 
-    public void setDriverPropsFile(final String driverPropsFile) {
-        this.driverPropsFile = Strings.getNullIfEmpty(driverPropsFile);
+    public void setDriverProps(Properties driverProps) {
+        this.driverProps = driverProps;
     }
+
 }
