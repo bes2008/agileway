@@ -9,8 +9,7 @@ import com.jn.langx.util.function.Predicate;
 
 import java.util.List;
 
-public abstract class HttpRequestParameterController
-{
+public class HttpRequestParameterController {
     private static final List<String> TRUE_VALUES;
 
     protected String getParameter(final String name) {
@@ -147,7 +146,6 @@ public abstract class HttpRequestParameterController
 
     protected Boolean getBooleanParameter(final String name, final boolean defaultValue) {
         final String valueOpt = this.getParameter(name);
-        final Boolean ret = null;
         if (!Strings.isBlank(valueOpt)) {
             return isTrue(name);
         }
@@ -158,7 +156,7 @@ public abstract class HttpRequestParameterController
         final List<String> valueOpt = this.getParameters(name);
         List<Boolean> ret = null;
         if (valueOpt != null) {
-            ret = Pipeline.of(valueOpt).map(new Function<String,Boolean>(){
+            ret = Pipeline.of(valueOpt).map(new Function<String, Boolean>() {
                 @Override
                 public Boolean apply(String input) {
                     return isTrue(input);
