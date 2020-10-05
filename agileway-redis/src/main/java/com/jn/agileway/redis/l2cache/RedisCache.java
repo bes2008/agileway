@@ -1,0 +1,228 @@
+package com.jn.agileway.redis.l2cache;
+
+import com.jn.agileway.redis.redistemplate.key.RedisKeyWrapper;
+import com.jn.agileway.redis.redistemplate.IredisTemplate;
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
+import com.jn.langx.cache.*;
+import com.jn.langx.util.Emptys;
+import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.function.Consumer2;
+import com.jn.langx.util.function.Supplier;
+import org.springframework.data.redis.core.BoundValueOperations;
+
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+
+public class RedisCache<V> implements Cache<String, V> {
+    @NonNull
+    private IredisTemplate<String, V> redisTemplate;
+    @Nullable
+    private Loader<String, V> loader;
+    // unit: seconds
+    @Nullable
+    private RemoveListener removeListener = RemoveListeners.noop();
+
+    @NonNull
+    private RedisKeyWrapper keyWrapper = new RedisKeyWrapper().prefix("iredis:cache");
+
+    @Override
+    public void set(String key, V value) {
+        BoundValueOperations<String, V> valueOperations = redisTemplate.boundValueOps(keyWrapper.wrap(key));
+        valueOperations.set(value);
+    }
+
+    @Override
+    public void set(String key, V value, long expire) {
+        long now = System.currentTimeMillis();
+        long ttl = expire - now;
+        set(key, value, ttl, TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    public void set(String key, V value, long ttl, TimeUnit timeUnit) {
+        BoundValueOperations<String, V> valueOperations = redisTemplate.boundValueOps(keyWrapper.wrap(key));
+        if (ttl < 0) {
+            valueOperations.set(value);
+        }
+        if (ttl > 0) {
+            valueOperations.set(value, ttl, timeUnit);
+        }
+    }
+
+    @Override
+    public V get(String key) {
+        V v = getFromRedis(key);
+        if (v == null && loader != null) {
+            v = loader.load(key);
+            if (v != null) {
+                set(key, v);
+            }
+        }
+        return v;
+    }
+
+    private V getFromRedis(String unwrappedKey) {
+        V v = null;
+        BoundValueOperations<String, V> valueOperations = redisTemplate.boundValueOps(keyWrapper.wrap(unwrappedKey));
+        v = valueOperations.get();
+        return v;
+    }
+
+    private V getAndUpdateExpireTime(String key, long durationMills) {
+        return redisTemplate.executeScript("GetAndUpdateExpireTime", Collects.asList(keyWrapper.wrap(key)), durationMills);
+    }
+
+    @Override
+    public Map<String, V> getAll(Iterable<String> keys) {
+        List<String> keyList = keyWrapper.wrap(keys);
+        List<V> values = redisTemplate.opsForValue().multiGet(keyList);
+        Map<String, V> map = new HashMap<String, V>();
+        if (Emptys.isNotEmpty(values)) {
+            Collects.forEach(keyList, new Consumer2<Integer, String>() {
+                @Override
+                public void accept(Integer index, String wrappedKey) {
+                    String unwrappedKey = keyWrapper.unwrap(wrappedKey);
+                    V v = values.get(index);
+                    if (v == null && loader != null) {
+                        v = loader.load(unwrappedKey);
+                        if (v != null) {
+                            set(unwrappedKey, v);
+                        }
+                    }
+                    map.put(unwrappedKey, v);
+                }
+            });
+        }
+        return map;
+    }
+
+    @Override
+    public Map<String, V> getAllIfPresent(Iterable<String> keys) {
+        List<String> keyList = Collects.asList(keys);
+        List<V> values = redisTemplate.opsForValue().multiGet(keyList);
+        Map<String, V> map = new HashMap<String, V>();
+        Collects.forEach(keyList, new Consumer2<Integer, String>() {
+            @Override
+            public void accept(Integer index, String key) {
+                V v = values.get(index);
+                if (v != null) {
+                    map.put(key, v);
+                }
+            }
+        });
+        return map;
+    }
+
+    @Override
+    public V getIfPresent(String key) {
+        BoundValueOperations<String, V> valueOperations = redisTemplate.boundValueOps(key);
+        return valueOperations.get();
+    }
+
+    @Override
+    public V get(String key, Supplier<String, V> loader) {
+        V value = getFromRedis(key);
+        if (value == null) {
+            if (loader != null) {
+                value = loader.get(key);
+            }
+            if (value == null && this.loader != null) {
+                value = this.loader.load(key);
+            }
+        }
+        if (value != null) {
+            set(key, value);
+        }
+        return null;
+    }
+
+    @Override
+    public V remove(String key) {
+        V ret = redisTemplate.executeScript("GetAndRemove", Collects.asList(keyWrapper.wrap(key)));
+        removeListener.onRemove(key, ret, RemoveCause.EXPLICIT);
+        return ret;
+    }
+
+    @Override
+    public List<V> remove(Collection<String> keys) {
+        return redisTemplate.executeScript("mGetAndRemove", keyWrapper.wrap(keys));
+    }
+
+    @Override
+    public void refresh(String key) {
+        if (loader != null) {
+            V v = loader.load(key);
+            if (v == null) {
+                redisTemplate.delete(keyWrapper.wrap(key));
+            } else {
+                set(key, v);
+                removeListener.onRemove(key, v, RemoveCause.REPLACED);
+            }
+        }
+    }
+
+
+    @Override
+    public void clean() {
+        Set<String> wrappedKeys = redisTemplate.keys(keyWrapper.wrap("*"));
+        redisTemplate.delete(wrappedKeys);
+    }
+
+    @Override
+    public int size() {
+        Set<String> wrappedKeys = redisTemplate.keys(keyWrapper.wrap("*"));
+        return com.jn.langx.util.Objects.length(wrappedKeys);
+    }
+
+    @Override
+    public Map<String, V> toMap() {
+        Set<String> wrappedKeys = redisTemplate.keys(keyWrapper.wrap("*"));
+        List<V> values = redisTemplate.opsForValue().multiGet(wrappedKeys);
+        Map<String, V> map = Collects.<String, V>emptyHashMap();
+        Collects.forEach(wrappedKeys, new Consumer2<Integer, String>() {
+            @Override
+            public void accept(Integer index, String wrappedKey) {
+                String unwrappedKey = keyWrapper.unwrap(wrappedKey);
+                map.put(unwrappedKey, values.get(index));
+            }
+        });
+        return map;
+    }
+
+    public void setRemoveListener(RemoveListener removeListener) {
+        if (removeListener != null) {
+            this.removeListener = removeListener;
+        }
+    }
+
+    public IredisTemplate<String, V> getRedisTemplate() {
+        return redisTemplate;
+    }
+
+    public void setRedisTemplate(IredisTemplate<String, V> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
+
+    public Loader<String, V> getLoader() {
+        return loader;
+    }
+
+    public void setLoader(Loader<String, V> loader) {
+        this.loader = loader;
+    }
+
+    public RemoveListener getRemoveListener() {
+        return removeListener;
+    }
+
+    public RedisKeyWrapper getKeyWrapper() {
+        return keyWrapper;
+    }
+
+    public void setKeyWrapper(RedisKeyWrapper keyWrapper) {
+        if (keyWrapper != null) {
+            this.keyWrapper = keyWrapper;
+        }
+    }
+}

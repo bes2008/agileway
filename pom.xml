@@ -13,6 +13,8 @@
         <module>agileway-spring</module>
         <module>agileway-feign</module>
         <module>agileway-jdbc-datasource</module>
+        <module>agileway-redis</module>
+        <module>agileway-shiro-redis</module>
     </modules>
 
     <name>agileway</name>
@@ -53,12 +55,11 @@
         </license>
     </licenses>
     <properties>
-        <langx.version>2.9.0</langx.version>
+        <langx.version>2.10.0</langx.version>
         <easyjson.version>3.0.3</easyjson.version>
     </properties>
     <dependencyManagement>
         <dependencies>
-
             <dependency>
                 <groupId>com.github.fangjinuo.agileway</groupId>
                 <artifactId>agileway-web</artifactId>
@@ -69,7 +70,16 @@
                 <artifactId>agileway-spring</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.github.fangjinuo.agileway</groupId>
+                <artifactId>agileway-redis</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fangjinuo.agileway</groupId>
+                <artifactId>agileway-shiro-redis</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.github.fangjinuo.langx</groupId>
                 <artifactId>langx-java</artifactId>
@@ -85,6 +95,7 @@
                 <artifactId>easyjson-core</artifactId>
                 <version>${easyjson.version}</version>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
 
