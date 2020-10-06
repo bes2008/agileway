@@ -7,6 +7,7 @@ import com.jn.agileway.redis.redistemplate.serialization.RedisKeySerializer;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
 import com.jn.agileway.redis.redistemplate.script.RedisLuaScriptRepository;
+import com.jn.easyjson.core.factory.JsonScope;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Preconditions;
@@ -31,7 +32,7 @@ public class RedisTemplates {
     ) {
         Preconditions.checkNotNull(beanClass, "the target class is null");
         EasyjsonRedisSerializer easyjsonRedisSerializer = new EasyjsonRedisSerializer();
-        easyjsonRedisSerializer.setJsonFactory(JsonFactorys.getJSONFactory());
+        easyjsonRedisSerializer.setJsonFactory(JsonFactorys.getJSONFactory(JsonScope.SINGLETON));
         easyjsonRedisSerializer.setTargetType(beanClass);
         return createRedisTemplate(connectionFactory, keyPrefix, easyjsonRedisSerializer, beanClass.getClassLoader(), null, hashKeySerializer, hashValueSerializer, redisLuaScriptRepository, enableTx, initIt);
     }
