@@ -54,6 +54,28 @@
             <distribution>manual</distribution>
         </license>
     </licenses>
+
+    <repositories>
+        <repository>
+            <id>aliyun</id>
+            <url>https://maven.aliyun.com/repository/central</url>
+            <name>aliyun</name>
+            <layout>default</layout>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2/</url>
+            <name>central</name>
+            <layout>default</layout>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
     <properties>
         <langx.version>2.10.0</langx.version>
         <easyjson.version>3.0.3</easyjson.version>

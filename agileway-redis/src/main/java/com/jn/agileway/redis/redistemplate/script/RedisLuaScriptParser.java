@@ -53,7 +53,7 @@ public class RedisLuaScriptParser implements InputStreamConfigurationParser<Redi
                     return;
                 }
                 List<String> segments = Pipeline.of(comment.split(" ,;"))
-                        .filter(Functions.notEmptyPredicate())
+                        .filter(Functions.<String>notEmptyPredicate())
                         .clearNulls()
                         .asList();
                 if (!segments.isEmpty()) {
@@ -76,7 +76,7 @@ public class RedisLuaScriptParser implements InputStreamConfigurationParser<Redi
         return returnTypeHolder.get();
     }
 
-    private boolean isBooleanType(String string) {
+    private boolean isBooleanType(final String string) {
         return Pipeline.of("java.lang.Boolean", "boolean").anyMatch(new Predicate<String>() {
             @Override
             public boolean test(String type) {
@@ -85,7 +85,7 @@ public class RedisLuaScriptParser implements InputStreamConfigurationParser<Redi
         });
     }
 
-    private boolean isLongType(String string) {
+    private boolean isLongType(final String string) {
         return Pipeline.of("java.lang.Long", "long").anyMatch(new Predicate<String>() {
             @Override
             public boolean test(String type) {
@@ -94,7 +94,7 @@ public class RedisLuaScriptParser implements InputStreamConfigurationParser<Redi
         });
     }
 
-    private boolean isListType(String string) {
+    private boolean isListType(final String string) {
         return Pipeline.of("java.util.List", "list", "table").anyMatch(new Predicate<String>() {
             @Override
             public boolean test(String type) {

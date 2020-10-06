@@ -76,8 +76,8 @@ public class RedisCache<V> implements Cache<String, V> {
     @Override
     public Map<String, V> getAll(Iterable<String> keys) {
         List<String> keyList = keyWrapper.wrap(keys);
-        List<V> values = redisTemplate.opsForValue().multiGet(keyList);
-        Map<String, V> map = new HashMap<String, V>();
+        final List<V> values = redisTemplate.opsForValue().multiGet(keyList);
+        final Map<String, V> map = new HashMap<String, V>();
         if (Emptys.isNotEmpty(values)) {
             Collects.forEach(keyList, new Consumer2<Integer, String>() {
                 @Override
@@ -100,8 +100,8 @@ public class RedisCache<V> implements Cache<String, V> {
     @Override
     public Map<String, V> getAllIfPresent(Iterable<String> keys) {
         List<String> keyList = Collects.asList(keys);
-        List<V> values = redisTemplate.opsForValue().multiGet(keyList);
-        Map<String, V> map = new HashMap<String, V>();
+        final List<V> values = redisTemplate.opsForValue().multiGet(keyList);
+        final Map<String, V> map = new HashMap<String, V>();
         Collects.forEach(keyList, new Consumer2<Integer, String>() {
             @Override
             public void accept(Integer index, String key) {
@@ -178,8 +178,8 @@ public class RedisCache<V> implements Cache<String, V> {
     @Override
     public Map<String, V> toMap() {
         Set<String> wrappedKeys = redisTemplate.keys(keyWrapper.wrap("*"));
-        List<V> values = redisTemplate.opsForValue().multiGet(wrappedKeys);
-        Map<String, V> map = Collects.<String, V>emptyHashMap();
+        final List<V> values = redisTemplate.opsForValue().multiGet(wrappedKeys);
+        final Map<String, V> map = Collects.<String, V>emptyHashMap();
         Collects.forEach(wrappedKeys, new Consumer2<Integer, String>() {
             @Override
             public void accept(Integer index, String wrappedKey) {
