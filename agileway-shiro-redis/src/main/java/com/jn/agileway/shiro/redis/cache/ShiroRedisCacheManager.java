@@ -3,7 +3,7 @@ package com.jn.agileway.shiro.redis.cache;
 import com.jn.agileway.redis.l2cache.RedisCache;
 import com.jn.agileway.redis.l2cache.RedisCacheContext;
 import com.jn.agileway.redis.l2cache.RedisCacheFactory;
-import com.jn.agileway.redis.redistemplate.IredisTemplate;
+import com.jn.agileway.redis.redistemplate.RedisTemplate;
 import com.jn.agileway.redis.redistemplate.key.RedisKeyWrapper;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
@@ -19,7 +19,7 @@ import org.apache.shiro.cache.CacheException;
 public class ShiroRedisCacheManager extends AbstractCacheManager {
 
     @NonNull
-    private IredisTemplate redisTemplate;
+    private RedisTemplate redisTemplate;
     @Nullable
     private Loader<String, ?> loader;
     @Nullable
@@ -45,11 +45,11 @@ public class ShiroRedisCacheManager extends AbstractCacheManager {
         return shiroRedisCache;
     }
 
-    public IredisTemplate getRedisTemplate() {
+    public RedisTemplate getRedisTemplate() {
         return redisTemplate;
     }
 
-    public void setRedisTemplate(IredisTemplate redisTemplate) {
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 

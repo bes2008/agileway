@@ -20,7 +20,7 @@ public class RedisTemplates {
 
     public static final StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
 
-    public static IredisTemplate<String, ?> createBeanJsonRedisTemplate(
+    public static RedisTemplate<String, ?> createBeanJsonRedisTemplate(
             @NonNull RedisConnectionFactory connectionFactory,
             @Nullable String keyPrefix,
             @NonNull Class beanClass,
@@ -37,7 +37,7 @@ public class RedisTemplates {
         return createRedisTemplate(connectionFactory, keyPrefix, easyjsonRedisSerializer, beanClass.getClassLoader(), null, hashKeySerializer, hashValueSerializer, redisLuaScriptRepository, enableTx, initIt);
     }
 
-    public static IredisTemplate<String, ?> createBeanRedisTemplate(
+    public static RedisTemplate<String, ?> createBeanRedisTemplate(
             @NonNull RedisConnectionFactory connectionFactory,
             @Nullable String keyPrefix,
             @NonNull Class<?> beanClass,
@@ -53,7 +53,7 @@ public class RedisTemplates {
         return createRedisTemplate(connectionFactory, keyPrefix, beanSerializer, beanClass.getClassLoader(), null, hashKeySerializer, hashValueSerializer, redisLuaScriptRepository, enableTx, initIt);
     }
 
-    public static IredisTemplate<String, ?> createEasyjsonCommonJsonRedisTemplate(
+    public static RedisTemplate<String, ?> createEasyjsonCommonJsonRedisTemplate(
             @NonNull RedisConnectionFactory connectionFactory,
             @Nullable String keyPrefix,
             @NonNull JSONFactory jsonFactory,
@@ -69,7 +69,7 @@ public class RedisTemplates {
         return createRedisTemplate(connectionFactory, keyPrefix, easyjsonRedisSerializer, beanClassLoader, null, hashKeySerializer, hashValueSerializer, redisLuaScriptRepository, enableTx, initIt);
     }
 
-    public static IredisTemplate<String, ?> createJacksonCommonJsonRedisTemplate(
+    public static RedisTemplate<String, ?> createJacksonCommonJsonRedisTemplate(
             @NonNull RedisConnectionFactory connectionFactory,
             @Nullable String keyPrefix,
             @Nullable ClassLoader beanClassLoader,
@@ -84,7 +84,7 @@ public class RedisTemplates {
     }
 
 
-    public static IredisTemplate<String, ?> createRedisTemplate(
+    public static RedisTemplate<String, ?> createRedisTemplate(
             @NonNull RedisConnectionFactory connectionFactory,
             @Nullable String keyPrefix,
             @NonNull RedisSerializer<?> valueSerializer,
@@ -96,7 +96,7 @@ public class RedisTemplates {
     }
 
 
-    public static IredisTemplate<String, ?> createRedisTemplate(
+    public static RedisTemplate<String, ?> createRedisTemplate(
             @NonNull RedisConnectionFactory connectionFactory,
             @Nullable String keyPrefix,
             @NonNull RedisSerializer<?> valueSerializer,
@@ -116,7 +116,7 @@ public class RedisTemplates {
         return createRedisTemplate(connectionFactory, redisKeySerializer, valueSerializer, beanClassLoader, stringSerializer, hashKeySerializer, hashValueSerializer, redisLuaScriptRepository, enableTx,initIt);
     }
 
-    public static IredisTemplate<String, ?> createRedisTemplate(
+    public static RedisTemplate<String, ?> createRedisTemplate(
             @NonNull RedisConnectionFactory connectionFactory,
             @Nullable RedisSerializer<String> keySerializer,
             @NonNull RedisSerializer<?> valueSerializer,
@@ -128,7 +128,7 @@ public class RedisTemplates {
             boolean enableTx,
             boolean initIt
     ) {
-        IredisTemplate<String, ?> redisTemplate = new IredisTemplate<String, Object>();
+        RedisTemplate<String, ?> redisTemplate = new RedisTemplate<String, Object>();
         Preconditions.checkNotNull(connectionFactory, "the redis connection factory is null");
         redisTemplate.setConnectionFactory(connectionFactory);
 

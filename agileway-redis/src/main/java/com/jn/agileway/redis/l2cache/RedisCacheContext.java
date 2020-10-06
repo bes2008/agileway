@@ -1,7 +1,7 @@
 package com.jn.agileway.redis.l2cache;
 
 import com.jn.agileway.redis.redistemplate.key.RedisKeyWrapper;
-import com.jn.agileway.redis.redistemplate.IredisTemplate;
+import com.jn.agileway.redis.redistemplate.RedisTemplate;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.cache.Loader;
@@ -9,7 +9,7 @@ import com.jn.langx.cache.RemoveListener;
 
 public class RedisCacheContext {
     @NonNull
-    private IredisTemplate redisTemplate;
+    private RedisTemplate redisTemplate;
     @Nullable
     private Loader<String, ?> loader;
     @Nullable
@@ -24,11 +24,11 @@ public class RedisCacheContext {
         this.keyWrapper = keyWrapper;
     }
 
-    public IredisTemplate getRedisTemplate() {
+    public RedisTemplate getRedisTemplate() {
         return redisTemplate;
     }
 
-    public void setRedisTemplate(IredisTemplate redisTemplate) {
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 

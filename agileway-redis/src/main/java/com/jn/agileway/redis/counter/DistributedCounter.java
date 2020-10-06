@@ -1,14 +1,14 @@
 package com.jn.agileway.redis.counter;
 
-import com.jn.agileway.redis.redistemplate.IredisTemplate;
+import com.jn.agileway.redis.redistemplate.RedisTemplate;
 import com.jn.langx.util.struct.counter.Counter;
 
 public interface DistributedCounter extends Counter<Long> {
     void clear();
 
-    IredisTemplate getRedisTemplate();
+    RedisTemplate getRedisTemplate();
 
-    void setRedisTemplate(IredisTemplate redisTemplate);
+    void setRedisTemplate(RedisTemplate redisTemplate);
 
     String getCounterKey();
 

@@ -1,6 +1,6 @@
 package com.jn.agileway.shiro.redis.session;
 
-import com.jn.agileway.redis.redistemplate.IredisTemplate;
+import com.jn.agileway.redis.redistemplate.RedisTemplate;
 import com.jn.agileway.redis.redistemplate.key.RedisKeyWrapper;
 import com.jn.langx.IdGenerator;
 import com.jn.langx.text.StringTemplates;
@@ -15,7 +15,7 @@ import java.util.Collection;
 
 public class RedisSessionDAO extends AbstractSessionDAO {
     private static final Logger logger = LoggerFactory.getLogger(RedisSessionDAO.class);
-    private IredisTemplate<String, Session> redisTemplate;
+    private RedisTemplate<String, Session> redisTemplate;
 
     private RedisKeyWrapper sessionKeyWrapper = new RedisKeyWrapper().prefix("shiro:session");
 
@@ -84,7 +84,7 @@ public class RedisSessionDAO extends AbstractSessionDAO {
         setSessionIdGenerator(new SessionIdGeneratorAdapter(uuidGenerator));
     }
 
-    public void setRedisTemplate(IredisTemplate<String, Session> redisTemplate) {
+    public void setRedisTemplate(RedisTemplate<String, Session> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 

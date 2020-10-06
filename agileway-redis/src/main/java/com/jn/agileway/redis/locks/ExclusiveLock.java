@@ -1,6 +1,6 @@
 package com.jn.agileway.redis.locks;
 
-import com.jn.agileway.redis.redistemplate.IredisTemplate;
+import com.jn.agileway.redis.redistemplate.RedisTemplate;
 import com.jn.langx.Builder;
 import com.jn.langx.annotation.NotThreadSafe;
 import com.jn.langx.util.collection.Collects;
@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 @NotThreadSafe
 public class ExclusiveLock extends DistributedLock {
 
-    private IredisTemplate redisTemplate;
+    private RedisTemplate redisTemplate;
     /**
      * 需要对 resource上锁
      */
@@ -140,11 +140,11 @@ public class ExclusiveLock extends DistributedLock {
     }
 
 
-    public IredisTemplate getRedisTemplate() {
+    public RedisTemplate getRedisTemplate() {
         return redisTemplate;
     }
 
-    public void setRedisTemplate(IredisTemplate redisTemplate) {
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 

@@ -1,13 +1,13 @@
 package com.jn.agileway.redis.counter;
 
-import com.jn.agileway.redis.redistemplate.IredisTemplate;
+import com.jn.agileway.redis.redistemplate.RedisTemplate;
 
 public class HashedDistributedCounter implements DistributedCounter {
-    private IredisTemplate redisTemplate;
+    private RedisTemplate redisTemplate;
     private String key;
     private String counterKey; // the key in a hash
 
-    public HashedDistributedCounter(IredisTemplate redisTemplate, String key, String counterKey){
+    public HashedDistributedCounter(RedisTemplate redisTemplate, String key, String counterKey){
         setRedisTemplate(redisTemplate);
         setKey(key);
         setCounterKey(counterKey);
@@ -49,12 +49,12 @@ public class HashedDistributedCounter implements DistributedCounter {
     }
 
     @Override
-    public IredisTemplate getRedisTemplate() {
+    public RedisTemplate getRedisTemplate() {
         return this.redisTemplate;
     }
 
     @Override
-    public void setRedisTemplate(IredisTemplate redisTemplate) {
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 

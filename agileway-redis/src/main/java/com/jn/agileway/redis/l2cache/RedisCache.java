@@ -1,7 +1,7 @@
 package com.jn.agileway.redis.l2cache;
 
 import com.jn.agileway.redis.redistemplate.key.RedisKeyWrapper;
-import com.jn.agileway.redis.redistemplate.IredisTemplate;
+import com.jn.agileway.redis.redistemplate.RedisTemplate;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.cache.*;
@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 public class RedisCache<V> implements Cache<String, V> {
     @NonNull
-    private IredisTemplate<String, V> redisTemplate;
+    private RedisTemplate<String, V> redisTemplate;
     @Nullable
     private Loader<String, V> loader;
     // unit: seconds
@@ -196,11 +196,11 @@ public class RedisCache<V> implements Cache<String, V> {
         }
     }
 
-    public IredisTemplate<String, V> getRedisTemplate() {
+    public RedisTemplate<String, V> getRedisTemplate() {
         return redisTemplate;
     }
 
-    public void setRedisTemplate(IredisTemplate<String, V> redisTemplate) {
+    public void setRedisTemplate(RedisTemplate<String, V> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 

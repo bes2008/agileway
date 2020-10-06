@@ -2,12 +2,11 @@ package com.jn.agileway.redis.redistemplate;
 
 import com.jn.agileway.redis.redistemplate.script.RedisLuaScript;
 import com.jn.agileway.redis.redistemplate.script.RedisLuaScriptRepository;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
 import java.util.List;
 
-public class IredisTemplate<K, V> extends RedisTemplate<K, V> {
+public class RedisTemplate<K, V> extends org.springframework.data.redis.core.RedisTemplate<K, V> {
     private RedisLuaScriptRepository luaScriptRepository;
 
     public RedisLuaScript findRedisScript(String scriptId) {
