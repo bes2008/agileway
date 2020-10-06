@@ -4,7 +4,7 @@ import com.jn.agileway.redis.l2cache.RedisCache;
 import com.jn.agileway.redis.l2cache.RedisCacheContext;
 import com.jn.agileway.redis.l2cache.RedisCacheFactory;
 import com.jn.agileway.redis.redistemplate.RedisTemplate;
-import com.jn.agileway.redis.redistemplate.key.RedisKeyWrapper;
+import com.jn.agileway.redis.key.RedisKeyWrapper;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.cache.Loader;

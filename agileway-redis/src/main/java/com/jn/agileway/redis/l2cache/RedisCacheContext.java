@@ -1,6 +1,6 @@
 package com.jn.agileway.redis.l2cache;
 
-import com.jn.agileway.redis.redistemplate.key.RedisKeyWrapper;
+import com.jn.agileway.redis.key.RedisKeyWrapper;
 import com.jn.agileway.redis.redistemplate.RedisTemplate;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;

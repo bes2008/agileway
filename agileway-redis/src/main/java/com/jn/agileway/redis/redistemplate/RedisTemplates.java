@@ -1,7 +1,7 @@
 package com.jn.agileway.redis.redistemplate;
 
-import com.jn.agileway.redis.redistemplate.key.RedisKeyProperties;
-import com.jn.agileway.redis.redistemplate.key.RedisKeyWrapper;
+import com.jn.agileway.redis.key.RedisKeyProperties;
+import com.jn.agileway.redis.key.RedisKeyWrapper;
 import com.jn.agileway.redis.redistemplate.serialization.EasyjsonRedisSerializer;
 import com.jn.agileway.redis.redistemplate.serialization.RedisKeySerializer;
 import com.jn.easyjson.core.JSONFactory;

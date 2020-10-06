@@ -1,7 +1,7 @@
 package com.jn.agileway.shiro.redis.session;
 
 import com.jn.agileway.redis.redistemplate.RedisTemplate;
-import com.jn.agileway.redis.redistemplate.key.RedisKeyWrapper;
+import com.jn.agileway.redis.key.RedisKeyWrapper;
 import com.jn.langx.IdGenerator;
 import com.jn.langx.text.StringTemplates;
 import org.apache.shiro.session.Session;

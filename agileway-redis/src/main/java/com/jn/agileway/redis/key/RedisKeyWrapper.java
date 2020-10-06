@@ -1,4 +1,4 @@
-package com.jn.agileway.redis.redistemplate.key;
+package com.jn.agileway.redis.key;
 
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
