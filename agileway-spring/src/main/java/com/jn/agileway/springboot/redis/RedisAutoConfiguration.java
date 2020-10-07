@@ -7,17 +7,27 @@ import com.jn.agileway.redis.redistemplate.RedisTemplates;
 import com.jn.agileway.redis.redistemplate.script.RedisLuaScriptRepository;
 import com.jn.agileway.redis.redistemplate.serialization.EasyjsonRedisSerializer;
 import com.jn.agileway.redis.redistemplate.serialization.RedisKeySerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 
-@ConditionalOnBean(RedisConnectionFactory.class)
+@Configuration
+@AutoConfigureAfter(value={
+        RedisLuaScriptRepositoryAutoConfiguration.class,
+        RedisConnectionFactory.class
+})
+@ConditionalOnProperty(name = "agileway.redis.global-template.enabled", havingValue = "true", matchIfMissing = false)
 public class RedisAutoConfiguration {
+    private static final Logger logger = LoggerFactory.getLogger(RedisAutoConfiguration.class);
 
     @Bean(name = "globalRedisKeyProperties")
-    @ConfigurationProperties(prefix = "agileway.redis.global-key")
+    @ConfigurationProperties(prefix = "agileway.redis.global-template.key")
     public RedisKeyProperties globalRedisKeyProperties() {
         return new RedisKeyProperties();
     }
@@ -25,13 +35,6 @@ public class RedisAutoConfiguration {
     @Bean(name = "globalRedisKeyWrapper")
     public RedisKeyWrapper globalRedisKeyWrapper(@Qualifier("globalRedisKeyProperties") RedisKeyProperties globalRedisKeyProperties) {
         return new RedisKeyWrapper(globalRedisKeyProperties);
-    }
-
-    @Bean
-    public RedisLuaScriptRepository redisLuaScriptRepository() {
-        RedisLuaScriptRepository repository = new RedisLuaScriptRepository();
-        repository.init();
-        return repository;
     }
 
     @Bean(name = "globalRedisTemplate")
@@ -50,6 +53,7 @@ public class RedisAutoConfiguration {
                 luaScriptRepository,
                 false, true
         );
+        logger.info("====== Initial the global redis template ======");
         return redisTemplate;
     }
 
