@@ -17,7 +17,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 public class RedisAutoConfiguration {
 
     @Bean(name = "globalRedisKeyProperties")
-    @ConfigurationProperties(prefix = "spring.redis.global")
+    @ConfigurationProperties(prefix = "agileway.redis.global-key")
     public RedisKeyProperties globalRedisKeyProperties() {
         return new RedisKeyProperties();
     }
@@ -36,7 +36,7 @@ public class RedisAutoConfiguration {
 
     @Bean(name = "globalRedisTemplate")
     public RedisTemplate globalRedisTemplate(RedisConnectionFactory redisConnectionFactory,
-                                             @Qualifier("licenseGlobalRedisKeyWrapper") RedisKeyWrapper redisKeyWrapper,
+                                             @Qualifier("globalRedisKeyWrapper") RedisKeyWrapper redisKeyWrapper,
                                              RedisLuaScriptRepository luaScriptRepository) {
         EasyjsonRedisSerializer valueSerializer = new EasyjsonRedisSerializer<>();
         valueSerializer.setSerializeType(true);

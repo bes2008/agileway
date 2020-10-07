@@ -5,6 +5,7 @@ import com.jn.agileway.redis.redistemplate.RedisTemplates;
 import com.jn.agileway.redis.redistemplate.script.RedisLuaScriptRepository;
 import com.jn.agileway.redis.redistemplate.serialization.EasyjsonRedisSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.BoundValueOperations;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
@@ -21,13 +22,16 @@ public class StringValueController {
     private RedisConnectionFactory connectionFactory;
     private RedisLuaScriptRepository repository;
 
+    @Value("agileway.redis.global-key.prefix")
+    private String keyPrefix;
+
     private RedisTemplate createRedisTemplate(TestScope scope) {
         RedisTemplate<String, ?> RedisTemplate = null;
         switch (scope) {
             case JACKSON_COMMON:
                 RedisTemplate = RedisTemplates.createRedisTemplate(
                         connectionFactory,
-                        "iredis",
+                        keyPrefix,
                         new GenericJackson2JsonRedisSerializer(),
                         StringValueController.class.getClassLoader(),
                         RedisTemplates.stringRedisSerializer,
@@ -42,7 +46,7 @@ public class StringValueController {
 
                 RedisTemplate = RedisTemplates.createRedisTemplate(
                         connectionFactory,
-                        "iredis",
+                        keyPrefix,
                         jsonSerializer,
                         StringValueController.class.getClassLoader(),
                         RedisTemplates.stringRedisSerializer,
@@ -54,7 +58,7 @@ public class StringValueController {
             default:
                 RedisTemplate = RedisTemplates.createRedisTemplate(
                         connectionFactory,
-                        "iredis",
+                        keyPrefix,
                         new StringRedisSerializer(),
                         StringValueController.class.getClassLoader(),
                         RedisTemplates.stringRedisSerializer,
