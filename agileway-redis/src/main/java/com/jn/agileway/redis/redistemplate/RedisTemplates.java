@@ -1,12 +1,11 @@
 package com.jn.agileway.redis.redistemplate;
 
-import com.jn.agileway.redis.key.RedisKeyProperties;
 import com.jn.agileway.redis.key.RedisKeyWrapper;
+import com.jn.agileway.redis.redistemplate.script.RedisLuaScriptRepository;
 import com.jn.agileway.redis.redistemplate.serialization.EasyjsonRedisSerializer;
 import com.jn.agileway.redis.redistemplate.serialization.RedisKeySerializer;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
-import com.jn.agileway.redis.redistemplate.script.RedisLuaScriptRepository;
 import com.jn.easyjson.core.factory.JsonScope;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
@@ -92,7 +91,7 @@ public class RedisTemplates {
             boolean enableTx,
             boolean initIt
     ) {
-        return createRedisTemplate(connectionFactory, keyPrefix, valueSerializer, null, null, null, null, redisLuaScriptRepository, enableTx,initIt);
+        return createRedisTemplate(connectionFactory, keyPrefix, valueSerializer, null, null, null, null, redisLuaScriptRepository, enableTx, initIt);
     }
 
 
@@ -108,12 +107,25 @@ public class RedisTemplates {
             boolean enableTx,
             boolean initIt
     ) {
+        RedisKeyWrapper keyWrapper = new RedisKeyWrapper().prefix(keyPrefix);
+        return createRedisTemplate(connectionFactory, keyWrapper, valueSerializer, beanClassLoader, stringSerializer, hashKeySerializer, hashValueSerializer, redisLuaScriptRepository, enableTx, initIt);
+    }
+
+    public static RedisTemplate<String, ?> createRedisTemplate(
+            @NonNull RedisConnectionFactory connectionFactory,
+            @NonNull RedisKeyWrapper keyWrapper,
+            @NonNull RedisSerializer<?> valueSerializer,
+            @Nullable ClassLoader beanClassLoader,
+            @Nullable RedisSerializer<String> stringSerializer,
+            @Nullable RedisSerializer<?> hashKeySerializer,
+            @Nullable RedisSerializer<?> hashValueSerializer,
+            @Nullable RedisLuaScriptRepository redisLuaScriptRepository,
+            boolean enableTx,
+            boolean initIt
+    ) {
         RedisKeySerializer redisKeySerializer = new RedisKeySerializer();
-        RedisKeyProperties keyProperties = new RedisKeyProperties();
-        keyProperties.setPrefix(keyPrefix);
-        RedisKeyWrapper keyWrapper = new RedisKeyWrapper(keyProperties);
         redisKeySerializer.setKeyWrapper(keyWrapper);
-        return createRedisTemplate(connectionFactory, redisKeySerializer, valueSerializer, beanClassLoader, stringSerializer, hashKeySerializer, hashValueSerializer, redisLuaScriptRepository, enableTx,initIt);
+        return createRedisTemplate(connectionFactory, redisKeySerializer, valueSerializer, beanClassLoader, stringSerializer, hashKeySerializer, hashValueSerializer, redisLuaScriptRepository, enableTx, initIt);
     }
 
     public static RedisTemplate<String, ?> createRedisTemplate(
@@ -155,7 +167,7 @@ public class RedisTemplates {
 
         redisTemplate.setEnableTransactionSupport(enableTx);
 
-        if(initIt) {
+        if (initIt) {
             redisTemplate.afterPropertiesSet();
         }
         return redisTemplate;
