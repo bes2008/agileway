@@ -1,5 +1,6 @@
 package com.jn.agileway.redis.key;
 
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Pipeline;
@@ -7,6 +8,7 @@ import com.jn.langx.util.function.Function;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public class RedisKeyWrapper {
     public static final String SEPARATOR_DEFAULT = ":";
@@ -46,6 +48,24 @@ public class RedisKeyWrapper {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        RedisKeyWrapper that = (RedisKeyWrapper) o;
+        if (!Objects.equals(prefix, that.prefix)) {
+            return false;
+        }
+        return Objects.equals(separation, that.separation);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objs.hash(prefix, separation);
+    }
+
+    @Override
     public String toString() {
         return "RedisKeyWrapper{" +
                 "prefix='" + prefix + '\'' +
@@ -65,7 +85,7 @@ public class RedisKeyWrapper {
         return prefix + key;
     }
 
-    public List<String> wrap(Iterable<String> keys){
+    public List<String> wrap(Iterable<String> keys) {
         return Pipeline.of(keys).map(new Function<String, String>() {
             @Override
             public String apply(String key) {
@@ -74,7 +94,7 @@ public class RedisKeyWrapper {
         }).asList();
     }
 
-    public List<String> unwrap(Iterable<String> keys){
+    public List<String> unwrap(Iterable<String> keys) {
         return Pipeline.of(keys).map(new Function<String, String>() {
             @Override
             public String apply(String key) {

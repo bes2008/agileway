@@ -77,7 +77,7 @@
     </repositories>
 
     <properties>
-        <langx.version>2.10.0</langx.version>
+        <langx.version>2.10.1</langx.version>
         <easyjson.version>3.0.3</easyjson.version>
     </properties>
     <dependencyManagement>
