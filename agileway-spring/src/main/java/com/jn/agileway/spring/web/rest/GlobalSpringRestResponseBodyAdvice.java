@@ -4,6 +4,7 @@ import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -19,12 +20,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestControllerAdvice
-public class GlobalSpringRestResponseBodyAdvice implements ResponseBodyAdvice {
+public class GlobalSpringRestResponseBodyAdvice implements ResponseBodyAdvice, InitializingBean {
     private static final Logger logger = LoggerFactory.getLogger(GlobalSpringRestResponseBodyAdvice.class);
     private GlobalSpringRestResponseBodyHandler responseBodyHandler;
 
-    public GlobalSpringRestResponseBodyAdvice(){
-        logger.info("Register a spring global rest response body advice: {} ", Reflects.getFQNClassName(getClass()));
+    public GlobalSpringRestResponseBodyAdvice() {
+
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        logger.info("Initial the spring global rest response body advice: {} ", Reflects.getFQNClassName(getClass()));
     }
 
     @Override
