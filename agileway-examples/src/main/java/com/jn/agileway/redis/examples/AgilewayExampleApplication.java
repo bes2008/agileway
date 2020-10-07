@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class IredisExampleApplication {
+public class AgilewayExampleApplication {
     public static void main(String[] args) throws InterruptedException {
-        SpringApplication.run(IredisExampleApplication.class, args);
+        SpringApplication.run(AgilewayExampleApplication.class, args);
         Thread.sleep(1000000000);
     }
 }
