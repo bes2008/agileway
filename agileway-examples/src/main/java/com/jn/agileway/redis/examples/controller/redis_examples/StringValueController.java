@@ -22,7 +22,7 @@ public class StringValueController {
     private RedisConnectionFactory connectionFactory;
     private RedisLuaScriptRepository repository;
 
-    @Value("agileway.redis.global-key.prefix")
+    @Value("${agileway.redis.global-key.prefix}")
     private String keyPrefix;
 
     private RedisTemplate createRedisTemplate(TestScope scope) {
