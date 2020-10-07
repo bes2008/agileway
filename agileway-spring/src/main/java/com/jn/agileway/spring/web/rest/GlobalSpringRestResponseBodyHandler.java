@@ -8,6 +8,7 @@ import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.io.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +26,15 @@ import java.lang.reflect.Method;
  *     4. 由于 @RestControllerAdvice 或者 @ControllerAdvice 定义类的创建不受我们的控制，我们想要自定义必须掌握控制权
  * </pre>
  */
-public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBodyHandler<Method> {
+public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBodyHandler<Method>, InitializingBean {
     private static final Logger logger = LoggerFactory.getLogger(GlobalSpringRestResponseBodyHandler.class);
     private GlobalRestResponseBodyHandlerConfiguration configuration = new GlobalRestResponseBodyHandlerConfiguration();
     private JSONFactory jsonFactory;
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        logger.info("Initial the global rest response body handler for spring mvc");
+    }
 
     @Override
     public void setConfiguration(GlobalRestResponseBodyHandlerConfiguration configuration) {

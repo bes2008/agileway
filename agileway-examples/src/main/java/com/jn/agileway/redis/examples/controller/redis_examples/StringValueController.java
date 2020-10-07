@@ -75,6 +75,15 @@ public class StringValueController {
         return operations.get();
     }
 
+
+    @GetMapping("/get")
+    public String get(@RequestParam String key, @RequestParam TestScope testScope) {
+        RedisTemplate redisTemplate = createRedisTemplate(testScope);
+        BoundValueOperations<String, String> operations = redisTemplate.boundValueOps(key);
+        return operations.get();
+    }
+
+
     @PostMapping("/setBean")
     public Object setBean(@RequestParam String key, @RequestParam String personName, @RequestParam int personAge, @RequestParam TestScope testScope) {
         RedisTemplate redisTemplate = createRedisTemplate(testScope);
@@ -86,19 +95,14 @@ public class StringValueController {
         return operations.get();
     }
 
-    @GetMapping("/get")
-    public String get(@RequestParam String key, @RequestParam TestScope testScope) {
+
+    @GetMapping("/getBean")
+    public Object getBean(@RequestParam String key, @RequestParam TestScope testScope) {
         RedisTemplate redisTemplate = createRedisTemplate(testScope);
         BoundValueOperations<String, String> operations = redisTemplate.boundValueOps(key);
         return operations.get();
     }
 
-    @GetMapping("/getBean")
-    public String getBean(@RequestParam String key, @RequestParam TestScope testScope) {
-        RedisTemplate redisTemplate = createRedisTemplate(testScope);
-        BoundValueOperations<String, String> operations = redisTemplate.boundValueOps(key);
-        return operations.get();
-    }
 
     @GetMapping("/increment")
     public String increment(@RequestParam String key, @RequestParam int delta, @RequestParam TestScope testScope) {
