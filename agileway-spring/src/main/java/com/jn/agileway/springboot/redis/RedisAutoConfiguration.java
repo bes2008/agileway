@@ -51,7 +51,7 @@ public class RedisAutoConfiguration {
                 new RedisKeySerializer(),
                 valueSerializer,
                 luaScriptRepository,
-                false, false
+                false, true
         );
         return redisTemplate;
     }
