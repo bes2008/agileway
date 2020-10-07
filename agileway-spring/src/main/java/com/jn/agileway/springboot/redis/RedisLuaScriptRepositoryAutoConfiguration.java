@@ -1,6 +1,13 @@
 package com.jn.agileway.springboot.redis;
 
+import com.jn.agileway.redis.redistemplate.script.BuiltinRedisLuaScriptLocationProvider;
+import com.jn.agileway.redis.redistemplate.script.RedisLuaScriptParser;
 import com.jn.agileway.redis.redistemplate.script.RedisLuaScriptRepository;
+import com.jn.agileway.redis.redistemplate.script.RedisLuaScriptResourceLoader;
+import com.jn.langx.configuration.resource.ResourceConfigurationLoader;
+import com.jn.langx.io.resource.ResourceLocationProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -8,15 +15,45 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 
 @Configuration
-@AutoConfigureAfter(value = {
-        RedisConnectionFactory.class
-})
+@AutoConfigureAfter(RedisConnectionFactory.class)
 public class RedisLuaScriptRepositoryAutoConfiguration {
+
+    @Bean
+    @ConditionalOnMissingBean(name = "redisLuaScriptParser")
+    public RedisLuaScriptParser redisLuaScriptParser() {
+        return new RedisLuaScriptParser();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "redisLuaScriptLocationProvider")
+    public ResourceLocationProvider redisLuaScriptLocationProvider() {
+        BuiltinRedisLuaScriptLocationProvider provider = new BuiltinRedisLuaScriptLocationProvider();
+        provider.init();
+        return provider;
+    }
+
+    @Bean(name = "redisLuaScriptLoader")
+    @ConditionalOnMissingBean(name = "redisLuaScriptLoader")
+    @Autowired
+    public ResourceConfigurationLoader redisLuaScriptLoader(
+            @Qualifier("redisLuaScriptParser") RedisLuaScriptParser parser,
+            @Qualifier("redisLuaScriptLocationProvider") ResourceLocationProvider redisLuaScriptLocationProvider) {
+        ResourceConfigurationLoader loader = new ResourceConfigurationLoader<>();
+        loader.setParser(parser);
+        loader.setResourceLocationProvider(redisLuaScriptLocationProvider);
+        return loader;
+    }
+
+
     @Bean
     @ConditionalOnMissingBean(name = "redisLuaScriptRepository")
-    public RedisLuaScriptRepository redisLuaScriptRepository() {
+    public RedisLuaScriptRepository redisLuaScriptRepository(
+            @Qualifier("redisLuaScriptLoader")
+                    ResourceConfigurationLoader redisLuaScriptLoader) {
         RedisLuaScriptRepository repository = new RedisLuaScriptRepository();
         repository.setName("Redis-LUA-Script-Repository");
+        repository.setConfigurationLoader(new RedisLuaScriptResourceLoader());
+        repository.setConfigurationLoader(redisLuaScriptLoader);
         repository.init();
         return repository;
     }
