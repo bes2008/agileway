@@ -23,8 +23,8 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
         RedisConnectionFactory.class
 })
 @ConditionalOnProperty(name = "agileway.redis.global-template.enabled", havingValue = "true", matchIfMissing = false)
-public class RedisAutoConfiguration {
-    private static final Logger logger = LoggerFactory.getLogger(RedisAutoConfiguration.class);
+public class RedisGlobalTemplateAutoConfiguration {
+    private static final Logger logger = LoggerFactory.getLogger(RedisGlobalTemplateAutoConfiguration.class);
 
     @Bean(name = "globalRedisKeyProperties")
     @ConfigurationProperties(prefix = "agileway.redis.global-template.key")
