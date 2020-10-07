@@ -7,7 +7,6 @@ import com.jn.agileway.redis.redistemplate.RedisTemplates;
 import com.jn.agileway.redis.redistemplate.script.RedisLuaScriptRepository;
 import com.jn.agileway.redis.redistemplate.serialization.EasyjsonRedisSerializer;
 import com.jn.agileway.redis.redistemplate.serialization.RedisKeySerializer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -23,10 +22,8 @@ public class RedisAutoConfiguration {
         return new RedisKeyProperties();
     }
 
-    @Bean
-    @Autowired
-    public RedisKeyWrapper licenseGlobalRedisKeyWrapper(
-            @Qualifier("globalRedisKeyProperties") RedisKeyProperties globalRedisKeyProperties) {
+    @Bean(name = "globalRedisKeyWrapper")
+    public RedisKeyWrapper globalRedisKeyWrapper(@Qualifier("globalRedisKeyProperties") RedisKeyProperties globalRedisKeyProperties) {
         return new RedisKeyWrapper(globalRedisKeyProperties);
     }
 

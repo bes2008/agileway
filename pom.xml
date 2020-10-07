@@ -15,6 +15,7 @@
         <module>agileway-jdbc-datasource</module>
         <module>agileway-redis</module>
         <module>agileway-shiro-redis</module>
+        <module>agileway-examples</module>
     </modules>
 
     <name>agileway</name>

@@ -1,0 +1,10 @@
+spring:
+  redis:
+    host: 192.168.1.79
+    port: 6379
+    database: 0
+
+
+knife4j:
+  application-title: agileway examples
+  base-package: com.jn.agileway.redis.examples.controller
