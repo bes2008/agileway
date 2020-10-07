@@ -1,4 +1,4 @@
-package com.jn.agileway.redis.examples.controller;
+package com.jn.agileway.redis.examples.controller.redis_examples;
 
 import com.jn.agileway.redis.redistemplate.RedisTemplate;
 import com.jn.agileway.redis.redistemplate.RedisTemplates;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
-@RequestMapping("/string")
+@RequestMapping("/redis-examples/string")
 @RestController
 public class StringValueController {
 

@@ -1,4 +1,4 @@
-package com.jn.agileway.redis.examples.controller;
+package com.jn.agileway.redis.examples.controller.redis_examples;
 
 public class Person {
     private String name;
