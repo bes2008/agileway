@@ -1,6 +1,7 @@
 package com.jn.agileway.springboot.web.rest;
 
 import com.jn.agileway.spring.web.rest.GlobalSpringRestExceptionHandler;
+import com.jn.agileway.spring.web.rest.GlobalSpringRestResponseBodyAdvice;
 import com.jn.agileway.spring.web.rest.GlobalSpringRestResponseBodyHandler;
 import com.jn.agileway.web.filter.globalresponse.GlobalFilterRestExceptionHandler;
 import com.jn.agileway.web.filter.globalresponse.GlobalFilterRestResponseHandler;
@@ -142,6 +143,16 @@ public class GlobalRestHandlersConfiguration {
 
         globalRestExceptionHandler.startup();
         return globalRestExceptionHandler;
+    }
+
+
+    @Bean
+    @Autowired
+    @ConditionalOnMissingBean({GlobalSpringRestResponseBodyAdvice.class})
+    public GlobalSpringRestResponseBodyAdvice globalSpringRestResponseBodyAdvice(GlobalSpringRestResponseBodyHandler globalSpringRestResponseBodyHandler){
+        GlobalSpringRestResponseBodyAdvice globalSpringRestResponseBodyAdvice = new GlobalSpringRestResponseBodyAdvice();
+        globalSpringRestResponseBodyAdvice.setResponseBodyHandler(globalSpringRestResponseBodyHandler);
+        return globalSpringRestResponseBodyAdvice;
     }
 
 }

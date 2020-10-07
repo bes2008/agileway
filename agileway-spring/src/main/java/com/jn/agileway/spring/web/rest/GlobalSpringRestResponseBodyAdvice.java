@@ -5,7 +5,6 @@ import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -30,7 +29,7 @@ public class GlobalSpringRestResponseBodyAdvice implements ResponseBodyAdvice, I
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        logger.info("Initial the spring global rest response body advice: {} ", Reflects.getFQNClassName(getClass()));
+        logger.info("====== Initial the spring global rest response body advice: {} ======", Reflects.getFQNClassName(getClass()));
     }
 
     @Override
@@ -75,7 +74,6 @@ public class GlobalSpringRestResponseBodyAdvice implements ResponseBodyAdvice, I
     }
 
 
-    @Autowired
     public void setResponseBodyHandler(GlobalSpringRestResponseBodyHandler responseBodyHandler) {
         this.responseBodyHandler = responseBodyHandler;
     }

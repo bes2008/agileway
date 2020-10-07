@@ -6,6 +6,7 @@ import com.jn.agileway.web.rest.GlobalRestResponseBodyHandlerConfiguration;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.io.Charsets;
+import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -33,7 +34,7 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        logger.info("Initial the global rest response body handler for spring mvc");
+        logger.info("Initial the global rest response body handler for spring mvc: {}", Reflects.getFQNClassName(GlobalSpringRestResponseBodyHandler.class));
     }
 
     @Override
