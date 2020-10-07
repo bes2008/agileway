@@ -1,6 +1,6 @@
 package com.jn.agileway.redis.examples.controller;
 
-import com.jn.agileway.redis.redistemplate.IredisTemplate;
+import com.jn.agileway.redis.redistemplate.RedisTemplate;
 import com.jn.agileway.redis.redistemplate.RedisTemplates;
 import com.jn.agileway.redis.redistemplate.script.RedisLuaScriptRepository;
 import com.jn.agileway.redis.redistemplate.serialization.EasyjsonRedisSerializer;
@@ -21,11 +21,11 @@ public class StringValueController {
     private RedisConnectionFactory connectionFactory;
     private RedisLuaScriptRepository repository;
 
-    private IredisTemplate createRedisTemplate(TestScope scope) {
-        IredisTemplate<String, ?> iredisTemplate = null;
+    private RedisTemplate createRedisTemplate(TestScope scope) {
+        RedisTemplate<String, ?> RedisTemplate = null;
         switch (scope) {
             case JACKSON_COMMON:
-                iredisTemplate = RedisTemplates.createRedisTemplate(
+                RedisTemplate = RedisTemplates.createRedisTemplate(
                         connectionFactory,
                         "iredis",
                         new GenericJackson2JsonRedisSerializer(),
@@ -40,7 +40,7 @@ public class StringValueController {
                 EasyjsonRedisSerializer jsonSerializer = new EasyjsonRedisSerializer();
                 jsonSerializer.setSerializeType(true);
 
-                iredisTemplate = RedisTemplates.createRedisTemplate(
+                RedisTemplate = RedisTemplates.createRedisTemplate(
                         connectionFactory,
                         "iredis",
                         jsonSerializer,
@@ -52,7 +52,7 @@ public class StringValueController {
                         false, true);
                 break;
             default:
-                iredisTemplate = RedisTemplates.createRedisTemplate(
+                RedisTemplate = RedisTemplates.createRedisTemplate(
                         connectionFactory,
                         "iredis",
                         new StringRedisSerializer(),
@@ -64,12 +64,12 @@ public class StringValueController {
                         false, true);
                 break;
         }
-        return iredisTemplate;
+        return RedisTemplate;
     }
 
     @PostMapping("/set")
     public String set(@RequestParam String key, @RequestParam String value, @RequestParam TestScope testScope) {
-        IredisTemplate redisTemplate = createRedisTemplate(testScope);
+        RedisTemplate redisTemplate = createRedisTemplate(testScope);
         BoundValueOperations<String, String> operations = redisTemplate.boundValueOps(key);
         operations.set(value);
         return operations.get();
@@ -77,7 +77,7 @@ public class StringValueController {
 
     @PostMapping("/setBean")
     public Object setBean(@RequestParam String key, @RequestParam String personName, @RequestParam int personAge, @RequestParam TestScope testScope) {
-        IredisTemplate redisTemplate = createRedisTemplate(testScope);
+        RedisTemplate redisTemplate = createRedisTemplate(testScope);
         BoundValueOperations<String, Object> operations = redisTemplate.boundValueOps(key);
         Person p = new Person();
         p.setAge(personAge);
@@ -88,21 +88,21 @@ public class StringValueController {
 
     @GetMapping("/get")
     public String get(@RequestParam String key, @RequestParam TestScope testScope) {
-        IredisTemplate redisTemplate = createRedisTemplate(testScope);
+        RedisTemplate redisTemplate = createRedisTemplate(testScope);
         BoundValueOperations<String, String> operations = redisTemplate.boundValueOps(key);
         return operations.get();
     }
 
     @GetMapping("/getBean")
     public String getBean(@RequestParam String key, @RequestParam TestScope testScope) {
-        IredisTemplate redisTemplate = createRedisTemplate(testScope);
+        RedisTemplate redisTemplate = createRedisTemplate(testScope);
         BoundValueOperations<String, String> operations = redisTemplate.boundValueOps(key);
         return operations.get();
     }
 
     @GetMapping("/increment")
     public String increment(@RequestParam String key, @RequestParam int delta, @RequestParam TestScope testScope) {
-        IredisTemplate redisTemplate = createRedisTemplate(testScope);
+        RedisTemplate redisTemplate = createRedisTemplate(testScope);
         BoundValueOperations<String, String> operations = redisTemplate.boundValueOps(key);
         return operations.increment(delta).toString();
     }
@@ -110,14 +110,14 @@ public class StringValueController {
 
     @GetMapping("/decrement")
     public String decrement(@RequestParam String key, @RequestParam int delta, @RequestParam TestScope testScope) {
-        IredisTemplate redisTemplate = createRedisTemplate(testScope);
+        RedisTemplate redisTemplate = createRedisTemplate(testScope);
         BoundValueOperations<String, String> operations = redisTemplate.boundValueOps(key);
         return operations.decrement(delta).toString();
     }
 
     @GetMapping("/keys")
     public Set<String> keys() {
-        IredisTemplate redisTemplate = createRedisTemplate(TestScope.NORMAL_STRING);
+        RedisTemplate redisTemplate = createRedisTemplate(TestScope.NORMAL_STRING);
         return redisTemplate.keys("*");
     }
 

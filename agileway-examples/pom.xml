@@ -54,5 +54,13 @@
             <groupId>com.github.fangjinuo.agileway</groupId>
             <artifactId>agileway-redis</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.github.fangjinuo.agileway</groupId>
+            <artifactId>agileway-shiro-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.fangjinuo.agileway</groupId>
+            <artifactId>agileway-spring</artifactId>
+        </dependency>
     </dependencies>
 </project>
