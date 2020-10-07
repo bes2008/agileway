@@ -1,7 +1,7 @@
-package com.jn.agileway.redis.redistemplate;
+package com.jn.agileway.redis.core;
 
-import com.jn.agileway.redis.redistemplate.script.RedisLuaScript;
-import com.jn.agileway.redis.redistemplate.script.RedisLuaScriptRepository;
+import com.jn.agileway.redis.core.script.RedisLuaScript;
+import com.jn.agileway.redis.core.script.RedisLuaScriptRepository;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
 import java.util.List;

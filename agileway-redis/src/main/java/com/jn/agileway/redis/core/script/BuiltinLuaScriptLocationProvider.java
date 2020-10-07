@@ -1,4 +1,4 @@
-package com.jn.agileway.redis.redistemplate.script;
+package com.jn.agileway.redis.core.script;
 
 import com.jn.langx.io.resource.Location;
 import com.jn.langx.io.resource.ResourceLocationProvider;
@@ -8,15 +8,15 @@ import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BuiltinRedisLuaScriptLocationProvider implements ResourceLocationProvider<String>, Initializable {
-    private static final Logger logger = LoggerFactory.getLogger(BuiltinRedisLuaScriptLocationProvider.class);
+public class BuiltinLuaScriptLocationProvider implements ResourceLocationProvider<String>, Initializable {
+    private static final Logger logger = LoggerFactory.getLogger(BuiltinLuaScriptLocationProvider.class);
     private String builtinPackageClassPath;
 
 
     @Override
     public void init() throws InitializationException {
         if (builtinPackageClassPath == null) {
-            String packageName = Reflects.getPackageName(BuiltinRedisLuaScriptLocationProvider.class);
+            String packageName = Reflects.getPackageName(BuiltinLuaScriptLocationProvider.class);
             packageName = packageName.replace('.', '/');
             packageName = "/" + packageName + "/lua/";
             builtinPackageClassPath = packageName;

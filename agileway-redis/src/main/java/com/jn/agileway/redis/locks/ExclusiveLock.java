@@ -1,6 +1,6 @@
 package com.jn.agileway.redis.locks;
 
-import com.jn.agileway.redis.redistemplate.RedisTemplate;
+import com.jn.agileway.redis.core.RedisTemplate;
 import com.jn.langx.Builder;
 import com.jn.langx.annotation.NotThreadSafe;
 import com.jn.langx.util.collection.Collects;

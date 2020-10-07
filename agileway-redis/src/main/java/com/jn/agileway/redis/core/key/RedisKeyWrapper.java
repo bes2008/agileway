@@ -1,4 +1,4 @@
-package com.jn.agileway.redis.key;
+package com.jn.agileway.redis.core.key;
 
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Preconditions;

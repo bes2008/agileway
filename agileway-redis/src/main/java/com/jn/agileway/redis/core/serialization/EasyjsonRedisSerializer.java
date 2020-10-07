@@ -1,4 +1,4 @@
-package com.jn.agileway.redis.redistemplate.serialization;
+package com.jn.agileway.redis.core.serialization;
 
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;

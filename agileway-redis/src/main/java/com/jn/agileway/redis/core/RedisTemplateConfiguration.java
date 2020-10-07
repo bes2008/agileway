@@ -1,4 +1,4 @@
-package com.jn.agileway.redis.redistemplate;
+package com.jn.agileway.redis.core;
 
 public class RedisTemplateConfiguration {
 }

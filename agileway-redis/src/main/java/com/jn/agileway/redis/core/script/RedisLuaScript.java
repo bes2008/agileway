@@ -1,4 +1,4 @@
-package com.jn.agileway.redis.redistemplate.script;
+package com.jn.agileway.redis.core.script;
 
 import com.jn.langx.configuration.Configuration;
 import org.springframework.data.redis.core.script.DefaultRedisScript;

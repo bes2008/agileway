@@ -1,12 +1,12 @@
 package com.jn.agileway.springboot.redis;
 
-import com.jn.agileway.redis.key.RedisKeyProperties;
-import com.jn.agileway.redis.key.RedisKeyWrapper;
-import com.jn.agileway.redis.redistemplate.RedisTemplate;
-import com.jn.agileway.redis.redistemplate.RedisTemplates;
-import com.jn.agileway.redis.redistemplate.script.RedisLuaScriptRepository;
-import com.jn.agileway.redis.redistemplate.serialization.EasyjsonRedisSerializer;
-import com.jn.agileway.redis.redistemplate.serialization.RedisKeySerializer;
+import com.jn.agileway.redis.core.key.RedisKeyProperties;
+import com.jn.agileway.redis.core.key.RedisKeyWrapper;
+import com.jn.agileway.redis.core.RedisTemplate;
+import com.jn.agileway.redis.core.RedisTemplates;
+import com.jn.agileway.redis.core.script.RedisLuaScriptRepository;
+import com.jn.agileway.redis.core.serialization.EasyjsonRedisSerializer;
+import com.jn.agileway.redis.core.serialization.RedisKeySerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;

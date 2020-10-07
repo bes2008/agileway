@@ -1,9 +1,9 @@
 package com.jn.agileway.springboot.redis;
 
-import com.jn.agileway.redis.redistemplate.script.BuiltinRedisLuaScriptLocationProvider;
-import com.jn.agileway.redis.redistemplate.script.RedisLuaScriptParser;
-import com.jn.agileway.redis.redistemplate.script.RedisLuaScriptRepository;
-import com.jn.agileway.redis.redistemplate.script.RedisLuaScriptResourceLoader;
+import com.jn.agileway.redis.core.script.BuiltinLuaScriptLocationProvider;
+import com.jn.agileway.redis.core.script.RedisLuaScriptParser;
+import com.jn.agileway.redis.core.script.RedisLuaScriptRepository;
+import com.jn.agileway.redis.core.script.RedisLuaScriptResourceLoader;
 import com.jn.langx.configuration.resource.ResourceConfigurationLoader;
 import com.jn.langx.io.resource.ResourceLocationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class RedisLuaScriptRepositoryAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(name = "redisLuaScriptLocationProvider")
     public ResourceLocationProvider redisLuaScriptLocationProvider() {
-        BuiltinRedisLuaScriptLocationProvider provider = new BuiltinRedisLuaScriptLocationProvider();
+        BuiltinLuaScriptLocationProvider provider = new BuiltinLuaScriptLocationProvider();
         provider.init();
         return provider;
     }

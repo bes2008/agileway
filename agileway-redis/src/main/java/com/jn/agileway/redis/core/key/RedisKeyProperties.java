@@ -1,4 +1,4 @@
-package com.jn.agileway.redis.key;
+package com.jn.agileway.redis.core.key;
 
 public class RedisKeyProperties {
     private String prefix = RedisKeyWrapper.PREFIX_DEFAULT;

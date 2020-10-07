@@ -1,6 +1,6 @@
-package com.jn.agileway.redis.redistemplate.serialization;
+package com.jn.agileway.redis.core.serialization;
 
-import com.jn.agileway.redis.key.RedisKeyWrapper;
+import com.jn.agileway.redis.core.key.RedisKeyWrapper;
 import com.jn.langx.util.Preconditions;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.lang.Nullable;

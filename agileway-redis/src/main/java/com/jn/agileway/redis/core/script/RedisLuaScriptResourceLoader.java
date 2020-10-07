@@ -1,4 +1,4 @@
-package com.jn.agileway.redis.redistemplate.script;
+package com.jn.agileway.redis.core.script;
 
 import com.jn.langx.configuration.resource.ResourceConfigurationLoader;
 import com.jn.langx.io.resource.*;

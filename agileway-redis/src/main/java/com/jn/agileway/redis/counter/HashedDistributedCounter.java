@@ -1,6 +1,6 @@
 package com.jn.agileway.redis.counter;
 
-import com.jn.agileway.redis.redistemplate.RedisTemplate;
+import com.jn.agileway.redis.core.RedisTemplate;
 
 public class HashedDistributedCounter implements DistributedCounter {
     private RedisTemplate redisTemplate;
