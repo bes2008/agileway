@@ -5,7 +5,7 @@ import com.jn.agileway.redis.core.key.RedisKeyWrapper;
 import com.jn.agileway.redis.core.RedisTemplate;
 import com.jn.agileway.redis.core.RedisTemplates;
 import com.jn.agileway.redis.core.script.RedisLuaScriptRepository;
-import com.jn.agileway.redis.core.serialization.EasyjsonRedisSerializer;
+import com.jn.agileway.redis.core.serialization.json.EasyjsonRedisSerializer;
 import com.jn.agileway.redis.core.serialization.RedisKeySerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

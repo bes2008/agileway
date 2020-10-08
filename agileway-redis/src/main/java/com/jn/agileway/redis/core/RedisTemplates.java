@@ -2,7 +2,7 @@ package com.jn.agileway.redis.core;
 
 import com.jn.agileway.redis.core.key.RedisKeyWrapper;
 import com.jn.agileway.redis.core.script.RedisLuaScriptRepository;
-import com.jn.agileway.redis.core.serialization.EasyjsonRedisSerializer;
+import com.jn.agileway.redis.core.serialization.json.EasyjsonRedisSerializer;
 import com.jn.agileway.redis.core.serialization.RedisKeySerializer;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;

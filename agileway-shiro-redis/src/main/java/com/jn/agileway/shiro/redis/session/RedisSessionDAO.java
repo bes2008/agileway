@@ -6,6 +6,7 @@ import com.jn.langx.IdGenerator;
 import com.jn.langx.annotation.NonNull;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
+import org.apache.shiro.session.mgt.SimpleSession;
 import org.apache.shiro.session.mgt.eis.AbstractSessionDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,16 @@ public class RedisSessionDAO extends AbstractSessionDAO {
         this.assignSessionId(session, sessionId);
         saveToRedis(session);
         return sessionId;
+    }
+
+    @Override
+    protected void assignSessionId(Session session, Serializable sessionId) {
+        if(session instanceof SimpleSession) {
+            ((SimpleSession)session).setId(sessionId);
+        }
+        else if(session instanceof SimpleShiroSession){
+            ((SimpleShiroSession)session).setId(sessionId);
+        }
     }
 
     private String getSessionIdRedisKey(Serializable sessionId) {
