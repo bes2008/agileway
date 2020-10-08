@@ -86,6 +86,11 @@
         <dependencies>
             <dependency>
                 <groupId>com.github.fangjinuo.agileway</groupId>
+                <artifactId>agileway-serialization</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fangjinuo.agileway</groupId>
                 <artifactId>agileway-web</artifactId>
                 <version>${project.version}</version>
             </dependency>

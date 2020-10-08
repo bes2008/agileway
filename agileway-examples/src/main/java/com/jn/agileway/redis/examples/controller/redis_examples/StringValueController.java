@@ -3,7 +3,7 @@ package com.jn.agileway.redis.examples.controller.redis_examples;
 import com.jn.agileway.redis.core.RedisTemplate;
 import com.jn.agileway.redis.core.RedisTemplates;
 import com.jn.agileway.redis.core.script.RedisLuaScriptRepository;
-import com.jn.agileway.redis.core.serialization.json.EasyjsonRedisSerializer;
+import com.jn.agileway.redis.core.serialization.EasyjsonRedisSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
