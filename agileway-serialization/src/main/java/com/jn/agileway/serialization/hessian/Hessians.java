@@ -2,8 +2,10 @@ package com.jn.agileway.serialization.hessian;
 
 import com.caucho.hessian.io.Hessian2Input;
 import com.caucho.hessian.io.Hessian2Output;
+import com.jn.langx.annotation.NonNull;
 import com.jn.langx.factory.Factory;
 import com.jn.langx.factory.ThreadLocalFactory;
+import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.io.IOs;
 
 import java.io.ByteArrayInputStream;
@@ -54,7 +56,7 @@ public class Hessians {
     }
 
 
-    public static <T> T deserialize(Factory<?, Hessian2Input> hessian2InputFactory,byte[] bytes) throws IOException {
+    public static <T> T deserialize(Factory<?, Hessian2Input> hessian2InputFactory, byte[] bytes) throws IOException {
         if (bytes == null || bytes.length == 0) {
             return null;
         }
@@ -64,6 +66,22 @@ public class Hessians {
             ByteArrayInputStream bai = new ByteArrayInputStream(bytes);
             input.init(bai);
             return (T) input.readObject();
+        } finally {
+            IOs.close(input);
+        }
+    }
+
+    public static <T> T deserialize(Factory<?, Hessian2Input> hessian2InputFactory, byte[] bytes, @NonNull Class targetType) throws IOException {
+        if (bytes == null || bytes.length == 0) {
+            return null;
+        }
+        Preconditions.checkNotNull(targetType, "target type is null");
+        Hessian2Input input = null;
+        try {
+            input = hessian2InputFactory.get(null);
+            ByteArrayInputStream bai = new ByteArrayInputStream(bytes);
+            input.init(bai);
+            return (T) input.readObject(targetType);
         } finally {
             IOs.close(input);
         }

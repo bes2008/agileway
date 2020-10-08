@@ -27,6 +27,11 @@ public class JdkGenericSerializer<T> implements GenericSerializer<T> {
     }
 
     @Override
+    public T deserialize(byte[] bytes, Class<T> targetType) throws SerializationException {
+        return null;
+    }
+
+    @Override
     public boolean canSerialize(Class<?> type) {
         return true;
     }

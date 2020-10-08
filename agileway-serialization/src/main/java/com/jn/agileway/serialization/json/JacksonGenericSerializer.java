@@ -10,7 +10,7 @@ import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 
-public class JacksonGenericSerializer implements GenericSerializer<Object> {
+public class JacksonGenericSerializer<T> implements GenericSerializer<T> {
     private final ObjectMapper mapper;
 
     public JacksonGenericSerializer() {
@@ -33,7 +33,7 @@ public class JacksonGenericSerializer implements GenericSerializer<Object> {
     }
 
 
-    public byte[] serialize(@Nullable Object source) throws SerializationException {
+    public byte[] serialize(@Nullable T source) throws SerializationException {
         if (source == null) {
             return null;
         } else {
@@ -45,23 +45,24 @@ public class JacksonGenericSerializer implements GenericSerializer<Object> {
         }
     }
 
-    public Object deserialize(@Nullable byte[] source) throws SerializationException {
-        return this.deserialize(source, Object.class);
+    public T deserialize(@Nullable byte[] source) throws SerializationException {
+        return (T) this.deserialize(source, (Class<T>) Object.class);
     }
 
     @Nullable
-    public <T> T deserialize(@Nullable byte[] source, Class<T> type) throws SerializationException {
+    public T deserialize(@Nullable byte[] source, Class<T> type) throws SerializationException {
         Preconditions.checkNotNull(type, "Deserialization type must not be null! Please provide Object.class to make use of Jackson2 default typing.");
         if (Emptys.isEmpty(source)) {
             return null;
         } else {
             try {
                 return this.mapper.readValue(source, type);
-            } catch (Exception var4) {
-                throw new SerializationException("Could not read JSON: " + var4.getMessage(), var4);
+            } catch (Exception ex) {
+                throw new SerializationException("Could not read JSON: " + ex.getMessage(), ex);
             }
         }
     }
+
 
     @Override
     public boolean canSerialize(Class<?> type) {

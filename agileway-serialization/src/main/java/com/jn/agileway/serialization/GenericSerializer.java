@@ -9,6 +9,10 @@ public interface GenericSerializer<T> {
     @Nullable
     T deserialize(@Nullable byte[] bytes) throws SerializationException;
 
+
+    @Nullable
+    T deserialize(@Nullable byte[] bytes, Class<T> targetType) throws SerializationException;
+
     boolean canSerialize(Class<?> type);
 
     Class<?> getTargetType();

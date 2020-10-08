@@ -5,6 +5,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.jn.langx.factory.Factory;
 import com.jn.langx.factory.ThreadLocalFactory;
+import com.jn.langx.util.Emptys;
 import com.jn.langx.util.io.IOs;
 
 import java.io.ByteArrayInputStream;
@@ -60,6 +61,26 @@ public class Kryos {
             ByteArrayInputStream bai = new ByteArrayInputStream(bytes);
             input = new Input(bai);
             return (T) kryoFactory.get(null).readClassAndObject(input);
+        } finally {
+            IOs.close(input);
+        }
+    }
+
+    public static <T> T deserialize(byte[] bytes, Class<T> targetType) {
+        return deserialize(kryoFactory, bytes, targetType);
+    }
+
+
+    public static <T> T deserialize(Factory<?, Kryo> kryoFactory, byte[] bytes, Class<T> targetType) {
+        if (Emptys.isEmpty(bytes)) {
+            return null;
+        }
+        Input input = null;
+        try {
+
+            ByteArrayInputStream bai = new ByteArrayInputStream(bytes);
+            input = new Input(bai);
+            return (T) kryoFactory.get(null).readObjectOrNull(input, targetType);
         } finally {
             IOs.close(input);
         }

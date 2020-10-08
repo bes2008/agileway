@@ -72,6 +72,15 @@ public class EasyjsonGenericSerializer<T> implements GenericSerializer<T> {
     }
 
     @Override
+    public T deserialize(byte[] bytes, Class<T> targetType) throws SerializationException {
+        if (Emptys.isEmpty(bytes)) {
+            return null;
+        }
+        String json = new String(bytes, Charsets.UTF_8);
+        return jsonFactory.get().fromJson(json, targetType);
+    }
+
+    @Override
     public Class<?> getTargetType() {
         return targetType;
     }
