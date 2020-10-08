@@ -2,7 +2,7 @@ package com.jn.agileway.serialization;
 
 import com.jn.langx.annotation.Nullable;
 
-public interface AgilewaySerializer<T> {
+public interface GenericSerializer<T> {
     @Nullable
     byte[] serialize(@Nullable T obj) throws SerializationException;
 

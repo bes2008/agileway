@@ -1,6 +1,6 @@
 package com.jn.agileway.serialization.json;
 
-import com.jn.agileway.serialization.AgilewaySerializer;
+import com.jn.agileway.serialization.GenericSerializer;
 import com.jn.agileway.serialization.SerializationException;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
@@ -12,7 +12,7 @@ import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.type.Primitives;
 
-public class EasyjsonGenericSerializer<T> implements AgilewaySerializer<T> {
+public class EasyjsonGenericSerializer<T> implements GenericSerializer<T> {
     private boolean serializeType = false;
     @NonNull
     private Class<T> targetType;

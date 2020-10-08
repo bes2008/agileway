@@ -1,26 +1,26 @@
 package com.jn.agileway.redis.core.serialization;
 
-import com.jn.agileway.serialization.AgilewaySerializer;
+import com.jn.agileway.serialization.GenericSerializer;
 import com.jn.agileway.serialization.SerializationException;
 import com.jn.langx.annotation.Nullable;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
 public class DelegatableRedisSerializer<T> implements RedisSerializer<T> {
-    private AgilewaySerializer<T> delegate;
+    private GenericSerializer<T> delegate;
 
     public DelegatableRedisSerializer() {
 
     }
 
-    public DelegatableRedisSerializer(AgilewaySerializer<T> delegate) {
+    public DelegatableRedisSerializer(GenericSerializer<T> delegate) {
         setDelegate(delegate);
     }
 
-    public AgilewaySerializer<T> getDelegate() {
+    public GenericSerializer<T> getDelegate() {
         return delegate;
     }
 
-    public void setDelegate(AgilewaySerializer<T> delegate) {
+    public void setDelegate(GenericSerializer<T> delegate) {
         this.delegate = delegate;
     }
 

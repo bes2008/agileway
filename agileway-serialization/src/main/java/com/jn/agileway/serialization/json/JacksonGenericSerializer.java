@@ -3,14 +3,14 @@ package com.jn.agileway.serialization.json;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jn.agileway.serialization.AgilewaySerializer;
+import com.jn.agileway.serialization.GenericSerializer;
 import com.jn.agileway.serialization.SerializationException;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 
-public class JacksonGenericSerializer implements AgilewaySerializer<Object> {
+public class JacksonGenericSerializer implements GenericSerializer<Object> {
     private final ObjectMapper mapper;
 
     public JacksonGenericSerializer() {

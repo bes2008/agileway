@@ -1,12 +1,12 @@
 package com.jn.agileway.serialization.kryo;
 
 
-import com.jn.agileway.serialization.AgilewaySerializer;
+import com.jn.agileway.serialization.GenericSerializer;
 import com.jn.agileway.serialization.SerializationException;
 
 import java.io.IOException;
 
-public class KryoGenericSerializer<T> implements AgilewaySerializer<T> {
+public class KryoGenericSerializer<T> implements GenericSerializer<T> {
     @Override
     public byte[] serialize(T t) throws SerializationException {
         try {

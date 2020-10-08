@@ -1,12 +1,12 @@
 package com.jn.agileway.serialization.hessian;
 
 
-import com.jn.agileway.serialization.AgilewaySerializer;
+import com.jn.agileway.serialization.GenericSerializer;
 import com.jn.agileway.serialization.SerializationException;
 
 import java.io.IOException;
 
-public class HessianGenericSerializer<T> implements AgilewaySerializer<T> {
+public class HessianGenericSerializer<T> implements GenericSerializer<T> {
 
     @Override
     public byte[] serialize(T o) throws SerializationException {

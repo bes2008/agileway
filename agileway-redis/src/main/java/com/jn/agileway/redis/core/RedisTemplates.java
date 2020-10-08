@@ -4,7 +4,7 @@ import com.jn.agileway.redis.core.key.RedisKeyWrapper;
 import com.jn.agileway.redis.core.script.RedisLuaScriptRepository;
 import com.jn.agileway.redis.core.serialization.DelegatableRedisSerializer;
 import com.jn.agileway.redis.core.serialization.RedisKeySerializer;
-import com.jn.agileway.serialization.AgilewaySerializer;
+import com.jn.agileway.serialization.GenericSerializer;
 import com.jn.agileway.serialization.json.EasyjsonGenericSerializer;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
@@ -133,7 +133,7 @@ public class RedisTemplates {
     public static RedisTemplate<String, ?> createRedisTemplate(
             @NonNull RedisConnectionFactory connectionFactory,
             @Nullable RedisSerializer<String> keySerializer,
-            @NonNull AgilewaySerializer<?> valueSerializer,
+            @NonNull GenericSerializer<?> valueSerializer,
             @Nullable ClassLoader beanClassLoader,
             @Nullable RedisSerializer<String> stringSerializer,
             @Nullable RedisSerializer<?> hashKeySerializer,
