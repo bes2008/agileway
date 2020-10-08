@@ -35,7 +35,7 @@ public class JacksonGenericSerializer implements GenericSerializer<Object> {
 
     public byte[] serialize(@Nullable Object source) throws SerializationException {
         if (source == null) {
-            return Emptys.EMPTY_BYTES;
+            return null;
         } else {
             try {
                 return this.mapper.writeValueAsBytes(source);
