@@ -43,7 +43,14 @@ public class RedisSessionDAO extends AbstractSessionDAO {
     @Override
     protected Session doReadSession(Serializable sessionId) {
         String sessionIdRedisKey = getSessionIdRedisKey(sessionId);
-        return redisTemplate.opsForValue().get(sessionIdRedisKey);
+        Session session = redisTemplate.opsForValue().get(sessionIdRedisKey);
+        if (session != null) {
+            if (session.getLastAccessTime().getTime() + session.getTimeout() < System.currentTimeMillis()) {
+                delete(session);
+                return null;
+            }
+        }
+        return session;
     }
 
     @Override
@@ -62,7 +69,7 @@ public class RedisSessionDAO extends AbstractSessionDAO {
         if (ttl > 0) {
             redisTemplate.opsForValue().set(sessionIdRedisKey, session, ttl, TimeUnit.MILLISECONDS);
         } else if (ttl == 0L) {
-            redisTemplate.delete(sessionIdRedisKey);
+            this.delete(session);
         } else {
             // never timeout
             redisTemplate.opsForValue().set(sessionIdRedisKey, session);
