@@ -47,6 +47,7 @@ public class RedisLuaScriptRepositoryAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(name = "redisLuaScriptRepository")
+    @Autowired
     public RedisLuaScriptRepository redisLuaScriptRepository(
             @Qualifier("redisLuaScriptLoader")
                     ResourceConfigurationLoader redisLuaScriptLoader) {

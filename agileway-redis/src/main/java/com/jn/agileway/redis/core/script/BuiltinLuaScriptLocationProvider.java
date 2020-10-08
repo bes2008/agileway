@@ -20,7 +20,7 @@ public class BuiltinLuaScriptLocationProvider implements ResourceLocationProvide
             packageName = packageName.replace('.', '/');
             packageName = "/" + packageName + "/lua/";
             builtinPackageClassPath = packageName;
-            logger.info("Initial the built in redis lua script location: {}", "classpath:" + builtinPackageClassPath);
+            logger.info("Initial the built-in redis lua script location: {}", "classpath:" + builtinPackageClassPath);
         }
     }
 

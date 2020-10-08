@@ -9,8 +9,10 @@ import com.jn.agileway.redis.core.serialization.EasyjsonRedisSerializer;
 import com.jn.agileway.redis.core.serialization.RedisKeySerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -26,18 +28,23 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 public class RedisGlobalTemplateAutoConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(RedisGlobalTemplateAutoConfiguration.class);
 
+    @ConditionalOnMissingBean(name = "globalRedisKeyProperties")
     @Bean(name = "globalRedisKeyProperties")
     @ConfigurationProperties(prefix = "agileway.redis.global-template.key")
     public RedisKeyProperties globalRedisKeyProperties() {
         return new RedisKeyProperties();
     }
 
+    @ConditionalOnMissingBean(name = "globalRedisKeyWrapper")
     @Bean(name = "globalRedisKeyWrapper")
+    @Autowired
     public RedisKeyWrapper globalRedisKeyWrapper(@Qualifier("globalRedisKeyProperties") RedisKeyProperties globalRedisKeyProperties) {
         return new RedisKeyWrapper(globalRedisKeyProperties);
     }
 
+    @ConditionalOnMissingBean(name = "globalRedisTemplate")
     @Bean(name = "globalRedisTemplate")
+    @Autowired
     public RedisTemplate globalRedisTemplate(RedisConnectionFactory redisConnectionFactory,
                                              @Qualifier("globalRedisKeyWrapper") RedisKeyWrapper redisKeyWrapper,
                                              RedisLuaScriptRepository luaScriptRepository) {

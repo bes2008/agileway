@@ -3,7 +3,7 @@ package com.jn.agileway.shiro.redis.session;
 import com.jn.agileway.redis.core.RedisTemplate;
 import com.jn.agileway.redis.core.key.RedisKeyWrapper;
 import com.jn.langx.IdGenerator;
-import com.jn.langx.text.StringTemplates;
+import com.jn.langx.annotation.NonNull;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.session.mgt.eis.AbstractSessionDAO;
@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 public class RedisSessionDAO extends AbstractSessionDAO {
     private static final Logger logger = LoggerFactory.getLogger(RedisSessionDAO.class);
@@ -26,9 +27,8 @@ public class RedisSessionDAO extends AbstractSessionDAO {
             throw new UnknownSessionException("session is null");
         }
         Serializable sessionId = generateSessionId(session);
-        String sessionIdRedisKey = getSessionIdRedisKey(sessionId);
         this.assignSessionId(session, sessionId);
-        redisTemplate.opsForValue().set(sessionIdRedisKey, session);
+        saveToRedis(session);
         return sessionId;
     }
 
@@ -52,12 +52,21 @@ public class RedisSessionDAO extends AbstractSessionDAO {
             logger.error("session is null");
             throw new UnknownSessionException("session is null");
         }
+        saveToRedis(session);
+    }
+
+    private void saveToRedis(@NonNull Session session) {
         Serializable sessionId = session.getId();
-        if (sessionId == null) {
-            throw new UnknownSessionException(StringTemplates.formatWithPlaceholder("unknown session: {}", session.toString()));
-        }
         String sessionIdRedisKey = getSessionIdRedisKey(sessionId);
-        redisTemplate.opsForValue().set(sessionIdRedisKey, session);
+        long ttl = session.getTimeout();
+        if (ttl > 0) {
+            redisTemplate.opsForValue().set(sessionIdRedisKey, session, ttl, TimeUnit.MILLISECONDS);
+        } else if (ttl == 0L) {
+            redisTemplate.delete(sessionIdRedisKey);
+        } else {
+            // never timeout
+            redisTemplate.opsForValue().set(sessionIdRedisKey, session);
+        }
     }
 
     @Override
