@@ -1,12 +1,13 @@
 package com.jn.agileway.springboot.redis;
 
-import com.jn.agileway.redis.core.key.RedisKeyProperties;
-import com.jn.agileway.redis.core.key.RedisKeyWrapper;
 import com.jn.agileway.redis.core.RedisTemplate;
 import com.jn.agileway.redis.core.RedisTemplates;
+import com.jn.agileway.redis.core.key.RedisKeyProperties;
+import com.jn.agileway.redis.core.key.RedisKeyWrapper;
 import com.jn.agileway.redis.core.script.RedisLuaScriptRepository;
-import com.jn.agileway.redis.core.serialization.EasyjsonRedisSerializer;
+import com.jn.agileway.redis.core.serialization.DelegatableRedisSerializer;
 import com.jn.agileway.redis.core.serialization.RedisKeySerializer;
+import com.jn.agileway.serialization.json.EasyjsonGenericSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 
 @Configuration
-@AutoConfigureAfter(value={
+@AutoConfigureAfter(value = {
         RedisLuaScriptRepositoryAutoConfiguration.class,
         RedisConnectionFactory.class
 })
@@ -48,15 +49,17 @@ public class RedisGlobalTemplateAutoConfiguration {
     public RedisTemplate globalRedisTemplate(RedisConnectionFactory redisConnectionFactory,
                                              @Qualifier("globalRedisKeyWrapper") RedisKeyWrapper redisKeyWrapper,
                                              RedisLuaScriptRepository luaScriptRepository) {
-        EasyjsonRedisSerializer valueSerializer = new EasyjsonRedisSerializer<>();
+        EasyjsonGenericSerializer valueSerializer = new EasyjsonGenericSerializer<>();
         valueSerializer.setSerializeType(true);
+
+        DelegatableRedisSerializer redisValueSerializer = new DelegatableRedisSerializer(valueSerializer);
         RedisTemplate redisTemplate = RedisTemplates.createRedisTemplate(redisConnectionFactory,
                 redisKeyWrapper,
-                valueSerializer,
+                redisValueSerializer,
                 this.getClass().getClassLoader(),
                 null,
                 new RedisKeySerializer(),
-                valueSerializer,
+                redisValueSerializer,
                 luaScriptRepository,
                 false, true
         );

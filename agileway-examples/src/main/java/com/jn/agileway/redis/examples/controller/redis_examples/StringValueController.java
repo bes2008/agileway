@@ -3,7 +3,8 @@ package com.jn.agileway.redis.examples.controller.redis_examples;
 import com.jn.agileway.redis.core.RedisTemplate;
 import com.jn.agileway.redis.core.RedisTemplates;
 import com.jn.agileway.redis.core.script.RedisLuaScriptRepository;
-import com.jn.agileway.redis.core.serialization.EasyjsonRedisSerializer;
+import com.jn.agileway.redis.core.serialization.DelegatableRedisSerializer;
+import com.jn.agileway.serialization.json.EasyjsonGenericSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -41,17 +42,18 @@ public class StringValueController {
                         false, true);
                 break;
             case EASYJSON_COMMON:
-                EasyjsonRedisSerializer jsonSerializer = new EasyjsonRedisSerializer();
+                EasyjsonGenericSerializer jsonSerializer = new EasyjsonGenericSerializer();
                 jsonSerializer.setSerializeType(true);
+                DelegatableRedisSerializer valueSerializer = new DelegatableRedisSerializer(jsonSerializer);
 
                 RedisTemplate = RedisTemplates.createRedisTemplate(
                         connectionFactory,
                         keyPrefix,
-                        jsonSerializer,
+                        valueSerializer,
                         StringValueController.class.getClassLoader(),
                         RedisTemplates.stringRedisSerializer,
                         null,
-                        null,
+                        valueSerializer,
                         repository,
                         false, true);
                 break;

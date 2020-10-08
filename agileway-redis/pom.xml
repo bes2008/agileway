@@ -17,9 +17,6 @@
         <spring.data.redis.version>2.3.4.RELEASE</spring.data.redis.version>
         <httpclient.version>4.5.11</httpclient.version>
         <jackson.version>2.10.2</jackson.version>
-        <hessian.version>4.0.63</hessian.version>
-        <kryo.version>5.0.0-RC9</kryo.version>
-        <protostuff.version>1.7.2</protostuff.version>
     </properties>
 
     <dependencyManagement>
@@ -76,28 +73,6 @@
                 <artifactId>jackson-databind</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>com.caucho</groupId>
-                <artifactId>hessian</artifactId>
-                <version>${hessian.version}</version>
-                <optional>true</optional>
-            </dependency>
-
-            <dependency>
-                <groupId>com.esotericsoftware</groupId>
-                <artifactId>kryo</artifactId>
-                <version>${kryo.version}</version>
-                <optional>true</optional>
-            </dependency>
-
-            <dependency>
-                <groupId>io.protostuff</groupId>
-                <artifactId>protostuff-runtime</artifactId>
-                <version>${protostuff.version}</version>
-                <optional>true</optional>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
 
@@ -122,21 +97,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.caucho</groupId>
-            <artifactId>hessian</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>com.esotericsoftware</groupId>
-            <artifactId>kryo</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>io.protostuff</groupId>
-            <artifactId>protostuff-runtime</artifactId>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.github.fangjinuo.agileway</groupId>
