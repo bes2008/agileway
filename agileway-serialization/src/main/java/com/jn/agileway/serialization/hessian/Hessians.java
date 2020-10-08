@@ -1,4 +1,4 @@
-package com.jn.agileway.redis.core.serialization.hessian;
+package com.jn.agileway.serialization.hessian;
 
 import com.caucho.hessian.io.Hessian2Input;
 import com.caucho.hessian.io.Hessian2Output;

@@ -1,4 +1,4 @@
-package com.jn.agileway.redis.core.serialization.kryo;
+package com.jn.agileway.serialization.kryo;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
@@ -29,7 +29,7 @@ public class Kryos {
         return serialize(kryoFactory, o);
     }
 
-    public static <T> byte[] serialize(Factory<?, Kryo> kryoFactory, T o) throws IOException {
+    public static <T> byte[] serialize(Factory<?, Kryo> kryoFactory, T o) {
         if (o == null) {
             return null;
         }
@@ -50,7 +50,7 @@ public class Kryos {
     }
 
 
-    public static <T> T deserialize(Factory<?, Kryo> kryoFactory, byte[] bytes) throws IOException {
+    public static <T> T deserialize(Factory<?, Kryo> kryoFactory, byte[] bytes) {
         if (bytes == null || bytes.length == 0) {
             return null;
         }

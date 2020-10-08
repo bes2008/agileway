@@ -9,68 +9,29 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>agileway-redis</artifactId>
+    <artifactId>agileway-serialization</artifactId>
 
     <properties>
-        <spring.version>5.2.9.RELEASE</spring.version>
-        <spring.boot.version>2.3.4.RELEASE</spring.boot.version>
-        <spring.data.redis.version>2.3.4.RELEASE</spring.data.redis.version>
-        <httpclient.version>4.5.11</httpclient.version>
-        <jackson.version>2.10.2</jackson.version>
         <hessian.version>4.0.63</hessian.version>
         <kryo.version>5.0.0-RC9</kryo.version>
         <protostuff.version>1.7.2</protostuff.version>
+        <jackson.version>2.10.2</jackson.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-data-redis</artifactId>
-                <version>${spring.boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.data</groupId>
-                <artifactId>spring-data-redis</artifactId>
-                <version>${spring.data.redis.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-jdbc</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.fangjinuo.easyjson</groupId>
-                <artifactId>easyjson-core</artifactId>
-                <version>${easyjson.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.github.fangjinuo.langx</groupId>
-                        <artifactId>langx-java</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.fangjinuo.langx</groupId>
-                <artifactId>langx-java</artifactId>
-                <version>${langx.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>${httpclient.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>com.github.fangjinuo.easyjson</groupId>
                 <artifactId>easyjson-jackson</artifactId>
                 <version>${easyjson.version}</version>
+                <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
                 <version>${jackson.version}</version>
+                <optional>true</optional>
             </dependency>
 
             <dependency>
@@ -93,45 +54,41 @@
                 <version>${protostuff.version}</version>
                 <optional>true</optional>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>com.github.fangjinuo.easyjson</groupId>
-            <artifactId>easyjson-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-redis</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.github.fangjinuo.easyjson</groupId>
             <artifactId>easyjson-jackson</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <optional>true</optional>
         </dependency>
+
+
         <dependency>
             <groupId>com.caucho</groupId>
             <artifactId>hessian</artifactId>
+            <version>${hessian.version}</version>
             <optional>true</optional>
         </dependency>
+
         <dependency>
             <groupId>com.esotericsoftware</groupId>
             <artifactId>kryo</artifactId>
+            <version>${kryo.version}</version>
             <optional>true</optional>
         </dependency>
+
         <dependency>
             <groupId>io.protostuff</groupId>
             <artifactId>protostuff-runtime</artifactId>
+            <version>${protostuff.version}</version>
             <optional>true</optional>
         </dependency>
     </dependencies>
