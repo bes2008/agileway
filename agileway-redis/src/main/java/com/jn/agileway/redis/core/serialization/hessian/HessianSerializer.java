@@ -27,7 +27,7 @@ public class HessianSerializer<T> implements RedisSerializer<T> {
 
     @Override
     public boolean canSerialize(Class type) {
-        return false;
+        return true;
     }
 
     @Override

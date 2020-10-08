@@ -15,3 +15,4 @@ Protocol buffer、Thrift、Avro 需要提供Schema，所以这三个不作为内
 Protostuff 基于protocol-buffer，避免了提供Schema。
 
 
+如果不需要预先知道类型，即可完成反序列化的框架，必然是在序列化时，将对象的类型也进行了序列化，自然序列化之后的包就比较大。
