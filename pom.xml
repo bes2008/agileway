@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
     <version>1.1.0</version>
     <modules>
-        <module>agileway-serialization</module>
+        <module>agileway-codec</module>
         <module>agileway-web</module>
         <module>agileway-spring</module>
         <module>agileway-feign</module>
@@ -86,7 +86,7 @@
         <dependencies>
             <dependency>
                 <groupId>com.github.fangjinuo.agileway</groupId>
-                <artifactId>agileway-serialization</artifactId>
+                <artifactId>agileway-codec</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -100,8 +100,7 @@
         </dependency>
         <dependency>
             <groupId>com.github.fangjinuo.agileway</groupId>
-            <artifactId>agileway-serialization</artifactId>
-            <version>1.1.0</version>
+            <artifactId>agileway-codec</artifactId>
             <scope>compile</scope>
         </dependency>
     </dependencies>
