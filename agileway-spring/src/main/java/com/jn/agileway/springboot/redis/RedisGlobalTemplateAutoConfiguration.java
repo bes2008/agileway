@@ -48,6 +48,7 @@ public class RedisGlobalTemplateAutoConfiguration {
                 true
         );
         logger.info("====== Initial the global redis template ======");
+        logger.info("the global redis template configuration: {}", globalRedisTemplateProperties);
         return redisTemplate;
     }
 

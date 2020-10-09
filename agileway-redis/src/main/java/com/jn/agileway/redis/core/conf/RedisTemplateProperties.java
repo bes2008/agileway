@@ -1,6 +1,7 @@
 package com.jn.agileway.redis.core.conf;
 
 import com.jn.agileway.redis.core.key.RedisKeyProperties;
+import com.jn.easyjson.core.factory.JsonFactorys;
 
 public class RedisTemplateProperties {
     private RedisKeyProperties key;
@@ -38,5 +39,10 @@ public class RedisTemplateProperties {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    @Override
+    public String toString() {
+        return JsonFactorys.getJSONFactory().get().toJson(this);
     }
 }
