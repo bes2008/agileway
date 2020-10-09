@@ -15,6 +15,7 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.*;
 
+import static com.jn.langx.util.Dates.MINUTES_TO_MILLIS;
 import static com.jn.langx.util.Dates.SECONDS_TO_MILLIS;
 
 public class SimpleShiroSession implements ValidatingSession {
@@ -31,7 +32,7 @@ public class SimpleShiroSession implements ValidatingSession {
     private Map<Object, Object> attributes;
 
     public SimpleShiroSession() {
-        this.timeout = Dates.MINUTES_TO_MILLIS * 30;
+        this.timeout = MINUTES_TO_MILLIS * 30;
         this.startTimestamp = new Date();
         this.lastAccessTime = this.startTimestamp;
     }
