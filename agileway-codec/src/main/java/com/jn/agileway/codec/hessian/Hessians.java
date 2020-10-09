@@ -45,9 +45,16 @@ public class Hessians {
             ByteArrayOutputStream bao = new ByteArrayOutputStream();
             output.init(bao);
             output.writeObject(o);
+            output.flush();
             return bao.toByteArray();
         } finally {
-            IOs.close(output);
+            if (hessian2OutputFactory instanceof ThreadLocalFactory) {
+                if (output != null) {
+                    output.reset();
+                }
+            } else {
+                IOs.close(output);
+            }
         }
     }
 
@@ -67,7 +74,13 @@ public class Hessians {
             input.init(bai);
             return (T) input.readObject();
         } finally {
-            IOs.close(input);
+            if (hessian2InputFactory instanceof ThreadLocalFactory) {
+                if (input != null) {
+                    input.reset();
+                }
+            } else {
+                IOs.close(input);
+            }
         }
     }
 
@@ -88,7 +101,13 @@ public class Hessians {
             input.init(bai);
             return (T) input.readObject(targetType);
         } finally {
-            IOs.close(input);
+            if (hessian2InputFactory instanceof ThreadLocalFactory) {
+                if (input != null) {
+                    input.reset();
+                }
+            } else {
+                IOs.close(input);
+            }
         }
     }
 
