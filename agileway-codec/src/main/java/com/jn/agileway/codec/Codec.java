@@ -16,4 +16,6 @@ public interface Codec<T> {
     boolean canSerialize(Class<?> type);
 
     Class<T> getTargetType();
+
+    void setTargetType(Class<T> targetType);
 }
