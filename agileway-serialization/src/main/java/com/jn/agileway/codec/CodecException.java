@@ -1,4 +1,4 @@
-package com.jn.agileway.serialization;
+package com.jn.agileway.codec;
 
 public class CodecException extends RuntimeException{
     public CodecException() {

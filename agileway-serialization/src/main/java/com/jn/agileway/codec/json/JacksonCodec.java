@@ -1,10 +1,10 @@
-package com.jn.agileway.serialization.json;
+package com.jn.agileway.codec.json;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jn.agileway.serialization.AbstractCodec;
-import com.jn.agileway.serialization.CodecException;
+import com.jn.agileway.codec.AbstractCodec;
+import com.jn.agileway.codec.CodecException;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;

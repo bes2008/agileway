@@ -1,7 +1,7 @@
-package com.jn.agileway.serialization.json;
+package com.jn.agileway.codec.json;
 
-import com.jn.agileway.serialization.AbstractCodec;
-import com.jn.agileway.serialization.CodecException;
+import com.jn.agileway.codec.AbstractCodec;
+import com.jn.agileway.codec.CodecException;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
 import com.jn.easyjson.core.factory.JsonScope;

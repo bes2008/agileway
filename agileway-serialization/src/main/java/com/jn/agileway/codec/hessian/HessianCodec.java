@@ -1,8 +1,8 @@
-package com.jn.agileway.serialization.hessian;
+package com.jn.agileway.codec.hessian;
 
 
-import com.jn.agileway.serialization.AbstractCodec;
-import com.jn.agileway.serialization.CodecException;
+import com.jn.agileway.codec.AbstractCodec;
+import com.jn.agileway.codec.CodecException;
 
 import java.io.IOException;
 

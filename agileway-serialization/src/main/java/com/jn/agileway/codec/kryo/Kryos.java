@@ -1,4 +1,4 @@
-package com.jn.agileway.serialization.kryo;
+package com.jn.agileway.codec.kryo;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;

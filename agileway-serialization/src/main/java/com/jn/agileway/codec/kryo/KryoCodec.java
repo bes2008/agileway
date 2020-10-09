@@ -1,8 +1,8 @@
-package com.jn.agileway.serialization.kryo;
+package com.jn.agileway.codec.kryo;
 
 
-import com.jn.agileway.serialization.AbstractCodec;
-import com.jn.agileway.serialization.CodecException;
+import com.jn.agileway.codec.AbstractCodec;
+import com.jn.agileway.codec.CodecException;
 import com.jn.langx.util.Emptys;
 
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.jn.agileway.serialization;
+package com.jn.agileway.codec;
 
 import com.jn.langx.util.reflect.Reflects;
 

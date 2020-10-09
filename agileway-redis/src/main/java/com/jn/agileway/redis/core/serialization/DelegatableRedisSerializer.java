@@ -1,7 +1,7 @@
 package com.jn.agileway.redis.core.serialization;
 
-import com.jn.agileway.serialization.Codec;
-import com.jn.agileway.serialization.CodecException;
+import com.jn.agileway.codec.Codec;
+import com.jn.agileway.codec.CodecException;
 import com.jn.langx.annotation.Nullable;
 import org.springframework.data.redis.serializer.RedisSerializer;
 

@@ -1,4 +1,4 @@
-package com.jn.agileway.serialization.protostuff;
+package com.jn.agileway.codec.protostuff;
 
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.util.Emptys;
