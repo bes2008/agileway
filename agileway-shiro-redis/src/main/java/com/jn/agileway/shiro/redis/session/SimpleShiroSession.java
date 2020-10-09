@@ -5,7 +5,6 @@ import com.jn.langx.util.hash.HashCodeBuilder;
 import org.apache.shiro.session.ExpiredSessionException;
 import org.apache.shiro.session.InvalidSessionException;
 import org.apache.shiro.session.StoppedSessionException;
-import org.apache.shiro.session.mgt.SimpleSession;
 import org.apache.shiro.session.mgt.ValidatingSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,7 @@ import static com.jn.langx.util.Dates.SECONDS_TO_MILLIS;
 
 public class SimpleShiroSession implements ValidatingSession, Serializable {
     private static final long serialVersionUID = -1L;
-    private transient static final Logger logger = LoggerFactory.getLogger(SimpleSession.class);
+    private transient static final Logger logger = LoggerFactory.getLogger(SimpleShiroSession.class);
 
     private Serializable id;
     private Date startTimestamp;
