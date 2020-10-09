@@ -28,7 +28,11 @@ public class HessianCodec<T> extends AbstractCodec<T> {
 
     @Override
     public T decode(byte[] bytes, Class<T> targetType) throws CodecException {
-        return null;
+        try {
+            return Hessians.deserialize(bytes, targetType);
+        } catch (IOException ex) {
+            throw new CodecException(ex.getMessage(), ex);
+        }
     }
 
 

@@ -71,6 +71,11 @@ public class Hessians {
         }
     }
 
+    public static <T> T deserialize(byte[] bytes, @NonNull Class targetType) throws IOException {
+        return deserialize(hessian2InputFactory, bytes, targetType);
+    }
+
+
     public static <T> T deserialize(Factory<?, Hessian2Input> hessian2InputFactory, byte[] bytes, @NonNull Class targetType) throws IOException {
         if (bytes == null || bytes.length == 0) {
             return null;
