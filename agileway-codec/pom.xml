@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>agileway-serialization</artifactId>
+    <artifactId>agileway-codec</artifactId>
 
     <properties>
         <hessian.version>4.0.63</hessian.version>
