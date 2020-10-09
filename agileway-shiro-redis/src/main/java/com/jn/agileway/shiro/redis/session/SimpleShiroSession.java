@@ -1,6 +1,5 @@
 package com.jn.agileway.shiro.redis.session;
 
-import com.jn.langx.util.Dates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.hash.HashCodeBuilder;
 import org.apache.shiro.session.ExpiredSessionException;
@@ -18,7 +17,7 @@ import java.util.*;
 import static com.jn.langx.util.Dates.MINUTES_TO_MILLIS;
 import static com.jn.langx.util.Dates.SECONDS_TO_MILLIS;
 
-public class SimpleShiroSession implements ValidatingSession {
+public class SimpleShiroSession implements ValidatingSession, Serializable {
     private static final long serialVersionUID = -1L;
     private transient static final Logger logger = LoggerFactory.getLogger(SimpleSession.class);
 

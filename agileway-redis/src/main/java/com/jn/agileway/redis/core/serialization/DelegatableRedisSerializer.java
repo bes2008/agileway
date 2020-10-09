@@ -33,7 +33,7 @@ public class DelegatableRedisSerializer<T> implements RedisSerializer<T> {
     @Override
     @Nullable
     public T deserialize(byte[] bytes) throws CodecException {
-        Class targetType = getTargetType();
+        Class<T> targetType = (Class<T>) getTargetType();
         if (targetType == null) {
             return delegate.decode(bytes);
         } else {
