@@ -7,7 +7,7 @@ import com.jn.agileway.redis.core.key.RedisKeyWrapper;
 import com.jn.agileway.redis.core.script.RedisLuaScriptRepository;
 import com.jn.agileway.redis.core.serialization.DelegatableRedisSerializer;
 import com.jn.agileway.redis.core.serialization.RedisKeySerializer;
-import com.jn.agileway.serialization.json.EasyjsonGenericSerializer;
+import com.jn.agileway.serialization.json.EasyjsonGenericCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class RedisGlobalTemplateAutoConfiguration {
     public RedisTemplate globalRedisTemplate(RedisConnectionFactory redisConnectionFactory,
                                              @Qualifier("globalRedisKeyWrapper") RedisKeyWrapper redisKeyWrapper,
                                              RedisLuaScriptRepository luaScriptRepository) {
-        EasyjsonGenericSerializer valueSerializer = new EasyjsonGenericSerializer<>();
+        EasyjsonGenericCodec valueSerializer = new EasyjsonGenericCodec<>();
         valueSerializer.setSerializeType(true);
 
         DelegatableRedisSerializer redisValueSerializer = new DelegatableRedisSerializer(valueSerializer);

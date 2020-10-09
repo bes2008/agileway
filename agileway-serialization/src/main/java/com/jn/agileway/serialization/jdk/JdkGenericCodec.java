@@ -1,37 +1,37 @@
 package com.jn.agileway.serialization.jdk;
 
-import com.jn.agileway.serialization.GenericSerializer;
-import com.jn.agileway.serialization.SerializationException;
+import com.jn.agileway.serialization.GenericCodec;
+import com.jn.agileway.serialization.CodecException;
 import com.jn.langx.util.io.ObjectIOs;
 
 import java.io.IOException;
 
-public class JdkGenericSerializer<T> implements GenericSerializer<T> {
+public class JdkGenericCodec<T> implements GenericCodec<T> {
 
     @Override
-    public byte[] serialize(T obj) throws SerializationException {
+    public byte[] serialize(T obj) throws CodecException {
         try {
             return ObjectIOs.serialize(obj);
         } catch (IOException ex) {
-            throw new SerializationException(ex.getMessage(), ex);
+            throw new CodecException(ex.getMessage(), ex);
         }
     }
 
     @Override
-    public T deserialize(byte[] bytes) throws SerializationException {
+    public T deserialize(byte[] bytes) throws CodecException {
         try {
             return ObjectIOs.deserialize(bytes);
         }catch (Throwable ex){
-            throw new SerializationException(ex.getMessage(), ex);
+            throw new CodecException(ex.getMessage(), ex);
         }
     }
 
     @Override
-    public T deserialize(byte[] bytes, Class<T> targetType) throws SerializationException {
+    public T deserialize(byte[] bytes, Class<T> targetType) throws CodecException {
         try {
             return ObjectIOs.deserialize(bytes, targetType);
         }catch (Throwable ex){
-            throw new SerializationException(ex.getMessage(), ex);
+            throw new CodecException(ex.getMessage(), ex);
         }
     }
 
