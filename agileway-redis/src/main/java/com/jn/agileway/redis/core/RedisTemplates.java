@@ -4,8 +4,8 @@ import com.jn.agileway.redis.core.key.RedisKeyWrapper;
 import com.jn.agileway.redis.core.script.RedisLuaScriptRepository;
 import com.jn.agileway.redis.core.serialization.DelegatableRedisSerializer;
 import com.jn.agileway.redis.core.serialization.RedisKeySerializer;
-import com.jn.agileway.serialization.GenericCodec;
-import com.jn.agileway.serialization.json.EasyjsonGenericCodec;
+import com.jn.agileway.serialization.Codec;
+import com.jn.agileway.serialization.json.EasyjsonCodec;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
 import com.jn.easyjson.core.factory.JsonScope;
@@ -32,7 +32,7 @@ public class RedisTemplates {
             boolean initIt
     ) {
         Preconditions.checkNotNull(beanClass, "the target class is null");
-        EasyjsonGenericCodec easyjsonRedisSerializer = new EasyjsonGenericCodec();
+        EasyjsonCodec easyjsonRedisSerializer = new EasyjsonCodec();
         easyjsonRedisSerializer.setJsonFactory(JsonFactorys.getJSONFactory(JsonScope.SINGLETON));
         easyjsonRedisSerializer.setTargetType(beanClass);
         return createRedisTemplate(connectionFactory, keyPrefix, new DelegatableRedisSerializer(easyjsonRedisSerializer), beanClass.getClassLoader(), null, hashKeySerializer, hashValueSerializer, redisLuaScriptRepository, enableTx, initIt);
@@ -65,7 +65,7 @@ public class RedisTemplates {
             boolean enableTx,
             boolean initIt
     ) {
-        EasyjsonGenericCodec easyjsonRedisSerializer = new EasyjsonGenericCodec();
+        EasyjsonCodec easyjsonRedisSerializer = new EasyjsonCodec();
         easyjsonRedisSerializer.setJsonFactory(jsonFactory);
         return createRedisTemplate(connectionFactory, keyPrefix, new DelegatableRedisSerializer(easyjsonRedisSerializer), beanClassLoader, null, hashKeySerializer, hashValueSerializer, redisLuaScriptRepository, enableTx, initIt);
     }
@@ -133,7 +133,7 @@ public class RedisTemplates {
     public static RedisTemplate<String, ?> createRedisTemplate(
             @NonNull RedisConnectionFactory connectionFactory,
             @Nullable RedisSerializer<String> keySerializer,
-            @NonNull GenericCodec<?> valueSerializer,
+            @NonNull Codec<?> valueSerializer,
             @Nullable ClassLoader beanClassLoader,
             @Nullable RedisSerializer<String> stringSerializer,
             @Nullable RedisSerializer<?> hashKeySerializer,

@@ -1,6 +1,6 @@
 package com.jn.agileway.serialization.json;
 
-import com.jn.agileway.serialization.GenericCodec;
+import com.jn.agileway.serialization.Codec;
 import com.jn.agileway.serialization.CodecException;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
@@ -12,17 +12,17 @@ import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.type.Primitives;
 
-public class EasyjsonGenericCodec<T> implements GenericCodec<T> {
+public class EasyjsonCodec<T> implements Codec<T> {
     private boolean serializeType = false;
     @NonNull
     private Class<T> targetType;
     private JSONFactory jsonFactory = JsonFactorys.getJSONFactory(JsonScope.SINGLETON);
 
-    public EasyjsonGenericCodec() {
+    public EasyjsonCodec() {
         setTargetType(Object.class);
     }
 
-    public EasyjsonGenericCodec(Class<T> targetType) {
+    public EasyjsonCodec(Class<T> targetType) {
         setTargetType(targetType);
     }
 

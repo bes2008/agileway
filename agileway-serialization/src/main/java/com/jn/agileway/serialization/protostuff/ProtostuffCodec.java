@@ -1,18 +1,18 @@
 package com.jn.agileway.serialization.protostuff;
 
-import com.jn.agileway.serialization.GenericCodec;
+import com.jn.agileway.serialization.Codec;
 import com.jn.agileway.serialization.CodecException;
 import com.jn.langx.util.reflect.Reflects;
 
-public class ProtostuffGenericCodec<T> implements GenericCodec<T> {
+public class ProtostuffCodec<T> implements Codec<T> {
 
     private Class<T> targetType;
 
-    public ProtostuffGenericCodec() {
+    public ProtostuffCodec() {
 
     }
 
-    public ProtostuffGenericCodec(Class<T> targetType) {
+    public ProtostuffCodec(Class<T> targetType) {
         setTargetType(targetType);
     }
 

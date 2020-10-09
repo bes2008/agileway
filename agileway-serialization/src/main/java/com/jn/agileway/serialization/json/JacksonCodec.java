@@ -3,21 +3,21 @@ package com.jn.agileway.serialization.json;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jn.agileway.serialization.GenericCodec;
+import com.jn.agileway.serialization.Codec;
 import com.jn.agileway.serialization.CodecException;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 
-public class JacksonGenericCodec<T> implements GenericCodec<T> {
+public class JacksonCodec<T> implements Codec<T> {
     private final ObjectMapper mapper;
 
-    public JacksonGenericCodec() {
+    public JacksonCodec() {
         this((String) null);
     }
 
-    public JacksonGenericCodec(@Nullable String classPropertyTypeName) {
+    public JacksonCodec(@Nullable String classPropertyTypeName) {
         this(new ObjectMapper());
         if (Strings.isNotBlank(classPropertyTypeName)) {
             this.mapper.enableDefaultTypingAsProperty(ObjectMapper.DefaultTyping.NON_FINAL, classPropertyTypeName);
@@ -27,7 +27,7 @@ public class JacksonGenericCodec<T> implements GenericCodec<T> {
 
     }
 
-    public JacksonGenericCodec(ObjectMapper mapper) {
+    public JacksonCodec(ObjectMapper mapper) {
         Preconditions.checkNotNull(mapper, "ObjectMapper must not be null!");
         this.mapper = mapper;
     }

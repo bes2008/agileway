@@ -2,7 +2,7 @@ package com.jn.agileway.serialization;
 
 import com.jn.langx.annotation.Nullable;
 
-public interface GenericCodec<T> {
+public interface Codec<T> {
     @Nullable
     byte[] serialize(@Nullable T obj) throws CodecException;
 

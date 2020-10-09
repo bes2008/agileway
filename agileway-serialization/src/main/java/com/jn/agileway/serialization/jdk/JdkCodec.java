@@ -1,20 +1,17 @@
-package com.jn.agileway.serialization.kryo;
+package com.jn.agileway.serialization.jdk;
 
-
-import com.jn.agileway.serialization.GenericCodec;
+import com.jn.agileway.serialization.Codec;
 import com.jn.agileway.serialization.CodecException;
-import com.jn.langx.util.Emptys;
+import com.jn.langx.util.io.ObjectIOs;
 
 import java.io.IOException;
 
-public class KryoGenericCodec<T> implements GenericCodec<T> {
-
-    private Class<T> targetType;
+public class JdkCodec<T> implements Codec<T> {
 
     @Override
-    public byte[] serialize(T t) throws CodecException {
+    public byte[] serialize(T obj) throws CodecException {
         try {
-            return Kryos.serialize(t);
+            return ObjectIOs.serialize(obj);
         } catch (IOException ex) {
             throw new CodecException(ex.getMessage(), ex);
         }
@@ -23,18 +20,19 @@ public class KryoGenericCodec<T> implements GenericCodec<T> {
     @Override
     public T deserialize(byte[] bytes) throws CodecException {
         try {
-            return Kryos.deserialize(bytes);
-        } catch (Throwable ex) {
+            return ObjectIOs.deserialize(bytes);
+        }catch (Throwable ex){
             throw new CodecException(ex.getMessage(), ex);
         }
     }
 
     @Override
     public T deserialize(byte[] bytes, Class<T> targetType) throws CodecException {
-        if (Emptys.isEmpty(bytes)) {
-            return null;
+        try {
+            return ObjectIOs.deserialize(bytes, targetType);
+        }catch (Throwable ex){
+            throw new CodecException(ex.getMessage(), ex);
         }
-        return Kryos.deserialize(bytes, targetType);
     }
 
     @Override
@@ -42,12 +40,8 @@ public class KryoGenericCodec<T> implements GenericCodec<T> {
         return true;
     }
 
-    public void setTargetType(Class<T> targetType) {
-        this.targetType = targetType;
-    }
-
     @Override
     public Class<?> getTargetType() {
-        return targetType;
+        return Object.class;
     }
 }
