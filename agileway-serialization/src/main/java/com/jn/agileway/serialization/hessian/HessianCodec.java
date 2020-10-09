@@ -1,15 +1,15 @@
 package com.jn.agileway.serialization.hessian;
 
 
-import com.jn.agileway.serialization.Codec;
+import com.jn.agileway.serialization.AbstractCodec;
 import com.jn.agileway.serialization.CodecException;
 
 import java.io.IOException;
 
-public class HessianCodec<T> implements Codec<T> {
+public class HessianCodec<T> extends AbstractCodec<T> {
 
     @Override
-    public byte[] serialize(T o) throws CodecException {
+    public byte[] encode(T o) throws CodecException {
         try {
             return Hessians.serialize(o);
         } catch (IOException ex) {
@@ -18,7 +18,7 @@ public class HessianCodec<T> implements Codec<T> {
     }
 
     @Override
-    public T deserialize(byte[] bytes) throws CodecException {
+    public T decode(byte[] bytes) throws CodecException {
         try {
             return Hessians.<T>deserialize(bytes);
         } catch (IOException ex) {
@@ -27,17 +27,9 @@ public class HessianCodec<T> implements Codec<T> {
     }
 
     @Override
-    public T deserialize(byte[] bytes, Class<T> targetType) throws CodecException {
+    public T decode(byte[] bytes, Class<T> targetType) throws CodecException {
         return null;
     }
 
-    @Override
-    public boolean canSerialize(Class type) {
-        return true;
-    }
 
-    @Override
-    public Class<?> getTargetType() {
-        return Object.class;
-    }
 }

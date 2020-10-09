@@ -27,13 +27,13 @@ public class DelegatableRedisSerializer<T> implements RedisSerializer<T> {
     @Override
     @Nullable
     public byte[] serialize(T obj) throws CodecException {
-        return delegate.serialize(obj);
+        return delegate.encode(obj);
     }
 
     @Override
     @Nullable
     public T deserialize(byte[] bytes) throws CodecException {
-        return delegate.deserialize(bytes);
+        return delegate.decode(bytes);
     }
 
     @Override

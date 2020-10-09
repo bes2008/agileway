@@ -1,18 +1,16 @@
 package com.jn.agileway.serialization.kryo;
 
 
-import com.jn.agileway.serialization.Codec;
+import com.jn.agileway.serialization.AbstractCodec;
 import com.jn.agileway.serialization.CodecException;
 import com.jn.langx.util.Emptys;
 
 import java.io.IOException;
 
-public class KryoCodec<T> implements Codec<T> {
-
-    private Class<T> targetType;
+public class KryoCodec<T> extends AbstractCodec<T> {
 
     @Override
-    public byte[] serialize(T t) throws CodecException {
+    public byte[] encode(T t) throws CodecException {
         try {
             return Kryos.serialize(t);
         } catch (IOException ex) {
@@ -21,7 +19,7 @@ public class KryoCodec<T> implements Codec<T> {
     }
 
     @Override
-    public T deserialize(byte[] bytes) throws CodecException {
+    public T decode(byte[] bytes) throws CodecException {
         try {
             return Kryos.deserialize(bytes);
         } catch (Throwable ex) {
@@ -30,24 +28,11 @@ public class KryoCodec<T> implements Codec<T> {
     }
 
     @Override
-    public T deserialize(byte[] bytes, Class<T> targetType) throws CodecException {
+    public T decode(byte[] bytes, Class<T> targetType) throws CodecException {
         if (Emptys.isEmpty(bytes)) {
             return null;
         }
         return Kryos.deserialize(bytes, targetType);
     }
 
-    @Override
-    public boolean canSerialize(Class<?> type) {
-        return true;
-    }
-
-    public void setTargetType(Class<T> targetType) {
-        this.targetType = targetType;
-    }
-
-    @Override
-    public Class<?> getTargetType() {
-        return targetType;
-    }
 }

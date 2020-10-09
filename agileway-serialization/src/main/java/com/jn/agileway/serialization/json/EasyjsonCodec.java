@@ -1,25 +1,21 @@
 package com.jn.agileway.serialization.json;
 
-import com.jn.agileway.serialization.Codec;
+import com.jn.agileway.serialization.AbstractCodec;
 import com.jn.agileway.serialization.CodecException;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
 import com.jn.easyjson.core.factory.JsonScope;
-import com.jn.langx.annotation.NonNull;
 import com.jn.langx.util.ClassLoaders;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.type.Primitives;
 
-public class EasyjsonCodec<T> implements Codec<T> {
+public class EasyjsonCodec<T> extends AbstractCodec<T> {
     private boolean serializeType = false;
-    @NonNull
-    private Class<T> targetType;
     private JSONFactory jsonFactory = JsonFactorys.getJSONFactory(JsonScope.SINGLETON);
 
     public EasyjsonCodec() {
-        setTargetType(Object.class);
     }
 
     public EasyjsonCodec(Class<T> targetType) {
@@ -27,7 +23,7 @@ public class EasyjsonCodec<T> implements Codec<T> {
     }
 
     @Override
-    public byte[] serialize(T t) throws CodecException {
+    public byte[] encode(T t) throws CodecException {
         if (t == null) {
             return new byte[0];
         }
@@ -39,12 +35,12 @@ public class EasyjsonCodec<T> implements Codec<T> {
     }
 
     @Override
-    public T deserialize(byte[] bytes) throws CodecException {
+    public T decode(byte[] bytes) throws CodecException {
         if (Emptys.isEmpty(bytes)) {
             return null;
         }
         String json = new String(bytes, Charsets.UTF_8);
-        Class<T> javaType = targetType;
+        Class<T> javaType = getTargetType();
         if (serializeType) {
             int index = json.indexOf(";");
 
@@ -67,12 +63,7 @@ public class EasyjsonCodec<T> implements Codec<T> {
     }
 
     @Override
-    public boolean canSerialize(Class<?> type) {
-        return Reflects.isSubClassOrEquals(targetType, type);
-    }
-
-    @Override
-    public T deserialize(byte[] bytes, Class<T> targetType) throws CodecException {
+    public T decode(byte[] bytes, Class<T> targetType) throws CodecException {
         if (Emptys.isEmpty(bytes)) {
             return null;
         }
@@ -80,16 +71,6 @@ public class EasyjsonCodec<T> implements Codec<T> {
         return jsonFactory.get().fromJson(json, targetType);
     }
 
-    @Override
-    public Class<?> getTargetType() {
-        return targetType;
-    }
-
-    public void setTargetType(Class targetType) {
-        if (targetType != null) {
-            this.targetType = targetType;
-        }
-    }
 
     public JSONFactory getJsonFactory() {
         return jsonFactory;

@@ -3,14 +3,14 @@ package com.jn.agileway.serialization.json;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jn.agileway.serialization.Codec;
+import com.jn.agileway.serialization.AbstractCodec;
 import com.jn.agileway.serialization.CodecException;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 
-public class JacksonCodec<T> implements Codec<T> {
+public class JacksonCodec<T> extends AbstractCodec<T> {
     private final ObjectMapper mapper;
 
     public JacksonCodec() {
@@ -33,7 +33,7 @@ public class JacksonCodec<T> implements Codec<T> {
     }
 
 
-    public byte[] serialize(@Nullable T source) throws CodecException {
+    public byte[] encode(@Nullable T source) throws CodecException {
         if (source == null) {
             return null;
         } else {
@@ -45,12 +45,12 @@ public class JacksonCodec<T> implements Codec<T> {
         }
     }
 
-    public T deserialize(@Nullable byte[] source) throws CodecException {
-        return (T) this.deserialize(source, (Class<T>) Object.class);
+    public T decode(@Nullable byte[] source) throws CodecException {
+        return (T) this.decode(source, (Class<T>) Object.class);
     }
 
     @Nullable
-    public T deserialize(@Nullable byte[] source, Class<T> type) throws CodecException {
+    public T decode(@Nullable byte[] source, Class<T> type) throws CodecException {
         Preconditions.checkNotNull(type, "Deserialization type must not be null! Please provide Object.class to make use of Jackson2 default typing.");
         if (Emptys.isEmpty(source)) {
             return null;
@@ -63,14 +63,4 @@ public class JacksonCodec<T> implements Codec<T> {
         }
     }
 
-
-    @Override
-    public boolean canSerialize(Class<?> type) {
-        return true;
-    }
-
-    @Override
-    public Class<?> getTargetType() {
-        return Object.class;
-    }
 }
