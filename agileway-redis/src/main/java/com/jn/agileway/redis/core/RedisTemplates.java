@@ -1,11 +1,18 @@
 package com.jn.agileway.redis.core;
 
+import com.jn.agileway.codec.Codec;
+import com.jn.agileway.codec.hessian.HessianCodec;
+import com.jn.agileway.codec.jdk.JdkCodec;
+import com.jn.agileway.codec.json.EasyjsonCodec;
+import com.jn.agileway.codec.json.JacksonCodec;
+import com.jn.agileway.codec.kryo.KryoCodec;
+import com.jn.agileway.codec.protostuff.ProtostuffCodec;
+import com.jn.agileway.redis.core.conf.BuiltinCodecType;
+import com.jn.agileway.redis.core.conf.RedisTemplateProperties;
 import com.jn.agileway.redis.core.key.RedisKeyWrapper;
 import com.jn.agileway.redis.core.script.RedisLuaScriptRepository;
 import com.jn.agileway.redis.core.serialization.DelegatableRedisSerializer;
 import com.jn.agileway.redis.core.serialization.RedisKeySerializer;
-import com.jn.agileway.codec.Codec;
-import com.jn.agileway.codec.json.EasyjsonCodec;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
 import com.jn.easyjson.core.factory.JsonScope;
@@ -143,6 +150,65 @@ public class RedisTemplates {
             boolean initIt
     ) {
         return createRedisTemplate(connectionFactory, keySerializer, new DelegatableRedisSerializer<>(valueSerializer), beanClassLoader, stringSerializer, hashKeySerializer, hashValueSerializer, redisLuaScriptRepository, enableTx, initIt);
+    }
+
+    public static RedisTemplate<String, ?> createRedisTemplate(
+            @NonNull RedisConnectionFactory connectionFactory,
+            RedisTemplateProperties redisTemplateProperties,
+            @Nullable ClassLoader beanClassLoader,
+            @Nullable RedisLuaScriptRepository redisLuaScriptRepository,
+            boolean initIt
+    ) {
+
+        RedisKeyWrapper keyWrapper = new RedisKeyWrapper(redisTemplateProperties.getKey());
+        RedisSerializer<String> keySerializer = new RedisKeySerializer(keyWrapper);
+
+        Codec<?> codec = newCodec(redisTemplateProperties.getValueCodecType());
+        RedisSerializer<?> valueSerializer = new DelegatableRedisSerializer(codec);
+
+
+        RedisSerializer hashKeySerializer = new RedisKeySerializer();
+
+        return createRedisTemplate(connectionFactory,
+                keySerializer,
+                valueSerializer,
+                beanClassLoader,
+                stringRedisSerializer,
+                hashKeySerializer,
+                valueSerializer,
+                redisLuaScriptRepository,
+                redisTemplateProperties.isTransactionEnabled(),
+                initIt
+        );
+    }
+
+    public static Codec newCodec(BuiltinCodecType codecType) {
+        codecType = codecType == null ? BuiltinCodecType.EASYJSON : codecType;
+        Codec codec = null;
+        switch (codecType) {
+            case EASYJSON:
+                codec = new EasyjsonCodec<>();
+                break;
+            case JSCKSON:
+                codec = new JacksonCodec();
+                break;
+            case JDK:
+                codec = new JdkCodec();
+                break;
+            case KRYO:
+                codec = new KryoCodec();
+                break;
+            case HESSIAN:
+                codec = new HessianCodec();
+                break;
+            case PROTOSTUFF:
+                codec = new ProtostuffCodec();
+                break;
+            default:
+                codec = new EasyjsonCodec();
+        }
+        return codec;
+
     }
 
     public static RedisTemplate<String, ?> createRedisTemplate(

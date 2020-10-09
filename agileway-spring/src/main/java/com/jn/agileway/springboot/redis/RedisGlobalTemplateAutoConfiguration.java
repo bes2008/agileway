@@ -1,13 +1,9 @@
 package com.jn.agileway.springboot.redis;
 
 import com.jn.agileway.redis.core.RedisTemplate;
+import com.jn.agileway.redis.core.conf.RedisTemplateProperties;
 import com.jn.agileway.redis.core.RedisTemplates;
-import com.jn.agileway.redis.core.key.RedisKeyProperties;
-import com.jn.agileway.redis.core.key.RedisKeyWrapper;
 import com.jn.agileway.redis.core.script.RedisLuaScriptRepository;
-import com.jn.agileway.redis.core.serialization.DelegatableRedisSerializer;
-import com.jn.agileway.redis.core.serialization.RedisKeySerializer;
-import com.jn.agileway.codec.json.EasyjsonCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,39 +25,27 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 public class RedisGlobalTemplateAutoConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(RedisGlobalTemplateAutoConfiguration.class);
 
-    @ConditionalOnMissingBean(name = "globalRedisKeyProperties")
-    @Bean(name = "globalRedisKeyProperties")
-    @ConfigurationProperties(prefix = "agileway.redis.global-template.key")
-    public RedisKeyProperties globalRedisKeyProperties() {
-        return new RedisKeyProperties();
+    @ConditionalOnMissingBean(name = "globalRedisTemplateProperties")
+    @Bean(name = "globalRedisTemplateProperties")
+    @ConfigurationProperties(prefix = "agileway.redis.global-template")
+    public RedisTemplateProperties globalRedisTemplateProperties() {
+        return new RedisTemplateProperties();
     }
 
-    @ConditionalOnMissingBean(name = "globalRedisKeyWrapper")
-    @Bean(name = "globalRedisKeyWrapper")
-    @Autowired
-    public RedisKeyWrapper globalRedisKeyWrapper(@Qualifier("globalRedisKeyProperties") RedisKeyProperties globalRedisKeyProperties) {
-        return new RedisKeyWrapper(globalRedisKeyProperties);
-    }
 
     @ConditionalOnMissingBean(name = "globalRedisTemplate")
     @Bean(name = "globalRedisTemplate")
     @Autowired
     public RedisTemplate globalRedisTemplate(RedisConnectionFactory redisConnectionFactory,
-                                             @Qualifier("globalRedisKeyWrapper") RedisKeyWrapper redisKeyWrapper,
+                                             @Qualifier("globalRedisTemplateProperties")
+                                                     RedisTemplateProperties globalRedisTemplateProperties,
                                              RedisLuaScriptRepository luaScriptRepository) {
-        EasyjsonCodec valueSerializer = new EasyjsonCodec<>();
-        valueSerializer.setSerializeType(true);
 
-        DelegatableRedisSerializer redisValueSerializer = new DelegatableRedisSerializer(valueSerializer);
         RedisTemplate redisTemplate = RedisTemplates.createRedisTemplate(redisConnectionFactory,
-                redisKeyWrapper,
-                redisValueSerializer,
+                globalRedisTemplateProperties,
                 this.getClass().getClassLoader(),
-                null,
-                new RedisKeySerializer(),
-                redisValueSerializer,
                 luaScriptRepository,
-                false, true
+                true
         );
         logger.info("====== Initial the global redis template ======");
         return redisTemplate;
