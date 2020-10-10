@@ -18,6 +18,7 @@
         <joda-time.version>2.10.6</joda-time.version>
         <protostuff.version>1.7.2</protostuff.version>
         <jackson.version>2.10.2</jackson.version>
+        <fst.version>2.56</fst.version>
     </properties>
 
     <dependencyManagement>
@@ -74,6 +75,13 @@
                 <groupId>io.protostuff</groupId>
                 <artifactId>protostuff-core</artifactId>
                 <version>${protostuff.version}</version>
+                <optional>true</optional>
+            </dependency>
+
+            <dependency>
+                <groupId>de.ruedigermoeller</groupId>
+                <artifactId>fst</artifactId>
+                <version>${fst.version}</version>
                 <optional>true</optional>
             </dependency>
         </dependencies>
@@ -139,6 +147,12 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>29.0-jre</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.ruedigermoeller</groupId>
+            <artifactId>fst</artifactId>
+            <optional>true</optional>
         </dependency>
 
     </dependencies>
