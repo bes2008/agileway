@@ -127,5 +127,13 @@
             <artifactId>protostuff-core</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>3.3.0</version>
+            <optional>true</optional>
+        </dependency>
+
     </dependencies>
 </project>

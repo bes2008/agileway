@@ -8,7 +8,7 @@ import com.jn.agileway.codec.kryo.serializer.JdkProxySerializer;
 import java.lang.reflect.InvocationHandler;
 import java.util.GregorianCalendar;
 
-public class JdkClassesCustomizer implements KryoCustomizer {
+public class JdkClassesKryoCustomizer implements KryoCustomizer {
     @Override
     public String getName() {
         return "jdk_classes";

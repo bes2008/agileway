@@ -5,7 +5,7 @@ import com.jn.agileway.codec.kryo.KryoCustomizer;
 import com.jn.langx.util.ClassLoaders;
 import de.javakaffee.kryoserializers.cglib.CGLibProxySerializer;
 
-public class CGLibProxyCustomizer implements KryoCustomizer {
+public class CGLibProxyKryoCustomizer implements KryoCustomizer {
     @Override
     public String getName() {
         return "cglib_proxy";

@@ -7,7 +7,7 @@ import de.javakaffee.kryoserializers.dexx.ListSerializer;
 import de.javakaffee.kryoserializers.dexx.MapSerializer;
 import de.javakaffee.kryoserializers.dexx.SetSerializer;
 
-public class DexxCustomizer implements KryoCustomizer {
+public class DexxKryoCustomizer implements KryoCustomizer {
     @Override
     public String getName() {
         return "dexx";
