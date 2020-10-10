@@ -5,10 +5,10 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.BeanSerializer;
 import com.esotericsoftware.kryo.serializers.DefaultSerializers;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.factory.Factory;
 import com.jn.langx.factory.ThreadLocalFactory;
 import com.jn.langx.util.Emptys;
-import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.reflect.type.Primitives;
 import de.javakaffee.kryoserializers.GregorianCalendarSerializer;
@@ -32,12 +32,16 @@ public class Kryos {
         @Override
         public Kryo get(Object o) {
             Kryo kryo = new Kryo();
+
+            kryo.setOptimizedGenerics(true);
+
             kryo.setReferences(true);
+            kryo.setCopyReferences(false);
+            // 设置为 false，等价于禁用了精确的类 serializer 查找，例如 默认有 Map接口的 Serializer，没有HashMap的，
+            // 如果类是个hashMap，如果设置为true，即精确查找的话，会因为找不到合适的Serializer而导致序列化失败，
+            kryo.setRegistrationRequired(false);
 
             kryo.register(Arrays.asList("").getClass(), new DefaultSerializers.ArraysAsListSerializer());
-            kryo.register(Collections.EMPTY_LIST.getClass(), new DefaultSerializers.CollectionsEmptyListSerializer());
-            kryo.register(Collections.EMPTY_MAP.getClass(), new DefaultSerializers.CollectionsEmptyMapSerializer());
-            kryo.register(Collections.EMPTY_SET.getClass(), new DefaultSerializers.CollectionsEmptySetSerializer());
             kryo.register(Collections.singletonList("").getClass(), new DefaultSerializers.CollectionsSingletonListSerializer());
             kryo.register(Collections.singleton("").getClass(), new DefaultSerializers.CollectionsSingletonSetSerializer());
             kryo.register(Collections.singletonMap("", "").getClass(), new DefaultSerializers.CollectionsSingletonMapSerializer());
@@ -119,45 +123,56 @@ public class Kryos {
         return deserialize(kryoFactory, bytes);
     }
 
+    public static <T> T deserialize(@Nullable byte[] bytes, @Nullable Class<T> targetType) {
+        return deserialize(getKryoFactory(null), bytes, targetType);
+    }
 
     public static <T> T deserialize(Factory<?, Kryo> kryoFactory, byte[] bytes) {
-        if (bytes == null || bytes.length == 0) {
-            return null;
-        }
-        Input input = null;
-        try {
-
-            ByteArrayInputStream bai = new ByteArrayInputStream(bytes);
-            input = new Input(bai);
-            return (T) kryoFactory.get(null).readClassAndObject(input);
-        } finally {
-            IOs.close(input);
-        }
-    }
-
-    public static <T> T deserialize(byte[] bytes, Class<T> targetType) {
-        return deserialize(kryoFactory, bytes, targetType);
+        return deserialize(getKryoFactory(kryoFactory), bytes, null);
     }
 
 
-    public static <T> T deserialize(Factory<?, Kryo> kryoFactory, byte[] bytes, Class<T> targetType) {
+    public static <T> T deserialize(@Nullable Factory<?, Kryo> kryoFactory, @Nullable byte[] bytes, @Nullable Class<T> targetType) {
         if (Emptys.isEmpty(bytes)) {
             return null;
         }
-        Preconditions.checkNotNull(targetType);
+        return deserialize(getKryoFactory(kryoFactory).get(null), bytes, targetType);
+    }
+
+
+    public static <T> T deserialize(Kryo kryo, byte[] bytes) {
+        return deserialize(kryo, bytes,null);
+    }
+
+
+    public static <T> T deserialize(Kryo kryo, byte[] bytes, Class<T> targetType) {
+        if (Emptys.isEmpty(bytes)) {
+            return null;
+        }
         Input input = null;
         try {
             ByteArrayInputStream bai = new ByteArrayInputStream(bytes);
             input = new Input(bai);
-            Kryo kryo = kryoFactory.get(null);
-            if (!Primitives.isPrimitiveOrPrimitiveWrapperType(targetType)) {
-                kryo.register(targetType, new BeanSerializer(kryo, targetType));
+            if (targetType != null) {
+                autoRegister(kryo, targetType);
+                return kryo.readObjectOrNull(input, targetType);
+            } else {
+                return (T) kryo.readClassAndObject(input);
             }
-            return (T) kryoFactory.get(null).readObjectOrNull(input, targetType);
         } finally {
             IOs.close(input);
         }
     }
 
+    public static Factory<?, Kryo> getKryoFactory(@Nullable Factory<?, Kryo> kryoFactory){
+        return kryoFactory == null ? Kryos.kryoFactory : kryoFactory;
+    }
+    public static void autoRegister(Kryo kryo, Class type) {
+        if (!Primitives.isPrimitiveOrPrimitiveWrapperType(type)) {
+            if (kryo.getRegistration(type) == null || kryo.getSerializer(type) == null || kryo.getDefaultSerializer(type) == null) {
+                kryo.register(type, new BeanSerializer(kryo, type));
+            }
+        }
+    }
 
 }

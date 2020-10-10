@@ -1,19 +1,26 @@
 package com.jn.agileway.codec.kryo;
 
-
+import com.esotericsoftware.kryo.Kryo;
 import com.jn.agileway.codec.AbstractCodec;
 import com.jn.agileway.codec.CodecException;
 import com.jn.langx.util.Emptys;
 
-import java.io.IOException;
-
 public class KryoCodec<T> extends AbstractCodec<T> {
+    private Kryo kryo;
+
+    public Kryo getKryo() {
+        return kryo == null ? Kryos.kryoFactory.get() : kryo;
+    }
+
+    public void setKryo(Kryo kryo) {
+        this.kryo = kryo;
+    }
 
     @Override
     public byte[] encode(T t) throws CodecException {
         try {
-            return Kryos.serialize(t);
-        } catch (IOException ex) {
+            return Kryos.serialize(getKryo(), t);
+        } catch (Throwable ex) {
             throw new CodecException(ex.getMessage(), ex);
         }
     }
@@ -21,7 +28,7 @@ public class KryoCodec<T> extends AbstractCodec<T> {
     @Override
     public T decode(byte[] bytes) throws CodecException {
         try {
-            return Kryos.deserialize(bytes);
+            return Kryos.deserialize(getKryo(), bytes, getTargetType());
         } catch (Throwable ex) {
             throw new CodecException(ex.getMessage(), ex);
         }
@@ -32,7 +39,7 @@ public class KryoCodec<T> extends AbstractCodec<T> {
         if (Emptys.isEmpty(bytes)) {
             return null;
         }
-        return Kryos.deserialize(bytes, targetType);
+        return Kryos.deserialize(getKryo(), bytes, targetType);
     }
 
 }
