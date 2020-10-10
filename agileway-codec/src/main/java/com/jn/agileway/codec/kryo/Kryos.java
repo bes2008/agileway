@@ -1,6 +1,7 @@
 package com.jn.agileway.codec.kryo;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.Registration;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.BeanSerializer;
@@ -8,8 +9,10 @@ import com.esotericsoftware.kryo.serializers.DefaultSerializers;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.factory.Factory;
 import com.jn.langx.factory.ThreadLocalFactory;
+import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.type.Primitives;
 import de.javakaffee.kryoserializers.GregorianCalendarSerializer;
 import de.javakaffee.kryoserializers.JdkProxySerializer;
@@ -119,20 +122,20 @@ public class Kryos {
         }
     }
 
-    public static <T> T deserialize(byte[] bytes) {
+    public static <T> T deserialize(byte[] bytes) throws IOException {
         return deserialize(kryoFactory, bytes);
     }
 
-    public static <T> T deserialize(@Nullable byte[] bytes, @Nullable Class<T> targetType) {
+    public static <T> T deserialize(@Nullable byte[] bytes, @Nullable Class<T> targetType) throws IOException {
         return deserialize(getKryoFactory(null), bytes, targetType);
     }
 
-    public static <T> T deserialize(Factory<?, Kryo> kryoFactory, byte[] bytes) {
+    public static <T> T deserialize(Factory<?, Kryo> kryoFactory, byte[] bytes) throws IOException {
         return deserialize(getKryoFactory(kryoFactory), bytes, null);
     }
 
 
-    public static <T> T deserialize(@Nullable Factory<?, Kryo> kryoFactory, @Nullable byte[] bytes, @Nullable Class<T> targetType) {
+    public static <T> T deserialize(@Nullable Factory<?, Kryo> kryoFactory, @Nullable byte[] bytes, @Nullable Class<T> targetType) throws IOException {
         if (Emptys.isEmpty(bytes)) {
             return null;
         }
@@ -140,12 +143,12 @@ public class Kryos {
     }
 
 
-    public static <T> T deserialize(Kryo kryo, byte[] bytes) {
-        return deserialize(kryo, bytes,null);
+    public static <T> T deserialize(Kryo kryo, byte[] bytes) throws IOException {
+        return deserialize(kryo, bytes, null);
     }
 
 
-    public static <T> T deserialize(Kryo kryo, byte[] bytes, Class<T> targetType) {
+    public static <T> T deserialize(Kryo kryo, byte[] bytes, Class<T> targetType) throws IOException {
         if (Emptys.isEmpty(bytes)) {
             return null;
         }
@@ -155,18 +158,45 @@ public class Kryos {
             input = new Input(bai);
             if (targetType != null) {
                 autoRegister(kryo, targetType);
-                return kryo.readObjectOrNull(input, targetType);
+            }
+            Class actualClass = null;
+
+            // 读类
+            Registration actualTypeRegistration = kryo.readClass(input);
+
+            if (input.available() < 1) {
+                return null;
+            }
+
+            if (actualTypeRegistration != null) {
+                actualClass = actualTypeRegistration.getType();
+            }
+            // 读数据
+            if (actualClass != null && targetType != null) {
+                if (Reflects.isSubClassOrEquals(targetType, actualClass)) {
+                    if (actualClass != targetType) {
+                        autoRegister(kryo, actualClass);
+                    }
+                    return (T) kryo.readObjectOrNull(input, actualClass);
+                } else {
+                    throw new ClassCastException(StringTemplates.formatWithPlaceholder("class {} is not cast to {}", Reflects.getFQNClassName(actualClass), Reflects.getFQNClassName(targetType)));
+                }
             } else {
-                return (T) kryo.readClassAndObject(input);
+                if (targetType == null) {
+                    return (T) kryo.readObjectOrNull(input, actualClass);
+                } else {
+                    return kryo.readObjectOrNull(input, targetType);
+                }
             }
         } finally {
             IOs.close(input);
         }
     }
 
-    public static Factory<?, Kryo> getKryoFactory(@Nullable Factory<?, Kryo> kryoFactory){
+    public static Factory<?, Kryo> getKryoFactory(@Nullable Factory<?, Kryo> kryoFactory) {
         return kryoFactory == null ? Kryos.kryoFactory : kryoFactory;
     }
+
     public static void autoRegister(Kryo kryo, Class type) {
         if (!Primitives.isPrimitiveOrPrimitiveWrapperType(type)) {
             if (kryo.getRegistration(type) == null || kryo.getSerializer(type) == null || kryo.getDefaultSerializer(type) == null) {

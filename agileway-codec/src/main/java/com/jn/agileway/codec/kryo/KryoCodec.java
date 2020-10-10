@@ -39,7 +39,11 @@ public class KryoCodec<T> extends AbstractCodec<T> {
         if (Emptys.isEmpty(bytes)) {
             return null;
         }
-        return Kryos.deserialize(getKryo(), bytes, targetType);
+        try {
+            return Kryos.deserialize(getKryo(), bytes, targetType);
+        } catch (Throwable ex) {
+            throw new CodecException(ex.getMessage(), ex);
+        }
     }
 
 }
