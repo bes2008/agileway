@@ -3,7 +3,7 @@ package com.jn.agileway.codec;
 import com.jn.langx.util.reflect.Reflects;
 
 public abstract class AbstractCodec<T> implements Codec<T> {
-    protected Class<T> targetType;
+    private Class<T> targetType;
 
 
     @Override

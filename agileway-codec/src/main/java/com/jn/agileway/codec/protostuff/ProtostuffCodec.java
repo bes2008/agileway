@@ -2,6 +2,7 @@ package com.jn.agileway.codec.protostuff;
 
 import com.jn.agileway.codec.AbstractCodec;
 import com.jn.agileway.codec.CodecException;
+import com.jn.langx.util.reflect.Reflects;
 
 public class ProtostuffCodec<T> extends AbstractCodec<T> {
 
@@ -36,4 +37,8 @@ public class ProtostuffCodec<T> extends AbstractCodec<T> {
         }
     }
 
+    @Override
+    public boolean canSerialize(Class type) {
+        return type != null && type != Object.class && Reflects.isSubClassOrEquals(type, getTargetType());
+    }
 }
