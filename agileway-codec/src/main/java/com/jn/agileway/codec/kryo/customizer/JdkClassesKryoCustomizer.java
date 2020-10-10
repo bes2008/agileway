@@ -2,8 +2,8 @@ package com.jn.agileway.codec.kryo.customizer;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.jn.agileway.codec.kryo.KryoCustomizer;
-import com.jn.agileway.codec.kryo.serializer.GregorianCalendarSerializer;
-import com.jn.agileway.codec.kryo.serializer.JdkProxySerializer;
+import com.jn.agileway.codec.kryo.serializer.jdk.GregorianCalendarSerializer;
+import com.jn.agileway.codec.kryo.serializer.jdk.JdkProxySerializer;
 
 import java.lang.reflect.InvocationHandler;
 import java.util.GregorianCalendar;
