@@ -54,29 +54,15 @@ public class Kryos {
                     try {
                         customizer.customize(kryo);
                     } catch (Throwable ex) {
-                        logger.error("Error occur when use the {} kry customizer : {}", name, Reflects.getFQNClassName(customizer.getClass()));
+                        if (ex instanceof NoClassDefFoundError || ex instanceof ClassNotFoundException) {
+                            logger.error("Error occur when register kryo serializers for {}, may be you should append de.javakaffee:kryo-serializers.jar to the classpath", name);
+                        } else {
+                            logger.error("Error occur when register kryo customizer  for {}", name);
+                        }
                     }
                 }
             });
 
-
-// guava ImmutableList, ImmutableSet, ImmutableMap, ImmutableMultimap, ImmutableTable, ReverseList, UnmodifiableNavigableSet
-//            ImmutableListSerializer.registerSerializers(kryo);
-//            ImmutableSetSerializer.registerSerializers(kryo);
-//            ImmutableMapSerializer.registerSerializers(kryo);
-//            ImmutableMultimapSerializer.registerSerializers(kryo);
-//            ImmutableTableSerializer.registerSerializers(kryo);
-//            ReverseListSerializer.registerSerializers(kryo);
-//            UnmodifiableNavigableSetSerializer.registerSerializers(kryo);
-// guava ArrayListMultimap, HashMultimap, LinkedHashMultimap, LinkedListMultimap, TreeMultimap, ArrayTable, HashBasedTable, TreeBasedTable
-//            ArrayListMultimapSerializer.registerSerializers(kryo);
-//            HashMultimapSerializer.registerSerializers(kryo);
-//            LinkedHashMultimapSerializer.registerSerializers(kryo);
-//            LinkedListMultimapSerializer.registerSerializers(kryo);
-//            TreeMultimapSerializer.registerSerializers(kryo);
-//            ArrayTableSerializer.registerSerializers(kryo);
-//            HashBasedTableSerializer.registerSerializers(kryo);
-//            TreeBasedTableSerializer.registerSerializers(kryo);
             return kryo;
         }
     });
