@@ -11,6 +11,8 @@ import com.jn.langx.factory.Factory;
 import com.jn.langx.factory.ThreadLocalFactory;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Emptys;
+import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.type.Primitives;
@@ -23,13 +25,14 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.GregorianCalendar;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Kryos {
     private Kryos() {
     }
+
+    private static final Map<String, KryoCustomizer> kryoCustomizerRegistry = new ConcurrentHashMap<String, KryoCustomizer>();
 
     public static final ThreadLocalFactory<?, Kryo> kryoFactory = new ThreadLocalFactory<Object, Kryo>(new Factory<Object, Kryo>() {
         @Override
@@ -92,7 +95,6 @@ public class Kryos {
             return kryo;
         }
     });
-
 
     public static <T> byte[] serialize(T o) throws IOException {
         return serialize(kryoFactory, o);
@@ -199,10 +201,27 @@ public class Kryos {
 
     public static void autoRegister(Kryo kryo, Class type) {
         if (!Primitives.isPrimitiveOrPrimitiveWrapperType(type)) {
-            if (kryo.getRegistration(type) == null || kryo.getSerializer(type) == null || kryo.getDefaultSerializer(type) == null) {
+            if ((kryo.getRegistration(type) != null && kryo.getSerializer(type) != null) || kryo.getDefaultSerializer(type) != null) {
                 kryo.register(type, new BeanSerializer(kryo, type));
             }
         }
     }
 
+    static {
+        ServiceLoader<KryoCustomizer> loader = ServiceLoader.load(KryoCustomizer.class);
+        Pipeline.of(loader).forEach(new Consumer<KryoCustomizer>() {
+            @Override
+            public void accept(KryoCustomizer kryoCustomizer) {
+                kryoCustomizerRegistry.put(kryoCustomizer.getName(), kryoCustomizer);
+            }
+        });
+    }
+
+    public static void registerCustomizer(String name, KryoCustomizer customizer) {
+        kryoCustomizerRegistry.put(name, customizer);
+    }
+
+    public static KryoCustomizer getCustomizer(String name) {
+        return kryoCustomizerRegistry.get(name);
+    }
 }
