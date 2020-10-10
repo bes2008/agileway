@@ -184,6 +184,7 @@ public class Kryos {
             @Override
             public void accept(KryoCustomizer kryoCustomizer) {
                 kryoCustomizerRegistry.put(kryoCustomizer.getName(), kryoCustomizer);
+                logger.info("Load the kryo serializers for {}", kryoCustomizer.getName());
             }
         });
     }
