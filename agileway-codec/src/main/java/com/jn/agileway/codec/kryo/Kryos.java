@@ -60,15 +60,6 @@ public class Kryos {
             });
 
 
-// joda DateTime, LocalDate, LocalDateTime and LocalTime
-//            kryo.register(DateTime.class, new JodaDateTimeSerializer());
-//            kryo.register(LocalDate.class, new JodaLocalDateSerializer());
-//            kryo.register(LocalDateTime.class, new JodaLocalDateTimeSerializer());
-//            kryo.register(LocalDateTime.class, new JodaLocalTimeSerializer());
-// protobuf
-//            kryo.register(SampleProtoA.class, new ProtobufSerializer()); // or override Kryo.getDefaultSerializer as shown below
-// wicket
-//            kryo.register( MiniMap.class, new MiniMapSerializer() );
 // guava ImmutableList, ImmutableSet, ImmutableMap, ImmutableMultimap, ImmutableTable, ReverseList, UnmodifiableNavigableSet
 //            ImmutableListSerializer.registerSerializers(kryo);
 //            ImmutableSetSerializer.registerSerializers(kryo);
