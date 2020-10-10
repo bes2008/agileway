@@ -5,37 +5,41 @@ import com.esotericsoftware.kryo.Registration;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.BeanSerializer;
-import com.esotericsoftware.kryo.serializers.DefaultSerializers;
-import com.jn.agileway.codec.kryo.serializer.GregorianCalendarSerializer;
-import com.jn.agileway.codec.kryo.serializer.JdkProxySerializer;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.factory.Factory;
 import com.jn.langx.factory.ThreadLocalFactory;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Emptys;
+import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.type.Primitives;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationHandler;
-import java.util.*;
+import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Kryos {
+
     private Kryos() {
     }
+
+    private static final Logger logger = LoggerFactory.getLogger(Kryos.class);
 
     private static final Map<String, KryoCustomizer> kryoCustomizerRegistry = new ConcurrentHashMap<String, KryoCustomizer>();
 
     public static final ThreadLocalFactory<?, Kryo> kryoFactory = new ThreadLocalFactory<Object, Kryo>(new Factory<Object, Kryo>() {
         @Override
         public Kryo get(Object o) {
-            Kryo kryo = new Kryo();
+            final Kryo kryo = new Kryo();
 
             kryo.setOptimizedGenerics(true);
 
@@ -44,17 +48,17 @@ public class Kryos {
             // 设置为 false，等价于禁用了精确的类 serializer 查找，例如 默认有 Map接口的 Serializer，没有HashMap的，
             // 如果类是个hashMap，如果设置为true，即精确查找的话，会因为找不到合适的Serializer而导致序列化失败，
             kryo.setRegistrationRequired(false);
+            Collects.forEach(kryoCustomizerRegistry, new Consumer2<String, KryoCustomizer>() {
+                @Override
+                public void accept(String name, KryoCustomizer customizer) {
+                    try {
+                        customizer.customize(kryo);
+                    } catch (Throwable ex) {
+                        logger.error("Error occur when use the {} kry customizer : {}", name, Reflects.getFQNClassName(customizer.getClass()));
+                    }
+                }
+            });
 
-
-            // custom serializers for non-jdk libs
-
-// register CGLibProxySerializer, works in combination with the appropriate action in handleUnregisteredClass (see below)
-//            kryo.register(CGLibProxySerializer.CGLibProxyMarker.class, new CGLibProxySerializer());
-
-            // dexx
-//            ListSerializer.registerSerializers(kryo);
-//            MapSerializer.registerSerializers(kryo);
-//            SetSerializer.registerSerializers(kryo);
 
 // joda DateTime, LocalDate, LocalDateTime and LocalTime
 //            kryo.register(DateTime.class, new JodaDateTimeSerializer());
