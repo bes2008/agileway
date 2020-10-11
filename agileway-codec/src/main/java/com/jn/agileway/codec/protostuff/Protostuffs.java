@@ -6,7 +6,6 @@ import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.SystemPropertys;
 import io.protostuff.GraphIOUtil;
 import io.protostuff.LinkedBuffer;
-import io.protostuff.ProtobufIOUtil;
 import io.protostuff.Schema;
 import io.protostuff.runtime.RuntimeSchema;
 
