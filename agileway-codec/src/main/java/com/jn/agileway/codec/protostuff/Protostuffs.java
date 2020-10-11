@@ -55,8 +55,8 @@ public class Protostuffs {
     static {
         // 下面的配置都是全局的, 可以参见 io.protostuff.runtime.RuntimeEnv
 
-        // 在序列化时，对于enum ，是否采用 name()
-        SystemPropertys.setPropertyIfAbsent("protostuff.runtime.enums_by_name", "false");
+        // 在序列化时，对于enum ，是否采用 name()，默认为false
+        SystemPropertys.setPropertyIfAbsent("protostuff.runtime.enums_by_name", "true");
         // 多态类
         SystemPropertys.setPropertyIfAbsent("protostuff.runtime.auto_load_polymorphic_classes", "true");
 
