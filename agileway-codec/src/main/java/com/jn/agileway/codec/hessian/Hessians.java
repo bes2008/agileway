@@ -3,6 +3,7 @@ package com.jn.agileway.codec.hessian;
 import com.caucho.hessian.io.Hessian2Input;
 import com.caucho.hessian.io.Hessian2Output;
 import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.factory.Factory;
 import com.jn.langx.factory.ThreadLocalFactory;
 import com.jn.langx.util.Preconditions;
@@ -11,6 +12,7 @@ import com.jn.langx.util.io.IOs;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 public class Hessians {
     private Hessians() {
@@ -38,15 +40,27 @@ public class Hessians {
         if (o == null) {
             return null;
         }
+        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+        try {
+            serialize(hessian2OutputFactory, o, bao);
+            return bao.toByteArray();
+        } finally {
+            IOs.close(bao);
+        }
+    }
 
+    public static <T> void serialize(@NonNull Factory<?, Hessian2Output> hessian2OutputFactory, @Nullable T o, @NonNull OutputStream outputStream) throws IOException {
+        if (o == null) {
+            return;
+        }
+        Preconditions.checkNotNull(hessian2OutputFactory, "hessian output factory is null");
+        Preconditions.checkNotNull(outputStream, "the output stream is null");
         Hessian2Output output = null;
         try {
             output = hessian2OutputFactory.get(null);
-            ByteArrayOutputStream bao = new ByteArrayOutputStream();
-            output.init(bao);
+            output.init(outputStream);
             output.writeObject(o);
             output.flush();
-            return bao.toByteArray();
         } finally {
             if (hessian2OutputFactory instanceof ThreadLocalFactory) {
                 if (output != null) {

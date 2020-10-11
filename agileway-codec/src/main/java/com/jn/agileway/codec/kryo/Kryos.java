@@ -5,11 +5,13 @@ import com.esotericsoftware.kryo.Registration;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.BeanSerializer;
+import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.factory.Factory;
 import com.jn.langx.factory.ThreadLocalFactory;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Emptys;
+import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
@@ -23,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
@@ -67,29 +70,60 @@ public class Kryos {
         }
     });
 
-    public static <T> byte[] serialize(T o) throws IOException {
+    public static <T> byte[] serialize(T o) {
         return serialize(kryoFactory, o);
+    }
+
+    public static <T> void serialize(T o, OutputStream outputStream) {
+        serialize(kryoFactory, o, outputStream);
     }
 
     public static <T> byte[] serialize(Factory<?, Kryo> kryoFactory, T o) {
         if (o == null) {
             return null;
         }
+        Preconditions.checkNotNull(kryoFactory, "the kryo factory is null");
         Kryo kryo = kryoFactory.get(null);
         return serialize(kryo, o);
     }
 
-    public static <T> byte[] serialize(Kryo kryo, T o) {
+
+    public static <T> void serialize(@NonNull Factory<?, Kryo> kryoFactory, @Nullable T o, @NonNull OutputStream outputStream) {
+        if (o == null) {
+            return;
+        }
+        Preconditions.checkNotNull(kryoFactory, "the kryo factory is null");
+        Kryo kryo = kryoFactory.get(null);
+        serialize(kryo, o, outputStream);
+    }
+
+    public static <T> byte[] serialize(@NonNull Kryo kryo, @Nullable T o) {
+        if (o == null) {
+            return null;
+        }
+        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+        try {
+            serialize(kryo, o, bao);
+            return bao.toByteArray();
+        } finally {
+            IOs.close(bao);
+        }
+    }
+
+
+    public static <T> void serialize(@NonNull Kryo kryo, @Nullable T o, @NonNull OutputStream outputStream) {
+        if (o == null) {
+            return;
+        }
+        Preconditions.checkNotNull(kryo, "the kryo is null");
         Output output = null;
         try {
-            ByteArrayOutputStream bao = new ByteArrayOutputStream();
-            output = new Output(bao);
+            output = new Output(outputStream);
             if (!Primitives.isPrimitiveOrPrimitiveWrapperType(o.getClass())) {
                 kryo.register(o.getClass(), new BeanSerializer(kryo, o.getClass()));
             }
             kryo.writeClassAndObject(output, o);
             output.flush();
-            return bao.toByteArray();
         } finally {
             IOs.close(output);
         }

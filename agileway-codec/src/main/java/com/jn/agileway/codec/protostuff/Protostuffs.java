@@ -1,6 +1,7 @@
 package com.jn.agileway.codec.protostuff;
 
 import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.SystemPropertys;
@@ -9,6 +10,8 @@ import io.protostuff.LinkedBuffer;
 import io.protostuff.Schema;
 import io.protostuff.runtime.RuntimeSchema;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Protostuffs {
@@ -27,6 +30,15 @@ public class Protostuffs {
         return GraphIOUtil.toByteArray(o, schema, buffer);
     }
 
+    public static <T> void serialize(@Nullable T o, @NonNull OutputStream outputStream) throws IOException {
+        if (o == null) {
+            return;
+        }
+        LinkedBuffer buffer = LinkedBuffer.allocate();
+        Class<T> objClass = (Class<T>) o.getClass();
+        Schema<T> schema = getSchema(objClass);
+        GraphIOUtil.writeTo(outputStream, o, schema, buffer);
+    }
 
     public static <T> T deserialize(byte[] bytes, @NonNull Class<T> targetType) {
         if (Emptys.isEmpty(bytes)) {
