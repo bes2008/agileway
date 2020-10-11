@@ -2,6 +2,7 @@ package com.jn.agileway.redis.core.conf;
 
 import com.jn.agileway.redis.core.key.RedisKeyProperties;
 import com.jn.easyjson.core.factory.JsonFactorys;
+import com.jn.easyjson.core.factory.JsonScope;
 
 public class RedisTemplateProperties {
     private RedisKeyProperties key;
@@ -43,6 +44,6 @@ public class RedisTemplateProperties {
 
     @Override
     public String toString() {
-        return JsonFactorys.getJSONFactory().get().toJson(this);
+        return JsonFactorys.getJSONFactory(JsonScope.SINGLETON).get().toJson(this);
     }
 }
