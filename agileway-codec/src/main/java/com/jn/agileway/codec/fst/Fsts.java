@@ -37,6 +37,10 @@ public class Fsts {
         @Override
         public FSTConfiguration get(Object o) {
             final FSTConfiguration fst = FSTConfiguration.createDefaultConfiguration();
+            // 用于解决循环依赖
+            fst.setShareReferences(true);
+            // 不检查是否实现 Serializable, Externalizable
+            fst.setStructMode(false);
             Collects.forEach(fstCustomizerRegistry, new Consumer2<String, FstCustomizer>() {
                 @Override
                 public void accept(String name, FstCustomizer customizer) {
