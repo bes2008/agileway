@@ -36,7 +36,7 @@ public class Fsts {
     public static final ThreadLocalFactory<?, FSTConfiguration> fstFactory = new ThreadLocalFactory<Object, FSTConfiguration>(new Factory<Object, FSTConfiguration>() {
         @Override
         public FSTConfiguration get(Object o) {
-            final FSTConfiguration fst = FSTConfiguration.createDefaultConfiguration();
+            final FSTConfiguration fst = FSTConfiguration.getDefaultConfiguration();
             // 用于解决循环依赖
             fst.setShareReferences(true);
             // 不检查是否实现 Serializable, Externalizable

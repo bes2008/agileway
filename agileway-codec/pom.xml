@@ -18,12 +18,11 @@
         <joda-time.version>2.10.6</joda-time.version>
         <protostuff.version>1.7.2</protostuff.version>
         <jackson.version>2.10.2</jackson.version>
-        <fst.version>2.56</fst.version>
+        <fst.version>2.57</fst.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-
             <dependency>
                 <groupId>com.github.fangjinuo.easyjson</groupId>
                 <artifactId>easyjson-jackson</artifactId>
