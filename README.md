@@ -32,11 +32,12 @@ Java、Web开发工具套件，尽量避免996
 + agileway-jdbc-datasource: 提供统一数据源
 + agileway-redis: 基于 RedisTemplate 提供一些扩展
     + 提供Java集合的扩展
-    + 提供分布式计数器
+    + 提供分布式Counter
     + 提供分布式Cache
     + 提供分布式Lock
     + 提供RedisTemplate 全局 Key Prefix
-    + 提供多种序列化类        
+    + 支持基于agileway-codec来使用多种序列化框架        
+    + 支持注册自定义Lua脚本
 + agileway-shiro-redis:
     + 提供基于redis的Shiro Cache实现
     + 提供基于redis的Shiro Session访问                

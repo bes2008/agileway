@@ -16,7 +16,6 @@ agileway:
       enabled: true
       key:
         prefix: agileway_redis_test
-
   rest:
     global-response-body:
       base-packages: com.jn.agileway.redis.examples.controller
