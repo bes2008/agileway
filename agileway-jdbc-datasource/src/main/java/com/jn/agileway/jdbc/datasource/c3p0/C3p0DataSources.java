@@ -15,6 +15,9 @@ import static com.jn.agileway.jdbc.datasource.c3p0.C3p0PropertyNames.*;
  * https://www.mchange.com/projects/c3p0/#using_datasources_factory
  */
 public class C3p0DataSources {
+    private C3p0DataSources() {
+    }
+
     public static DataSource createDataSource(final DataSourceProperties properties) {
         try {
             DataSource ds_unpooled = DataSources.unpooledDataSource(properties.getUrl(), properties.getUsername(), properties.getPassword());

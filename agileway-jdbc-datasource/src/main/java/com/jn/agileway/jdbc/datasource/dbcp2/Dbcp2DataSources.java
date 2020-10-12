@@ -14,6 +14,8 @@ import static com.jn.agileway.jdbc.datasource.dbcp2.Dbcp2PropertyNames.*;
  * http://commons.apache.org/proper/commons-dbcp/configuration.html
  */
 public class Dbcp2DataSources {
+    private Dbcp2DataSources() {
+    }
 
     public static BasicDataSource createDataSource(DataSourceProperties properties) {
         Properties props = properties.getDriverProps();
@@ -55,7 +57,7 @@ public class Dbcp2DataSources {
             props.setProperty(PROP_DEFAULT_SCHEMA, schema);
         }
 
-        props.setProperty(PROP_INITIAL_SIZE, ""+ properties.getInitialSize());
+        props.setProperty(PROP_INITIAL_SIZE, "" + properties.getInitialSize());
         props.setProperty(PROP_MIN_IDLE, "" + properties.getMinIdle());
         props.setProperty(PROP_MAX_IDLE, "" + Maths.max(8, properties.getMinIdle()));
         props.setProperty(PROP_MAX_TOTAL, "" + Maths.max(8, properties.getMaxPoolSize()));
@@ -66,7 +68,7 @@ public class Dbcp2DataSources {
             props.setProperty(PROP_VALIDATION_QUERY, validationQuery);
         }
 
-        props.setProperty(PROP_MAX_CONN_LIFETIME_MILLIS, ""+properties.getMaxLifetimeInMills());
+        props.setProperty(PROP_MAX_CONN_LIFETIME_MILLIS, "" + properties.getMaxLifetimeInMills());
 
 
         try {

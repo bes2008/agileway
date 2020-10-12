@@ -28,9 +28,18 @@ Java、Web开发工具套件，尽量避免996
         + 提供断点续传下载    
 + agileway-spring: 
     + web:
-        rest: 提供统一结果、统一异常的Spring环境下的处理
+        + rest: 提供统一结果、统一异常的Spring环境下的处理
+    + springboot:
+        + web:
+            + rest: 提供统一结果、统一异常的Spring-Boot环境下的处理
+        + redis: 提供redis 在Spring-boot下的全局RedisTemplate
 + agileway-jdbc-datasource: 提供统一数据源
-+ agileway-redis: 基于 RedisTemplate 提供一些扩展
+    + 支持 dbcp2
+    + 支持 c3p0
+    + 支持 druid
+    + 支持 hikaricp
+    + 支持 tomcat-jdbc
++ [agileway-redis: 基于 RedisTemplate 提供一些扩展](./.wiki/agileway-redis.MD)
     + 提供Java集合的扩展
     + 提供分布式Counter
     + 提供分布式Cache

@@ -11,6 +11,8 @@ import java.util.Properties;
 import static com.jn.agileway.jdbc.datasource.tomcatjdbc.TomcatJdbcDataSourcePropertyNames.*;
 
 public class TomcatJdbcDataSources {
+    private TomcatJdbcDataSources() {
+    }
 
     public static DataSource createDataSource(final DataSourceProperties properties) {
         DataSourceFactory dsf = new DataSourceFactory();

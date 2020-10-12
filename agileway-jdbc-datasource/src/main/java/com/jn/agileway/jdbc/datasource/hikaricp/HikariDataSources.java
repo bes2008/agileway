@@ -1,7 +1,7 @@
 package com.jn.agileway.jdbc.datasource.hikaricp;
 
-import com.jn.agileway.jdbc.datasource.DataSourceProperties;
 import com.jn.agileway.jdbc.Jdbcs;
+import com.jn.agileway.jdbc.datasource.DataSourceProperties;
 import com.jn.langx.util.Emptys;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -10,6 +10,9 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 public class HikariDataSources {
+    private HikariDataSources() {
+    }
+
     public static DataSource createDataSource(final DataSourceProperties props) {
         Properties driverProps = props.getDriverProps();
         HikariConfig config = null;
