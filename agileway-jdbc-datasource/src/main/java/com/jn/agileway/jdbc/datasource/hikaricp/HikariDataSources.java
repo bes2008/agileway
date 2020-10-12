@@ -5,11 +5,14 @@ import com.jn.agileway.jdbc.datasource.DataSourceProperties;
 import com.jn.langx.util.Emptys;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.util.Properties;
 
 public class HikariDataSources {
+    private static final Logger logger = LoggerFactory.getLogger(HikariDataSources.class);
     private HikariDataSources() {
     }
 
@@ -41,7 +44,7 @@ public class HikariDataSources {
         try {
             txIsoLevel = Jdbcs.getTransactionIsolation(props.getTransactionIsolationName());
         } catch (Throwable t) {
-
+            logger.error("parse jdbc transaction isolation fail: {}", t.getMessage(), t);
         } finally {
             if (txIsoLevel == -1) {
                 props.setTransactionIsolationName("TRANSACTION_READ_COMMITTED");

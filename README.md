@@ -47,6 +47,6 @@ Java、Web开发工具套件，尽量避免996
     + 提供RedisTemplate 全局 Key Prefix
     + 支持基于agileway-codec来使用多种序列化框架        
     + 支持注册自定义Lua脚本
-+ agileway-shiro-redis:
++ agileway-shiro-redis: 提供Shiro基于Redis的Cache，Session实现
     + 提供基于redis的Shiro Cache实现
     + 提供基于redis的Shiro Session访问                
