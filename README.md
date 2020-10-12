@@ -2,7 +2,7 @@
 Java、Web开发工具套件，尽量避免996
 
 ## module
-+ agileway-codec: 提供通用的encode, decode实现
++ [agileway-codec: 提供通用的encode, decode实现](./.wiki/agileway-codec.MD)
     + 支持基于 Jdk Serializable 规范实现
     + 支持基于 easyjson, jackson实现
     + 支持基于 hessian 序列化框架实现
