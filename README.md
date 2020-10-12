@@ -8,7 +8,7 @@ Java、Web开发工具套件，尽量避免996
     + 支持基于 hessian 序列化框架实现
     + 支持基于 Kryo 序列化框架实现
     + 支持基于 Protostuff 序列化框架实现
-+ agileway-feign： 提供对feign的扩展
++ [agileway-feign： 提供对feign的扩展](./.wiki/agileway-feign.MD)
     + 提供基于 Feign 的 RestService动态创建
     + 提供基于 easyjson 的 encoder, decoder
     + 集成负载均衡功能

@@ -1,4 +1,4 @@
-## Codec
+## Agileway-Codec
 
 目前市面上支持很多的序列化框架
 1）需要IDL的有：Thrift, Avro, Protobuf
