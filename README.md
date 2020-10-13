@@ -1,7 +1,12 @@
+[![License](https://img.shields.io/badge/license-Apach2.0-green.svg)](https://github.com/fangjinuo/agileway/blob/master/LICENSE)
+[![maven](https://img.shields.io/badge/maven-v1.2.0-green.svg)](https://search.maven.org/search?q=g:com.github.fangjinuo.sqlhelper%20AND%20v:1.2.0)
+
+
+
 # agileway
 Java、Web开发工具套件，尽量避免996
 
-## module
+## module & features
 + [agileway-codec: 提供通用的encode, decode实现](./.wiki/agileway-codec.MD)
     + 支持基于 Jdk Serializable 规范实现
     + 支持基于 easyjson, jackson实现
@@ -49,4 +54,11 @@ Java、Web开发工具套件，尽量避免996
     + 支持注册自定义Lua脚本
 + agileway-shiro-redis: 提供Shiro基于Redis的Cache，Session实现
     + 提供基于redis的Shiro Cache实现
-    + 提供基于redis的Shiro Session访问                
+    + 提供基于redis的Shiro Session访问       
++ [agileway-dmmq: 基于Disruptor实现的Memory Message Queue](./agileway-dmmq/README.MD)
+    + 消息流转：producer -> topic -> consumer
+    + 一个producer可以push消息到多个topic, 一个topic可以接收多个producer发的消息
+    + 一个consumer可以从多个topic拉取消息， 一个topic的消息可以被多个消费者重复的消费
+    + 一个consumer可以依赖于从同一topic拉取消息的多个其他的consumer
+    
+             
