@@ -1,8 +1,16 @@
 ## Agileway-Codec
 
 目前市面上支持很多的序列化框架
-1）需要Schema的有：Thrift, Avro, Protobuf, Protostuff
-2）不必需 IDL的：Fst, Hessian, Jdk 内置，Kryo
+1）需要Schema的有：
++ [Thrift](http://thrift.apache.org)
++ [Avro](https://avro.apache.org/)
++ [Protobuf](https://github.com/protocolbuffers/protobuf) 
++ [Protostuff](https://github.com/protostuff)
+2）不必需Schema的：
++ [Fst](https://github.com/RuedigerMoeller/fast-serialization) 
++ [Hessian](http://hessian.caucho.com/)
++ [Jdk 内置](https://docs.oracle.com/en/java/javase/13/docs/api/java.base/java/io/Serializable.html)
++ [Kryo](https://github.com/EsotericSoftware/kryo)
 
 需要Schema的不必说了，性能好，兼容多种语言，是特色，但是开发效率低下。
 
