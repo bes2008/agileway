@@ -6,6 +6,7 @@
 + [Avro](https://avro.apache.org/)
 + [Protobuf](https://github.com/protocolbuffers/protobuf) 
 + [Protostuff](https://github.com/protostuff)
++ [MsgPack](https://msgpack.org/)
 2）不必需Schema的：
 + [Fst](https://github.com/RuedigerMoeller/fast-serialization) 
 + [Hessian](http://hessian.caucho.com/)
