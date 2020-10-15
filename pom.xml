@@ -83,6 +83,7 @@
     <properties>
         <langx.version>2.10.2</langx.version>
         <easyjson.version>3.0.3</easyjson.version>
+        <httpclient.version>4.5.1</httpclient.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -130,6 +131,13 @@
                 <groupId>com.github.fangjinuo.easyjson</groupId>
                 <artifactId>easyjson-jackson</artifactId>
                 <version>${easyjson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
+                <scope>compile</scope>
+                <optional>true</optional>
             </dependency>
         </dependencies>
     </dependencyManagement>
