@@ -1,3 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.jn.agileway.springboot.redis.RedisLuaScriptRepositoryAutoConfiguration,\
-  com.jn.agileway.springboot.redis.RedisGlobalTemplateAutoConfiguration
+  com.jn.agileway.springboot.redis.RedisGlobalTemplateAutoConfiguration,\
+  com.jn.agileway.springboot.httpclient.HttpClientAutoConfiguration
