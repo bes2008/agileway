@@ -46,7 +46,7 @@ public class HttpClientProvider implements Initializable, Lifecycle, Supplier0<H
 
     private HttpClientProperties config;
 
-    private List<HttpClientCustomizer> customizers = Collects.emptyArrayList();
+    private final List<HttpClientCustomizer> customizers = Collects.emptyArrayList();
     private volatile boolean inited = false;
 
     private volatile boolean running = false;
@@ -118,12 +118,12 @@ public class HttpClientProvider implements Initializable, Lifecycle, Supplier0<H
         httpClient = httpClientBuilder.build();
 
         monitorThread = new IdleConnectionMonitorThread(connectionManager);
+        monitorThread.start();
     }
 
     @Override
     public void startup() {
         init();
-        monitorThread.start();
     }
 
     @Override
