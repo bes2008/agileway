@@ -143,4 +143,22 @@ public class HttpClientProperties {
             this.keepAliveTimeoutInMills = keepAliveTimeoutInMills;
         }
     }
+
+    @Override
+    public String toString() {
+        return "HttpClientProperties{" +
+                "poolMaxConnections=" + poolMaxConnections +
+                ", poolMaxPerRoute=" + poolMaxPerRoute +
+                ", poolIdleConnValidateDelayInMills=" + poolIdleConnValidateDelayInMills +
+                ", socketTimeoutInMills=" + socketTimeoutInMills +
+                ", connectTimeoutInMills=" + connectTimeoutInMills +
+                ", connectionRequestTimeoutInMills=" + connectionRequestTimeoutInMills +
+                ", authcEnabled=" + authcEnabled +
+                ", contentCompressionEnabled=" + contentCompressionEnabled +
+                ", idleConnectionTimeoutInMills=" + idleConnectionTimeoutInMills +
+                ", idleConnectionCleanupIntervalInMills=" + idleConnectionCleanupIntervalInMills +
+                ", maxRetry=" + maxRetry +
+                ", keepAliveTimeoutInMills=" + keepAliveTimeoutInMills +
+                '}';
+    }
 }
