@@ -34,7 +34,7 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        logger.info("Initial the global rest response body handler for spring mvc: {}", Reflects.getFQNClassName(GlobalSpringRestResponseBodyHandler.class));
+        logger.info("===[AGILE_WAY-SPRING_GLOBAL_REST_RESPONSE_BODY_HANDLER]=== Initial the global rest response body handler for spring mvc: {}", Reflects.getFQNClassName(GlobalSpringRestResponseBodyHandler.class));
     }
 
     @Override

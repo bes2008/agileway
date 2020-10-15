@@ -39,6 +39,7 @@ public class HttpClientAutoConfiguration {
         HttpClientProvider provider = new HttpClientProvider();
         provider.setConfig(httpClientProperties);
         provider.setCustomizers(Pipeline.<HttpClientCustomizer>of(httpClientCustomizersProvider.iterator()).asList());
+        provider.startup();
         return provider;
     }
 }

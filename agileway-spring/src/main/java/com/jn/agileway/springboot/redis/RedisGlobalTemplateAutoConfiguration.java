@@ -47,7 +47,7 @@ public class RedisGlobalTemplateAutoConfiguration {
                 luaScriptRepository,
                 true
         );
-        logger.info("====== Initial the global redis template ======");
+        logger.info("===[AGILE_WAY-GLOBAL_REDIS_TEMPLATE]=== Initial the global redis template");
         logger.info("the global redis template configuration: {}", globalRedisTemplateProperties);
         return redisTemplate;
     }

@@ -81,6 +81,7 @@ public class HttpClientProvider implements Initializable, Lifecycle, Supplier0<H
         }
         inited = true;
         Preconditions.checkNotNull(config, "the httpclient provider's config is null");
+        logger.info("===[AGILE_WAY-HTTP_CLIENT_PROVIDER]=== Initial the aigleway http client provider");
         this.connectionManager = new PoolingHttpClientConnectionManager();
         connectionManager.setMaxTotal(config.getPoolMaxConnections());
         connectionManager.setDefaultMaxPerRoute(config.getPoolMaxPerRoute());

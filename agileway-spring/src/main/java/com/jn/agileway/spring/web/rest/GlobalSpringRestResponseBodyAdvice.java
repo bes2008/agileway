@@ -29,7 +29,7 @@ public class GlobalSpringRestResponseBodyAdvice implements ResponseBodyAdvice, I
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        logger.info("====== Initial the spring global rest response body advice: {} ======", Reflects.getFQNClassName(getClass()));
+        logger.info("===[AGILE_WAY-GLOBAL_SPRING_REST_RESPONSE_ADVICE]=== Initial the spring global rest response body advice: {}", Reflects.getFQNClassName(getClass()));
     }
 
     @Override
