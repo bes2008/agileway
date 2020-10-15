@@ -29,13 +29,5 @@
             <artifactId>shiro-web</artifactId>
             <version>${shiro.version}</version>
         </dependency>
-        <!--这个库不错，可以作为后续参考使用-->
-        <!--
-        <dependency>
-            <groupId>org.iherus.shiro</groupId>
-            <artifactId>shiro-redis</artifactId>
-            <version>2.3.0</version>
-        </dependency>
-        -->
     </dependencies>
 </project>
