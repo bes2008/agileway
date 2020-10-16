@@ -19,6 +19,7 @@
         <dependency>
             <groupId>com.github.fangjinuo.agileway</groupId>
             <artifactId>agileway-redis</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -26,7 +27,7 @@
             <artifactId>spring-webmvc</artifactId>
             <version>5.2.9.RELEASE</version>
             <optional>true</optional>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -34,14 +35,14 @@
             <artifactId>spring-boot-starter</artifactId>
             <version>1.5.0.RELEASE</version>
             <optional>true</optional>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
             <version>1.5.0.RELEASE</version>
             <optional>true</optional>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
 
 
