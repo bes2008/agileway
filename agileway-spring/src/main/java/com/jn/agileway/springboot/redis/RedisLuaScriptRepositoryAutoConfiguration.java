@@ -9,11 +9,13 @@ import com.jn.langx.io.resource.ResourceLocationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 
+@ConditionalOnClass(RedisConnectionFactory.class)
 @Configuration
 @AutoConfigureAfter(RedisConnectionFactory.class)
 public class RedisLuaScriptRepositoryAutoConfiguration {
