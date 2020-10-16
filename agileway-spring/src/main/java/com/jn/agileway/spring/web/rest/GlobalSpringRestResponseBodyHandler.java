@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
@@ -87,6 +86,9 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
         RestRespBody respBody = null;
         if (statusCode >= 400) {
             respBody = RestRespBody.error(statusCode, "", "");
+            if (body != null) {
+                respBody.setData(body);
+            }
         } else {
             respBody = RestRespBody.ok(body);
         }
