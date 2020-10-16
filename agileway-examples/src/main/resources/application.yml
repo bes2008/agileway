@@ -14,7 +14,7 @@ agileway:
   httpClient:
     enabled: true
   redis:
-    enabled: false
+    enabled: true
     global-template:
       enabled: true
       key:

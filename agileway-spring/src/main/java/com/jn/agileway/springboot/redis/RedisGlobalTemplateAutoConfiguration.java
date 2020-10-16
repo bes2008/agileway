@@ -24,7 +24,6 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
         RedisLuaScriptRepositoryAutoConfiguration.class,
         RedisConnectionFactory.class
 })
-
 public class RedisGlobalTemplateAutoConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(RedisGlobalTemplateAutoConfiguration.class);
 
