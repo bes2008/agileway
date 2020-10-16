@@ -115,19 +115,26 @@ public class Fses {
     public static <T> T deserialize(@Nullable byte[] bytes, @Nullable Class<T> targetClass) {
         Pair<Fse, ByteArray> pair = fseFactory.get();
         Fse fse = pair.getKey();
-        return deserialize(fse, bytes, targetClass);
+        ByteArray buffer = pair.getValue();
+        try {
+            return deserialize(fse, buffer, bytes, targetClass);
+        }finally {
+            buffer.clear();
+        }
     }
 
-    public static <T> T deserialize(@NonNull Fse fst, @Nullable byte[] bytes) {
-        return deserialize(fst, bytes, null);
+    public static <T> T deserialize(@NonNull Fse fse, @Nullable byte[] bytes) {
+        return deserialize(fse, null, bytes, null);
     }
 
-    public static <T> T deserialize(@NonNull Fse fse, @Nullable byte[] bytes, @Nullable Class<T> targetClass) {
+    public static <T> T deserialize(@NonNull Fse fse, ByteArray buffer, @Nullable byte[] bytes, @Nullable Class<T> targetClass) {
         if (bytes == null) {
             return null;
         }
         try {
-            ByteArray buffer = ByteArray.wrap(bytes);
+            buffer = buffer == null ? ByteArray.allocate(bytes.length): buffer;
+            buffer.clear();
+            buffer.put(bytes);
             Object obj = fse.deSerialize(buffer);
             if (targetClass != null) {
                 if (!Reflects.isInstance(obj, targetClass)) {
