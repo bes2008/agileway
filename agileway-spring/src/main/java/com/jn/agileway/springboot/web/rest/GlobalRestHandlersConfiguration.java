@@ -26,7 +26,7 @@ public class GlobalRestHandlersConfiguration {
 
     @Bean
     @ConditionalOnMissingBean({JSONFactory.class})
-    public JSONFactory jsonFactory(){
+    public JSONFactory jsonFactory() {
         return JsonFactorys.getJSONFactory(JsonScope.SINGLETON);
     }
 
@@ -76,7 +76,7 @@ public class GlobalRestHandlersConfiguration {
 
     @Bean
     @ConditionalOnMissingBean({RestErrorMessageHandler.class})
-    public RestErrorMessageHandler errorMessageHandler(){
+    public RestErrorMessageHandler errorMessageHandler() {
         return NoopRestErrorMessageHandler.INSTANCE;
     }
 
@@ -89,6 +89,7 @@ public class GlobalRestHandlersConfiguration {
 
     /**
      * Spring Controller 级别的 Rest Exception Handler
+     *
      * @param jsonFactory
      * @param registry
      * @param globalRestExceptionHandlerProperties
@@ -118,6 +119,7 @@ public class GlobalRestHandlersConfiguration {
 
     /**
      * javax.servlet.Filter 级别的 Rest Exception Handler
+     *
      * @param jsonFactory
      * @param registry
      * @param globalRestExceptionHandlerProperties
@@ -147,14 +149,12 @@ public class GlobalRestHandlersConfiguration {
         return globalRestExceptionHandler;
     }
 
-
     @Bean
     @Autowired
     @ConditionalOnMissingBean({GlobalSpringRestResponseBodyAdvice.class})
-    public GlobalSpringRestResponseBodyAdvice globalSpringRestResponseBodyAdvice(GlobalSpringRestResponseBodyHandler globalSpringRestResponseBodyHandler){
+    public GlobalSpringRestResponseBodyAdvice globalSpringRestResponseBodyAdvice(GlobalSpringRestResponseBodyHandler globalSpringRestResponseBodyHandler) {
         GlobalSpringRestResponseBodyAdvice globalSpringRestResponseBodyAdvice = new GlobalSpringRestResponseBodyAdvice();
         globalSpringRestResponseBodyAdvice.setResponseBodyHandler(globalSpringRestResponseBodyHandler);
         return globalSpringRestResponseBodyAdvice;
     }
-
 }

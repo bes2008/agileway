@@ -16,8 +16,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Import({GlobalRestHandlersConfiguration.class})
 @EnableAgilewayWebFilters
-@ComponentScan(basePackageClasses = {
-        GlobalSpringRestResponseBodyAdvice.class
-})
 public @interface EnableGlobalRestHandlers {
 }
