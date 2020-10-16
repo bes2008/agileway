@@ -21,7 +21,7 @@ public class FstCodec<T> extends AbstractCodec<T> {
     @Override
     public T decode(byte[] bytes) throws CodecException {
         try {
-            return Fsts.deserialize(fst, bytes);
+            return Fsts.deserialize(fst, bytes, getTargetType());
         } catch (Throwable ex) {
             throw new CodecException(ex.getMessage(), ex);
         }

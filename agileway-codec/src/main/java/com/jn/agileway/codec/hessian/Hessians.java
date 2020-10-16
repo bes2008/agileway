@@ -2,12 +2,15 @@ package com.jn.agileway.codec.hessian;
 
 import com.caucho.hessian.io.Hessian2Input;
 import com.caucho.hessian.io.Hessian2Output;
+import com.jn.agileway.codec.CodecException;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.factory.Factory;
 import com.jn.langx.factory.ThreadLocalFactory;
+import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.reflect.Reflects;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -73,47 +76,33 @@ public class Hessians {
     }
 
     public static <T> T deserialize(byte[] bytes) throws IOException {
-        return deserialize(hessian2InputFactory, bytes);
+        return deserialize(hessian2InputFactory, bytes, null);
     }
 
-
-    public static <T> T deserialize(Factory<?, Hessian2Input> hessian2InputFactory, byte[] bytes) throws IOException {
-        if (bytes == null || bytes.length == 0) {
-            return null;
-        }
-        Hessian2Input input = null;
-        try {
-            input = hessian2InputFactory.get(null);
-            ByteArrayInputStream bai = new ByteArrayInputStream(bytes);
-            input.init(bai);
-            return (T) input.readObject();
-        } finally {
-            if (hessian2InputFactory instanceof ThreadLocalFactory) {
-                if (input != null) {
-                    input.reset();
-                }
-            } else {
-                IOs.close(input);
-            }
-        }
-    }
 
     public static <T> T deserialize(byte[] bytes, @NonNull Class targetType) throws IOException {
         return deserialize(hessian2InputFactory, bytes, targetType);
     }
 
 
-    public static <T> T deserialize(Factory<?, Hessian2Input> hessian2InputFactory, byte[] bytes, @NonNull Class targetType) throws IOException {
+    public static <T> T deserialize(Factory<?, Hessian2Input> hessian2InputFactory, byte[] bytes, @Nullable Class targetType) throws IOException {
         if (bytes == null || bytes.length == 0) {
             return null;
         }
-        Preconditions.checkNotNull(targetType, "target type is null");
         Hessian2Input input = null;
         try {
             input = hessian2InputFactory.get(null);
             ByteArrayInputStream bai = new ByteArrayInputStream(bytes);
             input.init(bai);
-            return (T) input.readObject(targetType);
+            Object obj = input.readObject(targetType);
+            if (targetType != null) {
+                if (!Reflects.isInstance(obj, targetType)) {
+                    throw new CodecException(StringTemplates.formatWithPlaceholder("{} is not cast to {} when use FSE deserialize", Reflects.getFQNClassName(obj.getClass()), Reflects.getFQNClassName(targetType)));
+                }
+                return (T) obj;
+            } else {
+                return (T) obj;
+            }
         } finally {
             if (hessian2InputFactory instanceof ThreadLocalFactory) {
                 if (input != null) {
