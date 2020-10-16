@@ -23,14 +23,6 @@ import org.springframework.core.annotation.Order;
 @Configuration
 @AutoConfigureBefore(GlobalSpringRestResponseBodyAdvice.class)
 public class GlobalRestHandlersConfiguration {
-
-    @Bean
-    @ConditionalOnMissingBean({JSONFactory.class})
-    public JSONFactory jsonFactory() {
-        return JsonFactorys.getJSONFactory(JsonScope.SINGLETON);
-    }
-
-
     @Order(-100)
     @Bean
     @Autowired
