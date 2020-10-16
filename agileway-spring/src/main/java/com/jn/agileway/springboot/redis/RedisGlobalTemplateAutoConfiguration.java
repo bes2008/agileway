@@ -1,8 +1,8 @@
 package com.jn.agileway.springboot.redis;
 
 import com.jn.agileway.redis.core.RedisTemplate;
-import com.jn.agileway.redis.core.conf.RedisTemplateProperties;
 import com.jn.agileway.redis.core.RedisTemplates;
+import com.jn.agileway.redis.core.conf.RedisTemplateProperties;
 import com.jn.agileway.redis.core.script.RedisLuaScriptRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 
-@ConditionalOnClass(RedisConnectionFactory.class)
+@ConditionalOnClass({RedisLuaScriptRepositoryAutoConfiguration.class, RedisConnectionFactory.class})
 @Configuration
 @AutoConfigureAfter(value = {
         RedisLuaScriptRepositoryAutoConfiguration.class,
