@@ -11,11 +11,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 
-@ConditionalOnClass(RedisConnectionFactory.class)
+@ConditionalOnProperty(name = "agileway.redis.endabled", havingValue = "true", matchIfMissing = false)
+@ConditionalOnClass({RedisConnectionFactory.class, RedisLuaScriptParser.class})
 @Configuration
 @AutoConfigureAfter(RedisConnectionFactory.class)
 public class RedisLuaScriptRepositoryAutoConfiguration {

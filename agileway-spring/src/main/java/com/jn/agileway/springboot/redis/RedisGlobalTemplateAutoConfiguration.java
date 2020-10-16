@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -17,13 +18,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 
-@ConditionalOnClass({RedisLuaScriptRepositoryAutoConfiguration.class, RedisConnectionFactory.class})
+@ConditionalOnExpression("${agileway.redis.endabled:false} == true && ${agileway.redis.global-template.enabled:false} == true")
 @Configuration
 @AutoConfigureAfter(value = {
         RedisLuaScriptRepositoryAutoConfiguration.class,
         RedisConnectionFactory.class
 })
-@ConditionalOnProperty(name = "agileway.redis.global-template.enabled", havingValue = "true", matchIfMissing = false)
+
 public class RedisGlobalTemplateAutoConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(RedisGlobalTemplateAutoConfiguration.class);
 
