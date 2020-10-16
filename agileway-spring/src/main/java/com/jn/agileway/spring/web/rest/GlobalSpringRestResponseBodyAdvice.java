@@ -5,6 +5,7 @@ import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -74,6 +75,7 @@ public class GlobalSpringRestResponseBodyAdvice implements ResponseBodyAdvice, I
     }
 
 
+    @Autowired(required = false)
     public void setResponseBodyHandler(GlobalSpringRestResponseBodyHandler responseBodyHandler) {
         this.responseBodyHandler = responseBodyHandler;
     }
