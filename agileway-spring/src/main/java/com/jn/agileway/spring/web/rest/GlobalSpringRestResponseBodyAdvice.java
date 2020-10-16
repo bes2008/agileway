@@ -75,7 +75,6 @@ public class GlobalSpringRestResponseBodyAdvice implements ResponseBodyAdvice, I
     }
 
 
-    @Autowired(required = false)
     public void setResponseBodyHandler(GlobalSpringRestResponseBodyHandler responseBodyHandler) {
         this.responseBodyHandler = responseBodyHandler;
     }

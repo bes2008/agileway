@@ -12,6 +12,7 @@ import com.jn.easyjson.core.factory.JsonFactorys;
 import com.jn.easyjson.core.factory.JsonScope;
 import com.jn.langx.util.collection.Collects;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -20,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
 @Configuration
+@AutoConfigureBefore(GlobalSpringRestResponseBodyAdvice.class)
 public class GlobalRestHandlersConfiguration {
 
     @Bean
