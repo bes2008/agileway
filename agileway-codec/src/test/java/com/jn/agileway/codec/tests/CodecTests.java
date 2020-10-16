@@ -2,6 +2,7 @@ package com.jn.agileway.codec.tests;
 
 import com.jn.agileway.codec.Codec;
 import com.jn.agileway.codec.CodecException;
+import com.jn.agileway.codec.fse.FseCodec;
 import com.jn.agileway.codec.fst.FstCodec;
 import com.jn.agileway.codec.hessian.HessianCodec;
 import com.jn.agileway.codec.kryo.KryoCodec;
@@ -61,6 +62,18 @@ public class CodecTests {
     @Test
     public void testFst() throws CodecException {
         Codec<Pojo> codec = new FstCodec<>();
+        byte[] bytes = codec.encode(pojo);
+        Pojo pojo2 = codec.decode(bytes);
+        Assert.assertEquals(pojo, pojo2);
+
+        Pojo pojo3 = codec.decode(bytes, Pojo.class);
+        Assert.assertEquals(pojo, pojo3);
+    }
+
+
+    @Test
+    public void testFse() throws CodecException {
+        Codec<Pojo> codec = new FseCodec<Pojo>();
         byte[] bytes = codec.encode(pojo);
         Pojo pojo2 = codec.decode(bytes);
         Assert.assertEquals(pojo, pojo2);

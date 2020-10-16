@@ -19,6 +19,7 @@
         <protostuff.version>1.7.2</protostuff.version>
         <jackson.version>2.10.2</jackson.version>
         <fst.version>2.57</fst.version>
+        <fse.version>aegean-2.1</fse.version>
     </properties>
 
     <dependencyManagement>
@@ -153,6 +154,11 @@
             <groupId>de.ruedigermoeller</groupId>
             <artifactId>fst</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.jfireframework</groupId>
+            <artifactId>fse</artifactId>
+            <version>${fse.version}</version>
         </dependency>
 
     </dependencies>
