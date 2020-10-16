@@ -79,4 +79,8 @@ public class GlobalSpringRestResponseBodyAdvice implements ResponseBodyAdvice, I
     public void setResponseBodyHandler(GlobalSpringRestResponseBodyHandler responseBodyHandler) {
         this.responseBodyHandler = responseBodyHandler;
     }
+
+    public GlobalSpringRestResponseBodyHandler getResponseBodyHandler() {
+        return responseBodyHandler;
+    }
 }
