@@ -8,9 +8,8 @@ import com.jn.agileway.web.filter.globalresponse.GlobalFilterRestResponseHandler
 import com.jn.agileway.web.filter.globalresponse.GlobalRestResponseFilter;
 import com.jn.agileway.web.rest.*;
 import com.jn.easyjson.core.JSONFactory;
-import com.jn.easyjson.core.factory.JsonFactorys;
-import com.jn.easyjson.core.factory.JsonScope;
 import com.jn.langx.util.collection.Collects;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -19,6 +18,8 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+
+import java.util.function.Consumer;
 
 @Configuration
 @AutoConfigureBefore(GlobalSpringRestResponseBodyAdvice.class)
@@ -61,8 +62,15 @@ public class GlobalRestHandlersConfiguration {
 
     @Bean
     @ConditionalOnMissingBean({GlobalRestExceptionHandlerRegistry.class})
-    public GlobalRestExceptionHandlerRegistry globalRestExceptionHandlerRegistry() {
+    public GlobalRestExceptionHandlerRegistry globalRestExceptionHandlerRegistry(ObjectProvider<RestActionExceptionHandler> restActionExceptionHandlersProvider) {
         GlobalRestExceptionHandlerRegistry registry = new GlobalRestExceptionHandlerRegistry();
+        registry.init();
+        restActionExceptionHandlersProvider.stream().forEach(new Consumer<RestActionExceptionHandler>() {
+            @Override
+            public void accept(RestActionExceptionHandler restActionExceptionHandler) {
+                registry.register(restActionExceptionHandler);
+            }
+        });
         return registry;
     }
 
