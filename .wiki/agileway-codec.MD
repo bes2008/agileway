@@ -2,16 +2,18 @@
 
 目前市面上支持很多的序列化框架
 1）需要Schema的有：
-+ [Thrift](http://thrift.apache.org)
 + [Avro](https://avro.apache.org/)
++ [MsgPack](https://msgpack.org/)
 + [Protobuf](https://github.com/protocolbuffers/protobuf) 
 + [Protostuff](https://github.com/protostuff)
-+ [MsgPack](https://msgpack.org/)
++ [Thrift](http://thrift.apache.org)
 2）不必需Schema的：
++ [FSE](https://github.com/linbin-eric/Fse)
 + [Fst](https://github.com/RuedigerMoeller/fast-serialization) 
 + [Hessian](http://hessian.caucho.com/)
 + [Jdk 内置](https://docs.oracle.com/en/java/javase/13/docs/api/java.base/java/io/Serializable.html)
 + [Kryo](https://github.com/EsotericSoftware/kryo)
++ [XSON](https://github.com/xsonorg/xson)
 
 需要Schema的不必说了，性能好，兼容多种语言，是特色，但是开发效率低下。
 
@@ -25,6 +27,8 @@
 | Jackson   |  支持       | 不支持       | 支持        | 不需要              | 支持       | 支持|
 | Hessian   |  支持      | 支持       | 支持        | 不需要              | 支持       | 支持 |
 | FST   |  支持      | 支持       | 支持        | 不需要              | 支持       | 支持 |
+| FSE   |  支持      | 支持       | 支持        | 不需要              | 支持       | 不支持 |
+| XSON   |  支持      | 支持       | 支持        | 不需要              | 支持       | 不支持 |
 
 
 虽然有这么多的框架可以先选择，但是他们在使用上毕竟有着不小的区别。
