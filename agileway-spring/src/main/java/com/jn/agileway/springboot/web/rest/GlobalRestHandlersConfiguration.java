@@ -62,16 +62,20 @@ public class GlobalRestHandlersConfiguration {
 
     @Bean
     @ConditionalOnMissingBean({GlobalRestExceptionHandlerRegistry.class})
-    public GlobalRestExceptionHandlerRegistry globalRestExceptionHandlerRegistry(ObjectProvider<RestActionExceptionHandler> restActionExceptionHandlersProvider) {
+    public GlobalRestExceptionHandlerRegistry globalRestExceptionHandlerRegistry() {
         GlobalRestExceptionHandlerRegistry registry = new GlobalRestExceptionHandlerRegistry();
         registry.init();
+        return registry;
+    }
+
+    @Autowired
+    public void registerExceptionHandlers(GlobalRestExceptionHandlerRegistry registry, ObjectProvider<RestActionExceptionHandler> restActionExceptionHandlersProvider) {
         restActionExceptionHandlersProvider.stream().forEach(new Consumer<RestActionExceptionHandler>() {
             @Override
             public void accept(RestActionExceptionHandler restActionExceptionHandler) {
                 registry.register(restActionExceptionHandler);
             }
         });
-        return registry;
     }
 
     @Bean

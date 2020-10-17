@@ -61,6 +61,9 @@ public class GlobalRestExceptionHandlerRegistry implements Initializable {
     }
 
     public void register(final RestActionExceptionHandler exceptionHandler) {
+        if(exceptionHandler instanceof GlobalRestExceptionHandler){
+            return;
+        }
         Class resolverClass = exceptionHandler.getClass();
         if (Reflects.isAnnotationPresent(resolverClass, RestActionExceptions.class)) {
             RestActionExceptions exceptions = Reflects.getAnnotation(resolverClass, RestActionExceptions.class);

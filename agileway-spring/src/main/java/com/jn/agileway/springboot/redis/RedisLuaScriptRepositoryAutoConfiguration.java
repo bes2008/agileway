@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 
-@ConditionalOnProperty(name = "agileway.redis.endabled", havingValue = "true", matchIfMissing = false)
+@ConditionalOnProperty(name = "agileway.redis.enabled", havingValue = "true", matchIfMissing = false)
 @ConditionalOnClass({RedisConnectionFactory.class, RedisLuaScriptParser.class})
 @Configuration
 @AutoConfigureAfter(RedisConnectionFactory.class)
