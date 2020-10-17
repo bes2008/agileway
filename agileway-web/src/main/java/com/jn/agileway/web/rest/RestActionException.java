@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 public @interface RestActionException {
     /**
-     * 异常类
+     * 异常类，会做是否是Throwable 子类的检查
      * @return
      */
     Class value();

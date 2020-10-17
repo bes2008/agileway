@@ -60,7 +60,7 @@ public class GlobalRestExceptionHandlerRegistry implements Initializable {
         register(registration.getName(), registration);
     }
 
-    public void register(RestActionExceptionHandler exceptionHandler) {
+    public void register(final RestActionExceptionHandler exceptionHandler) {
         Class resolverClass = exceptionHandler.getClass();
         if (Reflects.isAnnotationPresent(resolverClass, RestActionExceptions.class)) {
             RestActionExceptions exceptions = Reflects.getAnnotation(resolverClass, RestActionExceptions.class);
@@ -69,7 +69,18 @@ public class GlobalRestExceptionHandlerRegistry implements Initializable {
             if (Emptys.isNotEmpty(restActionExceptions)) {
                 final RestActionExceptionHandlerRegistration registration = new RestActionExceptionHandlerRegistration();
 
-                Collects.forEach(restActionExceptions, new Consumer<RestActionException>() {
+                Collects.forEach(Collects.asList(restActionExceptions), new Predicate<RestActionException>() {
+                    @Override
+                    public boolean test(RestActionException actionException) {
+                        Class exceptionClass = actionException.value();
+                        if (Reflects.isSubClassOrEquals(Throwable.class, exceptionClass)) {
+                            return true;
+                        } else {
+                            logger.error("****ERROR**** Can't register {} for class : {}", Reflects.getFQNClassName(exceptionHandler.getClass()), Reflects.getFQNClassName(exceptionClass));
+                            return false;
+                        }
+                    }
+                }, new Consumer<RestActionException>() {
                     @Override
                     public void accept(RestActionException actionException) {
                         RestActionExceptionHandlerDefinition element = new RestActionExceptionHandlerDefinition();
