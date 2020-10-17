@@ -15,7 +15,6 @@
         <spring.version>5.2.9.RELEASE</spring.version>
         <spring.boot.version>2.3.4.RELEASE</spring.boot.version>
         <spring.data.redis.version>2.3.4.RELEASE</spring.data.redis.version>
-        <jackson.version>2.10.2</jackson.version>
     </properties>
 
     <dependencyManagement>
