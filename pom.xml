@@ -84,6 +84,7 @@
         <langx.version>2.10.2</langx.version>
         <easyjson.version>3.0.3</easyjson.version>
         <httpclient.version>4.5.1</httpclient.version>
+        <javassist.version>3.21.0-GA</javassist.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -142,6 +143,12 @@
                 <artifactId>httpclient</artifactId>
                 <version>${httpclient.version}</version>
                 <scope>compile</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>org.javassist</groupId>
+                <artifactId>javassist</artifactId>
+                <version>${javassist.version}</version>
                 <optional>true</optional>
             </dependency>
         </dependencies>
