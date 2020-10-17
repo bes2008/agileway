@@ -2,12 +2,12 @@ package com.jn.agileway.codec.tests;
 
 import com.jn.agileway.codec.Codec;
 import com.jn.agileway.codec.CodecException;
-import com.jn.agileway.codec.fse.FseCodec;
-import com.jn.agileway.codec.fst.FstCodec;
-import com.jn.agileway.codec.hessian.HessianCodec;
-import com.jn.agileway.codec.kryo.KryoCodec;
-import com.jn.agileway.codec.protostuff.ProtostuffCodec;
-import com.jn.agileway.codec.xson.XsonCodec;
+import com.jn.agileway.codec.serialization.fse.FseCodec;
+import com.jn.agileway.codec.serialization.fst.FstCodec;
+import com.jn.agileway.codec.serialization.hessian.HessianCodec;
+import com.jn.agileway.codec.serialization.kryo.KryoCodec;
+import com.jn.agileway.codec.serialization.protostuff.ProtostuffCodec;
+import com.jn.agileway.codec.serialization.xson.XsonCodec;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -62,10 +62,10 @@ public interface Codec<T> {
 
 import com.jn.agileway.codec.Codec;
 import com.jn.agileway.codec.CodecException;
-import com.jn.agileway.codec.fst.FstCodec;
-import com.jn.agileway.codec.hessian.HessianCodec;
-import com.jn.agileway.codec.kryo.KryoCodec;
-import com.jn.agileway.codec.protostuff.ProtostuffCodec;
+import com.jn.agileway.codec.serialization.fst.FstCodec;
+import com.jn.agileway.codec.serialization.hessian.HessianCodec;
+import com.jn.agileway.codec.serialization.kryo.KryoCodec;
+import com.jn.agileway.codec.serialization.protostuff.ProtostuffCodec;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -1,12 +1,12 @@
 package com.jn.agileway.redis.core;
 
 import com.jn.agileway.codec.Codec;
-import com.jn.agileway.codec.hessian.HessianCodec;
-import com.jn.agileway.codec.jdk.JdkCodec;
-import com.jn.agileway.codec.json.EasyjsonCodec;
-import com.jn.agileway.codec.json.JacksonCodec;
-import com.jn.agileway.codec.kryo.KryoCodec;
-import com.jn.agileway.codec.protostuff.ProtostuffCodec;
+import com.jn.agileway.codec.serialization.hessian.HessianCodec;
+import com.jn.agileway.codec.serialization.jdk.JdkCodec;
+import com.jn.agileway.codec.serialization.json.EasyjsonCodec;
+import com.jn.agileway.codec.serialization.json.JacksonCodec;
+import com.jn.agileway.codec.serialization.kryo.KryoCodec;
+import com.jn.agileway.codec.serialization.protostuff.ProtostuffCodec;
 import com.jn.agileway.redis.core.conf.BuiltinCodecType;
 import com.jn.agileway.redis.core.conf.RedisTemplateProperties;
 import com.jn.agileway.redis.core.key.RedisKeyWrapper;

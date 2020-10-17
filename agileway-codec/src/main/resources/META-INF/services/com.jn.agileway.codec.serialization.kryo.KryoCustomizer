@@ -1,0 +1,6 @@
+com.jn.agileway.codec.serialization.kryo.customizer.LangxJavaKryoCustomizer
+com.jn.agileway.codec.serialization.kryo.customizer.JdkClassesKryoCustomizer
+com.jn.agileway.codec.serialization.kryo.customizer.GuavaKryoCustomizer
+com.jn.agileway.codec.serialization.kryo.customizer.JodaTimeKryoCustomizer
+com.jn.agileway.codec.serialization.kryo.customizer.CGLibProxyKryoCustomizer
+com.jn.agileway.codec.serialization.kryo.customizer.DexxKryoCustomizer
