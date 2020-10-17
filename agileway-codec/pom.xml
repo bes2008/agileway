@@ -158,11 +158,13 @@
             <groupId>com.jfireframework</groupId>
             <artifactId>fse</artifactId>
             <version>${fse.version}</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.xson</groupId>
             <artifactId>xson</artifactId>
             <version>1.0.2</version>
+            <optional>true</optional>
         </dependency>
 
     </dependencies>
