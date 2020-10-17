@@ -61,6 +61,9 @@ public class GlobalRestExceptionHandlerRegistry implements Initializable {
     }
 
     public void register(final RestActionExceptionHandler exceptionHandler) {
+        if(exceptionHandler ==null){
+            return;
+        }
         if(exceptionHandler instanceof GlobalRestExceptionHandler){
             return;
         }
