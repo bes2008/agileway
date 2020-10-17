@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 
-@ConditionalOnExpression("${agileway.redis.enabled} == true && ${agileway.redis.global-template.enabled:false} == true")
+@ConditionalOnExpression("${agileway.redis.enabled:false} == true && ${agileway.redis.global-template.enabled:false} == true")
 @Configuration
 @AutoConfigureAfter(value = {
         RedisLuaScriptRepositoryAutoConfiguration.class,
