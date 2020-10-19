@@ -10,12 +10,34 @@ import java.util.List;
  * 对标 ControllerAdvice
  */
 public class GlobalRestResponseBodyHandlerConfiguration {
+    /**
+     * 该配置指定包下的类会被应用统一响应
+     */
     private List<String> basePackages = Collects.newArrayList();
+    /**
+     * 该配置指定包下的类不会被应用统一响应
+     */
     private List<String> excludedBasePackages = Collects.newArrayList();
+    /**
+     * 该配置指定的类不会被应用统一响应
+     */
     private List<Class> excludedBasePackageClasses = Collects.newArrayList();
+
+    /**
+     * 该配置指定的类的类以及子类会被应用统一响应
+     */
     private List<Class> assignableTypes = Collects.newArrayList();
+    /**
+     * 该配置指定的类的类以及子类不会会被应用统一响应
+     */
     private List<Class> excludedAssignableTypes = Collects.newArrayList();
+    /**
+     * 被该配置指定的注解标注的类会被应用统一响应
+     */
     private List<Class> annotations = Collects.newArrayList();
+    /**
+     * 被该配置指定的注解标注的类不会被应用统一响应
+     */
     private List<Class> excludedAnnotations = Collects.newArrayList();
 
     public List<String> getBasePackages() {
