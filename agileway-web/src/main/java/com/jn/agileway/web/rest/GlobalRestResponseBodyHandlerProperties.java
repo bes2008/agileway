@@ -2,11 +2,18 @@ package com.jn.agileway.web.rest;
 
 import java.util.List;
 
+/**
+ * 可以从3个维度进行配置： package, class, annotation
+ */
 public class GlobalRestResponseBodyHandlerProperties {
+
     private List<String> basePackages;
     private List<String> excludedBasePackages;
+    private List<String> excludedBasePackageClasses;
+
     private List<String> assignableTypes;
     private List<String> excludedAssignableTypes;
+
     private List<String> annotations;
     private List<String> excludedAnnotations;
 
@@ -56,5 +63,13 @@ public class GlobalRestResponseBodyHandlerProperties {
 
     public void setExcludedAnnotations(List<String> excludedAnnotations) {
         this.excludedAnnotations = excludedAnnotations;
+    }
+
+    public List<String> getExcludedBasePackageClasses() {
+        return excludedBasePackageClasses;
+    }
+
+    public void setExcludedBasePackageClasses(List<String> excludedBasePackageClasses) {
+        this.excludedBasePackageClasses = excludedBasePackageClasses;
     }
 }

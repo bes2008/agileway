@@ -35,6 +35,7 @@ public class GlobalRestResponseBodyHandlerConfigurationBuilder implements Builde
         configuration.setExcludedAssignableTypes(loadClasses(properties.getExcludedAssignableTypes()));
         configuration.setBasePackages(properties.getBasePackages());
         configuration.setExcludedBasePackages(properties.getExcludedBasePackages());
+        configuration.setExcludedBasePackageClasses(loadClasses(properties.getExcludedBasePackageClasses()));
         return configuration;
     }
 

@@ -12,6 +12,7 @@ import java.util.List;
 public class GlobalRestResponseBodyHandlerConfiguration {
     private List<String> basePackages = Collects.newArrayList();
     private List<String> excludedBasePackages = Collects.newArrayList();
+    private List<Class> excludedBasePackageClasses = Collects.newArrayList();
     private List<Class> assignableTypes = Collects.newArrayList();
     private List<Class> excludedAssignableTypes = Collects.newArrayList();
     private List<Class> annotations = Collects.newArrayList();
@@ -27,7 +28,7 @@ public class GlobalRestResponseBodyHandlerConfiguration {
         }
     }
 
-    public void addBasePackage(String basePackage){
+    public void addBasePackage(String basePackage) {
         this.basePackages.add(basePackage);
     }
 
@@ -41,8 +42,16 @@ public class GlobalRestResponseBodyHandlerConfiguration {
         }
     }
 
-    public void addExcludedBasePackage(String excludedBasePackage ){
+    public void addExcludedBasePackage(String excludedBasePackage) {
         this.excludedBasePackages.add(excludedBasePackage);
+    }
+
+    public List<Class> getExcludedBasePackageClasses() {
+        return excludedBasePackageClasses;
+    }
+
+    public void setExcludedBasePackageClasses(List<Class> excludedBasePackageClasses) {
+        this.excludedBasePackageClasses = excludedBasePackageClasses;
     }
 
     public List<Class> getAssignableTypes() {
@@ -55,7 +64,7 @@ public class GlobalRestResponseBodyHandlerConfiguration {
         }
     }
 
-    public void addAssignableType(Class clazz){
+    public void addAssignableType(Class clazz) {
         this.assignableTypes.add(clazz);
     }
 
@@ -69,7 +78,7 @@ public class GlobalRestResponseBodyHandlerConfiguration {
         }
     }
 
-    public void addExcludedAssignableType(Class clazz){
+    public void addExcludedAssignableType(Class clazz) {
         this.excludedAssignableTypes.add(clazz);
     }
 
@@ -83,7 +92,7 @@ public class GlobalRestResponseBodyHandlerConfiguration {
         }
     }
 
-    public void addAnnotation(Class annotation){
+    public void addAnnotation(Class annotation) {
         this.annotations.add(annotation);
     }
 
@@ -97,12 +106,12 @@ public class GlobalRestResponseBodyHandlerConfiguration {
         }
     }
 
-    public void addExcludedAnnotation(Class annotation){
+    public void addExcludedAnnotation(Class annotation) {
         this.excludedAnnotations.add(annotation);
     }
 
     public boolean isAcceptable(final Class clazz) {
-        return isAssignableTypeMatched(clazz) || isPackageMatched(Reflects.getPackageName(clazz)) || isAnnotationMatched(clazz);
+        return isAssignableTypeMatched(clazz) || isPackageMatched(clazz) || isAnnotationMatched(clazz);
     }
 
     private boolean isAnnotationMatched(final Class clazz) {
@@ -112,7 +121,7 @@ public class GlobalRestResponseBodyHandlerConfiguration {
                 return Reflects.isAnnotationPresent(clazz, annotationClass);
             }
         })) {
-            return Collects.noneMatch(annotations, new Predicate<Class>() {
+            return Collects.noneMatch(excludedAnnotations, new Predicate<Class>() {
                 @Override
                 public boolean test(Class annotationClass) {
                     return Reflects.isAnnotationPresent(clazz, annotationClass);
@@ -139,21 +148,39 @@ public class GlobalRestResponseBodyHandlerConfiguration {
         return false;
     }
 
-    private boolean isPackageMatched(final String packageName) {
-        if (Collects.anyMatch(basePackages, new Predicate<String>() {
+    private boolean isPackageMatched(final Class clazz) {
+
+        final String packageName = clazz.getName();
+        // 不在指定的包下
+        if (Collects.noneMatch(basePackages, new Predicate<String>() {
             @Override
             public boolean test(String basePackage) {
                 return packageName.startsWith(basePackage);
             }
         })) {
-            return Collects.noneMatch(excludedBasePackages, new Predicate<String>() {
-                @Override
-                public boolean test(String excludeBasePackage) {
-                    return packageName.startsWith(excludeBasePackage);
-                }
-            });
+            return false;
         }
-        return false;
+
+        // 在任何一个指定的排除包下，就是要排除的
+        if (Collects.anyMatch(excludedBasePackages, new Predicate<String>() {
+            @Override
+            public boolean test(String excludeBasePackage) {
+                return packageName.startsWith(excludeBasePackage);
+            }
+        })) {
+            return false;
+        }
+
+        // 是任何一个要排除的包时
+        if (Collects.anyMatch(excludedBasePackageClasses, new Predicate<Class>() {
+            @Override
+            public boolean test(Class value) {
+                return Reflects.isSubClassOrEquals(clazz, value);
+            }
+        })) {
+            return false;
+        }
+        return true;
     }
 
 
