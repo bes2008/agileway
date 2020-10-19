@@ -171,7 +171,7 @@ public class GlobalRestResponseBodyHandlerConfiguration {
             return false;
         }
 
-        // 是任何一个要排除的包时
+        // 是任何一个要排除的类时
         if (Collects.anyMatch(excludedBasePackageClasses, new Predicate<Class>() {
             @Override
             public boolean test(Class value) {
