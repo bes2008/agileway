@@ -60,6 +60,7 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
         response.setStatus(body.getStatusCode());
         response.setContentType(GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8);
         response.setCharacterEncoding(Charsets.UTF_8.name());
+        request.setAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN,true);
         return body;
     }
 
