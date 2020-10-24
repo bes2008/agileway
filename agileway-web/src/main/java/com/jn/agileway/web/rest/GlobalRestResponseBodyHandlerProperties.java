@@ -17,6 +17,8 @@ public class GlobalRestResponseBodyHandlerProperties {
     private List<String> annotations;
     private List<String> excludedAnnotations;
 
+    private List<String> excludedMethods;
+
     public List<String> getBasePackages() {
         return basePackages;
     }
@@ -71,5 +73,13 @@ public class GlobalRestResponseBodyHandlerProperties {
 
     public void setExcludedBasePackageClasses(List<String> excludedBasePackageClasses) {
         this.excludedBasePackageClasses = excludedBasePackageClasses;
+    }
+
+    public List<String> getExcludedMethods() {
+        return excludedMethods;
+    }
+
+    public void setExcludedMethods(List<String> excludedMethods) {
+        this.excludedMethods = excludedMethods;
     }
 }

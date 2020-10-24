@@ -65,7 +65,7 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
     }
 
     public boolean isSupportedAction(Method actionMethod) {
-        boolean supported = configuration.isAcceptable(actionMethod.getDeclaringClass());
+        boolean supported = configuration.isAcceptable(actionMethod);
         if (!supported) {
             logger.debug("{} is not supported for unified response body handler", actionMethod.toString());
         }

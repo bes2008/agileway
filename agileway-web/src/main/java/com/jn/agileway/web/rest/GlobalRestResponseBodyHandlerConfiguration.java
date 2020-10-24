@@ -1,10 +1,15 @@
 package com.jn.agileway.web.rest;
 
+import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.reflect.Reflects;
 
+import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /***
  * 对标 ControllerAdvice
@@ -40,9 +45,12 @@ public class GlobalRestResponseBodyHandlerConfiguration {
      */
     private List<Class> excludedAnnotations = Collects.newArrayList();
 
+    private Set<String> excludedMethods = new CopyOnWriteArraySet<String>();
+
     public List<String> getBasePackages() {
         return basePackages;
     }
+
 
     public void setBasePackages(List<String> basePackages) {
         if (basePackages != null) {
@@ -136,6 +144,16 @@ public class GlobalRestResponseBodyHandlerConfiguration {
         return isAssignableTypeMatched(clazz) || isPackageMatched(clazz) || isAnnotationMatched(clazz);
     }
 
+    public boolean isAcceptable(final Method method){
+        if(isAcceptable(method.getDeclaringClass())){
+            if(isExcludedMethod(method)){
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
     private boolean isAnnotationMatched(final Class clazz) {
         if (Collects.anyMatch(annotations, new Predicate<Class>() {
             @Override
@@ -205,5 +223,42 @@ public class GlobalRestResponseBodyHandlerConfiguration {
         return true;
     }
 
+    public void addExcludedMethod(String methodFQN) {
+        if (Emptys.isNotEmpty(methodFQN)) {
+            this.excludedMethods.add(methodFQN);
+        }
+    }
 
+    public void addExcludedMethod(Method method) {
+        String className = Reflects.getFQNClassName(method.getDeclaringClass());
+        addExcludedMethod(className + "." + method.getName());
+    }
+
+    public void addExcludedMethods(List<String> methodFQNs) {
+        Collects.forEach(methodFQNs, new Consumer<String>() {
+            @Override
+            public void accept(String methodFQN) {
+                addExcludedMethod(methodFQN);
+            }
+        });
+    }
+
+    public boolean isExcludedMethod(String method) {
+        return this.excludedMethods.contains(method);
+    }
+
+    public boolean isExcludedMethod(Method method) {
+        String className = Reflects.getFQNClassName(method.getDeclaringClass());
+        String methodFQN = className + "." + method.getName();
+        if (!isExcludedMethod(methodFQN)) {
+            if(Reflects.hasAnnotation(method, RestActionExcluded.class)){
+                addExcludedMethod(methodFQN);
+                return true;
+            }else{
+                return false;
+            }
+        }else {
+            return true;
+        }
+    }
 }
