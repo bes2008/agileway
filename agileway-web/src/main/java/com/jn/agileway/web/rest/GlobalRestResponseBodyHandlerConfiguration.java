@@ -6,6 +6,7 @@ import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.reflect.Reflects;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
@@ -152,14 +153,34 @@ public class GlobalRestResponseBodyHandlerConfiguration {
             RestAction restAction = Reflects.getAnnotation(method, RestAction.class);
             return restAction.value();
         }
+
         // 没有注解时，根据配置来判断
         if(isAcceptable(method.getDeclaringClass())){
             if(isExcludedMethod(methodFQN)){
                 return false;
             }
+            // 存在 excludedAnnotations 中的任何一个
+            if(Collects.anyMatch(this.excludedAnnotations, new Predicate<Class>() {
+                @Override
+                public boolean test(Class excludedAnnotationClass) {
+                    return Reflects.hasAnnotation(method, excludedAnnotationClass);
+                }
+            })){
+                return false;
+            }
             return true;
+        }else {
+            // 存在 excludedAnnotations 中的任何一个
+            if(Collects.anyMatch(this.annotations, new Predicate<Class>() {
+                @Override
+                public boolean test(Class annotationClass) {
+                    return Reflects.hasAnnotation(method, annotationClass);
+                }
+            })){
+                return true;
+            }
+            return false;
         }
-        return false;
     }
 
     private boolean isAnnotationMatched(final Class clazz) {
