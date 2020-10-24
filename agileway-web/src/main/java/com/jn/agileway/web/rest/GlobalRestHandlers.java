@@ -14,5 +14,13 @@ public class GlobalRestHandlers {
      */
     public static final String GLOBAL_REST_EXCEPTION_HANDLER = Reflects.getFQNClassName(GlobalRestExceptionHandler.class);
 
-    public static final String RESPONSE_CONTENT_TYPE_JSON_UTF8= Servlets.getUTF8ContentType(MediaType.APPLICATION_JSON_VALUE);
+    /**
+     * 指定某个请求不是 REST 请求，或者没有启用全局处理的请求
+     */
+    public static final String GLOBAL_REST_NON_REST_REQUEST = "GLOBAL_REST_NON_REST_REQUEST";
+
+    /**
+     * 响应类型： JSON
+     */
+    public static final String RESPONSE_CONTENT_TYPE_JSON_UTF8 = Servlets.getUTF8ContentType(MediaType.APPLICATION_JSON_VALUE);
 }

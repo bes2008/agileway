@@ -51,6 +51,7 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
     @Override
     public RestRespBody handleResponseBody(HttpServletRequest request, HttpServletResponse response, Method actionMethod, Object actionReturnValue) {
         if (!isSupportedAction(actionMethod)) {
+            request.setAttribute(GlobalRestHandlers.GLOBAL_REST_DISABLE_REST_REQUEST,true);
             return null;
         }
         if (actionReturnValue instanceof Resource) {

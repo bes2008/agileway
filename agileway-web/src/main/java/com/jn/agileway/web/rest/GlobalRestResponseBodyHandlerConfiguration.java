@@ -145,8 +145,16 @@ public class GlobalRestResponseBodyHandlerConfiguration {
     }
 
     public boolean isAcceptable(final Method method){
+        // 有@RestAction注解时，根据该注解来判断
+        String className = Reflects.getFQNClassName(method.getDeclaringClass());
+        String methodFQN = className + "." + method.getName();
+        if(Reflects.hasAnnotation(method, RestAction.class)){
+            RestAction restAction = Reflects.getAnnotation(method, RestAction.class);
+            return restAction.value();
+        }
+        // 没有注解时，根据配置来判断
         if(isAcceptable(method.getDeclaringClass())){
-            if(isExcludedMethod(method)){
+            if(isExcludedMethod(methodFQN)){
                 return false;
             }
             return true;
@@ -243,22 +251,13 @@ public class GlobalRestResponseBodyHandlerConfiguration {
         });
     }
 
+    /**
+     * 是否为在要排除的方法
+     * @param method
+     * @return
+     */
     public boolean isExcludedMethod(String method) {
         return this.excludedMethods.contains(method);
     }
 
-    public boolean isExcludedMethod(Method method) {
-        String className = Reflects.getFQNClassName(method.getDeclaringClass());
-        String methodFQN = className + "." + method.getName();
-        if (!isExcludedMethod(methodFQN)) {
-            if(Reflects.hasAnnotation(method, RestActionExcluded.class)){
-                addExcludedMethod(methodFQN);
-                return true;
-            }else{
-                return false;
-            }
-        }else {
-            return true;
-        }
-    }
 }

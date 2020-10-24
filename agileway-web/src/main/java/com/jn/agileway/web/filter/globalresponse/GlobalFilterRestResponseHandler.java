@@ -45,14 +45,21 @@ public class GlobalFilterRestResponseHandler implements GlobalRestResponseBodyHa
 
     @Override
     public RestRespBody handleResponseBody(HttpServletRequest request, HttpServletResponse response, Method method, Object actionReturnValue) {
+        // 是否是非rest请求，或者禁用了全局Rest处理的请求，都视为是 非Rest请求
+        Boolean nonRestRequest = (Boolean) request.getAttribute(GlobalRestHandlers.GLOBAL_REST_NON_REST_REQUEST);
+        if (nonRestRequest!=null && nonRestRequest) {
+            return null;
+        }
+
         int statusCode = response.getStatus();
         long contentLength = Servlets.getContentLength(response);
         // 这个==0的判断其实没啥用
         if (contentLength == 0) {
             boolean error = HttpStatus.is4xxClientError(statusCode) || HttpStatus.is5xxServerError(statusCode);
             if (error) {
-                Boolean responseBodyWritten= (Boolean) request.getAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN);
-                if(responseBodyWritten==null || !responseBodyWritten) {
+                //rest response body 是否已写过
+                Boolean responseBodyWritten = (Boolean) request.getAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN);
+                if (responseBodyWritten == null || !responseBodyWritten) {
                     RestRespBody respBody = new RestRespBody(!error, statusCode, "", null, null);
                     String json = jsonFactory.get().toJson(respBody);
                     try {
