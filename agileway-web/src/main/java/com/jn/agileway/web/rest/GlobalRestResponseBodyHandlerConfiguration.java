@@ -6,7 +6,6 @@ import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.reflect.Reflects;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
@@ -145,38 +144,38 @@ public class GlobalRestResponseBodyHandlerConfiguration {
         return isAssignableTypeMatched(clazz) || isPackageMatched(clazz) || isAnnotationMatched(clazz);
     }
 
-    public boolean isAcceptable(final Method method){
+    public boolean isAcceptable(final Method method) {
         // 有@RestAction注解时，根据该注解来判断
         String className = Reflects.getFQNClassName(method.getDeclaringClass());
         String methodFQN = className + "." + method.getName();
-        if(Reflects.hasAnnotation(method, RestAction.class)){
+        if (Reflects.hasAnnotation(method, RestAction.class)) {
             RestAction restAction = Reflects.getAnnotation(method, RestAction.class);
             return restAction.value();
         }
 
         // 没有注解时，根据配置来判断
-        if(isAcceptable(method.getDeclaringClass())){
-            if(isExcludedMethod(methodFQN)){
+        if (isAcceptable(method.getDeclaringClass())) {
+            if (isExcludedMethod(methodFQN)) {
                 return false;
             }
             // 存在 excludedAnnotations 中的任何一个
-            if(Collects.anyMatch(this.excludedAnnotations, new Predicate<Class>() {
+            if (Collects.anyMatch(this.excludedAnnotations, new Predicate<Class>() {
                 @Override
                 public boolean test(Class excludedAnnotationClass) {
                     return Reflects.hasAnnotation(method, excludedAnnotationClass);
                 }
-            })){
+            })) {
                 return false;
             }
             return true;
-        }else {
+        } else {
             // 存在 excludedAnnotations 中的任何一个
-            if(Collects.anyMatch(this.annotations, new Predicate<Class>() {
+            if (Collects.anyMatch(this.annotations, new Predicate<Class>() {
                 @Override
                 public boolean test(Class annotationClass) {
                     return Reflects.hasAnnotation(method, annotationClass);
                 }
-            })){
+            })) {
                 return true;
             }
             return false;
@@ -274,6 +273,7 @@ public class GlobalRestResponseBodyHandlerConfiguration {
 
     /**
      * 是否为在要排除的方法
+     *
      * @param method
      * @return
      */
