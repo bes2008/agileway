@@ -30,6 +30,26 @@ public final class RestRespBody<T> {
 }
 ```
 
+### 配置
+```yaml
+agileway:
+  rest:
+    global-response-body:
+      # 类别1：基于 package的配置
+      basePackages: # Array<String> 配置指定的包下的类要进行统一的响应处理
+      excludedBasePackages: # Array<String> 配置package 级别的排除，基于 basePackages进行排除
+      excludedBasePackageClasses: # Array<String> 配置package 级别的排除，基于 basePackages进行排除
+      # 类别2：基于 Class的配置
+      assignableTypes: # Array<String> 配置只有这些类的子类才会被包含
+      excludedAssignableTypes: # Array<String> 配置的这些类的子类会被排除
+      # 类别3：基于 Annotation的配置，这些注解可以在类上，也可以在方法上。
+      annotations: # Array<String> 类上存在这些注解的，都会被包含
+      excludedAnnotations: # Array<String> 类上存在这些注解的，都会被排除
+    
+      # 类别4：直接进行 方法排除
+      excludedMethods: # Array<String> 要排除的方法， 配置格式为：classFQN.methodName。
+```
+
 ## 统一的异常处理
 Spring 中虽然提供了统一的异常处理（基于@ControllerAdvice），但仍然有不能够处理的情况：
 1）有人喜欢对Exception做二次包装，例如包装为RuntimeException
