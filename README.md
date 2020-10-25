@@ -16,6 +16,7 @@ Java、Web开发工具套件，尽量避免996
     + 支持基于 FST 序列化框架实现
     + 支持基于 FSE 序列化框架实现
     + 支持基于 XSON 序列化框架实现
+    + 支持基于 Cbor 序列化规范的实现
 + [agileway-feign： 提供对feign的扩展](./.wiki/agileway-feign.MD)
     + 提供基于 Feign 的 RestService动态创建
     + 提供基于 easyjson 的 encoder, decoder
