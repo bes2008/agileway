@@ -81,7 +81,7 @@
     </repositories>
 
     <properties>
-        <langx.version>2.10.2</langx.version>
+        <langx.version>2.10.3</langx.version>
         <easyjson.version>3.0.3</easyjson.version>
         <httpclient.version>4.5.1</httpclient.version>
         <javassist.version>3.21.0-GA</javassist.version>
