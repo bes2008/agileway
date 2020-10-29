@@ -35,7 +35,7 @@ public class UnifiedResponseInvocationHandlerFactory implements InvocationHandle
 
     @Override
     public InvocationHandler create(Target target, Map<Method, MethodHandler> dispatch) {
-        Preconditions.checkNotNull(jsonFactory,"the json factory is null");
+        Preconditions.checkNotNull(jsonFactory, "the json factory is null");
         return new UnifiedResponseInvocationHandler(target, dispatch);
     }
 
@@ -66,6 +66,9 @@ public class UnifiedResponseInvocationHandlerFactory implements InvocationHandle
             MethodHandler methodHandler = dispatch.get(method);
             try {
                 result = methodHandler.invoke(args);
+                if (result == null) {
+                    return null;
+                }
                 if (Reflects.isSubClassOrEquals(unifiedResponseClass, result.getClass())) {
                     return result;
                 }
@@ -83,7 +86,7 @@ public class UnifiedResponseInvocationHandlerFactory implements InvocationHandle
                     String responseBody = message.substring(errorStatusIndex + errorStatusMessageFlag.length());
                     Type type = ((MethodMetadata) Reflects.getAnyFieldValue(methodHandler, "metadata", true, false)).returnType();
                     return jsonFactory.get().fromJson(responseBody, type);
-                }else{
+                } else {
                     logger.error("error occur when execute {}", Reflects.getMethodString(method));
                 }
             }
