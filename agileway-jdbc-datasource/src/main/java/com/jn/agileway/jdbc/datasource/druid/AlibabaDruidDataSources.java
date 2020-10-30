@@ -3,6 +3,7 @@ package com.jn.agileway.jdbc.datasource.druid;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.jn.agileway.jdbc.datasource.DataSourceProperties;
 import com.jn.langx.util.Maths;
+import com.jn.langx.util.Throwables;
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -13,7 +14,7 @@ public class AlibabaDruidDataSources {
     private AlibabaDruidDataSources() {
     }
 
-    public static DataSource createDataSource(DataSourceProperties properties) throws Exception {
+    public static DataSource createDataSource(DataSourceProperties properties) {
         Properties props = properties.getDriverProps();
         if (props == null) {
             props = new Properties();
@@ -58,6 +59,10 @@ public class AlibabaDruidDataSources {
         if (validationQuery != null) {
             props.setProperty(PROP_VALIDATIONQUERY, validationQuery);
         }
-        return DruidDataSourceFactory.createDataSource(props);
+        try {
+            return DruidDataSourceFactory.createDataSource(props);
+        } catch (Exception ex) {
+            throw Throwables.wrapAsRuntimeException(ex);
+        }
     }
 }

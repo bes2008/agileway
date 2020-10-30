@@ -5,11 +5,20 @@ import com.jn.langx.util.Strings;
 import java.util.Properties;
 
 public class DataSourceProperties {
+    /**
+     * datasource:
+     */
+    private String name;
+    private String implementationKey;
+
+    /**
+     * driver properties:
+     */
     private String driverClassName;
     private String url;
     private String username;
     private String password;
-    private String name;
+
     private String catalog;
     private String schema;
 
@@ -205,4 +214,11 @@ public class DataSourceProperties {
         this.driverProps = driverProps;
     }
 
+    public String getImplementationKey() {
+        return implementationKey;
+    }
+
+    public void setImplementationKey(String implementationKey) {
+        this.implementationKey = implementationKey;
+    }
 }

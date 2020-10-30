@@ -1,8 +1,16 @@
 package com.jn.agileway.jdbc;
 
+import com.jn.agileway.jdbc.datasource.DataSourceProperties;
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.util.Emptys;
+import com.jn.langx.util.Objs;
+import com.jn.langx.util.Preconditions;
+
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.util.Locale;
+
+import static com.jn.agileway.jdbc.datasource.DataSourceConstants.DATASOURCE_IMPLEMENT_KEY_TOMCAT;
 
 public class Jdbcs {
     /**
@@ -45,4 +53,18 @@ public class Jdbcs {
 
         return -1;
     }
+
+    public static boolean isImplementationKeyMatched(@NonNull String expectedKey, DataSourceProperties properties){
+        Preconditions.checkNotNull(expectedKey, "the expected jdbc datasource implementation key is null or empty");
+        String implementationKey = properties.getImplementationKey();
+        boolean implementationKeyMatched = true;
+        if (Emptys.isNotEmpty(implementationKey)) {
+            if (!Objs.equals(expectedKey, implementationKey)) {
+                implementationKeyMatched = false;
+            }
+        }
+        return true;
+    }
+
+
 }
