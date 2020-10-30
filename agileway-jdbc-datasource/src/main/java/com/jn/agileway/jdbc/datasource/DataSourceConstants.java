@@ -6,4 +6,7 @@ public class DataSourceConstants {
     public static final String DATASOURCE_IMPLEMENT_KEY_DRUID = "druid";
     public static final String DATASOURCE_IMPLEMENT_KEY_DBCP2 = "dbcp2";
     public static final String DATASOURCE_IMPLEMENT_KEY_C3P0 = "c3p0";
+
+    public static final String DATASOURCE_IMPLEMENT_KEY = "datasource.implementation_key";
+    public static final String DATASOURCE_NAME = "datasource.name";
 }

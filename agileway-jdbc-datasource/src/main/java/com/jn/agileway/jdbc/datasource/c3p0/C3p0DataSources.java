@@ -69,4 +69,13 @@ public class C3p0DataSources {
             throw Throwables.wrapAsRuntimeException(ex);
         }
     }
+
+    public static DataSource createDataSource(Properties properties) {
+        try {
+            DataSource ds_unpooled = DataSources.unpooledDataSource();
+            return DataSources.pooledDataSource(ds_unpooled, properties);
+        } catch (Exception ex) {
+            throw Throwables.wrapAsRuntimeException(ex);
+        }
+    }
 }

@@ -65,4 +65,12 @@ public class AlibabaDruidDataSources {
             throw Throwables.wrapAsRuntimeException(ex);
         }
     }
+
+    public static DataSource createDataSource(Properties properties){
+        try {
+            return DruidDataSourceFactory.createDataSource(properties);
+        } catch (Exception ex) {
+            throw Throwables.wrapAsRuntimeException(ex);
+        }
+    }
 }

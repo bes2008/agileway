@@ -9,6 +9,8 @@ import com.jn.langx.text.StringTemplates;
 
 import javax.sql.DataSource;
 
+import java.util.Properties;
+
 import static com.jn.agileway.jdbc.datasource.DataSourceConstants.DATASOURCE_IMPLEMENT_KEY_DRUID;
 
 @Name(DATASOURCE_IMPLEMENT_KEY_DRUID)
@@ -23,5 +25,10 @@ public class AlibabaDruidDataSourceFactory implements DataSourceFactory {
             return AlibabaDruidDataSources.createDataSource(dataSourceProperties);
         }
         throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("Illegal datasource implementationKey {}, expected key is {}", dataSourceProperties.getImplementationKey(), DATASOURCE_IMPLEMENT_KEY_DRUID));
+    }
+
+    @Override
+    public DataSource get(Properties properties) {
+        return AlibabaDruidDataSources.createDataSource(properties);
     }
 }

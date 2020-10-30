@@ -77,4 +77,12 @@ public class Dbcp2DataSources {
             throw Throwables.wrapAsRuntimeException(ex);
         }
     }
+
+    public static BasicDataSource createDataSource(Properties props ){
+        try {
+            return BasicDataSourceFactory.createDataSource(props);
+        } catch (Exception ex) {
+            throw Throwables.wrapAsRuntimeException(ex);
+        }
+    }
 }

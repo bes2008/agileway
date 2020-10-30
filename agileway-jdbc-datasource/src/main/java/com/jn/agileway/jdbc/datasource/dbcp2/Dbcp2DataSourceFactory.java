@@ -9,6 +9,8 @@ import com.jn.langx.text.StringTemplates;
 
 import javax.sql.DataSource;
 
+import java.util.Properties;
+
 import static com.jn.agileway.jdbc.datasource.DataSourceConstants.DATASOURCE_IMPLEMENT_KEY_DBCP2;
 
 @Name(DATASOURCE_IMPLEMENT_KEY_DBCP2)
@@ -23,5 +25,10 @@ public class Dbcp2DataSourceFactory implements DataSourceFactory {
             return Dbcp2DataSources.createDataSource(dataSourceProperties);
         }
         throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("Illegal datasource implementationKey {}, expected key is {}", dataSourceProperties.getImplementationKey(), DATASOURCE_IMPLEMENT_KEY_DBCP2));
+    }
+
+    @Override
+    public DataSource get(Properties properties) {
+        return Dbcp2DataSources.createDataSource(properties);
     }
 }

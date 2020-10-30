@@ -67,4 +67,13 @@ public class TomcatJdbcDataSources {
         }
     }
 
+    public static DataSource createDataSource(Properties properties){
+        try {
+            DataSourceFactory dsf = new DataSourceFactory();
+            return dsf.createDataSource(properties);
+        } catch (Exception ex) {
+            throw Throwables.wrapAsRuntimeException(ex);
+        }
+    }
+
 }

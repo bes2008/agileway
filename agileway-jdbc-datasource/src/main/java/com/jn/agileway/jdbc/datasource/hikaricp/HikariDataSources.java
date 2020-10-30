@@ -54,4 +54,9 @@ public class HikariDataSources {
         config.setReadOnly(props.isReadOnly());
         return new HikariDataSource(config);
     }
+
+    public static DataSource createDataSource(final Properties props) {
+        return new HikariDataSource(new HikariConfig(props));
+    }
+
 }
