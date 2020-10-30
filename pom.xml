@@ -7,7 +7,7 @@
     <groupId>com.github.fangjinuo.agileway</groupId>
     <artifactId>agileway</artifactId>
     <packaging>pom</packaging>
-    <version>1.4.6</version>
+    <version>1.5.0</version>
     <modules>
         <module>agileway-codec</module>
         <module>agileway-web</module>
@@ -15,10 +15,10 @@
         <module>agileway-jdbc-datasource</module>
         <module>agileway-redis</module>
         <module>agileway-shiro-redis</module>
+        <module>agileway-httpclient</module>
         <module>agileway-examples</module>
         <module>agileway-feign</module>
         <module>agileway-dmmq</module>
-        <module>agileway-httpclient</module>
     </modules>
 
     <name>agileway</name>
