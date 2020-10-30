@@ -11,7 +11,7 @@ knife4j:
   base-package: com.jn.agileway.redis.examples.controller
 
 agileway:
-  httpClient:
+  httpclient:
     enabled: true
   redis:
     enabled: true
