@@ -94,6 +94,7 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
 
             if (writeUnifiedResponse) {
                 try {
+                    response.reset();
                     response.setStatus(respBody.getStatusCode());
                     String jsonstring = jsonFactory.get().toJson(respBody);
                     response.setContentType(GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8);
