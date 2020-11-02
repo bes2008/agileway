@@ -16,14 +16,13 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.ConnectionKeepAliveStrategy;
-import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
@@ -37,8 +36,6 @@ import java.util.concurrent.TimeUnit;
 
 public class HttpClientProvider implements Initializable, Lifecycle, Supplier0<HttpClient> {
     private static final Logger logger = LoggerFactory.getLogger(HttpClientProvider.class);
-
-    private PoolingHttpClientConnectionManager connectionManager;
 
     private CloseableHttpClient httpClient;
 
@@ -81,11 +78,7 @@ public class HttpClientProvider implements Initializable, Lifecycle, Supplier0<H
         }
         inited = true;
         Preconditions.checkNotNull(config, "the httpclient provider's config is null");
-        logger.info("===[AGILE_WAY-HTTP_CLIENT_PROVIDER]=== Initial the aigleway http client provider");
-        this.connectionManager = new PoolingHttpClientConnectionManager();
-        connectionManager.setMaxTotal(config.getPoolMaxConnections());
-        connectionManager.setDefaultMaxPerRoute(config.getPoolMaxPerRoute());
-        connectionManager.setValidateAfterInactivity(config.getPoolIdleConnValidateDelayInMills());
+        logger.info("===[AGILE_WAY-HTTP_CLIENT_PROVIDER]=== Initial the AGILEWAY http client provider");
 
         final RequestConfig.Builder requestConfigBuilder = RequestConfig.custom()
                 .setSocketTimeout(config.getSocketTimeoutInMills())
@@ -102,13 +95,13 @@ public class HttpClientProvider implements Initializable, Lifecycle, Supplier0<H
         });
 
         RequestConfig requestConfig = requestConfigBuilder.build();
-
-
         final HttpClientBuilder httpClientBuilder = HttpClients.custom()
-                .setConnectionManager(connectionManager)
                 .setDefaultRequestConfig(requestConfig)
                 .setRetryHandler(new AgilewayRetryHandler(config.getMaxRetry()))
                 .setKeepAliveStrategy(new AgilewayConnectionKeepAliveStrategy());
+        httpClientBuilder.setMaxConnPerRoute(config.getPoolMaxPerRoute());
+        httpClientBuilder.setMaxConnTotal(config.getPoolMaxConnections());
+        httpClientBuilder.evictIdleConnections(config.getIdleConnectionTimeoutInMills(), TimeUnit.MILLISECONDS);
 
         Pipeline.of(this.customizers).forEach(new Consumer<HttpClientCustomizer>() {
             @Override
@@ -118,8 +111,9 @@ public class HttpClientProvider implements Initializable, Lifecycle, Supplier0<H
         });
         httpClient = httpClientBuilder.build();
 
-        monitorThread = new IdleConnectionMonitorThread(connectionManager);
+        monitorThread = new IdleConnectionMonitorThread(httpClient.getConnectionManager());
         monitorThread.start();
+        running = true;
     }
 
     @Override
@@ -130,15 +124,17 @@ public class HttpClientProvider implements Initializable, Lifecycle, Supplier0<H
     @Override
     public void shutdown() {
         running = false;
-        this.connectionManager.shutdown();
+        if (httpClient != null) {
+            this.httpClient.getConnectionManager().shutdown();
+        }
         monitorThread.shutdown();
     }
 
     private class IdleConnectionMonitorThread extends Thread {
-        private final HttpClientConnectionManager connectionManager;
+        private final ClientConnectionManager connectionManager;
         private volatile boolean shutdown;
 
-        public IdleConnectionMonitorThread(HttpClientConnectionManager connectionManager) {
+        public IdleConnectionMonitorThread(ClientConnectionManager connectionManager) {
             super();
             this.connectionManager = connectionManager;
             setDaemon(true);
@@ -210,8 +206,8 @@ public class HttpClientProvider implements Initializable, Lifecycle, Supplier0<H
             }
 
             try {
-                connectionManager.closeExpiredConnections();
-                connectionManager.closeIdleConnections(config.getIdleConnectionTimeoutInMills(), TimeUnit.MILLISECONDS);
+                httpClient.getConnectionManager().closeExpiredConnections();
+                httpClient.getConnectionManager().closeIdleConnections(config.getIdleConnectionTimeoutInMills(), TimeUnit.MILLISECONDS);
             } catch (Exception ex) {
                 // ignore it
             }
