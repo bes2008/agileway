@@ -98,10 +98,10 @@ public class HttpClientProvider implements Initializable, Lifecycle, Supplier0<H
         final HttpClientBuilder httpClientBuilder = HttpClients.custom()
                 .setDefaultRequestConfig(requestConfig)
                 .setRetryHandler(new AgilewayRetryHandler(config.getMaxRetry()))
-                .setKeepAliveStrategy(new AgilewayConnectionKeepAliveStrategy());
-        httpClientBuilder.setMaxConnPerRoute(config.getPoolMaxPerRoute());
-        httpClientBuilder.setMaxConnTotal(config.getPoolMaxConnections());
-        httpClientBuilder.evictIdleConnections(config.getIdleConnectionTimeoutInMills(), TimeUnit.MILLISECONDS);
+                .setKeepAliveStrategy(new AgilewayConnectionKeepAliveStrategy())
+                .setMaxConnPerRoute(config.getPoolMaxPerRoute())
+                .setMaxConnTotal(config.getPoolMaxConnections())
+                .evictIdleConnections(config.getIdleConnectionTimeoutInMills(), TimeUnit.MILLISECONDS);
 
         Pipeline.of(this.customizers).forEach(new Consumer<HttpClientCustomizer>() {
             @Override
