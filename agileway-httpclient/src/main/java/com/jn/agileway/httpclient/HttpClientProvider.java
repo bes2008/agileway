@@ -10,6 +10,7 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Supplier0;
+import com.jn.langx.util.reflect.Reflects;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
 import org.apache.http.HttpResponse;
@@ -30,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -85,6 +87,11 @@ public class HttpClientProvider implements Initializable, Lifecycle, Supplier0<H
                 .setConnectionRequestTimeout(config.getConnectionRequestTimeoutInMills())
                 .setConnectTimeout(config.getConnectTimeoutInMills())
                 .setAuthenticationEnabled(config.isAuthcEnabled());
+
+        if(config.isContentCompressionEnabled()){
+            Method method = Reflects.getPublicMethod(RequestConfig.Builder.class, "setContentCompressionEnabled");
+            Reflects.invoke(method, requestConfigBuilder, new Object[]{true}, true, true);
+        }
 
         Pipeline.of(this.customizers).forEach(new Consumer<HttpClientCustomizer>() {
             @Override
