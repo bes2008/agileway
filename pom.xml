@@ -83,7 +83,8 @@
     <properties>
         <langx.version>2.10.5</langx.version>
         <easyjson.version>3.0.4</easyjson.version>
-        <httpclient.version>4.5.1</httpclient.version>
+        <httpclient.version>4.3.1</httpclient.version>
+        <httpasyncclient.version>4.0</httpasyncclient.version>
         <javassist.version>3.21.0-GA</javassist.version>
         <guava.version>29.0-jre</guava.version>
         <slf4j.version>1.7.22</slf4j.version>
@@ -151,6 +152,11 @@
                 <version>${httpclient.version}</version>
                 <scope>compile</scope>
                 <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpasyncclient</artifactId>
+                <version>${httpasyncclient.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.javassist</groupId>
