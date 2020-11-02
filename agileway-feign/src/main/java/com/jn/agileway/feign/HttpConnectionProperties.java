@@ -1,13 +1,20 @@
 package com.jn.agileway.feign;
 
+import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Maths;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.Collects;
+
+import java.util.List;
 
 public class HttpConnectionProperties {
     public static final String ACCESS_LOG_NAME = "access.log";
     private static final int DEFAULT_PORT = 6666;
 
     private String accessLoggerName = ACCESS_LOG_NAME;
+
+    private static final List<String> SUPPORTED_PROTOCOLS = Collects.newArrayList("http", "https");
+    private String protocol = "http";
 
     private int defaultPort = DEFAULT_PORT;
     private String pathPrefix = "";
@@ -115,11 +122,21 @@ public class HttpConnectionProperties {
     }
 
     public void setPathPrefix(String pathPrefix) {
-        if(pathPrefix!=null){
-            while (pathPrefix.startsWith("/")){
+        if (pathPrefix != null) {
+            while (pathPrefix.startsWith("/")) {
                 pathPrefix = pathPrefix.substring(1);
             }
         }
         this.pathPrefix = pathPrefix;
+    }
+
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public void setProtocol(String protocol) {
+        if (Emptys.isNotEmpty(protocol) && SUPPORTED_PROTOCOLS.contains(protocol)) {
+            this.protocol = protocol;
+        }
     }
 }

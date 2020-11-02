@@ -67,10 +67,11 @@ public class HttpConnectionContext {
     public String getUrl() {
         String url = null;
         if (Emptys.isNotEmpty(getNodes())) {
-            url = StringTemplates.formatWithPlaceholder("http://{}", getNodes().size() > 1 ? configuration.getLoadbalancerHost() : getNodes().get(0).toString());
+            url = getNodes().size() > 1 ? configuration.getLoadbalancerHost() : getNodes().get(0).toString();
         } else {
-            url = "http://unknown";
+            url = "unknown";
         }
+        url = StringTemplates.formatWithPlaceholder("{}://{}", configuration.getProtocol(), url);
         String urlPrefix = this.configuration.getPathPrefix();
         if (Strings.isBlank(urlPrefix)) {
             return url;
