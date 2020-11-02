@@ -84,7 +84,6 @@ public class HttpClientProvider implements Initializable, Lifecycle, Supplier0<H
                 .setSocketTimeout(config.getSocketTimeoutInMills())
                 .setConnectionRequestTimeout(config.getConnectionRequestTimeoutInMills())
                 .setConnectTimeout(config.getConnectTimeoutInMills())
-                .setContentCompressionEnabled(config.isContentCompressionEnabled())
                 .setAuthenticationEnabled(config.isAuthcEnabled());
 
         Pipeline.of(this.customizers).forEach(new Consumer<HttpClientCustomizer>() {
@@ -100,8 +99,8 @@ public class HttpClientProvider implements Initializable, Lifecycle, Supplier0<H
                 .setRetryHandler(new AgilewayRetryHandler(config.getMaxRetry()))
                 .setKeepAliveStrategy(new AgilewayConnectionKeepAliveStrategy())
                 .setMaxConnPerRoute(config.getPoolMaxPerRoute())
-                .setMaxConnTotal(config.getPoolMaxConnections())
-                .evictIdleConnections(config.getIdleConnectionTimeoutInMills(), TimeUnit.MILLISECONDS);
+                .setMaxConnTotal(config.getPoolMaxConnections());
+
 
         Pipeline.of(this.customizers).forEach(new Consumer<HttpClientCustomizer>() {
             @Override
