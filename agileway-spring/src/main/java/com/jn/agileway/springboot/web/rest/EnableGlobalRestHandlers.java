@@ -1,7 +1,5 @@
 package com.jn.agileway.springboot.web.rest;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;
@@ -16,8 +14,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Import({GlobalRestHandlersConfiguration.class})
 @EnableAgilewayWebFilters
-@ComponentScans({
-        @ComponentScan("com.jn.agileway.springboot.web.rest")
-})
 public @interface EnableGlobalRestHandlers {
 }

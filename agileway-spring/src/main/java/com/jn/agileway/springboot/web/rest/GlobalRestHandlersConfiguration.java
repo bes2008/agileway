@@ -17,12 +17,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 @Configuration
+@Import({SpringBuiltinExceptionHandlerAutoConfiguration.class})
 @AutoConfigureBefore(GlobalSpringRestResponseBodyAdvice.class)
 public class GlobalRestHandlersConfiguration {
     @Order(-100)
@@ -72,11 +74,10 @@ public class GlobalRestHandlersConfiguration {
     @Autowired
     public void registerExceptionHandlers(GlobalRestExceptionHandlerRegistry registry, ObjectProvider<List<RestActionExceptionHandler>> restActionExceptionHandlersProvider) {
         /**
-        restActionExceptionHandlersProvider.stream().forEach(new Consumer<RestActionExceptionHandler>() {
-            @Override
-            public void accept(RestActionExceptionHandler restActionExceptionHandler) {
-                registry.register(restActionExceptionHandler);
-            }
+         restActionExceptionHandlersProvider.stream().forEach(new Consumer<RestActionExceptionHandler>() {
+        @Override public void accept(RestActionExceptionHandler restActionExceptionHandler) {
+        registry.register(restActionExceptionHandler);
+        }
         });
          */
         restActionExceptionHandlersProvider.getObject().forEach(new Consumer<RestActionExceptionHandler>() {
