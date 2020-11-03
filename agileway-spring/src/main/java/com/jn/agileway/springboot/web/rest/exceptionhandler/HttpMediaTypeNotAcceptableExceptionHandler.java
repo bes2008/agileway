@@ -4,11 +4,13 @@ import com.jn.agileway.web.rest.RestActionException;
 import com.jn.agileway.web.rest.RestActionExceptionHandler;
 import com.jn.agileway.web.rest.RestActionExceptions;
 import com.jn.langx.http.rest.RestRespBody;
+import org.springframework.stereotype.Component;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Component
 @RestActionExceptions({
         @RestActionException(HttpMediaTypeNotAcceptableException.class)
 })

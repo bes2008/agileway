@@ -61,10 +61,10 @@ public class GlobalRestExceptionHandlerRegistry implements Initializable {
     }
 
     public void register(final RestActionExceptionHandler exceptionHandler) {
-        if(exceptionHandler ==null){
+        if (exceptionHandler == null) {
             return;
         }
-        if(exceptionHandler instanceof GlobalRestExceptionHandler){
+        if (exceptionHandler instanceof GlobalRestExceptionHandler) {
             return;
         }
         Class resolverClass = exceptionHandler.getClass();
@@ -108,8 +108,12 @@ public class GlobalRestExceptionHandlerRegistry implements Initializable {
                 registration.setName(name);
                 registration.setExceptionHandler(exceptionHandler);
                 register(registration);
+            } else {
+                logger.warn("Can't register {} , please check @com.jn.agileway.web.rest.RestActionExceptions at the class", Reflects.getFQNClassName(resolverClass));
             }
 
+        } else {
+            logger.warn("Can't register {} , the @com.jn.agileway.web.rest.RestActionExceptions was not found at the class", Reflects.getFQNClassName(resolverClass));
         }
     }
 

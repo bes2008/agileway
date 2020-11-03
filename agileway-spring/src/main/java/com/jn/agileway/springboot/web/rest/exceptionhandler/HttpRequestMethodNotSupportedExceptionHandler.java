@@ -7,11 +7,13 @@ import com.jn.agileway.web.rest.RestActionExceptions;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Strings;
+import org.springframework.stereotype.Component;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Component
 @RestActionExceptions({
         @RestActionException(HttpRequestMethodNotSupportedException.class)
 })

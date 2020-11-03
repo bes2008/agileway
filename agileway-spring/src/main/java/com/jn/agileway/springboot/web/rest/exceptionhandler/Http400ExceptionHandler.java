@@ -6,6 +6,7 @@ import com.jn.agileway.web.rest.RestActionExceptions;
 import com.jn.langx.http.rest.RestRespBody;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.ServletRequestBindingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Component
 @RestActionExceptions({
         @RestActionException(MissingServletRequestParameterException.class),
         @RestActionException(ServletRequestBindingException.class),

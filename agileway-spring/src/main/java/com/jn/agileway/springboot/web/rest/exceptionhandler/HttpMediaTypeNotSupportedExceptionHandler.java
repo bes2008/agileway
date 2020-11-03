@@ -6,12 +6,14 @@ import com.jn.agileway.web.rest.RestActionExceptions;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.Emptys;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+@Component
 @RestActionExceptions({
         @RestActionException(HttpMediaTypeNotSupportedException.class)
 })
