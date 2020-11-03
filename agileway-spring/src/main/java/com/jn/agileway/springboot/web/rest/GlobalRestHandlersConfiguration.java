@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 @Configuration
@@ -69,8 +70,16 @@ public class GlobalRestHandlersConfiguration {
     }
 
     @Autowired
-    public void registerExceptionHandlers(GlobalRestExceptionHandlerRegistry registry, ObjectProvider<RestActionExceptionHandler> restActionExceptionHandlersProvider) {
+    public void registerExceptionHandlers(GlobalRestExceptionHandlerRegistry registry, ObjectProvider<List<RestActionExceptionHandler>> restActionExceptionHandlersProvider) {
+        /**
         restActionExceptionHandlersProvider.stream().forEach(new Consumer<RestActionExceptionHandler>() {
+            @Override
+            public void accept(RestActionExceptionHandler restActionExceptionHandler) {
+                registry.register(restActionExceptionHandler);
+            }
+        });
+         */
+        restActionExceptionHandlersProvider.getObject().forEach(new Consumer<RestActionExceptionHandler>() {
             @Override
             public void accept(RestActionExceptionHandler restActionExceptionHandler) {
                 registry.register(restActionExceptionHandler);
@@ -114,11 +123,21 @@ public class GlobalRestHandlersConfiguration {
         globalRestExceptionHandler.setDefaultErrorStatusCode(globalRestExceptionHandlerProperties.getDefaultErrorStatusCode());
         globalRestExceptionHandler.setCauseScanEnabled(globalRestExceptionHandlerProperties.isCauseScanEnabled());
         globalRestExceptionHandler.setWriteUnifiedResponse(globalRestExceptionHandlerProperties.isWriteUnifiedResponse());
+        globalRestExceptionHandler.setErrorMessageHandler(restErrorMessageHandler);
 
         globalRestExceptionHandler.setJsonFactory(jsonFactory);
         globalRestExceptionHandler.setExceptionHandlerRegistry(registry);
         globalRestExceptionHandler.startup();
         return globalRestExceptionHandler;
+    }
+
+    @Bean
+    @Autowired
+    @ConditionalOnMissingBean({AgilewaySpringWebMvcConfigurer.class})
+    public AgilewaySpringWebMvcConfigurer agilewaySpringWebMvcConfigurer(GlobalSpringRestExceptionHandler globalSpringRestExceptionHandler) {
+        AgilewaySpringWebMvcConfigurer webMvcConfigurer = new AgilewaySpringWebMvcConfigurer();
+        webMvcConfigurer.setGlobalHandlerExceptionResolver(globalSpringRestExceptionHandler);
+        return webMvcConfigurer;
     }
 
     /**

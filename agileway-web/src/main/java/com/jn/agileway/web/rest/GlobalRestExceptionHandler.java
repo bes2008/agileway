@@ -94,13 +94,15 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
 
             if (writeUnifiedResponse) {
                 try {
-                    response.reset();
-                    response.setStatus(respBody.getStatusCode());
-                    String jsonstring = jsonFactory.get().toJson(respBody);
-                    response.setContentType(GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8);
-                    response.setCharacterEncoding(Charsets.UTF_8.name());
-                    response.getWriter().write(jsonstring);
-                    request.setAttribute(GLOBAL_REST_RESPONSE_HAD_WRITTEN, true);
+                    if(!response.isCommitted()) {
+                        response.resetBuffer();
+                        response.setStatus(respBody.getStatusCode());
+                        String jsonstring = jsonFactory.get().toJson(respBody);
+                        response.setContentType(GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8);
+                        response.setCharacterEncoding(Charsets.UTF_8.name());
+                        response.getWriter().write(jsonstring);
+                        request.setAttribute(GLOBAL_REST_RESPONSE_HAD_WRITTEN, true);
+                    }
                 } catch (IOException ioe) {
                     logger.warn(ioe.getMessage(), ioe);
                 }

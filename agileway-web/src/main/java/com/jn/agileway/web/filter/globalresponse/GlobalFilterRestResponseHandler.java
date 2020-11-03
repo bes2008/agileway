@@ -59,10 +59,11 @@ public class GlobalFilterRestResponseHandler implements GlobalRestResponseBodyHa
             if (error) {
                 //rest response body 是否已写过
                 Boolean responseBodyWritten = (Boolean) request.getAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN);
-                if (responseBodyWritten == null || !responseBodyWritten) {
+                if ((responseBodyWritten == null || !responseBodyWritten ) && !response.isCommitted()) {
                     RestRespBody respBody = new RestRespBody(!error, statusCode, "", null, null);
                     String json = jsonFactory.get().toJson(respBody);
                     try {
+                        response.resetBuffer();
                         Servlets.writeToResponse(response, GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8, json);
                     } catch (IOException ex) {
                         Throwables.throwAsRuntimeException(ex);
