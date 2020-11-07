@@ -6,7 +6,7 @@ import javax.sql.DataSource;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DelegatingDataSourceFactory implements DataSourceFactory {
+public class DataSourceRegistry implements DataSourceFactory {
     private ConcurrentHashMap<String, DataSource> dataSourceRegistry = new ConcurrentHashMap<String, DataSource>();
 
     @Override
@@ -45,5 +45,15 @@ public class DelegatingDataSourceFactory implements DataSourceFactory {
             }
         }
         return dataSource;
+    }
+
+    public void register(String dataSourceName, DataSource dataSource) {
+        Preconditions.checkNotNull(dataSourceName);
+        Preconditions.checkNotNull(dataSource);
+        dataSourceRegistry.put(dataSourceName, dataSource);
+    }
+
+    public DataSource get(String dataSource) {
+        return dataSourceRegistry.get(dataSource);
     }
 }
