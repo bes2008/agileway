@@ -1,11 +1,11 @@
 package com.jn.agileway.dmmq.disruptor;
 
-import com.jn.agileway.dmmq.core.*;
-import com.jn.agileway.dmmq.core.allocator.DefaultTopicAllocator;
-import com.jn.langx.lifecycle.Destroyable;
-import com.jn.langx.lifecycle.Initializable;
+import com.jn.agileway.dmmq.core.Consumer;
+import com.jn.agileway.dmmq.core.MessageHolder;
+import com.jn.agileway.dmmq.core.MessageTopic;
+import com.jn.agileway.dmmq.core.MessageTopicConfiguration;
+import com.jn.langx.annotation.NonNull;
 import com.jn.langx.lifecycle.InitializationException;
-import com.jn.langx.lifecycle.Lifecycle;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
@@ -15,18 +15,12 @@ import com.lmax.disruptor.dsl.Disruptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-public class DisruptorMessageTopic<M> implements Destroyable, Initializable, Lifecycle {
+public class DisruptorMessageTopic<M> extends MessageTopic<M> {
     private static final Logger logger = LoggerFactory.getLogger(DisruptorMessageTopic.class);
-    private String name = DefaultTopicAllocator.TOPIC_DEFAULT;
     private Disruptor<MessageHolder<M>> disruptor;
-    private MessageTopicConfiguration configuration;
-    private volatile boolean running = false;
     private final DisruptorMessageHolderFactory<M> messageHolderFactory = new DisruptorMessageHolderFactory<M>();
-    private final ConcurrentHashMap<String, Consumer<M>> consumerMap = new ConcurrentHashMap<String, Consumer<M>>();
-    private boolean inited = false;
 
     public String getName() {
         return this.name;
@@ -37,12 +31,12 @@ public class DisruptorMessageTopic<M> implements Destroyable, Initializable, Lif
     }
 
     public DisruptorTopicConfiguration getDisruptorTopicConfiguration() {
-        return (DisruptorTopicConfiguration) configuration;
+        return (DisruptorTopicConfiguration) getConfiguration();
     }
 
     public void setConfiguration(MessageTopicConfiguration configuration) {
-        if(configuration instanceof DisruptorTopicConfiguration) {
-            this.configuration = configuration;
+        if (configuration instanceof DisruptorTopicConfiguration) {
+            super.setConfiguration(configuration);
         }
     }
 
@@ -105,7 +99,7 @@ public class DisruptorMessageTopic<M> implements Destroyable, Initializable, Lif
         inited = true;
     }
 
-    public void publish(M message) {
+    public void publish(@NonNull M message) {
         DisruptorMessageTranslator translator = getDisruptorTopicConfiguration().getMessageTranslator();
         translator.setMessage(message);
         translator.setTopicName(getName());
