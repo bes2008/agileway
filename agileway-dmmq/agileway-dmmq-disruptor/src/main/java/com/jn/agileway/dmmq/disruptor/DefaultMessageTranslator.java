@@ -2,7 +2,7 @@ package com.jn.agileway.dmmq.disruptor;
 
 import com.jn.agileway.dmmq.core.MessageHolder;
 
-public class DefaultMessageTranslator<M> implements MessageTranslator<M> {
+public class DefaultMessageTranslator<M> implements DisruptorMessageTranslator<M> {
     private M message;
     private String topicName;
 

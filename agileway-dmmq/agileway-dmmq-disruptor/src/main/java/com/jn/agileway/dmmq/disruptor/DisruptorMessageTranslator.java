@@ -9,7 +9,7 @@ import com.lmax.disruptor.EventTranslator;
  *
  * @param <M>
  */
-public interface MessageTranslator<M> extends EventTranslator<MessageHolder<M>>, TopicNameAware {
+public interface DisruptorMessageTranslator<M> extends EventTranslator<MessageHolder<M>>, TopicNameAware {
     void setMessage(M message);
 
     M getMessage();

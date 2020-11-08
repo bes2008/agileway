@@ -106,7 +106,7 @@ public class DisruptorMessageTopic<M> implements Destroyable, Initializable, Lif
     }
 
     public void publish(M message) {
-        MessageTranslator translator = getDisruptorTopicConfiguration().getMessageTranslator();
+        DisruptorMessageTranslator translator = getDisruptorTopicConfiguration().getMessageTranslator();
         translator.setMessage(message);
         translator.setTopicName(getName());
         disruptor.publishEvent(translator);

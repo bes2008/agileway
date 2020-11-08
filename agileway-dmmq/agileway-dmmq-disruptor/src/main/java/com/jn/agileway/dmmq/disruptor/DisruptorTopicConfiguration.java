@@ -17,7 +17,7 @@ public class DisruptorTopicConfiguration extends MessageTopicConfiguration {
 
     private String messageTranslatorClass = Reflects.getFQNClassName(DefaultMessageTranslator.class);
     @NonNull
-    private MessageTranslator messageTranslator = new DefaultMessageTranslator();
+    private DisruptorMessageTranslator messageTranslator = new DefaultMessageTranslator();
 
 
     public int getRingBufferSize() {
@@ -51,11 +51,11 @@ public class DisruptorTopicConfiguration extends MessageTopicConfiguration {
         this.messageTranslatorClass = messageTranslatorClass;
     }
 
-    public MessageTranslator getMessageTranslator() {
+    public DisruptorMessageTranslator getMessageTranslator() {
         return messageTranslator;
     }
 
-    public void setMessageTranslator(MessageTranslator messageTranslator) {
+    public void setMessageTranslator(DisruptorMessageTranslator messageTranslator) {
         this.messageTranslator = messageTranslator;
     }
 
