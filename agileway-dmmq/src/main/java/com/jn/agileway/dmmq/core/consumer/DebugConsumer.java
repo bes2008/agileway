@@ -20,8 +20,8 @@ public class DebugConsumer<M> implements Consumer<M> {
     }
 
     @Override
-    public void handleEventException(Throwable ex, long sequence, Holder<M> event) {
-        logger.warn("error when handle sequence: {}, message: {}, error:{} ", sequence, event.get().toString(), ex);
+    public void handleEventException(Throwable ex, long sequence, Object eventHolder) {
+        logger.warn("error when handle sequence: {}, message: {}, error:{} ", sequence, ((Holder<M>)eventHolder).get().toString(), ex);
     }
 
     @Override

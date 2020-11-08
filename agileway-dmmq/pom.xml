@@ -12,9 +12,8 @@
     <artifactId>agileway-dmmq</artifactId>
     <description>a memory message queue based on disruptor</description>
     <properties>
-        <disruptor.version>3.4.2</disruptor.version>
+        <disruptor.version>3.0.0</disruptor.version>
     </properties>
-
 
     <dependencyManagement>
         <dependencies>
@@ -22,6 +21,7 @@
                 <groupId>com.lmax</groupId>
                 <artifactId>disruptor</artifactId>
                 <version>${disruptor.version}</version>
+                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
