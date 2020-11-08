@@ -1,4 +1,4 @@
-package com.jn.agileway.dmmq.core.utils;
+package com.jn.agileway.dmmq.disruptor.utils;
 
 import com.lmax.disruptor.*;
 
@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MQs {
+public class DisruptorMQs {
     public static final Map<String, WaitStrategy> builtinWaitStrategyMap;
 
     static {
