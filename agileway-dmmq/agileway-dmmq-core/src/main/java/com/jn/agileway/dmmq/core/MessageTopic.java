@@ -12,13 +12,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MessageTopic<M> implements Destroyable, Initializable, Lifecycle {
     private static final Logger logger = LoggerFactory.getLogger(MessageTopic.class);
-    private String name = DefaultTopicAllocator.TOPIC_DEFAULT;
+    protected String name = DefaultTopicAllocator.TOPIC_DEFAULT;
     //private Disruptor<MessageHolder<M>> disruptor;
     private MessageTopicConfiguration configuration;
-    private volatile boolean running = false;
+    protected volatile boolean running = false;
    // private final MessageHolderFactory<M> messageHolderFactory = new MessageHolderFactory<M>();
-    private final ConcurrentHashMap<String, Consumer<M>> consumerMap = new ConcurrentHashMap<String, Consumer<M>>();
-    private boolean inited = false;
+    protected final ConcurrentHashMap<String, Consumer<M>> consumerMap = new ConcurrentHashMap<String, Consumer<M>>();
+    protected boolean inited = false;
 
     public String getName() {
         return this.name;

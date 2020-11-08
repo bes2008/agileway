@@ -93,13 +93,13 @@ public class DisruptorMessageTopic<M> implements Destroyable, Initializable, Lif
         final DisruptorTopicConfiguration configuration = getDisruptorTopicConfiguration();
         if (configuration.getWaitStrategy() != null) {
             disruptor = new Disruptor<MessageHolder<M>>(messageHolderFactory,
-                    configuration.getRingBufferSize(),
+                    configuration.getBufferSize(),
                     configuration.getExecutor(),
                     configuration.getProducerType(),
                     configuration.getWaitStrategy());
         } else {
             disruptor = new Disruptor<MessageHolder<M>>(messageHolderFactory,
-                    configuration.getRingBufferSize(),
+                    configuration.getBufferSize(),
                     configuration.getExecutor());
         }
         inited = true;
