@@ -1,5 +1,7 @@
-package com.jn.agileway.dmmq.core;
+package com.jn.agileway.dmmq.disruptor;
 
+import com.jn.agileway.dmmq.core.MessageHolder;
+import com.jn.agileway.dmmq.core.TopicNameAware;
 import com.lmax.disruptor.EventTranslator;
 
 /**

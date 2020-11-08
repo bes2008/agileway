@@ -8,7 +8,7 @@
         <version>1.5.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
+    <groupId>com.github.fangjinuo.agileway.dmmq</groupId>
     <artifactId>agileway-dmmq</artifactId>
     <packaging>pom</packaging>
     <description>a memory message queue based on disruptor</description>

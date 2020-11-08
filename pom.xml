@@ -97,6 +97,16 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>com.github.fangjinuo.agileway.dmmq</groupId>
+                <artifactId>agileway-dmmq-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fangjinuo.agileway.dmmq</groupId>
+                <artifactId>agileway-dmmq-disruptor</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.github.fangjinuo.agileway</groupId>
                 <artifactId>agileway-codec</artifactId>
                 <version>${project.version}</version>
