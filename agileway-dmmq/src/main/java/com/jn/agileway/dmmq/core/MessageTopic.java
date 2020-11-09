@@ -5,20 +5,27 @@ import com.jn.langx.lifecycle.Destroyable;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.lifecycle.Lifecycle;
+import com.jn.langx.util.Emptys;
+import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.function.Function;
+import com.jn.langx.util.function.Functions;
+import com.lmax.disruptor.TimeoutException;
+import com.lmax.disruptor.dsl.Disruptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 public class MessageTopic<M> implements Destroyable, Initializable, Lifecycle {
     private static final Logger logger = LoggerFactory.getLogger(MessageTopic.class);
-    protected String name = DefaultTopicAllocator.TOPIC_DEFAULT;
-    //private Disruptor<MessageHolder<M>> disruptor;
+    private String name = DefaultTopicAllocator.TOPIC_DEFAULT;
+    private Disruptor<MessageHolder<M>> disruptor;
     private MessageTopicConfiguration configuration;
-    protected volatile boolean running = false;
-   // private final MessageHolderFactory<M> messageHolderFactory = new MessageHolderFactory<M>();
-    protected final ConcurrentHashMap<String, Consumer<M>> consumerMap = new ConcurrentHashMap<String, Consumer<M>>();
-    protected boolean inited = false;
+    private volatile boolean running = false;
+    private final MessageHolderFactory<M> messageHolderFactory = new MessageHolderFactory<M>();
+    private final ConcurrentHashMap<String, Consumer<M>> consumerMap = new ConcurrentHashMap<String, Consumer<M>>();
+    private boolean inited = false;
 
     public String getName() {
         return this.name;
@@ -37,7 +44,6 @@ public class MessageTopic<M> implements Destroyable, Initializable, Lifecycle {
     }
 
     public void subscribe(Consumer<M> consumer, String... dependencies) {
-        /*
         if (Emptys.isNotEmpty(dependencies)) {
             Consumer[] dependencyConsumers = (Consumer[]) Pipeline.of(dependencies).map(new Function<String, Consumer<M>>() {
                 @Override
@@ -50,7 +56,6 @@ public class MessageTopic<M> implements Destroyable, Initializable, Lifecycle {
             disruptor.handleEventsWith(consumer);
         }
         consumerMap.put(consumer.getName(), consumer);
-         */
     }
 
     @Override
@@ -59,20 +64,18 @@ public class MessageTopic<M> implements Destroyable, Initializable, Lifecycle {
             init();
         }
         running = true;
-        //disruptor.start();
+        disruptor.start();
     }
 
     @Override
     public void shutdown() {
         if (running) {
             running = false;
-            /*
             try {
                 disruptor.shutdown(20L, TimeUnit.SECONDS);
             } catch (TimeoutException ex) {
                 logger.error(ex.getMessage(), ex);
             }
-             */
         }
     }
 
@@ -84,7 +87,6 @@ public class MessageTopic<M> implements Destroyable, Initializable, Lifecycle {
 
     @Override
     public void init() throws InitializationException {
-        /*
         if (configuration.getWaitStrategy() != null) {
             disruptor = new Disruptor<MessageHolder<M>>(messageHolderFactory,
                     configuration.getRingBufferSize(),
@@ -96,12 +98,13 @@ public class MessageTopic<M> implements Destroyable, Initializable, Lifecycle {
                     configuration.getRingBufferSize(),
                     configuration.getExecutor());
         }
-         */
         inited = true;
     }
 
     public void publish(M message) {
-
-        //disruptor.publishEvent(translator);
+        MessageTranslator translator = configuration.getMessageTranslator();
+        translator.setMessage(message);
+        translator.setTopicName(getName());
+        disruptor.publishEvent(translator);
     }
 }

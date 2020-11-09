@@ -8,13 +8,48 @@
         <version>2.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.github.fangjinuo.agileway.dmmq</groupId>
-    <artifactId>agileway-dmmq</artifactId>
-    <packaging>pom</packaging>
-    <description>a memory message queue based on disruptor</description>
-    <modules>
-        <module>agileway-dmmq-core</module>
-        <module>agileway-dmmq-disruptor</module>
-    </modules>
 
+    <artifactId>agileway-dmmq</artifactId>
+    <description>a memory message queue based on disruptor</description>
+    <properties>
+        <disruptor.version>3.4.2</disruptor.version>
+    </properties>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.lmax</groupId>
+                <artifactId>disruptor</artifactId>
+                <version>${disruptor.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.github.fangjinuo.langx</groupId>
+            <artifactId>langx-java8</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                    <debug>true</debug>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

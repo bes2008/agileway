@@ -5,7 +5,7 @@ import com.jn.agileway.dmmq.core.event.TopicEventType;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.event.EventPublisher;
 import com.jn.langx.lifecycle.Lifecycle;
-import com.jn.langx.util.Objs;
+import com.jn.langx.util.Objects;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer2;
@@ -50,9 +50,7 @@ public class MessageTopicDispatcher implements Lifecycle {
         }
     }
 
-    public void publish(@NonNull String topicName, @NonNull final Object message) {
-        Preconditions.checkNotNull(message);
-        Preconditions.checkNotNull(topicName);
+    public void publish(String topicName, final Object message) {
         if (!running) {
             logger.warn("Publish message to topic {} fail, the message topic dispatcher is not running", topicName);
         }
@@ -66,7 +64,7 @@ public class MessageTopicDispatcher implements Lifecycle {
         }
 
         MessageTopic topic = topicMap.get(topicName);
-        if (Objs.isNull(topic)) {
+        if (Objects.isNull(topic)) {
             logger.warn("Can't find the specified topic : {}", topicName);
         } else {
             topic.publish(message);
@@ -83,7 +81,7 @@ public class MessageTopicDispatcher implements Lifecycle {
             });
         } else {
             MessageTopic topic = topicMap.get(topicName);
-            if (Objs.isNull(topic)) {
+            if (Objects.isNull(topic)) {
                 logger.warn("Can't find a topic : {}", topicName);
             } else {
                 topic.subscribe(consumer, dependencies);
