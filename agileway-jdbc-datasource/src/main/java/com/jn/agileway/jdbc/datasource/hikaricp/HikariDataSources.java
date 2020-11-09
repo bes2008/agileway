@@ -3,6 +3,7 @@ package com.jn.agileway.jdbc.datasource.hikaricp;
 import com.jn.agileway.jdbc.Jdbcs;
 import com.jn.agileway.jdbc.datasource.DataSourceProperties;
 import com.jn.langx.util.Emptys;
+import com.jn.langx.util.reflect.Reflects;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import java.util.Properties;
 
 public class HikariDataSources {
     private static final Logger logger = LoggerFactory.getLogger(HikariDataSources.class);
+
     private HikariDataSources() {
     }
 
@@ -30,7 +32,7 @@ public class HikariDataSources {
         config.setPassword(props.getPassword());
         config.setPoolName(props.getName());
         config.setCatalog(props.getCatalog());
-        config.setSchema(props.getSchema());
+        Reflects.invokePublicMethod(config, "setSchema", new Class[]{String.class}, new Object[]{props.getSchema()}, true, false);
         config.setLeakDetectionThreshold(props.getLeakDetectionThresholdInMills());
         config.setConnectionTimeout(props.getConnectionTimeoutInMills());
         config.setValidationTimeout(props.getValidationTimeoutInMills());
