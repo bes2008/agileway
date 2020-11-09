@@ -28,7 +28,7 @@
     <dependencies>
         <dependency>
             <groupId>com.github.fangjinuo.langx</groupId>
-            <artifactId>langx-java8</artifactId>
+            <artifactId>langx-java</artifactId>
         </dependency>
         <dependency>
             <groupId>com.lmax</groupId>
