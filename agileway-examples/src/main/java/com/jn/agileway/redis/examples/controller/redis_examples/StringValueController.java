@@ -1,10 +1,10 @@
 package com.jn.agileway.redis.examples.controller.redis_examples;
 
+import com.jn.agileway.codec.serialization.json.EasyjsonCodec;
 import com.jn.agileway.redis.core.RedisTemplate;
 import com.jn.agileway.redis.core.RedisTemplates;
 import com.jn.agileway.redis.core.script.RedisLuaScriptRepository;
 import com.jn.agileway.redis.core.serialization.DelegatableRedisSerializer;
-import com.jn.agileway.codec.serialization.json.EasyjsonCodec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -122,7 +122,7 @@ public class StringValueController {
     public String decrement(@RequestParam String key, @RequestParam int delta, @RequestParam TestScope testScope) {
         RedisTemplate redisTemplate = createRedisTemplate(testScope);
         BoundValueOperations<String, String> operations = redisTemplate.boundValueOps(key);
-        return operations.decrement(delta).toString();
+        return operations.increment(-delta).toString();
     }
 
     @GetMapping("/keys")

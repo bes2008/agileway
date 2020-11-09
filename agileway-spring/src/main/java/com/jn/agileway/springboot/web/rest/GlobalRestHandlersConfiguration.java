@@ -9,6 +9,7 @@ import com.jn.agileway.web.filter.globalresponse.GlobalRestResponseFilter;
 import com.jn.agileway.web.rest.*;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.function.Consumer;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -21,7 +22,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 @Configuration
 @Import({SpringBuiltinExceptionHandlerAutoConfiguration.class})
@@ -72,15 +72,8 @@ public class GlobalRestHandlersConfiguration {
     }
 
     @Autowired
-    public void registerExceptionHandlers(GlobalRestExceptionHandlerRegistry registry, ObjectProvider<List<RestActionExceptionHandler>> restActionExceptionHandlersProvider) {
-        /**
-         restActionExceptionHandlersProvider.stream().forEach(new Consumer<RestActionExceptionHandler>() {
-        @Override public void accept(RestActionExceptionHandler restActionExceptionHandler) {
-        registry.register(restActionExceptionHandler);
-        }
-        });
-         */
-        restActionExceptionHandlersProvider.getObject().forEach(new Consumer<RestActionExceptionHandler>() {
+    public void registerExceptionHandlers(final GlobalRestExceptionHandlerRegistry registry, ObjectProvider<List<RestActionExceptionHandler>> restActionExceptionHandlersProvider) {
+        Collects.forEach(restActionExceptionHandlersProvider.getObject(), new Consumer<RestActionExceptionHandler>() {
             @Override
             public void accept(RestActionExceptionHandler restActionExceptionHandler) {
                 registry.register(restActionExceptionHandler);

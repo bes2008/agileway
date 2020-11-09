@@ -1,9 +1,9 @@
 package com.jn.agileway.redis.core.serialization;
 
 import com.jn.agileway.redis.core.key.RedisKeyWrapper;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Preconditions;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import org.springframework.lang.Nullable;
 
 public class RedisKeySerializer extends StringRedisSerializer {
     private RedisKeyWrapper keyWrapper = new RedisKeyWrapper();

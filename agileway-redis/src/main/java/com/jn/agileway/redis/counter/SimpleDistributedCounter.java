@@ -13,7 +13,7 @@ public class SimpleDistributedCounter implements DistributedCounter {
 
     @Override
     public Long increment() {
-        return redisTemplate.opsForValue().increment(this.key);
+        return increment(1L);
     }
 
     @Override
@@ -23,12 +23,12 @@ public class SimpleDistributedCounter implements DistributedCounter {
 
     @Override
     public Long decrement() {
-        return redisTemplate.opsForValue().decrement(this.key);
+        return decrement(1L);
     }
 
     @Override
     public Long decrement(Long delta) {
-        return redisTemplate.opsForValue().decrement(this.key, delta);
+        return redisTemplate.opsForValue().increment(this.key, -delta);
     }
 
     @Override

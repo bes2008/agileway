@@ -41,12 +41,10 @@ public class DelegatableRedisSerializer<T> implements RedisSerializer<T> {
         }
     }
 
-    @Override
     public boolean canSerialize(Class<?> type) {
         return delegate.canSerialize(type);
     }
 
-    @Override
     public Class<?> getTargetType() {
         return delegate.getTargetType();
     }
