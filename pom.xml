@@ -87,7 +87,7 @@
         <httpclient.version>4.3.1</httpclient.version>
         <httpasyncclient.version>4.0</httpasyncclient.version>
         <javassist.version>3.21.0-GA</javassist.version>
-        <guava.version>29.0-jre</guava.version>
+        <guava.version>20.0</guava.version>
         <slf4j.version>1.7.22</slf4j.version>
         <snakeyaml.version>1.23</snakeyaml.version>
         <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
