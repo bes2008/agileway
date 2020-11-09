@@ -14,6 +14,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 @ConditionalOnClass(HttpClient.class)
 @ConditionalOnProperty(name = "agileway.httpclient.enabled", havingValue = "true", matchIfMissing = false)
 @ConditionalOnMissingBean(HttpClientAutoConfiguration.class)
@@ -37,10 +39,10 @@ public class HttpClientAutoConfiguration {
     @ConditionalOnMissingBean(name = "agilewayHttpClientProvider")
     public HttpClientProvider httpClientProvider(
             @Qualifier("agilewayHttpClientProperties") HttpClientProperties httpClientProperties,
-            ObjectProvider<HttpClientCustomizer> httpClientCustomizersProvider) {
+            ObjectProvider<List<HttpClientCustomizer>> httpClientCustomizersProviders) {
         HttpClientProvider provider = new HttpClientProvider();
         provider.setConfig(httpClientProperties);
-        provider.setCustomizers(Pipeline.<HttpClientCustomizer>of(httpClientCustomizersProvider.iterator()).asList());
+        provider.setCustomizers(httpClientCustomizersProviders.getObject());
         provider.startup();
         return provider;
     }

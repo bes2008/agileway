@@ -19,32 +19,28 @@
         <dependency>
             <groupId>com.github.fangjinuo.agileway</groupId>
             <artifactId>agileway-redis</artifactId>
-            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>5.2.9.RELEASE</version>
-            <optional>true</optional>
-            <scope>compile</scope>
+            <version>${spring.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-            <version>1.5.0.RELEASE</version>
-            <optional>true</optional>
-            <scope>compile</scope>
+            <version>${spring.boot.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
-            <version>1.5.0.RELEASE</version>
-            <optional>true</optional>
-            <scope>compile</scope>
+            <version>${spring.boot.version}</version>
+            <scope>provided</scope>
         </dependency>
-
 
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -56,14 +52,13 @@
         <dependency>
             <groupId>com.github.fangjinuo.agileway</groupId>
             <artifactId>agileway-httpclient</artifactId>
-            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <scope>compile</scope>
-            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
