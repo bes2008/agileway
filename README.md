@@ -65,4 +65,21 @@ Java、Web开发工具套件，尽量避免996
     + 一个consumer可以从多个topic拉取消息， 一个topic的消息可以被多个消费者重复的消费
     + 一个consumer可以依赖于从同一topic拉取消息的多个其他的consumer
     
+
+
+| module | jdk | version |
+|---|---|---|
+|agileway-web|7|1.0.0+|
+|agileway-spring|7|1.0.0+|
+|agileway-feign|6|1.0.0+|
+|agileway-codec|7|1.1.0+|
+|agileway-redis|7|1.1.0+|
+|agileway-shiro-redis|7|1.1.0+|
+|agileway-jdbc-datasource|7|1.1.0+|
+|agileway-dmmq|7|1.2.0+|
+|agileway-httpclient|6|1.3.0+|
+ 
+
+
+
              
