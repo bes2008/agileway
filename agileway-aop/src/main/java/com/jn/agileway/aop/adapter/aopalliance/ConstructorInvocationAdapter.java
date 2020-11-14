@@ -7,6 +7,10 @@ import java.lang.reflect.Constructor;
 public class ConstructorInvocationAdapter implements com.jn.langx.invocation.ConstructorInvocation {
     private ConstructorInvocation delegate;
 
+    public ConstructorInvocationAdapter(ConstructorInvocation delegate){
+        this.delegate = delegate;
+    }
+
     @Override
     public Object[] getArguments() {
         return delegate.getArguments();
