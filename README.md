@@ -64,7 +64,7 @@ Java、Web开发工具套件，尽量避免996
     + 一个producer可以push消息到多个topic, 一个topic可以接收多个producer发的消息
     + 一个consumer可以从多个topic拉取消息， 一个topic的消息可以被多个消费者重复的消费
     + 一个consumer可以依赖于从同一topic拉取消息的多个其他的consumer
-    
++ agileway-aop: 对AOP的支持、适配    
 
 
 | module | jdk | version |
