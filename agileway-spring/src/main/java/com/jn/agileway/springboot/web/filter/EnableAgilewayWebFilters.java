@@ -1,5 +1,6 @@
-package com.jn.agileway.springboot.web.rest;
+package com.jn.agileway.springboot.web.filter;
 
+import com.jn.agileway.springboot.web.filter.AgilewayBasicFiltersConfiguration;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;

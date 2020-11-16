@@ -1,4 +1,4 @@
-package com.jn.agileway.springboot.web.rest;
+package com.jn.agileway.springboot.web.filter;
 
 import com.jn.agileway.web.filter.accesslog.AccessLogFilter;
 import com.jn.agileway.web.filter.accesslog.WebAccessLogProperties;
