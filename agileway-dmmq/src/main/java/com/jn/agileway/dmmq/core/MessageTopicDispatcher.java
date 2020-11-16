@@ -5,6 +5,7 @@ import com.jn.agileway.dmmq.core.event.TopicEventType;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.event.EventPublisher;
 import com.jn.langx.lifecycle.Lifecycle;
+import com.jn.langx.registry.Registry;
 import com.jn.langx.util.Objects;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
@@ -15,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
-public class MessageTopicDispatcher implements Lifecycle {
+public class MessageTopicDispatcher implements Lifecycle, Registry<String,MessageTopic> {
     private static final Logger logger = LoggerFactory.getLogger(MessageTopicDispatcher.class);
     private final Map<String, MessageTopic> topicMap = Collects.emptyHashMap();
     private EventPublisher<TopicEvent> topicEventPublisher;
@@ -36,10 +37,32 @@ public class MessageTopicDispatcher implements Lifecycle {
         return Collects.newArrayList(topicMap.keySet());
     }
 
+    /**
+     *
+     * @param messageTopic
+     * @see #register(MessageTopic)
+     */
+    @Deprecated
     public void registerTopic(@NonNull MessageTopic messageTopic) {
         Preconditions.checkNotNull(messageTopic);
         topicMap.put(messageTopic.getName(), messageTopic);
         topicEventPublisher.publish(new TopicEvent(messageTopic, TopicEventType.ADD));
+    }
+
+    @Override
+    public void register(MessageTopic messageTopic) {
+        registerTopic(messageTopic);
+    }
+
+    @Override
+    public void register(String name, MessageTopic messageTopic) {
+        messageTopic.setName(name);
+        register(messageTopic);
+    }
+
+    @Override
+    public MessageTopic get(String name) {
+        return topicMap.get(name);
     }
 
     public void unregisterTopic(String name) {

@@ -2,6 +2,7 @@ package com.jn.agileway.web.rest;
 
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
+import com.jn.langx.registry.Registry;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
@@ -20,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 同一个web应用中，可能有多级的GlobalRestExceptionHandler，例如 Spring Controller级别的，有 javax.servlet.Filter级别的
  */
-public class GlobalRestExceptionHandlerRegistry implements Initializable {
+public class GlobalRestExceptionHandlerRegistry implements Registry<String, RestActionExceptionHandlerRegistration>, Initializable {
     private static final Logger logger = LoggerFactory.getLogger(GlobalRestExceptionHandlerRegistry.class);
     private volatile boolean inited = false;
     /**
@@ -46,6 +47,12 @@ public class GlobalRestExceptionHandlerRegistry implements Initializable {
     }
 
 
+    @Override
+    public RestActionExceptionHandlerRegistration get(String name) {
+        return registrationMap.get(name);
+    }
+
+    @Override
     public void register(String name, RestActionExceptionHandlerRegistration registration) {
         RestActionExceptionHandler exceptionHandler = registration.getExceptionHandler();
         name = Strings.useValueIfBlank(name, registration.getName());
