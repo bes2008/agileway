@@ -17,7 +17,7 @@ public class AgilewayBasicFiltersConfiguration {
 
     @Order(-102)
     @Bean
-    public FilterRegistrationBean baseFilterRegister (){
+    public FilterRegistrationBean baseFilterRegister() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         RRFilter filter = new RRFilter();
         registration.setFilter(filter);
@@ -28,14 +28,14 @@ public class AgilewayBasicFiltersConfiguration {
 
     @ConfigurationProperties(prefix = "agileway.web.access-log")
     @Bean
-    public WebAccessLogProperties accessLogProperties(){
+    public WebAccessLogProperties accessLogProperties() {
         return new WebAccessLogProperties();
     }
 
     @Order(-101)
     @Bean
     @Autowired
-    public FilterRegistrationBean accessLogFilterRegister (WebAccessLogProperties accessLogProperties){
+    public FilterRegistrationBean accessLogFilterRegister(WebAccessLogProperties accessLogProperties) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         AccessLogFilter filter = new AccessLogFilter();
         filter.setConfig(accessLogProperties);
