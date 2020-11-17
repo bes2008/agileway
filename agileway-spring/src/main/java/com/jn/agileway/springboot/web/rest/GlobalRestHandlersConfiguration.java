@@ -40,7 +40,7 @@ public class GlobalRestHandlersConfiguration {
         filterRestResponseHandler.setJsonFactory(jsonFactory);
         filter.setRestResponseBodyHandler(filterRestResponseHandler);
         filter.setExceptionHandler(globalFilterRestExceptionHandler);
-        registration.setUrlPatterns(Collects.newArrayList("/api/v1/*"));
+        registration.setUrlPatterns(Collects.newArrayList("/*"));
         return registration;
     }
 
