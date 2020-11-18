@@ -6,6 +6,7 @@ import com.jn.agileway.httpclient.HttpClientProvider;
 import com.jn.langx.util.collection.Pipeline;
 import org.apache.http.client.HttpClient;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -39,6 +40,7 @@ public class HttpClientAutoConfiguration {
     @ConditionalOnMissingBean(name = "agilewayHttpClientProvider")
     public HttpClientProvider httpClientProvider(
             @Qualifier("agilewayHttpClientProperties") HttpClientProperties httpClientProperties,
+            @Autowired(required = false)
             ObjectProvider<List<HttpClientCustomizer>> httpClientCustomizersProviders) {
         HttpClientProvider provider = new HttpClientProvider();
         provider.setConfig(httpClientProperties);
