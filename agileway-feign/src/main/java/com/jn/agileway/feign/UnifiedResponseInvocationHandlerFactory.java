@@ -87,7 +87,7 @@ public class UnifiedResponseInvocationHandlerFactory implements InvocationHandle
                     Type type = ((MethodMetadata) Reflects.getAnyFieldValue(methodHandler, "metadata", true, false)).returnType();
                     return jsonFactory.get().fromJson(responseBody, type);
                 } else {
-                    logger.error("error occur when execute {}", Reflects.getMethodString(method));
+                    logger.error("error occur when execute {}", Reflects.getMethodString(method), ex);
                 }
             }
             return result;
