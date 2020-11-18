@@ -9,16 +9,17 @@ import feign.Param;
 
 import java.util.Map;
 
-public class ToQueryStringExpander implements Param.Expander{
+public class ToQueryStringExpander implements Param.Expander {
     private static JSON jsons = JSONBuilderProvider.simplest();
+
     @Override
     public String expand(Object value) {
-        if(value==null){
+        if (value == null) {
             return "";
         }
         String jsonString = jsons.toJson(value);
         Map<String, Object> map = jsons.fromJson(jsonString, Map.class);
-        String queryString = HttpQueryStrings.toQueryString(map,null);
+        String queryString = HttpQueryStrings.toQueryString(map, null);
         queryString = new UrlEncoder().encode(queryString, Charsets.UTF_8);
         return queryString;
     }

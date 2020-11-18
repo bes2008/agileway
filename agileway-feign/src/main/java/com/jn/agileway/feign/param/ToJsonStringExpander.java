@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 public class ToJsonStringExpander implements Param.Expander {
     private static final Logger logger = LoggerFactory.getLogger(ToJsonStringExpander.class);
     private final JSON jsons = JSONBuilderProvider.simplest();
+
     @Override
     public String expand(Object value) {
         if (value == null) {
