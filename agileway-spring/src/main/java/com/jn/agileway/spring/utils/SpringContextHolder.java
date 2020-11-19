@@ -14,16 +14,18 @@ import java.util.concurrent.CountDownLatch;
 public class SpringContextHolder implements ApplicationContextAware {
     private static ApplicationContext applicationContext;
 
-    private static CountDownLatch downLatch = new CountDownLatch(1);
+    private static final CountDownLatch downLatch = new CountDownLatch(1);
 
     @Override
     public void setApplicationContext(ApplicationContext appContext) throws BeansException {
-        SpringContextHolder.applicationContext = appContext;
-        downLatch.countDown();
+        if (SpringContextHolder.applicationContext == null) {
+            SpringContextHolder.applicationContext = appContext;
+            downLatch.countDown();
+        }
     }
 
     public static ApplicationContext getApplicationContext() {
-        if (downLatch.getCount() < 1) {
+        if (applicationContext != null) {
             return applicationContext;
         }
         try {
