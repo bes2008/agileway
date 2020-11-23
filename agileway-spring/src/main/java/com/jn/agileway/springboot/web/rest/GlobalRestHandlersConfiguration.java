@@ -84,12 +84,6 @@ public class GlobalRestHandlersConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean({RestErrorMessageHandler.class})
-    public RestErrorMessageHandler errorMessageHandler() {
-        return NoopRestErrorMessageHandler.INSTANCE;
-    }
-
-    @Bean
     @ConfigurationProperties(prefix = "agileway.rest.global-exception-handler")
     @ConditionalOnMissingBean({GlobalRestExceptionHandlerProperties.class})
     public GlobalRestExceptionHandlerProperties globalRestExceptionHandlerProperties() {

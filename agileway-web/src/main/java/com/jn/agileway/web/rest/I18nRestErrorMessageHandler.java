@@ -10,22 +10,16 @@ import java.util.Locale;
 
 public class I18nRestErrorMessageHandler implements RestErrorMessageHandler {
     private I18nMessageStorage storage;
-    /**
-     * 是否强制使用 I18n storage里提供的错误消息
-     */
-    private boolean forceI18n = true;
+
+    private I18nRestErrorMessageHandlerProperties config = new I18nRestErrorMessageHandlerProperties();
 
     public void setI18MessageStorage(I18nMessageStorage storage) {
         this.storage = storage;
     }
 
-    public void setForceI18n(boolean forceI18n) {
-        this.forceI18n = forceI18n;
-    }
-
     @Override
     public void handler(@NonNull Locale locale, @NonNull RestRespBody restRespBody) {
-        if (forceI18n) {
+        if (config.isForceI18n()) {
             useI18nMessage(locale, restRespBody);
         } else if (Strings.isBlank(restRespBody.getErrorMessage())) {
             useI18nMessage(locale, restRespBody);
@@ -43,6 +37,12 @@ public class I18nRestErrorMessageHandler implements RestErrorMessageHandler {
         if (Emptys.isNotEmpty(message)) {
             restRespBody.setErrorCode(errorCode);
             restRespBody.setErrorMessage(message);
+        }
+    }
+
+    public void setConfig(I18nRestErrorMessageHandlerProperties config) {
+        if (config != null) {
+            this.config = config;
         }
     }
 }
