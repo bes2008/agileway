@@ -133,28 +133,32 @@
             <dependency>
                 <groupId>com.github.fangjinuo.langx</groupId>
                 <artifactId>langx-java</artifactId>
+                <scope>provided</scope>
                 <version>${langx.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.fangjinuo.langx</groupId>
                 <artifactId>langx-java8</artifactId>
+                <scope>provided</scope>
                 <version>${langx.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.fangjinuo.easyjson</groupId>
                 <artifactId>easyjson-core</artifactId>
+                <scope>provided</scope>
                 <version>${easyjson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.fangjinuo.easyjson</groupId>
                 <artifactId>easyjson-jackson</artifactId>
+                <scope>provided</scope>
                 <version>${easyjson.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
                 <version>${httpclient.version}</version>
-                <scope>compile</scope>
+                <scope>provided</scope>
                 <optional>true</optional>
             </dependency>
             <dependency>
