@@ -5,7 +5,9 @@ import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.text.i18n.I18nMessageStorage;
 import com.jn.langx.text.i18n.I18nMessageStorageAware;
 import com.jn.langx.util.Emptys;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.function.Predicate;
 
 import java.util.Locale;
 
@@ -30,12 +32,18 @@ public class I18nRestErrorMessageHandler implements RestErrorMessageHandler, I18
 
     private void useI18nMessage(@NonNull Locale locale, @NonNull RestRespBody restRespBody) {
         String errorCode = restRespBody.getErrorCode();
+        errorCode = Objs.<String>useValueIfMatch(errorCode, new Predicate<String>() {
+            @Override
+            public boolean test(String s) {
+                return Strings.equalsIgnoreCase("UNKNOWN", s);
+            }
+        }, "");
         if (Emptys.isEmpty(errorCode)) {
             if (restRespBody.getStatusCode() >= 400) {
                 errorCode = "HTTP-" + restRespBody.getStatusCode();
             }
         }
-        String message = storage.getMessage(locale, errorCode);
+        String message = storage.getMessage(locale, I18nRestErrorMessageHandler.class.getClassLoader(), errorCode);
         if (Emptys.isNotEmpty(message)) {
             restRespBody.setErrorCode(errorCode);
             restRespBody.setErrorMessage(message);
