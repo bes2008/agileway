@@ -34,13 +34,8 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
      */
     private boolean causeScanEnabled = false;
 
-    /**
-     * 默认的出错时的 http status code
-     */
-    private int defaultErrorStatusCode;
+    private DefaultRestErrorMessageHandler defaultErrorMessageHandler;
 
-    private String defaultErrorCode = "UNKNOWN";
-    private String defaultErrorMessage = "UNKNOWN";
     private volatile boolean inited = false;
     private volatile boolean running = false;
     private boolean writeUnifiedResponse = true;
@@ -87,14 +82,21 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
 
             if (respBody == null) {
                 logger.error(ex.getMessage(), ex);
-                respBody = RestRespBody.error(defaultErrorStatusCode, defaultErrorCode, defaultErrorMessage);
+                respBody = RestRespBody.error(defaultErrorMessageHandler.getDefaultErrorStatusCode(), defaultErrorMessageHandler.getDefaultErrorCode(), defaultErrorMessageHandler.getDefaultErrorMessage());
             }
             request.setAttribute(GLOBAL_REST_EXCEPTION_HANDLER, this);
-            errorMessageHandler.handler(respBody);
+            try {
+                errorMessageHandler.handler(request.getLocale(), respBody);
+            } catch (Throwable ex1) {
+                logger.error(ex1.getMessage(), ex1);
+            } finally {
+                defaultErrorMessageHandler.handler(request.getLocale(), respBody);
+            }
+
 
             if (writeUnifiedResponse) {
                 try {
-                    if(!response.isCommitted()) {
+                    if (!response.isCommitted()) {
                         response.resetBuffer();
                         response.setStatus(respBody.getStatusCode());
                         String jsonstring = jsonFactory.get().toJson(respBody);
@@ -148,18 +150,18 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
     }
 
     public void setDefaultErrorStatusCode(int defaultErrorStatusCode) {
-        this.defaultErrorStatusCode = defaultErrorStatusCode;
+        this.defaultErrorMessageHandler.setDefaultErrorStatusCode(defaultErrorStatusCode);
     }
 
     public void setDefaultErrorCode(String defaultErrorCode) {
         if (Strings.isNotBlank(defaultErrorCode)) {
-            this.defaultErrorCode = defaultErrorCode;
+            this.defaultErrorMessageHandler.setDefaultErrorCode(defaultErrorCode);
         }
     }
 
     public void setDefaultErrorMessage(String defaultErrorMessage) {
         if (Strings.isNotBlank(defaultErrorMessage)) {
-            this.defaultErrorMessage = defaultErrorMessage;
+            this.defaultErrorMessageHandler.setDefaultErrorMessage(defaultErrorMessage);
         }
     }
 
