@@ -4,7 +4,9 @@ import com.jn.agileway.web.rest.I18nRestErrorMessageHandler;
 import com.jn.agileway.web.rest.I18nRestErrorMessageHandlerProperties;
 import com.jn.langx.text.i18n.I18nMessageStorage;
 import com.jn.langx.text.i18n.JdkResourceBundleI18nMessageStorage;
+import com.jn.langx.util.Strings;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -19,11 +21,14 @@ public class I18nErrorMessageHandlerConfiguration {
         return new I18nRestErrorMessageHandlerProperties();
     }
 
+    @Value("${agileway.rest.global-exception-handler.i18n.bundle-basename:agileway_error}")
+    private String defaultBundleBasename = "agileway_error";
+
     @Bean(name = "globalI18nErrorMessageStorage")
     @ConditionalOnMissingBean(name = "globalI18nErrorMessageStorage")
     public I18nMessageStorage i18nMessageStorage() {
         JdkResourceBundleI18nMessageStorage storage = new JdkResourceBundleI18nMessageStorage();
-        storage.setBasename("agileway_error");
+        storage.setBasename(Strings.useValueIfBlank(defaultBundleBasename, "agileway_error"));
         return storage;
     }
 
