@@ -32,12 +32,14 @@ public class GlobalRestHandlersConfiguration {
     @Autowired
     public FilterRegistrationBean globalRestFilterRegister(
             GlobalFilterRestExceptionHandler globalFilterRestExceptionHandler,
+            GlobalRestExceptionHandlerProperties globalRestExceptionHandlerProperties,
             JSONFactory jsonFactory) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         GlobalRestResponseFilter filter = new GlobalRestResponseFilter();
         registration.setFilter(filter);
         GlobalFilterRestResponseHandler filterRestResponseHandler = new GlobalFilterRestResponseHandler();
         filterRestResponseHandler.setJsonFactory(jsonFactory);
+        filterRestResponseHandler.setGlobalRestExceptionHandlerProperties(globalRestExceptionHandlerProperties);
         filter.setRestResponseBodyHandler(filterRestResponseHandler);
         filter.setExceptionHandler(globalFilterRestExceptionHandler);
         registration.setUrlPatterns(Collects.newArrayList("/*"));
