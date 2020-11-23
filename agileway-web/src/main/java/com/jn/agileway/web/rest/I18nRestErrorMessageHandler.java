@@ -3,18 +3,20 @@ package com.jn.agileway.web.rest;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.text.i18n.I18nMessageStorage;
+import com.jn.langx.text.i18n.I18nMessageStorageAware;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Strings;
 
 import java.util.Locale;
 
-public class I18nRestErrorMessageHandler implements RestErrorMessageHandler {
+public class I18nRestErrorMessageHandler implements RestErrorMessageHandler, I18nMessageStorageAware {
     private I18nMessageStorage storage;
 
     private I18nRestErrorMessageHandlerProperties config = new I18nRestErrorMessageHandlerProperties();
 
-    public void setI18MessageStorage(I18nMessageStorage storage) {
-        this.storage = storage;
+    @Override
+    public void setI18nMessageStorage(I18nMessageStorage i18nMessageStorage) {
+        this.storage = i18nMessageStorage;
     }
 
     @Override
