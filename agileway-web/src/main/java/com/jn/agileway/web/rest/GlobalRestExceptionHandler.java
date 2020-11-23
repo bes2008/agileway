@@ -34,7 +34,7 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
      */
     private boolean causeScanEnabled = false;
 
-    private DefaultRestErrorMessageHandler defaultErrorMessageHandler;
+    private DefaultRestErrorMessageHandler defaultErrorMessageHandler = new DefaultRestErrorMessageHandler();
 
     private volatile boolean inited = false;
     private volatile boolean running = false;
