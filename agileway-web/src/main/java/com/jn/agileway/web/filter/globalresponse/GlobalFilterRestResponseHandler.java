@@ -1,8 +1,6 @@
 package com.jn.agileway.web.filter.globalresponse;
 
-import com.jn.agileway.web.rest.GlobalRestHandlers;
-import com.jn.agileway.web.rest.GlobalRestResponseBodyHandler;
-import com.jn.agileway.web.rest.GlobalRestResponseBodyHandlerConfiguration;
+import com.jn.agileway.web.rest.*;
 import com.jn.agileway.web.servlet.Servlets;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
@@ -23,6 +21,9 @@ public class GlobalFilterRestResponseHandler implements GlobalRestResponseBodyHa
     private static final Logger logger = LoggerFactory.getLogger(GlobalFilterRestResponseHandler.class);
     private GlobalRestResponseBodyHandlerConfiguration configuration = new GlobalRestResponseBodyHandlerConfiguration();
     private JSONFactory jsonFactory = JsonFactorys.getJSONFactory(JsonScope.SINGLETON);
+    private GlobalRestExceptionHandlerProperties globalRestExceptionHandlerProperties = new GlobalRestExceptionHandlerProperties();
+    private final DefaultRestErrorMessageHandler defaultRestErrorMessageHandler = new DefaultRestErrorMessageHandler();
+    private RestErrorMessageHandler restErrorMessageHandler = NoopRestErrorMessageHandler.INSTANCE;
 
     @Override
     public void setConfiguration(GlobalRestResponseBodyHandlerConfiguration configuration) {
@@ -43,11 +44,26 @@ public class GlobalFilterRestResponseHandler implements GlobalRestResponseBodyHa
         return jsonFactory;
     }
 
+    public void setRestErrorMessageHandler(RestErrorMessageHandler restErrorMessageHandler) {
+        if (restErrorMessageHandler != null) {
+            this.restErrorMessageHandler = restErrorMessageHandler;
+        }
+    }
+
+    public void setGlobalRestExceptionHandlerProperties(GlobalRestExceptionHandlerProperties globalRestExceptionHandlerProperties) {
+        if (globalRestExceptionHandlerProperties != null) {
+            this.globalRestExceptionHandlerProperties = globalRestExceptionHandlerProperties;
+            this.defaultRestErrorMessageHandler.setDefaultErrorCode(globalRestExceptionHandlerProperties.getDefaultErrorCode());
+            this.defaultRestErrorMessageHandler.setDefaultErrorMessage(globalRestExceptionHandlerProperties.getDefaultErrorMessage());
+            this.defaultRestErrorMessageHandler.setDefaultErrorStatusCode(globalRestExceptionHandlerProperties.getDefaultErrorStatusCode());
+        }
+    }
+
     @Override
     public RestRespBody handleResponseBody(HttpServletRequest request, HttpServletResponse response, Method method, Object actionReturnValue) {
         // 是否是非rest请求，或者禁用了全局Rest处理的请求，都视为是 非Rest请求
         Boolean nonRestRequest = (Boolean) request.getAttribute(GlobalRestHandlers.GLOBAL_REST_NON_REST_REQUEST);
-        if (nonRestRequest!=null && nonRestRequest) {
+        if (nonRestRequest != null && nonRestRequest) {
             return null;
         }
 
@@ -59,8 +75,10 @@ public class GlobalFilterRestResponseHandler implements GlobalRestResponseBodyHa
             if (error) {
                 //rest response body 是否已写过
                 Boolean responseBodyWritten = (Boolean) request.getAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN);
-                if ((responseBodyWritten == null || !responseBodyWritten ) && !response.isCommitted()) {
-                    RestRespBody respBody = new RestRespBody(!error, statusCode, "", null, null);
+                if ((responseBodyWritten == null || !responseBodyWritten) && !response.isCommitted()) {
+                    RestRespBody respBody = new RestRespBody(false, statusCode, "", this.defaultRestErrorMessageHandler.getDefaultErrorCode(), this.defaultRestErrorMessageHandler.getDefaultErrorMessage());
+                    restErrorMessageHandler.handler(request.getLocale(), respBody);
+                    defaultRestErrorMessageHandler.handler(request.getLocale(), respBody);
                     String json = jsonFactory.get().toJson(respBody);
                     try {
                         response.resetBuffer();
