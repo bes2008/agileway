@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class I18nErrorMessageHandlerConfiguration {
 
+    @Bean
     @ConfigurationProperties(prefix = "agileway.rest.global-exception-handler.i18n")
     public I18nRestErrorMessageHandlerProperties i18nRestErrorMessageHandlerProperties() {
         return new I18nRestErrorMessageHandlerProperties();
@@ -28,9 +29,10 @@ public class I18nErrorMessageHandlerConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public I18nRestErrorMessageHandler i18nRestErrorMessageHandler(@Qualifier("globalI18nErrorMessageStorage") I18nMessageStorage storage) {
+    public I18nRestErrorMessageHandler i18nRestErrorMessageHandler(@Qualifier("globalI18nErrorMessageStorage") I18nMessageStorage storage, I18nRestErrorMessageHandlerProperties i18nRestErrorMessageHandlerProperties) {
         I18nRestErrorMessageHandler i18nRestErrorMessageHandler = new I18nRestErrorMessageHandler();
         i18nRestErrorMessageHandler.setI18MessageStorage(storage);
+        i18nRestErrorMessageHandler.setConfig(i18nRestErrorMessageHandlerProperties);
         return i18nRestErrorMessageHandler;
     }
 }
