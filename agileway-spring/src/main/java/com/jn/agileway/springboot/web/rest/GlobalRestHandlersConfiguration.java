@@ -75,7 +75,7 @@ public class GlobalRestHandlersConfiguration {
 
     @Autowired
     public void registerExceptionHandlers(final GlobalRestExceptionHandlerRegistry registry, @Autowired(required = false) ObjectProvider<List<RestActionExceptionHandler>> restActionExceptionHandlersProvider) {
-        Collects.forEach(restActionExceptionHandlersProvider.getObject(), new Consumer<RestActionExceptionHandler>() {
+        Collects.forEach(restActionExceptionHandlersProvider.getIfAvailable(), new Consumer<RestActionExceptionHandler>() {
             @Override
             public void accept(RestActionExceptionHandler restActionExceptionHandler) {
                 registry.register(restActionExceptionHandler);

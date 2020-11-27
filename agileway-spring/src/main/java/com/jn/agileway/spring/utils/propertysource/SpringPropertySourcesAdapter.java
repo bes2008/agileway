@@ -4,7 +4,7 @@ import com.jn.langx.Delegatable;
 import com.jn.langx.text.PropertySource;
 import org.springframework.core.env.PropertySources;
 
-public class SpringPropertySourcesAdapter  implements PropertySource, Delegatable<PropertySources> {
+public class SpringPropertySourcesAdapter implements PropertySource, Delegatable<PropertySources> {
     private String name;
     private PropertySources delegate;
 
@@ -26,7 +26,7 @@ public class SpringPropertySourcesAdapter  implements PropertySource, Delegatabl
     @Override
     public String getProperty(String key) {
         Object obj = this.delegate.get(key);
-        if(obj!=null) {
+        if (obj != null) {
             return obj.toString();
         }
         return null;
