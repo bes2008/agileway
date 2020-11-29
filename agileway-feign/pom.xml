@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>agileway-feign</artifactId>
-
+    <description>Provide a simple method to use feign</description>
     <properties>
         <openfeign.version>9.7.0</openfeign.version>
         <openfeign.form.version>3.4.1</openfeign.form.version>

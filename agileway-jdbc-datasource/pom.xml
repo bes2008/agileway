@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>agileway-jdbc-datasource</artifactId>
-
+    <description>Provide an unified jdbc datasource factory</description>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
