@@ -7,6 +7,9 @@ import com.jn.langx.util.collection.Collects;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * https://redis.io/topics/distlock
+ */
 @NotThreadSafe
 public class ExclusiveLock extends DistributedLock {
 
