@@ -2,7 +2,7 @@ package com.jn.agileway.codec.serialization.kryo.customizer;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.jn.agileway.codec.serialization.kryo.KryoCustomizer;
-import com.jn.langx.util.Platform;
+import com.jn.langx.util.os.Platform;
 import de.javakaffee.kryoserializers.dexx.ListSerializer;
 import de.javakaffee.kryoserializers.dexx.MapSerializer;
 import de.javakaffee.kryoserializers.dexx.SetSerializer;

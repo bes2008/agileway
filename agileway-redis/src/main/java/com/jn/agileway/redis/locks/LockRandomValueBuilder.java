@@ -1,9 +1,9 @@
 package com.jn.agileway.redis.locks;
 
 import com.jn.langx.Builder;
-import com.jn.langx.util.Platform;
 import com.jn.langx.util.concurrent.threadlocal.GlobalThreadLocalMap;
 import com.jn.langx.util.net.Nets;
+import com.jn.langx.util.os.Platform;
 
 import java.net.InetAddress;
 
