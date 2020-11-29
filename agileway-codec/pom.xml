@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>agileway-codec</artifactId>
-    <description>Provide an unified codec API for hession, kryo, protostuff, fst, fes, xson , etc....</description>
+    <description>Provide an unified codec API for hession, kryo, protostuff, fst, fes, xson, cbor, jackson, json, etc....</description>
     <properties>
         <hessian.version>4.0.63</hessian.version>
         <kryo.version>5.0.0-RC9</kryo.version>
