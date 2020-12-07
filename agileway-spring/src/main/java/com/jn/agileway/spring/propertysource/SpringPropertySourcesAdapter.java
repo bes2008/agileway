@@ -1,4 +1,4 @@
-package com.jn.agileway.spring.utils.propertysource;
+package com.jn.agileway.spring.propertysource;
 
 import com.jn.langx.Delegatable;
 import com.jn.langx.text.PropertySource;
