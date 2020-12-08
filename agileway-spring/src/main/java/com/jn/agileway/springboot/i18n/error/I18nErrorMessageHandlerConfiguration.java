@@ -1,6 +1,7 @@
-package com.jn.agileway.springboot.i18n;
+package com.jn.agileway.springboot.i18n.error;
 
 import com.jn.agileway.spring.messagestorage.SpringMessageStorage;
+import com.jn.agileway.springboot.i18n.SpringBootBuiltinMessageSourceProperties;
 import com.jn.agileway.web.rest.I18nRestErrorMessageHandler;
 import com.jn.agileway.web.rest.I18nRestErrorMessageHandlerProperties;
 import com.jn.langx.annotation.NonNull;

@@ -1,4 +1,4 @@
-package com.jn.agileway.springboot.i18n;
+package com.jn.agileway.springboot.i18n.error;
 
 import org.springframework.context.annotation.Import;
 
