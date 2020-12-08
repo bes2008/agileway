@@ -1,4 +1,4 @@
-package com.jn.agileway.springboot.web.rest;
+package com.jn.agileway.springboot.i18n;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.jn.agileway.springboot.web.rest;
+package com.jn.agileway.springboot.i18n;
 
 import com.jn.agileway.spring.messagestorage.SpringMessageStorage;
 import com.jn.agileway.web.rest.I18nRestErrorMessageHandler;
