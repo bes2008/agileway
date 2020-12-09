@@ -31,7 +31,7 @@ public class I18nErrorMessageHandlerConfiguration {
         return new I18nRestErrorMessageHandlerProperties();
     }
 
-    @Bean(name="springBootBuiltinMessageSourceProperties")
+    @Bean(name = "springBootBuiltinMessageSourceProperties")
     @ConditionalOnMissingBean(name = "springBootBuiltinMessageSourceProperties")
     public SpringBootBuiltinMessageSourceProperties springBootBuiltinMessageSourceProperties() {
         return new SpringBootBuiltinMessageSourceProperties();
@@ -78,8 +78,8 @@ public class I18nErrorMessageHandlerConfiguration {
 
     }
 
-    @Bean
-    @ConditionalOnMissingBean
+    @Bean(name = "globalRestErrorMessageHandler")
+    @ConditionalOnMissingBean(name = "globalRestErrorMessageHandler")
     public I18nRestErrorMessageHandler i18nRestErrorMessageHandler(@Qualifier("globalI18nErrorMessageStorage") I18nMessageStorage storage, I18nRestErrorMessageHandlerProperties i18nRestErrorMessageHandlerProperties) {
         I18nRestErrorMessageHandler i18nRestErrorMessageHandler = new I18nRestErrorMessageHandler();
 

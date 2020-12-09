@@ -12,6 +12,7 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -57,11 +58,13 @@ public class GlobalRestHandlersConfiguration {
     @ConditionalOnMissingBean({GlobalSpringRestResponseBodyHandler.class})
     public GlobalSpringRestResponseBodyHandler globalSpringRestResponseBodyHandler(
             GlobalRestResponseBodyHandlerProperties properties,
-            JSONFactory jsonFactory) {
+            JSONFactory jsonFactory,
+            @Qualifier("globalRestErrorMessageHandler") RestErrorMessageHandler restErrorMessageHandler) {
         GlobalRestResponseBodyHandlerConfiguration configuration = new GlobalRestResponseBodyHandlerConfigurationBuilder().setProperties(properties).build();
         GlobalSpringRestResponseBodyHandler unifiedResponseBodyHandler = new GlobalSpringRestResponseBodyHandler();
         unifiedResponseBodyHandler.setJsonFactory(jsonFactory);
         unifiedResponseBodyHandler.setConfiguration(configuration);
+        unifiedResponseBodyHandler.setRestErrorMessageHandler(restErrorMessageHandler);
         return unifiedResponseBodyHandler;
     }
 
@@ -105,7 +108,8 @@ public class GlobalRestHandlersConfiguration {
             JSONFactory jsonFactory,
             GlobalRestExceptionHandlerRegistry registry,
             GlobalRestExceptionHandlerProperties globalRestExceptionHandlerProperties,
-            RestErrorMessageHandler restErrorMessageHandler) {
+            @Qualifier("globalRestErrorMessageHandler")
+                    RestErrorMessageHandler restErrorMessageHandler) {
         GlobalSpringRestExceptionHandler globalRestExceptionHandler = new GlobalSpringRestExceptionHandler();
 
         globalRestExceptionHandler.setDefaultErrorCode(globalRestExceptionHandlerProperties.getDefaultErrorCode());
@@ -145,7 +149,8 @@ public class GlobalRestHandlersConfiguration {
             JSONFactory jsonFactory,
             GlobalRestExceptionHandlerRegistry registry,
             GlobalRestExceptionHandlerProperties globalRestExceptionHandlerProperties,
-            RestErrorMessageHandler restErrorMessageHandler) {
+            @Qualifier("globalRestErrorMessageHandler")
+                    RestErrorMessageHandler restErrorMessageHandler) {
         GlobalFilterRestExceptionHandler globalRestExceptionHandler = new GlobalFilterRestExceptionHandler();
 
         globalRestExceptionHandler.setDefaultErrorCode(globalRestExceptionHandlerProperties.getDefaultErrorCode());

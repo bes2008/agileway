@@ -1,8 +1,6 @@
 package com.jn.agileway.spring.web.rest;
 
-import com.jn.agileway.web.rest.GlobalRestHandlers;
-import com.jn.agileway.web.rest.GlobalRestResponseBodyHandler;
-import com.jn.agileway.web.rest.GlobalRestResponseBodyHandlerConfiguration;
+import com.jn.agileway.web.rest.*;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.io.Charsets;
@@ -30,6 +28,7 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
     private static final Logger logger = LoggerFactory.getLogger(GlobalSpringRestResponseBodyHandler.class);
     private GlobalRestResponseBodyHandlerConfiguration configuration = new GlobalRestResponseBodyHandlerConfiguration();
     private JSONFactory jsonFactory;
+    private RestErrorMessageHandler restErrorMessageHandler = NoopRestErrorMessageHandler.INSTANCE;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -51,17 +50,20 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
     @Override
     public RestRespBody handleResponseBody(HttpServletRequest request, HttpServletResponse response, Method actionMethod, Object actionReturnValue) {
         if (!isSupportedAction(actionMethod)) {
-            request.setAttribute(GlobalRestHandlers.GLOBAL_REST_NON_REST_REQUEST,true);
+            request.setAttribute(GlobalRestHandlers.GLOBAL_REST_NON_REST_REQUEST, true);
             return null;
         }
         if (actionReturnValue instanceof Resource) {
             return null;
         }
         RestRespBody body = convertToRestRespBody(request, response, actionReturnValue);
+        if (body != null && body.getStatusCode() >= 400) {
+            restErrorMessageHandler.handler(request.getLocale(), body);
+        }
         response.setStatus(body.getStatusCode());
         response.setContentType(GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8);
         response.setCharacterEncoding(Charsets.UTF_8.name());
-        request.setAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN,true);
+        request.setAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN, true);
         return body;
     }
 
@@ -118,5 +120,11 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
 
     public JSONFactory getJsonFactory() {
         return jsonFactory;
+    }
+
+    public void setRestErrorMessageHandler(RestErrorMessageHandler restErrorMessageHandler) {
+        if (restErrorMessageHandler != null) {
+            this.restErrorMessageHandler = restErrorMessageHandler;
+        }
     }
 }
