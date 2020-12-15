@@ -1,8 +1,11 @@
 package com.jn.agileway.jdbc.datasource;
 
-public interface DataSourceSelector {
+public abstract class DataSourceSelector {
+    protected DataSourceRegistry registry;
 
-    void setDataSourceRegistry(DataSourceRegistry registry);
+    public void setDataSourceRegistry(DataSourceRegistry registry) {
+        this.registry = registry;
+    }
 
-    void select();
+    public abstract void select();
 }
