@@ -1,7 +1,7 @@
 package com.jn.agileway.jdbc.datasource.factory.hikaricp;
 
 import com.jn.agileway.jdbc.Jdbcs;
-import com.jn.agileway.jdbc.datasource.DataSourceProperties;
+import com.jn.agileway.jdbc.datasource.factory.DataSourceProperties;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.reflect.Reflects;
 import com.zaxxer.hikari.HikariConfig;

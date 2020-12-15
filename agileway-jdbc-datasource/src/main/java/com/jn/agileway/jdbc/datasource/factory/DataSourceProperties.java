@@ -1,4 +1,4 @@
-package com.jn.agileway.jdbc.datasource;
+package com.jn.agileway.jdbc.datasource.factory;
 
 import com.jn.langx.util.Strings;
 

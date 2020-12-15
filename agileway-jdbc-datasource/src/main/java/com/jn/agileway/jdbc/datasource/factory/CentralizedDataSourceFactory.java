@@ -1,5 +1,6 @@
-package com.jn.agileway.jdbc.datasource;
+package com.jn.agileway.jdbc.datasource.factory;
 
+import com.jn.agileway.jdbc.datasource.*;
 import com.jn.langx.util.Preconditions;
 
 import javax.sql.DataSource;

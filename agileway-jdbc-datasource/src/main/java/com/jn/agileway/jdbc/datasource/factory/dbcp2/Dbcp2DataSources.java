@@ -1,6 +1,6 @@
 package com.jn.agileway.jdbc.datasource.factory.dbcp2;
 
-import com.jn.agileway.jdbc.datasource.DataSourceProperties;
+import com.jn.agileway.jdbc.datasource.factory.DataSourceProperties;
 import com.jn.langx.util.Maths;
 import com.jn.langx.util.Throwables;
 import org.apache.commons.dbcp2.BasicDataSource;

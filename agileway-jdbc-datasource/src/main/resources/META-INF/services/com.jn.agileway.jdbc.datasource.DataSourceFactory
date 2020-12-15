@@ -1,0 +1,7 @@
+com.jn.agileway.jdbc.datasource.factory.hikaricp.HikaricpDataSourceFactory
+com.jn.agileway.jdbc.datasource.factory.tomcatjdbc.TomcatJdbcDataSourceFactory
+com.jn.agileway.jdbc.datasource.factory.druid.AlibabaDruidDataSourceFactory
+com.jn.agileway.jdbc.datasource.factory.dbcp2.Dbcp2DataSourceFactory
+com.jn.agileway.jdbc.datasource.factory.c3p0.C3p0DataSourceFactory
+
+

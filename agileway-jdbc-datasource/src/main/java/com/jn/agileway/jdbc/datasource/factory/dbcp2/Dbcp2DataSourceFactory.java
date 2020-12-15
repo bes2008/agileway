@@ -2,7 +2,7 @@ package com.jn.agileway.jdbc.datasource.factory.dbcp2;
 
 import com.jn.agileway.jdbc.Jdbcs;
 import com.jn.agileway.jdbc.datasource.DataSourceFactory;
-import com.jn.agileway.jdbc.datasource.DataSourceProperties;
+import com.jn.agileway.jdbc.datasource.factory.DataSourceProperties;
 import com.jn.langx.annotation.Name;
 import com.jn.langx.annotation.OnClasses;
 import com.jn.langx.text.StringTemplates;

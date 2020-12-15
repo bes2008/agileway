@@ -1,6 +1,6 @@
 package com.jn.agileway.jdbc;
 
-import com.jn.agileway.jdbc.datasource.DataSourceProperties;
+import com.jn.agileway.jdbc.datasource.factory.DataSourceProperties;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Objs;
@@ -9,8 +9,6 @@ import com.jn.langx.util.Preconditions;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.util.Locale;
-
-import static com.jn.agileway.jdbc.datasource.DataSourceConstants.DATASOURCE_IMPLEMENT_KEY_TOMCAT;
 
 public class Jdbcs {
     /**
