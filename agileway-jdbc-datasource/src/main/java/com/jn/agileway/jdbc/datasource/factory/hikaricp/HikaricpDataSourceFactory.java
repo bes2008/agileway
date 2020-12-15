@@ -1,4 +1,4 @@
-package com.jn.agileway.jdbc.datasource.hikaricp;
+package com.jn.agileway.jdbc.datasource.factory.hikaricp;
 
 import com.jn.agileway.jdbc.Jdbcs;
 import com.jn.agileway.jdbc.datasource.DataSourceFactory;

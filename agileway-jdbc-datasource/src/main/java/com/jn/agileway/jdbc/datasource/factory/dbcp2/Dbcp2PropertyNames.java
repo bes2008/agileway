@@ -1,4 +1,4 @@
-package com.jn.agileway.jdbc.datasource.dbcp2;
+package com.jn.agileway.jdbc.datasource.factory.dbcp2;
 
 public class Dbcp2PropertyNames {
     public static final String PROP_DEFAULT_AUTO_COMMIT = "autoCommitOnClose";

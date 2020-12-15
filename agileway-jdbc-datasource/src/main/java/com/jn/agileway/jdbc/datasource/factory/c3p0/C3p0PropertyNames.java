@@ -1,4 +1,4 @@
-package com.jn.agileway.jdbc.datasource.c3p0;
+package com.jn.agileway.jdbc.datasource.factory.c3p0;
 
 public class C3p0PropertyNames {
     public static final String PROP_DEFAULT_AUTO_COMMIT = "defaultAutoCommit";

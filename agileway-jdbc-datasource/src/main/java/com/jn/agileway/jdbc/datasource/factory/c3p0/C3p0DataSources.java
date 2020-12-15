@@ -1,4 +1,4 @@
-package com.jn.agileway.jdbc.datasource.c3p0;
+package com.jn.agileway.jdbc.datasource.factory.c3p0;
 
 import com.jn.agileway.jdbc.datasource.DataSourceProperties;
 import com.jn.langx.util.Maths;
@@ -8,7 +8,7 @@ import com.mchange.v2.c3p0.DataSources;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-import static com.jn.agileway.jdbc.datasource.c3p0.C3p0PropertyNames.*;
+import static com.jn.agileway.jdbc.datasource.factory.c3p0.C3p0PropertyNames.*;
 
 
 /**

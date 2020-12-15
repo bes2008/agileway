@@ -1,4 +1,4 @@
-package com.jn.agileway.jdbc.datasource.dbcp2;
+package com.jn.agileway.jdbc.datasource.factory.dbcp2;
 
 import com.jn.agileway.jdbc.Jdbcs;
 import com.jn.agileway.jdbc.datasource.DataSourceFactory;

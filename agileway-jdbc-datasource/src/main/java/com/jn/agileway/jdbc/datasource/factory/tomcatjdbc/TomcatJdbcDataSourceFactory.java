@@ -1,4 +1,4 @@
-package com.jn.agileway.jdbc.datasource.tomcatjdbc;
+package com.jn.agileway.jdbc.datasource.factory.tomcatjdbc;
 
 import com.jn.agileway.jdbc.Jdbcs;
 import com.jn.agileway.jdbc.datasource.DataSourceFactory;

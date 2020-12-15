@@ -1,21 +1,20 @@
-package com.jn.agileway.jdbc.datasource.tomcatjdbc;
+package com.jn.agileway.jdbc.datasource.factory.druid;
 
+import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.jn.agileway.jdbc.datasource.DataSourceProperties;
 import com.jn.langx.util.Maths;
 import com.jn.langx.util.Throwables;
-import org.apache.tomcat.jdbc.pool.DataSourceFactory;
 
 import javax.sql.DataSource;
 import java.util.Properties;
 
-import static com.jn.agileway.jdbc.datasource.tomcatjdbc.TomcatJdbcDataSourcePropertyNames.*;
+import static com.alibaba.druid.pool.DruidDataSourceFactory.*;
 
-public class TomcatJdbcDataSources {
-    private TomcatJdbcDataSources() {
+public class AlibabaDruidDataSources {
+    private AlibabaDruidDataSources() {
     }
 
-    public static DataSource createDataSource(final DataSourceProperties properties) {
-        DataSourceFactory dsf = new DataSourceFactory();
+    public static DataSource createDataSource(DataSourceProperties properties) {
         Properties props = properties.getDriverProps();
         if (props == null) {
             props = new Properties();
@@ -61,7 +60,7 @@ public class TomcatJdbcDataSources {
             props.setProperty(PROP_VALIDATIONQUERY, validationQuery);
         }
         try {
-            return dsf.createDataSource(props);
+            return DruidDataSourceFactory.createDataSource(props);
         } catch (Exception ex) {
             throw Throwables.wrapAsRuntimeException(ex);
         }
@@ -69,11 +68,9 @@ public class TomcatJdbcDataSources {
 
     public static DataSource createDataSource(Properties properties){
         try {
-            DataSourceFactory dsf = new DataSourceFactory();
-            return dsf.createDataSource(properties);
+            return DruidDataSourceFactory.createDataSource(properties);
         } catch (Exception ex) {
             throw Throwables.wrapAsRuntimeException(ex);
         }
     }
-
 }

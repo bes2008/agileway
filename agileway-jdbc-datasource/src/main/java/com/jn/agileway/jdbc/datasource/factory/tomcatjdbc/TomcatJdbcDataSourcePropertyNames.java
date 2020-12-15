@@ -1,4 +1,4 @@
-package com.jn.agileway.jdbc.datasource.tomcatjdbc;
+package com.jn.agileway.jdbc.datasource.factory.tomcatjdbc;
 
 public class TomcatJdbcDataSourcePropertyNames {
     public static final String PROP_DEFAULTAUTOCOMMIT = "defaultAutoCommit";

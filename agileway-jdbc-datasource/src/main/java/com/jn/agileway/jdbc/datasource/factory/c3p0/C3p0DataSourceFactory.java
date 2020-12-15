@@ -1,4 +1,4 @@
-package com.jn.agileway.jdbc.datasource.c3p0;
+package com.jn.agileway.jdbc.datasource.factory.c3p0;
 
 import com.jn.agileway.jdbc.Jdbcs;
 import com.jn.agileway.jdbc.datasource.DataSourceFactory;

@@ -1,4 +1,4 @@
-package com.jn.agileway.jdbc.datasource.dbcp2;
+package com.jn.agileway.jdbc.datasource.factory.dbcp2;
 
 import com.jn.agileway.jdbc.datasource.DataSourceProperties;
 import com.jn.langx.util.Maths;
@@ -8,7 +8,7 @@ import org.apache.commons.dbcp2.BasicDataSourceFactory;
 
 import java.util.Properties;
 
-import static com.jn.agileway.jdbc.datasource.dbcp2.Dbcp2PropertyNames.*;
+import static com.jn.agileway.jdbc.datasource.factory.dbcp2.Dbcp2PropertyNames.*;
 
 /**
  * http://commons.apache.org/proper/commons-dbcp/configuration.html

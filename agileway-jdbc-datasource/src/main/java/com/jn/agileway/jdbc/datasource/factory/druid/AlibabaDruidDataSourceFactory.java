@@ -1,4 +1,4 @@
-package com.jn.agileway.jdbc.datasource.druid;
+package com.jn.agileway.jdbc.datasource.factory.druid;
 
 import com.jn.agileway.jdbc.Jdbcs;
 import com.jn.agileway.jdbc.datasource.DataSourceFactory;
