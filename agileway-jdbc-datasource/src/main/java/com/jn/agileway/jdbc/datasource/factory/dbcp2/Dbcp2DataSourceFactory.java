@@ -28,7 +28,7 @@ public class Dbcp2DataSourceFactory implements DataSourceFactory {
             String name = dataSourceProperties.getName();
             return DelegatingNamedDataSource.of(dataSource, name);
         }
-        throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("Illegal datasource implementationKey {}, expected key is {}", dataSourceProperties.getImplementationKey(), DATASOURCE_IMPLEMENT_KEY_DBCP2));
+        throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("Illegal datasource implementationKey {}, expected key is {}", dataSourceProperties.getImplementation(), DATASOURCE_IMPLEMENT_KEY_DBCP2));
     }
 
     @Override

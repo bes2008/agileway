@@ -27,7 +27,7 @@ public class C3p0DataSourceFactory implements DataSourceFactory {
             String name = dataSourceProperties.getName();
             return DelegatingNamedDataSource.of(dataSource, name);
         }
-        throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("Illegal datasource implementationKey {}, expected key is {}", dataSourceProperties.getImplementationKey(), DATASOURCE_IMPLEMENT_KEY_C3P0));
+        throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("Illegal datasource implementationKey {}, expected key is {}", dataSourceProperties.getImplementation(), DATASOURCE_IMPLEMENT_KEY_C3P0));
     }
 
     @Override

@@ -15,6 +15,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class GroupedDataSourceRegistry implements Registry<String, NamedDataSource> {
 
+    /**
+     * key: group
+     * subKey: datasource name
+     */
     private ConcurrentHashMap<String, Map<String, NamedDataSource>> dataSourceRegistry = new ConcurrentHashMap<String, Map<String, NamedDataSource>>();
 
     public void register(String group, NamedDataSource dataSource) {
@@ -34,7 +38,7 @@ public class GroupedDataSourceRegistry implements Registry<String, NamedDataSour
 
     @Override
     public void register(NamedDataSource dataSource) {
-        register(DataSources.GROUP_DEFAULT, dataSource);
+        register(DataSources.DATASOURCE_GROUP_DEFAULT, dataSource);
     }
 
     public NamedDataSource get(final String dataSourceName) {

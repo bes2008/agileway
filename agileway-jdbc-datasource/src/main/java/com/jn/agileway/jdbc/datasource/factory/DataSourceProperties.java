@@ -1,5 +1,6 @@
 package com.jn.agileway.jdbc.datasource.factory;
 
+import com.jn.agileway.jdbc.datasource.DataSources;
 import com.jn.langx.util.Strings;
 
 import java.util.Properties;
@@ -8,8 +9,9 @@ public class DataSourceProperties {
     /**
      * datasource:
      */
+    private String group = DataSources.DATASOURCE_GROUP;
     private String name;
-    private String implementationKey;
+    private String implementation;
 
     /**
      * driver properties:
@@ -52,6 +54,14 @@ public class DataSourceProperties {
         this.isAutoCommit = true;
         this.isReadOnly = false;
         this.transactionIsolationName = "TRANSACTION_READ_COMMITTED";
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 
     public String getCatalog() {
@@ -214,11 +224,11 @@ public class DataSourceProperties {
         this.driverProps = driverProps;
     }
 
-    public String getImplementationKey() {
-        return implementationKey;
+    public String getImplementation() {
+        return implementation;
     }
 
-    public void setImplementationKey(String implementationKey) {
-        this.implementationKey = implementationKey;
+    public void setImplementation(String implementation) {
+        this.implementation = implementation;
     }
 }

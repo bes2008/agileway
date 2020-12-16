@@ -24,13 +24,13 @@ public class CentralizedDataSourceFactory implements DataSourceFactory {
 
         NamedDataSource dataSource = registry.get(name);
         if (dataSource == null) {
-            String implementationKey = dataSourceProperties.getImplementationKey();
+            String implementationKey = dataSourceProperties.getImplementation();
             DataSourceFactory delegate = DataSourceFactoryProvider.getInstance().get(implementationKey);
             if (delegate != null) {
                 dataSource = delegate.get(dataSourceProperties);
             }
             if (dataSource != null) {
-                registry.register(name, dataSource);
+                registry.register(dataSourceProperties.getGroup(), dataSource);
             }
         }
         return dataSource;
@@ -44,13 +44,14 @@ public class CentralizedDataSourceFactory implements DataSourceFactory {
 
         NamedDataSource dataSource = registry.get(name);
         if (dataSource == null) {
-            String implementationKey = properties.getProperty(DataSources.DATASOURCE_IMPLEMENT_KEY);
+            String implementationKey = properties.getProperty(DataSources.DATASOURCE_IMPLEMENT);
             DataSourceFactory delegate = DataSourceFactoryProvider.getInstance().get(implementationKey);
             if (delegate != null) {
                 dataSource = delegate.get(properties);
             }
             if (dataSource != null) {
-                registry.register(name, dataSource);
+               String group =properties.getProperty(DataSources.DATASOURCE_GROUP, DataSources.DATASOURCE_GROUP_DEFAULT);
+                registry.register(group, dataSource);
             }
         }
         return dataSource;
