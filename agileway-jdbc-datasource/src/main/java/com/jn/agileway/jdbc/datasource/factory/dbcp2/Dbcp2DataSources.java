@@ -1,11 +1,15 @@
 package com.jn.agileway.jdbc.datasource.factory.dbcp2;
 
+import com.jn.agileway.jdbc.datasource.DataSourceConstants;
+import com.jn.agileway.jdbc.datasource.DelegatingNamedDataSource;
+import com.jn.agileway.jdbc.datasource.NamedDataSource;
 import com.jn.agileway.jdbc.datasource.factory.DataSourceProperties;
 import com.jn.langx.util.Maths;
 import com.jn.langx.util.Throwables;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.BasicDataSourceFactory;
 
+import javax.sql.DataSource;
 import java.util.Properties;
 
 import static com.jn.agileway.jdbc.datasource.factory.dbcp2.Dbcp2PropertyNames.*;
@@ -17,11 +21,13 @@ public class Dbcp2DataSources {
     private Dbcp2DataSources() {
     }
 
-    public static BasicDataSource createDataSource(DataSourceProperties properties) {
+    public static NamedDataSource createDataSource(DataSourceProperties properties) {
         Properties props = properties.getDriverProps();
         if (props == null) {
             props = new Properties();
         }
+
+        props.setProperty(DataSourceConstants.DATASOURCE_NAME, properties.getName());
 
         String username = properties.getUsername();
         if (username != null) {
@@ -72,15 +78,17 @@ public class Dbcp2DataSources {
 
 
         try {
-            return BasicDataSourceFactory.createDataSource(props);
+            return createDataSource(props);
         } catch (Exception ex) {
             throw Throwables.wrapAsRuntimeException(ex);
         }
     }
 
-    public static BasicDataSource createDataSource(Properties props ){
+    public static NamedDataSource createDataSource(Properties props ){
         try {
-            return BasicDataSourceFactory.createDataSource(props);
+            String name = props.getProperty(DataSourceConstants.DATASOURCE_NAME);
+            DataSource dataSource =  BasicDataSourceFactory.createDataSource(props);
+            return DelegatingNamedDataSource.of(dataSource, name);
         } catch (Exception ex) {
             throw Throwables.wrapAsRuntimeException(ex);
         }

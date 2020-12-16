@@ -2,6 +2,7 @@ package com.jn.agileway.jdbc.datasource.factory.tomcatjdbc;
 
 import com.jn.agileway.jdbc.Jdbcs;
 import com.jn.agileway.jdbc.datasource.DataSourceFactory;
+import com.jn.agileway.jdbc.datasource.NamedDataSource;
 import com.jn.agileway.jdbc.datasource.factory.DataSourceProperties;
 import com.jn.langx.annotation.Name;
 import com.jn.langx.annotation.OnClasses;
@@ -20,7 +21,7 @@ import static com.jn.agileway.jdbc.datasource.DataSourceConstants.DATASOURCE_IMP
 })
 public class TomcatJdbcDataSourceFactory implements DataSourceFactory {
     @Override
-    public DataSource get(DataSourceProperties dataSourceProperties) {
+    public NamedDataSource get(DataSourceProperties dataSourceProperties) {
         if (Jdbcs.isImplementationKeyMatched(DATASOURCE_IMPLEMENT_KEY_TOMCAT, dataSourceProperties)) {
             return TomcatJdbcDataSources.createDataSource(dataSourceProperties);
         }
@@ -28,7 +29,7 @@ public class TomcatJdbcDataSourceFactory implements DataSourceFactory {
     }
 
     @Override
-    public DataSource get(Properties properties) {
+    public NamedDataSource get(Properties properties) {
         return TomcatJdbcDataSources.createDataSource(properties);
     }
 }

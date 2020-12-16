@@ -1,5 +1,8 @@
 package com.jn.agileway.jdbc.datasource.factory.c3p0;
 
+import com.jn.agileway.jdbc.datasource.DataSourceConstants;
+import com.jn.agileway.jdbc.datasource.DelegatingNamedDataSource;
+import com.jn.agileway.jdbc.datasource.NamedDataSource;
 import com.jn.agileway.jdbc.datasource.factory.DataSourceProperties;
 import com.jn.langx.util.Maths;
 import com.jn.langx.util.Throwables;
@@ -18,7 +21,7 @@ public class C3p0DataSources {
     private C3p0DataSources() {
     }
 
-    public static DataSource createDataSource(final DataSourceProperties properties) {
+    public static NamedDataSource createDataSource(final DataSourceProperties properties) {
         try {
             DataSource ds_unpooled = DataSources.unpooledDataSource(properties.getUrl(), properties.getUsername(), properties.getPassword());
             Properties props = properties.getDriverProps();
@@ -26,6 +29,7 @@ public class C3p0DataSources {
             if (props == null) {
                 props = new Properties();
             }
+
 
             String username = properties.getUsername();
             if (username != null) {
@@ -64,16 +68,20 @@ public class C3p0DataSources {
             props.setProperty(PROP_INITIAL_SIZE, "" + properties.getInitialSize());
             props.setProperty(PROP_MAX_POOL_SIZE, "" + Maths.max(8, properties.getMaxPoolSize()));
 
-            return DataSources.pooledDataSource(ds_unpooled, properties.getName(), props);
+            DataSource delegate  = DataSources.pooledDataSource(ds_unpooled, properties.getName(), props);
+            String name = properties.getName();
+            return DelegatingNamedDataSource.of(delegate, name);
         } catch (Exception ex) {
             throw Throwables.wrapAsRuntimeException(ex);
         }
     }
 
-    public static DataSource createDataSource(Properties properties) {
+    public static NamedDataSource createDataSource(Properties properties) {
         try {
             DataSource ds_unpooled = DataSources.unpooledDataSource();
-            return DataSources.pooledDataSource(ds_unpooled, properties);
+            String name = properties.getProperty(DataSourceConstants.DATASOURCE_NAME);
+            DataSource delegate = DataSources.pooledDataSource(ds_unpooled, properties);
+            return DelegatingNamedDataSource.of(delegate, name);
         } catch (Exception ex) {
             throw Throwables.wrapAsRuntimeException(ex);
         }

@@ -1,6 +1,9 @@
 package com.jn.agileway.jdbc.datasource.factory.druid;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
+import com.jn.agileway.jdbc.datasource.DataSourceConstants;
+import com.jn.agileway.jdbc.datasource.DelegatingNamedDataSource;
+import com.jn.agileway.jdbc.datasource.NamedDataSource;
 import com.jn.agileway.jdbc.datasource.factory.DataSourceProperties;
 import com.jn.langx.util.Maths;
 import com.jn.langx.util.Throwables;
@@ -14,7 +17,7 @@ public class AlibabaDruidDataSources {
     private AlibabaDruidDataSources() {
     }
 
-    public static DataSource createDataSource(DataSourceProperties properties) {
+    public static NamedDataSource createDataSource(DataSourceProperties properties) {
         Properties props = properties.getDriverProps();
         if (props == null) {
             props = new Properties();
@@ -59,16 +62,20 @@ public class AlibabaDruidDataSources {
         if (validationQuery != null) {
             props.setProperty(PROP_VALIDATIONQUERY, validationQuery);
         }
+
+        props.setProperty(DataSourceConstants.DATASOURCE_NAME, properties.getName());
         try {
-            return DruidDataSourceFactory.createDataSource(props);
+            return createDataSource(props);
         } catch (Exception ex) {
             throw Throwables.wrapAsRuntimeException(ex);
         }
     }
 
-    public static DataSource createDataSource(Properties properties){
+    public static NamedDataSource createDataSource(Properties properties){
         try {
-            return DruidDataSourceFactory.createDataSource(properties);
+            String name = properties.getProperty(DataSourceConstants.DATASOURCE_NAME);
+            DataSource delegate = DruidDataSourceFactory.createDataSource(properties);
+            return DelegatingNamedDataSource.of(delegate,name);
         } catch (Exception ex) {
             throw Throwables.wrapAsRuntimeException(ex);
         }

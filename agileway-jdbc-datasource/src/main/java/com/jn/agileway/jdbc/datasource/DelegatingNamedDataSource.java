@@ -1,6 +1,8 @@
 package com.jn.agileway.jdbc.datasource;
 
 import com.jn.langx.Delegatable;
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.Preconditions;
@@ -11,7 +13,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
-public class DelegatingDataSource implements DataSource, Delegatable<DataSource>, Initializable {
+public class DelegatingNamedDataSource implements NamedDataSource, Delegatable<DataSource>, Initializable {
+    private String name;
     private DataSource delegate;
 
     @Override
@@ -29,14 +32,14 @@ public class DelegatingDataSource implements DataSource, Delegatable<DataSource>
     /**
      * Create a new DelegatingDataSource.
      */
-    public DelegatingDataSource() {
+    public DelegatingNamedDataSource() {
     }
 
     /**
      * Create a new DelegatingDataSource.
      * @param targetDataSource the target DataSource
      */
-    public DelegatingDataSource(DataSource targetDataSource) {
+    public DelegatingNamedDataSource(DataSource targetDataSource) {
         setDelegate(targetDataSource);
     }
 
@@ -107,4 +110,23 @@ public class DelegatingDataSource implements DataSource, Delegatable<DataSource>
         return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     }
 
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+
+    public static final DelegatingNamedDataSource of(@NonNull DataSource delegate, @NonNull String name){
+        Preconditions.checkNotNull(delegate,"the delegate is null");
+        Preconditions.checkNotEmpty(name,"the name is null or empty");
+        DelegatingNamedDataSource dataSource = new DelegatingNamedDataSource();
+        dataSource.setDelegate(delegate);
+        dataSource.setName(name);
+        return dataSource;
+    }
 }

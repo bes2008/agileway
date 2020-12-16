@@ -6,9 +6,9 @@ import com.jn.langx.factory.Factory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-public interface DataSourceFactory extends Factory<DataSourceProperties, DataSource> {
+public interface DataSourceFactory extends Factory<DataSourceProperties, NamedDataSource> {
     @Override
-    DataSource get(DataSourceProperties dataSourceProperties);
+    NamedDataSource get(DataSourceProperties dataSourceProperties);
 
-    DataSource get(Properties properties);
+    NamedDataSource get(Properties properties);
 }

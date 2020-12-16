@@ -1,6 +1,9 @@
 package com.jn.agileway.jdbc.datasource.factory.hikaricp;
 
 import com.jn.agileway.jdbc.Jdbcs;
+import com.jn.agileway.jdbc.datasource.DataSourceConstants;
+import com.jn.agileway.jdbc.datasource.DelegatingNamedDataSource;
+import com.jn.agileway.jdbc.datasource.NamedDataSource;
 import com.jn.agileway.jdbc.datasource.factory.DataSourceProperties;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.reflect.Reflects;
@@ -18,7 +21,7 @@ public class HikariDataSources {
     private HikariDataSources() {
     }
 
-    public static DataSource createDataSource(final DataSourceProperties props) {
+    public static NamedDataSource createDataSource(final DataSourceProperties props) {
         Properties driverProps = props.getDriverProps();
         HikariConfig config = null;
         if (Emptys.isNotEmpty(driverProps)) {
@@ -54,11 +57,15 @@ public class HikariDataSources {
         }
         config.setTransactionIsolation(props.getTransactionIsolationName());
         config.setReadOnly(props.isReadOnly());
-        return new HikariDataSource(config);
+        HikariDataSource dataSource = new HikariDataSource(config);
+        String name = props.getName();
+        return DelegatingNamedDataSource.of(dataSource, name);
     }
 
-    public static DataSource createDataSource(final Properties props) {
-        return new HikariDataSource(new HikariConfig(props));
+    public static NamedDataSource createDataSource(final Properties props) {
+        HikariDataSource dataSource = new HikariDataSource(new HikariConfig(props));
+        String name = props.getProperty(DataSourceConstants.DATASOURCE_NAME);
+        return DelegatingNamedDataSource.of(dataSource, name);
     }
 
 }

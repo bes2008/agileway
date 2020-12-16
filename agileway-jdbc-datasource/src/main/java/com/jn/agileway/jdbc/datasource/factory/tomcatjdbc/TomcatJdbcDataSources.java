@@ -1,5 +1,8 @@
 package com.jn.agileway.jdbc.datasource.factory.tomcatjdbc;
 
+import com.jn.agileway.jdbc.datasource.DataSourceConstants;
+import com.jn.agileway.jdbc.datasource.DelegatingNamedDataSource;
+import com.jn.agileway.jdbc.datasource.NamedDataSource;
 import com.jn.agileway.jdbc.datasource.factory.DataSourceProperties;
 import com.jn.langx.util.Maths;
 import com.jn.langx.util.Throwables;
@@ -14,7 +17,7 @@ public class TomcatJdbcDataSources {
     private TomcatJdbcDataSources() {
     }
 
-    public static DataSource createDataSource(final DataSourceProperties properties) {
+    public static NamedDataSource createDataSource(final DataSourceProperties properties) {
         DataSourceFactory dsf = new DataSourceFactory();
         Properties props = properties.getDriverProps();
         if (props == null) {
@@ -61,16 +64,20 @@ public class TomcatJdbcDataSources {
             props.setProperty(PROP_VALIDATIONQUERY, validationQuery);
         }
         try {
-            return dsf.createDataSource(props);
+            DataSource dataSource = dsf.createDataSource(props);
+            String name = properties.getName();
+            return DelegatingNamedDataSource.of(dataSource, name);
         } catch (Exception ex) {
             throw Throwables.wrapAsRuntimeException(ex);
         }
     }
 
-    public static DataSource createDataSource(Properties properties){
+    public static NamedDataSource createDataSource(Properties properties) {
         try {
             DataSourceFactory dsf = new DataSourceFactory();
-            return dsf.createDataSource(properties);
+            DataSource dataSource = dsf.createDataSource(properties);
+            String name = properties.getProperty(DataSourceConstants.DATASOURCE_NAME);
+            return DelegatingNamedDataSource.of(dataSource, name);
         } catch (Exception ex) {
             throw Throwables.wrapAsRuntimeException(ex);
         }

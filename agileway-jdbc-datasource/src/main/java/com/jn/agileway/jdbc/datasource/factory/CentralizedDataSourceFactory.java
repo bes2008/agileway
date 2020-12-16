@@ -3,7 +3,6 @@ package com.jn.agileway.jdbc.datasource.factory;
 import com.jn.agileway.jdbc.datasource.*;
 import com.jn.langx.util.Preconditions;
 
-import javax.sql.DataSource;
 import java.util.Properties;
 
 public class CentralizedDataSourceFactory implements DataSourceFactory {
@@ -18,12 +17,12 @@ public class CentralizedDataSourceFactory implements DataSourceFactory {
     }
 
     @Override
-    public DataSource get(DataSourceProperties dataSourceProperties) {
+    public NamedDataSource get(DataSourceProperties dataSourceProperties) {
         Preconditions.checkNotNull(registry);
         String name = dataSourceProperties.getName();
         Preconditions.checkNotNull(name, "the datasource name is null");
 
-        DataSource dataSource = registry.get(name);
+        NamedDataSource dataSource = registry.get(name);
         if (dataSource == null) {
             String implementationKey = dataSourceProperties.getImplementationKey();
             DataSourceFactory delegate = DataSourceFactoryProvider.getInstance().get(implementationKey);
@@ -38,12 +37,12 @@ public class CentralizedDataSourceFactory implements DataSourceFactory {
     }
 
     @Override
-    public DataSource get(Properties properties) {
+    public NamedDataSource get(Properties properties) {
         Preconditions.checkNotNull(registry);
         String name = properties.getProperty(DataSourceConstants.DATASOURCE_NAME);
         Preconditions.checkNotNull(name, "the datasource name is null");
 
-        DataSource dataSource = registry.get(name);
+        NamedDataSource dataSource = registry.get(name);
         if (dataSource == null) {
             String implementationKey = properties.getProperty(DataSourceConstants.DATASOURCE_IMPLEMENT_KEY);
             DataSourceFactory delegate = DataSourceFactoryProvider.getInstance().get(implementationKey);
