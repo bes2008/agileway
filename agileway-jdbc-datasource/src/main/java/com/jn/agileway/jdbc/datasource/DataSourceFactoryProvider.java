@@ -89,7 +89,7 @@ public final class DataSourceFactoryProvider implements Provider<String, DataSou
     }
 
     public DataSourceFactory get() {
-        DataSourceFactory dataSourceFactory = registry.get(DataSourceConstants.DATASOURCE_IMPLEMENT_KEY_HIKARICP);
+        DataSourceFactory dataSourceFactory = registry.get(DataSources.DATASOURCE_IMPLEMENT_KEY_HIKARICP);
         if (dataSourceFactory == null) {
             dataSourceFactory = Collects.findFirst(registry.values());
         }

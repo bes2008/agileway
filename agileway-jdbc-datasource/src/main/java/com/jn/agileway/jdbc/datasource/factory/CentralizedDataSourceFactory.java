@@ -6,13 +6,13 @@ import com.jn.langx.util.Preconditions;
 import java.util.Properties;
 
 public class CentralizedDataSourceFactory implements DataSourceFactory {
-    private DataSourceRegistry registry;
+    private GroupedDataSourceRegistry registry;
 
-    public DataSourceRegistry getRegistry() {
+    public GroupedDataSourceRegistry getRegistry() {
         return registry;
     }
 
-    public void setRegistry(DataSourceRegistry registry) {
+    public void setRegistry(GroupedDataSourceRegistry registry) {
         this.registry = registry;
     }
 
@@ -39,12 +39,12 @@ public class CentralizedDataSourceFactory implements DataSourceFactory {
     @Override
     public NamedDataSource get(Properties properties) {
         Preconditions.checkNotNull(registry);
-        String name = properties.getProperty(DataSourceConstants.DATASOURCE_NAME);
+        String name = properties.getProperty(DataSources.DATASOURCE_NAME);
         Preconditions.checkNotNull(name, "the datasource name is null");
 
         NamedDataSource dataSource = registry.get(name);
         if (dataSource == null) {
-            String implementationKey = properties.getProperty(DataSourceConstants.DATASOURCE_IMPLEMENT_KEY);
+            String implementationKey = properties.getProperty(DataSources.DATASOURCE_IMPLEMENT_KEY);
             DataSourceFactory delegate = DataSourceFactoryProvider.getInstance().get(implementationKey);
             if (delegate != null) {
                 dataSource = delegate.get(properties);

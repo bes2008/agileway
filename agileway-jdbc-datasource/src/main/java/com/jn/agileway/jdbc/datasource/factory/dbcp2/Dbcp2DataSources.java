@@ -1,12 +1,8 @@
 package com.jn.agileway.jdbc.datasource.factory.dbcp2;
 
-import com.jn.agileway.jdbc.datasource.DataSourceConstants;
-import com.jn.agileway.jdbc.datasource.DelegatingNamedDataSource;
-import com.jn.agileway.jdbc.datasource.NamedDataSource;
 import com.jn.agileway.jdbc.datasource.factory.DataSourceProperties;
 import com.jn.langx.util.Maths;
 import com.jn.langx.util.Throwables;
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.BasicDataSourceFactory;
 
 import javax.sql.DataSource;
@@ -21,13 +17,12 @@ public class Dbcp2DataSources {
     private Dbcp2DataSources() {
     }
 
-    public static NamedDataSource createDataSource(DataSourceProperties properties) {
+    public static DataSource createDataSource(DataSourceProperties properties) {
         Properties props = properties.getDriverProps();
         if (props == null) {
             props = new Properties();
         }
 
-        props.setProperty(DataSourceConstants.DATASOURCE_NAME, properties.getName());
 
         String username = properties.getUsername();
         if (username != null) {
@@ -84,11 +79,9 @@ public class Dbcp2DataSources {
         }
     }
 
-    public static NamedDataSource createDataSource(Properties props ){
+    public static DataSource createDataSource(Properties props) {
         try {
-            String name = props.getProperty(DataSourceConstants.DATASOURCE_NAME);
-            DataSource dataSource =  BasicDataSourceFactory.createDataSource(props);
-            return DelegatingNamedDataSource.of(dataSource, name);
+            return BasicDataSourceFactory.createDataSource(props);
         } catch (Exception ex) {
             throw Throwables.wrapAsRuntimeException(ex);
         }

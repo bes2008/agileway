@@ -1,9 +1,9 @@
 package com.jn.agileway.jdbc.datasource;
 
 public abstract class DataSourceSelector {
-    protected DataSourceRegistry registry;
+    protected GroupedDataSourceRegistry registry;
 
-    public void setDataSourceRegistry(DataSourceRegistry registry) {
+    public void setDataSourceRegistry(GroupedDataSourceRegistry registry) {
         this.registry = registry;
     }
 

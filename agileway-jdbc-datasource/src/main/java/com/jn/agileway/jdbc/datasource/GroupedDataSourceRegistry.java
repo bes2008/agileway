@@ -1,21 +1,20 @@
 package com.jn.agileway.jdbc.datasource;
 
 import com.jn.langx.registry.Registry;
-import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Maps;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.function.Supplier;
-import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.struct.Holder;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DataSourceRegistry implements Registry<String, NamedDataSource> {
+public class GroupedDataSourceRegistry implements Registry<String, NamedDataSource> {
+
     private ConcurrentHashMap<String, Map<String, NamedDataSource>> dataSourceRegistry = new ConcurrentHashMap<String, Map<String, NamedDataSource>>();
 
     public void register(String group, NamedDataSource dataSource) {
@@ -35,10 +34,7 @@ public class DataSourceRegistry implements Registry<String, NamedDataSource> {
 
     @Override
     public void register(NamedDataSource dataSource) {
-        String name = Reflects.invokePublicMethod(dataSource, "getName", null, null, true, false);
-        if (Emptys.isNotEmpty(name)) {
-            register(name, dataSource);
-        }
+        register(DataSources.GROUP_DEFAULT, dataSource);
     }
 
     public NamedDataSource get(final String dataSourceName) {
