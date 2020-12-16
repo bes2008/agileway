@@ -282,6 +282,13 @@
                     <include>**/*</include>
                 </includes>
             </resource>
+            <resource>
+                <directory>${basedir}/src/main/java</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
         </resources>
 
         <testResources>

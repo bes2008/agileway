@@ -5,6 +5,7 @@ import com.jn.langx.Builder;
 import com.jn.langx.annotation.NotThreadSafe;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.concurrent.lock.DistributedLock;
+
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -25,7 +26,6 @@ public class ExclusiveLock extends DistributedLock {
 
     private Builder<String> lockRandomValueBuilder = new LockRandomValueBuilder();
 
-
     @Override
     public void lock() {
         String v = value;
@@ -37,7 +37,9 @@ public class ExclusiveLock extends DistributedLock {
             locked = redisTemplate.opsForValue().setIfAbsent(resource, v);
             if (!locked) {
                 try {
-                    this.wait(50);
+                    synchronized (this) {
+                        this.wait(50);
+                    }
                 } catch (InterruptedException ex) {
                     // ignore
                 }
@@ -57,7 +59,9 @@ public class ExclusiveLock extends DistributedLock {
             locked = redisTemplate.opsForValue().setIfAbsent(resource, v);
             if (!locked) {
                 try {
-                    this.wait(50);
+                    synchronized (this) {
+                        this.wait(50);
+                    }
                 } catch (InterruptedException ex) {
                     throw ex;
                 }
@@ -94,7 +98,9 @@ public class ExclusiveLock extends DistributedLock {
             locked = redisTemplate.opsForValue().setIfAbsent(resource, v);
             if (!locked && willWaitWhenLockFail) {
                 try {
-                    this.wait(50);
+                    synchronized (this) {
+                        this.wait(50);
+                    }
                 } catch (InterruptedException ex) {
                     throw ex;
                 }
@@ -106,6 +112,10 @@ public class ExclusiveLock extends DistributedLock {
         return locked;
     }
 
+
+    public void forceUnlock() {
+        unlockOnce(true);
+    }
 
     @Override
     public void unlock() {
@@ -120,7 +130,9 @@ public class ExclusiveLock extends DistributedLock {
             unlocked = unlockOnce(false);
             if (!unlocked) {
                 try {
-                    this.wait(50);
+                    synchronized (this) {
+                        this.wait(50);
+                    }
                 } catch (InterruptedException ex) {
                 }
             }
@@ -132,14 +144,11 @@ public class ExclusiveLock extends DistributedLock {
     }
 
     private boolean unlockOnce(boolean force) {
-        if (value != null) {
-            boolean unlocked = (boolean) redisTemplate.executeScript("UnlockExclusiveLock", Collects.newArrayList(this.resource), value, force);
-            if (unlocked) {
-                value = null;
-            }
-            return unlocked;
+        boolean unlocked = (boolean) redisTemplate.executeScript("UnlockExclusiveLock", Collects.newArrayList(this.resource), value, force);
+        if (unlocked) {
+            value = null;
         }
-        return true;
+        return unlocked;
     }
 
 

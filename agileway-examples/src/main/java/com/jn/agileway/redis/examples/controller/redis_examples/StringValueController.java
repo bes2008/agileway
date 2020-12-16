@@ -5,6 +5,8 @@ import com.jn.agileway.redis.core.RedisTemplate;
 import com.jn.agileway.redis.core.RedisTemplates;
 import com.jn.agileway.redis.core.script.RedisLuaScriptRepository;
 import com.jn.agileway.redis.core.serialization.DelegatableRedisSerializer;
+import com.jn.agileway.redis.locks.ExclusiveLock;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -14,10 +16,11 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @RequestMapping("/redis-examples/string")
 @RestController
-public class StringValueController {
+public class StringValueController implements InitializingBean {
 
 
     private RedisConnectionFactory connectionFactory;
@@ -25,6 +28,17 @@ public class StringValueController {
 
     @Value("${agileway.redis.global-template.key.prefix:agileway_redis_test}")
     private String keyPrefix;
+
+    ExclusiveLock lock = new ExclusiveLock();
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        lock.setRedisTemplate(redisTemplate);
+        lock.setResource("test_lock_key");
+    }
 
     private RedisTemplate createRedisTemplate(TestScope scope) {
         RedisTemplate<String, ?> RedisTemplate = null;
@@ -129,6 +143,21 @@ public class StringValueController {
     public Set<String> keys() {
         RedisTemplate redisTemplate = createRedisTemplate(TestScope.NORMAL_STRING);
         return redisTemplate.keys("*");
+    }
+
+    @GetMapping("/doWithLock")
+    public String doWithLock(String key, String value) {
+        try {
+            lock.forceUnlock();
+            lock.tryLock(50, TimeUnit.SECONDS);
+            String old = get(key,TestScope.EASYJSON_COMMON);
+            set(key,value,TestScope.EASYJSON_COMMON);
+            return old;
+        }catch (Throwable ex){
+            throw new RuntimeException(ex);
+        }finally {
+            lock.unlock();
+        }
     }
 
     @Autowired
