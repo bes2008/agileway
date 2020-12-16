@@ -12,7 +12,6 @@
         <module>agileway-codec</module>
         <module>agileway-web</module>
         <module>agileway-spring</module>
-        <module>agileway-jdbc-datasource</module>
         <module>agileway-redis</module>
         <module>agileway-shiro-redis</module>
         <module>agileway-httpclient</module>
