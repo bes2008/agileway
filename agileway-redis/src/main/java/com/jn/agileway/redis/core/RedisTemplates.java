@@ -186,9 +186,6 @@ public class RedisTemplates {
         codecType = codecType == null ? BuiltinCodecType.EASYJSON : codecType;
         Codec codec = null;
         switch (codecType) {
-            case EASYJSON:
-                codec = new EasyjsonCodec<>();
-                break;
             case JSCKSON:
                 codec = new JacksonCodec();
                 break;
@@ -205,7 +202,10 @@ public class RedisTemplates {
                 codec = new ProtostuffCodec();
                 break;
             default:
-                codec = new EasyjsonCodec();
+                EasyjsonCodec easyjsonCodec = new EasyjsonCodec<>();
+                easyjsonCodec.setSerializeType(true);
+                codec = easyjsonCodec;
+                return codec;
         }
         return codec;
 
