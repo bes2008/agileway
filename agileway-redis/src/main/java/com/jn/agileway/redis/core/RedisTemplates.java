@@ -202,10 +202,8 @@ public class RedisTemplates {
                 codec = new ProtostuffCodec();
                 break;
             default:
-                EasyjsonCodec easyjsonCodec = new EasyjsonCodec<>();
-                easyjsonCodec.setSerializeType(true);
-                codec = easyjsonCodec;
-                return codec;
+                codec = new EasyjsonCodec<>(true);;
+                break;
         }
         return codec;
 

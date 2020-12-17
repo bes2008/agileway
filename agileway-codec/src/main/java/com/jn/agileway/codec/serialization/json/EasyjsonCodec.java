@@ -18,6 +18,10 @@ public class EasyjsonCodec<T> extends AbstractCodec<T> {
     public EasyjsonCodec() {
     }
 
+    public EasyjsonCodec(boolean serializeType) {
+        setSerializeType(serializeType);
+    }
+
     public EasyjsonCodec(Class<T> targetType) {
         setTargetType(targetType);
     }
