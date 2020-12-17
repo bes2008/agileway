@@ -35,7 +35,7 @@ public class RedisLuaScriptResourceLoader extends ResourceConfigurationLoader<Re
                     if (resource instanceof FileResource) {
                         configuration.setLocation(new FileSystemResource((File) realResource));
                     } else if (resource instanceof ClassPathResource) {
-                        configuration.setLocation(new org.springframework.core.io.ClassPathResource(location.toString()));
+                        configuration.setLocation(new org.springframework.core.io.ClassPathResource(location.getPath()));
                     }
                 }
             } catch (IOException var7) {
