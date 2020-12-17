@@ -6,11 +6,11 @@
 -- @return boolean
 
 local value = redis.call("get", KEYS[1])
-if ARGS[2] then
+if ARGV[2] then
     redis.call("del", KEYS[1])
     return true
 else
-    if value == ARGS[1] then
+    if value == ARGV[1] then
         redis.call("del", KEYS[1])
         return true
     else
