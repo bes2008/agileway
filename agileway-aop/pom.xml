@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.github.fangjinuo.agileway</groupId>
         <artifactId>agileway</artifactId>
-        <version>2.2.4</version>
+        <version>2.2.5</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <description>Adapter aopalliance AOP to langx-java AOP interfaces</description>
