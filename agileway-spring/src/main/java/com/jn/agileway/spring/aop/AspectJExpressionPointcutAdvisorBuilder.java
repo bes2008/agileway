@@ -6,22 +6,22 @@ import com.jn.langx.util.Preconditions;
 import org.aopalliance.intercept.Interceptor;
 import org.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor;
 
-public class AspectjExpressionPointcutAdvisorBuilder implements Builder<AspectJExpressionPointcutAdvisor> {
+public class AspectJExpressionPointcutAdvisorBuilder implements Builder<AspectJExpressionPointcutAdvisor> {
     private Interceptor interceptor;
     private String expression;
     private int order;
 
-    public AspectjExpressionPointcutAdvisorBuilder interceptor(@NonNull Interceptor interceptor) {
+    public AspectJExpressionPointcutAdvisorBuilder interceptor(@NonNull Interceptor interceptor) {
         this.interceptor = interceptor;
         return this;
     }
 
-    public AspectjExpressionPointcutAdvisorBuilder expression(@NonNull String expression) {
+    public AspectJExpressionPointcutAdvisorBuilder expression(@NonNull String expression) {
         this.expression = expression;
         return this;
     }
 
-    public AspectjExpressionPointcutAdvisorBuilder order(int order) {
+    public AspectJExpressionPointcutAdvisorBuilder order(int order) {
         this.order = order;
         return this;
     }
