@@ -15,7 +15,7 @@ public class AspectJExpressionPointcutAdvisorBuilder implements Builder<AspectJE
         return this;
     }
 
-    public AspectJExpressionPointcutAdvisorBuilder expression(AspectJExpressionPointcutAdvisorProperties properties) {
+    public AspectJExpressionPointcutAdvisorBuilder properties(AspectJExpressionPointcutAdvisorProperties properties) {
         this.properties = properties;
         return this;
     }
