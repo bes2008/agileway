@@ -8,35 +8,29 @@ import org.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor;
 
 public class AspectJExpressionPointcutAdvisorBuilder implements Builder<AspectJExpressionPointcutAdvisor> {
     private Interceptor interceptor;
-    private String expression;
-    private int order;
+    private AspectJExpressionPointcutAdvisorProperties properties;
 
     public AspectJExpressionPointcutAdvisorBuilder interceptor(@NonNull Interceptor interceptor) {
         this.interceptor = interceptor;
         return this;
     }
 
-    public AspectJExpressionPointcutAdvisorBuilder expression(@NonNull String expression) {
-        this.expression = expression;
-        return this;
-    }
-
-    public AspectJExpressionPointcutAdvisorBuilder order(int order) {
-        this.order = order;
+    public AspectJExpressionPointcutAdvisorBuilder expression(AspectJExpressionPointcutAdvisorProperties properties) {
+        this.properties = properties;
         return this;
     }
 
 
     @Override
     public AspectJExpressionPointcutAdvisor build() {
-        AspectJExpressionPointcutAdvisor advisor = new AspectJExpressionPointcutAdvisor();
         Preconditions.checkNotNull(interceptor, "Error when build a aspectj expression pointcut advisor, the interceptor is null");
+        Preconditions.checkNotNull(properties, "Error when build a aspectj expression pointcut advisor, the properties is null");
+        Preconditions.checkNotEmpty(properties.getExpression(), "Error when build a aspectj expression pointcut advisor, the expression is null or empty");
+
+        AspectJExpressionPointcutAdvisor advisor = new AspectJExpressionPointcutAdvisor();
         advisor.setAdvice(interceptor);
-
-        Preconditions.checkNotEmpty(expression, "Error when build a aspectj expression pointcut advisor, the expression is null or empty");
-        advisor.setExpression(expression);
-
-        advisor.setOrder(order);
+        advisor.setExpression(properties.getExpression());
+        advisor.setOrder(properties.getOrder());
 
         return advisor;
     }
