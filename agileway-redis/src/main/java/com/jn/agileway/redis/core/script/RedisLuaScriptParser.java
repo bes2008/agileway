@@ -1,6 +1,7 @@
 package com.jn.agileway.redis.core.script;
 
 import com.jn.langx.configuration.InputStreamConfigurationParser;
+import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer2;
@@ -58,12 +59,19 @@ public class RedisLuaScriptParser implements InputStreamConfigurationParser<Redi
                         .asList();
                 if (!segments.isEmpty()) {
                     String returnTypeString = segments.get(0);
-                    if (isBooleanType(returnTypeString)) {
-                        returnTypeHolder.set(Boolean.class);
-                    } else if (isLongType(returnTypeString)) {
-                        returnTypeHolder.set(Long.class);
-                    } else if (isListType(returnTypeString)) {
-                        returnTypeHolder.set(List.class);
+                    if (Emptys.isNotEmpty(returnTypeString)) {
+                        if (isBooleanType(returnTypeString)) {
+                            returnTypeHolder.set(Boolean.class);
+                        } else if (isLongType(returnTypeString)) {
+                            returnTypeHolder.set(Long.class);
+                        } else if (isListType(returnTypeString)) {
+                            returnTypeHolder.set(List.class);
+                        } else if(isObjectType(returnTypeString)){
+                            // returnTypeHolder不能设置Object类型。
+                            // 如果是Object,那么会选择成ReturnType.MULTI(list对应的类型).所以用此内部类来标记用来选择是ReturnType.VALUE
+                            /** {@link org.springframework.data.redis.connection.ReturnType#fromJavaType(Class)}*/
+                            returnTypeHolder.set(ValueReturnType.class);
+                        }
                     }
                 }
             }
@@ -101,5 +109,18 @@ public class RedisLuaScriptParser implements InputStreamConfigurationParser<Redi
                 return Strings.equalsIgnoreCase(string, type);
             }
         });
+    }
+
+    private boolean isObjectType(final String string) {
+        return Pipeline.of("java.lang.Object", "object").anyMatch(new Predicate<String>() {
+            @Override
+            public boolean test(String type) {
+                return Strings.equalsIgnoreCase(string, type);
+            }
+        });
+    }
+
+    class ValueReturnType {
+
     }
 }
