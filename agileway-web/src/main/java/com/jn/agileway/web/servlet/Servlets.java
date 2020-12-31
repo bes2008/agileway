@@ -127,7 +127,8 @@ public class Servlets {
             "Proxy-Client-IP", // apache http server
             "WL-Proxy-Client-IP", // WebLogic 服务代理
             "X-Forwarded-For", // squid
-            "HTTP_CLIENT_IP"
+            "HTTP_CLIENT_IP",
+            "HTTP_X_FORWARDED_FOR"
     );
 
     public static String getClientIP(final HttpServletRequest request) {
