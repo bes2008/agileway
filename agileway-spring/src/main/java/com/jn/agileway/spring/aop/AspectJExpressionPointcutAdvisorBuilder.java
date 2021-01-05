@@ -2,6 +2,7 @@ package com.jn.agileway.spring.aop;
 
 import com.jn.langx.Builder;
 import com.jn.langx.annotation.NonNull;
+import com.jn.langx.invocation.aop.expression.AspectJExpressionPointcutAdvisorProperties;
 import com.jn.langx.util.Preconditions;
 import org.aopalliance.intercept.Interceptor;
 import org.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor;
