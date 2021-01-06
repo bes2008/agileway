@@ -5,6 +5,7 @@ import com.jn.agileway.web.filter.accesslog.WebAccessLogProperties;
 import com.jn.agileway.web.filter.rr.RRFilter;
 import com.jn.langx.util.collection.Collects;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -14,12 +15,18 @@ import org.springframework.core.annotation.Order;
 @Configuration
 public class AgilewayBasicFiltersConfiguration {
 
+    @Value("${agileway.web.encoding:UTF-8}")
+    private String encoding = "UTF-8";
+
+    @Value("${agileway.web.streamWrapper:false}")
+    private boolean streamWrapper = false;
 
     @Order(-102)
     @Bean
     public FilterRegistrationBean baseFilterRegister() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         RRFilter filter = new RRFilter();
+        filter.setStreamWrapperEnabled(streamWrapper);
         registration.setFilter(filter);
         registration.setUrlPatterns(Collects.newArrayList("/*"));
         return registration;
