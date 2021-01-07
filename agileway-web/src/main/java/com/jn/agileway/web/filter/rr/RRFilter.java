@@ -21,7 +21,7 @@ public class RRFilter extends OncePerRequestFilter {
         super.init(filterConfig);
         String streamWrapperEnabled = filterConfig.getInitParameter("streamWrapperEnabled");
         boolean enabled = BooleanEvaluator.createTrueEvaluator(false, true, new Object[]{"true"}).evalTrue(streamWrapperEnabled);
-        setStreamWrapperEnabled(enabled);
+        this.streamWrapperEnabled = enabled;
 
         String encoding = filterConfig.getInitParameter("encoding");
         if (Emptys.isNotEmpty(encoding)) {
@@ -30,14 +30,6 @@ public class RRFilter extends OncePerRequestFilter {
 
         logger.info("Initial Base Web Filter (RRFilter) with config : {}", filterConfig);
 
-    }
-
-    public boolean isStreamWrapperEnabled() {
-        return streamWrapperEnabled;
-    }
-
-    public void setStreamWrapperEnabled(boolean streamWrapperEnabled) {
-        this.streamWrapperEnabled = streamWrapperEnabled;
     }
 
     public String getEncoding() {

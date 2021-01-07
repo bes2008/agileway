@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
+import java.util.Map;
+
 @Configuration
 public class AgilewayBasicFiltersConfiguration {
 
@@ -26,8 +28,11 @@ public class AgilewayBasicFiltersConfiguration {
     public FilterRegistrationBean baseFilterRegister() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         RRFilter filter = new RRFilter();
-        filter.setStreamWrapperEnabled(streamWrapper);
         registration.setFilter(filter);
+        Map<String, String> initialParameters = Collects.emptyHashMap();
+        initialParameters.put("streamWrapperEnabled", "" + streamWrapper);
+        initialParameters.put("encoding", encoding);
+        registration.setInitParameters(initialParameters);
         registration.setUrlPatterns(Collects.newArrayList("/*"));
         return registration;
     }
