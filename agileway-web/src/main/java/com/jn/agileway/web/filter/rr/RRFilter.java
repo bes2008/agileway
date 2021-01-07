@@ -25,31 +25,25 @@ public class RRFilter extends OncePerRequestFilter {
 
         String encoding = filterConfig.getInitParameter("encoding");
         if (Emptys.isNotEmpty(encoding)) {
-            setEncoding(encoding);
+            this.encoding = encoding;
         }
 
         logger.info("Initial Base Web Filter (RRFilter) with config : {}", filterConfig);
 
     }
 
-    public String getEncoding() {
-        return encoding;
-    }
-
-    public void setEncoding(String encoding) {
-        this.encoding = encoding;
-    }
-
     public void doFilterInternal(final ServletRequest request, final ServletResponse response, final FilterChain chain) {
         try {
+            ServletRequest request1 = request;
             request.setCharacterEncoding(encoding);
             if (request instanceof HttpServletRequest) {
                 HttpServletRequest req = streamWrapperEnabled
                         ? new HttpServletRequestStreamWrapper((HttpServletRequest) request)
                         : (HttpServletRequest) request;
                 RRHolder.set(req, (HttpServletResponse) response);
+                request1 = req;
             }
-            chain.doFilter(request, response);
+            chain.doFilter(request1, response);
         } catch (Throwable t) {
             logger.error(t.getMessage(), t);
             Throwables.throwAsRuntimeException(t);

@@ -15,6 +15,11 @@ public class HttpServletRequestStreamWrapper extends HttpServletRequestWrapper {
 
     public HttpServletRequestStreamWrapper(HttpServletRequest request) {
         super(request);
+        try {
+            this.getInputStream();
+        }catch (Throwable ex){
+            // ignore it
+        }
     }
 
     private ByteBuffer requestBody;
@@ -22,7 +27,6 @@ public class HttpServletRequestStreamWrapper extends HttpServletRequestWrapper {
     @Override
     public ServletInputStream getInputStream() throws IOException {
         ServletInputStream inputStream = super.getInputStream();
-
         if (requestBody == null) {
             int length = this.getContentLength();
             if (length == 0) {
