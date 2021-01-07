@@ -1,6 +1,7 @@
 package com.jn.agileway.web.servlet;
 
 import com.jn.langx.util.io.Charsets;
+import com.jn.langx.util.io.IOs;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -24,18 +25,20 @@ public class HttpServletRequestStreamWrapper extends HttpServletRequestWrapper {
 
         if (requestBody == null) {
             int length = this.getContentLength();
-            if (length > 0) {
-                byte[] bytes = new byte[this.getContentLength()];
-                inputStream.read(bytes);
-                requestBody = ByteBuffer.wrap(bytes);
-            } else {
+            if (length == 0) {
                 requestBody = ByteBuffer.wrap(new byte[0]);
+            } else {
+                byte[] bytes = IOs.toByteArray(inputStream);
+                requestBody = ByteBuffer.wrap(bytes);
             }
         }
-        requestBody.reset();
+        requestBody.rewind();
         return new ServletInputStream() {
             @Override
             public int read() throws IOException {
+                if (requestBody == null || !requestBody.hasRemaining()) {
+                    return -1;
+                }
                 return requestBody.get();
             }
         };
