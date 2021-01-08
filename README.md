@@ -42,7 +42,7 @@ Java、Web开发工具套件，尽量避免996
         + web:
             + rest: 提供统一结果、统一异常的Spring-Boot环境下的处理
         + redis: 提供redis 在Spring-boot下的全局RedisTemplate
-+ agileway-jdbc-datasource: 提供统一数据源
++ agileway-jdbc-datasource: 提供统一数据源 （已迁移至 sqlhelper）
     + 支持 dbcp2
     + 支持 c3p0
     + 支持 druid
@@ -75,7 +75,6 @@ Java、Web开发工具套件，尽量避免996
 |agileway-codec|7|1.1.0+|
 |agileway-redis|7|1.1.0+|
 |agileway-shiro-redis|7|1.1.0+|
-|agileway-jdbc-datasource|7|1.1.0+|
 |agileway-dmmq|7|1.2.0+|
 |agileway-httpclient|6|1.3.0+|
 |agileway-aop|6|2.1.0+|
