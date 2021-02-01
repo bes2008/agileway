@@ -17,7 +17,7 @@ import java.io.IOException;
 public class JschCommandLineExecutorTest {
     private static Logger logger = LoggerFactory.getLogger(JschCommandLineExecutorTest.class);
 
-    public static void main(String[] args) throws IOException, JSchException, Throwable {
+    public static void main(String[] args) throws Throwable {
 
         JschGlobalProperties jschGlobalProperties = new JschGlobalProperties();
         jschGlobalProperties.apply();
