@@ -1,7 +1,5 @@
 package com.jn.agileway.ssh.jsch;
 
-import com.jn.langx.util.function.Consumer;
-
 public class JschProperties {
     private String host;
     private int port;

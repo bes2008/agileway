@@ -39,6 +39,7 @@ public class SshCommandTest {
 
         executeAndDump(session, "route");
         executeAndDump(session, "ifconfig");
+        executeAndDump(session, "cd ~/.java;ls -al");
 
 
         session.disconnect();

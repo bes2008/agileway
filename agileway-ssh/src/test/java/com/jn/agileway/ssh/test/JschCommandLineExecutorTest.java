@@ -8,12 +8,16 @@ import com.jn.agileway.ssh.jsch.JschProperties;
 import com.jn.agileway.ssh.jsch.exec.JschCommandLineExecutor;
 import com.jn.langx.commandline.CommandLine;
 import com.jn.langx.commandline.streamhandler.OutputAsStringExecuteStreamHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 
 public class JschCommandLineExecutorTest {
+    private static Logger logger = LoggerFactory.getLogger(JschCommandLineExecutorTest.class);
 
-    public static void main(String[] args) throws IOException, JSchException,Throwable {
+    public static void main(String[] args) throws IOException, JSchException, Throwable {
 
         JschGlobalProperties jschGlobalProperties = new JschGlobalProperties();
         jschGlobalProperties.apply();
@@ -35,16 +39,22 @@ public class JschCommandLineExecutorTest {
 
 
         JschCommandLineExecutor executor = new JschCommandLineExecutor(session);
+        executor.setWorkingDirectory(new File("~/.java"));
+
 
         OutputAsStringExecuteStreamHandler output = new OutputAsStringExecuteStreamHandler();
         executor.setStreamHandler(output);
 
-        CommandLine commandLine = CommandLine.parse("ifconfig");
-
-        executor.execute(commandLine);
-
+        executor.execute(CommandLine.parse("ifconfig"));
         String str = output.getOutputContent();
-        System.out.println(str);
+        logger.info(str);
+
+        System.out.println("====================================");
+
+        executor.execute(CommandLine.parse("ls -al"));
+        str = output.getOutputContent();
+        logger.info(str);
+
 
         session.disconnect();
     }

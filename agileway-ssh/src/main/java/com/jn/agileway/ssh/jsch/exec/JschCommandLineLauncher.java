@@ -34,7 +34,14 @@ public class JschCommandLineLauncher implements CommandLauncher<ChannelExecAdapt
             }
 
             ChannelExec channel = (ChannelExec) session.openChannel(ChannelType.EXEC.getName());
-            String command = commandLine.getExecutable();
+            String command = commandLine.getCommandLineString();
+
+            if (workingDirectory != null) {
+                String path = workingDirectory.getPath();
+                path = path.replace("\\","/");
+                command = "cd " + path + ";" + command;
+            }
+
             channel.setCommand(command);
             channel.connect();
             logger.debug("isClosed: {}", channel.isClosed());
