@@ -50,6 +50,8 @@ public class SshCommandTest {
         ChannelExec channel = (ChannelExec) session.openChannel(ChannelType.EXEC.getName());
         channel.setCommand(command);
         channel.connect();
+        logger.info("isClosed: {}", channel.isClosed());
+        logger.info("isConnected: {}", channel.isConnected());
         InputStream errorStream = channel.getErrStream();
         InputStream outStream = channel.getInputStream();
         String error = IOs.readAsString(errorStream);

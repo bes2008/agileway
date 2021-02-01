@@ -7,14 +7,13 @@ import com.jn.agileway.ssh.jsch.JschGlobalProperties;
 import com.jn.agileway.ssh.jsch.JschProperties;
 import com.jn.agileway.ssh.jsch.exec.JschCommandLineExecutor;
 import com.jn.langx.commandline.CommandLine;
-import com.jn.langx.commandline.ExecuteException;
-import com.jn.langx.commandline.ExecuteResultHandler;
 import com.jn.langx.commandline.streamhandler.OutputAsStringExecuteStreamHandler;
 
 import java.io.IOException;
 
 public class JschCommandLineExecutorTest {
-    public static void main(String[] args) throws IOException, JSchException {
+
+    public static void main(String[] args) throws IOException, JSchException,Throwable {
 
         JschGlobalProperties jschGlobalProperties = new JschGlobalProperties();
         jschGlobalProperties.apply();
@@ -36,22 +35,16 @@ public class JschCommandLineExecutorTest {
 
 
         JschCommandLineExecutor executor = new JschCommandLineExecutor(session);
-        executor.setStreamHandler(new OutputAsStringExecuteStreamHandler());
 
+        OutputAsStringExecuteStreamHandler output = new OutputAsStringExecuteStreamHandler();
+        executor.setStreamHandler(output);
 
         CommandLine commandLine = CommandLine.parse("ifconfig");
 
-        executor.execute(commandLine, new ExecuteResultHandler() {
-            @Override
-            public void onProcessComplete(int exitValue) {
+        executor.execute(commandLine);
 
-            }
-
-            @Override
-            public void onProcessFailed(ExecuteException e) {
-
-            }
-        });
+        String str = output.getOutputContent();
+        System.out.println(str);
 
         session.disconnect();
     }
