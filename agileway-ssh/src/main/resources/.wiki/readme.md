@@ -11,6 +11,14 @@ SSH https://www.ssh.com/ssh/
 |sshj   |Apache 2.0|1.6+     | ```net.schmizz:sshj:0.10.0``` |
 |jcabi-ssh| BSD | 1.8+ | ```com.jcabi:jcabi-ssh:1.6.1``` |
 |ganymed-ssh2 |Apache 2.0|1.8+|```com.airlenet.yang:ganymed-ssh2:1.2.0```|
+|j2ssh|||```sshtools:j2ssh-core:0.2.9```|
+
+
+Java版开源ssh框架功能对比：
+
+|功能|Jsch|sshj|jcabi-ssh|ganymed-ssh2|sshtools|
+|---|----|----|----------|------------|--------|
+
 
 
 

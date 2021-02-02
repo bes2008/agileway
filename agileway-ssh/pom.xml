@@ -54,6 +54,23 @@
             <version>0.2.9</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.trilead</groupId>
+            <artifactId>trilead-ssh2</artifactId>
+            <version>1.0.0-build222</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven.wagon</groupId>
+            <artifactId>wagon-ssh-common</artifactId>
+            <version>3.4.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.gridkit.lab</groupId>
+            <artifactId>telecontrol-ssh</artifactId>
+            <version>0.8.19</version>
+        </dependency>
 
     </dependencies>
 

@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.jsch;
+package com.jn.agileway.ssh.client.impl.jsch;
 
 public class JschProperties {
     private String host;

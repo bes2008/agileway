@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.jsch;
+package com.jn.agileway.ssh.client.impl.jsch;
 
 import com.jn.langx.util.enums.base.CommonEnum;
 import com.jn.langx.util.enums.base.EnumDelegate;

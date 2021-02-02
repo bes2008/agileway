@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.jsch;
+package com.jn.agileway.ssh.client.impl.jsch;
 
 import com.jcraft.jsch.JSch;
 import com.jn.langx.util.Strings;

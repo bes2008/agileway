@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.jsch.exec;
+package com.jn.agileway.ssh.client.impl.jsch.exec;
 
 import com.jcraft.jsch.Session;
 import com.jn.langx.commandline.DefaultCommandLineExecutor;
