@@ -1,6 +1,9 @@
 package com.jn.agileway.ssh.client;
 
-public interface Session {
+
+import com.jn.langx.configuration.Configuration;
+
+public interface SessionDefinition extends Configuration {
     String getHost();
 
     void setHost(String host);
@@ -8,8 +11,4 @@ public interface Session {
     int getPort();
 
     void setPort(int port);
-
-    void connect();
-
-    boolean isConnected();
 }
