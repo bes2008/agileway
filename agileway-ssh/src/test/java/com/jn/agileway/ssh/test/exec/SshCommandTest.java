@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.test;
+package com.jn.agileway.ssh.test.exec;
 
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;

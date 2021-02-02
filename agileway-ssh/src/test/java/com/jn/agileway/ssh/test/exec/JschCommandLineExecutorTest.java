@@ -1,7 +1,6 @@
-package com.jn.agileway.ssh.test;
+package com.jn.agileway.ssh.test.exec;
 
 import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jn.agileway.ssh.jsch.JschGlobalProperties;
 import com.jn.agileway.ssh.jsch.JschProperties;
@@ -12,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 
 public class JschCommandLineExecutorTest {
     private static Logger logger = LoggerFactory.getLogger(JschCommandLineExecutorTest.class);
