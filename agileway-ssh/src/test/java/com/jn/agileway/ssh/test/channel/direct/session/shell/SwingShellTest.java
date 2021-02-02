@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.test.shell;
+package com.jn.agileway.ssh.test.channel.direct.session.shell;
 
 /* -*-mode:java; c-basic-offset:2; indent-tabs-mode:nil -*- */
 /**

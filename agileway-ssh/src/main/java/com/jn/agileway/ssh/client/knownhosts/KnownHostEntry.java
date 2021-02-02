@@ -3,7 +3,7 @@ package com.jn.agileway.ssh.client.knownhosts;
 import com.jn.langx.util.enums.Enums;
 
 public class KnownHostEntry {
-    private String hostName;
+    private String hostname;
     private KnownHostType keyType;
     private String publicKey;
 
@@ -12,17 +12,17 @@ public class KnownHostEntry {
     }
 
     public KnownHostEntry(String hostName, KnownHostType keyType, String publicKey) {
-        setHostName(hostName);
+        setHostname(hostName);
         setKeyType(keyType);
         setPublicKey(publicKey);
     }
 
-    public String getHostName() {
-        return hostName;
+    public String getHostname() {
+        return hostname;
     }
 
-    public void setHostName(String hostName) {
-        this.hostName = hostName;
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
     }
 
     public KnownHostType getKeyType() {

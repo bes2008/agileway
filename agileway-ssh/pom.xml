@@ -34,13 +34,6 @@
             <version>0.10.0</version>
         </dependency>
 
-        <!--License: BSD-->
-        <dependency>
-            <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-ssh</artifactId>
-            <version>1.6.1</version>
-        </dependency>
-
         <!--License: Apache 2.0-->
         <dependency>
             <groupId>com.airlenet.yang</groupId>

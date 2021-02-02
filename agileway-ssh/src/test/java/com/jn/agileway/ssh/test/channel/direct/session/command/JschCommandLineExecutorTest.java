@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.test.exec;
+package com.jn.agileway.ssh.test.channel.direct.session.command;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
