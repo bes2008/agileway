@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.test;
+package com.jn.agileway.ssh.test.shell;
 
 /* -*-mode:java; c-basic-offset:2; indent-tabs-mode:nil -*- */
 /**
@@ -13,7 +13,7 @@ package com.jn.agileway.ssh.test;
 import com.jcraft.jsch.*;
 import javax.swing.*;
 
-public class Shell{
+public class SwingShellTest {
     public static void main(String[] arg){
 
         try{
