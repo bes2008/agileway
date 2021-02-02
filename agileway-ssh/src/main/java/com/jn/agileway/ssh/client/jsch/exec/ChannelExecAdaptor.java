@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.jsch.exec;
+package com.jn.agileway.ssh.client.jsch.exec;
 
 import com.jcraft.jsch.ChannelExec;
 import com.jn.langx.commandline.InstructionSequence;

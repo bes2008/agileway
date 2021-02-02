@@ -2,9 +2,9 @@ package com.jn.agileway.ssh.test.exec;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
-import com.jn.agileway.ssh.jsch.JschGlobalProperties;
-import com.jn.agileway.ssh.jsch.JschProperties;
-import com.jn.agileway.ssh.jsch.exec.JschCommandLineExecutor;
+import com.jn.agileway.ssh.client.jsch.JschGlobalProperties;
+import com.jn.agileway.ssh.client.jsch.JschProperties;
+import com.jn.agileway.ssh.client.jsch.exec.JschCommandLineExecutor;
 import com.jn.langx.commandline.CommandLine;
 import com.jn.langx.commandline.streamhandler.OutputAsStringExecuteStreamHandler;
 import org.slf4j.Logger;

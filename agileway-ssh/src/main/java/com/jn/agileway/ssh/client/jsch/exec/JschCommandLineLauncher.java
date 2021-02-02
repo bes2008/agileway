@@ -1,8 +1,8 @@
-package com.jn.agileway.ssh.jsch.exec;
+package com.jn.agileway.ssh.client.jsch.exec;
 
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.Session;
-import com.jn.agileway.ssh.jsch.ChannelType;
+import com.jn.agileway.ssh.client.jsch.ChannelType;
 import com.jn.langx.commandline.CommandLine;
 import com.jn.langx.commandline.launcher.CommandLauncher;
 import com.jn.langx.util.Throwables;
