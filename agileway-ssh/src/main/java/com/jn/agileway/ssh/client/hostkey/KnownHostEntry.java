@@ -1,17 +1,17 @@
-package com.jn.agileway.ssh.client.knownhosts;
+package com.jn.agileway.ssh.client.hostkey;
 
 import com.jn.langx.util.enums.Enums;
 
 public class KnownHostEntry {
     private String hostname;
-    private KnownHostType keyType;
+    private KnownHostKeyType keyType;
     private String publicKey;
 
     public KnownHostEntry(String hostName, String keyType, String publicKey) {
-        this(hostName, Enums.ofName(KnownHostType.class, keyType), publicKey);
+        this(hostName, Enums.ofName(KnownHostKeyType.class, keyType), publicKey);
     }
 
-    public KnownHostEntry(String hostName, KnownHostType keyType, String publicKey) {
+    public KnownHostEntry(String hostName, KnownHostKeyType keyType, String publicKey) {
         setHostname(hostName);
         setKeyType(keyType);
         setPublicKey(publicKey);
@@ -25,11 +25,11 @@ public class KnownHostEntry {
         this.hostname = hostname;
     }
 
-    public KnownHostType getKeyType() {
+    public KnownHostKeyType getKeyType() {
         return keyType;
     }
 
-    public void setKeyType(KnownHostType keyType) {
+    public void setKeyType(KnownHostKeyType keyType) {
         this.keyType = keyType;
     }
 
