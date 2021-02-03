@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.hostkey;
+package com.jn.agileway.ssh.client.transport.kex.hostkey;
 
 import com.jn.langx.util.enums.Enums;
 

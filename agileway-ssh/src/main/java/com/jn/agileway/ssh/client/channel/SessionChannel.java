@@ -1,6 +1,4 @@
-package com.jn.agileway.ssh.client.channel.direct;
-
-import com.jn.agileway.ssh.client.Channel;
+package com.jn.agileway.ssh.client.channel;
 
 import java.io.InputStream;
 
@@ -17,24 +15,7 @@ public interface SessionChannel extends Channel {
     InputStream getErrorInputStream();
 
     /**
-     * 发起 exec 请求，执行指定的命令
-     *
-     * @param command
-     */
-    void exec(String command);
-
-    /**
-     * 发起 subsystem 请求，执行指定的 subsystem
-     */
-    void subsystem(String subsystem);
-
-    /**
-     * 发起 shell 请求
-     */
-    void shell();
-
-    /**
-     * pseudo-terminal request
+     * pseudo-terminal request。 要在 {@link #exec(String)}, {@link #env(String, String)}, {@link #subsystem(String)} 请求之前。
      * <p>
      * equality: pty(term, 0, 0, 0, 0, null)
      */
@@ -61,7 +42,32 @@ public interface SessionChannel extends Channel {
      */
     void x11Forwarding(boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber);
 
-    void setEnvVariable(String variableName, String variableValue);
+
+    /**
+     * 发起 exec 请求，执行指定的命令
+     *
+     * @param command
+     */
+    void exec(String command);
+
+    /**
+     * 发起 subsystem 请求，执行指定的 subsystem
+     */
+    void subsystem(String subsystem);
+
+    /**
+     * 发起 shell 请求
+     */
+    void shell();
+
+    /**
+     * 发起 env 请求， 用于设置环境变量。
+     *
+     * @param variableName
+     * @param variableValue
+     */
+    void env(String variableName, String variableValue);
+
 
     void signal(String signalName);
 

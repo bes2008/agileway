@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client;
+package com.jn.agileway.ssh.client.channel;
 
 import java.io.InputStream;
 import java.io.OutputStream;

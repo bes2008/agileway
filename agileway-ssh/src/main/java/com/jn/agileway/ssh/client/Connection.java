@@ -1,8 +1,7 @@
 package com.jn.agileway.ssh.client;
 
-import ch.ethz.ssh2.auth.AuthenticationManager;
-import ch.ethz.ssh2.channel.ChannelManager;
-import com.jn.agileway.ssh.client.channel.direct.SessionChannel;
+import com.jn.agileway.ssh.client.channel.Channel;
+import com.jn.agileway.ssh.client.channel.SessionChannel;
 
 import java.io.Closeable;
 import java.io.File;
