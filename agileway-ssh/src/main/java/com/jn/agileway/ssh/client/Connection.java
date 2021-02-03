@@ -6,6 +6,7 @@ import com.jn.agileway.ssh.client.channel.SessionChannel;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 
 /**
  * 其实就是 connection
@@ -15,15 +16,22 @@ public interface Connection extends Closeable {
 
     void setId(String id);
 
-    String setHost(String host);
-
+    /**
+     * @return 服务端主机
+     */
     String getHost();
 
-    void setPort(int port);
-
+    /**
+     * @return 服务端端口
+     */
     int getPort();
 
-    void connect();
+    void connect(String host, int port) throws IOException;
+
+    void connect(InetAddress host, int port) throws IOException;
+
+    void connect(InetAddress host, int port, InetAddress localAddr, int localPort) throws IOException;
+
 
     boolean isClosed();
 
@@ -46,7 +54,7 @@ public interface Connection extends Closeable {
      * authentication (e.g., when using the putty or openssh clients) it is
      * *not* the same mechanism.
      *
-     * @param user the user name
+     * @param user     the user name
      * @param password the password
      * @return if the connection is now authenticated.
      * @throws IOException when error
@@ -80,18 +88,14 @@ public interface Connection extends Closeable {
      * website). Simply load your key and then use the "Conversions/Export OpenSSH key"
      * functionality to get a proper PEM file.
      *
-     * @param user
-     *            A <code>String</code> holding the username.
-     * @param pemPrivateKey
-     *            A <code>char[]</code> containing a DSA or RSA private key of the
-     *            user in OpenSSH key format (PEM, you can't miss the
-     *            "-----BEGIN DSA PRIVATE KEY-----" or "-----BEGIN RSA PRIVATE KEY-----"
-     *            tag). The char array may contain linebreaks/linefeeds.
-     * @param password
-     *            If the PEM structure is encrypted ("Proc-Type: 4,ENCRYPTED") then
-     *            you must specify a password. Otherwise, this argument will be ignored
-     *            and can be set to <code>null</code>.
-     *
+     * @param user          A <code>String</code> holding the username.
+     * @param pemPrivateKey A <code>char[]</code> containing a DSA or RSA private key of the
+     *                      user in OpenSSH key format (PEM, you can't miss the
+     *                      "-----BEGIN DSA PRIVATE KEY-----" or "-----BEGIN RSA PRIVATE KEY-----"
+     *                      tag). The char array may contain linebreaks/linefeeds.
+     * @param password      If the PEM structure is encrypted ("Proc-Type: 4,ENCRYPTED") then
+     *                      you must specify a password. Otherwise, this argument will be ignored
+     *                      and can be set to <code>null</code>.
      * @return whether the connection is now authenticated.
      * @throws IOException when error
      */
@@ -107,17 +111,13 @@ public interface Connection extends Closeable {
      * website). Simply load your key and then use the "Conversions/Export OpenSSH key"
      * functionality to get a proper PEM file.
      *
-     * @param user
-     *            A <code>String</code> holding the username.
-     * @param pemFile
-     *            A <code>File</code> object pointing to a file containing a DSA or RSA
-     *            private key of the user in OpenSSH key format (PEM, you can't miss the
-     *            "-----BEGIN DSA PRIVATE KEY-----" or "-----BEGIN RSA PRIVATE KEY-----"
-     *            tag).
-     * @param password
-     *            If the PEM file is encrypted then you must specify the password.
-     *            Otherwise, this argument will be ignored and can be set to <code>null</code>.
-     *
+     * @param user     A <code>String</code> holding the username.
+     * @param pemFile  A <code>File</code> object pointing to a file containing a DSA or RSA
+     *                 private key of the user in OpenSSH key format (PEM, you can't miss the
+     *                 "-----BEGIN DSA PRIVATE KEY-----" or "-----BEGIN RSA PRIVATE KEY-----"
+     *                 tag).
+     * @param password If the PEM file is encrypted then you must specify the password.
+     *                 Otherwise, this argument will be ignored and can be set to <code>null</code>.
      * @return whether the connection is now authenticated.
      * @throws IOException when error
      */
