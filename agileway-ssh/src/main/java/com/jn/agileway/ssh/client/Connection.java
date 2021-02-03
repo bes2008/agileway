@@ -93,13 +93,13 @@ public interface Connection extends Closeable {
      *                      user in OpenSSH key format (PEM, you can't miss the
      *                      "-----BEGIN DSA PRIVATE KEY-----" or "-----BEGIN RSA PRIVATE KEY-----"
      *                      tag). The char array may contain linebreaks/linefeeds.
-     * @param password      If the PEM structure is encrypted ("Proc-Type: 4,ENCRYPTED") then
+     * @param passphrase      If the PEM structure is encrypted ("Proc-Type: 4,ENCRYPTED") then
      *                      you must specify a password. Otherwise, this argument will be ignored
      *                      and can be set to <code>null</code>.
      * @return whether the connection is now authenticated.
      * @throws IOException when error
      */
-    boolean authenticateWithPublicKey(String user, char[] pemPrivateKey, String password) throws IOException;
+    boolean authenticateWithPublicKey(String user, char[] pemPrivateKey, String passphrase) throws IOException;
 
     /**
      * A convenience wrapper function which reads in a private key (PEM format, either DSA or RSA)
@@ -116,12 +116,12 @@ public interface Connection extends Closeable {
      *                 private key of the user in OpenSSH key format (PEM, you can't miss the
      *                 "-----BEGIN DSA PRIVATE KEY-----" or "-----BEGIN RSA PRIVATE KEY-----"
      *                 tag).
-     * @param password If the PEM file is encrypted then you must specify the password.
+     * @param passphrase If the PEM file is encrypted then you must specify the password.
      *                 Otherwise, this argument will be ignored and can be set to <code>null</code>.
      * @return whether the connection is now authenticated.
      * @throws IOException when error
      */
-    boolean authenticateWithPublicKey(String user, File pemFile, String password) throws IOException;
+    boolean authenticateWithPublicKey(String user, File pemFile, String passphrase) throws IOException;
 
     /**
      * 发起“session” message 给server 打开session channel,然后发起 相应的 请求（exec, shell, subsystem）

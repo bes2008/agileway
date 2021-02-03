@@ -47,6 +47,20 @@ public interface SshConfig {
     @NotEmpty
     String getUser();
 
+    /**
+     * @return 用户的密码
+     */
     @Nullable
     String getPassword();
+
+    /**
+     * 私钥文件在本地的路径
+     */
+    @Nullable
+    String getPrivateKeyfilePath();
+
+    /**
+     * 私钥文件在本地的路径
+     */
+    String getPrivateKeyfilePassphrase();
 }

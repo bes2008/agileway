@@ -8,6 +8,8 @@ import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 
 public abstract class AbstractConnectionFactory<C extends SshConfig> implements ConnectionFactory<C> {
@@ -96,10 +98,45 @@ public abstract class AbstractConnectionFactory<C extends SshConfig> implements 
             return null;
         }
 
-        // step 4: do authc
-        String user = sshConfig.getUser();
-
 
         return connection;
+    }
+
+    protected boolean authenticate(Connection connection, SshConfig sshConfig) {
+        // step 1: do authc
+        String user = sshConfig.getUser();
+        if (Strings.isBlank(user)) {
+            return false;
+        }
+        String password = sshConfig.getPassword();
+
+        boolean authcSuccess = false;
+
+        // 使用密码认证
+        if (Strings.isNotBlank(password)) {
+            try {
+                authcSuccess = connection.authenticateWithPassword(user, password);
+            } catch (IOException ex) {
+                return false;
+            }
+        }
+
+        // 使用 public key 认证
+        if (!authcSuccess) {
+            String privateKeyfilePath = sshConfig.getPrivateKeyfilePath();
+            String passphrase = sshConfig.getPrivateKeyfilePassphrase();
+            File privateKeyfile = new File(privateKeyfilePath);
+            if (privateKeyfile.exists()) {
+                try {
+                    authcSuccess = connection.authenticateWithPublicKey(user, privateKeyfile, passphrase);
+                } catch (IOException ex) {
+                    return false;
+                }
+            }
+
+        }
+
+        // 交互式方式获取 密码、或者 public key
+        return authcSuccess;
     }
 }
