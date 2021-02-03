@@ -15,13 +15,14 @@ public interface SessionChannel extends Channel {
     InputStream getErrorInputStream();
 
     /**
-     * pseudo-terminal request。 要在 {@link #exec(String)}, {@link #env(String, String)}, {@link #subsystem(String)} 请求之前。
+     * pseudo-terminal 请求。 要在 {@link #exec(String)}, {@link #env(String, String)}, {@link #subsystem(String)} 请求之前。
      * <p>
      * equality: pty(term, 0, 0, 0, 0, null)
      */
     void pty(String term);
 
     /**
+     * 发起 pseudo-terminal 请求， 要在 {@link #exec(String)}, {@link #env(String, String)}, {@link #subsystem(String)} 请求之前。
      * @param term                 TERM environment variable value (e.g., vt100)
      * @param termWidthCharacters  terminal width, characters (e.g., 80)
      * @param termHeightCharacters terminal height, rows (e.g., 24)
@@ -33,7 +34,7 @@ public interface SessionChannel extends Channel {
 
 
     /**
-     * 发送 X11 Forwarding
+     * 发送 X11 Forwarding 请求。 要在 {@link #exec(String)}, {@link #env(String, String)}, {@link #subsystem(String)} 请求之前。
      *
      * @param singleConnection          single connection
      * @param x11AuthenticationProtocol x11 authentication protocol
