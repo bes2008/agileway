@@ -1,45 +1,7 @@
 package com.jn.agileway.ssh.client.impl.sshj;
 
-import com.jn.agileway.ssh.client.SshConfig;
-import com.jn.langx.util.reflect.Reflects;
+import com.jn.agileway.ssh.client.AbstractSshConfig;
 
-public class SshjConfig implements SshConfig {
+public class SshjConfig extends AbstractSshConfig {
 
-    @Override
-    public String getHost() {
-        return null;
-    }
-
-
-    @Override
-    public int getPort() {
-        return 0;
-    }
-
-
-    @Override
-    public String getLocalHost() {
-        return null;
-    }
-
-
-    @Override
-    public int getLocalPort() {
-        return 0;
-    }
-
-    @Override
-    public String getConnectionClass() {
-        return Reflects.getFQNClassName(SshjConnection.class);
-    }
-
-    @Override
-    public String getUser() {
-        return null;
-    }
-
-    @Override
-    public String getPassword() {
-        return null;
-    }
 }

@@ -11,7 +11,7 @@ import java.net.InetAddress;
 /**
  * 其实就是 connection
  */
-public interface Connection extends Closeable {
+public interface Connection<CONF extends SshConfig> extends Closeable {
     String getId();
 
     void setId(String id);
@@ -20,6 +20,8 @@ public interface Connection extends Closeable {
      * @return 服务端主机
      */
     String getHost();
+
+    CONF getConfig();
 
     /**
      * @return 服务端端口

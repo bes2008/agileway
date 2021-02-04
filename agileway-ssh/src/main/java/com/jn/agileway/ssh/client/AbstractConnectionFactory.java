@@ -1,5 +1,6 @@
 package com.jn.agileway.ssh.client;
 
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.ClassLoaders;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.io.IOs;
@@ -12,15 +13,15 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 
-public abstract class AbstractConnectionFactory<C extends SshConfig> implements ConnectionFactory<C> {
+public abstract class AbstractConnectionFactory<CONF extends SshConfig> implements ConnectionFactory<CONF> {
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public Connection get(C sshConfig) {
-        return connectAndAuthc(sshConfig);
+    public Connection get(CONF sshConfig) {
+        return connectAndAuthenticate(sshConfig);
     }
 
-    protected Connection createConnection(C sshConfig) {
+    protected Connection createConnection(CONF sshConfig) {
         Connection connection = null;
         Class connectionClass = getConnectionClass(sshConfig);
         if (connectionClass != null) {
@@ -30,7 +31,7 @@ public abstract class AbstractConnectionFactory<C extends SshConfig> implements 
 
     }
 
-    private Class getConnectionClass(C sshConfig) {
+    private Class getConnectionClass(CONF sshConfig) {
         String connectionClass = sshConfig.getConnectionClass();
         Class connectionClazz = getDefaultConnectionClass();
         if (Strings.isNotBlank(connectionClass)) {
@@ -47,7 +48,7 @@ public abstract class AbstractConnectionFactory<C extends SshConfig> implements 
         return connectionClazz;
     }
 
-    protected abstract Class getDefaultConnectionClass();
+    protected abstract Class<?> getDefaultConnectionClass();
 
     /**
      * 创建连接并进行身份认证
@@ -55,7 +56,7 @@ public abstract class AbstractConnectionFactory<C extends SshConfig> implements 
      * @param sshConfig
      * @return 成功则返回 connection，不成功则返回 null
      */
-    protected Connection connectAndAuthc(C sshConfig) {
+    protected Connection connectAndAuthenticate(CONF sshConfig) {
         Connection connection = createConnection(sshConfig);
         String host = sshConfig.getHost();
         int port = sshConfig.getPort();
@@ -123,20 +124,28 @@ public abstract class AbstractConnectionFactory<C extends SshConfig> implements 
 
         // 使用 public key 认证
         if (!authcSuccess) {
+            @Nullable
             String privateKeyfilePath = sshConfig.getPrivateKeyfilePath();
-            String passphrase = sshConfig.getPrivateKeyfilePassphrase();
-            File privateKeyfile = new File(privateKeyfilePath);
-            if (privateKeyfile.exists()) {
-                try {
-                    authcSuccess = connection.authenticateWithPublicKey(user, privateKeyfile, passphrase);
-                } catch (IOException ex) {
-                    return false;
+            if (Strings.isNotBlank(privateKeyfilePath)) {
+                @Nullable
+                String passphrase = sshConfig.getPrivateKeyfilePassphrase();
+                File privateKeyfile = new File(privateKeyfilePath);
+                if (privateKeyfile.exists()) {
+                    try {
+                        authcSuccess = connection.authenticateWithPublicKey(user, privateKeyfile, passphrase);
+                    } catch (IOException ex) {
+                        return false;
+                    }
                 }
             }
 
         }
 
-        // 交互式方式获取 密码、或者 public key
+        if (!authcSuccess) {
+            // 交互式方式获取 密码、或者 public key
+
+        }
+
         return authcSuccess;
     }
 }
