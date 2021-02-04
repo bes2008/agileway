@@ -6,7 +6,6 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jn.agileway.ssh.client.impl.jsch.ChannelType;
 import com.jn.agileway.ssh.client.impl.jsch.JschGlobalProperties;
-import com.jn.agileway.ssh.client.impl.jsch.JschProperties;
 import com.jn.langx.util.io.IOs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,18 +21,17 @@ public class SshCommandTest {
         jschGlobalProperties.apply();
 
 
-        JschProperties jschProperties = new JschProperties();
-        jschProperties.setPassword("fjn13570");
-        jschProperties.setUsername("fangjinuo");
-        jschProperties.setHost("192.168.1.79");
-        jschProperties.setPort(22);
+        String password = "fjn13570";
+        String username = "fangjinuo";
+        String host = "192.168.1.79";
+        int port = 22;
 
 
         JSch jsch = new JSch();
         jsch.setKnownHosts("known_hosts");
 
-        Session session = jsch.getSession(jschProperties.getUsername(), jschProperties.getHost(), jschProperties.getPort());
-        session.setPassword(jschProperties.getPassword());
+        Session session = jsch.getSession(username, host, port);
+        session.setPassword(password);
         session.connect();
 
 
@@ -62,7 +60,6 @@ public class SshCommandTest {
         channel.disconnect();
         logger.info("====== finish execute: {} ======", command);
     }
-
 
 
 }
