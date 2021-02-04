@@ -1,38 +1,14 @@
 package com.jn.agileway.ssh.client.impl.jsch;
 
-import com.jn.agileway.ssh.client.SshConnection;
+import com.jn.agileway.ssh.client.AbstractSshConnection;
 import com.jn.agileway.ssh.client.channel.Channel;
 import com.jn.agileway.ssh.client.channel.SessionChannel;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 
-public class JschConnection implements SshConnection<JschConfig> {
-    @Override
-    public String getId() {
-        return null;
-    }
+public class JschConnection extends AbstractSshConnection<JschConnectionConfig> {
 
-    @Override
-    public void setId(String id) {
-
-    }
-
-    @Override
-    public String getHost() {
-        return null;
-    }
-
-    @Override
-    public JschConfig getConfig() {
-        return null;
-    }
-
-    @Override
-    public int getPort() {
-        return 0;
-    }
 
     @Override
     public void connect(String host, int port) throws IOException {
@@ -69,10 +45,6 @@ public class JschConnection implements SshConnection<JschConfig> {
         return false;
     }
 
-    @Override
-    public boolean authenticateWithPublicKey(String user, File pemFile, String passphrase) throws IOException {
-        return false;
-    }
 
     @Override
     public SessionChannel openSession() {

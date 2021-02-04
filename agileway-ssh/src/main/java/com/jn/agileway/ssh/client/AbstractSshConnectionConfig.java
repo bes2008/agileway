@@ -1,6 +1,6 @@
 package com.jn.agileway.ssh.client;
 
-public class AbstractSshConfig implements SshConnectionConfig {
+public class AbstractSshConnectionConfig implements SshConnectionConfig {
     /**
      * ssh 服务端 主机
      */

@@ -1,47 +1,15 @@
 package com.jn.agileway.ssh.client.impl.sshj;
 
-import com.jn.agileway.ssh.client.SshConnection;
+import com.jn.agileway.ssh.client.AbstractSshConnection;
 import com.jn.agileway.ssh.client.channel.Channel;
 import com.jn.agileway.ssh.client.channel.SessionChannel;
 import net.schmizz.sshj.SSHClient;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 
-public class SshjConnection implements SshConnection {
-    private String id;
-    /**
-     * 服务端主机
-     */
-    private String host;
-    /**
-     * 服务端端口
-     */
-    private int port;
-
+public class SshjConnection extends AbstractSshConnection<SshjConnectionConfig> {
     private SSHClient sshClient;
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(String id) {
-        this.id = id;
-    }
-
-
-    @Override
-    public String getHost() {
-        return this.host;
-    }
-
-    @Override
-    public int getPort() {
-        return this.port;
-    }
 
     private void makeSureSshClient() {
         if (sshClient == null) {
@@ -90,10 +58,6 @@ public class SshjConnection implements SshConnection {
         return false;
     }
 
-    @Override
-    public boolean authenticateWithPublicKey(String user, File pemFile, String password) throws IOException {
-        return false;
-    }
 
     @Override
     public SessionChannel openSession() {
