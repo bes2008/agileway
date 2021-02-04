@@ -4,7 +4,7 @@ import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
 
-public interface SshConfig {
+public interface SshConnectionConfig {
 
     /**
      * @return 服务端地址

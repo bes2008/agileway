@@ -1,6 +1,6 @@
 package com.jn.agileway.ssh.client.impl.ganymedssh2;
 
-import com.jn.agileway.ssh.client.Connection;
+import com.jn.agileway.ssh.client.SshConnection;
 import com.jn.agileway.ssh.client.channel.Channel;
 import com.jn.agileway.ssh.client.channel.SessionChannel;
 
@@ -8,7 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 
-public class GanymedSsh2Connection implements Connection<GanymedSsh2Config> {
+public class GanymedSsh2Connection implements SshConnection<GanymedSsh2Config> {
+
     @Override
     public String getId() {
         return null;

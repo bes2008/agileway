@@ -1,6 +1,6 @@
 package com.jn.agileway.ssh.client.impl.jsch;
 
-import com.jn.agileway.ssh.client.Connection;
+import com.jn.agileway.ssh.client.SshConnection;
 import com.jn.agileway.ssh.client.channel.Channel;
 import com.jn.agileway.ssh.client.channel.SessionChannel;
 
@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 
-public class JschConnection implements Connection<JschConfig> {
+public class JschConnection implements SshConnection<JschConfig> {
     @Override
     public String getId() {
         return null;

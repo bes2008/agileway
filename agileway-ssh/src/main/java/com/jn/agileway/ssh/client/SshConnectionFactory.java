@@ -2,7 +2,7 @@ package com.jn.agileway.ssh.client;
 
 import com.jn.langx.factory.Factory;
 
-public interface ConnectionFactory<CONF extends SshConfig> extends Factory<CONF, Connection> {
+public interface SshConnectionFactory<CONF extends SshConnectionConfig> extends Factory<CONF, SshConnection> {
     /**
      * 获取一个认证通过的，可以直接使用的Connection
      *
@@ -10,6 +10,6 @@ public interface ConnectionFactory<CONF extends SshConfig> extends Factory<CONF,
      * @return
      */
     @Override
-    Connection get(CONF sshConfig);
+    SshConnection get(CONF sshConfig);
 
 }

@@ -1,6 +1,6 @@
 package com.jn.agileway.ssh.client.impl.sshj;
 
-import com.jn.agileway.ssh.client.Connection;
+import com.jn.agileway.ssh.client.SshConnection;
 import com.jn.agileway.ssh.client.channel.Channel;
 import com.jn.agileway.ssh.client.channel.SessionChannel;
 import net.schmizz.sshj.SSHClient;
@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 
-public class SshjConnection implements Connection {
+public class SshjConnection implements SshConnection {
     private String id;
     /**
      * 服务端主机

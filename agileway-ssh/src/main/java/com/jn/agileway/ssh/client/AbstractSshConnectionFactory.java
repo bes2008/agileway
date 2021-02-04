@@ -13,19 +13,19 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 
-public abstract class AbstractConnectionFactory<CONF extends SshConfig> implements ConnectionFactory<CONF> {
+public abstract class AbstractSshConnectionFactory<CONF extends SshConnectionConfig> implements SshConnectionFactory<CONF> {
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public Connection get(CONF sshConfig) {
+    public SshConnection get(CONF sshConfig) {
         return connectAndAuthenticate(sshConfig);
     }
 
-    protected Connection createConnection(CONF sshConfig) {
-        Connection connection = null;
+    protected SshConnection createConnection(CONF sshConfig) {
+        SshConnection connection = null;
         Class connectionClass = getConnectionClass(sshConfig);
         if (connectionClass != null) {
-            connection = Reflects.<Connection>newInstance(connectionClass);
+            connection = Reflects.<SshConnection>newInstance(connectionClass);
         }
         return connection;
 
@@ -56,8 +56,8 @@ public abstract class AbstractConnectionFactory<CONF extends SshConfig> implemen
      * @param sshConfig
      * @return 成功则返回 connection，不成功则返回 null
      */
-    protected Connection connectAndAuthenticate(CONF sshConfig) {
-        Connection connection = createConnection(sshConfig);
+    protected SshConnection connectAndAuthenticate(CONF sshConfig) {
+        SshConnection connection = createConnection(sshConfig);
         String host = sshConfig.getHost();
         int port = sshConfig.getPort();
 
@@ -103,7 +103,7 @@ public abstract class AbstractConnectionFactory<CONF extends SshConfig> implemen
         return connection;
     }
 
-    protected boolean authenticate(Connection connection, SshConfig sshConfig) {
+    protected boolean authenticate(SshConnection connection, SshConnectionConfig sshConfig) {
         // step 1: do authc
         String user = sshConfig.getUser();
         if (Strings.isBlank(user)) {
