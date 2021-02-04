@@ -8,7 +8,7 @@ public class AbstractSshConnectionConfig implements SshConnectionConfig {
     /**
      * ssh 服务端 端口
      */
-    private int port;
+    private int port = 22;
 
     /**
      * 连接创建时，绑定的本地主机
@@ -19,11 +19,6 @@ public class AbstractSshConnectionConfig implements SshConnectionConfig {
      * 连接创建时，绑定的本地端口
      */
     private int localPort;
-
-    /**
-     * 连接实现类
-     */
-    private String connectionClass;
 
     /**
      * 用户名称
@@ -81,15 +76,6 @@ public class AbstractSshConnectionConfig implements SshConnectionConfig {
 
     public void setLocalPort(int localPort) {
         this.localPort = localPort;
-    }
-
-    @Override
-    public String getConnectionClass() {
-        return this.connectionClass;
-    }
-
-    public void setConnectionClass(String connectionClass) {
-        this.connectionClass = connectionClass;
     }
 
     @Override

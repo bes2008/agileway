@@ -32,14 +32,6 @@ public interface SshConnectionConfig {
     int getLocalPort();
 
     /**
-     * 获取实现类
-     *
-     * @return the implementation class for the connection adapter
-     */
-    @Nullable
-    String getConnectionClass();
-
-    /**
      * 获取用户名称
      *
      * @return username

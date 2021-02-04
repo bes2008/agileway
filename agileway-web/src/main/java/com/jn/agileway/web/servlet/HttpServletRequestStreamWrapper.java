@@ -17,12 +17,13 @@ public class HttpServletRequestStreamWrapper extends HttpServletRequestWrapper {
         super(request);
         try {
             this.getInputStream();
-        }catch (Throwable ex){
+        } catch (Throwable ex) {
             // ignore it
         }
     }
 
-    private ByteBuffer requestBody;
+    private byte[] requestBodyBackup;
+    private ByteBuffer requestBody;// for input stream
 
     @Override
     public ServletInputStream getInputStream() throws IOException {
@@ -30,13 +31,14 @@ public class HttpServletRequestStreamWrapper extends HttpServletRequestWrapper {
         if (requestBody == null) {
             int length = this.getContentLength();
             if (length == 0) {
-                requestBody = ByteBuffer.wrap(new byte[0]);
+                requestBodyBackup = new byte[0];
             } else {
-                byte[] bytes = IOs.toByteArray(inputStream);
-                requestBody = ByteBuffer.wrap(bytes);
+                requestBodyBackup = IOs.toByteArray(inputStream);
             }
+            requestBody = ByteBuffer.wrap(requestBodyBackup);
+            requestBody.rewind();
         }
-        requestBody.rewind();
+
         return new ServletInputStream() {
             @Override
             public int read() throws IOException {
@@ -46,6 +48,10 @@ public class HttpServletRequestStreamWrapper extends HttpServletRequestWrapper {
                 return requestBody.get();
             }
         };
+    }
+
+    public byte[] getRequestBody() {
+        return requestBodyBackup;
     }
 
     @Override

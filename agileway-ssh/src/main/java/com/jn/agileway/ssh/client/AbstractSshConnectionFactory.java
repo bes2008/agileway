@@ -1,7 +1,6 @@
 package com.jn.agileway.ssh.client;
 
 import com.jn.langx.annotation.Nullable;
-import com.jn.langx.util.ClassLoaders;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.net.Nets;
@@ -23,29 +22,12 @@ public abstract class AbstractSshConnectionFactory<CONF extends SshConnectionCon
 
     protected SshConnection createConnection(CONF sshConfig) {
         SshConnection connection = null;
-        Class connectionClass = getConnectionClass(sshConfig);
+        Class connectionClass = getDefaultConnectionClass();
         if (connectionClass != null) {
             connection = Reflects.<SshConnection>newInstance(connectionClass);
         }
         return connection;
 
-    }
-
-    private Class getConnectionClass(CONF sshConfig) {
-        String connectionClass = sshConfig.getConnectionClass();
-        Class connectionClazz = getDefaultConnectionClass();
-        if (Strings.isNotBlank(connectionClass)) {
-            if (ClassLoaders.hasClass(connectionClass, this.getClass().getClassLoader())) {
-                try {
-                    connectionClazz = ClassLoaders.loadClass(connectionClass, this.getClass().getClassLoader());
-                } catch (Throwable ex) {
-                    // ignore it
-                }
-            } else {
-                logger.warn("Can't find the ssh connection class: {}", connectionClass);
-            }
-        }
-        return connectionClazz;
     }
 
     protected abstract Class<?> getDefaultConnectionClass();
@@ -99,8 +81,10 @@ public abstract class AbstractSshConnectionFactory<CONF extends SshConnectionCon
             return null;
         }
 
-
-        return connection;
+        if (authenticate(connection, sshConfig)) {
+            return connection;
+        }
+        return null;
     }
 
     protected boolean authenticate(SshConnection connection, SshConnectionConfig sshConfig) {

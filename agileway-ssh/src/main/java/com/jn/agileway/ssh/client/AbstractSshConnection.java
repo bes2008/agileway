@@ -24,6 +24,10 @@ public abstract class AbstractSshConnection<CONF extends SshConnectionConfig> im
         return getConfig().getHost();
     }
 
+    public void setConfig(CONF connConfig){
+        this.sshConfig = connConfig;
+    }
+
     @Override
     public CONF getConfig() {
         return sshConfig;

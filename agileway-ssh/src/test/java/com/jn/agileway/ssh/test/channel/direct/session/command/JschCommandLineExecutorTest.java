@@ -2,9 +2,11 @@ package com.jn.agileway.ssh.test.channel.direct.session.command;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
+import com.jn.agileway.ssh.client.SshConnection;
+import com.jn.agileway.ssh.client.impl.jsch.JschConnectionConfig;
+import com.jn.agileway.ssh.client.impl.jsch.JschConnectionFactory;
 import com.jn.agileway.ssh.client.impl.jsch.JschGlobalProperties;
-import com.jn.agileway.ssh.client.impl.jsch.JschProperties;
-import com.jn.agileway.ssh.client.impl.jsch.exec.JschCommandLineExecutor;
+import com.jn.agileway.ssh.client.supports.command.SshCommandLineExecutor;
 import com.jn.langx.commandline.CommandLine;
 import com.jn.langx.commandline.streamhandler.OutputAsStringExecuteStreamHandler;
 import org.slf4j.Logger;
@@ -21,22 +23,18 @@ public class JschCommandLineExecutorTest {
         jschGlobalProperties.apply();
 
 
-        JschProperties jschProperties = new JschProperties();
-        jschProperties.setPassword("fjn13570");
-        jschProperties.setUsername("fangjinuo");
-        jschProperties.setHost("192.168.1.79");
-        jschProperties.setPort(22);
-
-
         JSch jsch = new JSch();
         jsch.setKnownHosts("known_hosts");
 
-        Session session = jsch.getSession(jschProperties.getUsername(), jschProperties.getHost(), jschProperties.getPort());
-        session.setPassword(jschProperties.getPassword());
-        session.connect();
+        JschConnectionFactory connectionFactory = new JschConnectionFactory();
+        JschConnectionConfig connectionConfig = new JschConnectionConfig();
+        connectionConfig.setHost("192.168.1.79");
+        connectionConfig.setPort(22);
+        connectionConfig.setUser("fangjinuo");
+        connectionConfig.setPassword("fjn13570");
+        SshConnection connection = connectionFactory.get(connectionConfig);
 
-
-        JschCommandLineExecutor executor = new JschCommandLineExecutor(session);
+        SshCommandLineExecutor executor = new SshCommandLineExecutor(connection);
         executor.setWorkingDirectory(new File("~/.java"));
 
 
@@ -54,6 +52,6 @@ public class JschCommandLineExecutorTest {
         logger.info(str);
 
 
-        session.disconnect();
+        connection.close();
     }
 }

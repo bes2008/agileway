@@ -1,6 +1,6 @@
-package com.jn.agileway.ssh.client.impl.jsch.exec;
+package com.jn.agileway.ssh.client.supports.command;
 
-import com.jcraft.jsch.ChannelExec;
+import com.jn.agileway.ssh.client.channel.SessionChannel;
 import com.jn.langx.commandline.InstructionSequence;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Throwables;
@@ -8,18 +8,18 @@ import com.jn.langx.util.Throwables;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class ChannelExecAdaptor implements InstructionSequence {
-    private ChannelExec channel;
+public class SshCommandExecutionAdaptor implements InstructionSequence {
+    private SessionChannel commandChannel;
 
-    public ChannelExecAdaptor(ChannelExec channel) {
+    public SshCommandExecutionAdaptor(SessionChannel channel) {
         Preconditions.checkNotNull(channel);
-        this.channel = channel;
+        this.commandChannel = channel;
     }
 
     @Override
     public OutputStream getOutputStream() {
         try {
-            return channel.getOutputStream();
+            return commandChannel.getStdOutputStream();
         } catch (Throwable ex) {
             throw Throwables.wrapAsRuntimeException(ex);
         }
@@ -28,7 +28,7 @@ public class ChannelExecAdaptor implements InstructionSequence {
     @Override
     public InputStream getInputStream() {
         try {
-            return channel.getInputStream();
+            return commandChannel.getStdInputStream();
         } catch (Throwable ex) {
             throw Throwables.wrapAsRuntimeException(ex);
         }
@@ -37,7 +37,7 @@ public class ChannelExecAdaptor implements InstructionSequence {
     @Override
     public InputStream getErrorStream() {
         try {
-            return channel.getErrStream();
+            return commandChannel.getErrorInputStream();
         } catch (Throwable ex) {
             throw Throwables.wrapAsRuntimeException(ex);
         }
@@ -45,7 +45,7 @@ public class ChannelExecAdaptor implements InstructionSequence {
 
     @Override
     public void destroy() {
-        channel.disconnect();
+        commandChannel.close();
     }
 
     @Override
@@ -55,6 +55,6 @@ public class ChannelExecAdaptor implements InstructionSequence {
 
     @Override
     public int exitValue() {
-        return 0;
+        return commandChannel.getExitStatus();
     }
 }
