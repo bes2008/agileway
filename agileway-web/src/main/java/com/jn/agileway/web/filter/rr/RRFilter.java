@@ -37,9 +37,15 @@ public class RRFilter extends OncePerRequestFilter {
             ServletRequest request1 = request;
             request.setCharacterEncoding(encoding);
             if (request instanceof HttpServletRequest) {
-                HttpServletRequest req = streamWrapperEnabled
-                        ? new HttpServletRequestStreamWrapper((HttpServletRequest) request)
-                        : (HttpServletRequest) request;
+                HttpServletRequest req = (HttpServletRequest) request;
+                String contentType = req.getContentType();
+                boolean isMultipartRequest = false;
+                if (Emptys.isNotEmpty(contentType) && contentType.contains("multipart")) {
+                    isMultipartRequest = true;
+                }
+                if (streamWrapperEnabled && !isMultipartRequest) {
+                    req = new HttpServletRequestStreamWrapper((HttpServletRequest) request);
+                }
                 RRHolder.set(req, (HttpServletResponse) response);
                 request1 = req;
             }
