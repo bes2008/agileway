@@ -7,7 +7,7 @@ import com.jn.agileway.ssh.client.channel.SessionChannel;
 import java.io.IOException;
 import java.net.InetAddress;
 
-public class GanymedSsh2Connection extends AbstractSshConnection<GanymedSsh2ConnectionConfig> {
+public class Ssh2Connection extends AbstractSshConnection<Ssh2ConnectionConfig> {
 
     @Override
     public boolean isClosed() {
