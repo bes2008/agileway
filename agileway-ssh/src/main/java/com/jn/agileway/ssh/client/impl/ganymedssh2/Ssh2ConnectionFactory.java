@@ -7,4 +7,5 @@ public class Ssh2ConnectionFactory extends AbstractSshConnectionFactory<Ssh2Conn
     protected Class<?> getDefaultConnectionClass() {
         return Ssh2Connection.class;
     }
+
 }

@@ -2,7 +2,7 @@ package com.jn.agileway.ssh.client.supports.command;
 
 import com.jn.agileway.ssh.client.SshConnection;
 import com.jn.agileway.ssh.client.SshException;
-import com.jn.agileway.ssh.client.channel.SessionChannel;
+import com.jn.agileway.ssh.client.channel.SessionedChannel;
 import com.jn.langx.commandline.CommandLine;
 import com.jn.langx.commandline.launcher.CommandLauncher;
 import com.jn.langx.util.Preconditions;
@@ -34,7 +34,7 @@ public class SshCommandLineLauncher implements CommandLauncher<SshCommandExecuti
                 throw new SshException(new IllegalStateException("connection is not connected"));
             }
 
-            SessionChannel sessionChannel = connection.openSession();
+            SessionedChannel sessionChannel = connection.openSession();
             Preconditions.checkNotNull(sessionChannel, "the ssh exec session channel is null");
             String command = commandLine.getCommandLineString();
 

@@ -5,7 +5,7 @@ import com.jcraft.jsch.Session;
 import com.jn.agileway.ssh.client.AbstractSshConnection;
 import com.jn.agileway.ssh.client.SshConnectionStatus;
 import com.jn.agileway.ssh.client.channel.Channel;
-import com.jn.agileway.ssh.client.channel.SessionChannel;
+import com.jn.agileway.ssh.client.channel.SessionedChannel;
 import com.jn.agileway.ssh.client.impl.jsch.authc.PasswordUserInfo;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
@@ -121,9 +121,9 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
 
 
     @Override
-    public SessionChannel openSession() {
+    public SessionedChannel openSession() {
         Preconditions.checkNotNull(delegate != null && delegate.isConnected());
-        return new JschSessionChannel(delegate);
+        return new JschSessionedChannel(delegate);
     }
 
     @Override

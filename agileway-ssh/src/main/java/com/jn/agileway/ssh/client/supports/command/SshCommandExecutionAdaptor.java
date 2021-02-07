@@ -1,6 +1,6 @@
 package com.jn.agileway.ssh.client.supports.command;
 
-import com.jn.agileway.ssh.client.channel.SessionChannel;
+import com.jn.agileway.ssh.client.channel.SessionedChannel;
 import com.jn.langx.commandline.InstructionSequence;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Throwables;
@@ -9,9 +9,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class SshCommandExecutionAdaptor implements InstructionSequence {
-    private SessionChannel commandChannel;
+    private SessionedChannel commandChannel;
 
-    public SshCommandExecutionAdaptor(SessionChannel channel) {
+    public SshCommandExecutionAdaptor(SessionedChannel channel) {
         Preconditions.checkNotNull(channel);
         this.commandChannel = channel;
     }

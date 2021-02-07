@@ -19,10 +19,8 @@ public class JschConnectionFactory extends AbstractSshConnectionFactory<JschConn
     }
 
     @Override
-    protected SshConnection createConnection(JschConnectionConfig connectionConfig) {
-        JschConnection connection = new JschConnection();
-        connection.setJsch(jsch);
-        connection.setConfig(connectionConfig);
-        return connection;
+    protected void setSshConnectionDelegate(SshConnection connection, JschConnectionConfig sshConfig) {
+        JschConnection conn = (JschConnection) connection;
+        conn.setJsch(jsch);
     }
 }

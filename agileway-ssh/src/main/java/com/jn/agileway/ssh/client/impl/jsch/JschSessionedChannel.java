@@ -2,7 +2,7 @@ package com.jn.agileway.ssh.client.impl.jsch;
 
 import com.jcraft.jsch.*;
 import com.jn.agileway.ssh.client.SshException;
-import com.jn.agileway.ssh.client.channel.SessionChannel;
+import com.jn.agileway.ssh.client.channel.SessionedChannel;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer2;
@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Hashtable;
 
-class JschSessionChannel implements SessionChannel {
+class JschSessionedChannel implements SessionedChannel {
     private Session session;
 
     private Channel channel;
@@ -39,7 +39,7 @@ class JschSessionChannel implements SessionChannel {
     private int termHeightPixels = 480;
     private byte[] terminalModes = null;
 
-    JschSessionChannel(Session session) {
+    JschSessionedChannel(Session session) {
         Preconditions.checkNotNull(session);
         this.session = session;
     }

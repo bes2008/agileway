@@ -2,7 +2,7 @@ package com.jn.agileway.ssh.client.impl.sshj;
 
 import com.jn.agileway.ssh.client.AbstractSshConnection;
 import com.jn.agileway.ssh.client.channel.Channel;
-import com.jn.agileway.ssh.client.channel.SessionChannel;
+import com.jn.agileway.ssh.client.channel.SessionedChannel;
 import net.schmizz.sshj.SSHClient;
 
 import java.io.IOException;
@@ -50,7 +50,7 @@ public class SshjConnection extends AbstractSshConnection<SshjConnectionConfig> 
 
 
     @Override
-    public SessionChannel openSession() {
+    public SessionedChannel openSession() {
         return null;
     }
 

@@ -8,7 +8,7 @@ import java.io.InputStream;
 /**
  * https://datatracker.ietf.org/doc/rfc4254/?include_text=1
  */
-public interface SessionChannel extends Channel {
+public interface SessionedChannel extends Channel {
 
     /**
      * 远程机器错误输出的内容，会作为这里的错误输入

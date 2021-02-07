@@ -1,7 +1,9 @@
 package com.jn.agileway.ssh.client;
 
+import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Emptys;
+import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.net.Nets;
@@ -24,12 +26,15 @@ public abstract class AbstractSshConnectionFactory<CONF extends SshConnectionCon
     protected SshConnection createConnection(CONF sshConfig) {
         SshConnection connection = null;
         Class connectionClass = getDefaultConnectionClass();
-        if (connectionClass != null) {
-            connection = Reflects.<SshConnection>newInstance(connectionClass);
-        }
+        Preconditions.checkNotNull(connectionClass);
+        connection = Reflects.<SshConnection>newInstance(connectionClass);
+        connection.setConfig(sshConfig);
+        setSshConnectionDelegate(connection, sshConfig);
         return connection;
 
     }
+
+    protected void setSshConnectionDelegate(@NonNull SshConnection connection, @NonNull CONF sshConfig){};
 
     protected abstract Class<?> getDefaultConnectionClass();
 

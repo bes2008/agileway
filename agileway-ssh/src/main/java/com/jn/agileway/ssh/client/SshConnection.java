@@ -1,7 +1,7 @@
 package com.jn.agileway.ssh.client;
 
 import com.jn.agileway.ssh.client.channel.Channel;
-import com.jn.agileway.ssh.client.channel.SessionChannel;
+import com.jn.agileway.ssh.client.channel.SessionedChannel;
 
 import java.io.Closeable;
 import java.io.File;
@@ -22,6 +22,8 @@ public interface SshConnection<CONF extends SshConnectionConfig> extends Closeab
     String getHost();
 
     CONF getConfig();
+
+    void setConfig(CONF config);
 
     /**
      * @return 服务端端口
@@ -133,7 +135,7 @@ public interface SshConnection<CONF extends SshConnectionConfig> extends Closeab
      * <p>
      * 参见：https://datatracker.ietf.org/doc/rfc4254/?include_text=1 第6.1节
      */
-    SessionChannel openSession();
+    SessionedChannel openSession();
 
     Channel openForwardChannel();
 }
