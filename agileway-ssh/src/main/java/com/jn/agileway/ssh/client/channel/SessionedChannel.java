@@ -1,9 +1,12 @@
 package com.jn.agileway.ssh.client.channel;
 
 import com.jn.agileway.ssh.client.SshException;
+import com.jn.agileway.ssh.client.utils.PTYMode;
+import com.jn.agileway.ssh.client.utils.Signal;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 /**
  * https://datatracker.ietf.org/doc/rfc4254/?include_text=1
@@ -32,7 +35,7 @@ public interface SessionedChannel extends Channel {
      * @param termHeightPixels     terminal height, pixels (e.g., 480)
      * @param terminalModes        encoded terminal modes
      */
-    void pty(String term, int termWidthCharacters, int termHeightCharacters, int termWidthPixels, int termHeightPixels, byte[] terminalModes) throws IOException;
+    void pty(String term, int termWidthCharacters, int termHeightCharacters, int termWidthPixels, int termHeightPixels, Map<PTYMode, Integer> terminalModes) throws IOException;
 
 
     /**
@@ -51,7 +54,7 @@ public interface SessionedChannel extends Channel {
      * @param variableName
      * @param variableValue
      */
-    void env(String variableName, String variableValue);
+    void env(String variableName, String variableValue) throws SshException;
 
     /**
      * 发起 exec 请求，执行指定的命令
@@ -71,7 +74,7 @@ public interface SessionedChannel extends Channel {
     void shell() throws SshException;
 
 
-    void signal(String signal) throws SshException;
+    void signal(Signal signal) throws SshException;
 
     int getExitStatus();
 

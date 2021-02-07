@@ -3,6 +3,9 @@ package com.jn.agileway.ssh.client.impl.jsch;
 import com.jcraft.jsch.*;
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
+import com.jn.agileway.ssh.client.utils.PTYMode;
+import com.jn.agileway.ssh.client.utils.Signal;
+import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer2;
@@ -11,12 +14,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Hashtable;
+import java.util.Map;
 
 class JschSessionedChannel implements SessionedChannel {
     private Session session;
 
     private Channel channel;
-    private JschChannelType channelType;
+    private JschChannelType channelType = JschChannelType.SESSION;
 
     private boolean agentForwarding = false;
     /**
@@ -37,7 +41,7 @@ class JschSessionedChannel implements SessionedChannel {
     private int termHeightCharacters = 24;
     private int termWidthPixels = 640;
     private int termHeightPixels = 480;
-    private byte[] terminalModes = null;
+    private Map<PTYMode, Integer> terminalModes = null;
 
     JschSessionedChannel(Session session) {
         Preconditions.checkNotNull(session);
@@ -51,7 +55,7 @@ class JschSessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void pty(String term, int termWidthCharacters, int termHeightCharacters, int termWidthPixels, int termHeightPixels, byte[] terminalModes) throws IOException {
+    public void pty(String term, int termWidthCharacters, int termHeightCharacters, int termWidthPixels, int termHeightPixels, Map<PTYMode, Integer> terminalModes) throws IOException {
         this.term = term;
         this.termWidthCharacters = termWidthCharacters;
         this.termHeightCharacters = termHeightCharacters;
@@ -133,22 +137,27 @@ class JschSessionedChannel implements SessionedChannel {
         // x11 forward:
         channel.setXForwarding(x11Forwarding);
 
+
+        byte[] terminalModesBytes = null;
+        if (Emptys.isNotEmpty(this.terminalModes)) {
+            terminalModesBytes = PTYMode.encode(terminalModes);
+        }
         // pty:
         switch (channelType) {
             case SUBSYSTEM:
                 ChannelSubsystem subsystem = (ChannelSubsystem) channel;
                 subsystem.setPtyType(term, termWidthCharacters, termHeightCharacters, termWidthPixels, termHeightPixels);
-                subsystem.setTerminalMode(terminalModes);
+                subsystem.setTerminalMode(terminalModesBytes);
                 break;
             case EXEC:
                 ChannelExec exec = (ChannelExec) channel;
                 exec.setPtyType(term, termWidthCharacters, termHeightCharacters, termWidthPixels, termHeightPixels);
-                exec.setTerminalMode(terminalModes);
+                exec.setTerminalMode(terminalModesBytes);
                 break;
             case SHELL:
                 ChannelShell shell = (ChannelShell) channel;
                 shell.setPtyType(term, termWidthCharacters, termHeightCharacters, termWidthPixels, termHeightPixels);
-                shell.setTerminalMode(terminalModes);
+                shell.setTerminalMode(terminalModesBytes);
                 break;
             default:
                 break;
@@ -188,16 +197,17 @@ class JschSessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void env(String variableName, String variableValue) {
+    public void env(String variableName, String variableValue) throws SshException {
         this.envVariables.put(variableName, variableValue);
     }
 
     @Override
-    public void signal(String signal) throws SshException {
+    public void signal(Signal signal) throws SshException {
         Preconditions.checkState(channel != null && channel.isConnected());
-        Preconditions.checkNotEmpty(signal);
+        Preconditions.checkNotEmpty(signal, "the signal is null or empty");
+        Preconditions.checkArgument(signal != Signal.UNKNOWN, "the signal is UNKNOWN");
         try {
-            channel.sendSignal(signal);
+            channel.sendSignal(signal.name());
         } catch (Throwable ex) {
             throw new SshException(ex);
         }
@@ -210,7 +220,7 @@ class JschSessionedChannel implements SessionedChannel {
 
     @Override
     public String getType() {
-        return "session";
+        return this.channelType.getName();
     }
 
     @Override
@@ -222,33 +232,45 @@ class JschSessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
-        return this.channel.getInputStream();
-    }
-
-    @Override
-    public OutputStream getOutputStream() throws IOException {
-        return this.channel.getOutputStream();
-    }
-
-    @Override
-    public InputStream getErrorInputStream() throws IOException {
-        Preconditions.checkState(channel != null);
-        InputStream errorInputStream = null;
-        switch (channelType) {
-            case EXEC:
-                errorInputStream = ((ChannelExec) channel).getErrStream();
-                break;
-
-            case SUBSYSTEM:
-                errorInputStream = ((ChannelSubsystem) channel).getErrStream();
-                break;
-            case SHELL:
-                break;
-            default:
-                break;
+    public InputStream getInputStream() throws SshException {
+        try {
+            return this.channel.getInputStream();
+        } catch (Throwable ex) {
+            throw new SshException(ex);
         }
-        return errorInputStream;
+    }
+
+    @Override
+    public OutputStream getOutputStream() throws SshException {
+        try {
+            return this.channel.getOutputStream();
+        } catch (Throwable ex) {
+            throw new SshException(ex);
+        }
+    }
+
+    @Override
+    public InputStream getErrorInputStream() throws SshException {
+        Preconditions.checkState(channel != null);
+        try {
+            InputStream errorInputStream = null;
+            switch (channelType) {
+                case EXEC:
+                    errorInputStream = ((ChannelExec) channel).getErrStream();
+                    break;
+
+                case SUBSYSTEM:
+                    errorInputStream = ((ChannelSubsystem) channel).getErrStream();
+                    break;
+                case SHELL:
+                    break;
+                default:
+                    break;
+            }
+            return errorInputStream;
+        } catch (Throwable ex) {
+            throw new SshException(ex);
+        }
     }
 
 }
