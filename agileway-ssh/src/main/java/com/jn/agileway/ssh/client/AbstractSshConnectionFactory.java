@@ -1,6 +1,7 @@
 package com.jn.agileway.ssh.client;
 
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.net.Nets;
@@ -62,10 +63,12 @@ public abstract class AbstractSshConnectionFactory<CONF extends SshConnectionCon
         int localPort = sshConfig.getLocalPort();
 
         InetAddress localAddress = null;
-        try {
-            localAddress = InetAddress.getByName(localHost);
-        } catch (Throwable ex) {
-            logger.warn(ex.getMessage(), ex);
+        if (Emptys.isNotEmpty(localHost)) {
+            try {
+                localAddress = InetAddress.getByName(localHost);
+            } catch (Throwable ex) {
+                logger.warn(ex.getMessage(), ex);
+            }
         }
 
         // step 3: connect socket to server

@@ -1,5 +1,6 @@
 package com.jn.agileway.ssh.client.channel;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -17,13 +18,13 @@ public interface Channel {
      *
      * @return
      */
-    InputStream getStdInputStream();
+    InputStream getStdInputStream() throws IOException;
 
     /**
      * 获取一个输出到远程机器的流
      *
      * @return
      */
-    OutputStream getStdOutputStream();
+    OutputStream getStdOutputStream() throws IOException;
 
 }

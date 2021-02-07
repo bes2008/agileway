@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class JschGlobalProperties implements Function0 {
 
-    private int maxAuthTries = 3;
+    private int maxAuthTries = 6;
     /**
      * 在session#connect后，内部会自动的进行 host 检查
      * <p>

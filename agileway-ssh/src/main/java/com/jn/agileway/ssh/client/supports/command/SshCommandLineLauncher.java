@@ -5,6 +5,7 @@ import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.SessionChannel;
 import com.jn.langx.commandline.CommandLine;
 import com.jn.langx.commandline.launcher.CommandLauncher;
+import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Throwables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,7 @@ public class SshCommandLineLauncher implements CommandLauncher<SshCommandExecuti
             }
 
             SessionChannel sessionChannel = connection.openSession();
+            Preconditions.checkNotNull(sessionChannel, "the ssh exec session channel is null");
             String command = commandLine.getCommandLineString();
 
             if (workingDirectory != null) {

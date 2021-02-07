@@ -3,7 +3,7 @@ package com.jn.agileway.ssh.client.impl.jsch;
 import com.jn.langx.util.enums.base.CommonEnum;
 import com.jn.langx.util.enums.base.EnumDelegate;
 
-public enum ChannelType implements CommonEnum {
+public enum JschChannelType implements CommonEnum {
     SESSION(0, "session", "will open a session"),
     SHELL(1, "shell", "shell"),
     /**
@@ -19,7 +19,7 @@ public enum ChannelType implements CommonEnum {
 
     private final EnumDelegate delegate;
 
-    ChannelType(int code, String name, String displayText) {
+    JschChannelType(int code, String name, String displayText) {
         this.delegate = new EnumDelegate(code, name, displayText);
     }
 

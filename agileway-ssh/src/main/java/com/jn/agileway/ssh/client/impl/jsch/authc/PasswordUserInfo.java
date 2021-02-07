@@ -1,8 +1,8 @@
-package com.jn.agileway.ssh.client.impl.jsch;
+package com.jn.agileway.ssh.client.impl.jsch.authc;
 
 import com.jcraft.jsch.UserInfo;
 
-public class SimpleUserInfo implements UserInfo {
+public class PasswordUserInfo implements UserInfo {
     private String passphrase;
     private String password;
 
@@ -24,9 +24,14 @@ public class SimpleUserInfo implements UserInfo {
         this.password = password;
     }
 
+    /**
+     *
+     * @param message
+     * @return 返回是否拿到密码
+     */
     @Override
     public boolean promptPassword(String message) {
-        return false;
+        return true;
     }
 
     @Override

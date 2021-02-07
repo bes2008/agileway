@@ -5,12 +5,17 @@ import com.jcraft.jsch.Session;
 import com.jn.agileway.ssh.client.AbstractSshConnection;
 import com.jn.agileway.ssh.client.channel.Channel;
 import com.jn.agileway.ssh.client.channel.SessionChannel;
+import com.jn.agileway.ssh.client.impl.jsch.authc.PasswordUserInfo;
+import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetAddress;
 
 public class JschConnection extends AbstractSshConnection<JschConnectionConfig> {
+    private Logger logger = LoggerFactory.getLogger(JschConnection.class);
     private JSch jsch;
     private Session delegate;
 
@@ -65,12 +70,13 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
 
             try {
                 delegate = jsch.getSession(user, getHost(), getPort());
-                SimpleUserInfo userInfo = new SimpleUserInfo();
+                PasswordUserInfo userInfo = new PasswordUserInfo();
                 userInfo.setPassword(password);
                 delegate.setUserInfo(userInfo);
                 delegate.connect();
                 return true;
             } catch (Throwable ex) {
+                logger.error(ex.getMessage(), ex);
                 if (delegate != null) {
                     delegate.disconnect();
                     delegate = null;
@@ -94,7 +100,7 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
                 delegate = jsch.getSession(user, getHost(), getPort());
 
                 if (Strings.isNotBlank(passphrase)) {
-                    SimpleUserInfo userInfo = new SimpleUserInfo();
+                    PasswordUserInfo userInfo = new PasswordUserInfo();
                     userInfo.setPassphrase(passphrase);
                     delegate.setUserInfo(userInfo);
                 }
@@ -115,7 +121,8 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
 
     @Override
     public SessionChannel openSession() {
-        return null;
+        Preconditions.checkNotNull(delegate != null && delegate.isConnected());
+        return new JschSessionChannel(delegate);
     }
 
     @Override
