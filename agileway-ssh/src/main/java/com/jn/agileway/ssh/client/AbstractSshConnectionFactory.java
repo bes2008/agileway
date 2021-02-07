@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.InetAddress;
 
 public abstract class AbstractSshConnectionFactory<CONF extends SshConnectionConfig> implements SshConnectionFactory<CONF> {
@@ -34,7 +33,10 @@ public abstract class AbstractSshConnectionFactory<CONF extends SshConnectionCon
 
     }
 
-    protected void setSshConnectionDelegate(@NonNull SshConnection connection, @NonNull CONF sshConfig){};
+    protected void setSshConnectionDelegate(@NonNull SshConnection connection, @NonNull CONF sshConfig) {
+    }
+
+    ;
 
     protected abstract Class<?> getDefaultConnectionClass();
 
@@ -110,7 +112,8 @@ public abstract class AbstractSshConnectionFactory<CONF extends SshConnectionCon
         if (Strings.isNotBlank(password)) {
             try {
                 authcSuccess = connection.authenticateWithPassword(user, password);
-            } catch (IOException ex) {
+            } catch (SshException ex) {
+                logger.error(ex.getMessage(), ex);
                 return false;
             }
         }
@@ -126,7 +129,8 @@ public abstract class AbstractSshConnectionFactory<CONF extends SshConnectionCon
                 if (privateKeyfile.exists()) {
                     try {
                         authcSuccess = connection.authenticateWithPublicKey(user, privateKeyfile, passphrase);
-                    } catch (IOException ex) {
+                    } catch (SshException ex) {
+                        logger.error(ex.getMessage(), ex);
                         return false;
                     }
                 }

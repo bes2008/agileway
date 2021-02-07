@@ -8,12 +8,10 @@ import ch.ethz.ssh2.Connection;
  * by the server if authentication mode "keyboard-interactive" is selected.
  *
  * @see Connection#authenticateWithKeyboardInteractive(String,
- *      String[], ch.ethz.ssh2.InteractiveCallback)
- *
+ * String[], ch.ethz.ssh2.InteractiveCallback)
  */
 
-public interface InteractiveCallback
-{
+public interface InteractiveCallback {
     /**
      * This callback interface is used during a "keyboard-interactive"
      * authentication. Every time the server sends a set of challenges (however,
@@ -34,21 +32,16 @@ public interface InteractiveCallback
      * [draft-ietf-secsh-architecture-XX.txt] to avoid attacks by including
      * terminal control characters in the fields to be displayed.
      *
-     * @param name
-     *            the name String sent by the server.
-     * @param instruction
-     *            the instruction String sent by the server.
-     * @param numPrompts
-     *            number of prompts - may be zero (in this case, you should just
-     *            return a String array of length zero).
-     * @param prompt
-     *            an array (length <code>numPrompts</code>) of Strings
-     * @param echo
-     *            an array (length <code>numPrompts</code>) of booleans. For
-     *            each prompt, the corresponding echo field indicates whether or
-     *            not the user input should be echoed as characters are typed.
+     * @param name        the name String sent by the server.
+     * @param instruction the instruction String sent by the server.
+     * @param numPrompts  number of prompts - may be zero (in this case, you should just
+     *                    return a String array of length zero).
+     * @param prompt      an array (length <code>numPrompts</code>) of Strings
+     * @param echo        an array (length <code>numPrompts</code>) of booleans. For
+     *                    each prompt, the corresponding echo field indicates whether or
+     *                    not the user input should be echoed as characters are typed.
      * @return an array of reponses - the array size must match the parameter
-     *         <code>numPrompts</code>.
+     * <code>numPrompts</code>.
      */
     public String[] replyToChallenge(String name, String instruction, int numPrompts, String[] prompt, boolean[] echo) throws Exception;
 }

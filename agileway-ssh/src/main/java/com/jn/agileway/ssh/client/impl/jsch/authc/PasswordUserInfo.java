@@ -6,7 +6,7 @@ public class PasswordUserInfo implements UserInfo {
     private String passphrase;
     private String password;
 
-    public void setPassphrase(String passphrase){
+    public void setPassphrase(String passphrase) {
         this.passphrase = passphrase;
     }
 
@@ -25,7 +25,6 @@ public class PasswordUserInfo implements UserInfo {
     }
 
     /**
-     *
      * @param message
      * @return 返回是否拿到密码
      */

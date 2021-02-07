@@ -4,6 +4,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.jn.agileway.ssh.client.AbstractSshConnection;
 import com.jn.agileway.ssh.client.SshConnectionStatus;
+import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.Channel;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
 import com.jn.agileway.ssh.client.impl.jsch.authc.PasswordUserInfo;
@@ -43,23 +44,23 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
      * @throws IOException
      */
     @Override
-    public void connect(String host, int port) throws IOException {
+    public void connect(String host, int port)  throws SshException {
         sshConfig.setHost(host);
         sshConfig.setPort(port);
     }
 
     @Override
-    public void connect(InetAddress host, int port) throws IOException {
+    public void connect(InetAddress host, int port)  throws SshException {
         connect(host.getHostName(), port);
     }
 
     @Override
-    public void connect(InetAddress host, int port, InetAddress localAddr, int localPort) throws IOException {
+    public void connect(InetAddress host, int port, InetAddress localAddr, int localPort)  throws SshException {
         connect(host, port);
     }
 
     @Override
-    public boolean authenticateWithPassword(String user, String password) throws IOException {
+    public boolean authenticateWithPassword(String user, String password) throws SshException {
         if (!isConnected()) {
             sshConfig.setUser(user);
             sshConfig.setPassword(password);
@@ -89,7 +90,7 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
 
 
     @Override
-    public boolean authenticateWithPublicKey(String user, char[] pemPrivateKey, String passphrase) throws IOException {
+    public boolean authenticateWithPublicKey(String user, char[] pemPrivateKey, String passphrase)  throws SshException {
         if (!isConnected()) {
             sshConfig.setUser(user);
 
@@ -121,7 +122,7 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
 
 
     @Override
-    public SessionedChannel openSession() throws IOException {
+    public SessionedChannel openSession()  throws SshException {
         Preconditions.checkNotNull(delegate != null && delegate.isConnected());
         return new JschSessionedChannel(delegate);
     }

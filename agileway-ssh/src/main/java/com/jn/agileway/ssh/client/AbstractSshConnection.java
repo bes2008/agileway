@@ -1,6 +1,7 @@
 package com.jn.agileway.ssh.client;
 
 import com.jn.langx.util.Preconditions;
+import com.jn.langx.util.io.IOs;
 
 import java.io.CharArrayWriter;
 import java.io.File;
@@ -42,19 +43,26 @@ public abstract class AbstractSshConnection<CONF extends SshConnectionConfig> im
     }
 
     @Override
-    public boolean authenticateWithPublicKey(String user, File pemFile, String passphrase) throws IOException {
+    public boolean authenticateWithPublicKey(String user, File pemFile, String passphrase) throws SshException {
         if (pemFile == null) {
             throw new IllegalArgumentException("pemFile argument is null");
         }
         char[] buff = new char[256];
 
         CharArrayWriter cw = new CharArrayWriter();
-        FileReader fr = new FileReader(pemFile);
-        int len = 0;
-        while ((len = fr.read(buff)) != -1) {
-            cw.write(buff, 0, len);
+        FileReader fr = null;
+        try {
+            fr = new FileReader(pemFile);
+            int len = 0;
+            while ((len = fr.read(buff)) != -1) {
+                cw.write(buff, 0, len);
+            }
+        } catch (IOException ex) {
+            throw new SshException(ex.getMessage(), ex);
+        } finally {
+            IOs.close(fr);
         }
-        fr.close();
+
 
         return authenticateWithPublicKey(user, cw.toCharArray(), passphrase);
     }

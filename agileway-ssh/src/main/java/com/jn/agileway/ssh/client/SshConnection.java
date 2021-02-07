@@ -30,11 +30,11 @@ public interface SshConnection<CONF extends SshConnectionConfig> extends Closeab
      */
     int getPort();
 
-    void connect(String host, int port) throws IOException;
+    void connect(String host, int port) throws SshException;
 
-    void connect(InetAddress host, int port) throws IOException;
+    void connect(InetAddress host, int port) throws SshException;
 
-    void connect(InetAddress host, int port, InetAddress localAddr, int localPort) throws IOException;
+    void connect(InetAddress host, int port, InetAddress localAddr, int localPort) throws SshException;
 
 
     boolean isClosed();
@@ -65,7 +65,7 @@ public interface SshConnection<CONF extends SshConnectionConfig> extends Closeab
      * @return if the connection is now authenticated.
      * @throws IOException when error
      */
-    boolean authenticateWithPassword(String user, String password) throws IOException;
+    boolean authenticateWithPassword(String user, String password) throws SshException;
 
     /**
      * After a successful connect, one has to authenticate oneself.
@@ -99,13 +99,13 @@ public interface SshConnection<CONF extends SshConnectionConfig> extends Closeab
      *                      user in OpenSSH key format (PEM, you can't miss the
      *                      "-----BEGIN DSA PRIVATE KEY-----" or "-----BEGIN RSA PRIVATE KEY-----"
      *                      tag). The char array may contain linebreaks/linefeeds.
-     * @param passphrase      If the PEM structure is encrypted ("Proc-Type: 4,ENCRYPTED") then
+     * @param passphrase    If the PEM structure is encrypted ("Proc-Type: 4,ENCRYPTED") then
      *                      you must specify a password. Otherwise, this argument will be ignored
      *                      and can be set to <code>null</code>.
      * @return whether the connection is now authenticated.
      * @throws IOException when error
      */
-    boolean authenticateWithPublicKey(String user, char[] pemPrivateKey, String passphrase) throws IOException;
+    boolean authenticateWithPublicKey(String user, char[] pemPrivateKey, String passphrase) throws SshException;
 
     /**
      * A convenience wrapper function which reads in a private key (PEM format, either DSA or RSA)
@@ -117,17 +117,17 @@ public interface SshConnection<CONF extends SshConnectionConfig> extends Closeab
      * website). Simply load your key and then use the "Conversions/Export OpenSSH key"
      * functionality to get a proper PEM file.
      *
-     * @param user     A <code>String</code> holding the username.
-     * @param pemFile  A <code>File</code> object pointing to a file containing a DSA or RSA
-     *                 private key of the user in OpenSSH key format (PEM, you can't miss the
-     *                 "-----BEGIN DSA PRIVATE KEY-----" or "-----BEGIN RSA PRIVATE KEY-----"
-     *                 tag).
+     * @param user       A <code>String</code> holding the username.
+     * @param pemFile    A <code>File</code> object pointing to a file containing a DSA or RSA
+     *                   private key of the user in OpenSSH key format (PEM, you can't miss the
+     *                   "-----BEGIN DSA PRIVATE KEY-----" or "-----BEGIN RSA PRIVATE KEY-----"
+     *                   tag).
      * @param passphrase If the PEM file is encrypted then you must specify the password.
-     *                 Otherwise, this argument will be ignored and can be set to <code>null</code>.
+     *                   Otherwise, this argument will be ignored and can be set to <code>null</code>.
      * @return whether the connection is now authenticated.
      * @throws IOException when error
      */
-    boolean authenticateWithPublicKey(String user, File pemFile, String passphrase) throws IOException;
+    boolean authenticateWithPublicKey(String user, File pemFile, String passphrase) throws SshException;
 
     /**
      * 发起“session” message 给server 打开session channel,然后发起 相应的 请求（exec, shell, subsystem）
@@ -135,7 +135,7 @@ public interface SshConnection<CONF extends SshConnectionConfig> extends Closeab
      * <p>
      * 参见：https://datatracker.ietf.org/doc/rfc4254/?include_text=1 第6.1节
      */
-    SessionedChannel openSession() throws IOException;
+    SessionedChannel openSession() throws SshException;
 
     Channel openForwardChannel();
 }
