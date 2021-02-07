@@ -133,7 +133,7 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
     }
 
     @Override
-    public void doClose() throws IOException {
+    protected void doClose() throws IOException {
         if (delegate != null) {
             delegate.disconnect();
         }

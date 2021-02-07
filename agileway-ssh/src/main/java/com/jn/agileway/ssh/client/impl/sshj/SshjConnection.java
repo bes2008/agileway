@@ -166,7 +166,7 @@ public class SshjConnection extends AbstractSshConnection<SshjConnectionConfig> 
     }
 
     @Override
-    public void doClose() throws IOException {
+    protected void doClose() throws IOException {
         this.sshClient.close();
     }
 }
