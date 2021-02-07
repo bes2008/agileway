@@ -1,6 +1,7 @@
 package com.jn.agileway.ssh.client.impl.sshj;
 
 import com.jn.agileway.ssh.client.AbstractSshConnection;
+import com.jn.agileway.ssh.client.SshConnectionStatus;
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.Channel;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
@@ -65,6 +66,7 @@ public class SshjConnection extends AbstractSshConnection<SshjConnectionConfig> 
                     sshClient.connect(host, port, localAddr, localPort);
                 }
             }
+            setStatus(SshConnectionStatus.CONNECTED);
         } catch (Throwable ex) {
             throw new SshException(ex);
         }
