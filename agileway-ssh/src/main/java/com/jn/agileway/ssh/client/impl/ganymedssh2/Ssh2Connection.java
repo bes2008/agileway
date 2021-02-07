@@ -89,8 +89,9 @@ public class Ssh2Connection extends AbstractSshConnection<Ssh2ConnectionConfig> 
         return null;
     }
 
+
     @Override
-    public void close() throws IOException {
-        setStatus(SshConnectionStatus.CLOSED);
+    protected void doClose() throws IOException {
+        this.delegate.close();
     }
 }

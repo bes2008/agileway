@@ -94,4 +94,13 @@ public abstract class AbstractSshConnection<CONF extends SshConnectionConfig> im
         Preconditions.checkNotNull(status);
         this.status = status;
     }
+
+    @Override
+    public final void close() throws IOException {
+        this.hostKeyVerifier.clear();
+        setStatus(SshConnectionStatus.CLOSED);
+        doClose();
+    }
+
+    protected abstract void doClose() throws IOException;
 }

@@ -44,18 +44,18 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
      * @throws IOException
      */
     @Override
-    public void connect(String host, int port)  throws SshException {
+    public void connect(String host, int port) throws SshException {
         sshConfig.setHost(host);
         sshConfig.setPort(port);
     }
 
     @Override
-    public void connect(InetAddress host, int port)  throws SshException {
+    public void connect(InetAddress host, int port) throws SshException {
         connect(host.getHostName(), port);
     }
 
     @Override
-    public void connect(InetAddress host, int port, InetAddress localAddr, int localPort)  throws SshException {
+    public void connect(InetAddress host, int port, InetAddress localAddr, int localPort) throws SshException {
         connect(host, port);
     }
 
@@ -90,7 +90,7 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
 
 
     @Override
-    public boolean authenticateWithPublicKey(String user, char[] pemPrivateKey, String passphrase)  throws SshException {
+    public boolean authenticateWithPublicKey(String user, char[] pemPrivateKey, String passphrase) throws SshException {
         if (!isConnected()) {
             sshConfig.setUser(user);
 
@@ -122,7 +122,7 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
 
 
     @Override
-    public SessionedChannel openSession()  throws SshException {
+    public SessionedChannel openSession() throws SshException {
         Preconditions.checkNotNull(delegate != null && delegate.isConnected());
         return new JschSessionedChannel(delegate);
     }
@@ -133,10 +133,9 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
     }
 
     @Override
-    public void close() throws IOException {
+    public void doClose() throws IOException {
         if (delegate != null) {
             delegate.disconnect();
         }
-        setStatus(SshConnectionStatus.CLOSED);
     }
 }

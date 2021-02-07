@@ -166,8 +166,7 @@ public class SshjConnection extends AbstractSshConnection<SshjConnectionConfig> 
     }
 
     @Override
-    public void close() throws IOException {
-        this.hostKeyVerifier.clear();
+    public void doClose() throws IOException {
         this.sshClient.close();
     }
 }
