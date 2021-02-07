@@ -3,6 +3,7 @@ package com.jn.agileway.ssh.client.impl.jsch;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.jn.agileway.ssh.client.AbstractSshConnection;
+import com.jn.agileway.ssh.client.SshConnectionStatus;
 import com.jn.agileway.ssh.client.channel.Channel;
 import com.jn.agileway.ssh.client.channel.SessionChannel;
 import com.jn.agileway.ssh.client.impl.jsch.authc.PasswordUserInfo;
@@ -73,6 +74,7 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
                 userInfo.setPassword(password);
                 delegate.setUserInfo(userInfo);
                 delegate.connect();
+                setStatus(SshConnectionStatus.CONNECTED);
                 return true;
             } catch (Throwable ex) {
                 logger.error(ex.getMessage(), ex);
@@ -104,7 +106,7 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
                     delegate.setUserInfo(userInfo);
                 }
                 delegate.connect();
-
+                setStatus(SshConnectionStatus.CONNECTED);
                 return true;
             } catch (Throwable ex) {
                 if (delegate != null) {
@@ -134,5 +136,6 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
         if (delegate != null) {
             delegate.disconnect();
         }
+        setStatus(SshConnectionStatus.CLOSED);
     }
 }

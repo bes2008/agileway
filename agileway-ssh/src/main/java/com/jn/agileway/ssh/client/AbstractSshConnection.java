@@ -10,7 +10,7 @@ import java.io.IOException;
 public abstract class AbstractSshConnection<CONF extends SshConnectionConfig> implements SshConnection<CONF> {
     private String connId;
     protected CONF sshConfig;
-    protected SshConnectionStatus status = SshConnectionStatus.INITIALING;
+    private SshConnectionStatus status = SshConnectionStatus.INITIALING;
 
     @Override
     public String getId() {
