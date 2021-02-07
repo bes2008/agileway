@@ -4,6 +4,9 @@ import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
 
+import java.io.File;
+import java.util.List;
+
 public interface SshConnectionConfig {
 
     /**
@@ -55,4 +58,6 @@ public interface SshConnectionConfig {
      * 私钥文件在本地的路径
      */
     String getPrivateKeyfilePassphrase();
+
+    String getKnownHostsPaths();
 }

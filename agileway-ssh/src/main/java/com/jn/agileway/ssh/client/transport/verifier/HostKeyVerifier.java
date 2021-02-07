@@ -25,4 +25,6 @@ public interface HostKeyVerifier {
      * @throws Exception Will be wrapped with an IOException, extended version of returning false =)
      */
     boolean verify(String hostname, int port, byte[] key);
+
+    boolean verify(String hostname, int port, PublicKey key);
 }

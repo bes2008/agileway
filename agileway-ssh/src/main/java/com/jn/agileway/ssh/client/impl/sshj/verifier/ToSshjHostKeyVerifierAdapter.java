@@ -1,14 +1,14 @@
-package com.jn.agileway.ssh.client.impl.sshj;
+package com.jn.agileway.ssh.client.impl.sshj.verifier;
 
 import net.schmizz.sshj.transport.verification.HostKeyVerifier;
 
 import java.security.PublicKey;
 
-public class SshjHostKeyVerifierAdapter implements HostKeyVerifier {
+public class ToSshjHostKeyVerifierAdapter implements HostKeyVerifier {
 
     private com.jn.agileway.ssh.client.transport.verifier.HostKeyVerifier delegate;
 
-    SshjHostKeyVerifierAdapter(com.jn.agileway.ssh.client.transport.verifier.HostKeyVerifier delegate) {
+    ToSshjHostKeyVerifierAdapter(com.jn.agileway.ssh.client.transport.verifier.HostKeyVerifier delegate) {
         this.delegate = delegate;
     }
 

@@ -4,6 +4,7 @@ import com.jn.agileway.ssh.client.AbstractSshConnection;
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.Channel;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
+import com.jn.agileway.ssh.client.impl.sshj.verifier.ToSshjHostKeyVerifierAdapter;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
@@ -56,7 +57,7 @@ public class SshjConnection extends AbstractSshConnection<SshjConnectionConfig> 
             makeSureSshClient();
             if (!sshClient.isConnected()) {
                 if (!this.hostKeyVerifier.isEmpty()) {
-                    sshClient.addHostKeyVerifier(new SshjHostKeyVerifierAdapter(this.hostKeyVerifier));
+                    sshClient.addHostKeyVerifier(new ToSshjHostKeyVerifierAdapter(this.hostKeyVerifier));
                 }
                 if (localAddr == null || !Nets.isValidPort(localPort)) {
                     sshClient.connect(host, port);

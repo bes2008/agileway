@@ -28,15 +28,19 @@ public abstract class AbstractSshConnectionFactory<CONF extends SshConnectionCon
         Preconditions.checkNotNull(connectionClass);
         connection = Reflects.<SshConnection>newInstance(connectionClass);
         connection.setConfig(sshConfig);
-        setSshConnectionDelegate(connection, sshConfig);
+        postConstructConnection(connection, sshConfig);
         return connection;
 
     }
 
-    protected void setSshConnectionDelegate(@NonNull SshConnection connection, @NonNull CONF sshConfig) {
-    }
-
-    ;
+    /**
+     * 1） 设置代理
+     * 2） 设置 host key verifier
+     *
+     * @param connection
+     * @param sshConfig
+     */
+    protected abstract void postConstructConnection(@NonNull SshConnection connection, @NonNull CONF sshConfig);
 
     protected abstract Class<?> getDefaultConnectionClass();
 

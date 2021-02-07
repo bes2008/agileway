@@ -42,6 +42,11 @@ public class AbstractSshConnectionConfig implements SshConnectionConfig {
      */
     private String privateKeyfilePassphrase;
 
+    /**
+     * 由分号分割的路径集合
+     */
+    private String knownHostsPaths = "${user.home}/.ssh/known_hosts;/etc/ssh/known_hosts";
+
     @Override
     public String getHost() {
         return this.host;
@@ -113,5 +118,14 @@ public class AbstractSshConnectionConfig implements SshConnectionConfig {
 
     public void setPrivateKeyfilePassphrase(String privateKeyfilePassphrase) {
         this.privateKeyfilePassphrase = privateKeyfilePassphrase;
+    }
+
+    @Override
+    public String getKnownHostsPaths() {
+        return knownHostsPaths;
+    }
+
+    public void setKnownHostsPaths(String knownHostsPaths) {
+        this.knownHostsPaths = knownHostsPaths;
     }
 }
