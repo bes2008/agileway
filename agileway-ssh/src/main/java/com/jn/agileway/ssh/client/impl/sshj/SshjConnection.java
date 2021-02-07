@@ -55,6 +55,9 @@ public class SshjConnection extends AbstractSshConnection<SshjConnectionConfig> 
         try {
             makeSureSshClient();
             if (!sshClient.isConnected()) {
+                if (!this.hostKeyVerifier.isEmpty()) {
+                    sshClient.addHostKeyVerifier(new SshjHostKeyVerifierAdapter(this.hostKeyVerifier));
+                }
                 if (localAddr == null || !Nets.isValidPort(localPort)) {
                     sshClient.connect(host, port);
                 } else {
@@ -164,6 +167,7 @@ public class SshjConnection extends AbstractSshConnection<SshjConnectionConfig> 
 
     @Override
     public void close() throws IOException {
+        this.hostKeyVerifier.clear();
         this.sshClient.close();
     }
 }

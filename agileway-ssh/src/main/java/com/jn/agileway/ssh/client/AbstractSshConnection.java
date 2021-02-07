@@ -14,7 +14,7 @@ public abstract class AbstractSshConnection<CONF extends SshConnectionConfig> im
     private String connId;
     protected CONF sshConfig;
     private SshConnectionStatus status = SshConnectionStatus.INITIALING;
-    private AnyHostKeyVerifier hostKeyVerifier = new AnyHostKeyVerifier();
+    protected AnyHostKeyVerifier hostKeyVerifier = new AnyHostKeyVerifier();
 
     @Override
     public String getId() {

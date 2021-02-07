@@ -1,0 +1,22 @@
+package com.jn.agileway.ssh.client.impl.sshj;
+
+import net.schmizz.sshj.transport.verification.HostKeyVerifier;
+
+import java.security.PublicKey;
+
+public class SshjHostKeyVerifierAdapter implements HostKeyVerifier {
+
+    private com.jn.agileway.ssh.client.transport.kex.HostKeyVerifier delegate;
+
+    SshjHostKeyVerifierAdapter(com.jn.agileway.ssh.client.transport.kex.HostKeyVerifier delegate) {
+        this.delegate = delegate;
+    }
+
+    @Override
+    public boolean verify(String hostname, int port, PublicKey key) {
+        if (this.delegate == null) {
+            return false;
+        }
+        return delegate.verifyServerHostKey(hostname, port, key);
+    }
+}
