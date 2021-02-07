@@ -242,7 +242,7 @@ class JschSessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public InputStream getErrorInputStream() throws IOException {
+    public InputStream getStdErrorInputStream() throws IOException {
         Preconditions.checkState(channel != null);
         InputStream errorInputStream = null;
         switch (channelType) {

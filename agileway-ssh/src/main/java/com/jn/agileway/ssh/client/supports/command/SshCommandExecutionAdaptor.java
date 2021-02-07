@@ -37,7 +37,7 @@ public class SshCommandExecutionAdaptor implements InstructionSequence {
     @Override
     public InputStream getErrorStream() {
         try {
-            return commandChannel.getErrorInputStream();
+            return commandChannel.getStdErrorInputStream();
         } catch (Throwable ex) {
             throw Throwables.wrapAsRuntimeException(ex);
         }

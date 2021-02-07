@@ -50,7 +50,7 @@ public class SshjConnection extends AbstractSshConnection<SshjConnectionConfig> 
 
 
     @Override
-    public SessionedChannel openSession() {
+    public SessionedChannel openSession() throws IOException{
         return null;
     }
 

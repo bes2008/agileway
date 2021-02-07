@@ -10,12 +10,6 @@ import java.io.InputStream;
  */
 public interface SessionedChannel extends Channel {
 
-    /**
-     * 远程机器错误输出的内容，会作为这里的错误输入
-     *
-     * @return
-     */
-    InputStream getErrorInputStream() throws IOException;
 
     /**
      * pseudo-terminal 请求。 要在 {@link #exec(String)}, {@link #env(String, String)}, {@link #subsystem(String)} 请求之前。
@@ -76,5 +70,12 @@ public interface SessionedChannel extends Channel {
     void signal(String signal) throws SshException;
 
     int getExitStatus();
+
+    /**
+     * 远程机器错误输出的内容，会作为这里的错误输入
+     *
+     * @return
+     */
+    InputStream getStdErrorInputStream() throws IOException;
 
 }

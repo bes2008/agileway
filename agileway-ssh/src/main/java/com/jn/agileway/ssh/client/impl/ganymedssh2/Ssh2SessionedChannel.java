@@ -1,5 +1,6 @@
 package com.jn.agileway.ssh.client.impl.ganymedssh2;
 
+import ch.ethz.ssh2.Session;
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
 
@@ -8,10 +9,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class Ssh2SessionedChannel implements SessionedChannel {
-    @Override
-    public InputStream getErrorInputStream() throws IOException {
-        return null;
+    private Session session;
+
+    public Ssh2SessionedChannel(Session session) {
+        this.session = session;
     }
+
+
 
     @Override
     public void pty(String term) {
@@ -86,5 +90,10 @@ public class Ssh2SessionedChannel implements SessionedChannel {
     @Override
     public OutputStream getStdOutputStream() throws IOException {
         return null;
+    }
+
+    @Override
+    public InputStream getStdErrorInputStream() throws IOException {
+        return session.getStderr();
     }
 }

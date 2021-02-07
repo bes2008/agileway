@@ -121,7 +121,7 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
 
 
     @Override
-    public SessionedChannel openSession() {
+    public SessionedChannel openSession() throws IOException {
         Preconditions.checkNotNull(delegate != null && delegate.isConnected());
         return new JschSessionedChannel(delegate);
     }

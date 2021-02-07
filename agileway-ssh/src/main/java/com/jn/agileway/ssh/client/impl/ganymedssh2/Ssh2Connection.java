@@ -1,6 +1,7 @@
 package com.jn.agileway.ssh.client.impl.ganymedssh2;
 
 import ch.ethz.ssh2.Connection;
+import ch.ethz.ssh2.Session;
 import com.jn.agileway.ssh.client.AbstractSshConnection;
 import com.jn.agileway.ssh.client.SshConnectionStatus;
 import com.jn.agileway.ssh.client.channel.Channel;
@@ -54,8 +55,10 @@ public class Ssh2Connection extends AbstractSshConnection<Ssh2ConnectionConfig> 
 
 
     @Override
-    public SessionedChannel openSession() {
-        return null;
+    public SessionedChannel openSession() throws IOException{
+        Session session = delegate.openSession();
+        Ssh2SessionedChannel channel = new Ssh2SessionedChannel(session);
+        return channel;
     }
 
     @Override

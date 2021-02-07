@@ -135,7 +135,7 @@ public interface SshConnection<CONF extends SshConnectionConfig> extends Closeab
      * <p>
      * 参见：https://datatracker.ietf.org/doc/rfc4254/?include_text=1 第6.1节
      */
-    SessionedChannel openSession();
+    SessionedChannel openSession() throws IOException;
 
     Channel openForwardChannel();
 }
