@@ -7,6 +7,10 @@ import java.io.InputStream;
 
 /**
  * https://datatracker.ietf.org/doc/rfc4254/?include_text=1
+ *
+ * 在执行完 exec, subsystem, shell 方法后，必须执行 close方法，因为sessioned channel 是不可重用的。
+ * 在执行exec, subsystem, shell 方法之前，pty, x11forwarding 最好不要执行多次
+ * 在执行exec, subsystem, shell 方法之前，env 方法可以执行多次
  */
 public interface SessionedChannel extends Channel {
 
