@@ -99,6 +99,7 @@ public abstract class AbstractSshConnectionFactory<CONF extends SshConnectionCon
         String password = sshConfig.getPassword();
 
         boolean authcSuccess = false;
+        // 这里只提供两种认证方式，至于交互式方式，则是有这两种方式内部去实现
 
         // 使用密码认证
         if (Strings.isNotBlank(password)) {
@@ -127,12 +128,6 @@ public abstract class AbstractSshConnectionFactory<CONF extends SshConnectionCon
             }
 
         }
-
-        if (!authcSuccess) {
-            // 交互式方式获取 密码、或者 public key
-
-        }
-
         return authcSuccess;
     }
 }

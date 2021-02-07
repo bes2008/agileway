@@ -14,6 +14,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.InetAddress;
 
+/**
+ * 基于 JSch 的实现。
+ */
 public class JschConnection extends AbstractSshConnection<JschConnectionConfig> {
     private Logger logger = LoggerFactory.getLogger(JschConnection.class);
     private JSch jsch;
@@ -29,6 +32,15 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
         }
     }
 
+    /**
+     * 由于jsch 的 session.connect 方法内部完成了 连接创建、身份认证两个过程。
+     * <p>
+     * 所以这里在调用connect时，并不进行实际的connect操作，延迟到 authenticate 方法里
+     *
+     * @param host
+     * @param port
+     * @throws IOException
+     */
     @Override
     public void connect(String host, int port) throws IOException {
         sshConfig.setHost(host);
@@ -132,6 +144,8 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
 
     @Override
     public void close() throws IOException {
-
+        if (delegate != null) {
+            delegate.disconnect();
+        }
     }
 }
