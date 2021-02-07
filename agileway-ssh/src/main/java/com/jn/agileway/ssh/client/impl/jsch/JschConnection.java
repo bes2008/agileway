@@ -58,19 +58,6 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
     }
 
     @Override
-    public boolean isClosed() {
-        if (delegate == null) {
-            return false;
-        }
-        return delegate.isConnected();
-    }
-
-    @Override
-    public boolean isConnected() {
-        return delegate != null && delegate.isConnected();
-    }
-
-    @Override
     public boolean authenticateWithPassword(String user, String password) throws IOException {
         if (!isConnected()) {
             sshConfig.setUser(user);

@@ -1,5 +1,7 @@
 package com.jn.agileway.ssh.client;
 
+import com.jn.langx.util.Preconditions;
+
 import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileReader;
@@ -8,6 +10,7 @@ import java.io.IOException;
 public abstract class AbstractSshConnection<CONF extends SshConnectionConfig> implements SshConnection<CONF> {
     private String connId;
     protected CONF sshConfig;
+    protected SshConnectionStatus status = SshConnectionStatus.INITIALING;
 
     @Override
     public String getId() {
@@ -24,7 +27,7 @@ public abstract class AbstractSshConnection<CONF extends SshConnectionConfig> im
         return getConfig().getHost();
     }
 
-    public void setConfig(CONF connConfig){
+    public void setConfig(CONF connConfig) {
         this.sshConfig = connConfig;
     }
 
@@ -54,5 +57,25 @@ public abstract class AbstractSshConnection<CONF extends SshConnectionConfig> im
         fr.close();
 
         return authenticateWithPublicKey(user, cw.toCharArray(), passphrase);
+    }
+
+    @Override
+    public final boolean isClosed() {
+        return status == SshConnectionStatus.CLOSED;
+    }
+
+    @Override
+    public final boolean isConnected() {
+        return status.getCode() >= SshConnectionStatus.CONNECTED.getCode();
+    }
+
+    @Override
+    public SshConnectionStatus getStatus() {
+        return status;
+    }
+
+    protected void setStatus(SshConnectionStatus status) {
+        Preconditions.checkNotNull(status);
+        this.status = status;
     }
 }

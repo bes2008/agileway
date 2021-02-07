@@ -39,6 +39,8 @@ public interface SshConnection<CONF extends SshConnectionConfig> extends Closeab
 
     boolean isConnected();
 
+    SshConnectionStatus getStatus();
+
     /**
      * After a successful connect, one has to authenticate oneself. This method
      * sends username and password to the server.

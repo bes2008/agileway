@@ -1,5 +1,6 @@
 package com.jn.agileway.ssh.client.impl.ganymedssh2;
 
+import ch.ethz.ssh2.Connection;
 import com.jn.agileway.ssh.client.AbstractSshConnection;
 import com.jn.agileway.ssh.client.channel.Channel;
 import com.jn.agileway.ssh.client.channel.SessionChannel;
@@ -9,15 +10,9 @@ import java.net.InetAddress;
 
 public class Ssh2Connection extends AbstractSshConnection<Ssh2ConnectionConfig> {
 
-    @Override
-    public boolean isClosed() {
-        return false;
-    }
-
-    @Override
-    public boolean isConnected() {
-        return false;
-    }
+    private Connection conn;
+    private boolean closed = false;
+    private boolean connected = false;
 
     @Override
     public void connect(String host, int port) throws IOException {

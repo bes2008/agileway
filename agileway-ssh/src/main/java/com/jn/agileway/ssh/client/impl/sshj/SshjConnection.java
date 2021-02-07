@@ -39,16 +39,6 @@ public class SshjConnection extends AbstractSshConnection<SshjConnectionConfig> 
     }
 
     @Override
-    public boolean isClosed() {
-        return false;
-    }
-
-    @Override
-    public boolean isConnected() {
-        return false;
-    }
-
-    @Override
     public boolean authenticateWithPassword(String user, String password) throws IOException {
         return false;
     }
