@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.transport.kex;
+package com.jn.agileway.ssh.client.transport.verifier;
 
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Predicate;

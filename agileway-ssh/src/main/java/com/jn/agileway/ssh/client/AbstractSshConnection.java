@@ -1,7 +1,7 @@
 package com.jn.agileway.ssh.client;
 
-import com.jn.agileway.ssh.client.transport.kex.AnyHostKeyVerifier;
-import com.jn.agileway.ssh.client.transport.kex.HostKeyVerifier;
+import com.jn.agileway.ssh.client.transport.verifier.AnyHostKeyVerifier;
+import com.jn.agileway.ssh.client.transport.verifier.HostKeyVerifier;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.io.IOs;
 

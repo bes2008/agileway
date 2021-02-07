@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.transport.kex;
+package com.jn.agileway.ssh.client.transport.verifier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

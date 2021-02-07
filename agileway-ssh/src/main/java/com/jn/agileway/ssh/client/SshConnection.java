@@ -2,7 +2,7 @@ package com.jn.agileway.ssh.client;
 
 import com.jn.agileway.ssh.client.channel.Channel;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
-import com.jn.agileway.ssh.client.transport.kex.HostKeyVerifier;
+import com.jn.agileway.ssh.client.transport.verifier.HostKeyVerifier;
 
 import java.io.Closeable;
 import java.io.File;

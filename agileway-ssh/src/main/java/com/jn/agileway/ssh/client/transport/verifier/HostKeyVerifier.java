@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.transport.kex;
+package com.jn.agileway.ssh.client.transport.verifier;
 
 
 import com.trilead.ssh2.Connection;
