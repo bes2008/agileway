@@ -1,5 +1,7 @@
 package com.jn.agileway.ssh.client;
 
+import com.jn.agileway.ssh.client.transport.kex.AnyHostKeyVerifier;
+import com.jn.agileway.ssh.client.transport.kex.HostKeyVerifier;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.io.IOs;
 
@@ -12,6 +14,7 @@ public abstract class AbstractSshConnection<CONF extends SshConnectionConfig> im
     private String connId;
     protected CONF sshConfig;
     private SshConnectionStatus status = SshConnectionStatus.INITIALING;
+    private AnyHostKeyVerifier hostKeyVerifier = new AnyHostKeyVerifier();
 
     @Override
     public String getId() {
@@ -40,6 +43,11 @@ public abstract class AbstractSshConnection<CONF extends SshConnectionConfig> im
     @Override
     public int getPort() {
         return getConfig().getPort();
+    }
+
+    @Override
+    public void addHostKeyVerifier(HostKeyVerifier hostKeyVerifier) {
+        this.hostKeyVerifier.add(hostKeyVerifier);
     }
 
     @Override

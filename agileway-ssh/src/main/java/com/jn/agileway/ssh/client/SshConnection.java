@@ -2,6 +2,7 @@ package com.jn.agileway.ssh.client;
 
 import com.jn.agileway.ssh.client.channel.Channel;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
+import com.jn.agileway.ssh.client.transport.kex.HostKeyVerifier;
 
 import java.io.Closeable;
 import java.io.File;
@@ -29,6 +30,9 @@ public interface SshConnection<CONF extends SshConnectionConfig> extends Closeab
      * @return 服务端端口
      */
     int getPort();
+
+    void addHostKeyVerifier(HostKeyVerifier hostKeyVerifier);
+
 
     void connect(String host, int port) throws SshException;
 
