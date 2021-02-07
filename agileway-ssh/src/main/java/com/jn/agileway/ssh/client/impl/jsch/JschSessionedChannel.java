@@ -210,17 +210,7 @@ class JschSessionedChannel implements SessionedChannel {
 
     @Override
     public String getType() {
-        return null;
-    }
-
-    @Override
-    public boolean isStarted() {
-        return channel == null || channel.isConnected();
-    }
-
-    @Override
-    public boolean isStopped() {
-        return channel != null && channel.isClosed();
+        return "session";
     }
 
     @Override

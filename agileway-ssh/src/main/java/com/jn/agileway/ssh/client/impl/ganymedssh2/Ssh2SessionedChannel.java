@@ -21,68 +21,72 @@ public class Ssh2SessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void pty(String term) throws IOException{
+    public void pty(String term) throws IOException {
         pty(term, 0, 0, 0, 0, null);
     }
 
     @Override
-    public void pty(String term, int termWidthCharacters, int termHeightCharacters, int termWidthPixels, int termHeightPixels, byte[] terminalModes) throws IOException{
+    public void pty(String term, int termWidthCharacters, int termHeightCharacters, int termWidthPixels, int termHeightPixels, byte[] terminalModes) throws IOException {
         this.session.requestPTY(term, termWidthCharacters, termHeightCharacters, termWidthPixels, termHeightPixels, terminalModes);
     }
 
     @Override
-    public void x11Forwarding(String host, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber)throws IOException {
-        this.session.requestX11Forwarding(host, port, Strings.isBlank(x11AuthenticationCookie)?null:x11AuthenticationCookie.getBytes(Charsets.UTF_8), singleConnection);
+    public void x11Forwarding(String host, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) throws IOException {
+        this.session.requestX11Forwarding(host, port, Strings.isBlank(x11AuthenticationCookie) ? null : x11AuthenticationCookie.getBytes(Charsets.UTF_8), singleConnection);
     }
 
     @Override
     public void env(String variableName, String variableValue) {
-
+        // ganymed-ssh2-1.2.0 is not supports set env variable
     }
 
     @Override
     public void exec(String command) throws SshException {
-
+        Preconditions.checkNotEmpty(command, "the command is illegal : {}", command);
+        try {
+            this.session.execCommand(command);
+        } catch (Throwable ex) {
+            throw new SshException(ex);
+        }
     }
 
     @Override
     public void subsystem(String subsystem) throws SshException {
-
+        Preconditions.checkNotEmpty(subsystem, "the subsystem is illegal : {}", subsystem);
+        try {
+            this.session.startSubSystem(subsystem);
+        } catch (Throwable ex) {
+            throw new SshException(ex);
+        }
     }
 
     @Override
     public void shell() throws SshException {
-
+        try {
+            this.session.startShell();
+        } catch (Throwable ex) {
+            throw new SshException(ex);
+        }
     }
 
     @Override
     public void signal(String signal) throws SshException {
-
+        // unsupported
     }
 
     @Override
     public int getExitStatus() {
-        return 0;
+        return this.session.getExitStatus();
     }
 
     @Override
     public String getType() {
-        return null;
-    }
-
-    @Override
-    public boolean isStarted() {
-        return false;
-    }
-
-    @Override
-    public boolean isStopped() {
-        return false;
+        return "session";
     }
 
     @Override
     public void close() {
-
+        this.session.close();
     }
 
     @Override

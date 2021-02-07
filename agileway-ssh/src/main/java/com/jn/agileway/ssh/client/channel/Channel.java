@@ -7,10 +7,6 @@ import java.io.OutputStream;
 public interface Channel {
     String getType();
 
-    boolean isStarted();
-
-    boolean isStopped();
-
     void close();
 
     /**
