@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class Ssh2SessionedChannel implements SessionedChannel {
+class Ssh2SessionedChannel implements SessionedChannel {
     private Session session;
 
     public Ssh2SessionedChannel(@NonNull Session session) {
