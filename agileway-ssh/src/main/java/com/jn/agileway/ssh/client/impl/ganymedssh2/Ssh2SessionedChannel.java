@@ -3,6 +3,8 @@ package com.jn.agileway.ssh.client.impl.ganymedssh2;
 import ch.ethz.ssh2.Session;
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.util.Preconditions;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,15 +13,14 @@ import java.io.OutputStream;
 public class Ssh2SessionedChannel implements SessionedChannel {
     private Session session;
 
-    public Ssh2SessionedChannel(Session session) {
+    public Ssh2SessionedChannel(@NonNull Session session) {
+        Preconditions.checkNotNull(session);
         this.session = session;
     }
 
-
-
     @Override
     public void pty(String term) {
-
+        pty(term, 0, 0, 0, 0, null);
     }
 
     @Override
@@ -83,17 +84,17 @@ public class Ssh2SessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public InputStream getStdInputStream() throws IOException {
-        return null;
+    public InputStream getInputStream() throws IOException {
+        return session.getStdout();
     }
 
     @Override
-    public OutputStream getStdOutputStream() throws IOException {
-        return null;
+    public OutputStream getOutputStream() throws IOException {
+        return session.getStdin();
     }
 
     @Override
-    public InputStream getStdErrorInputStream() throws IOException {
+    public InputStream getErrorInputStream() throws IOException {
         return session.getStderr();
     }
 }

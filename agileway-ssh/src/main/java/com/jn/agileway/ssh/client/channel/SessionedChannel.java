@@ -76,6 +76,6 @@ public interface SessionedChannel extends Channel {
      *
      * @return
      */
-    InputStream getStdErrorInputStream() throws IOException;
+    InputStream getErrorInputStream() throws IOException;
 
 }

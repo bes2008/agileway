@@ -18,13 +18,13 @@ public interface Channel {
      *
      * @return
      */
-    InputStream getStdInputStream() throws IOException;
+    InputStream getInputStream() throws IOException;
 
     /**
      * 获取一个输出到远程机器的流
      *
      * @return
      */
-    OutputStream getStdOutputStream() throws IOException;
+    OutputStream getOutputStream() throws IOException;
 
 }

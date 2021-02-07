@@ -19,7 +19,7 @@ public class SshCommandExecutionAdaptor implements InstructionSequence {
     @Override
     public OutputStream getOutputStream() {
         try {
-            return commandChannel.getStdOutputStream();
+            return commandChannel.getOutputStream();
         } catch (Throwable ex) {
             throw Throwables.wrapAsRuntimeException(ex);
         }
@@ -28,7 +28,7 @@ public class SshCommandExecutionAdaptor implements InstructionSequence {
     @Override
     public InputStream getInputStream() {
         try {
-            return commandChannel.getStdInputStream();
+            return commandChannel.getInputStream();
         } catch (Throwable ex) {
             throw Throwables.wrapAsRuntimeException(ex);
         }
@@ -37,7 +37,7 @@ public class SshCommandExecutionAdaptor implements InstructionSequence {
     @Override
     public InputStream getErrorStream() {
         try {
-            return commandChannel.getStdErrorInputStream();
+            return commandChannel.getErrorInputStream();
         } catch (Throwable ex) {
             throw Throwables.wrapAsRuntimeException(ex);
         }

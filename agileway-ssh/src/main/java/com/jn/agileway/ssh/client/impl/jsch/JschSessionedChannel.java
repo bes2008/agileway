@@ -232,17 +232,17 @@ class JschSessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public InputStream getStdInputStream() throws IOException {
+    public InputStream getInputStream() throws IOException {
         return this.channel.getInputStream();
     }
 
     @Override
-    public OutputStream getStdOutputStream() throws IOException {
+    public OutputStream getOutputStream() throws IOException {
         return this.channel.getOutputStream();
     }
 
     @Override
-    public InputStream getStdErrorInputStream() throws IOException {
+    public InputStream getErrorInputStream() throws IOException {
         Preconditions.checkState(channel != null);
         InputStream errorInputStream = null;
         switch (channelType) {
