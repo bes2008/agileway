@@ -46,12 +46,12 @@ class JschSessionedChannel implements SessionedChannel {
 
 
     @Override
-    public void pty(String term) {
+    public void pty(String term) throws IOException {
         pty(term, 0, 0, 0, 0, null);
     }
 
     @Override
-    public void pty(String term, int termWidthCharacters, int termHeightCharacters, int termWidthPixels, int termHeightPixels, byte[] terminalModes) {
+    public void pty(String term, int termWidthCharacters, int termHeightCharacters, int termWidthPixels, int termHeightPixels, byte[] terminalModes) throws IOException {
         this.term = term;
         this.termWidthCharacters = termWidthCharacters;
         this.termHeightCharacters = termHeightCharacters;
@@ -61,7 +61,7 @@ class JschSessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void x11Forwarding(boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) {
+    public void x11Forwarding(String host, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) throws IOException {
         this.x11Forwarding = true;
     }
 

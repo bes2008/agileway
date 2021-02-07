@@ -16,7 +16,7 @@ public interface SessionedChannel extends Channel {
      * <p>
      * equality: pty(term, 0, 0, 0, 0, null)
      */
-    void pty(String term);
+    void pty(String term) throws IOException;
 
     /**
      * 发起 pseudo-terminal 请求， 要在 {@link #exec(String)}, {@link #env(String, String)}, {@link #subsystem(String)} 请求之前。
@@ -28,7 +28,7 @@ public interface SessionedChannel extends Channel {
      * @param termHeightPixels     terminal height, pixels (e.g., 480)
      * @param terminalModes        encoded terminal modes
      */
-    void pty(String term, int termWidthCharacters, int termHeightCharacters, int termWidthPixels, int termHeightPixels, byte[] terminalModes);
+    void pty(String term, int termWidthCharacters, int termHeightCharacters, int termWidthPixels, int termHeightPixels, byte[] terminalModes) throws IOException;
 
 
     /**
@@ -39,7 +39,7 @@ public interface SessionedChannel extends Channel {
      * @param x11AuthenticationCookie   x11 authentication cookie
      * @param x11ScreenNumber           x11 screen number
      */
-    void x11Forwarding(boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber);
+    void x11Forwarding(String hostname, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) throws IOException;
 
     /**
      * 发起 env 请求， 用于设置环境变量。

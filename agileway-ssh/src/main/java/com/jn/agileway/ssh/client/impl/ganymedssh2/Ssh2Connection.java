@@ -55,7 +55,8 @@ public class Ssh2Connection extends AbstractSshConnection<Ssh2ConnectionConfig> 
 
 
     @Override
-    public SessionedChannel openSession() throws IOException{
+    public SessionedChannel openSession() throws IOException {
+        Preconditions.checkNotNull(delegate);
         Session session = delegate.openSession();
         Ssh2SessionedChannel channel = new Ssh2SessionedChannel(session);
         return channel;

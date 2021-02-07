@@ -5,6 +5,8 @@ import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.util.Preconditions;
+import com.jn.langx.util.Strings;
+import com.jn.langx.util.io.Charsets;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,18 +21,18 @@ public class Ssh2SessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void pty(String term) {
+    public void pty(String term) throws IOException{
         pty(term, 0, 0, 0, 0, null);
     }
 
     @Override
-    public void pty(String term, int termWidthCharacters, int termHeightCharacters, int termWidthPixels, int termHeightPixels, byte[] terminalModes) {
-
+    public void pty(String term, int termWidthCharacters, int termHeightCharacters, int termWidthPixels, int termHeightPixels, byte[] terminalModes) throws IOException{
+        this.session.requestPTY(term, termWidthCharacters, termHeightCharacters, termWidthPixels, termHeightPixels, terminalModes);
     }
 
     @Override
-    public void x11Forwarding(boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) {
-
+    public void x11Forwarding(String host, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber)throws IOException {
+        this.session.requestX11Forwarding(host, port, Strings.isBlank(x11AuthenticationCookie)?null:x11AuthenticationCookie.getBytes(Charsets.UTF_8), singleConnection);
     }
 
     @Override
