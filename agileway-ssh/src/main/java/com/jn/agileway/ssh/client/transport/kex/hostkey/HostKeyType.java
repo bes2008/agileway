@@ -3,7 +3,7 @@ package com.jn.agileway.ssh.client.transport.kex.hostkey;
 import com.jn.langx.util.enums.base.CommonEnum;
 import com.jn.langx.util.enums.base.EnumDelegate;
 
-public enum KnownHostKeyType implements CommonEnum {
+public enum HostKeyType implements CommonEnum {
     SSH_DSS(1, "ssh-dss", "ssh-dss"),
     SSH_RSA(2, "ssh-rsa", "ssh-rsa"),
     ECDSA_SHA2_NISTP256(3, "ecdsa-sha2-nistp256", "ecdsa-sha2-nistp256"),
@@ -12,7 +12,7 @@ public enum KnownHostKeyType implements CommonEnum {
     ;
     private EnumDelegate delegate;
 
-    KnownHostKeyType(int code, String name, String displayText) {
+    HostKeyType(int code, String name, String displayText) {
         this.delegate = new EnumDelegate(code, name, displayText);
     }
 

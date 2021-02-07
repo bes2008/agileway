@@ -44,8 +44,12 @@ public class SshCommandExecutionAdaptor implements InstructionSequence {
     }
 
     @Override
-    public void destroy() {
-        commandChannel.close();
+    public void destroy(){
+        try {
+            commandChannel.close();
+        }catch (Throwable ex){
+            throw Throwables.wrapAsRuntimeException(ex);
+        }
     }
 
     @Override

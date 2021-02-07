@@ -10,6 +10,8 @@ import com.jn.agileway.ssh.client.impl.ganymedssh2.Ssh2ConnectionFactory;
 import com.jn.agileway.ssh.client.impl.jsch.JschConnectionConfig;
 import com.jn.agileway.ssh.client.impl.jsch.JschConnectionFactory;
 import com.jn.agileway.ssh.client.impl.jsch.JschGlobalProperties;
+import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionConfig;
+import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionFactory;
 import com.jn.agileway.ssh.client.supports.command.SshCommandLineExecutor;
 import com.jn.langx.commandline.CommandLine;
 import com.jn.langx.commandline.DefaultExecuteResultHandler;
@@ -40,6 +42,11 @@ public class SshCommandLineExecutorTest {
     @Test
     public void testGanymedSsh2() throws Throwable {
         testExec(new Ssh2ConnectionFactory(), new Ssh2ConnectionConfig());
+    }
+
+    @Test
+    public void testSshj() throws Throwable {
+        testExec(new SshjConnectionFactory(), new SshjConnectionConfig());
     }
 
 

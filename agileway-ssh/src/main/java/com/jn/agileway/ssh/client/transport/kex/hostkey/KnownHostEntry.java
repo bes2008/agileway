@@ -4,14 +4,14 @@ import com.jn.langx.util.enums.Enums;
 
 public class KnownHostEntry {
     private String hostname;
-    private KnownHostKeyType keyType;
+    private HostKeyType keyType;
     private String publicKey;
 
     public KnownHostEntry(String hostName, String keyType, String publicKey) {
-        this(hostName, Enums.ofName(KnownHostKeyType.class, keyType), publicKey);
+        this(hostName, Enums.ofName(HostKeyType.class, keyType), publicKey);
     }
 
-    public KnownHostEntry(String hostName, KnownHostKeyType keyType, String publicKey) {
+    public KnownHostEntry(String hostName, HostKeyType keyType, String publicKey) {
         setHostname(hostName);
         setKeyType(keyType);
         setPublicKey(publicKey);
@@ -25,11 +25,11 @@ public class KnownHostEntry {
         this.hostname = hostname;
     }
 
-    public KnownHostKeyType getKeyType() {
+    public HostKeyType getKeyType() {
         return keyType;
     }
 
-    public void setKeyType(KnownHostKeyType keyType) {
+    public void setKeyType(HostKeyType keyType) {
         this.keyType = keyType;
     }
 
