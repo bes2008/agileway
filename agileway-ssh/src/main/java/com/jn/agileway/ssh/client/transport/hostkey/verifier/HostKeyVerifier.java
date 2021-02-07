@@ -1,7 +1,6 @@
-package com.jn.agileway.ssh.client.transport.verifier;
+package com.jn.agileway.ssh.client.transport.hostkey.verifier;
 
 
-import com.trilead.ssh2.Connection;
 
 import java.security.PublicKey;
 
@@ -18,7 +17,7 @@ public interface HostKeyVerifier {
      * <p>
      * Note: SSH-2 servers are allowed to change their hostkey at ANY time.
      *
-     * @param hostname the hostname used to create the {@link Connection} object
+     * @param hostname the hostname used to create the {@link com.jn.agileway.ssh.client.impl.sshj.SshjConnection} object
      * @param port     the remote TCP port
      * @return if the client wants to accept the server's host key - if not, the
      * connection will be closed.

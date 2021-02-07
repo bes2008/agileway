@@ -6,9 +6,9 @@ import java.security.PublicKey;
 
 public class ToSshjHostKeyVerifierAdapter implements HostKeyVerifier {
 
-    private com.jn.agileway.ssh.client.transport.verifier.HostKeyVerifier delegate;
+    private com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier delegate;
 
-    ToSshjHostKeyVerifierAdapter(com.jn.agileway.ssh.client.transport.verifier.HostKeyVerifier delegate) {
+    public ToSshjHostKeyVerifierAdapter(com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier delegate) {
         this.delegate = delegate;
     }
 

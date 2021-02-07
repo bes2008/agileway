@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.transport.verifier;
+package com.jn.agileway.ssh.client.transport.hostkey.verifier;
 
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Predicate;

@@ -7,6 +7,7 @@ import com.jn.agileway.ssh.client.SshConnectionStatus;
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.Channel;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
+import com.jn.agileway.ssh.client.impl.ganymedssh2.verifier.ToSsh2HostKeyVerifierAdapter;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.net.Nets;
 
@@ -42,7 +43,11 @@ public class Ssh2Connection extends AbstractSshConnection<Ssh2ConnectionConfig> 
                     localSocket = new Socket(localAddr, localPort);
                 }
                 Connection conn = new Connection(host.getHostName(), port, localSocket);
-                conn.connect();
+                if (this.hostKeyVerifier.isEmpty()) {
+                    conn.connect();
+                } else {
+                    conn.connect(new ToSsh2HostKeyVerifierAdapter(this.hostKeyVerifier));
+                }
                 setStatus(SshConnectionStatus.CONNECTED);
                 this.delegate = conn;
             }

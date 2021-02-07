@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.transport.verifier;
+package com.jn.agileway.ssh.client.transport.hostkey;
 
 import com.jn.langx.util.enums.base.CommonEnum;
 import com.jn.langx.util.enums.base.EnumDelegate;
@@ -30,4 +30,5 @@ public enum HostKeyType implements CommonEnum {
     public String getDisplayText() {
         return this.delegate.getDisplayText();
     }
+
 }

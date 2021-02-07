@@ -1,6 +1,6 @@
 package com.jn.agileway.ssh.client.impl.sshj.verifier;
 
-import com.jn.agileway.ssh.client.transport.verifier.HostKeyVerifier;
+import com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier;
 
 import java.security.PublicKey;
 

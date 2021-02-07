@@ -1,9 +1,17 @@
-package com.jn.agileway.ssh.client.transport.verifier;
+package com.jn.agileway.ssh.client.transport.hostkey.knownhosts;
 
+import com.jn.agileway.ssh.client.transport.hostkey.HostKeyType;
+import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.enums.Enums;
 
+import java.util.List;
+
 public class KnownHostEntry {
-    private String hostname;
+    /**
+     * 逗号分割的多个主机名
+     */
+    private List<String> hostnames;
     private HostKeyType keyType;
     private String publicKey;
 
@@ -12,17 +20,25 @@ public class KnownHostEntry {
     }
 
     public KnownHostEntry(String hostName, HostKeyType keyType, String publicKey) {
-        setHostname(hostName);
+        setHostnames(hostName);
         setKeyType(keyType);
         setPublicKey(publicKey);
     }
 
-    public String getHostname() {
-        return hostname;
+    public List<String> getHostnames() {
+        return hostnames;
     }
 
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
+    public String getHostnamesString() {
+        return Strings.join(",", hostnames);
+    }
+
+    public void setHostnames(String hostname) {
+        setHostnames(Collects.newArrayList(Strings.split(hostname, ",")));
+    }
+
+    public void setHostnames(List<String> hostnames) {
+        this.hostnames = hostnames;
     }
 
     public HostKeyType getKeyType() {

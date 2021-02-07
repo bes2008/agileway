@@ -20,7 +20,10 @@ public class SshjConnectionFactory extends AbstractSshConnectionFactory<SshjConn
 
     @Override
     protected void postConstructConnection(final SshConnection connection, final SshjConnectionConfig sshConfig) {
+        setKnownHosts(connection, sshConfig);
+    }
 
+    private void setKnownHosts(final SshConnection connection, final SshjConnectionConfig sshConfig){
         List<File> paths = SshConfigs.getKnownHostsFiles(sshConfig.getKnownHostsPaths());
         if (!paths.isEmpty()) {
             Collects.forEach(paths, new Consumer<File>() {
@@ -37,7 +40,6 @@ public class SshjConnectionFactory extends AbstractSshConnectionFactory<SshjConn
             });
 
         }
-
 
     }
 }
