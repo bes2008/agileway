@@ -8,7 +8,7 @@ import java.security.PublicKey;
 public class KnownHostsVerifier implements HostKeyVerifier{
     private static final Logger logger = LoggerFactory.getLogger(KnownHostsVerifier.class);
     @Override
-    public boolean verifyServerHostKey(String hostname, int port, PublicKey key){
+    public boolean verify(String hostname, int port, PublicKey key){
         logger.warn(logger.getName());
         return false;
     }

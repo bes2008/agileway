@@ -42,16 +42,17 @@
         </dependency>
 
         <dependency>
+            <groupId>com.trilead</groupId>
+            <artifactId>trilead-ssh2</artifactId>
+            <version>1.0.0-build222</version>
+        </dependency>
+
+        <dependency>
             <groupId>sshtools</groupId>
             <artifactId>j2ssh-core</artifactId>
             <version>0.2.9</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.trilead</groupId>
-            <artifactId>trilead-ssh2</artifactId>
-            <version>1.0.0-build222</version>
-        </dependency>
 
         <dependency>
             <groupId>org.apache.maven.wagon</groupId>

@@ -24,5 +24,5 @@ public interface HostKeyVerifier {
      * connection will be closed.
      * @throws Exception Will be wrapped with an IOException, extended version of returning false =)
      */
-    boolean verifyServerHostKey(String hostname, int port, PublicKey key);
+    boolean verify(String hostname, int port, PublicKey key);
 }
