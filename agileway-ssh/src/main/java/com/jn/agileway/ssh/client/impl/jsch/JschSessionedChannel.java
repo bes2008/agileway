@@ -67,6 +67,9 @@ class JschSessionedChannel implements SessionedChannel {
     @Override
     public void x11Forwarding(String host, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) throws IOException {
         this.x11Forwarding = true;
+        session.setX11Host(host);
+        session.setX11Port(port);
+        session.setX11Cookie(x11AuthenticationCookie);
     }
 
     @Override

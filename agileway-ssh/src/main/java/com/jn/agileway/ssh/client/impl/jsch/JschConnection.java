@@ -74,7 +74,7 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
                 PasswordUserInfo userInfo = new PasswordUserInfo();
                 userInfo.setPassword(password);
                 delegate.setUserInfo(userInfo);
-                delegate.connect();
+                delegate.connect(3);
                 setStatus(SshConnectionStatus.CONNECTED);
                 return true;
             } catch (Throwable ex) {
@@ -106,7 +106,7 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
                     userInfo.setPassphrase(passphrase);
                     delegate.setUserInfo(userInfo);
                 }
-                delegate.connect();
+                delegate.connect(3);
                 setStatus(SshConnectionStatus.CONNECTED);
                 return true;
             } catch (Throwable ex) {
