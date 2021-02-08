@@ -21,7 +21,7 @@ public class Ssh2ConnectionFactory extends AbstractSshConnectionFactory<Ssh2Conn
     }
 
     private void addHostKeyVerifiers(SshConnection connection, Ssh2ConnectionConfig sshConfig) {
-        List<File> paths = SshConfigs.getKnownHostsFiles(sshConfig.getKnownHostsPaths());
+        List<File> paths = SshConfigs.getKnownHostsFiles(sshConfig.getKnownHostsPath());
 
         if (!paths.isEmpty()) {
             KnownHostsVerifier verifier = new KnownHostsVerifier(paths);

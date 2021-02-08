@@ -60,7 +60,7 @@ public interface SshConnectionConfig {
      */
     String getPrivateKeyfilePassphrase();
 
-    String getKnownHostsPaths();
+    String getKnownHostsPath();
 
     Object getProperty(String property);
 

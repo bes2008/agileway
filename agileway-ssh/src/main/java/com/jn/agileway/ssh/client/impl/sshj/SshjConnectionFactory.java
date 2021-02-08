@@ -24,7 +24,7 @@ public class SshjConnectionFactory extends AbstractSshConnectionFactory<SshjConn
     }
 
     private void setKnownHosts(final SshConnection connection, final SshjConnectionConfig sshConfig){
-        List<File> paths = SshConfigs.getKnownHostsFiles(sshConfig.getKnownHostsPaths());
+        List<File> paths = SshConfigs.getKnownHostsFiles(sshConfig.getKnownHostsPath());
         if (!paths.isEmpty()) {
             Collects.forEach(paths, new Consumer<File>() {
                 @Override

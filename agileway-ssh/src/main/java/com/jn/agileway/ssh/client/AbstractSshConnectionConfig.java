@@ -50,7 +50,7 @@ public class AbstractSshConnectionConfig implements SshConnectionConfig {
     /**
      * 由分号分割的路径集合
      */
-    private String knownHostsPaths = "${user.home}/.ssh/known_hosts;/etc/ssh/known_hosts";
+    private String knownHostsPath = "${user.home}/.ssh/known_hosts";
 
     private Map<String, Object> props = Collects.emptyHashMap();
 
@@ -128,12 +128,12 @@ public class AbstractSshConnectionConfig implements SshConnectionConfig {
     }
 
     @Override
-    public String getKnownHostsPaths() {
-        return knownHostsPaths;
+    public String getKnownHostsPath() {
+        return knownHostsPath;
     }
 
-    public void setKnownHostsPaths(String knownHostsPaths) {
-        this.knownHostsPaths = knownHostsPaths;
+    public void setKnownHostsPath(String knownHostsPath) {
+        this.knownHostsPath = knownHostsPath;
     }
 
     public void setProps(Map<String, Object> props) {

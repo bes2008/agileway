@@ -52,8 +52,8 @@ public class JschConnectionFactory extends AbstractSshConnectionFactory<JschConn
     private static final List<String> strictHostKeyCheckingValues = Collects.newArrayList("yes", "ask", "no");
 
     private void setKnownHosts(final SshConnection connection, final JschConnectionConfig sshConfig) {
-        String knownHostsPaths = sshConfig.getKnownHostsPaths();
-        List<File> paths = SshConfigs.getKnownHostsFiles(sshConfig.getKnownHostsPaths());
+        String knownHostsPath = sshConfig.getKnownHostsPath();
+        List<File> paths = SshConfigs.getKnownHostsFiles(knownHostsPath);
         boolean found = false;
         if (!paths.isEmpty()) {
             found = Collects.anyMatch(paths, new Predicate<File>() {
@@ -85,7 +85,7 @@ public class JschConnectionFactory extends AbstractSshConnectionFactory<JschConn
                 strictHostKeyChecking = "ask";
             }
         } else {
-            if (knownHostsPaths == null) {
+            if (knownHostsPath == null) {
                 strictHostKeyChecking = "no";
             } else {
                 strictHostKeyChecking = "ask";
@@ -96,8 +96,8 @@ public class JschConnectionFactory extends AbstractSshConnectionFactory<JschConn
 
         if ("ask".equals(strictHostKeyChecking) || "yes".equals(strictHostKeyChecking)) {
             if (!found) {
-                if (Strings.isNotBlank(knownHostsPaths)) {
-                    throw new IllegalStateException(StringTemplates.formatWithPlaceholder("Can't find any valid known_hosts file: {}", knownHostsPaths));
+                if (Strings.isNotBlank(knownHostsPath)) {
+                    throw new IllegalStateException(StringTemplates.formatWithPlaceholder("Can't find any valid known_hosts file: {}", knownHostsPath));
                 } else {
                     throw new IllegalStateException(StringTemplates.formatWithPlaceholder("Can't find any valid known_hosts file"));
                 }
