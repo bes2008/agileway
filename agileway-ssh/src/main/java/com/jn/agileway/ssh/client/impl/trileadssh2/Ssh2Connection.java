@@ -74,6 +74,7 @@ public class Ssh2Connection extends AbstractSshConnection<Ssh2ConnectionConfig> 
     @Override
     public SessionedChannel openSession() throws SshException {
         Preconditions.checkNotNull(delegate);
+        Preconditions.checkState(getStatus() == SshConnectionStatus.CONNECTED, "ssh not connected");
         try {
             Session session = delegate.openSession();
             Ssh2SessionedChannel channel = new Ssh2SessionedChannel(session);
@@ -91,6 +92,8 @@ public class Ssh2Connection extends AbstractSshConnection<Ssh2ConnectionConfig> 
 
     @Override
     protected void doClose() throws IOException {
-        this.delegate.close();
+        if (this.delegate != null) {
+            this.delegate.close();
+        }
     }
 }

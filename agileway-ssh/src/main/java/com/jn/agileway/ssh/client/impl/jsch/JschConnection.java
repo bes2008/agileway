@@ -133,6 +133,7 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
 
     @Override
     public SessionedChannel openSession() throws SshException {
+        Preconditions.checkState(getStatus() == SshConnectionStatus.CONNECTED, "ssh not connected");
         Preconditions.checkNotNull(delegate != null && delegate.isConnected());
         return new JschSessionedChannel(delegate);
     }

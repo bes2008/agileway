@@ -155,6 +155,7 @@ public class SshjConnection extends AbstractSshConnection<SshjConnectionConfig> 
 
     @Override
     public SessionedChannel openSession() throws SshException {
+        Preconditions.checkState(getStatus() == SshConnectionStatus.CONNECTED, "ssh not connected");
         try {
             Session session = sshClient.startSession();
             return new SshjSessionedChannel(session);
