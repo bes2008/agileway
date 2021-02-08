@@ -22,8 +22,11 @@ Java版开源ssh框架功能对比：
 |License    | BSD      |Apache 2.0| Apache 2.0 |Trilead AG  | >=0.2.8 GPL ; <0.2.8 LGPL + Apache  |
 |JDK supports | 1.6+   |1.6+      |1.4+      |1.4+      | 1.6+ |
 |代码可读性  | C        | A        | A          |A           | B       |
+|算法支持情况| 比较全    |比较全     |比较全       |比较全       | 需要手动添加最新算法 [最新算法下载地址](https://www.oracle.com/java/technologies/javase-jce8-downloads.html#)   |
 
-ganymed-ssh2 与 trilead-ssh2 代码基本是一致的
+注意：
++ ganymed-ssh2 与 trilead-ssh2 代码基本是一致的
++ j2ssh 的License不友好，算法支持也不全面，如果出现因算法确实导致连接失败时，需要先下载最新算法，从oracle官网下载jce_policy-8.zip，并解压，将local_policy.jar和US_export_policy.jar替换到JAVA_HOME/jre/lib/security目录，并重启应用就可以了。
 
 ## 1、协议说明
 
@@ -86,7 +89,6 @@ key exchange 是在ssh client 通过tcp连接到server后发生的，流程如�
    Channels are flow-controlled.  No data may be sent to a channel until
    a message is received to indicate that window space is available.
 ```
-
 
 
 Channel 分类：
