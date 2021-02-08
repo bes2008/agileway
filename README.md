@@ -87,6 +87,7 @@ Java、Web开发工具套件，尽量避免996
 |agileway-dmmq|7|1.2.0+|
 |agileway-httpclient|6|1.3.0+|
 |agileway-aop|6|2.1.0+|
+|agileway-aop|6|2.3.0+|
  
 
 
