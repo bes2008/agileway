@@ -6,6 +6,8 @@ import com.jn.agileway.ssh.client.SshConnectionFactory;
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.impl.ganymedssh2.Ssh2ConnectionConfig;
 import com.jn.agileway.ssh.client.impl.ganymedssh2.Ssh2ConnectionFactory;
+import com.jn.agileway.ssh.client.impl.j2ssh.J2sshConnectionConfig;
+import com.jn.agileway.ssh.client.impl.j2ssh.J2sshConnectionFactory;
 import com.jn.agileway.ssh.client.impl.jsch.JschConnectionConfig;
 import com.jn.agileway.ssh.client.impl.jsch.JschConnectionFactory;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionConfig;
@@ -37,9 +39,20 @@ public class SshCommandLineExecutorTest {
         testExec(new Ssh2ConnectionFactory(), new Ssh2ConnectionConfig());
     }
 
+
+    @Test
+    public void testTrileadSsh2() throws Throwable {
+        testExec(new com.jn.agileway.ssh.client.impl.trileadssh2.Ssh2ConnectionFactory(), new com.jn.agileway.ssh.client.impl.trileadssh2.Ssh2ConnectionConfig());
+    }
+
     @Test
     public void testSshj() throws Throwable {
         testExec(new SshjConnectionFactory(), new SshjConnectionConfig());
+    }
+
+    @Test
+    public void testJ2ssh() throws Throwable {
+        testExec(new J2sshConnectionFactory(), new J2sshConnectionConfig());
     }
 
 

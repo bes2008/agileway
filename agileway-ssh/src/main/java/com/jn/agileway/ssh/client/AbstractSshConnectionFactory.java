@@ -90,6 +90,7 @@ public abstract class AbstractSshConnectionFactory<CONF extends SshConnectionCon
                 connection.connect(host, port);
             }
         } catch (Throwable ex) {
+            logger.error(ex.getMessage(), ex);
             IOs.close(connection);
             connection = null;
             return null;

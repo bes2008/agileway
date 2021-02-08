@@ -11,6 +11,19 @@ import java.net.InetAddress;
 
 /**
  * 其实就是 connection
+ *
+ * 使用步骤：
+ * 1) 使用 SshConnectionFactory 创建 SshConnection;
+ * 2.1) 使用 SshConnection#openSession() 创建 SshSessionedChannel
+ * 2.2) 使用SshSessionedChannel执行 shell()或者 exec(), 或者 subsystem()
+ * 2.3) 调用 SshSessionedChannel#close() 关闭会话
+ *
+ * 3) 关闭SshConnection
+ *
+ * 需要注意的是：
+ * 1）SshSessionedChannel 不可重用
+ * 2）SshConnection 最好共用
+ *
  */
 public interface SshConnection<CONF extends SshConnectionConfig> extends Closeable {
     String getId();
