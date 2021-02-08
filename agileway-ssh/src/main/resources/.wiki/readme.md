@@ -10,18 +10,19 @@ SSH https://www.ssh.com/ssh/
 | JSch  | BSD   |1.6+        | ```com.jcraft:jsch:0.1.55 ``` |
 |sshj   |Apache 2.0|1.6+     | ```net.schmizz:sshj:0.10.0``` |
 |ganymed-ssh2 |Apache 2.0|1.8+|```com.airlenet.yang:ganymed-ssh2:1.2.0```|
+|trilead-ssh2 |Apache 2.0|1.8+|```com.trilead:trilead-ssh2:1.0.0-build222```|
 |j2ssh|||```sshtools:j2ssh-core:0.2.9```|
 
 
 Java版开源ssh框架功能对比：
 
-|对比项      |Jsch      | sshj     |ganymed-ssh2|j2ssh   |
-|---------  |----------|----------|------------|--------|
-|License    | BSD      |Apache 2.0| Apache 2.0 | 未知    |
-|JDK supports | 1.6+   |1.6+      |1.8+        | JDK11 + |
-|代码可读性  | C        | A        | A          | B       |
+|对比项      |Jsch      | sshj     |ganymed-ssh2|trilead-ssh2|j2ssh   |
+|---------  |----------|----------|------------|------------|--------|
+|License    | BSD      |Apache 2.0| Apache 2.0 |Trilead AG  | 未知    |
+|JDK supports | 1.6+   |1.6+      |1.8+        |JDK 4+      | JDK11 + |
+|代码可读性  | C        | A        | A          |A           | B       |
 
-
+ganymed-ssh2 与 trilead-ssh2 代码基本是一致的
 
 ## 1、协议说明
 
