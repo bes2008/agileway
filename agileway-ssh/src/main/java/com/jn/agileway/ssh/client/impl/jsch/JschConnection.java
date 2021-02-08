@@ -10,6 +10,7 @@ import com.jn.agileway.ssh.client.channel.SessionedChannel;
 import com.jn.agileway.ssh.client.impl.jsch.authc.PasswordUserInfo;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.MapAccessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +26,6 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
     private Session delegate;
 
     public JschConnection() {
-        setJsch(new JSch());
     }
 
     public void setJsch(JSch jsch) {
@@ -59,6 +59,15 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
         connect(host, port);
     }
 
+    private int getConnectTimeout() {
+        MapAccessor mapAccessor = new MapAccessor(sshConfig.getProps());
+        int connectTimeout = mapAccessor.getInteger("ConnectTimeout", 0);
+        if (connectTimeout < 0) {
+            connectTimeout = 0;
+        }
+        return connectTimeout;
+    }
+
     @Override
     public boolean authenticateWithPassword(String user, String password) throws SshException {
         if (!isConnected()) {
@@ -74,7 +83,8 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
                 PasswordUserInfo userInfo = new PasswordUserInfo();
                 userInfo.setPassword(password);
                 delegate.setUserInfo(userInfo);
-                delegate.connect(3);
+
+                delegate.connect(getConnectTimeout());
                 setStatus(SshConnectionStatus.CONNECTED);
                 return true;
             } catch (Throwable ex) {
@@ -106,7 +116,7 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
                     userInfo.setPassphrase(passphrase);
                     delegate.setUserInfo(userInfo);
                 }
-                delegate.connect(3);
+                delegate.connect(getConnectTimeout());
                 setStatus(SshConnectionStatus.CONNECTED);
                 return true;
             } catch (Throwable ex) {
