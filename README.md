@@ -65,7 +65,16 @@ Java、Web开发工具套件，尽量避免996
     + 一个consumer可以从多个topic拉取消息， 一个topic的消息可以被多个消费者重复的消费
     + 一个consumer可以依赖于从同一topic拉取消息的多个其他的consumer
 + agileway-aop: 对AOP的支持、适配    
-
++ agileway-ssh:
+    + 功能
+      + 支持 Session Channel
+      + 支持 forwarding
+    + 类库
+      + com.jcraft:jsch:0.1.55
+      + com.trilead:trilead-ssh2:1.0.0-build222
+      + com.airlenet.yang:ganymed-ssh2:1.2.0
+      + net.schmizz:sshj:0.10.0
+      + sshtools:j2ssh-core:0.2.9
 
 | module | jdk | version |
 |---|---|---|
