@@ -11,7 +11,6 @@ import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.io.Charsets;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
@@ -26,26 +25,34 @@ class Ssh2SessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void pty(String term) throws IOException {
+    public void pty(String term) throws SshException {
         pty(term, 0, 0, 0, 0, null);
     }
 
     @Override
-    public void pty(String term, int termWidthCharacters, int termHeightCharacters, int termWidthPixels, int termHeightPixels, Map<PTYMode, Integer> terminalModes) throws IOException {
+    public void pty(String term, int termWidthCharacters, int termHeightCharacters, int termWidthPixels, int termHeightPixels, Map<PTYMode, Integer> terminalModes) throws SshException {
         byte[] terminalModesBytes = null;
         if (Emptys.isNotEmpty(terminalModes)) {
             terminalModesBytes = PTYMode.encode(terminalModes);
         }
-        this.session.requestPTY(term, termWidthCharacters, termHeightCharacters, termWidthPixels, termHeightPixels, terminalModesBytes);
+        try {
+            this.session.requestPTY(term, termWidthCharacters, termHeightCharacters, termWidthPixels, termHeightPixels, terminalModesBytes);
+        } catch (Throwable ex) {
+            throw new SshException(ex);
+        }
     }
 
     @Override
-    public void x11Forwarding(String host, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) throws IOException {
-        this.session.requestX11Forwarding(host, port, Strings.isBlank(x11AuthenticationCookie) ? null : x11AuthenticationCookie.getBytes(Charsets.UTF_8), singleConnection);
+    public void x11Forwarding(String host, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) throws SshException {
+        try {
+            this.session.requestX11Forwarding(host, port, Strings.isBlank(x11AuthenticationCookie) ? null : x11AuthenticationCookie.getBytes(Charsets.UTF_8), singleConnection);
+        } catch (Throwable ex) {
+            throw new SshException(ex);
+        }
     }
 
     @Override
-    public void env(String variableName, String variableValue) throws SshException{
+    public void env(String variableName, String variableValue) throws SshException {
         // ganymed-ssh2-1.2.0 is not supports set env variable
     }
 

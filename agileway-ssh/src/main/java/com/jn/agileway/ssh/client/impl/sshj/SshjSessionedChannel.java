@@ -31,12 +31,12 @@ class SshjSessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void pty(String term) throws IOException {
+    public void pty(String term) throws SshException {
         pty(term, 0, 0, 0, 0, null);
     }
 
     @Override
-    public void pty(String term, int termWidthCharacters, int termHeightCharacters, int termWidthPixels, int termHeightPixels, Map<PTYMode, Integer> terminalModes) throws IOException {
+    public void pty(String term, int termWidthCharacters, int termHeightCharacters, int termWidthPixels, int termHeightPixels, Map<PTYMode, Integer> terminalModes) throws SshException {
         final Map<net.schmizz.sshj.connection.channel.direct.PTYMode, Integer> terminalModeMap = new HashMap<net.schmizz.sshj.connection.channel.direct.PTYMode, Integer>();
         Collects.forEach(terminalModes, new Consumer2<PTYMode, Integer>() {
             @Override
@@ -48,12 +48,20 @@ class SshjSessionedChannel implements SessionedChannel {
                 }
             }
         });
-        this.session.allocatePTY(term, termWidthCharacters, termHeightCharacters, termWidthPixels, termHeightPixels, terminalModeMap);
+        try {
+            this.session.allocatePTY(term, termWidthCharacters, termHeightCharacters, termWidthPixels, termHeightPixels, terminalModeMap);
+        } catch (Throwable ex) {
+            throw new SshException(ex);
+        }
     }
 
     @Override
-    public void x11Forwarding(String hostname, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) throws IOException {
-        this.session.reqX11Forwarding(x11AuthenticationProtocol, x11AuthenticationCookie, x11ScreenNumber);
+    public void x11Forwarding(String hostname, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) throws SshException {
+        try {
+            this.session.reqX11Forwarding(x11AuthenticationProtocol, x11AuthenticationCookie, x11ScreenNumber);
+        } catch (Throwable ex) {
+            throw new SshException(ex);
+        }
     }
 
     @Override
