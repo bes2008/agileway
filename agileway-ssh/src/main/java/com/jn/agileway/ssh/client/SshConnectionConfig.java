@@ -6,6 +6,7 @@ import com.jn.langx.annotation.Nullable;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 public interface SshConnectionConfig {
 
@@ -60,4 +61,8 @@ public interface SshConnectionConfig {
     String getPrivateKeyfilePassphrase();
 
     String getKnownHostsPaths();
+
+    Object getProperty(String property);
+
+    boolean hasProperty(String property);
 }

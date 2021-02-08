@@ -5,7 +5,6 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jn.agileway.ssh.client.impl.jsch.JschChannelType;
-import com.jn.agileway.ssh.client.impl.jsch.JschGlobalProperties;
 import com.jn.langx.util.io.IOs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,15 +16,12 @@ public class SshCommandTest {
     private static final Logger logger = LoggerFactory.getLogger(SshCommandTest.class);
 
     public static void main(String[] args) throws JSchException, IOException {
-        JschGlobalProperties jschGlobalProperties = new JschGlobalProperties();
-        jschGlobalProperties.apply();
-
-
         String password = "fjn13570";
         String username = "fangjinuo";
         String host = "192.168.1.79";
         int port = 22;
 
+        JSch.setConfig("StrictHostKeyChecking","false");
 
         JSch jsch = new JSch();
         jsch.setKnownHosts("known_hosts");

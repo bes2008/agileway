@@ -1,6 +1,5 @@
 package com.jn.agileway.ssh.test.channel.direct.session.command;
 
-import com.jcraft.jsch.JSch;
 import com.jn.agileway.ssh.client.AbstractSshConnectionConfig;
 import com.jn.agileway.ssh.client.SshConnection;
 import com.jn.agileway.ssh.client.SshConnectionFactory;
@@ -9,7 +8,6 @@ import com.jn.agileway.ssh.client.impl.ganymedssh2.Ssh2ConnectionConfig;
 import com.jn.agileway.ssh.client.impl.ganymedssh2.Ssh2ConnectionFactory;
 import com.jn.agileway.ssh.client.impl.jsch.JschConnectionConfig;
 import com.jn.agileway.ssh.client.impl.jsch.JschConnectionFactory;
-import com.jn.agileway.ssh.client.impl.jsch.JschGlobalProperties;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionConfig;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionFactory;
 import com.jn.agileway.ssh.client.supports.command.SshCommandLineExecutor;
@@ -29,12 +27,6 @@ public class SshCommandLineExecutorTest {
 
     @Test
     public void testJsch() throws Throwable {
-        JschGlobalProperties jschGlobalProperties = new JschGlobalProperties();
-        jschGlobalProperties.apply();
-
-        JSch jsch = new JSch();
-        jsch.setKnownHosts("known_hosts");
-
         testExec(new JschConnectionFactory(), new JschConnectionConfig());
     }
 

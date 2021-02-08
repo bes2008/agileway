@@ -1,5 +1,10 @@
 package com.jn.agileway.ssh.client;
 
+import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.Collects;
+
+import java.util.Map;
+
 public class AbstractSshConnectionConfig implements SshConnectionConfig {
     /**
      * ssh 服务端 主机
@@ -46,6 +51,8 @@ public class AbstractSshConnectionConfig implements SshConnectionConfig {
      * 由分号分割的路径集合
      */
     private String knownHostsPaths = "${user.home}/.ssh/known_hosts;/etc/ssh/known_hosts";
+
+    private Map<String, Object> props = Collects.emptyHashMap();
 
     @Override
     public String getHost() {
@@ -127,5 +134,27 @@ public class AbstractSshConnectionConfig implements SshConnectionConfig {
 
     public void setKnownHostsPaths(String knownHostsPaths) {
         this.knownHostsPaths = knownHostsPaths;
+    }
+
+    public void setProps(Map<String, Object> props) {
+        if (props != null) {
+            this.props = props;
+        }
+    }
+
+    public Map<String, Object> getProps() {
+        return props;
+    }
+
+    public Object getProperty(String property) {
+        return this.props.get(property);
+    }
+
+    @Override
+    public boolean hasProperty(String property) {
+        if (Strings.isEmpty(property)) {
+            return false;
+        }
+        return this.props.containsKey(property);
     }
 }
