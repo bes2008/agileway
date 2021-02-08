@@ -9,7 +9,6 @@ import com.jn.langx.annotation.Nullable;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
-import com.jn.langx.util.collection.MapAccessor;
 import com.jn.langx.util.function.Predicate;
 
 import java.io.File;
@@ -50,6 +49,8 @@ public class JschConnectionFactory extends AbstractSshConnectionFactory<JschConn
         }
     }
 
+    private static final List<String> strictHostKeyCheckingValues = Collects.newArrayList("yes", "ask", "no");
+
     private void setKnownHosts(final SshConnection connection, final JschConnectionConfig sshConfig) {
         String knownHostsPaths = sshConfig.getKnownHostsPaths();
         List<File> paths = SshConfigs.getKnownHostsFiles(sshConfig.getKnownHostsPaths());
@@ -68,11 +69,29 @@ public class JschConnectionFactory extends AbstractSshConnectionFactory<JschConn
             });
 
         }
-        if (!found) {
-            MapAccessor mapAccessor = new MapAccessor(sshConfig.getProps());
-            // @see jsch Session
-            boolean strictHostKeyChecking = mapAccessor.getBoolean("StrictHostKeyChecking", true);
-            if (strictHostKeyChecking) {
+
+        // 如果设置了 StrictHostKeyChecking，怎根据值来判断
+        // @see jsch Session
+
+        String strictHostKeyChecking = null;
+
+        if (sshConfig.hasProperty("StrictHostKeyChecking")) {
+            strictHostKeyChecking = sshConfig.getProperty("StrictHostKeyChecking").toString();
+            if (!strictHostKeyCheckingValues.contains(strictHostKeyChecking)) {
+                strictHostKeyChecking = "yes";
+            }
+        } else {
+            if (knownHostsPaths == null) {
+                strictHostKeyChecking = "no";
+            } else {
+                strictHostKeyChecking = "yes";
+            }
+        }
+        sshConfig.setProperty("StrictHostKeyChecking", strictHostKeyChecking);
+
+
+        if ("ask".equals(strictHostKeyChecking) || "yes".equals(strictHostKeyChecking)) {
+            if (!found) {
                 if (Strings.isNotBlank(knownHostsPaths)) {
                     throw new IllegalStateException(StringTemplates.formatWithPlaceholder("Can't find any valid known_hosts file: {}", knownHostsPaths));
                 } else {

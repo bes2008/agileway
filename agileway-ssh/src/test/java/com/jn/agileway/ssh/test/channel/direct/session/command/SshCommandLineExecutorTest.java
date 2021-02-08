@@ -27,7 +27,9 @@ public class SshCommandLineExecutorTest {
 
     @Test
     public void testJsch() throws Throwable {
-        testExec(new JschConnectionFactory(), new JschConnectionConfig());
+        JschConnectionConfig connectionConfig = new JschConnectionConfig();
+        connectionConfig.setProperty("ConnectTimeout", "120000");
+        testExec(new JschConnectionFactory(), connectionConfig);
     }
 
 

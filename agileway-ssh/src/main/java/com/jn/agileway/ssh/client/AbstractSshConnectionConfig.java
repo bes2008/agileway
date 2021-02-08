@@ -150,6 +150,10 @@ public class AbstractSshConnectionConfig implements SshConnectionConfig {
         return this.props.get(property);
     }
 
+    public void setProperty(String property, Object value) {
+        this.props.put(property, value);
+    }
+
     @Override
     public boolean hasProperty(String property) {
         if (Strings.isEmpty(property)) {
