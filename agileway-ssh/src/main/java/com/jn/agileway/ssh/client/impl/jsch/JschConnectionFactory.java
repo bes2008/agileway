@@ -73,18 +73,22 @@ public class JschConnectionFactory extends AbstractSshConnectionFactory<JschConn
         // 如果设置了 StrictHostKeyChecking，怎根据值来判断
         // @see jsch Session
 
+        // no: 关闭检查
+        // yes: 开启检查，如果没有找到完全匹配的，则直接报错
+        // ask: 开启检查，如果没有找到完全匹配的，则进行利用 UserInfo#promtYesNo 来进行询问，主要是问是否要删除原有的，添加新的
+
         String strictHostKeyChecking = null;
 
         if (sshConfig.hasProperty("StrictHostKeyChecking")) {
             strictHostKeyChecking = sshConfig.getProperty("StrictHostKeyChecking").toString();
             if (!strictHostKeyCheckingValues.contains(strictHostKeyChecking)) {
-                strictHostKeyChecking = "yes";
+                strictHostKeyChecking = "ask";
             }
         } else {
             if (knownHostsPaths == null) {
                 strictHostKeyChecking = "no";
             } else {
-                strictHostKeyChecking = "yes";
+                strictHostKeyChecking = "ask";
             }
         }
         sshConfig.setProperty("StrictHostKeyChecking", strictHostKeyChecking);

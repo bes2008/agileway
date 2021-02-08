@@ -17,6 +17,6 @@ public class ToSshjHostKeyVerifierAdapter implements HostKeyVerifier {
         if (this.delegate == null) {
             return false;
         }
-        return delegate.verify(hostname, port, key);
+        return delegate.verify(hostname, port, null, key);
     }
 }

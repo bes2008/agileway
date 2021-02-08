@@ -13,12 +13,12 @@ public class AnyHostKeyVerifier implements HostKeyVerifier {
     private static final Logger logger = LoggerFactory.getLogger(AnyHostKeyVerifier.class);
 
     @Override
-    public boolean verify(final String hostname, final int port, final byte[] key) {
+    public boolean verify(final String hostname, final int port, final String serverHostKeyAlgorithm, final byte[] key) {
         return Collects.anyMatch(verifiers, new Predicate<HostKeyVerifier>() {
             @Override
             public boolean test(HostKeyVerifier verifier) {
                 try {
-                    return verifier.verify(hostname, port, key);
+                    return verifier.verify(hostname, port, serverHostKeyAlgorithm, key);
                 } catch (Throwable ex) {
                     logger.warn(ex.getMessage(), ex);
                     return false;
@@ -28,12 +28,12 @@ public class AnyHostKeyVerifier implements HostKeyVerifier {
     }
 
     @Override
-    public boolean verify(final String hostname, final int port,  final PublicKey key) {
+    public boolean verify(final String hostname, final int port, final String serverHostKeyAlgorithm, final PublicKey key) {
         return Collects.anyMatch(verifiers, new Predicate<HostKeyVerifier>() {
             @Override
             public boolean test(HostKeyVerifier verifier) {
                 try {
-                    return verifier.verify(hostname, port, key);
+                    return verifier.verify(hostname, port, serverHostKeyAlgorithm, key);
                 } catch (Throwable ex) {
                     logger.warn(ex.getMessage(), ex);
                     return false;

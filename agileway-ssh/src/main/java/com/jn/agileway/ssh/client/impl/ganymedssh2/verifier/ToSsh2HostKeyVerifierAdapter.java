@@ -11,6 +11,6 @@ public class ToSsh2HostKeyVerifierAdapter implements ServerHostKeyVerifier {
 
     @Override
     public boolean verifyServerHostKey(String hostname, int port, String serverHostKeyAlgorithm, byte[] serverHostKey) throws Exception {
-        return delegate.verify(hostname, port, serverHostKey);
+        return delegate.verify(hostname, port, serverHostKeyAlgorithm, serverHostKey);
     }
 }

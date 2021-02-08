@@ -38,9 +38,14 @@ public class PasswordUserInfo implements UserInfo {
         return false;
     }
 
+    /**
+     * 用于处理 host key 检查失败是，进行询问
+     * @param message
+     * @return
+     */
     @Override
     public boolean promptYesNo(String message) {
-        return false;
+        return true;
     }
 
     @Override

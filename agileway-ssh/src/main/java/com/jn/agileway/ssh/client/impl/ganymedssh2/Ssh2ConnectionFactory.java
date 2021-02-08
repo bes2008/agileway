@@ -17,7 +17,7 @@ public class Ssh2ConnectionFactory extends AbstractSshConnectionFactory<Ssh2Conn
 
     @Override
     protected void postConstructConnection(SshConnection connection, Ssh2ConnectionConfig sshConfig) {
-
+        addHostKeyVerifiers(connection, sshConfig);
     }
 
     private void addHostKeyVerifiers(SshConnection connection, Ssh2ConnectionConfig sshConfig) {

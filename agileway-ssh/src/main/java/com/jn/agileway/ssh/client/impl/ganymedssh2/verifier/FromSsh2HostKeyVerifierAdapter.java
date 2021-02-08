@@ -13,18 +13,18 @@ public class FromSsh2HostKeyVerifierAdapter implements HostKeyVerifier {
     }
 
     @Override
-    public boolean verify(String hostname, int port, byte[] key) {
+    public boolean verify(String hostname, int port, String serverHostKeyAlgorithm,  byte[] key) {
         try {
-            return delegate.verifyServerHostKey(hostname, port, null, key);
+            return delegate.verifyServerHostKey(hostname, port, serverHostKeyAlgorithm, key);
         } catch (Throwable ex) {
             return false;
         }
     }
 
     @Override
-    public boolean verify(String hostname, int port, PublicKey key) {
+    public boolean verify(String hostname, int port, String serverHostKeyAlgorithm, PublicKey key) {
         try {
-            return delegate.verifyServerHostKey(hostname, port, null, key.getEncoded());
+            return delegate.verifyServerHostKey(hostname, port, serverHostKeyAlgorithm, key.getEncoded());
         } catch (Throwable ex) {
             return false;
         }
