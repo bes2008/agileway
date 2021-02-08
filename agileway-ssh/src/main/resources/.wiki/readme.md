@@ -5,21 +5,22 @@ SSH https://www.ssh.com/ssh/
 
 目前开源的ssh client有很多，支持情况也都不一样，下面就做一些对比：
 
-|project|License|JDK supports|maven|
-|-------|-------|------------|-----|
-| JSch  | BSD   |1.6+        | ```com.jcraft:jsch:0.1.55 ``` |
-|sshj   |Apache 2.0|1.6+     | ```net.schmizz:sshj:0.10.0``` |
-|ganymed-ssh2 |Apache 2.0|1.8+|```com.airlenet.yang:ganymed-ssh2:1.2.0```|
-|trilead-ssh2 |Apache 2.0|1.8+|```com.trilead:trilead-ssh2:1.0.0-build222```|
-|j2ssh|||```sshtools:j2ssh-core:0.2.9```|
+|project|License|JDK supports|maven|项目状态|
+|-------|-------|------------|-----|-------|
+| JSch  | BSD   |1.6+        | ```com.jcraft:jsch:0.1.55 ``` | 不做特性开发，只做BugFix|
+|sshj   |Apache 2.0|1.6+     | ```net.schmizz:sshj:0.10.0``` | 活跃 |
+|ganymed-ssh2 |Apache 2.0|1.4+|```com.airlenet.yang:ganymed-ssh2:1.2.0```| 不做特性开发，只做BugFix |
+|trilead-ssh2 |Apache 2.0|1.4+|```com.trilead:trilead-ssh2:1.0.0-build222```|不做特性开发，只做BugFix|
+|j2ssh|>=0.2.8 GPL ; <0.2.8 LGPL + Apache |1.6+|```sshtools:j2ssh-core:0.2.9```| 不做特性开发，只做BugFix|
+
 
 
 Java版开源ssh框架功能对比：
 
 |对比项      |Jsch      | sshj     |ganymed-ssh2|trilead-ssh2|j2ssh   |
 |---------  |----------|----------|------------|------------|--------|
-|License    | BSD      |Apache 2.0| Apache 2.0 |Trilead AG  | 未知    |
-|JDK supports | 1.6+   |1.6+      |1.8+        |JDK 4+      | JDK11 + |
+|License    | BSD      |Apache 2.0| Apache 2.0 |Trilead AG  | >=0.2.8 GPL ; <0.2.8 LGPL + Apache  |
+|JDK supports | 1.6+   |1.6+      |1.4+      |1.4+      | 1.6+ |
 |代码可读性  | C        | A        | A          |A           | B       |
 
 ganymed-ssh2 与 trilead-ssh2 代码基本是一致的

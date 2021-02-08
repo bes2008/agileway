@@ -69,6 +69,8 @@ Java、Web开发工具套件，尽量避免996
     + 功能
       + 支持 Session Channel
       + 支持 forwarding
+      + 支持 SCP
+      + 支持 SFTP
     + 类库
       + com.jcraft:jsch:0.1.55
       + com.trilead:trilead-ssh2:1.0.0-build222
