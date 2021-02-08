@@ -4,7 +4,6 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import com.jn.agileway.ssh.client.impl.jsch.JschChannelType;
 import com.jn.langx.util.io.IOs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +41,7 @@ public class SshCommandTest {
 
     private static void executeAndDump(Session session, String command) throws JSchException, IOException {
         logger.info("\n====== start execute: {} ======", command);
-        ChannelExec channel = (ChannelExec) session.openChannel(JschChannelType.EXEC.getName());
+        ChannelExec channel = (ChannelExec) session.openChannel("exec");
         channel.setCommand(command);
         channel.connect();
         logger.info("isClosed: {}", channel.isClosed());

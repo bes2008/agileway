@@ -3,7 +3,7 @@ package com.jn.agileway.ssh.client.impl.jsch;
 import com.jn.langx.util.enums.base.CommonEnum;
 import com.jn.langx.util.enums.base.EnumDelegate;
 
-public enum JschChannelType implements CommonEnum {
+enum JschChannelType implements CommonEnum {
     SESSION(0, "session", "will open a session"),
     SHELL(1, "shell", "shell"),
     /**
