@@ -89,12 +89,29 @@ class J2sshSessionedChannel implements SessionedChannel {
 
     @Override
     public int getExitStatus() {
-        return sessionChannelClient.getExitCode();
+        long maxWait = 5000;
+        Integer exitStatus = sessionChannelClient.getExitCode();
+        while (exitStatus == null && maxWait > 0) {
+            try {
+                int timeout = 10;
+                maxWait = maxWait - timeout;
+                wait(timeout);
+            } catch (Throwable ex) {
+                // ignore it
+            }
+
+            exitStatus = sessionChannelClient.getExitCode();
+        }
+        return exitStatus == null ? 0 : exitStatus;
     }
 
     @Override
-    public InputStream getErrorInputStream() throws IOException {
-        return sessionChannelClient.getStderrInputStream();
+    public InputStream getErrorInputStream() throws SshException {
+        try {
+            return sessionChannelClient.getStderrInputStream();
+        } catch (Throwable ex) {
+            throw new SshException(ex);
+        }
     }
 
     @Override

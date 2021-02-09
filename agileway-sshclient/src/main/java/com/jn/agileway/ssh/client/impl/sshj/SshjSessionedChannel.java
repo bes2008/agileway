@@ -143,10 +143,36 @@ class SshjSessionedChannel implements SessionedChannel {
     @Override
     public int getExitStatus() {
         if (subsystem != null) {
-            return subsystem.getExitStatus();
+            long maxWait = 5000; // 5s
+            Integer exitStatus = subsystem.getExitStatus();
+            while (exitStatus == null && maxWait > 0) {
+                try {
+                    int timeout = 10;
+                    maxWait = maxWait - timeout;
+                    wait(timeout);
+                } catch (Throwable ex) {
+                    // ignore it
+                }
+
+                exitStatus = subsystem.getExitStatus();
+            }
+            return exitStatus==null ? 0 : exitStatus;
         }
         if (command != null) {
-            return command.getExitStatus();
+            long maxWait = 5000;
+            Integer exitStatus = command.getExitStatus();
+            while (exitStatus == null && maxWait > 0) {
+                try {
+                    int timeout = 10;
+                    maxWait = maxWait - timeout;
+                    wait(timeout);
+                } catch (Throwable ex) {
+                    // ignore it
+                }
+
+                exitStatus = command.getExitStatus();
+            }
+            return exitStatus==null ? 0 : exitStatus;
         }
         return 0;
     }

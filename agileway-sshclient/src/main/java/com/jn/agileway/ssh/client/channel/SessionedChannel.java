@@ -76,6 +76,12 @@ public interface SessionedChannel extends Channel {
 
     void signal(Signal signal) throws SshException;
 
+    /**
+     * 在内部获取 exit status 时，时通过 ssh 命令来完成的，所以内部在获取值时，可能不在一个线程里，因此需要有个等待的过程。
+     *
+     * 此外也不是所有的 ssh server 都会实现返回 exit status 的功能的，
+     * @return
+     */
     int getExitStatus();
 
     /**
@@ -83,6 +89,6 @@ public interface SessionedChannel extends Channel {
      *
      * @return
      */
-    InputStream getErrorInputStream() throws IOException;
+    InputStream getErrorInputStream() throws SshException;
 
 }

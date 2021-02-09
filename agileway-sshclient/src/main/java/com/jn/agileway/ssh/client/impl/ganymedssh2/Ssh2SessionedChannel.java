@@ -1,5 +1,6 @@
 package com.jn.agileway.ssh.client.impl.ganymedssh2;
 
+import ch.ethz.ssh2.ChannelCondition;
 import ch.ethz.ssh2.Session;
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
@@ -95,7 +96,12 @@ class Ssh2SessionedChannel implements SessionedChannel {
 
     @Override
     public int getExitStatus() {
-        return this.session.getExitStatus();
+        Integer exitStatus = this.session.getExitStatus();
+        if (exitStatus == null) {
+            session.waitForCondition(ChannelCondition.STDOUT_DATA | ChannelCondition.STDERR_DATA | ChannelCondition.EXIT_STATUS, 5000);
+            exitStatus = this.session.getExitStatus();
+        }
+        return exitStatus;
     }
 
     @Override

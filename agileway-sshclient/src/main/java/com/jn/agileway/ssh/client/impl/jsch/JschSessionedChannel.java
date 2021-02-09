@@ -10,7 +10,6 @@ import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer2;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Hashtable;
@@ -218,7 +217,19 @@ class JschSessionedChannel implements SessionedChannel {
 
     @Override
     public int getExitStatus() {
-        return channel.getExitStatus();
+        int exitStatus = channel.getExitStatus();
+        long maxWait = 5000; // 5s
+        while (exitStatus == -1) {
+            try {
+                int timeout = 10;
+                maxWait = maxWait - timeout;
+                wait(timeout);
+            } catch (Throwable ex) {
+                // ignore it
+            }
+            exitStatus = channel.getExitStatus();
+        }
+        return exitStatus;
     }
 
     @Override
