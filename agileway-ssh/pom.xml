@@ -52,7 +52,7 @@
         <dependency>
             <groupId>sshtools</groupId>
             <artifactId>j2ssh-core</artifactId>
-            <version>0.2.2</version>
+            <version>0.2.9</version>
         </dependency>
         <!--将 Apache Common-Logging 适配给 slf4j, j2ssh-core 用的是 Common-Logging -->
         <dependency>
