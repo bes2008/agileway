@@ -15,14 +15,16 @@ SSH https://www.ssh.com/ssh/
 
 
 
+
 Java版开源ssh框架功能对比：
 
 |对比项      |Jsch      | sshj     |ganymed-ssh2|trilead-ssh2|j2ssh   |
 |---------  |----------|----------|------------|------------|--------|
 |License    | BSD      |Apache 2.0| Apache 2.0 |Trilead AG  | >=0.2.8 GPL ; <0.2.8 LGPL + Apache  |
-|JDK supports | 1.6+   |1.6+      |1.4+      |1.4+      | 1.6+ |
+|JDK supports | 1.6+   |1.6+      |1.4+        |1.4+      | 1.6+ |
 |代码可读性  | C        | A        | A          |A           | B       |
 |算法支持情况| 比较全    |比较全     |比较全       |比较全       | 需要手动添加最新算法 [最新算法下载地址](https://www.oracle.com/java/technologies/javase-jce8-downloads.html#)   |
+|SFTP       |支持      |支持       |支持         |支持        | 支持    |
 
 注意：
 + ganymed-ssh2 与 trilead-ssh2 代码基本是一致的
@@ -198,10 +200,53 @@ EXTENDED_REPLY: sends a vendor-specific response from server to client.
 ```
 
 
+Java SSH Client 对 SFTP的支持情况
+
+|SFTP Protocol| JSch       | sshj               | ganymed-ssh2 | j2ssh |
+|-------------|------------|--------------------|--------------|-------|
+|Java Class   | com.jcraft.jsch.ChannelSftp |net.schmizz.sshj.sftp.SFTPClient | ch.ethz.ssh2.SFTPv3Client |       |
+|INIT         | 创建ChannelSftp时自动发起 |创建 SFTPClient时自动发起|创建 SFTPClient时自动发起||
+|VERSION      | #version() | #version()         | #getProtocolVersion()||
+|OPEN         | #get()     | #open()            | #openFileRO(), #openFileRW()||
+|CLOSE        |            | RemoteFile#close() | #closeFile() ||
+|READ         | #get()     | RemoteFile#read()  | #read()      ||
+|WRITE        | #put()     | RemoteFile#write() | #write()     ||
+|OPENDIR      |            | #open()            | #openFileRO()||
+|READDIR      | #ls()      | #ls()              | #ls()        ||
+|MKDIR        | #mkdir()   | #mkdir()           | #mkdir()     ||
+|RMDIR        | #rmdir()   | #rmdir()           | #rmdir()     ||
+|REMOVE       | #rm()      | #rm()              | #rm()        ||
+|RENAME       | #rename()  | #rename()          | #mv()        ||
+|STAT         | #stat()    | #stat()            | #stat()      ||
+|LSTAT        | #lstat()   | #lstat()           | #lstat()     ||
+|FSTAT        |            |                    | #fstat()     ||
+|SETSTAT      | #setStat() |                    | #setstat()   ||
+|FSETSTAT     |            |                    | #fsetstat()  ||
+|READLINK     | #readlink()| #readlink()        | #readLink()  ||
+|SYMLINK      | #symlink() | #symlink()         | #createSymlink()||
+|REALPATH     | #realpath()| #canonicalize()    | #canonicalPath()||
+
+
+Java SSH Client 对 SFTP的支持的额外功能：
+
+|SFTP Protocol| JSch       | sshj | ganymed-ssh2 | j2ssh |
+|-------------|------------|------|--------------|-------|
+|chgrp        | #chgrp()| #chgrp()|||
+|chown        | #chown()| #chown()|||
+|chmod        | #chmod()| #chmod()|||
+|mtime        | |#mtime()|||
+|atime        | |#atime()|||
+|size         | SftpATTRS#getSize()| #size()|||
+
 4、SCP
 
 SCP 是Linux里一个的 command program， 它是基于sftp 协议的一个程序。用于提供文件在多个机器上的copy。
 
+
+|SCP     | JSch             |   sshj             |  ganymed-ssh2 | j2ssh |
+|--------|------------------|--------------------|---------------|-------|
+|put     | ChannelSftp#put()| SFTPClient#put()   |SCPClient#put()|       |
+|get     | ChannelSftp#get()| SFTPClient#get()   |SCPClient#get()|       |
 
 
 
