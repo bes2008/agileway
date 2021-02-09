@@ -28,6 +28,9 @@ Java版开源ssh框架功能对比：
 + ganymed-ssh2 与 trilead-ssh2 代码基本是一致的
 + j2ssh 的License不友好，算法支持也不全面，如果出现连接失败时，最好是把 debug日志打开，看看到底是什么情况，是由于算法两边支持不能协商一致还是怎么的
 + openssh 配置文件说明 https://www.ssh.com/ssh/sshd/#configuration-file
+
+
+
 ## 1、协议说明
 
 [标准规范](https://datatracker.ietf.org/wg/secsh/documents/)

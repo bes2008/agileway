@@ -19,7 +19,7 @@
         <module>agileway-feign</module>
         <module>agileway-dmmq</module>
         <module>agileway-aop</module>
-        <module>agileway-ssh</module>
+        <module>agileway-sshclient</module>
     </modules>
 
     <name>agileway</name>
