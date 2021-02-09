@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.supports.command;
+package com.jn.agileway.ssh.client.supports.command.executor;
 
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
 import com.jn.langx.commandline.InstructionSequence;

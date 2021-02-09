@@ -12,7 +12,7 @@ import com.jn.agileway.ssh.client.impl.jsch.JschConnectionConfig;
 import com.jn.agileway.ssh.client.impl.jsch.JschConnectionFactory;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionConfig;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionFactory;
-import com.jn.agileway.ssh.client.supports.command.SshCommandLineExecutor;
+import com.jn.agileway.ssh.client.supports.command.executor.SshCommandLineExecutor;
 import com.jn.langx.commandline.CommandLine;
 import com.jn.langx.commandline.DefaultExecuteResultHandler;
 import com.jn.langx.commandline.streamhandler.OutputAsStringExecuteStreamHandler;
