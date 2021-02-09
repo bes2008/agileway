@@ -130,6 +130,80 @@ OpenSSH 的Channel，跟常规的Channel 并不是一个层面的。它是建立
 
 
 
+# 3、SFTP
+
+SFTP 是基于 SSH协议的 subsystem Channel，并提供ftp相关的功能。
+
+因为基于SSH协议，所以端口也是22。
+
+SFTP支持的数据协议：
+
+```text
+INIT: sends client version numbers and extensions to the server
+
+VERSION: returns server version number and extensions to the client
+
+OPEN: opens or creates a file, returning a file handle
+
+CLOSE: closes a file handle
+
+READ: reads data from a file
+
+WRITE: writes data to a file
+
+OPENDIR: opens a directory for reading, returning a directory handle
+
+READDIR: reads file names and attributes from a directory handle
+
+MKDIR: creates a directory
+
+RMDIR: removes a directory
+
+REMOVE: removes a file
+
+RENAME: renames a file
+
+STAT: returns file attributes given a path, following symlinks
+
+LSTAT: returns file attributes given a path, without following symlinks
+
+FSTAT: returns file attributes given a file handle
+
+SETSTAT: modifies file attributes given a path
+
+FSETSTAT: modifies file attributes given a file handle
+
+READLINK: reads the value of a symbolic link
+
+SYMLINK: creates a symbolic link
+
+REALPATH: canonicalizes server-size relative path to an absolute path
+
+The following response packets are returned by the server:
+
+STATUS: indicates success or failure of an operation
+
+HANDLE: returns a file handle upon success
+
+DATA: returns data upon success
+
+ATTRS: returns file attributes upon success
+
+There is also an extension mechanism for arbitrary vendor-specific extensions. The extensions that are supported are negotiated using the INIT and VERSION packets.
+
+EXTENDED: sends a vendor-specific request from client to server
+
+EXTENDED_REPLY: sends a vendor-specific response from server to client.
+
+```
+
+
+4、SCP
+
+SCP 是Linux里一个的 command program， 它是基于sftp 协议的一个程序。用于提供文件在多个机器上的copy。
+
+
+
 
 
 
