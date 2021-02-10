@@ -219,9 +219,9 @@ Java SSH Client 对 SFTP的支持情况
 |RENAME       | #rename()  | #rename()          | #mv()        ||
 |STAT         | #stat()    | #stat()            | #stat()      ||
 |LSTAT        | #lstat()   | #lstat()           | #lstat()     ||
-|FSTAT        |            |                    | #fstat()     ||
-|SETSTAT      | #setStat() |                    | #setstat()   ||
-|FSETSTAT     |            |                    | #fsetstat()  ||
+|FSTAT        |            | RemoteFile#fetchAttributes()| #fstat()     ||
+|SETSTAT      | #setStat() | #setAttributes()   | #setstat()   ||
+|FSETSTAT     |            | RemoteFile#setAttributes()| #fsetstat()  ||
 |READLINK     | #readlink()| #readlink()        | #readLink()  ||
 |SYMLINK      | #symlink() | #symlink()         | #createSymlink()||
 |REALPATH     | #realpath()| #canonicalize()    | #canonicalPath()||
