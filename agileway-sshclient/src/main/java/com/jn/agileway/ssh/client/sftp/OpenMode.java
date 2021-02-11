@@ -18,7 +18,7 @@ import com.jn.langx.util.enums.base.EnumDelegate;
  *     APPEND_PLUS(a+)                 0   |         0      1      1     1    1   => 01111  => 00001111 => 0x0f
  *
  *     CREATE 与 EXIST 是完全相反的。
- *     所以把前
+ *     在SFTP中，传输的是binary, 所以不必要 b
  * </pre
  */
 public enum OpenMode implements CommonEnum {
