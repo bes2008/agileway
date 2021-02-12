@@ -1,10 +1,12 @@
 package com.jn.agileway.ssh.client.sftp;
 
 import com.jn.agileway.ssh.client.SshConnection;
+import com.jn.agileway.ssh.client.sftp.filter.SftpFileFilter;
 import com.jn.langx.annotation.Nullable;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * 代表了一个成功连接的 sftp 会话
@@ -22,14 +24,46 @@ public interface SftpSession extends Closeable {
      * packet:
      * |packet_type|req_id|path|openMode|file_attributes|
      * </p>
-     * @param path     the file path
+     * @param filepath     the file path
      * @param openMode {int} the open mode
      * @param attrs    the file attributes
      * @return the opened file
      */
-    SftpFile open(String path, OpenMode openMode, @Nullable FileAttributes attrs);
+    SftpFile open(String filepath, OpenMode openMode, @Nullable FileAttributes attrs);
 
-    SftpFile open(String path, int openMode, @Nullable FileAttributes attrs);
+    SftpFile open(String filepath, int openMode, @Nullable FileAttributes attrs);
+
+    /**
+     * Retrieve the file attributes of a file. This method
+     * follows symbolic links on the server.
+     *
+     * @return a FileAttributes object.
+     * @throws IOException
+     * @see #lstat(String)
+     */
+    FileAttributes stat(String filepath);
+
+    FileAttributes lstat(String filepath);
+
+    FileAttributes fstat(SftpFile file);
+
+    /**
+     * Create a symbolic link on the server. Creates a link "src" that points
+     * to "target".
+     *
+     * @throws IOException
+     */
+    void createSymlink(String src, String target) throws IOException;
+
+    /**
+     * Read the target of a symbolic link.
+     *
+     * @return The target of the link.
+     * @throws IOException
+     */
+    String readLink(String path) throws IOException;
+
+    String canonicalPath(String path) throws IOException;
 
     /**
      * <pre>
@@ -63,6 +97,53 @@ public interface SftpSession extends Closeable {
      * @see SftpFile#write(long, byte[], int, int)
      */
     void write(SftpFile file, long fileOffset, byte[] data, int offset, int length);
+
+    /**
+     * packet:
+     * |packet_type|req_id|file_handle|
+     *
+     * @param file
+     * @return
+     */
+    List<SftpFile> listFiles(SftpFile file, SftpFileFilter filter);
+
+    /**
+     * packet:
+     * |packet_type|req_id|path|file_attributes_flags_mask|file_attributes|
+     *
+     * @param directory
+     * @param attributes
+     * @return
+     */
+    void mkdir(String directory, FileAttributes attributes);
+
+    /**
+     * packet:
+     * |packet_type|req_id|path|
+     *
+     * @param directory
+     * @return
+     */
+    void rmdir(String directory);
+
+    /**
+     * packet:
+     * |packet_type|req_id|path|
+     *
+     * @param filepath
+     * @return
+     */
+    void rm(String filepath);
+
+    /**
+     * packet:
+     * |packet_type|req_id|path|
+     *
+     * @param oldFilepath
+     * @param newFilepath
+     * @return
+     */
+    void mv(String oldFilepath, String newFilepath);
 
     /**
      * 关闭 sftp session
