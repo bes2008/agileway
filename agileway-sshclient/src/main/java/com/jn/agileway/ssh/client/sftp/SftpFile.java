@@ -1,6 +1,5 @@
 package com.jn.agileway.ssh.client.sftp;
 
-import ch.ethz.ssh2.SFTPv3Client;
 import com.jn.agileway.ssh.client.sftp.filter.SftpFileFilter;
 import com.jn.agileway.ssh.client.sftp.filter.SftpFilenameFilter;
 import com.jn.langx.annotation.NonNull;
@@ -8,7 +7,6 @@ import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
@@ -80,4 +78,8 @@ public abstract class SftpFile implements Closeable {
     public abstract List<SftpFile> listFiles(SftpFileFilter filter);
 
     public abstract boolean exist();
+
+    public abstract void setAttributes(FileAttributes attrs);
+
+    public abstract FileAttributes getAttributes();
 }

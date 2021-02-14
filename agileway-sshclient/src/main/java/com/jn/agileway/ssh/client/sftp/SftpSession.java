@@ -34,20 +34,6 @@ public interface SftpSession extends Closeable {
     SftpFile open(String filepath, int openMode, @Nullable FileAttributes attrs);
 
     /**
-     * Retrieve the file attributes of a file. This method
-     * follows symbolic links on the server.
-     *
-     * @return a FileAttributes object.
-     * @throws IOException
-     * @see #lstat(String)
-     */
-    FileAttributes stat(String filepath);
-
-    FileAttributes lstat(String filepath);
-
-    FileAttributes fstat(SftpFile file);
-
-    /**
      * Create a symbolic link on the server. Creates a link "src" that points
      * to "target".
      *
@@ -97,6 +83,31 @@ public interface SftpSession extends Closeable {
      * @see SftpFile#write(long, byte[], int, int)
      */
     void write(SftpFile file, long fileOffset, byte[] data, int offset, int length);
+
+    /**
+     * Retrieve the file attributes of a file. This method
+     * follows symbolic links on the server.
+     *
+     * @return a FileAttributes object.
+     * @throws IOException
+     * @see #lstat(String)
+     */
+    FileAttributes stat(String filepath);
+
+    FileAttributes lstat(String filepath);
+
+    FileAttributes fstat(SftpFile file);
+
+    /**
+     * Modify the attributes of a file. Used for operations such as changing
+     * the ownership, permissions or access times, as well as for truncating a file.
+     *
+     * @param path  the file path
+     * @param attrs A FileAttributes object. Specifies the modifications to be
+     *              made to the attributes of the file. Empty fields will be ignored.
+     * @throws IOException
+     */
+    void setStat(String path, FileAttributes attrs) throws IOException;
 
     /**
      * packet:
