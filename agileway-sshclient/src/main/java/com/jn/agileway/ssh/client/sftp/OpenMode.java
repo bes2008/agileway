@@ -70,12 +70,12 @@ public enum OpenMode implements CommonEnum {
 
     private EnumDelegate delegate;
 
-    public static final int SSH_FXP_READ        = 0x00000001;
-    public static final int SSH_FXP_WRITE       = 0x00000002;
-    public static final int SSH_FXP_APPEND      = 0x00000004;
-    public static final int SSH_FXP_CREATE      = 0x00000008;
-    public static final int SSH_FXP_TRUNCATE    = 0x00000010;
-    public static final int SSH_FXP_EXCL        = 0x00000020;
+    private static final int SSH_FXP_READ        = 0x00000001;
+    private static final int SSH_FXP_WRITE       = 0x00000002;
+    private static final int SSH_FXP_APPEND      = 0x00000004;
+    private static final int SSH_FXP_CREATE      = 0x00000008;
+    private static final int SSH_FXP_TRUNCATE    = 0x00000010;
+    private static final int SSH_FXP_EXCL        = 0x00000020;
 
     OpenMode(int code, String name, String displayText) {
         this.delegate = new EnumDelegate(code, name, displayText);
@@ -95,5 +95,45 @@ public enum OpenMode implements CommonEnum {
     @Override
     public String getDisplayText() {
         return this.delegate.getDisplayText();
+    }
+
+    public boolean isAppended(){
+        return isAppended(this.getCode());
+    }
+
+    public static boolean isAppended(int mode){
+        return (mode & SSH_FXP_APPEND) == SSH_FXP_APPEND;
+    }
+
+    public boolean isTruncated(){
+        return isTruncated(this.getCode());
+    }
+
+    public static boolean isTruncated(int mode){
+        return (mode & SSH_FXP_TRUNCATE) == SSH_FXP_TRUNCATE;
+    }
+
+    public boolean isCreatable(){
+        return isCreatable(this.getCode());
+    }
+
+    public static boolean isCreatable(int mode){
+        return (mode & SSH_FXP_CREATE) ==SSH_FXP_CREATE;
+    }
+
+    public boolean isReadable(){
+        return isReadable(this.getCode());
+    }
+
+    public static boolean isReadable(int mode){
+        return (mode & SSH_FXP_READ) == SSH_FXP_READ;
+    }
+
+    public boolean isWritable(){
+        return isWritable(this.getCode());
+    }
+
+    public static boolean isWritable(int mode){
+        return (mode & SSH_FXP_WRITE) == SSH_FXP_WRITE;
     }
 }

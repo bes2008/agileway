@@ -20,11 +20,11 @@ public class OpenModeTests {
     private void showOpenMode(OpenMode openMode) {
         System.out.println(StringTemplates.formatWithPlaceholder("======={}=======", openMode.getName()));
         System.out.println(StringTemplates.formatWithPlaceholder("code: {}, HEX: 0x{}", openMode.getCode(), Radixs.toHex2(openMode.getCode())));
-        System.out.println("truncated: " + (openMode.getCode() & OpenMode.SSH_FXP_TRUNCATE));
-        System.out.println("create: " + (openMode.getCode() & OpenMode.SSH_FXP_CREATE));
-        System.out.println("append: " + (openMode.getCode() & OpenMode.SSH_FXP_APPEND));
-        System.out.println("write: " + (openMode.getCode() & OpenMode.SSH_FXP_WRITE));
-        System.out.println("read: " + (openMode.getCode() & OpenMode.SSH_FXP_READ));
+        System.out.println("truncated: " + openMode.isTruncated());
+        System.out.println("create: " + openMode.isCreatable());
+        System.out.println("append: " + openMode.isAppended());
+        System.out.println("write: " + openMode.isWritable());
+        System.out.println("read: " + openMode.isReadable());
     }
 
 }
