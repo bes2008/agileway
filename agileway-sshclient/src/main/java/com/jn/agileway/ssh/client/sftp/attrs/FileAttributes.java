@@ -1,5 +1,7 @@
 package com.jn.agileway.ssh.client.sftp.attrs;
 
+import java.util.Set;
+
 public interface FileAttributes {
     long getSize();
 
@@ -14,4 +16,6 @@ public interface FileAttributes {
     long getModifyTime();
 
     String getExtend(String key);
+
+    Set<String> getExtendKeys();
 }

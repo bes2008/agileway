@@ -75,6 +75,10 @@ public enum OpenMode implements CommonEnum {
     private static final int SSH_FXP_APPEND      = 0x00000004;
     private static final int SSH_FXP_CREATE      = 0x00000008;
     private static final int SSH_FXP_TRUNCATE    = 0x00000010;
+    /**
+     * Causes the request to fail if the named file already exists. SSH_FXP_CREATE MUST also be specified if
+     * this flag is used.
+     */
     private static final int SSH_FXP_EXCL        = 0x00000020;
 
     OpenMode(int code, String name, String displayText) {
@@ -135,5 +139,9 @@ public enum OpenMode implements CommonEnum {
 
     public static boolean isWritable(int mode){
         return (mode & SSH_FXP_WRITE) == SSH_FXP_WRITE;
+    }
+
+    public static boolean willFailWhenCreateExist(int mode){
+        return (mode & SSH_FXP_EXCL) == SSH_FXP_EXCL;
     }
 }

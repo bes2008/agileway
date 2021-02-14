@@ -23,23 +23,23 @@ public class FileMode {
         /** unknown */
         UNKNOWN(0);
 
-        private final int val;
+        private final int mask;
 
         private Type(int val) {
-            this.val = val;
+            this.mask = val;
         }
 
         public static FileMode.Type fromMask(int mask) {
             for (Type t : FileMode.Type.values()) {
-                if (t.val == mask) {
+                if (t.mask == mask) {
                     return t;
                 }
             }
             return UNKNOWN;
         }
 
-        public int toMask() {
-            return val;
+        public int getMask() {
+            return mask;
         }
 
     }

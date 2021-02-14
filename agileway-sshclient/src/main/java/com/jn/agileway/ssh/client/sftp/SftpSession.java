@@ -28,9 +28,9 @@ public interface SftpSession extends Closeable {
      * @param attrs    the file attributes
      * @return the opened file
      */
-    SftpFile open(String filepath, OpenMode openMode, @Nullable FileAttributes attrs);
+    SftpFile open(String filepath, OpenMode openMode, @Nullable FileAttributes attrs) throws IOException;
 
-    SftpFile open(String filepath, int openMode, @Nullable FileAttributes attrs);
+    SftpFile open(String filepath, int openMode, @Nullable FileAttributes attrs) throws IOException;
 
     /**
      * Create a symbolic link on the server. Creates a link "src" that points
