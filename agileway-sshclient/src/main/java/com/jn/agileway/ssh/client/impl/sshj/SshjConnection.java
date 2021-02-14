@@ -38,6 +38,10 @@ public class SshjConnection extends AbstractSshConnection<SshjConnectionConfig> 
         }
     }
 
+    public SSHClient getSshClient(){
+        return this.sshClient;
+    }
+
     @Override
     public void connect(String host, int port) throws SshException {
         try {

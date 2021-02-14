@@ -1,6 +1,5 @@
 package com.jn.agileway.ssh.client.sftp;
 
-import com.jn.agileway.ssh.client.SshConnection;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttributes;
 import com.jn.agileway.ssh.client.sftp.filter.SftpFileFilter;
 import com.jn.langx.annotation.Nullable;
@@ -16,7 +15,6 @@ import java.util.List;
  * 其中： packet_type, req_id 分别代表了 packet 类别，请求 id，这两个字段，均由 底层实现库自行封装
  */
 public interface SftpSession extends Closeable {
-    SshConnection getSshConnection();
 
     int getProtocolVersion();
 

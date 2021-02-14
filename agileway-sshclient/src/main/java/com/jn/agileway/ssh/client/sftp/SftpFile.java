@@ -14,7 +14,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 /**
- * 代表一个打开的 file
+ * 代表一个打开的 file 或者 directory
  */
 public abstract class SftpFile implements Closeable {
     @NotEmpty
@@ -34,9 +34,18 @@ public abstract class SftpFile implements Closeable {
 
     protected boolean isClosed = false;
 
-    SftpFile(SftpSession session, String path, InputStream inputStream, OutputStream outputStream) {
+    public SftpFile(SftpSession session, String path) {
+        this(session, path, null, null);
+    }
+
+    public SftpFile(SftpSession session, String path, @Nullable InputStream inputStream, @Nullable OutputStream outputStream) {
+        this(session, path, null, inputStream, outputStream);
+    }
+
+    public SftpFile(SftpSession session, String path, @Nullable String fileHandle, @Nullable InputStream inputStream, @Nullable OutputStream outputStream) {
         this.session = session;
         this.path = path;
+        this.fileHandle = fileHandle;
         this.inputStream = inputStream;
         this.outputStream = outputStream;
     }

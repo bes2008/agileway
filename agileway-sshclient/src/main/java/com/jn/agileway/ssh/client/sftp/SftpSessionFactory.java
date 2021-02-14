@@ -3,7 +3,7 @@ package com.jn.agileway.ssh.client.sftp;
 import com.jn.agileway.ssh.client.SshConnection;
 import com.jn.langx.factory.Factory;
 
-public interface SftpSessionFactory extends Factory<SshConnection, SftpSession> {
+public interface SftpSessionFactory<SESSION extends SftpSession> extends Factory<SshConnection, SESSION> {
     @Override
-    SftpSession get(SshConnection sshConnection);
+    SESSION get(SshConnection sshConnection);
 }
