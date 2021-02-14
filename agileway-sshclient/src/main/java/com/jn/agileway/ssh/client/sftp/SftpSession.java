@@ -93,11 +93,11 @@ public interface SftpSession extends Closeable {
      * @throws IOException
      * @see #lstat(String)
      */
-    FileAttributes stat(String filepath);
+    FileAttributes stat(String filepath) throws IOException;
 
-    FileAttributes lstat(String filepath);
+    FileAttributes lstat(String filepath) throws IOException;
 
-    FileAttributes fstat(SftpFile file);
+    FileAttributes fstat(SftpFile file) throws IOException;
 
     /**
      * Modify the attributes of a file. Used for operations such as changing
@@ -117,7 +117,7 @@ public interface SftpSession extends Closeable {
      * @param file
      * @return
      */
-    List<SftpFile> listFiles(SftpFile file, SftpFileFilter filter);
+    List<SftpFile> listFiles(SftpFile file, SftpFileFilter filter) throws IOException;
 
     /**
      * packet:
@@ -127,7 +127,7 @@ public interface SftpSession extends Closeable {
      * @param attributes
      * @return
      */
-    void mkdir(String directory, FileAttributes attributes);
+    void mkdir(String directory, FileAttributes attributes) throws IOException;
 
     /**
      * packet:
@@ -136,7 +136,7 @@ public interface SftpSession extends Closeable {
      * @param directory
      * @return
      */
-    void rmdir(String directory);
+    void rmdir(String directory) throws IOException;
 
     /**
      * packet:
@@ -145,7 +145,7 @@ public interface SftpSession extends Closeable {
      * @param filepath
      * @return
      */
-    void rm(String filepath);
+    void rm(String filepath) throws IOException;
 
     /**
      * packet:
@@ -155,7 +155,7 @@ public interface SftpSession extends Closeable {
      * @param newFilepath
      * @return
      */
-    void mv(String oldFilepath, String newFilepath);
+    void mv(String oldFilepath, String newFilepath) throws IOException;
 
     /**
      * 关闭 sftp session

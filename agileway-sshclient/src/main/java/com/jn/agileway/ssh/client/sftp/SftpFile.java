@@ -8,6 +8,7 @@ import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
 
 import java.io.Closeable;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
@@ -80,7 +81,11 @@ public abstract class SftpFile implements Closeable {
 
     public abstract boolean exist();
 
-    public abstract void setAttributes(FileAttributes attrs);
+    public void setAttributes(FileAttributes attrs) throws IOException {
+        session.setStat(this.path, attrs);
+    }
 
-    public abstract FileAttributes getAttributes();
+    public FileAttributes getAttributes() throws IOException {
+        return session.stat(this.path);
+    }
 }
