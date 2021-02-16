@@ -4,12 +4,9 @@ import com.jn.agileway.ssh.client.sftp.OpenMode;
 import com.jn.agileway.ssh.client.sftp.SftpFile;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
-import com.jn.agileway.ssh.client.sftp.attrs.FileMode;
 import com.jn.agileway.ssh.client.sftp.filter.SftpFileFilter;
-import com.jn.langx.util.Emptys;
-import com.jn.langx.util.collection.Collects;
-import com.jn.langx.util.function.Consumer;
-import net.schmizz.sshj.sftp.*;
+import net.schmizz.sshj.sftp.RemoteFile;
+import net.schmizz.sshj.sftp.SFTPClient;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,34 +25,13 @@ public class SshjSftpSession implements SftpSession {
     }
 
     @Override
-    public SftpFile open(String filepath, OpenMode openMode, FileAttrs attrs) throws IOException{
+    public SftpFile open(String filepath, OpenMode openMode, FileAttrs attrs) throws IOException {
         return open(filepath, openMode.getCode(), attrs);
     }
 
     @Override
     public SftpFile open(String filepath, int openMode, final FileAttrs attrs) throws IOException {
-        Set<net.schmizz.sshj.sftp.OpenMode> openModes = Collects.emptyHashSet();
-        if (openMode > 0) {
-            if (OpenMode.isReadable(openMode)) {
-                openModes.add(net.schmizz.sshj.sftp.OpenMode.READ);
-            }
-            if (OpenMode.isWritable(openMode)) {
-                openModes.add(net.schmizz.sshj.sftp.OpenMode.WRITE);
-            }
-            if (OpenMode.isCreatable(openMode)) {
-                openModes.add(net.schmizz.sshj.sftp.OpenMode.CREAT);
-            }
-            if (OpenMode.isAppended(openMode)) {
-                openModes.add(net.schmizz.sshj.sftp.OpenMode.APPEND);
-            }
-            if (OpenMode.isTruncated(openMode)) {
-                openModes.add(net.schmizz.sshj.sftp.OpenMode.TRUNC);
-            }
-            if (OpenMode.willFailWhenCreateExist(openMode)) {
-                openModes.add(net.schmizz.sshj.sftp.OpenMode.EXCL);
-            }
-        }
-
+        Set<net.schmizz.sshj.sftp.OpenMode> openModes = SshjSftps.toSshjOpenModeSet(openMode);
         net.schmizz.sshj.sftp.FileAttributes attributes = SshjSftps.toFileAttributes(attrs);
         RemoteFile remoteFile = sftpClient.open(filepath, openModes, attributes);
         SshjSftpFile file = new SshjSftpFile(this, filepath);

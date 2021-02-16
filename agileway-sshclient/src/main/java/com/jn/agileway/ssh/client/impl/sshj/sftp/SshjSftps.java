@@ -7,10 +7,36 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 import net.schmizz.sshj.sftp.FileAttributes;
 import net.schmizz.sshj.sftp.FileMode;
+import net.schmizz.sshj.sftp.OpenMode;
 
 import java.util.Set;
 
 public class SshjSftps {
+
+    public static Set<OpenMode> toSshjOpenModeSet(int openMode){
+        Set<net.schmizz.sshj.sftp.OpenMode> openModes = Collects.emptyHashSet();
+        if (openMode > 0) {
+            if (com.jn.agileway.ssh.client.sftp.OpenMode.isReadable(openMode)) {
+                openModes.add(net.schmizz.sshj.sftp.OpenMode.READ);
+            }
+            if (com.jn.agileway.ssh.client.sftp.OpenMode.isWritable(openMode)) {
+                openModes.add(net.schmizz.sshj.sftp.OpenMode.WRITE);
+            }
+            if (com.jn.agileway.ssh.client.sftp.OpenMode.isCreatable(openMode)) {
+                openModes.add(net.schmizz.sshj.sftp.OpenMode.CREAT);
+            }
+            if (com.jn.agileway.ssh.client.sftp.OpenMode.isAppended(openMode)) {
+                openModes.add(net.schmizz.sshj.sftp.OpenMode.APPEND);
+            }
+            if (com.jn.agileway.ssh.client.sftp.OpenMode.isTruncated(openMode)) {
+                openModes.add(net.schmizz.sshj.sftp.OpenMode.TRUNC);
+            }
+            if (com.jn.agileway.ssh.client.sftp.OpenMode.willFailWhenCreateExist(openMode)) {
+                openModes.add(net.schmizz.sshj.sftp.OpenMode.EXCL);
+            }
+        }
+        return openModes;
+    }
 
     public static FileAttributes toFileAttributes(final FileAttrs attrs) {
         FileAttributes attributes = FileAttributes.EMPTY;
