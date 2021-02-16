@@ -8,6 +8,7 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.io.file.Files;
 import net.schmizz.sshj.common.KeyType;
+import net.schmizz.sshj.common.SecurityUtils;
 import net.schmizz.sshj.transport.verification.HostKeyVerifier;
 import net.schmizz.sshj.transport.verification.OpenSSHKnownHosts;
 
@@ -31,6 +32,9 @@ public class SshjConnectionFactory extends AbstractSshConnectionFactory<SshjConn
         if (paths.isEmpty()) {
             paths = SshConfigs.getKnownHostsFiles(sshConfig.getKnownHostsPath(), false);
         }
+        // 确保扩展的算法已经注册
+        SecurityUtils.getSecurityProvider();
+
         if (!paths.isEmpty()) {
             Collects.forEach(paths, new Consumer<File>() {
                 @Override
@@ -41,7 +45,8 @@ public class SshjConnectionFactory extends AbstractSshConnectionFactory<SshjConn
                             @Override
                             protected boolean hostKeyUnverifiableAction(String hostname, PublicKey key) {
                                 try {
-                                    this.write(new SimpleEntry(Marker.CA_CERT, hostname, KeyType.fromKey(key), key));
+                                    KeyType keyType = KeyType.fromKey(key);
+                                    this.write(new SimpleEntry(null, hostname, keyType, key));
                                     return true;
                                 } catch (Throwable ex) {
                                     logger.error(ex.getMessage(), ex);

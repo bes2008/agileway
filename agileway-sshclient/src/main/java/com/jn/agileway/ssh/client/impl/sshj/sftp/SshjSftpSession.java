@@ -1,13 +1,13 @@
 package com.jn.agileway.ssh.client.impl.sshj.sftp;
 
-import com.jn.agileway.ssh.client.sftp.OpenMode;
-import com.jn.agileway.ssh.client.sftp.SftpFile;
-import com.jn.agileway.ssh.client.sftp.SftpSession;
+import com.jn.agileway.ssh.client.sftp.*;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.filter.SftpFileFilter;
+import com.jn.langx.util.enums.Enums;
 import net.schmizz.sshj.sftp.RemoteFile;
 import net.schmizz.sshj.sftp.RemoteResourceInfo;
 import net.schmizz.sshj.sftp.SFTPClient;
+import net.schmizz.sshj.sftp.SFTPException;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,12 +32,19 @@ public class SshjSftpSession implements SftpSession {
 
     @Override
     public SftpFile open(String filepath, int openMode, final FileAttrs attrs) throws IOException {
-        Set<net.schmizz.sshj.sftp.OpenMode> openModes = SshjSftps.toSshjOpenModeSet(openMode);
-        net.schmizz.sshj.sftp.FileAttributes attributes = SshjSftps.toFileAttributes(attrs);
-        RemoteFile remoteFile = sftpClient.open(filepath, openModes, attributes);
-        SshjSftpFile file = new SshjSftpFile(this, filepath);
-        file.setRemoteFile(remoteFile);
-        return file;
+        try {
+            Set<net.schmizz.sshj.sftp.OpenMode> openModes = SshjSftps.toSshjOpenModeSet(openMode);
+            net.schmizz.sshj.sftp.FileAttributes attributes = SshjSftps.toFileAttributes(attrs);
+            RemoteFile remoteFile = sftpClient.open(filepath, openModes, attributes);
+            SshjSftpFile file = new SshjSftpFile(this, filepath);
+            file.setRemoteFile(remoteFile);
+            return file;
+        } catch (SFTPException ex) {
+            ResponseStatusCode statusCode = Enums.ofName(ResponseStatusCode.class, ex.getStatusCode().name());
+            SftpException exception = new SftpException(ex);
+            exception.setStatusCode(statusCode);
+            throw exception;
+        }
     }
 
     @Override
