@@ -96,7 +96,7 @@ public class SshjSftpSession implements SftpSession {
     @Override
     public FileAttrs stat(String filepath) throws IOException {
         net.schmizz.sshj.sftp.FileAttributes fileAttributes = sftpClient.stat(filepath);
-        return
+        return SshjSftps.fromFileAttributes(fileAttributes);
     }
 
     @Override
