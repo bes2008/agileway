@@ -6,59 +6,49 @@ import java.util.Map;
 import java.util.Set;
 
 public class FileAttrs {
-    private long size = 0;
+    private Long size = null;
 
-    public long getSize() {
+    public Long getSize() {
         return this.size;
     }
-
     public void setSize(long size) {
         this.size = size;
     }
 
-    private int uid = 0;
-
-    public int getUid() {
+    private Integer uid = null;
+    public Integer getUid() {
         return this.uid;
     }
-
     public void setUid(int uid) {
         this.uid = uid;
     }
 
-    private int gid;
-
-    public int getGid() {
+    private Integer gid = null;
+    public Integer getGid() {
         return this.gid;
     }
-
     public void setGid(int gid) {
         this.gid = gid;
     }
 
     private FileMode fileMode;
-
     public FileMode getFileMode() {
         return this.fileMode;
     }
-
     public void setFileMode(FileMode fileMode) {
         this.fileMode = fileMode;
     }
 
-    private long atime;
-
-    public long getAccessTime() {
+    private Long atime = null;
+    public Long getAccessTime() {
         return this.atime;
     }
-
     public void setAccessTime(long accessTime) {
         this.atime = accessTime;
     }
 
-    private long mtime;
-
-    public long getModifyTime() {
+    private Long mtime = null;
+    public Long getModifyTime() {
         return this.mtime;
     }
 
