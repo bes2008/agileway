@@ -1,6 +1,6 @@
 package com.jn.agileway.ssh.client.sftp;
 
-import com.jn.agileway.ssh.client.sftp.attrs.FileAttributes;
+import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.filter.SftpFileFilter;
 import com.jn.langx.annotation.Nullable;
 
@@ -25,12 +25,12 @@ public interface SftpSession extends Closeable {
      * </p>
      * @param filepath     the file path
      * @param openMode {int} the open mode
-     * @param attrs    the file attributes
+     * @param attrs    the file attributes if create
      * @return the opened file
      */
-    SftpFile open(String filepath, OpenMode openMode, @Nullable FileAttributes attrs) throws IOException;
+    SftpFile open(String filepath, OpenMode openMode, @Nullable FileAttrs attrs) throws IOException;
 
-    SftpFile open(String filepath, int openMode, @Nullable FileAttributes attrs) throws IOException;
+    SftpFile open(String filepath, int openMode, @Nullable FileAttrs attrs) throws IOException;
 
     /**
      * Create a symbolic link on the server. Creates a link "src" that points
@@ -91,11 +91,11 @@ public interface SftpSession extends Closeable {
      * @throws IOException
      * @see #lstat(String)
      */
-    FileAttributes stat(String filepath) throws IOException;
+    FileAttrs stat(String filepath) throws IOException;
 
-    FileAttributes lstat(String filepath) throws IOException;
+    FileAttrs lstat(String filepath) throws IOException;
 
-    FileAttributes fstat(SftpFile file) throws IOException;
+    FileAttrs fstat(SftpFile file) throws IOException;
 
     /**
      * Modify the attributes of a file. Used for operations such as changing
@@ -106,16 +106,26 @@ public interface SftpSession extends Closeable {
      *              made to the attributes of the file. Empty fields will be ignored.
      * @throws IOException
      */
-    void setStat(String path, FileAttributes attrs) throws IOException;
+    void setStat(String path, FileAttrs attrs) throws IOException;
 
     /**
      * packet:
      * |packet_type|req_id|file_handle|
      *
-     * @param file
+     * @param directory
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
      * @return
      */
-    List<SftpFile> listFiles(SftpFile file, SftpFileFilter filter) throws IOException;
+    List<SftpFile> listFiles(String directory, SftpFileFilter filter) throws IOException;
 
     /**
      * packet:
@@ -125,7 +135,7 @@ public interface SftpSession extends Closeable {
      * @param attributes
      * @return
      */
-    void mkdir(String directory, FileAttributes attributes) throws IOException;
+    void mkdir(String directory, FileAttrs attributes) throws IOException;
 
     /**
      * packet:

@@ -6,6 +6,7 @@ import com.jn.agileway.ssh.client.sftp.filter.SftpFileFilter;
 import com.jn.agileway.ssh.client.sftp.filter.SftpFilenameFilter;
 import com.jn.langx.annotation.Nullable;
 import net.schmizz.sshj.sftp.RemoteFile;
+import net.schmizz.sshj.sftp.RemoteResource;
 
 import java.io.InputStream;
 import java.io.OutputStream;
