@@ -1,17 +1,28 @@
 package com.jn.agileway.ssh.client.impl.sshj.sftp;
 
+import com.jn.agileway.ssh.client.sftp.ResponseStatusCode;
+import com.jn.agileway.ssh.client.sftp.SftpException;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.enums.Enums;
 import com.jn.langx.util.function.Consumer;
 import net.schmizz.sshj.sftp.FileAttributes;
 import net.schmizz.sshj.sftp.FileMode;
 import net.schmizz.sshj.sftp.OpenMode;
+import net.schmizz.sshj.sftp.SFTPException;
 
 import java.util.Set;
 
 public class SshjSftps {
+
+    public static SftpException wrapSftpException(SFTPException ex){
+        ResponseStatusCode statusCode = Enums.ofName(ResponseStatusCode.class, ex.getStatusCode().name());
+        SftpException exception = new SftpException(ex);
+        exception.setStatusCode(statusCode);
+        return exception;
+    }
 
     public static Set<OpenMode> toSshjOpenModeSet(int openMode){
         Set<net.schmizz.sshj.sftp.OpenMode> openModes = Collects.emptyHashSet();
