@@ -101,17 +101,18 @@ public class SshjSftpSession implements SftpSession {
 
     @Override
     public FileAttrs lstat(String filepath) throws IOException {
-        return null;
+        net.schmizz.sshj.sftp.FileAttributes fileAttributes = sftpClient.lstat(filepath);
+        return SshjSftps.fromFileAttributes(fileAttributes);
     }
 
     @Override
     public FileAttrs fstat(SftpFile file) throws IOException {
-        return null;
+        return file.getAttributes();
     }
 
     @Override
     public void setStat(String path, FileAttrs attrs) throws IOException {
-
+        sftpClient.setattr(path, SshjSftps.toFileAttributes(attrs));
     }
 
     @Override
