@@ -51,16 +51,6 @@ public interface SftpSession extends Closeable {
     String canonicalPath(String path) throws IOException;
 
     /**
-     * <pre>
-     *     packet:
-     *      |packet_type|req_id|file_handle|
-     * </pre>
-     *
-     * @see SftpFile#close()
-     */
-    void close(SftpFile file);
-
-    /**
      * packet:
      * |packet_type|req_id|file_handle|file_offset|length
      * <p>
@@ -113,16 +103,6 @@ public interface SftpSession extends Closeable {
      * |packet_type|req_id|file_handle|
      *
      * @param directory
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
      * @return
      */
     List<SftpFile> listFiles(String directory, SftpFileFilter filter) throws IOException;

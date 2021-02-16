@@ -2,15 +2,11 @@ package com.jn.agileway.ssh.client.impl.sshj.sftp;
 
 import com.jn.agileway.ssh.client.sftp.SftpFile;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
-import com.jn.agileway.ssh.client.sftp.filter.SftpFileFilter;
-import com.jn.agileway.ssh.client.sftp.filter.SftpFilenameFilter;
 import com.jn.langx.annotation.Nullable;
 import net.schmizz.sshj.sftp.RemoteFile;
-import net.schmizz.sshj.sftp.RemoteResource;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
 
 public class SshjSftpFile extends SftpFile {
     private RemoteFile remoteFile;
@@ -44,31 +40,6 @@ public class SshjSftpFile extends SftpFile {
     @Override
     public void write(long fileOffset, byte[] data, int offset, int length) {
 
-    }
-
-    @Override
-    public List<String> list() {
-        return null;
-    }
-
-    @Override
-    public List<String> list(SftpFilenameFilter filter) {
-        return null;
-    }
-
-    @Override
-    public List<SftpFile> listFiles() {
-        return null;
-    }
-
-    @Override
-    public List<SftpFile> listFiles(SftpFilenameFilter filter) {
-        return null;
-    }
-
-    @Override
-    public List<SftpFile> listFiles(SftpFileFilter filter) {
-        return null;
     }
 
     @Override

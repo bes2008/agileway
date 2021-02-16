@@ -6,6 +6,7 @@ import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.filter.SftpFileFilter;
 import net.schmizz.sshj.sftp.RemoteFile;
+import net.schmizz.sshj.sftp.RemoteResourceInfo;
 import net.schmizz.sshj.sftp.SFTPClient;
 
 import java.io.IOException;
@@ -55,11 +56,6 @@ public class SshjSftpSession implements SftpSession {
     }
 
     @Override
-    public void close(SftpFile file) {
-        file.close();
-    }
-
-    @Override
     public int read(SftpFile file, long fileOffset, byte[] buffer, int bufferOffset, int length) {
         return 0;
     }
@@ -93,31 +89,32 @@ public class SshjSftpSession implements SftpSession {
 
     @Override
     public List<SftpFile> listFiles(String directory, SftpFileFilter filter) throws IOException {
+        List<RemoteResourceInfo> list = sftpClient.ls(directory);
         return null;
     }
 
     @Override
     public void mkdir(String directory, FileAttrs attributes) throws IOException {
-
+        sftpClient.mkdirs(directory);
     }
 
     @Override
     public void rmdir(String directory) throws IOException {
-
+        sftpClient.rmdir(directory);
     }
 
     @Override
     public void rm(String filepath) throws IOException {
-
+        sftpClient.rm(filepath);
     }
 
     @Override
     public void mv(String oldFilepath, String newFilepath) throws IOException {
-
+        sftpClient.rename(oldFilepath, newFilepath);
     }
 
     @Override
     public void close() throws IOException {
-
+        sftpClient.close();
     }
 }

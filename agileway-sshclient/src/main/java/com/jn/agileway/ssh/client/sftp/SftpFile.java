@@ -1,8 +1,6 @@
 package com.jn.agileway.ssh.client.sftp;
 
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
-import com.jn.agileway.ssh.client.sftp.filter.SftpFileFilter;
-import com.jn.agileway.ssh.client.sftp.filter.SftpFilenameFilter;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
@@ -11,7 +9,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
 
 /**
  * 代表一个打开的 file 或者 directory
@@ -77,16 +74,6 @@ public abstract class SftpFile implements Closeable {
      * 写入远程文件时，从 fileOffset 开始。
      */
     public abstract void write(long fileOffset, byte[] data, int offset, int length);
-
-    public abstract List<String> list();
-
-    public abstract List<String> list(SftpFilenameFilter filter);
-
-    public abstract List<SftpFile> listFiles();
-
-    public abstract List<SftpFile> listFiles(SftpFilenameFilter filter);
-
-    public abstract List<SftpFile> listFiles(SftpFileFilter filter);
 
     public abstract boolean exist();
 
