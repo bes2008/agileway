@@ -1,6 +1,8 @@
 package com.jn.agileway.ssh.client.sftp;
 
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
+import com.jn.agileway.ssh.client.sftp.filter.SftpFileFilter;
+import com.jn.agileway.ssh.client.sftp.filter.SftpResourceInfo;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
@@ -9,6 +11,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 /**
  * 代表一个打开的 file 或者 directory
@@ -84,4 +87,6 @@ public abstract class SftpFile implements Closeable {
     public FileAttrs getAttributes() throws IOException {
         return session.stat(this.path);
     }
+
+    public abstract List<SftpResourceInfo> listFiles(SftpFileFilter filter);
 }

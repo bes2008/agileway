@@ -72,15 +72,6 @@ public class SshjSftpSession implements SftpSession {
         }
     }
 
-    @Override
-    public int read(SftpFile file, long fileOffset, byte[] buffer, int bufferOffset, int length) {
-        return 0;
-    }
-
-    @Override
-    public void write(SftpFile file, long fileOffset, byte[] data, int offset, int length) {
-
-    }
 
     @Override
     public FileAttrs stat(String filepath) throws IOException {

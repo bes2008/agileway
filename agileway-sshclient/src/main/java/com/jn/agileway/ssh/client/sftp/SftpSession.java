@@ -2,6 +2,7 @@ package com.jn.agileway.ssh.client.sftp;
 
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.filter.SftpFileFilter;
+import com.jn.agileway.ssh.client.sftp.filter.SftpResourceInfo;
 import com.jn.langx.annotation.Nullable;
 
 import java.io.Closeable;
@@ -50,28 +51,6 @@ public interface SftpSession extends Closeable {
 
     String canonicalPath(String path) throws IOException;
 
-    /**
-     * packet:
-     * |packet_type|req_id|file_handle|file_offset|length
-     * <p>
-     * 从file的 fileOffset 开始读取，最大读取 length 个 byte, 读取后放到 buffer中，从 buffer的 offset 开始放。
-     * 返回实际读取的数据。
-     * 若返回 -1，则代表结束
-     *
-     * @see SftpFile#read(long, byte[], int, int)
-     */
-    int read(SftpFile file, long fileOffset, byte[] buffer, int bufferOffset, int length);
-
-    /**
-     * packet:
-     * |packet_type|req_id|file_handle|length|bytes|
-     * <p>
-     * 从data 的 offset 开始，取出 length 个 byte，写入远程文件。
-     * 写入远程文件时，从 fileOffset 开始。
-     *
-     * @see SftpFile#write(long, byte[], int, int)
-     */
-    void write(SftpFile file, long fileOffset, byte[] data, int offset, int length);
 
     /**
      * Retrieve the file attributes of a file. This method
@@ -105,7 +84,7 @@ public interface SftpSession extends Closeable {
      * @param directory
      * @return
      */
-    List<SftpFile> listFiles(String directory, SftpFileFilter filter) throws IOException;
+    List<SftpResourceInfo> listFiles(String directory, SftpFileFilter filter) throws IOException;
 
     /**
      * packet:
