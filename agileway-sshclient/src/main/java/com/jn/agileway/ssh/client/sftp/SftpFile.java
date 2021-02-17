@@ -4,13 +4,11 @@ import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
-import com.jn.langx.util.function.Predicate;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
 
 /**
  * 代表一个打开的 file

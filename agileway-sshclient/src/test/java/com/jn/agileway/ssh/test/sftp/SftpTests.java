@@ -7,6 +7,7 @@ import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionConfig;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionFactory;
 import com.jn.agileway.ssh.client.impl.sshj.sftp.SshjSftpSessionFactory;
 import com.jn.agileway.ssh.client.sftp.*;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.SystemPropertys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
@@ -83,8 +84,25 @@ public class SftpTests {
         FileInputStream inputStream = new FileInputStream(file);
         byte[] fileData = IOs.toByteArray(inputStream);
         IOs.close(inputStream);
-        sftpFile.write(0, fileData, 0, fileData.length);
-        sftpFile.close();
+        try {
+            sftpFile.write(0, fileData, 0, fileData.length);
+        } catch (Throwable ex) {
+            logger.error(ex.getMessage(), ex);
+        } finally {
+            sftpFile.close();
+        }
+
+
+        sftpFile = session.open(filepath, OpenMode.READ, null);
+        byte[] buffer = new byte[fileData.length];
+        try {
+            int readLength = sftpFile.read(0, buffer, 0, fileData.length);
+        } catch (Throwable ex) {
+            logger.error(ex.getMessage(), ex);
+        } finally {
+            sftpFile.close();
+        }
+        logger.info("{}:{}", file.getPath(), Objs.deepEquals(buffer, fileData));
     }
 
     void _copyDir(final SftpSession session, File localDirectory, final String remoteDir) throws IOException {
