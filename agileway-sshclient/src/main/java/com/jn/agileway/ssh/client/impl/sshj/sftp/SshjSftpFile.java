@@ -1,10 +1,10 @@
 package com.jn.agileway.ssh.client.impl.sshj.sftp;
 
 import com.jn.agileway.ssh.client.sftp.SftpFile;
-import com.jn.agileway.ssh.client.sftp.SftpSession;
-import com.jn.agileway.ssh.client.sftp.filter.SftpFileFilter;
 import com.jn.agileway.ssh.client.sftp.SftpResourceInfo;
+import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.util.function.Predicate;
 import net.schmizz.sshj.sftp.RemoteFile;
 
 import java.io.InputStream;
@@ -45,8 +45,7 @@ public class SshjSftpFile extends SftpFile {
 
     }
 
-    @Override
-    public List<SftpResourceInfo> listFiles(SftpFileFilter filter) {
+    public List<SftpResourceInfo> listFiles(Predicate<SftpResourceInfo> predicate) {
         return null;
     }
 
