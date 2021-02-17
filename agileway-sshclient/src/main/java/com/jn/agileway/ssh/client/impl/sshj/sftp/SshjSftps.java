@@ -1,8 +1,9 @@
 package com.jn.agileway.ssh.client.impl.sshj.sftp;
 
 import com.jn.agileway.ssh.client.sftp.ResponseStatusCode;
-import com.jn.agileway.ssh.client.sftp.SftpException;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
+import com.jn.agileway.ssh.client.sftp.exception.NoSuchFileSftpException;
+import com.jn.agileway.ssh.client.sftp.exception.SftpException;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
@@ -17,14 +18,19 @@ import java.util.Set;
 
 public class SshjSftps {
 
-    public static SftpException wrapSftpException(SFTPException ex){
+    public static SftpException wrapSftpException(SFTPException ex) {
         ResponseStatusCode statusCode = Enums.ofName(ResponseStatusCode.class, ex.getStatusCode().name());
-        SftpException exception = new SftpException(ex);
+        SftpException exception = null;
+        if (statusCode == ResponseStatusCode.NO_SUCH_FILE) {
+            exception = new NoSuchFileSftpException(ex);
+        } else {
+            exception = new SftpException(ex);
+        }
         exception.setStatusCode(statusCode);
         return exception;
     }
 
-    public static Set<OpenMode> toSshjOpenModeSet(int openMode){
+    public static Set<OpenMode> toSshjOpenModeSet(int openMode) {
         Set<net.schmizz.sshj.sftp.OpenMode> openModes = Collects.emptyHashSet();
         if (openMode > 0) {
             if (com.jn.agileway.ssh.client.sftp.OpenMode.isReadable(openMode)) {
@@ -132,4 +138,5 @@ public class SshjSftps {
 
         return new FileMode(fileMode.getMask());
     }
+
 }

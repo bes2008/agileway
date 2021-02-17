@@ -1,6 +1,7 @@
-package com.jn.agileway.ssh.client.sftp;
+package com.jn.agileway.ssh.client.sftp.exception;
 
 import com.jn.agileway.ssh.client.SshException;
+import com.jn.agileway.ssh.client.sftp.ResponseStatusCode;
 
 public class SftpException extends SshException {
     private ResponseStatusCode statusCode;

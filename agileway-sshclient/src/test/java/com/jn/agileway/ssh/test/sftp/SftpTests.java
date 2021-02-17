@@ -2,15 +2,13 @@ package com.jn.agileway.ssh.test.sftp;
 
 import com.jn.agileway.ssh.client.AbstractSshConnectionConfig;
 import com.jn.agileway.ssh.client.SshConnection;
-import com.jn.agileway.ssh.client.SshConnectionConfig;
 import com.jn.agileway.ssh.client.SshConnectionFactory;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionConfig;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionFactory;
 import com.jn.agileway.ssh.client.impl.sshj.sftp.SshjSftpSessionFactory;
-import com.jn.agileway.ssh.client.sftp.OpenMode;
-import com.jn.agileway.ssh.client.sftp.SftpFile;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.agileway.ssh.client.sftp.SftpSessionFactory;
+import com.jn.agileway.ssh.client.sftp.Sftps;
 import com.jn.langx.util.io.IOs;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -20,7 +18,7 @@ public class SftpTests {
     private static final Logger logger = LoggerFactory.getLogger(SftpTests.class);
 
     @Test
-    public void testSftp_sshj(){
+    public void testSftp_sshj() {
         _test(new SshjSftpSessionFactory(), new SshjConnectionFactory(), new SshjConnectionConfig(), "/home/fangjinuo/Templates/test_sftp_sshj");
     }
 
@@ -36,7 +34,13 @@ public class SftpTests {
         SftpSession session = sessionFactory.get(connection);
         try {
             // 确保testWorkingDirectory 存在，并且是 empty的
-            SftpFile workingDirectory = session.open(testWorkingDirectory, OpenMode.READ, null);
+            boolean testWorkingDirectoryExist = Sftps.existDirectory(session, testWorkingDirectory);
+            logger.info("directory exist? {}", testWorkingDirectoryExist);
+            if (!testWorkingDirectoryExist) {
+                session.mkdir(testWorkingDirectory, null);
+                testWorkingDirectoryExist = Sftps.existDirectory(session, testWorkingDirectory);
+                logger.info("directory exist? {}", testWorkingDirectoryExist);
+            }
 
         } catch (Throwable ex) {
             logger.error(ex.getMessage(), ex);
