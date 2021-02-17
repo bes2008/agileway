@@ -32,4 +32,8 @@ public class SftpResourceInfo {
         return attrs;
     }
 
+    @Override
+    public String toString() {
+        return this.attrs.toString()+ " " + this.name;
+    }
 }

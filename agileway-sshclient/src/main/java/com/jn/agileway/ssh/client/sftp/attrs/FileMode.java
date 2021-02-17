@@ -1,37 +1,56 @@
 package com.jn.agileway.ssh.client.sftp.attrs;
 
+import com.jn.langx.util.enums.base.CommonEnum;
+import com.jn.langx.util.enums.base.EnumDelegate;
+
 import java.util.Collections;
 import java.util.Set;
 
 public class FileMode {
 
-    public static enum Type {
-        /** block special */
-        BLOCK_SPECIAL(0060000),
-        /** character special */
-        CHAR_SPECIAL(0020000),
-        /** FIFO special */
-        FIFO_SPECIAL(0010000),
-        /** socket special */
-        SOCKET_SPECIAL(0140000),
-        /** regular */
-        REGULAR(0100000),
-        /** directory */
-        DIRECTORY(0040000),
-        /** symbolic link */
-        SYMBOLIC_LINK(0120000),
-        /** unknown */
-        UNKNOWN(0);
+    public static enum Type implements CommonEnum {
+        /**
+         * block special
+         */
+        BLOCK_SPECIAL(0060000, "BLOCK_DEVICE", "b"),
+        /**
+         * character special
+         */
+        CHAR_SPECIAL(0020000, "CHAR_DEVICE", "c"),
+        /**
+         * FIFO special
+         */
+        FIFO_SPECIAL(0010000, "FIFO", "p"),
+        /**
+         * socket special
+         */
+        SOCKET_SPECIAL(0140000, "SOCKET", "s"),
+        /**
+         * regular
+         */
+        REGULAR(0100000, "REGULAR", "-"),
+        /**
+         * directory
+         */
+        DIRECTORY(0040000, "DIRECTORY", "d"),
+        /**
+         * symbolic link
+         */
+        SYMBOLIC_LINK(0120000, "SYMBOLIC_LINK", "l"),
+        /**
+         * unknown
+         */
+        UNKNOWN(0, "UNKNOWN", "unknown");
 
-        private final int mask;
+        private final EnumDelegate delegate;
 
-        private Type(int val) {
-            this.mask = val;
+        Type(int val, String name, String displayText) {
+            this.delegate = new EnumDelegate(val, name, displayText);
         }
 
         public static FileMode.Type fromMask(int mask) {
             for (Type t : FileMode.Type.values()) {
-                if (t.mask == mask) {
+                if (t.getMask() == mask) {
                     return t;
                 }
             }
@@ -39,9 +58,24 @@ public class FileMode {
         }
 
         public int getMask() {
-            return mask;
+            return getCode();
         }
 
+
+        @Override
+        public int getCode() {
+            return this.delegate.getCode();
+        }
+
+        @Override
+        public String getName() {
+            return this.delegate.getName();
+        }
+
+        @Override
+        public String getDisplayText() {
+            return this.delegate.getDisplayText();
+        }
     }
 
     private final int mask;

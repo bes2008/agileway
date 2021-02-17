@@ -127,5 +127,11 @@ public class SftpTests {
         });
 
         List<SftpResourceInfo> ls = session.listFiles(remoteDir);
+        Collects.forEach(ls, new Consumer<SftpResourceInfo>() {
+            @Override
+            public void accept(SftpResourceInfo sftpResourceInfo) {
+                System.out.println(sftpResourceInfo);
+            }
+        });
     }
 }
