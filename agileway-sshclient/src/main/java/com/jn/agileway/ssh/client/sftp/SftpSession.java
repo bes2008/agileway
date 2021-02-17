@@ -76,6 +76,8 @@ public interface SftpSession extends Closeable {
      */
     void setStat(String path, FileAttrs attrs) throws IOException;
 
+    List<SftpResourceInfo> listFiles(String directory) throws IOException;
+
     /**
      * packet:
      * |packet_type|req_id|file_handle|

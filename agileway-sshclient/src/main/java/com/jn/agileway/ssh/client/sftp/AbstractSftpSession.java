@@ -15,6 +15,10 @@ public abstract class AbstractSftpSession implements SftpSession {
         return open(filepath, openMode.getCode(), attrs);
     }
 
+    public List<SftpResourceInfo> listFiles(String directory) throws IOException{
+        return listFiles(directory, null);
+    }
+
     @Override
     public List<SftpResourceInfo> listFiles(String directory, Predicate<SftpResourceInfo> predicate) throws IOException {
         List<SftpResourceInfo> children = doListFiles(directory);
