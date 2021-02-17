@@ -5,6 +5,7 @@ import com.jn.agileway.ssh.client.sftp.SftpFile;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.filter.SftpFileFilter;
+import com.jn.agileway.ssh.client.sftp.filter.SftpResourceInfo;
 import net.schmizz.sshj.sftp.RemoteFile;
 import net.schmizz.sshj.sftp.RemoteResourceInfo;
 import net.schmizz.sshj.sftp.SFTPClient;
@@ -112,7 +113,7 @@ public class SshjSftpSession implements SftpSession {
     }
 
     @Override
-    public List<SftpFile> listFiles(String directory, SftpFileFilter filter) throws IOException {
+    public List<SftpResourceInfo> listFiles(String directory, SftpFileFilter filter) throws IOException {
         try {
             List<RemoteResourceInfo> list = sftpClient.ls(directory);
             return null;
