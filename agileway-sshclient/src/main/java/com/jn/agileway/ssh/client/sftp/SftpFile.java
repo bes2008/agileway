@@ -13,7 +13,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 /**
- * 代表一个打开的 file 或者 directory
+ * 代表一个打开的 file
  */
 public abstract class SftpFile implements Closeable {
     @NotEmpty
@@ -50,15 +50,6 @@ public abstract class SftpFile implements Closeable {
     }
 
     /**
-     * <pre>
-     *     packet:
-     *      |packet_type|req_id|file_handle|
-     * </pre>
-     */
-    @Override
-    public abstract void close();
-
-    /**
      * packet:
      * |packet_type|req_id|file_handle|file_offset|length
      * <p>
@@ -66,7 +57,7 @@ public abstract class SftpFile implements Closeable {
      * 返回实际读取的数据。
      * 若返回 -1，则代表结束
      */
-    public abstract int read(long fileOffset, byte[] buffer, int bufferOffset, int length);
+    public abstract int read(long fileOffset, byte[] buffer, int bufferOffset, int length) throws IOException;
 
     /**
      * packet:
@@ -75,9 +66,7 @@ public abstract class SftpFile implements Closeable {
      * 从data 的 offset 开始，取出 length 个 byte，写入远程文件。
      * 写入远程文件时，从 fileOffset 开始。
      */
-    public abstract void write(long fileOffset, byte[] data, int offset, int length);
-
-    public abstract boolean exist();
+    public abstract void write(long fileOffset, byte[] data, int offset, int length) throws IOException;
 
     public void setAttributes(FileAttrs attrs) throws IOException {
         session.setStat(this.path, attrs);
@@ -87,5 +76,4 @@ public abstract class SftpFile implements Closeable {
         return session.stat(this.path);
     }
 
-    public abstract List<SftpResourceInfo> listFiles(Predicate<SftpResourceInfo> filter);
 }

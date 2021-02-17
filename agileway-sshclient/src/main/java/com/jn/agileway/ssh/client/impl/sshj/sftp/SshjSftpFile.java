@@ -1,15 +1,13 @@
 package com.jn.agileway.ssh.client.impl.sshj.sftp;
 
 import com.jn.agileway.ssh.client.sftp.SftpFile;
-import com.jn.agileway.ssh.client.sftp.SftpResourceInfo;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.langx.annotation.Nullable;
-import com.jn.langx.util.function.Predicate;
 import net.schmizz.sshj.sftp.RemoteFile;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
 
 public class SshjSftpFile extends SftpFile {
     private RemoteFile remoteFile;
@@ -31,26 +29,18 @@ public class SshjSftpFile extends SftpFile {
     }
 
     @Override
-    public void close() {
+    public void close() throws IOException {
         this.isClosed = true;
+        remoteFile.close();
     }
 
     @Override
-    public int read(long fileOffset, byte[] buffer, int bufferOffset, int length) {
-        return 0;
+    public int read(long fileOffset, byte[] buffer, int bufferOffset, int length) throws IOException {
+        return remoteFile.read(fileOffset, buffer, bufferOffset, length);
     }
 
     @Override
-    public void write(long fileOffset, byte[] data, int offset, int length) {
-
-    }
-
-    public List<SftpResourceInfo> listFiles(Predicate<SftpResourceInfo> predicate) {
-        return null;
-    }
-
-    @Override
-    public boolean exist() {
-        return false;
+    public void write(long fileOffset, byte[] data, int offset, int length) throws IOException {
+        remoteFile.write(fileOffset, data, offset, length);
     }
 }
