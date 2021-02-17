@@ -16,7 +16,7 @@ import net.schmizz.sshj.sftp.SFTPException;
 
 import java.util.Set;
 
-public class SshjSftps {
+class SshjSftps {
 
     public static SftpException wrapSftpException(SFTPException ex) {
         ResponseStatusCode statusCode = Enums.ofName(ResponseStatusCode.class, ex.getStatusCode().name());
