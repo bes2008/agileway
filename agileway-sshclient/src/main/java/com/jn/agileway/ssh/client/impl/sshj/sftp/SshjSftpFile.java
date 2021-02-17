@@ -3,7 +3,7 @@ package com.jn.agileway.ssh.client.impl.sshj.sftp;
 import com.jn.agileway.ssh.client.sftp.SftpFile;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.agileway.ssh.client.sftp.filter.SftpFileFilter;
-import com.jn.agileway.ssh.client.sftp.filter.SftpResourceInfo;
+import com.jn.agileway.ssh.client.sftp.SftpResourceInfo;
 import com.jn.langx.annotation.Nullable;
 import net.schmizz.sshj.sftp.RemoteFile;
 

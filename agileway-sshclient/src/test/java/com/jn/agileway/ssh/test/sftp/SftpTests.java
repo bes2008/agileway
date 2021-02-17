@@ -6,13 +6,17 @@ import com.jn.agileway.ssh.client.SshConnectionFactory;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionConfig;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionFactory;
 import com.jn.agileway.ssh.client.impl.sshj.sftp.SshjSftpSessionFactory;
+import com.jn.agileway.ssh.client.sftp.SftpResourceInfo;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.agileway.ssh.client.sftp.SftpSessionFactory;
 import com.jn.agileway.ssh.client.sftp.Sftps;
+import com.jn.langx.util.function.Functions;
 import com.jn.langx.util.io.IOs;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class SftpTests {
     private static final Logger logger = LoggerFactory.getLogger(SftpTests.class);
@@ -41,6 +45,8 @@ public class SftpTests {
                 testWorkingDirectoryExist = Sftps.existDirectory(session, testWorkingDirectory);
                 logger.info("directory exist? {}", testWorkingDirectoryExist);
             }
+            List<SftpResourceInfo> children = session.listFiles(testWorkingDirectory, Functions.<SftpResourceInfo>truePredicate());
+
 
         } catch (Throwable ex) {
             logger.error(ex.getMessage(), ex);

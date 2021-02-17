@@ -1,9 +1,8 @@
 package com.jn.agileway.ssh.client.sftp;
 
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
-import com.jn.agileway.ssh.client.sftp.filter.SftpFileFilter;
-import com.jn.agileway.ssh.client.sftp.filter.SftpResourceInfo;
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.util.function.Predicate;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -84,7 +83,7 @@ public interface SftpSession extends Closeable {
      * @param directory
      * @return
      */
-    List<SftpResourceInfo> listFiles(String directory, SftpFileFilter filter) throws IOException;
+    List<SftpResourceInfo> listFiles(String directory, Predicate<SftpResourceInfo> predicate) throws IOException;
 
     /**
      * packet:

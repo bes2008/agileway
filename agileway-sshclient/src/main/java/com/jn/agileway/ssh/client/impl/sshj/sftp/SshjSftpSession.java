@@ -1,11 +1,9 @@
 package com.jn.agileway.ssh.client.impl.sshj.sftp;
 
-import com.jn.agileway.ssh.client.sftp.OpenMode;
+import com.jn.agileway.ssh.client.sftp.AbstractSftpSession;
 import com.jn.agileway.ssh.client.sftp.SftpFile;
-import com.jn.agileway.ssh.client.sftp.SftpSession;
+import com.jn.agileway.ssh.client.sftp.SftpResourceInfo;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
-import com.jn.agileway.ssh.client.sftp.filter.SftpFileFilter;
-import com.jn.agileway.ssh.client.sftp.filter.SftpResourceInfo;
 import net.schmizz.sshj.sftp.RemoteFile;
 import net.schmizz.sshj.sftp.RemoteResourceInfo;
 import net.schmizz.sshj.sftp.SFTPClient;
@@ -15,7 +13,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-public class SshjSftpSession implements SftpSession {
+public class SshjSftpSession extends AbstractSftpSession {
     private SFTPClient sftpClient;
 
     public SshjSftpSession(SFTPClient client) {
@@ -25,11 +23,6 @@ public class SshjSftpSession implements SftpSession {
     @Override
     public int getProtocolVersion() {
         return sftpClient.version();
-    }
-
-    @Override
-    public SftpFile open(String filepath, OpenMode openMode, FileAttrs attrs) throws IOException {
-        return open(filepath, openMode.getCode(), attrs);
     }
 
     @Override
@@ -113,7 +106,7 @@ public class SshjSftpSession implements SftpSession {
     }
 
     @Override
-    public List<SftpResourceInfo> listFiles(String directory, SftpFileFilter filter) throws IOException {
+    protected List<SftpResourceInfo> doListFiles(String directory) throws IOException {
         try {
             List<RemoteResourceInfo> list = sftpClient.ls(directory);
             return null;
@@ -121,6 +114,7 @@ public class SshjSftpSession implements SftpSession {
             throw SshjSftps.wrapSftpException(ex);
         }
     }
+
 
     @Override
     public void mkdir(String directory, FileAttrs attributes) throws IOException {

@@ -2,7 +2,6 @@ package com.jn.agileway.ssh.client.sftp;
 
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.filter.SftpFileFilter;
-import com.jn.agileway.ssh.client.sftp.filter.SftpResourceInfo;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;

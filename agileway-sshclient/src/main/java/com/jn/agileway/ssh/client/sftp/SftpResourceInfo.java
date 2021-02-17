@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.sftp.filter;
+package com.jn.agileway.ssh.client.sftp;
 
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.langx.util.io.file.Filenames;
