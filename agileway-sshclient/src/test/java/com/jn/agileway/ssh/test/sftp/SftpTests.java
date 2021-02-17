@@ -125,5 +125,7 @@ public class SftpTests {
                 }
             }
         });
+
+        List<SftpResourceInfo> ls = session.listFiles(remoteDir);
     }
 }

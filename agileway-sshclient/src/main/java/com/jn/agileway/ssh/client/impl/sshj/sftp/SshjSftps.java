@@ -1,6 +1,7 @@
 package com.jn.agileway.ssh.client.impl.sshj.sftp;
 
 import com.jn.agileway.ssh.client.sftp.ResponseStatusCode;
+import com.jn.agileway.ssh.client.sftp.SftpResourceInfo;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.exception.NoSuchFileSftpException;
 import com.jn.agileway.ssh.client.sftp.exception.SftpException;
@@ -9,10 +10,7 @@ import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.enums.Enums;
 import com.jn.langx.util.function.Consumer;
-import net.schmizz.sshj.sftp.FileAttributes;
-import net.schmizz.sshj.sftp.FileMode;
-import net.schmizz.sshj.sftp.OpenMode;
-import net.schmizz.sshj.sftp.SFTPException;
+import net.schmizz.sshj.sftp.*;
 
 import java.util.Set;
 
@@ -137,6 +135,10 @@ class SshjSftps {
         }
 
         return new FileMode(fileMode.getMask());
+    }
+
+    public static SftpResourceInfo fromRemoteResourceInfo(RemoteResourceInfo info) {
+        return new SftpResourceInfo(info.getPath(), fromFileAttributes(info.getAttributes()));
     }
 
 }
