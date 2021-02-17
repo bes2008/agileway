@@ -123,6 +123,7 @@ public interface SftpSession extends Closeable {
      * packet:
      * |packet_type|req_id|path|
      *
+     * 只能删除空目录，目录下有内容时，需要先清理目录里的内容
      * @param directory
      * @return
      */

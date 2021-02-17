@@ -7,6 +7,7 @@ import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionConfig;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionFactory;
 import com.jn.agileway.ssh.client.impl.sshj.sftp.SshjSftpSessionFactory;
 import com.jn.agileway.ssh.client.sftp.*;
+import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.SystemPropertys;
 import com.jn.langx.util.collection.Collects;
@@ -53,18 +54,10 @@ public class SftpTests {
                 Collects.forEach(children, new Consumer<SftpResourceInfo>() {
                     @Override
                     public void accept(SftpResourceInfo sftpResourceInfo) {
-                        if(sftpResourceInfo.getAttrs().isDirectory()){
-                            try {
-                                session.rmdir(sftpResourceInfo.getPath());
-                            }catch (Throwable ex){
-                                logger.error(ex.getMessage(), ex);
-                            }
-                        }else {
-                            try {
-                                session.rm(sftpResourceInfo.getPath());
-                            } catch (Throwable ex) {
-                                logger.error(ex.getMessage(), ex);
-                            }
+                        try {
+                            _remove(session, sftpResourceInfo.getPath());
+                        }catch (Throwable ex){
+                            logger.error(ex.getMessage(), ex);
                         }
                     }
                 });
@@ -80,6 +73,33 @@ public class SftpTests {
             IOs.close(session);
         }
     }
+
+    void _remove(SftpSession session, String path) throws IOException {
+        FileAttrs attrs = session.stat(path);
+        if (attrs.isDirectory()) {
+            _removeDir(session, path);
+        } else {
+            session.rm(path);
+        }
+    }
+
+    void _removeDir(final SftpSession session, String directory) throws IOException {
+        List<SftpResourceInfo> children = session.listFiles(directory);
+        if (!children.isEmpty()) {
+            Collects.forEach(children, new Consumer<SftpResourceInfo>() {
+                @Override
+                public void accept(SftpResourceInfo sftpResourceInfo) {
+                    try {
+                        _remove(session, sftpResourceInfo.getPath());
+                    } catch (Throwable ex) {
+                        logger.error(ex.getMessage(), ex);
+                    }
+                }
+            });
+        }
+        session.rmdir(directory);
+    }
+
 
     void _copyFile(SftpSession session, File file, String remoteDir) throws IOException {
         boolean remoteDirExist = Sftps.existDirectory(session, remoteDir);
