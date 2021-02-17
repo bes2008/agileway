@@ -22,6 +22,9 @@ public interface SftpSession extends Closeable {
      * <pre>
      * packet:
      * |packet_type|req_id|path|openMode|file_attributes|
+     *
+     * packet_type: OPEN
+     *
      * </p>
      * @param filepath     the file path
      * @param openMode {int} the open mode
@@ -35,6 +38,8 @@ public interface SftpSession extends Closeable {
     /**
      * Create a symbolic link on the server. Creates a link "src" that points
      * to "target".
+     * <p>
+     * packet_type: SYMLINK
      *
      * @throws IOException
      */
@@ -42,18 +47,28 @@ public interface SftpSession extends Closeable {
 
     /**
      * Read the target of a symbolic link.
+     * packet_type: READLINK
      *
      * @return The target of the link.
      * @throws IOException
      */
     String readLink(String path) throws IOException;
 
+    /**
+     * packet_type: REALPATH
+     *
+     * @param path
+     * @return
+     * @throws IOException
+     */
     String canonicalPath(String path) throws IOException;
 
 
     /**
      * Retrieve the file attributes of a file. This method
      * follows symbolic links on the server.
+     * <p>
+     * packet_type: STAT
      *
      * @return a FileAttributes object.
      * @throws IOException
@@ -61,13 +76,20 @@ public interface SftpSession extends Closeable {
      */
     FileAttrs stat(String filepath) throws IOException;
 
+    /**
+     * packet_type: LSTAT
+     *
+     * @param filepath
+     * @return
+     * @throws IOException
+     */
     FileAttrs lstat(String filepath) throws IOException;
-
-    FileAttrs fstat(SftpFile file) throws IOException;
 
     /**
      * Modify the attributes of a file. Used for operations such as changing
      * the ownership, permissions or access times, as well as for truncating a file.
+     *
+     * packet_type: SETSTAT
      *
      * @param path  the file path
      * @param attrs A FileAttributes object. Specifies the modifications to be

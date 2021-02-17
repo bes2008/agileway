@@ -90,15 +90,6 @@ public class SshjSftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public FileAttrs fstat(SftpFile file) throws IOException {
-        try {
-            return file.getAttributes();
-        } catch (SFTPException ex) {
-            throw SshjSftps.wrapSftpException(ex);
-        }
-    }
-
-    @Override
     public void setStat(String path, FileAttrs attrs) throws IOException {
         try {
             sftpClient.setattr(path, SshjSftps.toFileAttributes(attrs));

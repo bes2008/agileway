@@ -2,6 +2,7 @@ package com.jn.agileway.ssh.client.impl.sshj.sftp;
 
 import com.jn.agileway.ssh.client.sftp.SftpFile;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
+import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.langx.annotation.Nullable;
 import net.schmizz.sshj.sftp.RemoteFile;
 
@@ -42,5 +43,15 @@ public class SshjSftpFile extends SftpFile {
     @Override
     public void write(long fileOffset, byte[] data, int offset, int length) throws IOException {
         remoteFile.write(fileOffset, data, offset, length);
+    }
+
+    @Override
+    public void setAttributes(FileAttrs attrs) throws IOException {
+        remoteFile.setAttributes(SshjSftps.toFileAttributes(attrs));
+    }
+
+    @Override
+    public FileAttrs getAttributes() throws IOException {
+        return SshjSftps.fromFileAttributes(remoteFile.fetchAttributes());
     }
 }

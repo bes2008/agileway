@@ -53,10 +53,18 @@ public class SftpTests {
                 Collects.forEach(children, new Consumer<SftpResourceInfo>() {
                     @Override
                     public void accept(SftpResourceInfo sftpResourceInfo) {
-                        try {
-                            session.rm(sftpResourceInfo.getPath());
-                        } catch (Throwable ex) {
-                            logger.error(ex.getMessage(), ex);
+                        if(sftpResourceInfo.getAttrs().isDirectory()){
+                            try {
+                                session.rmdir(sftpResourceInfo.getPath());
+                            }catch (Throwable ex){
+                                logger.error(ex.getMessage(), ex);
+                            }
+                        }else {
+                            try {
+                                session.rm(sftpResourceInfo.getPath());
+                            } catch (Throwable ex) {
+                                logger.error(ex.getMessage(), ex);
+                            }
                         }
                     }
                 });
@@ -103,6 +111,8 @@ public class SftpTests {
             sftpFile.close();
         }
         logger.info("{}:{}", file.getPath(), Objs.deepEquals(buffer, fileData));
+
+        logger.info("canonical path: {}", session.canonicalPath(filepath));
     }
 
     void _copyDir(final SftpSession session, File localDirectory, final String remoteDir) throws IOException {

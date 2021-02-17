@@ -66,12 +66,20 @@ public abstract class SftpFile implements Closeable {
      */
     public abstract void write(long fileOffset, byte[] data, int offset, int length) throws IOException;
 
-    public void setAttributes(FileAttrs attrs) throws IOException {
-        session.setStat(this.path, attrs);
-    }
+    /**
+     * FSETSTAT
+     *
+     * @param attrs
+     * @throws IOException
+     */
+    public abstract void setAttributes(FileAttrs attrs) throws IOException;
 
-    public FileAttrs getAttributes() throws IOException {
-        return session.stat(this.path);
-    }
+    /**
+     * FSTAT
+     *
+     * @return
+     * @throws IOException
+     */
+    public abstract FileAttrs getAttributes() throws IOException;
 
 }
