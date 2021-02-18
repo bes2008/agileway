@@ -7,7 +7,6 @@ import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionConfig;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionFactory;
 import com.jn.agileway.ssh.client.impl.sshj.sftp.SshjSftpSessionFactory;
 import com.jn.agileway.ssh.client.sftp.*;
-import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.SystemPropertys;
 import com.jn.langx.util.collection.Collects;
@@ -30,7 +29,7 @@ public class SftpTests {
         _test(new SshjSftpSessionFactory(), new SshjConnectionFactory(), new SshjConnectionConfig(), "/home/fangjinuo/Templates/test_sftp_sshj");
     }
 
-    void _test(SftpSessionFactory sessionFactory, SshConnectionFactory connectionFactory, AbstractSshConnectionConfig connectionConfig, String testWorkingDirectory) {
+    void _test(SftpSessionFactory sessionFactory, SshConnectionFactory connectionFactory, AbstractSshConnectionConfig connectionConfig, final String testWorkingDirectory) {
         connectionConfig.setHost("192.168.234.128");
         //connectionConfig.setHost("192.168.1.79");
         connectionConfig.setPort(22);
@@ -51,16 +50,7 @@ public class SftpTests {
             }
             List<SftpResourceInfo> children = session.listFiles(testWorkingDirectory);
             if (!children.isEmpty()) {
-                Collects.forEach(children, new Consumer<SftpResourceInfo>() {
-                    @Override
-                    public void accept(SftpResourceInfo sftpResourceInfo) {
-                        try {
-                            _remove(session, sftpResourceInfo.getPath());
-                        }catch (Throwable ex){
-                            logger.error(ex.getMessage(), ex);
-                        }
-                    }
-                });
+                Sftps.removeDir(session, testWorkingDirectory, true);
             }
 
             // 拷贝 agileway-sshclient 模块下所有的文件到  testWorkingDirectory
@@ -72,32 +62,6 @@ public class SftpTests {
         } finally {
             IOs.close(session);
         }
-    }
-
-    void _remove(SftpSession session, String path) throws IOException {
-        FileAttrs attrs = session.stat(path);
-        if (attrs.isDirectory()) {
-            _removeDir(session, path);
-        } else {
-            session.rm(path);
-        }
-    }
-
-    void _removeDir(final SftpSession session, String directory) throws IOException {
-        List<SftpResourceInfo> children = session.listFiles(directory);
-        if (!children.isEmpty()) {
-            Collects.forEach(children, new Consumer<SftpResourceInfo>() {
-                @Override
-                public void accept(SftpResourceInfo sftpResourceInfo) {
-                    try {
-                        _remove(session, sftpResourceInfo.getPath());
-                    } catch (Throwable ex) {
-                        logger.error(ex.getMessage(), ex);
-                    }
-                }
-            });
-        }
-        session.rmdir(directory);
     }
 
 
