@@ -3,6 +3,9 @@ package com.jn.agileway.ssh.client.sftp;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.attrs.FileType;
 import com.jn.agileway.ssh.client.sftp.exception.NoSuchFileSftpException;
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.NotEmpty;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
@@ -109,7 +112,6 @@ public class Sftps {
         }
     }
 
-
     /**
      * copy local file to remote dir
      *
@@ -119,7 +121,7 @@ public class Sftps {
      * @return
      * @throws IOException
      */
-    public static int copyFile(SftpSession session, File file, String remoteDir, String newName) throws IOException {
+    public static int copyFile(@NonNull SftpSession session, @NonNull File file, @NotEmpty String remoteDir, @Nullable String newName) throws IOException {
         boolean remoteDirExist = Sftps.existDirectory(session, remoteDir);
         if (!remoteDirExist) {
             session.mkdir(remoteDir, null);

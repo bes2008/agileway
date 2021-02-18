@@ -64,7 +64,7 @@ public class SftpTests {
 
 
     void _copyFile(SftpSession session, File file, String remoteDir) throws IOException {
-        int length = Sftps.copyFile(session, file, remoteDir);
+        int length = Sftps.copyFile(session, file, remoteDir, null);
 
         String filepath = remoteDir + "/" + file.getName();
         SftpFile sftpFile = session.open(filepath, OpenMode.READ, null);
