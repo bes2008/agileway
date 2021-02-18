@@ -7,6 +7,7 @@ import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionConfig;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionFactory;
 import com.jn.agileway.ssh.client.impl.sshj.sftp.SshjSftpSessionFactory;
 import com.jn.agileway.ssh.client.sftp.*;
+import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.langx.util.SystemPropertys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
@@ -23,11 +24,16 @@ public class SftpTests {
     private static final Logger logger = LoggerFactory.getLogger(SftpTests.class);
 
     @Test
-    public void testSftp_sshj() {
+    public void testSftp_jsch() throws IOException {
         _test(new SshjSftpSessionFactory(), new SshjConnectionFactory(), new SshjConnectionConfig(), "/home/fangjinuo/Templates/test_sftp_sshj");
     }
 
-    void _test(SftpSessionFactory sessionFactory, SshConnectionFactory connectionFactory, AbstractSshConnectionConfig connectionConfig, final String testWorkingDirectory) {
+    @Test
+    public void testSftp_sshj() throws IOException {
+        _test(new SshjSftpSessionFactory(), new SshjConnectionFactory(), new SshjConnectionConfig(), "/home/fangjinuo/Templates/test_sftp_sshj");
+    }
+
+    void _test(SftpSessionFactory sessionFactory, SshConnectionFactory connectionFactory, AbstractSshConnectionConfig connectionConfig, final String testWorkingDirectory) throws IOException{
         connectionConfig.setHost("192.168.234.128");
         //connectionConfig.setHost("192.168.1.79");
         connectionConfig.setPort(22);
@@ -37,6 +43,10 @@ public class SftpTests {
         SshConnection connection = connectionFactory.get(connectionConfig);
 
         final SftpSession session = sessionFactory.get(connection);
+
+        FileAttrs attrs = session.stat("/home/fangjinuo");
+        System.out.println(attrs);
+
         try {
             // 确保testWorkingDirectory 存在，并且是 empty的
             boolean testWorkingDirectoryExist = Sftps.existDirectory(session, testWorkingDirectory);

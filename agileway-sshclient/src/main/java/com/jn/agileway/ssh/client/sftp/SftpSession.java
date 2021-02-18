@@ -1,6 +1,7 @@
 package com.jn.agileway.ssh.client.sftp;
 
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
+import com.jn.agileway.ssh.client.sftp.exception.SftpException;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.function.Predicate;
 
@@ -16,7 +17,7 @@ import java.util.List;
  */
 public interface SftpSession extends Closeable {
 
-    int getProtocolVersion();
+    int getProtocolVersion() throws SftpException;
 
     /**
      * <pre>

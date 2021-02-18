@@ -4,6 +4,7 @@ import com.jn.agileway.ssh.client.sftp.AbstractSftpSession;
 import com.jn.agileway.ssh.client.sftp.SftpFile;
 import com.jn.agileway.ssh.client.sftp.SftpResourceInfo;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
+import com.jn.agileway.ssh.client.sftp.exception.SftpException;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
 import net.schmizz.sshj.sftp.RemoteFile;
@@ -23,7 +24,7 @@ public class SshjSftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public int getProtocolVersion() {
+    public int getProtocolVersion() throws SftpException {
         return sftpClient.version();
     }
 

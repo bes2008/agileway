@@ -149,4 +149,8 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
             delegate.disconnect();
         }
     }
+
+    public Session getDelegate() {
+        return delegate;
+    }
 }

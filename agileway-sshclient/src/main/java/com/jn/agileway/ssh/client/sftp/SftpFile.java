@@ -7,8 +7,6 @@ import com.jn.langx.annotation.Nullable;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * 代表一个打开的 file
@@ -24,27 +22,17 @@ public abstract class SftpFile implements Closeable {
      */
     @Nullable
     protected String fileHandle;
-    @Nullable
-    protected InputStream inputStream;
-    @Nullable
-    protected OutputStream outputStream;
 
     protected boolean isClosed = false;
 
     public SftpFile(SftpSession session, String path) {
-        this(session, path, null, null);
+        this(session, path, null);
     }
 
-    public SftpFile(SftpSession session, String path, @Nullable InputStream inputStream, @Nullable OutputStream outputStream) {
-        this(session, path, null, inputStream, outputStream);
-    }
-
-    public SftpFile(SftpSession session, String path, @Nullable String fileHandle, @Nullable InputStream inputStream, @Nullable OutputStream outputStream) {
+    public SftpFile(SftpSession session, String path, @Nullable String fileHandle) {
         this.session = session;
         this.path = path;
         this.fileHandle = fileHandle;
-        this.inputStream = inputStream;
-        this.outputStream = outputStream;
     }
 
     /**

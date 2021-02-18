@@ -7,22 +7,17 @@ import com.jn.langx.annotation.Nullable;
 import net.schmizz.sshj.sftp.RemoteFile;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 public class SshjSftpFile extends SftpFile {
     private RemoteFile remoteFile;
 
     public SshjSftpFile(SftpSession session, String path) {
-        super(session, path, null, null);
+        super(session, path, null);
     }
 
-    public SshjSftpFile(SftpSession session, String path, @Nullable InputStream inputStream, @Nullable OutputStream outputStream) {
-        super(session, path, null, inputStream, outputStream);
-    }
 
-    public SshjSftpFile(SftpSession session, String path, @Nullable String fileHandle, @Nullable InputStream inputStream, @Nullable OutputStream outputStream) {
-        super(session, path, fileHandle, inputStream, outputStream);
+    public SshjSftpFile(SftpSession session, String path, @Nullable String fileHandle) {
+        super(session, path, fileHandle);
     }
 
     public void setRemoteFile(RemoteFile remoteFile) {
