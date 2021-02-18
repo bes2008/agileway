@@ -126,18 +126,24 @@ public class Sftps {
         }
         String name = Emptys.isEmpty(newName) ? file.getName() : newName;
         String filepath = remoteDir + "/" + name;
-        SftpFile sftpFile = session.open(filepath, OpenMode.WRITE, null);
-        FileInputStream inputStream = new FileInputStream(file);
-        byte[] fileData = IOs.toByteArray(inputStream);
-        IOs.close(inputStream);
+
+        FileInputStream inputStream = null;
+        SftpFile sftpFile = null;
+        int sum = 0;
         try {
-            sftpFile.write(0, fileData, 0, fileData.length);
-        } catch (Throwable ex) {
-            logger.error(ex.getMessage(), ex);
+            sftpFile = session.open(filepath, OpenMode.WRITE, null);
+            inputStream = new FileInputStream(file);
+            byte[] buffer = new byte[4096];
+            int readLength = 0;
+            while ((readLength = inputStream.read(buffer, 0, buffer.length)) != -1) {
+                sftpFile.write(sum, buffer, 0, readLength);
+                sum += readLength;
+            }
         } finally {
-            sftpFile.close();
+            IOs.close(sftpFile);
+            IOs.close(inputStream);
         }
-        return fileData.length;
+        return sum;
     }
 
     /**
@@ -193,7 +199,7 @@ public class Sftps {
             sftpFile = session.open(remoteFile, OpenMode.READ, null);
             byte[] buffer = new byte[4096];
             int readLength = 0;
-            while ((readLength = sftpFile.read(0, buffer, 0, buffer.length)) != -1) {
+            while ((readLength = sftpFile.read(sum, buffer, 0, buffer.length)) != -1) {
                 fout.write(buffer, 0, readLength);
                 sum += readLength;
             }
