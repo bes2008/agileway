@@ -92,14 +92,14 @@ public class FileAttrs {
 
     public boolean isDirectory() {
         if (this.fileMode != null) {
-            return this.fileMode.getType() == FileMode.Type.DIRECTORY;
+            return this.fileMode.getType() == FileType.DIRECTORY;
         }
         return false;
     }
 
     public boolean isFile() {
         if (this.fileMode != null) {
-            return this.fileMode.getType() == FileMode.Type.REGULAR;
+            return this.fileMode.getType() == FileType.REGULAR;
         }
         return false;
     }
@@ -107,35 +107,35 @@ public class FileAttrs {
 
     public boolean isSocket() {
         if (this.fileMode != null) {
-            return this.fileMode.getType() == FileMode.Type.SOCKET_SPECIAL;
+            return this.fileMode.getType() == FileType.SOCKET_SPECIAL;
         }
         return false;
     }
 
     public boolean isBlock() {
         if (this.fileMode != null) {
-            return this.fileMode.getType() == FileMode.Type.BLOCK_SPECIAL;
+            return this.fileMode.getType() == FileType.BLOCK_SPECIAL;
         }
         return false;
     }
 
     public boolean isChar() {
         if (this.fileMode != null) {
-            return this.fileMode.getType() == FileMode.Type.CHAR_SPECIAL;
+            return this.fileMode.getType() == FileType.CHAR_SPECIAL;
         }
         return false;
     }
 
     public boolean isLink() {
         if (this.fileMode != null) {
-            return this.fileMode.getType() == FileMode.Type.SYMBOLIC_LINK;
+            return this.fileMode.getType() == FileType.SYMBOLIC_LINK;
         }
         return false;
     }
 
     public boolean isFIFO() {
         if (this.fileMode != null) {
-            return this.fileMode.getType() == FileMode.Type.FIFO_SPECIAL;
+            return this.fileMode.getType() == FileType.FIFO_SPECIAL;
         }
         return false;
     }
