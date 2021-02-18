@@ -104,6 +104,8 @@ public interface SftpSession extends Closeable {
      * packet:
      * |packet_type|req_id|file_handle|
      *
+     * packet_type: READDIR
+     *
      * @param directory
      * @return
      */
@@ -112,6 +114,8 @@ public interface SftpSession extends Closeable {
     /**
      * packet:
      * |packet_type|req_id|path|file_attributes_flags_mask|file_attributes|
+     *
+     * packet_type: MKDIR
      *
      * @param directory
      * @param attributes
@@ -123,9 +127,13 @@ public interface SftpSession extends Closeable {
      * packet:
      * |packet_type|req_id|path|
      *
+     * packet_type: RMDIR
+     *
      * 只能删除空目录，目录下有内容时，需要先清理目录里的内容
      * @param directory
      * @return
+     *
+     * @see Sftps#removeDir(SftpSession, String, boolean)
      */
     void rmdir(String directory) throws IOException;
 
@@ -141,6 +149,8 @@ public interface SftpSession extends Closeable {
     /**
      * packet:
      * |packet_type|req_id|path|
+     *
+     * packet_type: RM
      *
      * @param oldFilepath
      * @param newFilepath
