@@ -7,7 +7,6 @@ import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionConfig;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionFactory;
 import com.jn.agileway.ssh.client.impl.sshj.sftp.SshjSftpSessionFactory;
 import com.jn.agileway.ssh.client.sftp.*;
-import com.jn.langx.util.Objs;
 import com.jn.langx.util.SystemPropertys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
@@ -17,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -66,36 +64,19 @@ public class SftpTests {
 
 
     void _copyFile(SftpSession session, File file, String remoteDir) throws IOException {
-        boolean remoteDirExist = Sftps.existDirectory(session, remoteDir);
-        if (!remoteDirExist) {
-            session.mkdir(remoteDir, null);
-        }
-        String name = file.getName();
-        String filepath = remoteDir + "/" + name;
-        SftpFile sftpFile = session.open(filepath, OpenMode.WRITE, null);
-        FileInputStream inputStream = new FileInputStream(file);
-        byte[] fileData = IOs.toByteArray(inputStream);
-        IOs.close(inputStream);
+        int length = Sftps.copyFile(session, file, remoteDir);
+
+        String filepath = remoteDir + "/" + file.getName();
+        SftpFile sftpFile = session.open(filepath, OpenMode.READ, null);
+        byte[] buffer = new byte[length];
         try {
-            sftpFile.write(0, fileData, 0, fileData.length);
+            int readLength = sftpFile.read(0, buffer, 0, length);
+            logger.info("read length == write length ? {}", length == readLength);
         } catch (Throwable ex) {
             logger.error(ex.getMessage(), ex);
         } finally {
             sftpFile.close();
         }
-
-
-        sftpFile = session.open(filepath, OpenMode.READ, null);
-        byte[] buffer = new byte[fileData.length];
-        try {
-            int readLength = sftpFile.read(0, buffer, 0, fileData.length);
-        } catch (Throwable ex) {
-            logger.error(ex.getMessage(), ex);
-        } finally {
-            sftpFile.close();
-        }
-        logger.info("{}:{}", file.getPath(), Objs.deepEquals(buffer, fileData));
-
         logger.info("canonical path: {}", session.canonicalPath(filepath));
     }
 

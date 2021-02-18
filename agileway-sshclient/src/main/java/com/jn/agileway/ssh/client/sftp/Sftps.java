@@ -3,12 +3,15 @@ package com.jn.agileway.ssh.client.sftp;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.attrs.FileType;
 import com.jn.agileway.ssh.client.sftp.exception.NoSuchFileSftpException;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.io.IOs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -54,6 +57,7 @@ public class Sftps {
 
     /**
      * 判断是否存在 某个普通的文件
+     *
      * @param session
      * @param filepath
      * @return
@@ -65,6 +69,7 @@ public class Sftps {
 
     /**
      * 判断是否存在某个目录
+     *
      * @param session
      * @param directoryPath
      * @return
@@ -101,4 +106,50 @@ public class Sftps {
             session.rmdir(directory);
         }
     }
+
+
+    public static int copyFile(SftpSession session, File file, String remoteDir) throws IOException {
+        boolean remoteDirExist = Sftps.existDirectory(session, remoteDir);
+        if (!remoteDirExist) {
+            session.mkdir(remoteDir, null);
+        }
+        String name = file.getName();
+        String filepath = remoteDir + "/" + name;
+        SftpFile sftpFile = session.open(filepath, OpenMode.WRITE, null);
+        FileInputStream inputStream = new FileInputStream(file);
+        byte[] fileData = IOs.toByteArray(inputStream);
+        IOs.close(inputStream);
+        try {
+            sftpFile.write(0, fileData, 0, fileData.length);
+        } catch (Throwable ex) {
+            logger.error(ex.getMessage(), ex);
+        } finally {
+            sftpFile.close();
+        }
+        return fileData.length;
+    }
+
+    public static void copyDir(final SftpSession session, File localDirectory, final String remoteDir) throws IOException {
+        boolean remoteDirExist = Sftps.existDirectory(session, remoteDir);
+        if (!remoteDirExist) {
+            session.mkdir(remoteDir, null);
+        }
+        Collects.forEach(localDirectory.listFiles(), new Consumer<File>() {
+            @Override
+            public void accept(File file) {
+                String name = file.getName();
+                try {
+                    if (file.isFile()) {
+                        copyFile(session, file, remoteDir);
+                    } else {
+                        copyDir(session, file, remoteDir + "/" + name);
+                    }
+                } catch (Throwable ex) {
+                    logger.error(ex.getMessage(), ex);
+                }
+            }
+        });
+
+    }
+
 }
