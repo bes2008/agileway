@@ -3,15 +3,17 @@ package com.jn.agileway.ssh.client.sftp;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.attrs.FileType;
 import com.jn.agileway.ssh.client.sftp.exception.NoSuchFileSftpException;
-import com.jn.langx.util.Objs;
+import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.io.file.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -108,12 +110,21 @@ public class Sftps {
     }
 
 
-    public static int copyFile(SftpSession session, File file, String remoteDir) throws IOException {
+    /**
+     * copy local file to remote dir
+     *
+     * @param session
+     * @param file
+     * @param remoteDir
+     * @return
+     * @throws IOException
+     */
+    public static int copyFile(SftpSession session, File file, String remoteDir, String newName) throws IOException {
         boolean remoteDirExist = Sftps.existDirectory(session, remoteDir);
         if (!remoteDirExist) {
             session.mkdir(remoteDir, null);
         }
-        String name = file.getName();
+        String name = Emptys.isEmpty(newName) ? file.getName() : newName;
         String filepath = remoteDir + "/" + name;
         SftpFile sftpFile = session.open(filepath, OpenMode.WRITE, null);
         FileInputStream inputStream = new FileInputStream(file);
@@ -129,6 +140,15 @@ public class Sftps {
         return fileData.length;
     }
 
+    /**
+     * copy local directory to remote dir
+     *
+     * @param session
+     * @param localDirectory
+     * @param remoteDir
+     * @return
+     * @throws IOException
+     */
     public static void copyDir(final SftpSession session, File localDirectory, final String remoteDir) throws IOException {
         boolean remoteDirExist = Sftps.existDirectory(session, remoteDir);
         if (!remoteDirExist) {
@@ -140,7 +160,7 @@ public class Sftps {
                 String name = file.getName();
                 try {
                     if (file.isFile()) {
-                        copyFile(session, file, remoteDir);
+                        copyFile(session, file, remoteDir, null);
                     } else {
                         copyDir(session, file, remoteDir + "/" + name);
                     }
@@ -149,7 +169,61 @@ public class Sftps {
                 }
             }
         });
-
     }
 
+    /**
+     * copy remote directory to local
+     *
+     * @param session
+     * @param localDirectory
+     * @param remoteFile
+     */
+    public static int reverseCopyFile(final SftpSession session, final File localDirectory, final String remoteFile) throws IOException {
+        if (!existFile(session, remoteFile)) {
+            logger.error("remote file is not exist: {}", remoteFile);
+            return -1;
+        }
+        Files.makeDirs(localDirectory);
+
+        FileOutputStream fout = null;
+        SftpFile sftpFile = null;
+        int sum = 0;
+        try {
+            fout = new FileOutputStream(localDirectory);
+            sftpFile = session.open(remoteFile, OpenMode.READ, null);
+            byte[] buffer = new byte[4096];
+            int readLength = 0;
+            while ((readLength = sftpFile.read(0, buffer, 0, buffer.length)) != -1) {
+                fout.write(buffer, 0, readLength);
+                sum += readLength;
+            }
+        } finally {
+            IOs.close(sftpFile);
+            IOs.close(fout);
+        }
+        return sum;
+    }
+
+    public static void reverseCopyDirectory(final SftpSession session, final File localDirectory, final String remoteDirectory) throws IOException {
+        if (!existDirectory(session, remoteDirectory)) {
+            logger.error("remote directory is not exist: {}", remoteDirectory);
+            return;
+        }
+        Files.makeDirs(localDirectory);
+        Collects.forEach(session.listFiles(remoteDirectory), new Consumer<SftpResourceInfo>() {
+            @Override
+            public void accept(SftpResourceInfo sftpResourceInfo) {
+                String name = sftpResourceInfo.getName();
+                try {
+                    if (sftpResourceInfo.getAttrs().isDirectory()) {
+                        reverseCopyDirectory(session, new File(localDirectory, name), sftpResourceInfo.getPath());
+                    } else {
+                        reverseCopyFile(session, localDirectory, sftpResourceInfo.getPath());
+                    }
+                } catch (Throwable ex) {
+                    logger.error(ex.getMessage(), ex);
+                }
+            }
+        });
+    }
 }
