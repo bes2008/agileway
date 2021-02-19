@@ -2,6 +2,7 @@ package com.jn.agileway.ssh.client.sftp.attrs;
 
 import com.jn.langx.util.Dates;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.io.file.FilePermission;
 
 import java.util.Date;
 import java.util.Map;

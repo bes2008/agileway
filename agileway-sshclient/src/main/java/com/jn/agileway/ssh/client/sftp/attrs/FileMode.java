@@ -1,5 +1,7 @@
 package com.jn.agileway.ssh.client.sftp.attrs;
 
+import com.jn.langx.util.io.file.FilePermission;
+
 import java.util.Collections;
 import java.util.Set;
 
@@ -40,4 +42,11 @@ public class FileMode {
         return "[mask=" + mask + "]";
     }
 
+    public static FileMode createFileMode(FileType fileType, int permissions) {
+        return createFileMode(fileType, FilePermission.fromMask(permissions));
+    }
+
+    public static FileMode createFileMode(FileType fileType, Set<FilePermission> permissions) {
+        return new FileMode(fileType.getMask() | FilePermission.toMask(permissions));
+    }
 }

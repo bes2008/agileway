@@ -4,6 +4,7 @@ import ch.ethz.ssh2.*;
 import com.jn.agileway.ssh.client.sftp.*;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.attrs.FileMode;
+import com.jn.agileway.ssh.client.sftp.attrs.FileType;
 import com.jn.agileway.ssh.client.sftp.exception.NoSuchFileSftpException;
 import com.jn.agileway.ssh.client.sftp.exception.SftpException;
 import com.jn.langx.text.StringTemplates;
@@ -52,6 +53,15 @@ public class Ssh2SftpSession extends AbstractSftpSession {
     @Override
     public SftpFile open(String filepath, int openMode, FileAttrs attrs) throws IOException {
         if (!Sftps.exist(this, filepath)) {
+            if (attrs == null) {
+                attrs = new FileAttrs();
+
+            }
+            FileMode fileMode = attrs.getFileMode();
+            if (fileMode == null) {
+                fileMode = FileMode.createFileMode(FileType.REGULAR, 0644);
+                attrs.setFileMode(fileMode);
+            }
             if (OpenMode.isCreatable(openMode)) {
                 sftpClient.createFileTruncate(filepath, Ssh2Sftps.toSsh2FileAttributes(attrs));
             } else {
@@ -136,7 +146,7 @@ public class Ssh2SftpSession extends AbstractSftpSession {
     public void mkdir(String directory, FileAttrs attributes) throws IOException {
         try {
             FileMode fileMode = attributes == null ? null : attributes.getFileMode();
-            int permissions = fileMode == null ? 0 : fileMode.getMask();
+            int permissions = fileMode == null ? 0775 : fileMode.getMask();
             sftpClient.mkdir(directory, permissions);
         } catch (SFTPException ex) {
             throw Ssh2Sftps.wrapSftpException(ex);
