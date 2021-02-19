@@ -28,7 +28,7 @@ public class Ssh2SftpSession extends AbstractSftpSession {
     }
 
     @Override
-    protected List<SftpResourceInfo> doListFiles(String directory) throws IOException {
+    protected List<SftpResourceInfo> doListFiles(final String directory) throws IOException {
         Vector<SFTPv3DirectoryEntry> vector = sftpClient.ls(directory);
         return Pipeline.of(vector).filter(new Predicate<SFTPv3DirectoryEntry>() {
             @Override
@@ -39,7 +39,7 @@ public class Ssh2SftpSession extends AbstractSftpSession {
             @Override
             public SftpResourceInfo apply(SFTPv3DirectoryEntry entry) {
                 FileAttrs attrs = Ssh2Sftps.fromSsh2FileAttributes(entry.attributes);
-                return new SftpResourceInfo(entry.longEntry, attrs);
+                return new SftpResourceInfo(directory + "/" + entry.filename, attrs);
             }
         }).asList();
 
