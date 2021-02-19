@@ -1,17 +1,19 @@
 package com.jn.agileway.ssh.client.impl.ganymedssh2.sftp;
 
-import ch.ethz.ssh2.SFTPException;
-import ch.ethz.ssh2.SFTPv3Client;
-import ch.ethz.ssh2.SFTPv3FileAttributes;
-import com.jn.agileway.ssh.client.sftp.AbstractSftpSession;
-import com.jn.agileway.ssh.client.sftp.SftpFile;
-import com.jn.agileway.ssh.client.sftp.SftpResourceInfo;
+import ch.ethz.ssh2.*;
+import com.jn.agileway.ssh.client.sftp.*;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.attrs.FileMode;
+import com.jn.agileway.ssh.client.sftp.exception.NoSuchFileSftpException;
 import com.jn.agileway.ssh.client.sftp.exception.SftpException;
+import com.jn.langx.text.StringTemplates;
+import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.function.Function;
+import com.jn.langx.util.function.Predicate;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Vector;
 
 public class Ssh2SftpSession extends AbstractSftpSession {
     private SFTPv3Client sftpClient;
@@ -20,9 +22,26 @@ public class Ssh2SftpSession extends AbstractSftpSession {
         this.sftpClient = sftpClient;
     }
 
+    public SFTPv3Client getSftpClient() {
+        return sftpClient;
+    }
+
     @Override
     protected List<SftpResourceInfo> doListFiles(String directory) throws IOException {
-        return null;
+        Vector<SFTPv3DirectoryEntry> vector = sftpClient.ls(directory);
+        return Pipeline.of(vector).filter(new Predicate<SFTPv3DirectoryEntry>() {
+            @Override
+            public boolean test(SFTPv3DirectoryEntry entry) {
+                return !".".equals(entry.filename) && !"..".equals(entry.filename);
+            }
+        }).map(new Function<SFTPv3DirectoryEntry, SftpResourceInfo>() {
+            @Override
+            public SftpResourceInfo apply(SFTPv3DirectoryEntry entry) {
+                FileAttrs attrs = Ssh2Sftps.fromSsh2FileAttributes(entry.attributes);
+                return new SftpResourceInfo(entry.longEntry, attrs);
+            }
+        }).asList();
+
     }
 
     @Override
@@ -32,7 +51,28 @@ public class Ssh2SftpSession extends AbstractSftpSession {
 
     @Override
     public SftpFile open(String filepath, int openMode, FileAttrs attrs) throws IOException {
+        if (!Sftps.exist(this, filepath)) {
+            if (OpenMode.isCreatable(openMode)) {
+                sftpClient.createFileTruncate(filepath, Ssh2Sftps.toSsh2FileAttributes(attrs));
+            } else {
+                throw new NoSuchFileSftpException(StringTemplates.formatWithPlaceholder("no such file: {}", filepath));
+            }
+        } else {
+            if (OpenMode.isTruncated(openMode)) {
+                sftpClient.createFileTruncate(filepath, Ssh2Sftps.toSsh2FileAttributes(attrs));
+            }
+        }
 
+        SFTPv3FileHandle handle = null;
+        if (OpenMode.isWritable(openMode)) {
+            handle = sftpClient.openFileRW(filepath);
+        } else {
+            handle = sftpClient.openFileRO(filepath);
+        }
+
+        Ssh2SftpFile sftpFile = new Ssh2SftpFile(this, filepath);
+        sftpFile.setFileHandle(handle);
+        return sftpFile;
     }
 
     @Override

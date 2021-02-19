@@ -102,4 +102,8 @@ public class Ssh2Connection extends AbstractSshConnection<Ssh2ConnectionConfig> 
             this.delegate.close();
         }
     }
+
+    public Connection getDelegate() {
+        return delegate;
+    }
 }
