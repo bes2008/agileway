@@ -3,6 +3,9 @@ package com.jn.agileway.ssh.test.sftp;
 import com.jn.agileway.ssh.client.AbstractSshConnectionConfig;
 import com.jn.agileway.ssh.client.SshConnection;
 import com.jn.agileway.ssh.client.SshConnectionFactory;
+import com.jn.agileway.ssh.client.impl.jsch.JschConnectionConfig;
+import com.jn.agileway.ssh.client.impl.jsch.JschConnectionFactory;
+import com.jn.agileway.ssh.client.impl.jsch.sftp.JschSftpSessionFactory;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionConfig;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionFactory;
 import com.jn.agileway.ssh.client.impl.sshj.sftp.SshjSftpSessionFactory;
@@ -25,7 +28,7 @@ public class SftpTests {
 
     @Test
     public void testSftp_jsch() throws IOException {
-        _test(new SshjSftpSessionFactory(), new SshjConnectionFactory(), new SshjConnectionConfig(), "/home/fangjinuo/Templates/test_sftp_sshj");
+        _test(new JschSftpSessionFactory(), new JschConnectionFactory(), new JschConnectionConfig(), "/home/fangjinuo/Templates/test_sftp_jsch");
     }
 
     @Test
@@ -33,21 +36,24 @@ public class SftpTests {
         _test(new SshjSftpSessionFactory(), new SshjConnectionFactory(), new SshjConnectionConfig(), "/home/fangjinuo/Templates/test_sftp_sshj");
     }
 
-    void _test(SftpSessionFactory sessionFactory, SshConnectionFactory connectionFactory, AbstractSshConnectionConfig connectionConfig, final String testWorkingDirectory) throws IOException{
+    void _test(SftpSessionFactory sessionFactory, SshConnectionFactory connectionFactory, AbstractSshConnectionConfig connectionConfig, final String testWorkingDirectory) throws IOException {
         connectionConfig.setHost("192.168.234.128");
         //connectionConfig.setHost("192.168.1.79");
         connectionConfig.setPort(22);
         connectionConfig.setUser("fangjinuo");
         connectionConfig.setPassword("fjn13570");
 
-        SshConnection connection = connectionFactory.get(connectionConfig);
-
-        final SftpSession session = sessionFactory.get(connection);
-
-        FileAttrs attrs = session.stat("/home/fangjinuo");
-        System.out.println(attrs);
-
+        SshConnection connection = null;
+        SftpSession _session = null;
         try {
+            connection = connectionFactory.get(connectionConfig);
+
+            final SftpSession session = sessionFactory.get(connection);
+            _session = session;
+
+            FileAttrs attrs = session.stat("/home/fangjinuo");
+            System.out.println(attrs);
+
             // 确保testWorkingDirectory 存在，并且是 empty的
             boolean testWorkingDirectoryExist = Sftps.existDirectory(session, testWorkingDirectory);
             logger.info("directory exist? {}", testWorkingDirectoryExist);
@@ -68,7 +74,8 @@ public class SftpTests {
         } catch (Throwable ex) {
             logger.error(ex.getMessage(), ex);
         } finally {
-            IOs.close(session);
+            IOs.close(_session);
+            IOs.close(connection);
         }
     }
 

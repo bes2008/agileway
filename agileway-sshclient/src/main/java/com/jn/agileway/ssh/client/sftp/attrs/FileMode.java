@@ -37,7 +37,7 @@ public class FileMode {
 
     @Override
     public String toString() {
-        return "[mask=" + Integer.toOctalString(mask) + "]";
+        return "[mask=" + mask + "]";
     }
 
 }

@@ -7,7 +7,9 @@ import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.exception.NoSuchFileSftpException;
 import com.jn.agileway.ssh.client.sftp.exception.SftpException;
 import com.jn.langx.text.StringTemplates;
-import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.function.Function;
+import com.jn.langx.util.function.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,18 +34,29 @@ public class JschSftpSession extends AbstractSftpSession {
     public int getProtocolVersion() throws SftpException {
         try {
             return channel.getServerVersion();
-        } catch (Throwable ex) {
-            throw new SftpException(ex);
+        } catch (com.jcraft.jsch.SftpException ex) {
+            throw JschSftps.wrapSftpException(ex);
         }
     }
 
     @Override
-    protected List<SftpResourceInfo> doListFiles(String directory) throws IOException {
+    protected List<SftpResourceInfo> doListFiles(final String directory) throws IOException {
         try {
-            Vector vector = channel.ls(directory);
-            return Collects.asList(vector);
+            Vector<ChannelSftp.LsEntry> vector = channel.ls(directory);
+            return Pipeline.of(vector).filter(new Predicate<ChannelSftp.LsEntry>() {
+                @Override
+                public boolean test(ChannelSftp.LsEntry entry) {
+                    return !".".equals(entry.getFilename()) && !"..".equals(entry.getFilename());
+                }
+            }).map(new Function<ChannelSftp.LsEntry, SftpResourceInfo>() {
+                @Override
+                public SftpResourceInfo apply(ChannelSftp.LsEntry entry) {
+                    FileAttrs attrs =  JschSftps.fromSftpATTRS(entry.getAttrs());
+                    return new SftpResourceInfo(directory + "/" + entry.getFilename(), attrs);
+                }
+            }).asList();
         } catch (com.jcraft.jsch.SftpException ex) {
-            throw new SftpException(ex);
+            throw JschSftps.wrapSftpException(ex);
         }
     }
 
@@ -54,8 +67,8 @@ public class JschSftpSession extends AbstractSftpSession {
                 // 创建文件
                 try {
                     channel.put(new ByteArrayInputStream(new byte[0]), filepath, ChannelSftp.OVERWRITE);
-                } catch (Throwable ex) {
-                    throw new NoSuchFileSftpException(StringTemplates.formatWithPlaceholder("no such file: {}", filepath));
+                } catch (com.jcraft.jsch.SftpException ex) {
+                    throw JschSftps.wrapSftpException(ex);
                 }
             } else {
                 throw new NoSuchFileSftpException(StringTemplates.formatWithPlaceholder("no such file: {}", filepath));
@@ -69,7 +82,7 @@ public class JschSftpSession extends AbstractSftpSession {
         try {
             channel.symlink(src, target);
         } catch (com.jcraft.jsch.SftpException ex) {
-            throw new SftpException(ex);
+            throw JschSftps.wrapSftpException(ex);
         }
     }
 
@@ -78,7 +91,7 @@ public class JschSftpSession extends AbstractSftpSession {
         try {
             return channel.readlink(path);
         } catch (com.jcraft.jsch.SftpException ex) {
-            throw new SftpException(ex);
+            throw JschSftps.wrapSftpException(ex);
         }
     }
 
@@ -87,7 +100,7 @@ public class JschSftpSession extends AbstractSftpSession {
         try {
             return channel.realpath(path);
         } catch (com.jcraft.jsch.SftpException ex) {
-            throw new SftpException(ex);
+            throw JschSftps.wrapSftpException(ex);
         }
     }
 
@@ -97,7 +110,7 @@ public class JschSftpSession extends AbstractSftpSession {
             SftpATTRS sftpATTRS = channel.stat(filepath);
             return JschSftps.fromSftpATTRS(sftpATTRS);
         } catch (com.jcraft.jsch.SftpException ex) {
-            throw new SftpException(ex);
+            throw JschSftps.wrapSftpException(ex);
         }
     }
 
@@ -107,7 +120,7 @@ public class JschSftpSession extends AbstractSftpSession {
             SftpATTRS sftpATTRS = channel.lstat(filepath);
             return JschSftps.fromSftpATTRS(sftpATTRS);
         } catch (com.jcraft.jsch.SftpException ex) {
-            throw new SftpException(ex);
+            throw JschSftps.wrapSftpException(ex);
         }
     }
 
@@ -118,7 +131,7 @@ public class JschSftpSession extends AbstractSftpSession {
             sftpATTRS = JschSftps.toSftpATTRS(sftpATTRS, attrs);
             channel.setStat(path, sftpATTRS);
         } catch (com.jcraft.jsch.SftpException ex) {
-            throw new SftpException(ex);
+            throw JschSftps.wrapSftpException(ex);
         }
     }
 
@@ -127,7 +140,7 @@ public class JschSftpSession extends AbstractSftpSession {
         try {
             channel.mkdir(directory);
         } catch (com.jcraft.jsch.SftpException ex) {
-            throw new SftpException(ex);
+            throw JschSftps.wrapSftpException(ex);
         }
     }
 
@@ -136,7 +149,7 @@ public class JschSftpSession extends AbstractSftpSession {
         try {
             channel.rmdir(directory);
         } catch (com.jcraft.jsch.SftpException ex) {
-            throw new SftpException(ex);
+            throw JschSftps.wrapSftpException(ex);
         }
     }
 
@@ -145,7 +158,7 @@ public class JschSftpSession extends AbstractSftpSession {
         try {
             channel.rm(filepath);
         } catch (com.jcraft.jsch.SftpException ex) {
-            throw new SftpException(ex);
+            throw JschSftps.wrapSftpException(ex);
         }
     }
 
@@ -154,7 +167,7 @@ public class JschSftpSession extends AbstractSftpSession {
         try {
             channel.rename(oldFilepath, newFilepath);
         } catch (com.jcraft.jsch.SftpException ex) {
-            throw new SftpException(ex);
+            throw JschSftps.wrapSftpException(ex);
         }
     }
 

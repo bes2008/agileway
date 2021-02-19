@@ -13,6 +13,7 @@ public class JschSftpSessionFactory implements SftpSessionFactory<JschSftpSessio
         JschConnection conn = (JschConnection) sshConnection;
         try {
             ChannelSftp channel = (ChannelSftp) conn.getDelegate().openChannel("sftp");
+            channel.connect();
             return new JschSftpSession(channel);
         } catch (JSchException ex) {
             throw new SshException(ex);
