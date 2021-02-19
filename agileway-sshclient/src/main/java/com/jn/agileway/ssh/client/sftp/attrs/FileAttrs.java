@@ -51,13 +51,13 @@ public class FileAttrs {
     /**
      * access time: unit: s
      */
-    private Long atime = null;
+    private Integer atime = null;
 
-    public Long getAccessTime() {
+    public Integer getAccessTime() {
         return this.atime;
     }
 
-    public void setAccessTime(long accessTime) {
+    public void setAccessTime(int accessTime) {
         this.atime = accessTime;
     }
 
@@ -65,13 +65,13 @@ public class FileAttrs {
     /**
      * modify time: unit: s
      */
-    private Long mtime = null;
+    private Integer mtime = null;
 
-    public Long getModifyTime() {
+    public Integer getModifyTime() {
         return this.mtime;
     }
 
-    public void setModifyTime(long modifyTime) {
+    public void setModifyTime(int modifyTime) {
         this.mtime = modifyTime;
     }
 

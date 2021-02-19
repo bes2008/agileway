@@ -72,7 +72,7 @@ class SshjSftps {
             }
 
             if (attrs.getAccessTime() != null || attrs.getModifyTime() != null) {
-                builder.withAtimeMtime(Objs.useValueIfNull(attrs.getAccessTime(), 0L), Objs.useValueIfNull(attrs.getModifyTime(), 0L));
+                builder.withAtimeMtime(Objs.useValueIfNull(attrs.getAccessTime(), 0), Objs.useValueIfNull(attrs.getModifyTime(), 0));
             }
 
             Set<String> extendKeys = attrs.getExtendKeys();
@@ -102,10 +102,10 @@ class SshjSftps {
         }
 
         if (attributes.getAtime() != 0L) {
-            attrs.setAccessTime(attributes.getAtime());
+            attrs.setAccessTime(((Long) attributes.getAtime()).intValue());
         }
         if (attributes.getMtime() != 0L) {
-            attrs.setModifyTime(attributes.getMtime());
+            attrs.setModifyTime(((Long) attributes.getMtime()).intValue());
         }
 
         if (attributes.getUID() != 0L) {

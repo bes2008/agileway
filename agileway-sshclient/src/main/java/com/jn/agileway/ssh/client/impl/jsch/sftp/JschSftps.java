@@ -56,13 +56,13 @@ public class JschSftps {
             );
         }
 
-        Long atime = attrs.getAccessTime();
-        Long mtime = attrs.getModifyTime();
+        Integer atime = attrs.getAccessTime();
+        Integer mtime = attrs.getModifyTime();
 
         if (atime != null || mtime != null) {
             sftpATTRS.setACMODTIME(
-                    Objs.useValueIfNull(atime, sftpATTRS.getATime()).intValue(),
-                    Objs.useValueIfNull(mtime, sftpATTRS.getMTime()).intValue()
+                    Objs.useValueIfNull(atime, sftpATTRS.getATime()),
+                    Objs.useValueIfNull(mtime, sftpATTRS.getMTime())
             );
         }
 
