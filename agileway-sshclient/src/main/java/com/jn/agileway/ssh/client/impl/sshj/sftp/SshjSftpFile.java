@@ -3,7 +3,6 @@ package com.jn.agileway.ssh.client.impl.sshj.sftp;
 import com.jn.agileway.ssh.client.sftp.SftpFile;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
-import com.jn.langx.annotation.Nullable;
 import net.schmizz.sshj.sftp.RemoteFile;
 
 import java.io.IOException;
@@ -12,12 +11,7 @@ public class SshjSftpFile extends SftpFile {
     private RemoteFile remoteFile;
 
     public SshjSftpFile(SftpSession session, String path) {
-        super(session, path, null);
-    }
-
-
-    public SshjSftpFile(SftpSession session, String path, @Nullable String fileHandle) {
-        super(session, path, fileHandle);
+        super(session, path);
     }
 
     public void setRemoteFile(RemoteFile remoteFile) {

@@ -3,7 +3,6 @@ package com.jn.agileway.ssh.client.sftp;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.NotEmpty;
-import com.jn.langx.annotation.Nullable;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -17,22 +16,12 @@ public abstract class SftpFile implements Closeable {
 
     @NonNull
     protected SftpSession session;
-    /**
-     * UTF8 格式的字符串，代表了 文件句柄
-     */
-    @Nullable
-    protected String fileHandle;
 
     protected boolean isClosed = false;
 
     public SftpFile(SftpSession session, String path) {
-        this(session, path, null);
-    }
-
-    public SftpFile(SftpSession session, String path, @Nullable String fileHandle) {
         this.session = session;
         this.path = path;
-        this.fileHandle = fileHandle;
     }
 
     /**

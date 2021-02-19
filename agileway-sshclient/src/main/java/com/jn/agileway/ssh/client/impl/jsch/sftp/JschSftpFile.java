@@ -16,10 +16,6 @@ public class JschSftpFile extends SftpFile {
         super(session, path);
     }
 
-    public JschSftpFile(SftpSession session, String path, String fileHandle) {
-        super(session, path, fileHandle);
-    }
-
     @Override
     public int read(long fileOffset, byte[] buffer, int bufferOffset, int length) throws IOException {
         ChannelSftp channel = ((JschSftpSession) this.session).getChannel();
