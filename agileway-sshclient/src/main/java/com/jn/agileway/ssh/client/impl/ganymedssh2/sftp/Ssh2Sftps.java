@@ -23,6 +23,9 @@ public class Ssh2Sftps {
     }
 
     public static SFTPv3FileAttributes toSsh2FileAttributes(FileAttrs attributes) {
+        if (attributes == null) {
+            return null;
+        }
         SFTPv3FileAttributes attrs = new SFTPv3FileAttributes();
         if (attributes.getSize() != null) {
             attrs.size = (attributes.getSize());
@@ -52,6 +55,10 @@ public class Ssh2Sftps {
     }
 
     public static FileAttrs fromSsh2FileAttributes(SFTPv3FileAttributes attributes) {
+        if (attributes == null) {
+            return null;
+        }
+
         FileAttrs attrs = new FileAttrs();
         if (attributes.size != null) {
             attrs.setSize(attributes.size);

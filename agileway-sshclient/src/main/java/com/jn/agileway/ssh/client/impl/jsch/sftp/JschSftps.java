@@ -7,12 +7,13 @@ import com.jn.agileway.ssh.client.sftp.attrs.FileMode;
 import com.jn.agileway.ssh.client.sftp.exception.NoSuchFileSftpException;
 import com.jn.agileway.ssh.client.sftp.exception.SftpException;
 import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.enums.Enums;
 
 public class JschSftps {
 
-    public static SftpException wrapSftpException(com.jcraft.jsch.SftpException ex){
+    public static SftpException wrapSftpException(com.jcraft.jsch.SftpException ex) {
         ResponseStatusCode statusCode = Enums.ofCode(ResponseStatusCode.class, ex.id);
         SftpException exception = null;
         if (statusCode == ResponseStatusCode.NO_SUCH_FILE) {
@@ -25,6 +26,10 @@ public class JschSftps {
     }
 
     public static FileAttrs fromSftpATTRS(SftpATTRS sftpATTRS) {
+        if (sftpATTRS == null) {
+            return null;
+        }
+
         FileAttrs attrs = new FileAttrs();
         attrs.setSize(sftpATTRS.getSize());
 
@@ -40,7 +45,11 @@ public class JschSftps {
         return attrs;
     }
 
-    public static SftpATTRS toSftpATTRS(@NonNull SftpATTRS sftpATTRS, @NonNull FileAttrs attrs) {
+    public static SftpATTRS toSftpATTRS(@NonNull SftpATTRS sftpATTRS, @Nullable FileAttrs attrs) {
+        if (attrs == null) {
+            return sftpATTRS;
+        }
+
         Long size = attrs.getSize();
         if (size != null) {
             sftpATTRS.setSIZE(size);

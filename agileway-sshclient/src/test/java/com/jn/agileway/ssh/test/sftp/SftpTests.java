@@ -91,17 +91,19 @@ public class SftpTests {
 
     void _copyFile(SftpSession session, File file, String remoteDir) throws IOException {
         int length = Sftps.copyFile(session, file, remoteDir, null);
-
         String filepath = remoteDir + "/" + file.getName();
-        SftpFile sftpFile = session.open(filepath, OpenMode.READ, null);
-        byte[] buffer = new byte[length];
-        try {
-            int readLength = sftpFile.read(0, buffer, 0, length);
-            logger.info("read length == write length ? {}", length == readLength);
-        } catch (Throwable ex) {
-            logger.error(ex.getMessage(), ex);
-        } finally {
-            sftpFile.close();
+        // ganymed-ssh2 的 read 方法对 length 参数有这个限制
+        if (length < 32786) {
+            SftpFile sftpFile = session.open(filepath, OpenMode.READ, null);
+            byte[] buffer = new byte[length];
+            try {
+                int readLength = sftpFile.read(0, buffer, 0, length);
+                logger.info("read length == write length ? {}", length == readLength);
+            } catch (Throwable ex) {
+                logger.error(ex.getMessage(), ex);
+            } finally {
+                sftpFile.close();
+            }
         }
         logger.info("canonical path: {}", session.canonicalPath(filepath));
     }
