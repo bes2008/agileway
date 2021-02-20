@@ -18,17 +18,14 @@ public class KnownHostsFiles {
         List<KnownHostEntry> entries = Collects.emptyArrayList();
         while (true) {
             String line = br.readLine();
-
-            if (line == null)
+            if (line == null) {
                 break;
-
+            }
             line = line.trim();
-
-            if (line.startsWith("#"))
+            if (line.startsWith("#")) {
                 continue;
-
+            }
             String[] arr = line.split(" ");
-
             if (arr.length >= 3) {
                 HostKeyType keyType = Enums.ofName(HostKeyType.class, arr[1]);
                 if (keyType != null) {
@@ -47,8 +44,9 @@ public class KnownHostsFiles {
         FileReader fr = new FileReader(knownHosts);
         while (true) {
             int len = fr.read(buff);
-            if (len < 0)
+            if (len < 0) {
                 break;
+            }
             cw.write(buff, 0, len);
         }
         fr.close();
@@ -71,16 +69,19 @@ public class KnownHostsFiles {
      * @throws IOException
      */
     public static void appendHostKeysToFile(File knownHosts, String[] hostnames, String serverHostKeyAlgorithm, String serverHostKey) throws IOException {
-        if ((hostnames == null) || (hostnames.length == 0))
+        if (hostnames == null || hostnames.length == 0) {
             throw new IllegalArgumentException("Need at least one hostname specification");
+        }
 
-        if ((serverHostKeyAlgorithm == null) || (serverHostKey == null))
+        if (serverHostKeyAlgorithm == null || serverHostKey == null) {
             throw new IllegalArgumentException();
+        }
 
         StringBuilder buffer = new StringBuilder();
         for (int i = 0; i < hostnames.length; i++) {
-            if (i != 0)
+            if (i != 0) {
                 buffer.append(',');
+            }
             buffer.append(hostnames[i]);
         }
 
