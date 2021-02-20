@@ -6,6 +6,7 @@ import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.Channel;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
 import com.jn.agileway.ssh.client.impl.j2ssh.verifier.ToJ2sshHostKeyVerifier;
+import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.io.Charsets;
 import com.sshtools.j2ssh.SshClient;
@@ -99,7 +100,7 @@ public class J2sshConnection extends AbstractSshConnection<J2sshConnectionConfig
     }
 
     @Override
-    public Channel openForwardChannel() {
+    public Channel openForwardChannel() throws SshException {
         return null;
     }
 
@@ -108,5 +109,10 @@ public class J2sshConnection extends AbstractSshConnection<J2sshConnectionConfig
         if (sshClient != null) {
             sshClient.disconnect();
         }
+    }
+
+    @Override
+    public SftpSession openSftpSession() throws SshException {
+        return null;
     }
 }

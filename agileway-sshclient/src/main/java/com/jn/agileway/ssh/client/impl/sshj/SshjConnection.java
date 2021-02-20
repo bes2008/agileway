@@ -5,13 +5,16 @@ import com.jn.agileway.ssh.client.SshConnectionStatus;
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.Channel;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
+import com.jn.agileway.ssh.client.impl.sshj.sftp.SshjSftpSession;
 import com.jn.agileway.ssh.client.impl.sshj.verifier.ToSshjHostKeyVerifierAdapter;
+import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.net.Nets;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.connection.channel.direct.Session;
+import net.schmizz.sshj.sftp.SFTPClient;
 import net.schmizz.sshj.userauth.UserAuthException;
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
 import net.schmizz.sshj.userauth.keyprovider.OpenSSHKeyFile;
@@ -169,12 +172,22 @@ public class SshjConnection extends AbstractSshConnection<SshjConnectionConfig> 
     }
 
     @Override
-    public Channel openForwardChannel() {
+    public Channel openForwardChannel() throws SshException {
         return null;
     }
 
     @Override
     protected void doClose() throws IOException {
         this.sshClient.close();
+    }
+
+    @Override
+    public SftpSession openSftpSession() throws SshException {
+        try {
+            SFTPClient client = sshClient.newSFTPClient();
+            return new SshjSftpSession(client);
+        } catch (Throwable ex) {
+            throw new SshException(ex);
+        }
     }
 }

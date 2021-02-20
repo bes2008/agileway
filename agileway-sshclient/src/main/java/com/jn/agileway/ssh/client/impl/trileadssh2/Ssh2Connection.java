@@ -5,9 +5,12 @@ import com.jn.agileway.ssh.client.SshConnectionStatus;
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.Channel;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
+import com.jn.agileway.ssh.client.impl.trileadssh2.sftp.Ssh2SftpSession;
 import com.jn.agileway.ssh.client.impl.trileadssh2.verifier.ToSsh2HostKeyVerifierAdapter;
+import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.langx.util.Preconditions;
 import com.trilead.ssh2.Connection;
+import com.trilead.ssh2.SFTPv3Client;
 import com.trilead.ssh2.Session;
 
 import java.io.IOException;
@@ -85,7 +88,7 @@ public class Ssh2Connection extends AbstractSshConnection<Ssh2ConnectionConfig> 
     }
 
     @Override
-    public Channel openForwardChannel() {
+    public Channel openForwardChannel() throws SshException {
         return null;
     }
 
@@ -97,7 +100,14 @@ public class Ssh2Connection extends AbstractSshConnection<Ssh2ConnectionConfig> 
         }
     }
 
-    public Connection getDelegate() {
-        return delegate;
+    @Override
+    public SftpSession openSftpSession() throws SshException {
+        try {
+            SFTPv3Client sftpClient = new SFTPv3Client(this.delegate);
+            Ssh2SftpSession session = new Ssh2SftpSession(sftpClient);
+            return session;
+        } catch (Throwable ex) {
+            throw new SshException(ex.getMessage(), ex);
+        }
     }
 }

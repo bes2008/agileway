@@ -2,6 +2,7 @@ package com.jn.agileway.ssh.client;
 
 import com.jn.agileway.ssh.client.channel.Channel;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
+import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier;
 
 import java.io.Closeable;
@@ -154,5 +155,7 @@ public interface SshConnection<CONF extends SshConnectionConfig> extends Closeab
      */
     SessionedChannel openSession() throws SshException;
 
-    Channel openForwardChannel();
+    Channel openForwardChannel() throws SshException;
+
+    SftpSession openSftpSession() throws SshException;
 }

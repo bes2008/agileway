@@ -5,13 +5,10 @@ import com.jn.agileway.ssh.client.SshConnection;
 import com.jn.agileway.ssh.client.SshConnectionFactory;
 import com.jn.agileway.ssh.client.impl.jsch.JschConnectionConfig;
 import com.jn.agileway.ssh.client.impl.jsch.JschConnectionFactory;
-import com.jn.agileway.ssh.client.impl.jsch.sftp.JschSftpSessionFactory;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionConfig;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionFactory;
-import com.jn.agileway.ssh.client.impl.sshj.sftp.SshjSftpSessionFactory;
 import com.jn.agileway.ssh.client.impl.trileadssh2.Ssh2ConnectionConfig;
 import com.jn.agileway.ssh.client.impl.trileadssh2.Ssh2ConnectionFactory;
-import com.jn.agileway.ssh.client.impl.trileadssh2.sftp.Ssh2SftpSessionFactory;
 import com.jn.agileway.ssh.client.sftp.*;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.langx.util.SystemPropertys;
@@ -31,21 +28,21 @@ public class SftpTests {
 
     @Test
     public void testSftp_trilead_ssh2() throws IOException {
-        _test(new Ssh2SftpSessionFactory(), new Ssh2ConnectionFactory(), new Ssh2ConnectionConfig(), "/home/fangjinuo/Templates/test_sftp_trilead_ssh2");
+        _test(new Ssh2ConnectionFactory(), new Ssh2ConnectionConfig(), "/home/fangjinuo/Templates/test_sftp_trilead_ssh2");
     }
 
 
     @Test
     public void testSftp_jsch() throws IOException {
-        _test(new JschSftpSessionFactory(), new JschConnectionFactory(), new JschConnectionConfig(), "/home/fangjinuo/Templates/test_sftp_jsch");
+        _test(new JschConnectionFactory(), new JschConnectionConfig(), "/home/fangjinuo/Templates/test_sftp_jsch");
     }
 
     @Test
     public void testSftp_sshj() throws IOException {
-        _test(new SshjSftpSessionFactory(), new SshjConnectionFactory(), new SshjConnectionConfig(), "/home/fangjinuo/Templates/test_sftp_sshj");
+        _test(new SshjConnectionFactory(), new SshjConnectionConfig(), "/home/fangjinuo/Templates/test_sftp_sshj");
     }
 
-    void _test(SftpSessionFactory sessionFactory, SshConnectionFactory connectionFactory, AbstractSshConnectionConfig connectionConfig, final String testWorkingDirectory) throws IOException {
+    void _test(SshConnectionFactory connectionFactory, AbstractSshConnectionConfig connectionConfig, final String testWorkingDirectory) throws IOException {
         connectionConfig.setHost("192.168.234.128");
         //connectionConfig.setHost("192.168.1.79");
         connectionConfig.setPort(22);
@@ -57,7 +54,7 @@ public class SftpTests {
         try {
             connection = connectionFactory.get(connectionConfig);
 
-            final SftpSession session = sessionFactory.get(connection);
+            final SftpSession session = connection.openSftpSession();
             _session = session;
 
             FileAttrs attrs = session.stat("/home/fangjinuo");

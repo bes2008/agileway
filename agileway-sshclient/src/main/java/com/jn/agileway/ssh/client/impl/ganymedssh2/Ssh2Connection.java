@@ -1,13 +1,16 @@
 package com.jn.agileway.ssh.client.impl.ganymedssh2;
 
 import ch.ethz.ssh2.Connection;
+import ch.ethz.ssh2.SFTPv3Client;
 import ch.ethz.ssh2.Session;
 import com.jn.agileway.ssh.client.AbstractSshConnection;
 import com.jn.agileway.ssh.client.SshConnectionStatus;
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.Channel;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
+import com.jn.agileway.ssh.client.impl.ganymedssh2.sftp.Ssh2SftpSession;
 import com.jn.agileway.ssh.client.impl.ganymedssh2.verifier.ToSsh2HostKeyVerifierAdapter;
+import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.net.Nets;
 
@@ -91,19 +94,26 @@ public class Ssh2Connection extends AbstractSshConnection<Ssh2ConnectionConfig> 
     }
 
     @Override
-    public Channel openForwardChannel() {
+    public Channel openForwardChannel() throws SshException {
         return null;
     }
 
 
     @Override
     protected void doClose() throws IOException {
-        if(this.delegate!=null) {
+        if (this.delegate != null) {
             this.delegate.close();
         }
     }
 
-    public Connection getDelegate() {
-        return delegate;
+    @Override
+    public SftpSession openSftpSession() throws SshException {
+        try {
+            SFTPv3Client sftpClient = new SFTPv3Client(this.delegate);
+            Ssh2SftpSession session = new Ssh2SftpSession(sftpClient);
+            return session;
+        } catch (Throwable ex) {
+            throw new SshException(ex.getMessage(), ex);
+        }
     }
 }
