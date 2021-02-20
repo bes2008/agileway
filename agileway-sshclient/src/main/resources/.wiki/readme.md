@@ -9,8 +9,8 @@ SSH https://www.ssh.com/ssh/
 |-------|-------|------------|-----|-------|
 | JSch  | BSD   |1.6+        | ```com.jcraft:jsch:0.1.55 ``` | 不做特性开发，只做BugFix|
 |sshj   |Apache 2.0|1.6+     | ```net.schmizz:sshj:0.10.0``` | 活跃 |
-|ganymed-ssh2 |Apache 2.0|1.4+|```com.airlenet.yang:ganymed-ssh2:1.2.0```| 不做特性开发，只做BugFix |
-|trilead-ssh2 |Apache 2.0|1.4+|```com.trilead:trilead-ssh2:1.0.0-build222```|不做特性开发，只做BugFix|
+|ganymed-ssh2 |Apache 2.0|1.4+|```com.airlenet.yang:ganymed-ssh2:1.2.0```| 超过10年没有维护，有Bug也没有再修复 |
+|trilead-ssh2 |Apache 2.0|1.4+|```com.trilead:trilead-ssh2:1.0.0-build222```|源自ganymed-ssh2,不做特性开发，只做BugFix|
 |j2ssh|>=0.2.8 GPL ; <0.2.8 LGPL + Apache |1.6+|```sshtools:j2ssh-core:0.2.9```| 不做特性开发，只做BugFix|
 
 

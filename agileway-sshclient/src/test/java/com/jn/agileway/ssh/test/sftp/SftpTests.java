@@ -3,15 +3,15 @@ package com.jn.agileway.ssh.test.sftp;
 import com.jn.agileway.ssh.client.AbstractSshConnectionConfig;
 import com.jn.agileway.ssh.client.SshConnection;
 import com.jn.agileway.ssh.client.SshConnectionFactory;
-import com.jn.agileway.ssh.client.impl.ganymedssh2.Ssh2ConnectionConfig;
-import com.jn.agileway.ssh.client.impl.ganymedssh2.Ssh2ConnectionFactory;
-import com.jn.agileway.ssh.client.impl.ganymedssh2.sftp.Ssh2SftpSessionFactory;
 import com.jn.agileway.ssh.client.impl.jsch.JschConnectionConfig;
 import com.jn.agileway.ssh.client.impl.jsch.JschConnectionFactory;
 import com.jn.agileway.ssh.client.impl.jsch.sftp.JschSftpSessionFactory;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionConfig;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionFactory;
 import com.jn.agileway.ssh.client.impl.sshj.sftp.SshjSftpSessionFactory;
+import com.jn.agileway.ssh.client.impl.trileadssh2.Ssh2ConnectionConfig;
+import com.jn.agileway.ssh.client.impl.trileadssh2.Ssh2ConnectionFactory;
+import com.jn.agileway.ssh.client.impl.trileadssh2.sftp.Ssh2SftpSessionFactory;
 import com.jn.agileway.ssh.client.sftp.*;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.langx.util.SystemPropertys;
@@ -30,8 +30,8 @@ public class SftpTests {
     private static final Logger logger = LoggerFactory.getLogger(SftpTests.class);
 
     @Test
-    public void testSftp_ganymed_ssh2() throws IOException {
-        _test(new Ssh2SftpSessionFactory(), new Ssh2ConnectionFactory(), new Ssh2ConnectionConfig(), "/home/fangjinuo/Templates/test_sftp_ganymed_ssh2");
+    public void testSftp_trilead_ssh2() throws IOException {
+        _test(new Ssh2SftpSessionFactory(), new Ssh2ConnectionFactory(), new Ssh2ConnectionConfig(), "/home/fangjinuo/Templates/test_sftp_trilead_ssh2");
     }
 
 

@@ -1,6 +1,5 @@
-package com.jn.agileway.ssh.client.impl.ganymedssh2.sftp;
+package com.jn.agileway.ssh.client.impl.trileadssh2.sftp;
 
-import ch.ethz.ssh2.*;
 import com.jn.agileway.ssh.client.sftp.*;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.attrs.FileMode;
@@ -11,6 +10,7 @@ import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Predicate;
+import com.trilead.ssh2.*;
 
 import java.io.IOException;
 import java.util.List;
