@@ -49,7 +49,6 @@ public class JschSftps {
         if (attrs == null) {
             return sftpATTRS;
         }
-
         Long size = attrs.getSize();
         if (size != null) {
             sftpATTRS.setSIZE(size);

@@ -238,6 +238,10 @@ Java SSH Client 对 SFTP的支持的额外功能：
 |atime        | |#atime()|||
 |size         | SftpATTRS#getSize()| #size()|||
 
+
+推荐选择顺序：sshj > trilead-ssh2 > jsch 
+
+
 4、SCP
 
 SCP 是Linux里一个的 command program， 它是基于sftp 协议的一个程序。用于提供文件在多个机器上的copy。
@@ -248,6 +252,8 @@ SCP 是Linux里一个的 command program， 它是基于sftp 协议的一个程�
 |put     | ChannelSftp#put()| SFTPClient#put()   |SCPClient#put()|       |
 |get     | ChannelSftp#get()| SFTPClient#get()   |SCPClient#get()|       |
 
+
+经过整合后，建议的做法是：Sftps#copy, Sftps.reverseCopy
 
 
 

@@ -24,6 +24,7 @@
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
             <version>0.1.55</version>
+            <optional>true</optional>
         </dependency>
 
 
@@ -32,6 +33,7 @@
             <groupId>net.schmizz</groupId>
             <artifactId>sshj</artifactId>
             <version>0.10.0</version>
+            <optional>true</optional>
         </dependency>
 
         <!--License: Apache 2.0-->
@@ -39,6 +41,7 @@
             <groupId>com.airlenet.yang</groupId>
             <artifactId>ganymed-ssh2</artifactId>
             <version>1.2.0</version>
+            <optional>true</optional>
         </dependency>
 
         <!--采用私有协议，代码和 ganymed-ssh2 基本一样-->
@@ -46,6 +49,7 @@
             <groupId>com.trilead</groupId>
             <artifactId>trilead-ssh2</artifactId>
             <version>1.0.0-build222</version>
+            <optional>true</optional>
         </dependency>
 
         <!-- &lt;0.2.8 use LGPL + Apache,  &ge;0.2.8 GPL-->
@@ -53,19 +57,14 @@
             <groupId>sshtools</groupId>
             <artifactId>j2ssh-core</artifactId>
             <version>0.2.9</version>
+            <optional>true</optional>
         </dependency>
         <!--将 Apache Common-Logging 适配给 slf4j, j2ssh-core 用的是 Common-Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
             <version>${slf4j.version}</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.apache.maven.wagon</groupId>
-            <artifactId>wagon-ssh-common</artifactId>
-            <version>3.4.2</version>
+            <optional>true</optional>
         </dependency>
 
     </dependencies>

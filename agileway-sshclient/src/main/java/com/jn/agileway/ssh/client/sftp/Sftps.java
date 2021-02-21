@@ -1,12 +1,14 @@
 package com.jn.agileway.ssh.client.sftp;
 
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
+import com.jn.agileway.ssh.client.sftp.attrs.FileMode;
 import com.jn.agileway.ssh.client.sftp.attrs.FileType;
 import com.jn.agileway.ssh.client.sftp.exception.NoSuchFileSftpException;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Emptys;
+import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.io.IOs;
@@ -113,6 +115,15 @@ public class Sftps {
         }
     }
 
+    public static void copy(@NonNull SftpSession session, @NonNull File file, @NotEmpty String remoteDir) throws IOException {
+        Preconditions.checkArgument(file.exists(), "the file {} is not exist", file.getPath());
+        if (file.isFile()) {
+            copyFile(session, file, remoteDir, null);
+        } else {
+            copyDir(session, file, remoteDir);
+        }
+    }
+
     /**
      * copy local file to remote dir
      *
@@ -180,6 +191,15 @@ public class Sftps {
         });
     }
 
+    public static void reverseCopy(final SftpSession session, final File localDirectory, final String path) throws IOException {
+        FileType fileType = getFileType(session, path);
+        if (fileType == FileType.REGULAR) {
+            reverseCopyFile(session, localDirectory, path);
+        } else if (fileType == FileType.DIRECTORY) {
+            reverseCopyDirectory(session, localDirectory, path);
+        }
+    }
+
     /**
      * copy remote directory to local
      *
@@ -235,4 +255,30 @@ public class Sftps {
             }
         });
     }
+
+    public static void chmod(final SftpSession session, String path, int permissions) throws IOException {
+        FileAttrs attrs = session.stat(path);
+        FileType fileType = attrs.getFileMode().getType();
+        FileAttrs attrs2 = new FileAttrs();
+        attrs2.setFileMode(FileMode.createFileMode(fileType, permissions));
+        session.setStat(path, attrs2);
+    }
+
+    public static void chown(final SftpSession session, String path, int uid) throws IOException {
+        FileAttrs attrs = session.stat(path);
+        FileAttrs attrs2 = new FileAttrs();
+        attrs2.setUid(uid);
+        attrs2.setGid(attrs.getGid());
+        session.setStat(path, attrs2);
+    }
+
+    public static void chgrp(final SftpSession session, String path, int gid) throws IOException {
+        FileAttrs attrs = session.stat(path);
+        FileAttrs attrs2 = new FileAttrs();
+        attrs2.setUid(attrs.getUid());
+        attrs2.setGid(gid);
+        session.setStat(path, attrs2);
+    }
+
+
 }
