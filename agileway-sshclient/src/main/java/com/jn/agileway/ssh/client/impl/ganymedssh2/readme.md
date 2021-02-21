@@ -1,0 +1,1 @@
+Ganymed-ssh2 已不再维护，由 trilead-ssh2 来继续维护。如果要使用，请使用 trilead-ssh2 。
