@@ -40,11 +40,19 @@ public class EasyjsonCodec<T> extends AbstractCodec<T> {
 
     @Override
     public T decode(byte[] bytes) throws CodecException {
+        return decode(bytes, getTargetType());
+    }
+
+    @Override
+    public T decode(byte[] bytes, Class<T> targetType) throws CodecException {
         if (Emptys.isEmpty(bytes)) {
             return null;
         }
         String json = new String(bytes, Charsets.UTF_8);
-        Class<T> javaType = getTargetType();
+        Class<T> javaType = targetType;
+        if (javaType == null) {
+            javaType = getTargetType();
+        }
         if (serializeType) {
             int index = json.indexOf(";");
 
@@ -64,15 +72,6 @@ public class EasyjsonCodec<T> extends AbstractCodec<T> {
         } else {
             return jsonFactory.get().fromJson(json, javaType);
         }
-    }
-
-    @Override
-    public T decode(byte[] bytes, Class<T> targetType) throws CodecException {
-        if (Emptys.isEmpty(bytes)) {
-            return null;
-        }
-        String json = new String(bytes, Charsets.UTF_8);
-        return jsonFactory.get().fromJson(json, targetType);
     }
 
 

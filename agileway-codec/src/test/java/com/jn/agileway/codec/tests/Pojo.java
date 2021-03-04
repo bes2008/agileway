@@ -1,6 +1,7 @@
 package com.jn.agileway.codec.tests;
 
 import com.jn.langx.util.Objs;
+import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.hash.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -204,9 +205,9 @@ public class Pojo implements Serializable {
     public Collection<Object> getAttributeKeys() {
         Map<Object, Object> attributes = getAttributes();
         if (attributes == null) {
-            return Collections.emptySet();
+            return Collects.emptyHashSet();
         }
-        return attributes.keySet();
+        return Collects.newHashSet(attributes.keySet());
     }
 
     public Object getAttribute(Object key) {
