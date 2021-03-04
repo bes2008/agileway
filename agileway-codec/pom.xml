@@ -173,5 +173,11 @@
             <artifactId>jackson-dataformat-cbor</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <dependency>
+            <groupId>org.msgpack</groupId>
+            <artifactId>jackson-dataformat-msgpack</artifactId>
+            <version>0.8.22</version>
+        </dependency>
     </dependencies>
 </project>
