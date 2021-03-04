@@ -2,9 +2,8 @@ package com.jn.agileway.codec.serialization.protostuff;
 
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
-import com.jn.langx.util.Emptys;
-import com.jn.langx.util.Preconditions;
-import com.jn.langx.util.SystemPropertys;
+import com.jn.langx.util.*;
+import com.jn.langx.util.reflect.Reflects;
 import io.protostuff.GraphIOUtil;
 import io.protostuff.LinkedBuffer;
 import io.protostuff.Schema;
@@ -24,9 +23,25 @@ public class Protostuffs {
         if (o == null) {
             return null;
         }
+        // 序列化 对象
+        byte[] data = _serialize(o);
+
+        // 将 对象进行包装，再次写数据
+        WrappedStruct wrappedStruct = new WrappedStruct();
+        wrappedStruct.setName(Reflects.getFQNClassName(o.getClass()));
+        wrappedStruct.setValue(data);
+        data = _serialize(wrappedStruct);
+        return data;
+    }
+
+    private static byte[] _serialize(Object o) {
+        if (o == null) {
+            return null;
+        }
+        // 序列化 对象
         LinkedBuffer buffer = LinkedBuffer.allocate();
-        Class<T> objClass = (Class<T>) o.getClass();
-        Schema<T> schema = getSchema(objClass);
+        Class objClass = o.getClass();
+        Schema schema = getSchema(objClass);
         return GraphIOUtil.toByteArray(o, schema, buffer);
     }
 
@@ -34,9 +49,17 @@ public class Protostuffs {
         if (o == null) {
             return;
         }
+
+        // 序列化 对象
+        byte[] data = _serialize(o);
+
+        // 将 对象进行包装，再次写数据
+        WrappedStruct wrappedStruct = new WrappedStruct();
+        wrappedStruct.setName(Reflects.getFQNClassName(o.getClass()));
+        wrappedStruct.setValue(data);
+
         LinkedBuffer buffer = LinkedBuffer.allocate();
-        Class<T> objClass = (Class<T>) o.getClass();
-        Schema<T> schema = getSchema(objClass);
+        Schema<T> schema = getSchema(WrappedStruct.class);
         GraphIOUtil.writeTo(outputStream, o, schema, buffer);
     }
 
@@ -44,9 +67,27 @@ public class Protostuffs {
         if (Emptys.isEmpty(bytes)) {
             return null;
         }
+
+        Schema<WrappedStruct> schm = getSchema(WrappedStruct.class);
+        WrappedStruct wrappedStruct = schm.newMessage();
+        GraphIOUtil.mergeFrom(bytes, wrappedStruct, schm);
+
+        byte[] data = wrappedStruct.getValue();
+        String actualClass = wrappedStruct.getName();
+
+        String expectClass = (targetType == null || targetType == Object.class) ? null : Reflects.getFQNClassName(targetType);
+        if (expectClass != null) {
+            Preconditions.checkArgument(expectClass.equals(actualClass), "expect class: {}, actual class: {}", expectClass, actualClass);
+        } else {
+            try {
+                targetType = ClassLoaders.loadClass(actualClass);
+            } catch (Throwable ex) {
+                throw Throwables.wrapAsRuntimeException(ex);
+            }
+        }
         Schema<T> schema = getSchema(targetType);
         T instance = schema.newMessage();
-        GraphIOUtil.mergeFrom(bytes, instance, schema);
+        GraphIOUtil.mergeFrom(data, instance, schema);
         return instance;
     }
 
