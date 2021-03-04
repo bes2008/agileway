@@ -20,6 +20,7 @@
         <fst.version>2.57</fst.version>
         <fse.version>aegean-2.1</fse.version>
         <xson.version>1.0.2</xson.version>
+        <msgpack.version>0.8.22</msgpack.version>
     </properties>
 
     <dependencyManagement>
@@ -91,6 +92,11 @@
                 <groupId>com.fasterxml.jackson.dataformat</groupId>
                 <artifactId>jackson-dataformat-cbor</artifactId>
                 <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.msgpack</groupId>
+                <artifactId>jackson-dataformat-msgpack</artifactId>
+                <version>${msgpack.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -177,7 +183,7 @@
         <dependency>
             <groupId>org.msgpack</groupId>
             <artifactId>jackson-dataformat-msgpack</artifactId>
-            <version>0.8.22</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 </project>
