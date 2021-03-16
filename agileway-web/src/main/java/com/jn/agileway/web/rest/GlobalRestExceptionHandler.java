@@ -85,6 +85,7 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
                 respBody = RestRespBody.error(defaultErrorMessageHandler.getDefaultErrorStatusCode(), defaultErrorMessageHandler.getDefaultErrorCode(), defaultErrorMessageHandler.getDefaultErrorMessage());
             }
             request.setAttribute(GLOBAL_REST_EXCEPTION_HANDLER, this);
+            respBody.setUrl(request.getRequestURL().toString());
             try {
                 errorMessageHandler.handler(request.getLocale(), respBody);
             } catch (Throwable ex1) {

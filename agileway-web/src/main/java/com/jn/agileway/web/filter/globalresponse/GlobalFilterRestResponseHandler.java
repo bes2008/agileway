@@ -77,6 +77,7 @@ public class GlobalFilterRestResponseHandler implements GlobalRestResponseBodyHa
                 Boolean responseBodyWritten = (Boolean) request.getAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN);
                 if ((responseBodyWritten == null || !responseBodyWritten) && !response.isCommitted()) {
                     RestRespBody respBody = new RestRespBody(false, statusCode, "", this.defaultRestErrorMessageHandler.getDefaultErrorCode(), this.defaultRestErrorMessageHandler.getDefaultErrorMessage());
+                    respBody.setUrl(request.getRequestURL().toString());
                     restErrorMessageHandler.handler(request.getLocale(), respBody);
                     defaultRestErrorMessageHandler.handler(request.getLocale(), respBody);
                     String json = jsonFactory.get().toJson(respBody);

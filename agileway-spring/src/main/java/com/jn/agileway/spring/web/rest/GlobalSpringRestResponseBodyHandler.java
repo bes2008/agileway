@@ -60,6 +60,7 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
         if (body != null && body.getStatusCode() >= 400) {
             restErrorMessageHandler.handler(request.getLocale(), body);
         }
+        body.setUrl(request.getRequestURL().toString());
         response.setStatus(body.getStatusCode());
         response.setContentType(GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8);
         response.setCharacterEncoding(Charsets.UTF_8.name());
