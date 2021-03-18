@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>agileway-redis</artifactId>
+    <artifactId>agileway-redis-springdata2</artifactId>
     <description>Provides a large number of convenient redis tools:
         distributed locks,
         distributed count,
@@ -19,7 +19,7 @@
         the enhanced RedisTemplate based on a specified key prefix and the agileway-codec module
     </description>
     <properties>
-        <spring.data.redis.version>1.8.23.RELEASE</spring.data.redis.version>
+        <spring.data.redis.version>2.3.4.RELEASE</spring.data.redis.version>
     </properties>
 
     <dependencyManagement>
