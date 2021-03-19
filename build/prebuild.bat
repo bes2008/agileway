@@ -9,7 +9,4 @@ mkdir "%PROJECT_DIR%/agileway-redis-springdata2/src"
 echo xcopy "%PROJECT_DIR%/agileway-redis\src\*" -> "%PROJECT_DIR%/agileway-redis-springdata2/src/"
 
 xcopy /E/c/f "%PROJECT_DIR%/agileway-redis\src\*" "%PROJECT_DIR%/agileway-redis-springdata2/src/"
-
-
-
 cd ..
