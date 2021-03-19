@@ -15,12 +15,12 @@
         <module>agileway-redis</module>
         <module>agileway-shiro-redis</module>
         <module>agileway-httpclient</module>
-        <module>agileway-examples</module>
-        <module>agileway-feign</module>
         <module>agileway-dmmq</module>
         <module>agileway-aop</module>
         <module>agileway-sshclient</module>
         <module>agileway-redis-springdata2</module>
+        <module>agileway-examples</module>
+        <module>agileway-feign</module>
     </modules>
 
     <name>agileway</name>
