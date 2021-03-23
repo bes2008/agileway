@@ -1,12 +1,17 @@
 package com.jn.agileway.redis.core;
 
 import com.jn.agileway.codec.Codec;
+import com.jn.agileway.codec.serialization.cbor.CborJacksonCodec;
+import com.jn.agileway.codec.serialization.fse.FseCodec;
+import com.jn.agileway.codec.serialization.fst.FstCodec;
 import com.jn.agileway.codec.serialization.hessian.HessianCodec;
 import com.jn.agileway.codec.serialization.jdk.JdkCodec;
 import com.jn.agileway.codec.serialization.json.EasyjsonCodec;
 import com.jn.agileway.codec.serialization.json.JacksonCodec;
 import com.jn.agileway.codec.serialization.kryo.KryoCodec;
+import com.jn.agileway.codec.serialization.msgpack.MsgPackCodec;
 import com.jn.agileway.codec.serialization.protostuff.ProtostuffCodec;
+import com.jn.agileway.codec.serialization.xson.XsonCodec;
 import com.jn.agileway.redis.core.conf.BuiltinCodecType;
 import com.jn.agileway.redis.core.conf.RedisTemplateProperties;
 import com.jn.agileway.redis.core.key.RedisKeyWrapper;
@@ -201,6 +206,20 @@ public class RedisTemplates {
             case PROTOSTUFF:
                 codec = new ProtostuffCodec();
                 break;
+            case FSE:
+                codec = new FseCodec();
+                break;
+            case FST:
+                codec = new FstCodec();
+                break;
+            case CBOR:
+                codec = new CborJacksonCodec();
+                break;
+            case MSGPACK:
+                codec = new MsgPackCodec();
+                break;
+            case XSON:
+                codec = new XsonCodec();
             default:
                 codec = new EasyjsonCodec<>(true);;
                 break;

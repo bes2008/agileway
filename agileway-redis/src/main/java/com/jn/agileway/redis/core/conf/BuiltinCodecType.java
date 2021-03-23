@@ -1,10 +1,15 @@
 package com.jn.agileway.redis.core.conf;
 
 public enum BuiltinCodecType {
-    EASYJSON,
+    CBOR,
+    FSE,
+    FST,
+    HESSIAN,
     JSCKSON,
     JDK,
-    HESSIAN,
+    EASYJSON,
+    KRYO,
+    MSGPACK,
     PROTOSTUFF,
-    KRYO
+    XSON
 }
