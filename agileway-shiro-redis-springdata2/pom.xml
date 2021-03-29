@@ -9,18 +9,15 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>agileway-shiro-redis</artifactId>
-
-    <description>Provide the shiro enhances based on redis : cache, session manager</description>
-
     <properties>
         <shiro.version>[1.4.2,)</shiro.version>
     </properties>
 
+    <artifactId>agileway-shiro-redis-springdata2</artifactId>
     <dependencies>
         <dependency>
             <groupId>com.github.fangjinuo.agileway</groupId>
-            <artifactId>agileway-redis</artifactId>
+            <artifactId>agileway-redis-springdata2</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.shiro</groupId>
