@@ -3,9 +3,7 @@ package com.jn.agileway.web.filter.xss;
 import com.jn.langx.annotation.NotThreadSafe;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.Objs;
-import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
-import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Functions;
 
 import java.util.HashSet;

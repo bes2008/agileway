@@ -8,10 +8,20 @@ public class XssProperties {
      */
     private boolean enabled = true;
 
+    /**
+     * @see HtmlEventHandlerXssHandler
+     */
     private Set<String> htmlEventHandlers = HtmlEventHandlerXssHandler.DEFAULT_ON_XXX_FUNCTION_NAMES;
 
+    /**
+     * @see HtmlTagXssHandler
+     */
     private Set<String> htmlTags = HtmlTagXssHandler.DEFAULT_TAGS;
 
+    /**
+     * @see JavaScriptXssHandler
+     */
+    private boolean javascriptEnabled = true;
 
     public boolean isEnabled() {
         return enabled;
@@ -35,5 +45,13 @@ public class XssProperties {
 
     public void setHtmlTags(Set<String> htmlTags) {
         this.htmlTags = htmlTags;
+    }
+
+    public boolean isJavascriptEnabled() {
+        return javascriptEnabled;
+    }
+
+    public void setJavascriptEnabled(boolean javascriptEnabled) {
+        this.javascriptEnabled = javascriptEnabled;
     }
 }
