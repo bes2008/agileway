@@ -18,8 +18,11 @@ public class PathMatchPredicate implements HttpRequestPredicate {
 
     @Override
     public boolean test(RR holder) {
+        if (includePathMatcher == null) {
+            return false;
+        }
         String requestUri = holder.getRequest().getRequestURI();
-        if (includePathMatcher == null || includePathMatcher.match(requestUri)) {
+        if (includePathMatcher.match(requestUri)) {
             if (excludePathMatcher == null || !excludePathMatcher.match(requestUri)) {
                 return true;
             }
