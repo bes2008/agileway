@@ -5,7 +5,6 @@ import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.EmptyEvalutible;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
-import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Functions;
 import com.jn.langx.util.function.Predicate;
@@ -59,7 +58,7 @@ public class XssFirewall implements EmptyEvalutible, Initializable {
     }
 
     public boolean willIntercept(HttpServletRequest request) {
-        return Functions.allPredicate(Pipeline.of(predicates).toArray(Predicate[].class)).test(request);
+        return Functions.allPredicate(Collects.toArray(predicates, Predicate[].class)).test(request);
     }
 }
 

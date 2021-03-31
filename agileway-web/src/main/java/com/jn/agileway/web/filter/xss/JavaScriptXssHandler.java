@@ -1,13 +1,11 @@
 package com.jn.agileway.web.filter.xss;
 
-import com.jn.langx.util.Objs;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class JavaScriptXssHandler extends AbstractXssHandler {
+public class JavaScriptXssHandler extends AbstractRegexpXssHandler {
     private static final List<Pattern> FILTER_PATTERNS = Collections.unmodifiableList(Arrays.<Pattern>asList(
             // Avoid anything between script tags
             Pattern.compile("<script>(.*?)</script>", Pattern.CASE_INSENSITIVE),
@@ -27,12 +25,7 @@ public class JavaScriptXssHandler extends AbstractXssHandler {
     ));
 
     @Override
-    protected boolean isAttack(String value) {
-        if (Objs.isNotEmpty(value)) {
-            for (Pattern pattern : FILTER_PATTERNS) {
-                return pattern.matcher(value).matches();
-            }
-        }
-        return false;
+    protected List<Pattern> getIncludedPatterns() {
+        return FILTER_PATTERNS;
     }
 }
