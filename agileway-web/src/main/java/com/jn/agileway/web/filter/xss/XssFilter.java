@@ -17,6 +17,9 @@ import java.util.List;
 public class XssFilter extends OncePerRequestFilter {
     private XssFirewall firewall;
 
+    public XssFilter(){
+    }
+
     public void setFirewall(XssFirewall firewall) {
         this.firewall = firewall;
     }

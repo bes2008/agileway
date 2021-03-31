@@ -62,21 +62,26 @@ public class AgilewayBasicFiltersConfiguration {
         return registration;
     }
 
+
     @ConfigurationProperties(prefix = "agileway.web.xss")
     @Bean
     public XssProperties xssProperties() {
         return new XssProperties();
     }
 
-    @Order(-101)
+
+    @Order(-100)
     @Bean
     public FilterRegistrationBean xssFilterRegistrationBean(XssProperties xssProperties) {
         XssFirewall xssFirewal1 = new XssFirewallFactory().get(xssProperties);
         XssFilter filter = new XssFilter();
+        filter.setFirewall(xssFirewal1);
 
         FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setName("XSSFilter");
         registration.setFilter(filter);
         registration.setOrder(-100);
         return registration;
     }
+
 }
