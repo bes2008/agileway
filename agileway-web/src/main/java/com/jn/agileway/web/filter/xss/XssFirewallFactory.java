@@ -36,14 +36,19 @@ public class XssFirewallFactory implements Factory<XssProperties, XssFirewall> {
         if (xssProps.isJavascriptEnabled()) {
             firewall.add(new JavaScriptXssHandler());
         }
-        HtmlEventHandlerXssHandler eventHandlerXssHandler = new HtmlEventHandlerXssHandler();
-        eventHandlerXssHandler.setFunctionNames(xssProps.getHtmlEventHandlers());
-        firewall.add(eventHandlerXssHandler);
+
+        if (xssProps.isHtmlEventHandlersEnabled()) {
+            HtmlEventHandlerXssHandler eventHandlerXssHandler = new HtmlEventHandlerXssHandler();
+            eventHandlerXssHandler.setFunctionNames(xssProps.getHtmlEventHandlers());
+            firewall.add(eventHandlerXssHandler);
+        }
 
         // html tags
-        HtmlTagXssHandler tagXssHandler = new HtmlTagXssHandler();
-        tagXssHandler.setIncludeTags(xssProps.getHtmlTags());
-        firewall.add(tagXssHandler);
+        if (xssProps.isHtmlTagsEnabled()) {
+            HtmlTagXssHandler tagXssHandler = new HtmlTagXssHandler();
+            tagXssHandler.setIncludeTags(xssProps.getHtmlTags());
+            firewall.add(tagXssHandler);
+        }
 
 
         return firewall;

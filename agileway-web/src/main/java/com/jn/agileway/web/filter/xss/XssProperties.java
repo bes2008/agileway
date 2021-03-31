@@ -14,10 +14,13 @@ public class XssProperties {
     private List<String> excludePaths;
 
 
+    private boolean htmlEventHandlersEnabled = true;
     /**
      * @see HtmlEventHandlerXssHandler
      */
     private Set<String> htmlEventHandlers = HtmlEventHandlerXssHandler.DEFAULT_ON_XXX_FUNCTION_NAMES;
+
+    private boolean htmlTagsEnabled= true;
 
     /**
      * @see HtmlTagXssHandler
@@ -75,5 +78,21 @@ public class XssProperties {
 
     public void setExcludePaths(List<String> excludePaths) {
         this.excludePaths = excludePaths;
+    }
+
+    public boolean isHtmlEventHandlersEnabled() {
+        return htmlEventHandlersEnabled;
+    }
+
+    public void setHtmlEventHandlersEnabled(boolean htmlEventHandlersEnabled) {
+        this.htmlEventHandlersEnabled = htmlEventHandlersEnabled;
+    }
+
+    public boolean isHtmlTagsEnabled() {
+        return htmlTagsEnabled;
+    }
+
+    public void setHtmlTagsEnabled(boolean htmlTagsEnabled) {
+        this.htmlTagsEnabled = htmlTagsEnabled;
     }
 }
