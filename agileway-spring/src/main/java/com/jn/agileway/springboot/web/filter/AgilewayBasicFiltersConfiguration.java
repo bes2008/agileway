@@ -3,6 +3,10 @@ package com.jn.agileway.springboot.web.filter;
 import com.jn.agileway.web.filter.accesslog.AccessLogFilter;
 import com.jn.agileway.web.filter.accesslog.WebAccessLogProperties;
 import com.jn.agileway.web.filter.rr.RRFilter;
+import com.jn.agileway.web.filter.xss.XssFilter;
+import com.jn.agileway.web.filter.xss.XssFirewall;
+import com.jn.agileway.web.filter.xss.XssFirewallFactory;
+import com.jn.agileway.web.filter.xss.XssProperties;
 import com.jn.langx.util.collection.Collects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +29,7 @@ public class AgilewayBasicFiltersConfiguration {
 
     @Order(-102)
     @Bean
-    public FilterRegistrationBean baseFilterRegister() {
+    public FilterRegistrationBean baseFilterRegistrationBean() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         RRFilter filter = new RRFilter();
         registration.setFilter(filter);
@@ -34,6 +38,7 @@ public class AgilewayBasicFiltersConfiguration {
         initialParameters.put("encoding", encoding);
         registration.setInitParameters(initialParameters);
         registration.setUrlPatterns(Collects.newArrayList("/*"));
+        registration.setOrder(-102);
         return registration;
     }
 
@@ -47,12 +52,31 @@ public class AgilewayBasicFiltersConfiguration {
     @Order(-101)
     @Bean
     @Autowired
-    public FilterRegistrationBean accessLogFilterRegister(WebAccessLogProperties accessLogProperties) {
+    public FilterRegistrationBean accessLogFilterRegistrationBean(WebAccessLogProperties accessLogProperties) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         AccessLogFilter filter = new AccessLogFilter();
         filter.setConfig(accessLogProperties);
         registration.setFilter(filter);
         registration.setUrlPatterns(accessLogProperties.getUrlPatterns());
+        registration.setOrder(-101);
+        return registration;
+    }
+
+    @ConfigurationProperties(prefix = "agileway.web.xss")
+    @Bean
+    public XssProperties xssProperties() {
+        return new XssProperties();
+    }
+
+    @Order(-101)
+    @Bean
+    public FilterRegistrationBean xssFilterRegistrationBean(XssProperties xssProperties) {
+        XssFirewall xssFirewal1 = new XssFirewallFactory().get(xssProperties);
+        XssFilter filter = new XssFilter();
+
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(filter);
+        registration.setOrder(-100);
         return registration;
     }
 }

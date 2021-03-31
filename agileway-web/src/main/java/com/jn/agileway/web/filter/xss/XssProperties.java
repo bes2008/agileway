@@ -7,7 +7,7 @@ public class XssProperties {
     /**
      * 是否启用 xss firewall
      */
-    private boolean enabled = true;
+    private boolean enabled = false;
 
     private List<String> includePaths;
 
