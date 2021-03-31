@@ -1,14 +1,15 @@
 package com.jn.agileway.web.filter.xss;
 
-import javax.servlet.http.HttpServletRequest;
+import com.jn.agileway.web.servlet.RR;
+
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.util.List;
 
 public class XssFirewallHttpServletWrapper extends HttpServletRequestWrapper {
     private List<XssHandler> xssHandlers;
 
-    public XssFirewallHttpServletWrapper(HttpServletRequest servletRequest, List<XssHandler> xssHandlers) {
-        super(servletRequest);
+    public XssFirewallHttpServletWrapper(RR holder, List<XssHandler> xssHandlers) {
+        super(holder.getRequest());
         this.xssHandlers = xssHandlers;
     }
 
