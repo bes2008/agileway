@@ -1,5 +1,6 @@
 package com.jn.agileway.web.filter.xss;
 
+import java.util.List;
 import java.util.Set;
 
 public class XssProperties {
@@ -7,6 +8,11 @@ public class XssProperties {
      * 是否启用 xss firewall
      */
     private boolean enabled = true;
+
+    private List<String> includePaths;
+
+    private List<String> excludePaths;
+
 
     /**
      * @see HtmlEventHandlerXssHandler
@@ -53,5 +59,21 @@ public class XssProperties {
 
     public void setJavascriptEnabled(boolean javascriptEnabled) {
         this.javascriptEnabled = javascriptEnabled;
+    }
+
+    public List<String> getIncludePaths() {
+        return includePaths;
+    }
+
+    public void setIncludePaths(List<String> includePaths) {
+        this.includePaths = includePaths;
+    }
+
+    public List<String> getExcludePaths() {
+        return excludePaths;
+    }
+
+    public void setExcludePaths(List<String> excludePaths) {
+        this.excludePaths = excludePaths;
     }
 }
