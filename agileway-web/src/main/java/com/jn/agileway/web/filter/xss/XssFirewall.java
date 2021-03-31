@@ -1,5 +1,6 @@
 package com.jn.agileway.web.filter.xss;
 
+import com.jn.agileway.web.filter.prediates.HttpServletRequestPredicate;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.Objs;
@@ -7,7 +8,6 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Listable;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Functions;
-import com.jn.langx.util.function.Predicate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
@@ -16,15 +16,15 @@ import java.util.List;
 
 public class XssFirewall implements Listable<XssHandler>, Initializable {
     private boolean inited = false;
-    private List<Predicate> predicates = Collects.emptyArrayList();
+    private List<HttpServletRequestPredicate> predicates = Collects.emptyArrayList();
 
     private List<XssHandler> xssHandlers = Collects.emptyArrayList();
 
-    public void setPredicates(List<Predicate> predicates) {
+    public void setPredicates(List<HttpServletRequestPredicate> predicates) {
         this.predicates = predicates;
     }
 
-    public List<Predicate> getPredicates() {
+    public List<HttpServletRequestPredicate> getPredicates() {
         return predicates;
     }
 
@@ -46,7 +46,7 @@ public class XssFirewall implements Listable<XssHandler>, Initializable {
         return false;
     }
 
-    public void addPredicate(Predicate predicate) {
+    public void addPredicate(HttpServletRequestPredicate predicate) {
         Collects.addAll(predicates, predicate);
     }
 
@@ -93,7 +93,7 @@ public class XssFirewall implements Listable<XssHandler>, Initializable {
     }
 
     public boolean willIntercept(HttpServletRequest request) {
-        return Functions.allPredicate(Collects.toArray(predicates, Predicate[].class)).test(request);
+        return Functions.allPredicate(Collects.toArray(predicates, HttpServletRequestPredicate[].class)).test(request);
     }
 }
 
