@@ -1,10 +1,9 @@
-package com.jn.agileway.web.filter.prediates;
+package com.jn.agileway.web.prediates;
 
+import com.jn.agileway.web.servlet.RR;
 import com.jn.langx.util.pattern.patternset.AntPathMatcher;
 
-import javax.servlet.http.HttpServletRequest;
-
-public class PathMatchPredicate implements HttpServletRequestPredicate {
+public class PathMatchPredicate implements HttpRequestPredicate {
 
     private AntPathMatcher includePathMatcher;
     private AntPathMatcher excludePathMatcher;
@@ -18,12 +17,12 @@ public class PathMatchPredicate implements HttpServletRequestPredicate {
     }
 
     @Override
-    public boolean test(HttpServletRequest request) {
+    public boolean test(RR holder) {
         if (includePathMatcher == null) {
             return false;
         }
 
-        String requestUri = request.getRequestURI();
+        String requestUri = holder.getRequest().getRequestURI();
         if (includePathMatcher.match(requestUri)) {
             if (excludePathMatcher == null || !excludePathMatcher.match(requestUri)) {
                 return true;
