@@ -26,7 +26,7 @@ public class XssFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
-        if (Objs.isNotEmpty(firewall) && request instanceof HttpServletRequest) {
+        if (Objs.isNotEmpty(firewall) && firewall.isEnabled() && request instanceof HttpServletRequest) {
 
             List<XssHandler> handlers = firewall.getXssHandlers();
             RR rr = RRHolder.get();
@@ -35,6 +35,7 @@ public class XssFilter extends OncePerRequestFilter {
                 rr = RRHolder.get();
             }
             request = new XssFirewallHttpServletWrapper(rr, handlers);
+            RRHolder.set((HttpServletRequest) request, (HttpServletResponse) response);
         }
         chain.doFilter(request, response);
     }

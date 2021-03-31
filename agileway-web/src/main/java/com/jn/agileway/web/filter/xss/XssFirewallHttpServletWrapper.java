@@ -29,8 +29,10 @@ public class XssFirewallHttpServletWrapper extends HttpServletRequestWrapper {
     }
 
     private String applyXssHandlers(String value) {
-        for (XssHandler xssHandler : xssHandlers) {
-            value = xssHandler.apply(value);
+        if (value != null) {
+            for (XssHandler xssHandler : xssHandlers) {
+                value = xssHandler.apply(value);
+            }
         }
         return value;
     }

@@ -11,6 +11,11 @@ knife4j:
   base-package: com.jn.agileway.redis.examples.controller
 
 agileway:
+  web:
+    access-log:
+      level: BODY
+    xss:
+      enabled: true
   httpclient:
     enabled: true
   redis:
@@ -22,3 +27,11 @@ agileway:
   rest:
     global-response-body:
       base-packages: com.jn.agileway.redis.examples.controller
+logging:
+  level:
+    com:
+      jn:
+        agileway:
+          web:
+            filter:
+              accesslog: debug

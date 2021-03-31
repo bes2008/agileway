@@ -76,6 +76,7 @@ public class AgilewayBasicFiltersConfiguration {
         XssFirewall xssFirewal1 = new XssFirewallFactory().get(xssProperties);
         XssFilter filter = new XssFilter();
         filter.setFirewall(xssFirewal1);
+        xssFirewal1.init();
 
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setName("XSSFilter");
