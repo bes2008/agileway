@@ -7,13 +7,8 @@ import java.util.regex.Pattern;
 
 public class JavaScriptXssHandler extends AbstractRegexpXssHandler {
     private static final List<Pattern> FILTER_PATTERNS = Collections.unmodifiableList(Arrays.<Pattern>asList(
-            // Avoid anything between script tags
-            Pattern.compile("<script>(.*?)</script>", Pattern.CASE_INSENSITIVE),
             // Avoid javascript:... expressions
             Pattern.compile("javascript:", Pattern.CASE_INSENSITIVE),
-            // Remove any lonesome </script> tag
-            Pattern.compile("</script>", Pattern.CASE_INSENSITIVE),
-            Pattern.compile("<script(.*?)>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL),
             // Avoid anything in a src='...' type of expression
             Pattern.compile("src[\r\n]*=[\r\n]*'(.*?)'", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL),
             Pattern.compile("src[\r\n]*=[\r\n]*\"(.*?)\"", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL),
