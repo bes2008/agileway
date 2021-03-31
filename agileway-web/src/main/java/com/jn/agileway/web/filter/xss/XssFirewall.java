@@ -16,6 +16,7 @@ import java.util.List;
 
 public class XssFirewall implements Listable<XssHandler>, Initializable {
     private boolean inited = false;
+    private boolean enabled = false;
     private List<HttpRequestPredicate> predicates = Collects.emptyArrayList();
 
     private List<XssHandler> xssHandlers = Collects.emptyArrayList();
@@ -94,6 +95,14 @@ public class XssFirewall implements Listable<XssHandler>, Initializable {
 
     public boolean willIntercept(RR holder) {
         return Functions.allPredicate(Collects.toArray(predicates, HttpRequestPredicate[].class)).test(holder);
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }
 

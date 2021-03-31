@@ -24,7 +24,7 @@ public class HtmlTagXssHandler extends AbstractRegexpXssHandler {
         return includePatterns;
     }
 
-    public void setIncludeTags(List<String> tags) {
+    public void setIncludeTags(Collection<String> tags) {
         this.includePatterns = toPatterns(tags);
     }
 

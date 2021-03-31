@@ -11,6 +11,13 @@ import java.util.List;
 import java.util.Map;
 
 public class PathMatchPredicateFactory extends HttpRequestPredicateFactory {
+    public static final String INCLUDE = "include";
+    public static final String EXCLUDE = "exclude";
+
+    public PathMatchPredicateFactory() {
+        setName("path");
+    }
+
     @Override
     public HttpRequestPredicate get(Object o) {
         final PathMatchPredicate predicate = new PathMatchPredicate();
@@ -30,7 +37,7 @@ public class PathMatchPredicateFactory extends HttpRequestPredicateFactory {
                 Collects.forEach((Map) o, new Consumer2<Object, Object>() {
                     @Override
                     public void accept(Object key, Object value) {
-                        if ("include".equals(key)) {
+                        if (INCLUDE.equals(key)) {
                             if (value instanceof String) {
                                 predicate.setIncludePatterns((String) value);
                             } else if (Arrs.isArray(value) || value instanceof Collection) {
@@ -41,7 +48,7 @@ public class PathMatchPredicateFactory extends HttpRequestPredicateFactory {
                                 }
                             }
                         }
-                        if ("exclude".equals(key)) {
+                        if (EXCLUDE.equals(key)) {
                             if (value instanceof String) {
                                 predicate.setExcludePatterns((String) value);
                             } else if (Arrs.isArray(value) || value instanceof Collection) {

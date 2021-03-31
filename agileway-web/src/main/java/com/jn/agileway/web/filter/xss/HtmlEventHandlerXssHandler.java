@@ -6,6 +6,7 @@ import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Functions;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -127,6 +128,9 @@ public class HtmlEventHandlerXssHandler extends AbstractXssHandler {
         }
     }
 
+    public void setFunctionNames(Collection<String> functionNames) {
+        this.functionNames = Pipeline.of(functionNames).clearNulls().map(Functions.toLowerCase()).asSet(true);
+    }
 
     protected boolean isAttack(String value) {
         init();
