@@ -1,5 +1,7 @@
 package com.jn.agileway.web.filter.rr;
 
+import com.jn.agileway.web.servlet.RR;
+
 import javax.servlet.http.*;
 
 public class RRHolder {
@@ -27,26 +29,12 @@ public class RRHolder {
         rr.set(new RR(request, response));
     }
 
+    public static RR get(){
+        return rr.get();
+    }
+
     public static void remove() {
         rr.remove();
     }
 
-
-    private static class RR {
-        private HttpServletRequest request;
-        private HttpServletResponse response;
-
-        public RR(final HttpServletRequest request, final HttpServletResponse response) {
-            this.request = request;
-            this.response = response;
-        }
-
-        public HttpServletRequest getRequest() {
-            return this.request;
-        }
-
-        public HttpServletResponse getResponse() {
-            return this.response;
-        }
-    }
 }
