@@ -14,10 +14,12 @@ agileway:
   web:
     access-log:
       level: BODY
-    security:
+    waf:
       xss:
         enabled: true
-      x-contenttype-options: true
+      x-content-type: true
+      sql-inject:
+        enabled: true
   httpclient:
     enabled: true
   redis:

@@ -4,6 +4,9 @@ import com.jn.agileway.web.filter.accesslog.AccessLogFilter;
 import com.jn.agileway.web.filter.accesslog.WebAccessLogProperties;
 import com.jn.agileway.web.filter.rr.RRFilter;
 import com.jn.agileway.web.filter.waf.WAF;
+import com.jn.agileway.web.filter.waf.sqlinject.SqlInjectFilter;
+import com.jn.agileway.web.filter.waf.sqlinject.SqlInjectProperties;
+import com.jn.agileway.web.filter.waf.sqlinject.SqlInjectWafFactory;
 import com.jn.agileway.web.filter.waf.xcontenttype.XContentTypeOptionsFilter;
 import com.jn.agileway.web.filter.waf.xss.XssFilter;
 import com.jn.agileway.web.filter.waf.xss.XssProperties;
@@ -65,7 +68,7 @@ public class AgilewayBasicFiltersConfiguration {
     }
 
 
-    @ConfigurationProperties(prefix = "agileway.web.security.xss")
+    @ConfigurationProperties(prefix = "agileway.web.waf.xss")
     @Bean
     public XssProperties xssProperties() {
         return new XssProperties();
@@ -78,7 +81,7 @@ public class AgilewayBasicFiltersConfiguration {
         WAF xssFirewal1 = new XssWafFactory().get(xssProperties);
         XssFilter filter = new XssFilter();
         filter.setFirewall(xssFirewal1);
-        xssFirewal1.setName("XSS-Firewall");
+
         xssFirewal1.init();
 
         FilterRegistrationBean registration = new FilterRegistrationBean();
@@ -89,7 +92,7 @@ public class AgilewayBasicFiltersConfiguration {
     }
 
     @Order(-98)
-    @ConditionalOnProperty("agileway.web.security.x-contenttype-options")
+    @ConditionalOnProperty("agileway.web.waf.x-content-type")
     @Bean
     public FilterRegistrationBean xContentTypeOptionsRegistrationBean() {
         XContentTypeOptionsFilter filter = new XContentTypeOptionsFilter();
@@ -101,4 +104,24 @@ public class AgilewayBasicFiltersConfiguration {
         return registration;
     }
 
+    @ConfigurationProperties(prefix = "agileway.web.waf.sql-inject")
+    @Bean
+    public SqlInjectProperties sqlInjectProperties() {
+        return new SqlInjectProperties();
+    }
+
+
+    @Order(-97)
+    @Bean
+    public FilterRegistrationBean xContentTypeOptionsRegistrationBean(SqlInjectProperties sqlInjectProperties) {
+        WAF waf = new SqlInjectWafFactory().get(sqlInjectProperties);
+        SqlInjectFilter filter = new SqlInjectFilter();
+        filter.setFirewall(waf);
+
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setName("SQLInjectFilter");
+        registration.setFilter(filter);
+        registration.setOrder(-97);
+        return registration;
+    }
 }

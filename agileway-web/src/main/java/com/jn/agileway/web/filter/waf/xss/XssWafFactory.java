@@ -16,6 +16,7 @@ public class XssWafFactory implements Factory<XssProperties, WAF> {
     @Override
     public WAF get(XssProperties xssProps) {
         WAF firewall = new WAF();
+        firewall.setName("XSS-Firewall");
         firewall.setEnabled(xssProps.isEnabled());
 
         // path match predicate
