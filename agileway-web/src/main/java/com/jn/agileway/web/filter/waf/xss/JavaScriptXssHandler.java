@@ -1,4 +1,4 @@
-package com.jn.agileway.web.filter.xss;
+package com.jn.agileway.web.filter.waf.xss;
 
 import java.util.Arrays;
 import java.util.Collections;

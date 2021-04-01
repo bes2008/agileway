@@ -1,4 +1,4 @@
-package com.jn.agileway.web.filter.xss;
+package com.jn.agileway.web.filter.waf.xss;
 
 import com.jn.agileway.web.prediates.HttpRequestPredicateFactoryRegistry;
 import com.jn.agileway.web.prediates.PathMatchPredicate;

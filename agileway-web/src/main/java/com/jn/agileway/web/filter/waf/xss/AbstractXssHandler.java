@@ -1,10 +1,11 @@
-package com.jn.agileway.web.filter.xss;
+package com.jn.agileway.web.filter.waf.xss;
 
+import com.jn.agileway.web.filter.waf.WAFHandler;
 import com.jn.langx.lifecycle.AbstractInitializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractXssHandler extends AbstractInitializable implements XssHandler {
+public abstract class AbstractXssHandler extends AbstractInitializable implements WAFHandler {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override

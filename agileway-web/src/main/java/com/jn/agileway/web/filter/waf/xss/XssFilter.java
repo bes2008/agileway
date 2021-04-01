@@ -1,7 +1,8 @@
-package com.jn.agileway.web.filter.xss;
+package com.jn.agileway.web.filter.waf.xss;
 
 import com.jn.agileway.web.filter.OncePerRequestFilter;
 import com.jn.agileway.web.filter.rr.RRHolder;
+import com.jn.agileway.web.filter.waf.WAFHandler;
 import com.jn.agileway.web.servlet.RR;
 import com.jn.langx.util.Objs;
 
@@ -28,7 +29,7 @@ public class XssFilter extends OncePerRequestFilter {
     protected void doFilterInternal(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         if (Objs.isNotEmpty(firewall) && firewall.isEnabled() && request instanceof HttpServletRequest) {
 
-            List<XssHandler> handlers = firewall.getXssHandlers();
+            List<WAFHandler> handlers = firewall.getXssHandlers();
             RR rr = RRHolder.get();
             if (rr == null) {
                 RRHolder.set((HttpServletRequest) request, (HttpServletResponse) response);

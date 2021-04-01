@@ -1,4 +1,4 @@
-package com.jn.agileway.web.filter.xss;
+package com.jn.agileway.web.filter.waf.xss;
 
 import com.jn.langx.annotation.NotThreadSafe;
 import com.jn.langx.lifecycle.InitializationException;
