@@ -1,5 +1,6 @@
 package com.jn.agileway.web.filter.waf.xss;
 
+import com.jn.agileway.web.filter.waf.WAFStrategy;
 import com.jn.agileway.web.prediates.HttpRequestPredicateFactoryRegistry;
 import com.jn.agileway.web.prediates.PathMatchPredicate;
 import com.jn.agileway.web.prediates.PathMatchPredicateFactory;
@@ -29,27 +30,30 @@ public class XssFirewallFactory implements Factory<XssProperties, XssFirewall> {
             pathConfig.put(PathMatchPredicateFactory.EXCLUDE, xssProps.getExcludePaths());
         }
         PathMatchPredicate pathMatchPredicate = (PathMatchPredicate) factory.get(pathConfig);
-        firewall.addPredicate(pathMatchPredicate);
+
+        WAFStrategy xssStrategy = new WAFStrategy();
+        xssStrategy.addPredicate(pathMatchPredicate);
 
 
         // html event handlers
         if (xssProps.isJavascriptEnabled()) {
-            firewall.add(new JavaScriptXssHandler());
+            xssStrategy.add(new JavaScriptXssHandler());
         }
 
         if (xssProps.isHtmlEventHandlersEnabled()) {
             HtmlEventHandlerXssHandler eventHandlerXssHandler = new HtmlEventHandlerXssHandler();
             eventHandlerXssHandler.setFunctionNames(xssProps.getHtmlEventHandlers());
-            firewall.add(eventHandlerXssHandler);
+            xssStrategy.add(eventHandlerXssHandler);
         }
 
         // html tags
         if (xssProps.isHtmlTagsEnabled()) {
             HtmlTagXssHandler tagXssHandler = new HtmlTagXssHandler();
             tagXssHandler.setIncludeTags(xssProps.getHtmlTags());
-            firewall.add(tagXssHandler);
+            xssStrategy.add(tagXssHandler);
         }
 
+        firewall.addStrategy(xssStrategy);
 
         return firewall;
     }
