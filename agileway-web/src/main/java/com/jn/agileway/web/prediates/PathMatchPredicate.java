@@ -1,6 +1,7 @@
 package com.jn.agileway.web.prediates;
 
 import com.jn.agileway.web.servlet.RR;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.pattern.patternset.AntPathMatcher;
 
 public class PathMatchPredicate implements HttpRequestPredicate {
@@ -8,12 +9,28 @@ public class PathMatchPredicate implements HttpRequestPredicate {
     private AntPathMatcher includePathMatcher;
     private AntPathMatcher excludePathMatcher;
 
+    public PathMatchPredicate() {
+    }
+
+    public PathMatchPredicate(String includes) {
+        this(includes, null);
+    }
+
+    public PathMatchPredicate(String includes, String excludes) {
+        setIncludePatterns(includes);
+        setExcludePatterns(excludes);
+    }
+
     public void setIncludePatterns(String patternsExpression) {
-        this.includePathMatcher = new AntPathMatcher((String) null, patternsExpression);
+        if (Objs.isNotEmpty(patternsExpression)) {
+            this.includePathMatcher = new AntPathMatcher((String) null, patternsExpression);
+        }
     }
 
     public void setExcludePatterns(String patternsExpression) {
-        this.excludePathMatcher = new AntPathMatcher((String) null, patternsExpression);
+        if (Objs.isNotEmpty(patternsExpression)) {
+            this.excludePathMatcher = new AntPathMatcher((String) null, patternsExpression);
+        }
     }
 
     @Override

@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class XssFirewallFactory implements Factory<XssProperties, WAF> {
+public class XssWafFactory implements Factory<XssProperties, WAF> {
     @Override
     public WAF get(XssProperties xssProps) {
         WAF firewall = new WAF();
