@@ -1,6 +1,8 @@
 package com.jn.agileway.spring.web.rest;
 
+import com.jn.agileway.web.filter.waf.WAFs;
 import com.jn.langx.http.rest.RestRespBody;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +56,13 @@ public class GlobalSpringRestResponseBodyAdvice implements ResponseBodyAdvice, I
 
         RestRespBody respBody = responseBodyHandler.handleResponseBody(httpServletRequest, httpServletResponse, returnType.getMethod(), body);
         if (selectedConverterType == StringHttpMessageConverter.class) {
-            return responseBodyHandler.getJsonFactory().get().toJson(respBody);
+            String json = responseBodyHandler.getJsonFactory().get().toJson(respBody);
+            String testContent = WAFs.clearIfContainsJavaScript(json);
+            if (Objs.isEmpty(testContent)) {
+                respBody.setData("");
+                json = responseBodyHandler.getJsonFactory().get().toJson(respBody);
+            }
+            return json;
         }
         return respBody;
     }

@@ -1,5 +1,6 @@
 package com.jn.agileway.web.rest;
 
+import com.jn.agileway.web.filter.waf.WAFs;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
 import com.jn.easyjson.core.factory.JsonScope;
@@ -7,6 +8,7 @@ import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.lifecycle.Lifecycle;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.reflect.Reflects;
@@ -101,6 +103,11 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
                         response.resetBuffer();
                         response.setStatus(respBody.getStatusCode());
                         String jsonstring = jsonFactory.get().toJson(respBody);
+                        String testContent = WAFs.clearIfContainsJavaScript(jsonstring);
+                        if (Objs.isEmpty(testContent)) {
+                            respBody.setData("");
+                            jsonstring = jsonFactory.get().toJson(respBody);
+                        }
                         response.setContentType(GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8);
                         response.setCharacterEncoding(Charsets.UTF_8.name());
                         response.getWriter().write(jsonstring);

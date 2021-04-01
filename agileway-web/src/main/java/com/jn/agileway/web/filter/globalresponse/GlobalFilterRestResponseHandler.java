@@ -1,5 +1,6 @@
 package com.jn.agileway.web.filter.globalresponse;
 
+import com.jn.agileway.web.filter.waf.WAFs;
 import com.jn.agileway.web.rest.*;
 import com.jn.agileway.web.servlet.Servlets;
 import com.jn.easyjson.core.JSONFactory;
@@ -7,6 +8,7 @@ import com.jn.easyjson.core.factory.JsonFactorys;
 import com.jn.easyjson.core.factory.JsonScope;
 import com.jn.langx.http.HttpStatus;
 import com.jn.langx.http.rest.RestRespBody;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Throwables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,6 +84,11 @@ public class GlobalFilterRestResponseHandler implements GlobalRestResponseBodyHa
                     defaultRestErrorMessageHandler.handler(request.getLocale(), respBody);
                     String json = jsonFactory.get().toJson(respBody);
                     try {
+                        String testContent = WAFs.clearIfContainsJavaScript(json);
+                        if (Objs.isEmpty(testContent)) {
+                            respBody.setData("");
+                            json = jsonFactory.get().toJson(respBody);
+                        }
                         response.resetBuffer();
                         Servlets.writeToResponse(response, GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8, json);
                     } catch (IOException ex) {
