@@ -2,6 +2,7 @@ package com.jn.agileway.redis.examples.controller.rest;
 
 import com.jn.agileway.redis.examples.controller.redis_examples.Person;
 import com.jn.agileway.web.filter.rr.RRHolder;
+import com.jn.langx.text.StringTemplates;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,7 +40,16 @@ public class GlobalResponseTests {
     public Object showRequest(){
 
         HttpServletRequest request = RRHolder.getRequest();
-        String[] values = request.getParameterValues("hello");
+        String[] values = request.getParameterValues("name");
         return values;
+    }
+
+    @GetMapping("/testXss")
+    @PostMapping
+    public Object testXss(){
+
+        HttpServletRequest request = RRHolder.getRequest();
+        String value = request.getParameter("name");
+        return StringTemplates.formatWithPlaceholder("<script>{}</script>", value);
     }
 }
