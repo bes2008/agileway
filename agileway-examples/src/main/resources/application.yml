@@ -14,8 +14,10 @@ agileway:
   web:
     access-log:
       level: BODY
-    xss:
-      enabled: true
+    security:
+      xss:
+        enabled: true
+      x-contenttype-options: true
   httpclient:
     enabled: true
   redis:

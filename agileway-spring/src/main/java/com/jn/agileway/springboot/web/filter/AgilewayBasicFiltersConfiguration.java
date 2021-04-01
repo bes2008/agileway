@@ -2,6 +2,7 @@ package com.jn.agileway.springboot.web.filter;
 
 import com.jn.agileway.web.filter.accesslog.AccessLogFilter;
 import com.jn.agileway.web.filter.accesslog.WebAccessLogProperties;
+import com.jn.agileway.web.filter.respheaders.XContentTypeOptionsFilter;
 import com.jn.agileway.web.filter.rr.RRFilter;
 import com.jn.agileway.web.filter.xss.XssFilter;
 import com.jn.agileway.web.filter.xss.XssFirewall;
@@ -10,6 +11,7 @@ import com.jn.agileway.web.filter.xss.XssProperties;
 import com.jn.langx.util.collection.Collects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -63,7 +65,7 @@ public class AgilewayBasicFiltersConfiguration {
     }
 
 
-    @ConfigurationProperties(prefix = "agileway.web.xss")
+    @ConfigurationProperties(prefix = "agileway.web.security.xss")
     @Bean
     public XssProperties xssProperties() {
         return new XssProperties();
@@ -82,6 +84,19 @@ public class AgilewayBasicFiltersConfiguration {
         registration.setName("XSSFilter");
         registration.setFilter(filter);
         registration.setOrder(-100);
+        return registration;
+    }
+
+    @Order(-98)
+    @ConditionalOnProperty("agileway.web.security.x-contenttype-options")
+    @Bean
+    public FilterRegistrationBean xContentTypeOptionsRegistrationBean() {
+        XContentTypeOptionsFilter filter = new XContentTypeOptionsFilter();
+        filter.setEnabled(true);
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setName("X-ContentType-Options");
+        registration.setFilter(filter);
+        registration.setOrder(-98);
         return registration;
     }
 

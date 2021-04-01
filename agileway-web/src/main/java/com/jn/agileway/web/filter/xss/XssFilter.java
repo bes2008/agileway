@@ -36,6 +36,8 @@ public class XssFilter extends OncePerRequestFilter {
             }
             request = new XssFirewallHttpServletWrapper(rr, handlers);
             RRHolder.set((HttpServletRequest) request, (HttpServletResponse) response);
+            // ref: https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/X-XSS-Protection
+            ((HttpServletResponse) response).setHeader("X-XSS-Protection","1;mode=block");
         }
         chain.doFilter(request, response);
     }
