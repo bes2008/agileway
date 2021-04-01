@@ -12,10 +12,11 @@ public class SqlInjectWafFactory implements Factory<SqlInjectProperties, WAF> {
         waf.setName("SQL-Inject-WAF");
         waf.setEnabled(props.isEnabled());
 
-
         WAFStrategy strategy = new WAFStrategy();
-        strategy.addPredicate(new PathMatchPredicate());
+        strategy.addPredicate(new PathMatchPredicate("/*"));
+        strategy.add(new SqlCharRemoveHandler());
 
-        return null;
+        waf.addStrategy(strategy);
+        return waf;
     }
 }
