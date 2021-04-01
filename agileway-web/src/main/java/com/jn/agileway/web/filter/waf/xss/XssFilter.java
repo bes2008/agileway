@@ -36,10 +36,12 @@ public class XssFilter extends OncePerRequestFilter {
                 rr = RRHolder.get();
             }
             WAFStrategy strategy = xssFirewall.findStrategy(rr);
-            request = new WAFHttpServletWrapper(rr, strategy.getHandlers());
-            RRHolder.set((HttpServletRequest) request, (HttpServletResponse) response);
-            // ref: https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/X-XSS-Protection
-            ((HttpServletResponse) response).setHeader("X-XSS-Protection", "1;mode=block");
+            if (Objs.isNotEmpty(strategy)) {
+                request = new WAFHttpServletWrapper(rr, strategy.getHandlers());
+                RRHolder.set((HttpServletRequest) request, (HttpServletResponse) response);
+                // ref: https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/X-XSS-Protection
+                ((HttpServletResponse) response).setHeader("X-XSS-Protection", "1;mode=block");
+            }
         }
         chain.doFilter(request, response);
     }

@@ -35,8 +35,10 @@ public class SqlInjectFilter extends OncePerRequestFilter {
                 rr = RRHolder.get();
             }
             WAFStrategy strategy = sqlWaf.findStrategy(rr);
-            request = new WAFHttpServletWrapper(rr, strategy.getHandlers());
-            RRHolder.set((HttpServletRequest) request, (HttpServletResponse) response);
+            if(Objs.isNotEmpty(strategy)) {
+                request = new WAFHttpServletWrapper(rr, strategy.getHandlers());
+                RRHolder.set((HttpServletRequest) request, (HttpServletResponse) response);
+            }
         }
         chain.doFilter(request, response);
     }

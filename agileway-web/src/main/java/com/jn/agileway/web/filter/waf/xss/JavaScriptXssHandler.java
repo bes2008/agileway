@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 public class JavaScriptXssHandler extends AbstractRegexpXssHandler {
     private static final List<Pattern> FILTER_PATTERNS = Collections.unmodifiableList(Arrays.<Pattern>asList(
+            Pattern.compile(".*<script.*>.*</script>.*", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL),
             // Avoid javascript:... expressions
             Pattern.compile(".*javascript:.*", Pattern.CASE_INSENSITIVE),
             // Avoid anything in a src='...' type of expression
@@ -19,6 +20,7 @@ public class JavaScriptXssHandler extends AbstractRegexpXssHandler {
             Pattern.compile(".*vbscript:.*", Pattern.CASE_INSENSITIVE),
             Pattern.compile(".*typescript:.*", Pattern.CASE_INSENSITIVE),
             Pattern.compile(".*actionscript:.*", Pattern.CASE_INSENSITIVE)
+
     ));
 
     @Override
