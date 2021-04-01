@@ -3,6 +3,7 @@ package com.jn.agileway.web.filter.waf.xss;
 import com.jn.agileway.web.filter.OncePerRequestFilter;
 import com.jn.agileway.web.filter.rr.RRHolder;
 import com.jn.agileway.web.filter.waf.WAF;
+import com.jn.agileway.web.filter.waf.WAFHttpServletWrapper;
 import com.jn.agileway.web.filter.waf.WAFStrategy;
 import com.jn.agileway.web.servlet.RR;
 import com.jn.langx.util.Objs;
@@ -35,7 +36,7 @@ public class XssFilter extends OncePerRequestFilter {
                 rr = RRHolder.get();
             }
             WAFStrategy strategy = xssFirewall.findStrategy(rr);
-            request = new XssFirewallHttpServletWrapper(rr, strategy.getHandlers());
+            request = new WAFHttpServletWrapper(rr, strategy.getHandlers());
             RRHolder.set((HttpServletRequest) request, (HttpServletResponse) response);
             // ref: https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/X-XSS-Protection
             ((HttpServletResponse) response).setHeader("X-XSS-Protection", "1;mode=block");

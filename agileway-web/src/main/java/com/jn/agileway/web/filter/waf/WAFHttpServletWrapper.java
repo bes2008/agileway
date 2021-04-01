@@ -1,17 +1,16 @@
-package com.jn.agileway.web.filter.waf.xss;
+package com.jn.agileway.web.filter.waf;
 
-import com.jn.agileway.web.filter.waf.WAFHandler;
 import com.jn.agileway.web.servlet.RR;
 
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.util.List;
 
-public class XssFirewallHttpServletWrapper extends HttpServletRequestWrapper {
-    private List<WAFHandler> xssHandlers;
+public class WAFHttpServletWrapper extends HttpServletRequestWrapper {
+    private List<WAFHandler> wafHandlers;
 
-    public XssFirewallHttpServletWrapper(RR holder, List<WAFHandler> xssHandlers) {
+    public WAFHttpServletWrapper(RR holder, List<WAFHandler> xssHandlers) {
         super(holder.getRequest());
-        this.xssHandlers = xssHandlers;
+        this.wafHandlers = xssHandlers;
     }
 
     @Override
@@ -20,9 +19,9 @@ public class XssFirewallHttpServletWrapper extends HttpServletRequestWrapper {
         if (values == null) {
             return null;
         }
-        int count = values.length;
-        String[] handledValues = new String[count];
-        for (int i = 0; i < count; i++) {
+        int length = values.length;
+        String[] handledValues = new String[length];
+        for (int i = 0; i < length; i++) {
             String handledValue = values[i];
             handledValues[i] = applyXssHandlers(handledValue);
         }
@@ -31,7 +30,7 @@ public class XssFirewallHttpServletWrapper extends HttpServletRequestWrapper {
 
     private String applyXssHandlers(String value) {
         if (value != null) {
-            for (WAFHandler xssHandler : xssHandlers) {
+            for (WAFHandler xssHandler : wafHandlers) {
                 value = xssHandler.apply(value);
             }
         }
