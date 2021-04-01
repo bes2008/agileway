@@ -11,15 +11,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class XContentTypeOptionsFilter extends OncePerRequestFilter {
-    private boolean enabled;
+    private XContentTypeOptionsProperties properties = new XContentTypeOptionsProperties();
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setProperties(XContentTypeOptionsProperties properties) {
+        this.properties = properties;
     }
+
 
     @Override
     protected void doFilterInternal(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
-        if (enabled) {
+        if (properties.isEnabled()) {
             if (request instanceof HttpServletRequest) {
                 ((HttpServletResponse) response).setHeader("X-Content-Type-Options", "nosniff");
             }

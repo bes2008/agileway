@@ -8,6 +8,7 @@ import com.jn.agileway.web.filter.waf.sqlinject.SqlInjectFilter;
 import com.jn.agileway.web.filter.waf.sqlinject.SqlInjectProperties;
 import com.jn.agileway.web.filter.waf.sqlinject.SqlInjectWafFactory;
 import com.jn.agileway.web.filter.waf.xcontenttype.XContentTypeOptionsFilter;
+import com.jn.agileway.web.filter.waf.xcontenttype.XContentTypeOptionsProperties;
 import com.jn.agileway.web.filter.waf.xss.XssFilter;
 import com.jn.agileway.web.filter.waf.xss.XssProperties;
 import com.jn.agileway.web.filter.waf.xss.XssWafFactory;
@@ -93,12 +94,17 @@ public class AgilewayBasicFiltersConfiguration {
         return registration;
     }
 
-    @Order(-98)
-    @ConditionalOnProperty("agileway.web.waf.xcontent")
     @Bean
-    public FilterRegistrationBean xContentTypeOptionsRegistrationBean() {
+    @ConfigurationProperties(prefix = "agileway.web.waf.xcontent")
+    public XContentTypeOptionsProperties xContentTypeOptionsProperties(){
+        return new XContentTypeOptionsProperties();
+    }
+
+    @Order(-98)
+    @Bean
+    public FilterRegistrationBean xContentTypeOptionsRegistrationBean(XContentTypeOptionsProperties properties) {
         XContentTypeOptionsFilter filter = new XContentTypeOptionsFilter();
-        filter.setEnabled(true);
+        filter.setProperties(properties);
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setName("X-ContentType-Options Filter");
         registration.setFilter(filter);
@@ -115,7 +121,7 @@ public class AgilewayBasicFiltersConfiguration {
 
     @Order(-97)
     @Bean
-    public FilterRegistrationBean xContentTypeOptionsRegistrationBean(SqlInjectProperties sqlInjectProperties) {
+    public FilterRegistrationBean sqlInjectRegistrationBean(SqlInjectProperties sqlInjectProperties) {
         WAF waf = new SqlInjectWafFactory().get(sqlInjectProperties);
         SqlInjectFilter filter = new SqlInjectFilter();
         filter.setFirewall(waf);
