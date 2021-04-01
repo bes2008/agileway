@@ -1,6 +1,7 @@
 package com.jn.agileway.web.filter.waf;
 
 import com.jn.agileway.web.servlet.RR;
+import com.jn.langx.Named;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.EmptyEvalutible;
@@ -10,11 +11,21 @@ import com.jn.langx.util.function.Predicate;
 
 import java.util.List;
 
-public class WAF implements Initializable, EmptyEvalutible {
+public class WAF implements Initializable, EmptyEvalutible, Named {
     private boolean inited = false;
     private boolean enabled = false;
+    private String name;
     private final List<WAFStrategy> strategies = Collects.emptyArrayList();
 
+    @Override
+    public void setName(String s) {
+        this.name = s;
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
 
     @Override
     public void init() throws InitializationException {
