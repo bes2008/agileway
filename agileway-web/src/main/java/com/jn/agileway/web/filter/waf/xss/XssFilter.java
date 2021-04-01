@@ -2,6 +2,7 @@ package com.jn.agileway.web.filter.waf.xss;
 
 import com.jn.agileway.web.filter.OncePerRequestFilter;
 import com.jn.agileway.web.filter.rr.RRHolder;
+import com.jn.agileway.web.filter.waf.WAF;
 import com.jn.agileway.web.filter.waf.WAFStrategy;
 import com.jn.agileway.web.servlet.RR;
 import com.jn.langx.util.Objs;
@@ -15,26 +16,25 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class XssFilter extends OncePerRequestFilter {
-    private XssFirewall firewall;
+    private WAF xssFirewall;
 
     public XssFilter() {
     }
 
-    public void setFirewall(XssFirewall firewall) {
-        this.firewall = firewall;
+    public void setFirewall(WAF xssFirewall) {
+        this.xssFirewall = xssFirewall;
     }
 
     @Override
     protected void doFilterInternal(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
-        if (Objs.isNotEmpty(firewall) && firewall.isEnabled() && request instanceof HttpServletRequest) {
-
+        if (Objs.isNotEmpty(xssFirewall) && xssFirewall.isEnabled() && request instanceof HttpServletRequest) {
 
             RR rr = RRHolder.get();
             if (rr == null) {
                 RRHolder.set((HttpServletRequest) request, (HttpServletResponse) response);
                 rr = RRHolder.get();
             }
-            WAFStrategy strategy = firewall.findStrategy(rr);
+            WAFStrategy strategy = xssFirewall.findStrategy(rr);
             request = new XssFirewallHttpServletWrapper(rr, strategy.getHandlers());
             RRHolder.set((HttpServletRequest) request, (HttpServletResponse) response);
             // ref: https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/X-XSS-Protection

@@ -2,10 +2,10 @@ package com.jn.agileway.springboot.web.filter;
 
 import com.jn.agileway.web.filter.accesslog.AccessLogFilter;
 import com.jn.agileway.web.filter.accesslog.WebAccessLogProperties;
-import com.jn.agileway.web.filter.waf.xcontenttype.XContentTypeOptionsFilter;
 import com.jn.agileway.web.filter.rr.RRFilter;
+import com.jn.agileway.web.filter.waf.WAF;
+import com.jn.agileway.web.filter.waf.xcontenttype.XContentTypeOptionsFilter;
 import com.jn.agileway.web.filter.waf.xss.XssFilter;
-import com.jn.agileway.web.filter.waf.xss.XssFirewall;
 import com.jn.agileway.web.filter.waf.xss.XssFirewallFactory;
 import com.jn.agileway.web.filter.waf.xss.XssProperties;
 import com.jn.langx.util.collection.Collects;
@@ -75,7 +75,7 @@ public class AgilewayBasicFiltersConfiguration {
     @Order(-100)
     @Bean
     public FilterRegistrationBean xssFilterRegistrationBean(XssProperties xssProperties) {
-        XssFirewall xssFirewal1 = new XssFirewallFactory().get(xssProperties);
+        WAF xssFirewal1 = new XssFirewallFactory().get(xssProperties);
         XssFilter filter = new XssFilter();
         filter.setFirewall(xssFirewal1);
         xssFirewal1.init();

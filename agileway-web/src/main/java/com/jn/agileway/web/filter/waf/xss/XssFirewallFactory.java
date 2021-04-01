@@ -1,5 +1,6 @@
 package com.jn.agileway.web.filter.waf.xss;
 
+import com.jn.agileway.web.filter.waf.WAF;
 import com.jn.agileway.web.filter.waf.WAFStrategy;
 import com.jn.agileway.web.prediates.HttpRequestPredicateFactoryRegistry;
 import com.jn.agileway.web.prediates.PathMatchPredicate;
@@ -11,10 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class XssFirewallFactory implements Factory<XssProperties, XssFirewall> {
+public class XssFirewallFactory implements Factory<XssProperties, WAF> {
     @Override
-    public XssFirewall get(XssProperties xssProps) {
-        XssFirewall firewall = new XssFirewall();
+    public WAF get(XssProperties xssProps) {
+        WAF firewall = new WAF();
         firewall.setEnabled(xssProps.isEnabled());
 
         // path match predicate

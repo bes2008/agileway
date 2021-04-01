@@ -1,6 +1,5 @@
-package com.jn.agileway.web.filter.waf.xss;
+package com.jn.agileway.web.filter.waf;
 
-import com.jn.agileway.web.filter.waf.WAFStrategy;
 import com.jn.agileway.web.servlet.RR;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
@@ -11,7 +10,7 @@ import com.jn.langx.util.function.Predicate;
 
 import java.util.List;
 
-public class XssFirewall implements Initializable, EmptyEvalutible {
+public class WAF implements Initializable, EmptyEvalutible {
     private boolean inited = false;
     private boolean enabled = false;
     private final List<WAFStrategy> strategies = Collects.emptyArrayList();
@@ -64,4 +63,3 @@ public class XssFirewall implements Initializable, EmptyEvalutible {
         this.enabled = enabled;
     }
 }
-
