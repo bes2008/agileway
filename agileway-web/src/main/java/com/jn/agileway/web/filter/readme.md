@@ -5,4 +5,4 @@
 3. GlobalResponseFilter 对相应内容做统一处理，封装成RestRespBody
 
 建议配置顺序：
-RRFilter > AccessLogFilter > GlobalResponseFilter > XssFilter > CsrfFilter > X-ContentType-Options > your custom filter
+RRFilter > AccessLogFilter > XssFilter > CsrfFilter > X-ContentType-Options >  GlobalResponseFilter > your custom filter

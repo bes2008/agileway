@@ -1,8 +1,11 @@
 package com.jn.agileway.web.filter.globalresponse;
 
 import com.jn.agileway.web.filter.OncePerRequestFilter;
+import com.jn.agileway.web.filter.waf.WAFs;
+import com.jn.agileway.web.filter.waf.xss.JavaScriptXssHandler;
 import com.jn.agileway.web.rest.GlobalRestResponseBodyHandlerConfiguration;
 import com.jn.langx.http.rest.RestRespBody;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +59,10 @@ public class GlobalRestResponseFilter extends OncePerRequestFilter {
             } finally {
                 if (restResponseBodyHandler != null) {
                     restResponseBodyHandler.handleResponseBody(req, resp, doFilterMethod, restRespBody);
+                }
+                JavaScriptXssHandler javaScriptXssHandler = WAFs.JAVA_SCRIPT_XSS_HANDLER.get();
+                if (javaScriptXssHandler != null && Objs.isNotEmpty(restRespBody.getData()) && (restRespBody.getData() instanceof String)) {
+                    restRespBody.setData(javaScriptXssHandler.apply((String) restRespBody.getData()));
                 }
             }
         } else {

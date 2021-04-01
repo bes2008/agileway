@@ -52,7 +52,7 @@ public class HtmlTagXssHandler extends AbstractRegexpXssHandler {
         return Pipeline.of(tags).clearNulls().distinct().map(new Function<String, Pattern>() {
             @Override
             public Pattern apply(String tag) {
-                return Pattern.compile(".*<" + tag + ".*(/)?>((.*?)</" + tag + ">.*)?", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+                return Pattern.compile(".*<" + tag + ".*(/)?>((.*?)</" + tag + ">.*)?", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
             }
         }).asList();
     }
