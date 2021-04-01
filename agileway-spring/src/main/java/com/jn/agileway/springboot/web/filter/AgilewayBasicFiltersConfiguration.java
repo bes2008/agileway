@@ -94,7 +94,7 @@ public class AgilewayBasicFiltersConfiguration {
     }
 
     @Order(-98)
-    @ConditionalOnProperty("agileway.web.waf.x-content-type")
+    @ConditionalOnProperty("agileway.web.waf.xcontent")
     @Bean
     public FilterRegistrationBean xContentTypeOptionsRegistrationBean() {
         XContentTypeOptionsFilter filter = new XContentTypeOptionsFilter();

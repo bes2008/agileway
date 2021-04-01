@@ -15,11 +15,11 @@ agileway:
     access-log:
       level: BODY
     waf:
+      xcontent: true
       xss:
         enabled: true
         include-paths:
           - /**
-      x-content-type: true
       sql-inject:
         enabled: true
   httpclient:
