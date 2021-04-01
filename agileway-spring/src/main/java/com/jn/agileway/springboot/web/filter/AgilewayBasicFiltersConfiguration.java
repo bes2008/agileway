@@ -2,7 +2,7 @@ package com.jn.agileway.springboot.web.filter;
 
 import com.jn.agileway.web.filter.accesslog.AccessLogFilter;
 import com.jn.agileway.web.filter.accesslog.WebAccessLogProperties;
-import com.jn.agileway.web.filter.waf.XContentTypeOptionsFilter;
+import com.jn.agileway.web.filter.waf.xcontenttype.XContentTypeOptionsFilter;
 import com.jn.agileway.web.filter.rr.RRFilter;
 import com.jn.agileway.web.filter.waf.xss.XssFilter;
 import com.jn.agileway.web.filter.waf.xss.XssFirewall;

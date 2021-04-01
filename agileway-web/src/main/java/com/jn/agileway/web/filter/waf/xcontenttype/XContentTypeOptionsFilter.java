@@ -1,4 +1,4 @@
-package com.jn.agileway.web.filter.waf;
+package com.jn.agileway.web.filter.waf.xcontenttype;
 
 import com.jn.agileway.web.filter.OncePerRequestFilter;
 
