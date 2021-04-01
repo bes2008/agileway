@@ -19,6 +19,7 @@ public class WAFs {
 
     public static final ThreadLocal<JavaScriptXssHandler> JAVA_SCRIPT_XSS_HANDLER = new ThreadLocal<JavaScriptXssHandler>();
 
+
     public static String clearIfContainsJavaScript(String data) {
         if (Objs.isNotEmpty(data)) {
             JavaScriptXssHandler xssHandler = JAVA_SCRIPT_XSS_HANDLER.get();
