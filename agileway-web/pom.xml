@@ -22,38 +22,6 @@
             <groupId>com.github.fangjinuo.easyjson</groupId>
             <artifactId>easyjson-core</artifactId>
         </dependency>
-<!--
-        <dependency>
-            <groupId>com.github.houbb</groupId>
-            <artifactId>xss</artifactId>
-            <version>0.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.zuihou</groupId>
-            <artifactId>zuihou-xss-starter</artifactId>
-            <version>2.7.0</version>
-        </dependency>
-        <dependency>
-            <groupId>kim.hanjie.common</groupId>
-            <artifactId>common-xss</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>io.leopard</groupId>
-            <artifactId>nobug-xss</artifactId>
-            <version>0.9.12</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codesnippets4all</groupId>
-            <artifactId>xss-filter</artifactId>
-            <version>1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.techguy-bhushan</groupId>
-            <artifactId>xss.filter</artifactId>
-            <version>1.0.2</version>
-        </dependency>
--->
     </dependencies>
 
 </project>
