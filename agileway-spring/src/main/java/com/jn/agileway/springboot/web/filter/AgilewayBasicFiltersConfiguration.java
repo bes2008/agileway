@@ -44,6 +44,7 @@ public class AgilewayBasicFiltersConfiguration {
         registration.setInitParameters(initialParameters);
         registration.setUrlPatterns(Collects.newArrayList("/*"));
         registration.setOrder(-102);
+        registration.setName("StreamWrapper Filter");
         return registration;
     }
 
@@ -62,6 +63,7 @@ public class AgilewayBasicFiltersConfiguration {
         AccessLogFilter filter = new AccessLogFilter();
         filter.setConfig(accessLogProperties);
         registration.setFilter(filter);
+        registration.setName("AccessLog Filter");
         registration.setUrlPatterns(accessLogProperties.getUrlPatterns());
         registration.setOrder(-101);
         return registration;
@@ -85,7 +87,7 @@ public class AgilewayBasicFiltersConfiguration {
         xssFirewal1.init();
 
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setName("XSSFilter");
+        registration.setName("XSS Filter");
         registration.setFilter(filter);
         registration.setOrder(-100);
         return registration;
@@ -98,7 +100,7 @@ public class AgilewayBasicFiltersConfiguration {
         XContentTypeOptionsFilter filter = new XContentTypeOptionsFilter();
         filter.setEnabled(true);
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setName("X-ContentType-Options");
+        registration.setName("X-ContentType-Options Filter");
         registration.setFilter(filter);
         registration.setOrder(-98);
         return registration;
@@ -119,7 +121,7 @@ public class AgilewayBasicFiltersConfiguration {
         filter.setFirewall(waf);
 
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setName("SQLInjectFilter");
+        registration.setName("SQLInject Filter");
         registration.setFilter(filter);
         registration.setOrder(-97);
         return registration;

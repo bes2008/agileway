@@ -44,6 +44,7 @@ public class GlobalRestHandlersConfiguration {
         filter.setRestResponseBodyHandler(filterRestResponseHandler);
         filter.setExceptionHandler(globalFilterRestExceptionHandler);
         registration.setUrlPatterns(Collects.newArrayList("/*"));
+        registration.setName("GlobalRestResponse Filter");
         return registration;
     }
 
