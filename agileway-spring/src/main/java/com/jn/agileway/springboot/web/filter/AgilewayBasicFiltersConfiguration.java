@@ -15,7 +15,6 @@ import com.jn.agileway.web.filter.waf.xss.XssWafFactory;
 import com.jn.langx.util.collection.Collects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -96,7 +95,7 @@ public class AgilewayBasicFiltersConfiguration {
 
     @Bean
     @ConfigurationProperties(prefix = "agileway.web.waf.xcontent")
-    public XContentTypeOptionsProperties xContentTypeOptionsProperties(){
+    public XContentTypeOptionsProperties xContentTypeOptionsProperties() {
         return new XContentTypeOptionsProperties();
     }
 
