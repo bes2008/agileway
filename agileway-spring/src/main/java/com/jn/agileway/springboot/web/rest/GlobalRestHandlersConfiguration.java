@@ -28,7 +28,7 @@ import java.util.List;
 @Import({SpringBuiltinExceptionHandlerAutoConfiguration.class})
 @AutoConfigureBefore(GlobalSpringRestResponseBodyAdvice.class)
 public class GlobalRestHandlersConfiguration {
-    @Order(-100)
+    @Order(-90)
     @Bean
     @Autowired
     public FilterRegistrationBean globalRestFilterRegister(

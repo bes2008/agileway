@@ -59,7 +59,8 @@ public class GlobalRestResponseFilter extends OncePerRequestFilter {
                 if (restResponseBodyHandler != null) {
                     restResponseBodyHandler.handleResponseBody(req, resp, doFilterMethod, restRespBody);
                 }
-                if (Objs.isNotEmpty(restRespBody.getData()) && (restRespBody.getData() instanceof String)) {
+
+                if (restRespBody != null && Objs.isNotEmpty(restRespBody.getData()) && (restRespBody.getData() instanceof String)) {
                     restRespBody.setData(WAFs.clearIfContainsJavaScript((String) restRespBody.getData()));
                 }
             }

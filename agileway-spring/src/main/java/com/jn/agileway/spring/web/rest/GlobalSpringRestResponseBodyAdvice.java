@@ -3,6 +3,7 @@ package com.jn.agileway.spring.web.rest;
 import com.jn.agileway.web.filter.waf.WAFs;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.Objs;
+import com.jn.langx.util.function.Supplier0;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,16 +55,27 @@ public class GlobalSpringRestResponseBodyAdvice implements ResponseBodyAdvice, I
             return body;
         }
 
-        RestRespBody respBody = responseBodyHandler.handleResponseBody(httpServletRequest, httpServletResponse, returnType.getMethod(), body);
+        final RestRespBody respBody = responseBodyHandler.handleResponseBody(httpServletRequest, httpServletResponse, returnType.getMethod(), body);
         if (selectedConverterType == StringHttpMessageConverter.class) {
             String json = responseBodyHandler.getJsonFactory().get().toJson(respBody);
-            String testContent = WAFs.clearIfContainsJavaScript(json);
-            if (Objs.isEmpty(testContent)) {
-                respBody.setData("");
+            String xssFilteredData = WAFs.clearIfContainsJavaScript(json);
+            if (Objs.isEmpty(xssFilteredData)) {
+                respBody.setData(null);
                 json = responseBodyHandler.getJsonFactory().get().toJson(respBody);
             }
             return json;
         }
+
+        String xssFilteredData = WAFs.clearIfContainsJavaScript(new Supplier0<String>() {
+            @Override
+            public String get() {
+                return responseBodyHandler.getJsonFactory().get().toJson(respBody);
+            }
+        });
+        if (Objs.isEmpty(xssFilteredData)) {
+            respBody.setData(null);
+        }
+
         return respBody;
     }
 

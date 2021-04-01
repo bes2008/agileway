@@ -15,13 +15,13 @@ agileway:
     access-log:
       level: BODY
     waf:
-      xcontent: false
+      xcontent: true
       xss:
-        enabled: false
+        enabled: true
         include-paths:
           - /**
       sql-inject:
-        enabled: false
+        enabled: true
   httpclient:
     enabled: true
   redis:

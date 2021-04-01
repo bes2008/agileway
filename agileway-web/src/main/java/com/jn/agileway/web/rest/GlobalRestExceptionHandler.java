@@ -103,9 +103,9 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
                         response.resetBuffer();
                         response.setStatus(respBody.getStatusCode());
                         String jsonstring = jsonFactory.get().toJson(respBody);
-                        String testContent = WAFs.clearIfContainsJavaScript(jsonstring);
-                        if (Objs.isEmpty(testContent)) {
-                            respBody.setData("");
+                        String xssFilteredData = WAFs.clearIfContainsJavaScript(jsonstring);
+                        if (Objs.isEmpty(xssFilteredData)) {
+                            respBody.setData(null);
                             jsonstring = jsonFactory.get().toJson(respBody);
                         }
                         response.setContentType(GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8);
