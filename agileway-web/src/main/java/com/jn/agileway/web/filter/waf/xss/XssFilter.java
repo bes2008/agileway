@@ -59,7 +59,7 @@ public class XssFilter extends OncePerRequestFilter {
                 // ref: http://www.ruanyifeng.com/blog/2016/09/csp.html
                 // ref: https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html
                 if(Objs.isNotEmpty(xssFirewall.getContentSecurityPolicy())) {
-                    ((HttpServletResponse) response).setHeader("Content-Security-Policy", "1;mode=block");
+                    ((HttpServletResponse) response).setHeader("Content-Security-Policy", xssFirewall.getContentSecurityPolicy());
                 }
             }
         }
