@@ -49,9 +49,9 @@
          可以对用户输入、http响应 进行 encode操作。
 
          提供了如下功能：
-         1） 验证用户输入（String, Number, Integer, Date, 富文本html）是否合法 ==> 这个功能，通常我们会采用 常见的 validator 框架专门来做这个事情
+         1） 验证用户输入（String, Number, Integer, Date, 富文本html）是否合法，可以防止SQL注入攻击，XSS攻击等 ==> 这个功能，通常我们会采用 常见的 validator 框架专门来做这个事情
          2） CSRF 功能 token 管理
-         3） 增强了encoder功能，提供了对 css, html, javascript, vbscript, sql, xml, xpath, url 等进行 encode 功能。
+         3） 增强了encoder功能，提供了对 css, html, javascript, vbscript, sql, xml, xpath, url 等进行 encode 功能。 这样可以防止XSS攻击、SQL注入攻击。
          4） 基于 3）提供了 JSP  taglib ，用于对 html 响应内容进行 encode，已防止 黑客来基于输出内容进行 XSS 攻击
          -->
         <!--
