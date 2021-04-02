@@ -23,7 +23,8 @@
             <artifactId>easyjson-core</artifactId>
         </dependency>
 
-        <!-- 用于对用户输入内容，进行清理 ，可以自定义清理规则-->
+        <!-- 针对用户输入进行XSS防御: 用于对用户输入内容，进行清理 ，可以自定义清理规则-->
+        <!--
         <dependency>
             <groupId>org.owasp.antisamy</groupId>
             <artifactId>antisamy</artifactId>
@@ -31,8 +32,18 @@
             <optional>true</optional>
             <scope>test</scope>
         </dependency>
+        -->
+        <!-- 针对用户输入进行XSS防御:  这也是一款专门用于清理 html 标签的库 -->
+        <!--
+        <dependency>
+            <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
+            <artifactId>owasp-java-html-sanitizer</artifactId>
+            <version>20200713.1</version>
+        </dependency>
+        -->
 
-        <!-- 提供了 JSP  taglib ，用于对 html 响应内容进行 encode，已防止 黑客来基于输出内容进行 XSS 攻击 -->
+
+        <!-- 针对输出进行XSS防御：提供了 JSP  taglib ，用于对 html 响应内容进行 encode，已防止 黑客来基于输出内容进行 XSS 攻击 -->
         <!--
         <dependency>
             <groupId>org.owasp.esapi</groupId>
