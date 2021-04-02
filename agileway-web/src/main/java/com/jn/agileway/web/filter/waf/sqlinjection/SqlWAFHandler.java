@@ -1,4 +1,4 @@
-package com.jn.agileway.web.filter.waf.sqlinject;
+package com.jn.agileway.web.filter.waf.sqlinjection;
 
 import com.jn.agileway.web.filter.waf.AbstractWAFHandler;
 

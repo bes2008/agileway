@@ -1,14 +1,14 @@
-package com.jn.agileway.web.filter.waf.sqlinject;
+package com.jn.agileway.web.filter.waf.sqlinjection;
 
 import com.jn.agileway.web.filter.waf.WAFStrategy;
 import com.jn.agileway.web.prediates.PathMatchPredicate;
 import com.jn.langx.factory.Factory;
 
-public class SqlInjectWafFactory implements Factory<SqlInjectProperties, SqlFirewall> {
+public class SqlInjectionWafFactory implements Factory<SqlInjectionProperties, SqlFirewall> {
     @Override
-    public SqlFirewall get(SqlInjectProperties props) {
+    public SqlFirewall get(SqlInjectionProperties props) {
         SqlFirewall waf = new SqlFirewall();
-        waf.setName("SQL-Inject-WAF");
+        waf.setName("SQL-Injection-WAF");
         waf.setConfig(props);
 
         WAFStrategy strategy = new WAFStrategy();

@@ -3,10 +3,10 @@ package com.jn.agileway.springboot.web.filter;
 import com.jn.agileway.web.filter.accesslog.AccessLogFilter;
 import com.jn.agileway.web.filter.accesslog.WebAccessLogProperties;
 import com.jn.agileway.web.filter.rr.RRFilter;
-import com.jn.agileway.web.filter.waf.sqlinject.SqlFirewall;
-import com.jn.agileway.web.filter.waf.sqlinject.SqlInjectFilter;
-import com.jn.agileway.web.filter.waf.sqlinject.SqlInjectProperties;
-import com.jn.agileway.web.filter.waf.sqlinject.SqlInjectWafFactory;
+import com.jn.agileway.web.filter.waf.sqlinjection.SqlFirewall;
+import com.jn.agileway.web.filter.waf.sqlinjection.SqlInjectionFilter;
+import com.jn.agileway.web.filter.waf.sqlinjection.SqlInjectionProperties;
+import com.jn.agileway.web.filter.waf.sqlinjection.SqlInjectionWafFactory;
 import com.jn.agileway.web.filter.waf.xcontenttype.XContentTypeOptionsFilter;
 import com.jn.agileway.web.filter.waf.xcontenttype.XContentTypeOptionsProperties;
 import com.jn.agileway.web.filter.waf.xss.XssFilter;
@@ -114,20 +114,20 @@ public class AgilewayBasicFiltersConfiguration {
 
     @ConfigurationProperties(prefix = "agileway.web.waf.sql-inject")
     @Bean
-    public SqlInjectProperties sqlInjectProperties() {
-        return new SqlInjectProperties();
+    public SqlInjectionProperties sqlInjectProperties() {
+        return new SqlInjectionProperties();
     }
 
 
     @Order(-97)
     @Bean
-    public FilterRegistrationBean sqlInjectRegistrationBean(SqlInjectProperties sqlInjectProperties) {
-        SqlFirewall firewall = new SqlInjectWafFactory().get(sqlInjectProperties);
-        SqlInjectFilter filter = new SqlInjectFilter();
+    public FilterRegistrationBean sqlInjectionRegistrationBean(SqlInjectionProperties sqlInjectProperties) {
+        SqlFirewall firewall = new SqlInjectionWafFactory().get(sqlInjectProperties);
+        SqlInjectionFilter filter = new SqlInjectionFilter();
         filter.setFirewall(firewall);
 
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setName("SQLInject Filter");
+        registration.setName("SQLInjection Filter");
         registration.setFilter(filter);
         registration.setOrder(-97);
         return registration;

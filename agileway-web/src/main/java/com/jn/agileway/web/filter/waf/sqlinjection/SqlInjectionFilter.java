@@ -1,4 +1,4 @@
-package com.jn.agileway.web.filter.waf.sqlinject;
+package com.jn.agileway.web.filter.waf.sqlinjection;
 
 import com.jn.agileway.web.filter.OncePerRequestFilter;
 import com.jn.agileway.web.filter.rr.RRHolder;
@@ -16,13 +16,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html
- */
-public class SqlInjectFilter extends OncePerRequestFilter {
+
+public class SqlInjectionFilter extends OncePerRequestFilter {
     private WAF sqlWaf;
 
-    public SqlInjectFilter() {
+    public SqlInjectionFilter() {
     }
 
     public void setFirewall(WAF sqlFirewall) {
