@@ -14,10 +14,11 @@ import java.util.Map;
 
 public class XssWafFactory implements Factory<XssProperties, WAF> {
     @Override
-    public WAF get(XssProperties xssProps) {
-        WAF firewall = new WAF();
+    public XssFirewall get(XssProperties xssProps) {
+        XssFirewall firewall = new XssFirewall();
         firewall.setName("XSS-Firewall");
         firewall.setEnabled(xssProps.isEnabled());
+        firewall.setProperties(xssProps);
 
         // path match predicate
         PathMatchPredicateFactory factory = (PathMatchPredicateFactory) HttpRequestPredicateFactoryRegistry.getInstance().get("path");

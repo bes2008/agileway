@@ -20,12 +20,12 @@ import java.io.IOException;
  * https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#xss-prevention-rules-summary
  */
 public class XssFilter extends OncePerRequestFilter {
-    private WAF xssFirewall;
+    private XssFirewall xssFirewall;
 
     public XssFilter() {
     }
 
-    public void setFirewall(WAF xssFirewall) {
+    public void setFirewall(XssFirewall xssFirewall) {
         this.xssFirewall = xssFirewall;
     }
 
@@ -54,6 +54,11 @@ public class XssFilter extends OncePerRequestFilter {
                 RRHolder.set((HttpServletRequest) request, (HttpServletResponse) response);
                 // ref: https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/X-XSS-Protection
                 ((HttpServletResponse) response).setHeader("X-XSS-Protection", "1;mode=block");
+                // ref: https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
+                // ref: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
+                if(Objs.isNotEmpty(xssFirewall.getContentSecurityPolicy())) {
+                    ((HttpServletResponse) response).setHeader("Content-Security-Policy", "1;mode=block");
+                }
             }
         }
         chain.doFilter(request, response);

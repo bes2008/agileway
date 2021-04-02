@@ -10,6 +10,7 @@ import com.jn.agileway.web.filter.waf.sqlinject.SqlInjectWafFactory;
 import com.jn.agileway.web.filter.waf.xcontenttype.XContentTypeOptionsFilter;
 import com.jn.agileway.web.filter.waf.xcontenttype.XContentTypeOptionsProperties;
 import com.jn.agileway.web.filter.waf.xss.XssFilter;
+import com.jn.agileway.web.filter.waf.xss.XssFirewall;
 import com.jn.agileway.web.filter.waf.xss.XssProperties;
 import com.jn.agileway.web.filter.waf.xss.XssWafFactory;
 import com.jn.langx.util.collection.Collects;
@@ -80,7 +81,7 @@ public class AgilewayBasicFiltersConfiguration {
     @Order(-100)
     @Bean
     public FilterRegistrationBean xssFilterRegistrationBean(XssProperties xssProperties) {
-        WAF xssFirewal1 = new XssWafFactory().get(xssProperties);
+        XssFirewall xssFirewal1 = new XssWafFactory().get(xssProperties);
         XssFilter filter = new XssFilter();
         filter.setFirewall(xssFirewal1);
 

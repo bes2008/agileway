@@ -13,6 +13,7 @@ public class XssProperties {
 
     private List<String> excludePaths;
 
+    private String contentSecurityPolicy = "default-src 'self'";
 
     private boolean htmlEventHandlersEnabled = true;
     /**
@@ -20,7 +21,7 @@ public class XssProperties {
      */
     private Set<String> htmlEventHandlers = HtmlEventHandlerXssHandler.DEFAULT_ON_XXX_FUNCTION_NAMES;
 
-    private boolean htmlTagsEnabled= true;
+    private boolean htmlTagsEnabled = true;
 
     /**
      * @see HtmlTagXssHandler
@@ -94,5 +95,13 @@ public class XssProperties {
 
     public void setHtmlTagsEnabled(boolean htmlTagsEnabled) {
         this.htmlTagsEnabled = htmlTagsEnabled;
+    }
+
+    public String getContentSecurityPolicy() {
+        return contentSecurityPolicy;
+    }
+
+    public void setContentSecurityPolicy(String contentSecurityPolicy) {
+        this.contentSecurityPolicy = contentSecurityPolicy;
     }
 }
