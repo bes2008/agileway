@@ -13,7 +13,7 @@ public class CommonHttpRequestPredicateProperties {
      * <p>
      * 可选类型：String[], Collection<String>, Map<String,String>,PathPatternExpressions
      */
-    private Object path;
+    private Object path = new PathPatternExpressions("/**");
 
     public Object getPath() {
         return path;
