@@ -4,7 +4,7 @@ import com.jn.langx.util.Objs;
 
 import java.util.List;
 
-public class CommonHttpRequestPredicateProperties {
+public class HttpRequestPredicateGroupProperties {
 
     private List<String> methods = MethodPredicate.DEFAULT_METHODS;
 
