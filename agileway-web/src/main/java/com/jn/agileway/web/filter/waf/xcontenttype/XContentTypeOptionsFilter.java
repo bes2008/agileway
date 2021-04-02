@@ -10,6 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 如果服务器发送响应头 "X-Content-Type-Options: nosniff"，
+ * 则 浏览器在处理 <script></script> 和 <style> 元素时，会拒绝包含错误的 MIME 类型的响应。
+ * 这是一种安全功能，有助于防止基于 MIME 类型混淆的攻击。
+ */
 public class XContentTypeOptionsFilter extends OncePerRequestFilter {
     private XContentTypeOptionsProperties properties = new XContentTypeOptionsProperties();
 
