@@ -29,6 +29,10 @@ Java、Web开发工具套件，尽量避免996
         + encoding filter
         + rr filter
         + global response filter
+        + WAF (Web Application Firewall)
+           + XSS
+           + CSRF
+           + SQL Inject
     + rest: 
         + 提供统一的异常处理
         + 提供rest 请求结果统一化结构处理机制
@@ -66,7 +70,7 @@ Java、Web开发工具套件，尽量避免996
     + 一个consumer可以从多个topic拉取消息， 一个topic的消息可以被多个消费者重复的消费
     + 一个consumer可以依赖于从同一topic拉取消息的多个其他的consumer
 + agileway-aop: 对AOP的支持、适配    
-+ agileway-ssh:
++ agileway-sshclient:
     + 功能
       + 支持 Session Channel
       + 支持 forwarding
@@ -90,7 +94,7 @@ Java、Web开发工具套件，尽量避免996
 |agileway-dmmq|7|1.2.0+|
 |agileway-httpclient|6|1.3.0+|
 |agileway-aop|6|2.1.0+|
-|agileway-aop|6|2.3.0+|
+|agileway-sshclient|6|2.3.0+|
  
 
 

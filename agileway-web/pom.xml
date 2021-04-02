@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.github.fangjinuo.agileway</groupId>
         <artifactId>agileway</artifactId>
-        <version>2.4.2</version>
+        <version>2.4.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -22,6 +22,30 @@
             <groupId>com.github.fangjinuo.easyjson</groupId>
             <artifactId>easyjson-core</artifactId>
         </dependency>
+
+        <!-- 用于对用户输入内容，进行清理 ，可以自定义清理规则-->
+        <dependency>
+            <groupId>org.owasp.antisamy</groupId>
+            <artifactId>antisamy</artifactId>
+            <version>1.6.2</version>
+            <optional>true</optional>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- 提供了 JSP  taglib ，用于对 html 响应内容进行 encode，已防止 黑客来基于输出内容进行 XSS 攻击 -->
+        <!--
+        <dependency>
+            <groupId>org.owasp.esapi</groupId>
+            <artifactId>esapi</artifactId>
+            <version>2.2.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.owasp.encoder</groupId>
+            <artifactId>encoder</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+        -->
+
     </dependencies>
 
 </project>
