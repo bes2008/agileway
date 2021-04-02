@@ -56,6 +56,7 @@ public class XssFilter extends OncePerRequestFilter {
                 ((HttpServletResponse) response).setHeader("X-XSS-Protection", "1;mode=block");
                 // ref: https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
                 // ref: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
+                // ref: http://www.ruanyifeng.com/blog/2016/09/csp.html
                 if(Objs.isNotEmpty(xssFirewall.getContentSecurityPolicy())) {
                     ((HttpServletResponse) response).setHeader("Content-Security-Policy", "1;mode=block");
                 }
