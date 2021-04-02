@@ -18,19 +18,19 @@ agileway:
       xcontent:
         enabled: true
         predicates:
-          path:
+          paths:
             includes: /**
           methods: GET,POST
       xss:
         enabled: true
         predicates:
-          path:
+          paths:
             includes: /**
           methods: [GET,POST]
       sql-injection:
         enabled: true
         predicates:
-          path:
+          paths:
             includes: /**
           methods:
             - GET

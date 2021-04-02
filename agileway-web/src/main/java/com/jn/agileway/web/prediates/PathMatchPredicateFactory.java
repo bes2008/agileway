@@ -10,9 +10,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import static com.jn.agileway.web.prediates.PathPatternExpressions.EXCLUDES;
+import static com.jn.agileway.web.prediates.PathPatternExpressions.INCLUDES;
+
 public class PathMatchPredicateFactory extends HttpRequestPredicateFactory {
-    public static final String INCLUDE = "include";
-    public static final String EXCLUDE = "exclude";
 
     public PathMatchPredicateFactory() {
         setName("path");
@@ -38,7 +39,7 @@ public class PathMatchPredicateFactory extends HttpRequestPredicateFactory {
                 Collects.forEach((Map) o, new Consumer2<Object, Object>() {
                     @Override
                     public void accept(Object key, Object value) {
-                        if (INCLUDE.equals(key)) {
+                        if (INCLUDES.equals(key)) {
                             if (value instanceof String) {
                                 path.setIncludes((String) value);
                             } else if (Arrs.isArray(value) || value instanceof Collection) {
@@ -49,7 +50,7 @@ public class PathMatchPredicateFactory extends HttpRequestPredicateFactory {
                                 }
                             }
                         }
-                        if (EXCLUDE.equals(key)) {
+                        if (EXCLUDES.equals(key)) {
                             if (value instanceof String) {
                                 path.setExcludes((String) value);
                             } else if (Arrs.isArray(value) || value instanceof Collection) {

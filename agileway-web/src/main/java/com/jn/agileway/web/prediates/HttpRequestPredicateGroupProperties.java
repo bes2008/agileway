@@ -3,6 +3,7 @@ package com.jn.agileway.web.prediates;
 import com.jn.langx.util.Objs;
 
 import java.util.List;
+import java.util.Map;
 
 public class HttpRequestPredicateGroupProperties {
 
@@ -11,16 +12,16 @@ public class HttpRequestPredicateGroupProperties {
     /**
      * @see PathMatchPredicateFactory
      * <p>
-     * 可选类型：String[], Collection<String>, Map<String,String>,PathPatternExpressions
+     * 可选类型：Map<String,String>,PathPatternExpressions
      */
-    private Object path = new PathPatternExpressions("/**");
+    private Map<String, String> paths = new PathPatternExpressions("/**").toMap();
 
-    public Object getPath() {
-        return path;
+    public Map<String, String> getPaths() {
+        return paths;
     }
 
-    public void setPath(Object path) {
-        this.path = path;
+    public void setPaths(Map<String, String> paths) {
+        this.paths = paths;
     }
 
     public List<String> getMethods() {
