@@ -20,16 +20,17 @@ public class PathMatchPredicateFactory extends HttpRequestPredicateFactory {
 
     @Override
     public HttpRequestPredicate get(Object o) {
-        final PathMatchPredicate predicate = new PathMatchPredicate();
+        PathMatchPredicate predicate = null;
 
         if (Objs.isNotEmpty(o)) {
+            final PathPatternExpressions path = new PathPatternExpressions();
             if (Arrs.isArray(o) || o instanceof Collection) {
                 List<String> expressions = HttpRequestPredicates.toStringList(o, null);
                 if (Objs.isNotEmpty(expressions)) {
                     String includePatternExpression = expressions.get(0);
-                    predicate.setIncludePatterns(includePatternExpression);
+                    path.setIncludes(includePatternExpression);
                     if (expressions.size() > 1) {
-                        predicate.setExcludePatterns(expressions.get(1));
+                        path.setExcludes(expressions.get(1));
                     }
                 }
 
@@ -39,29 +40,31 @@ public class PathMatchPredicateFactory extends HttpRequestPredicateFactory {
                     public void accept(Object key, Object value) {
                         if (INCLUDE.equals(key)) {
                             if (value instanceof String) {
-                                predicate.setIncludePatterns((String) value);
+                                path.setIncludes((String) value);
                             } else if (Arrs.isArray(value) || value instanceof Collection) {
                                 List<String> expressions = HttpRequestPredicates.toStringList(value, null);
                                 if (Objs.isNotEmpty(expressions)) {
                                     String patternSet = Strings.join(";", expressions);
-                                    predicate.setIncludePatterns(patternSet);
+                                    path.setIncludes(patternSet);
                                 }
                             }
                         }
                         if (EXCLUDE.equals(key)) {
                             if (value instanceof String) {
-                                predicate.setExcludePatterns((String) value);
+                                path.setExcludes((String) value);
                             } else if (Arrs.isArray(value) || value instanceof Collection) {
                                 List<String> expressions = HttpRequestPredicates.toStringList(value, null);
                                 if (Objs.isNotEmpty(expressions)) {
                                     String patternSet = Strings.join(";", expressions);
-                                    predicate.setExcludePatterns(patternSet);
+                                    path.setExcludes(patternSet);
                                 }
                             }
                         }
                     }
                 });
             }
+
+            predicate = new PathMatchPredicate(path);
         }
 
         return predicate;

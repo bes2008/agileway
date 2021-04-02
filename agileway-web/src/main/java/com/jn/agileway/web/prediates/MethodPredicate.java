@@ -1,14 +1,23 @@
 package com.jn.agileway.web.prediates;
 
 import com.jn.agileway.web.servlet.RR;
+import com.jn.langx.http.HttpMethod;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.function.Function;
 
 import java.util.List;
 
 public class MethodPredicate implements HttpRequestPredicate {
+    static final List<String> DEFAULT_METHODS = Pipeline.of(HttpMethod.values()).map(new Function<HttpMethod, String>() {
+        @Override
+        public String apply(HttpMethod httpMethod) {
+            return httpMethod.name();
+        }
+    }).asList();
 
-    private List<String> methods = Collects.emptyArrayList();
+    private List<String> methods = DEFAULT_METHODS;
 
     public void setMethods(String... methods) {
         setMethods(Collects.asList(methods));

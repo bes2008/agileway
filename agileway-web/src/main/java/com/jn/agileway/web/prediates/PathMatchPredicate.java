@@ -12,6 +12,11 @@ public class PathMatchPredicate implements HttpRequestPredicate {
     public PathMatchPredicate() {
     }
 
+    public PathMatchPredicate(PathPatternExpressions expressions) {
+        this(expressions.getIncludes(), expressions.getExcludes());
+    }
+
+
     public PathMatchPredicate(String includes) {
         this(includes, null);
     }
