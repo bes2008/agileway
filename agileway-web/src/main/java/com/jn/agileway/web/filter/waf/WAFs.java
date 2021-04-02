@@ -24,9 +24,11 @@ public class WAFs {
     public static String clearIfContainsJavaScript(Supplier0<String> dataSupplier) {
         if (Objs.isNotEmpty(dataSupplier)) {
             JavaScriptXssHandler xssHandler = JAVA_SCRIPT_XSS_HANDLER.get();
+            String data = dataSupplier.get();
             if (xssHandler != null) {
-                String data = dataSupplier.get();
                 return xssHandler.apply(data);
+            }else{
+                return data;
             }
         }
         return null;
