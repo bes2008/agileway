@@ -11,9 +11,8 @@ import com.jn.langx.util.function.Predicate;
 
 import java.util.List;
 
-public class WAF implements Initializable, EmptyEvalutible, Named {
+public abstract class WAF implements Initializable, EmptyEvalutible, Named {
     private boolean inited = false;
-    private boolean enabled = false;
     private String name;
     private final List<WAFStrategy> strategies = Collects.emptyArrayList();
 
@@ -66,11 +65,7 @@ public class WAF implements Initializable, EmptyEvalutible, Named {
         return false;
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
+    public abstract boolean isEnabled();
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
+    public abstract void setEnabled(boolean enabled);
 }

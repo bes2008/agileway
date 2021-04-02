@@ -3,7 +3,7 @@ package com.jn.agileway.springboot.web.filter;
 import com.jn.agileway.web.filter.accesslog.AccessLogFilter;
 import com.jn.agileway.web.filter.accesslog.WebAccessLogProperties;
 import com.jn.agileway.web.filter.rr.RRFilter;
-import com.jn.agileway.web.filter.waf.WAF;
+import com.jn.agileway.web.filter.waf.sqlinject.SqlFirewall;
 import com.jn.agileway.web.filter.waf.sqlinject.SqlInjectFilter;
 import com.jn.agileway.web.filter.waf.sqlinject.SqlInjectProperties;
 import com.jn.agileway.web.filter.waf.sqlinject.SqlInjectWafFactory;
@@ -81,11 +81,11 @@ public class AgilewayBasicFiltersConfiguration {
     @Order(-100)
     @Bean
     public FilterRegistrationBean xssFilterRegistrationBean(XssProperties xssProperties) {
-        XssFirewall xssFirewal1 = new XssWafFactory().get(xssProperties);
+        XssFirewall firewall = new XssWafFactory().get(xssProperties);
         XssFilter filter = new XssFilter();
-        filter.setFirewall(xssFirewal1);
+        filter.setFirewall(firewall);
 
-        xssFirewal1.init();
+        firewall.init();
 
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setName("XSS Filter");
@@ -122,9 +122,9 @@ public class AgilewayBasicFiltersConfiguration {
     @Order(-97)
     @Bean
     public FilterRegistrationBean sqlInjectRegistrationBean(SqlInjectProperties sqlInjectProperties) {
-        WAF waf = new SqlInjectWafFactory().get(sqlInjectProperties);
+        SqlFirewall firewall = new SqlInjectWafFactory().get(sqlInjectProperties);
         SqlInjectFilter filter = new SqlInjectFilter();
-        filter.setFirewall(waf);
+        filter.setFirewall(firewall);
 
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setName("SQLInject Filter");
