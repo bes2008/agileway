@@ -1,7 +1,10 @@
 package com.jn.agileway.web.prediates;
 
+import com.jn.agileway.web.servlet.RR;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Listable;
+import com.jn.langx.util.function.Functions;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -47,5 +50,12 @@ public final class HttpRequestPredicateGroup implements Listable<HttpRequestPred
     @Override
     public boolean isNull() {
         return false;
+    }
+
+    public boolean match(RR rr) {
+        if (Objs.isEmpty(rr)) {
+            return false;
+        }
+        return Functions.allPredicate(Collects.toArray(predicates, HttpRequestPredicate[].class)).test(rr);
     }
 }

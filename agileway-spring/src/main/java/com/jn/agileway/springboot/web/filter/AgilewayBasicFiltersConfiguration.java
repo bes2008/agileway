@@ -13,6 +13,8 @@ import com.jn.agileway.web.filter.waf.xss.XssFilter;
 import com.jn.agileway.web.filter.waf.xss.XssFirewall;
 import com.jn.agileway.web.filter.waf.xss.XssProperties;
 import com.jn.agileway.web.filter.waf.xss.XssWafFactory;
+import com.jn.agileway.web.prediates.HttpRequestPredicateGroup;
+import com.jn.agileway.web.prediates.HttpRequestPredicateGroupFactory;
 import com.jn.langx.util.collection.Collects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -105,6 +107,8 @@ public class AgilewayBasicFiltersConfiguration {
     public FilterRegistrationBean xContentTypeOptionsRegistrationBean(XContentTypeOptionsProperties properties) {
         XContentTypeOptionsFilter filter = new XContentTypeOptionsFilter();
         filter.setProperties(properties);
+        HttpRequestPredicateGroup predicates = new HttpRequestPredicateGroupFactory().get(properties.getPredicates());
+        filter.setPredicates(predicates);
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setName("X-ContentType-Options Filter");
         registration.setFilter(filter);

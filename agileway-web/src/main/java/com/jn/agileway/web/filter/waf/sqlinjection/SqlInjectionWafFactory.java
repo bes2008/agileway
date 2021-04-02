@@ -1,7 +1,8 @@
 package com.jn.agileway.web.filter.waf.sqlinjection;
 
 import com.jn.agileway.web.filter.waf.WAFStrategy;
-import com.jn.agileway.web.prediates.PathMatchPredicate;
+import com.jn.agileway.web.prediates.HttpRequestPredicateGroup;
+import com.jn.agileway.web.prediates.HttpRequestPredicateGroupFactory;
 import com.jn.langx.factory.Factory;
 
 public class SqlInjectionWafFactory implements Factory<SqlInjectionProperties, SqlFirewall> {
@@ -12,7 +13,9 @@ public class SqlInjectionWafFactory implements Factory<SqlInjectionProperties, S
         waf.setConfig(props);
 
         WAFStrategy strategy = new WAFStrategy();
-        strategy.addPredicate(new PathMatchPredicate("/*"));
+
+        HttpRequestPredicateGroup predicates = new HttpRequestPredicateGroupFactory().get(props.getPredicates());
+        strategy.setPredicates(predicates);
         strategy.add(new SqlCharRemoveHandler());
 
         waf.addStrategy(strategy);

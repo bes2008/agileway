@@ -1,6 +1,7 @@
 package com.jn.agileway.web.filter.waf.xcontenttype;
 
 import com.jn.agileway.web.filter.OncePerRequestFilter;
+import com.jn.agileway.web.prediates.HttpRequestPredicateGroup;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -17,17 +18,23 @@ import java.io.IOException;
  */
 public class XContentTypeOptionsFilter extends OncePerRequestFilter {
     private XContentTypeOptionsProperties properties = new XContentTypeOptionsProperties();
+    private HttpRequestPredicateGroup predicates;
 
     public void setProperties(XContentTypeOptionsProperties properties) {
         this.properties = properties;
     }
 
+    public void setPredicates(HttpRequestPredicateGroup predicates) {
+        this.predicates = predicates;
+    }
 
     @Override
     protected void doFilterInternal(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         if (properties.isEnabled()) {
             if (request instanceof HttpServletRequest) {
-                ((HttpServletResponse) response).setHeader("X-Content-Type-Options", "nosniff");
+                if (predicates.match(getRR(request, response))) {
+                    ((HttpServletResponse) response).setHeader("X-Content-Type-Options", "nosniff");
+                }
             }
         }
         doFilter(request, response, chain);

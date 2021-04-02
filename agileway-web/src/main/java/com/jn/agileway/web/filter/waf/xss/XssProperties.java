@@ -1,6 +1,7 @@
 package com.jn.agileway.web.filter.waf.xss;
 
-import java.util.List;
+import com.jn.agileway.web.prediates.HttpRequestPredicateGroupProperties;
+
 import java.util.Set;
 
 public class XssProperties {
@@ -9,9 +10,7 @@ public class XssProperties {
      */
     private boolean enabled = false;
 
-    private List<String> includePaths;
-
-    private List<String> excludePaths;
+    private HttpRequestPredicateGroupProperties predicates;
 
     private String contentSecurityPolicy = "default-src 'self'";
 
@@ -65,20 +64,12 @@ public class XssProperties {
         this.javascriptEnabled = javascriptEnabled;
     }
 
-    public List<String> getIncludePaths() {
-        return includePaths;
+    public HttpRequestPredicateGroupProperties getPredicates() {
+        return predicates;
     }
 
-    public void setIncludePaths(List<String> includePaths) {
-        this.includePaths = includePaths;
-    }
-
-    public List<String> getExcludePaths() {
-        return excludePaths;
-    }
-
-    public void setExcludePaths(List<String> excludePaths) {
-        this.excludePaths = excludePaths;
+    public void setPredicates(HttpRequestPredicateGroupProperties predicates) {
+        this.predicates = predicates;
     }
 
     public boolean isHtmlEventHandlersEnabled() {

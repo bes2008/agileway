@@ -1,6 +1,6 @@
 package com.jn.agileway.web.filter.waf;
 
-import com.jn.agileway.web.prediates.HttpRequestPredicate;
+import com.jn.agileway.web.prediates.HttpRequestPredicateGroup;
 import com.jn.agileway.web.servlet.RR;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
@@ -8,37 +8,22 @@ import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Listable;
 import com.jn.langx.util.function.Consumer;
-import com.jn.langx.util.function.Functions;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
 public class WAFStrategy implements Listable<WAFHandler>, Initializable {
-    private final List<HttpRequestPredicate> predicates = Collects.emptyArrayList();
+    private HttpRequestPredicateGroup predicates = null;
     private final List<WAFHandler> handlers = Collects.emptyArrayList();
 
-    public List<HttpRequestPredicate> getPredicates() {
-        return predicates;
-    }
-
-    public void setPredicates(List<HttpRequestPredicate> predicates) {
-        Collects.addAll(this.predicates, predicates);
-    }
-
-    public void addPredicate(HttpRequestPredicate predicate) {
-        Collects.addAll(this.predicates, predicate);
-    }
 
     public List<WAFHandler> getHandlers() {
         return handlers;
     }
 
     public boolean match(RR rr) {
-        if (Objs.isEmpty(rr)) {
-            return false;
-        }
-        return Functions.allPredicate(Collects.toArray(predicates, HttpRequestPredicate[].class)).test(rr);
+        return predicates != null && predicates.match(rr);
     }
 
     @Override
@@ -84,5 +69,9 @@ public class WAFStrategy implements Listable<WAFHandler>, Initializable {
     @Override
     public boolean isNull() {
         return handlers == null;
+    }
+
+    public void setPredicates(HttpRequestPredicateGroup predicates) {
+        this.predicates = predicates;
     }
 }

@@ -1,15 +1,9 @@
 package com.jn.agileway.web.filter.waf.xss;
 
 import com.jn.agileway.web.filter.waf.WAFStrategy;
-import com.jn.agileway.web.prediates.HttpRequestPredicateFactoryRegistry;
-import com.jn.agileway.web.prediates.PathMatchPredicate;
-import com.jn.agileway.web.prediates.PathMatchPredicateFactory;
+import com.jn.agileway.web.prediates.HttpRequestPredicateGroup;
+import com.jn.agileway.web.prediates.HttpRequestPredicateGroupFactory;
 import com.jn.langx.factory.Factory;
-import com.jn.langx.util.Objs;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class XssWafFactory implements Factory<XssProperties, XssFirewall> {
     @Override
@@ -18,22 +12,10 @@ public class XssWafFactory implements Factory<XssProperties, XssFirewall> {
         firewall.setName("XSS-Firewall");
         firewall.setConfig(xssProps);
 
-        // path match predicate
-        PathMatchPredicateFactory factory = (PathMatchPredicateFactory) HttpRequestPredicateFactoryRegistry.getInstance().get("path");
-        if (factory == null) {
-            factory = new PathMatchPredicateFactory();
-        }
-        Map<String, List<String>> pathConfig = new HashMap<String, List<String>>();
-        if (Objs.isNotEmpty(xssProps.getIncludePaths())) {
-            pathConfig.put(PathMatchPredicateFactory.INCLUDE, xssProps.getIncludePaths());
-        }
-        if (Objs.isNotEmpty(xssProps.getExcludePaths())) {
-            pathConfig.put(PathMatchPredicateFactory.EXCLUDE, xssProps.getExcludePaths());
-        }
-        PathMatchPredicate pathMatchPredicate = (PathMatchPredicate) factory.get(pathConfig);
+        HttpRequestPredicateGroup predicates = new HttpRequestPredicateGroupFactory().get(xssProps.getPredicates());
 
         WAFStrategy xssStrategy = new WAFStrategy();
-        xssStrategy.addPredicate(pathMatchPredicate);
+        xssStrategy.setPredicates(predicates);
 
 
         // html event handlers

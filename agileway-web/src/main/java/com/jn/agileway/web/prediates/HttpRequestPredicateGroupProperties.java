@@ -6,7 +6,7 @@ import java.util.List;
 
 public class HttpRequestPredicateGroupProperties {
 
-    private List<String> methods = MethodPredicate.DEFAULT_METHODS;
+    private List<String> methods;
 
     /**
      * @see PathMatchPredicateFactory

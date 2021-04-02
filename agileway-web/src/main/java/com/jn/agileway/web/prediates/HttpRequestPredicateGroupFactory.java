@@ -1,6 +1,7 @@
 package com.jn.agileway.web.prediates;
 
 import com.jn.langx.factory.Factory;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
@@ -18,6 +19,9 @@ public class HttpRequestPredicateGroupFactory implements Factory<HttpRequestPred
     @Override
     public final HttpRequestPredicateGroup get(final HttpRequestPredicateGroupProperties config) {
         final HttpRequestPredicateGroup group = new HttpRequestPredicateGroup();
+        if (config == null) {
+            return group;
+        }
         Collection<Field> fields = Reflects.getAllDeclaredFields(config.getClass(), false);
         Collects.forEach(fields, new Consumer<Field>() {
             @Override
@@ -29,8 +33,15 @@ public class HttpRequestPredicateGroupFactory implements Factory<HttpRequestPred
                 if (factory == null) {
                     logger.warn("Can't find a http-request-predicate factory for {}", fieldName);
                 } else {
-                    Object value = invokeGetterOrFiled(config, fieldName, true, true);
-                    predicate = factory.get(value);
+                    Object value = null;
+                    try {
+                        value = invokeGetterOrFiled(config, fieldName, true, true);
+                    } catch (Throwable ex) {
+                        logger.warn("error occur when get http-request-predicate value: {}, error: {},", fieldName, ex.getMessage(), ex);
+                    }
+                    if (Objs.isNotEmpty(value)) {
+                        predicate = factory.get(value);
+                    }
                 }
 
                 if (predicate != null) {

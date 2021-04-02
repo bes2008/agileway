@@ -1,9 +1,13 @@
 package com.jn.agileway.web.filter;
 
+import com.jn.agileway.web.filter.rr.RRHolder;
+import com.jn.agileway.web.servlet.RR;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -73,6 +77,17 @@ public abstract class OncePerRequestFilter implements Filter {
         }
     }
 
+    protected RR getRR(ServletRequest request, ServletResponse response) {
+        RR rr = RRHolder.get();
+        if (rr != null) {
+            return rr;
+        }
+        if (request instanceof HttpServletRequest) {
+            RRHolder.set((HttpServletRequest) request, (HttpServletResponse) response);
+            rr = RRHolder.get();
+        }
+        return rr;
+    }
 
     /**
      * Return name of the request attribute that identifies that a request has already been filtered.
