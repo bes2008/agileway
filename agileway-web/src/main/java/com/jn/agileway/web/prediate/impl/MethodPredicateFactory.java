@@ -14,7 +14,7 @@ import java.util.List;
 public class MethodPredicateFactory extends HttpRequestPredicateFactory {
 
     public MethodPredicateFactory() {
-        setName(HttpRequestPredicates.PREDICATE_TYPE_METHOD);
+        setName(HttpRequestPredicates.PREDICATE_KEY_METHOD);
     }
 
     @Override

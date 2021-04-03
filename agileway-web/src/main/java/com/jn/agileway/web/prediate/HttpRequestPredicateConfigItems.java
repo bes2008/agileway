@@ -62,7 +62,7 @@ public class HttpRequestPredicateConfigItems implements Iterable<HttpRequestPred
             @Override
             public HttpRequestPredicateConfigItem apply(String itemExpression) {
                 int keyValueSeparatorIndex = itemExpression.indexOf(PREDICATE_CONFIGURATION_ITEM_SEPARATOR);
-                String key = itemExpression.substring(0, keyValueSeparatorIndex);
+                String key = itemExpression.substring(0, keyValueSeparatorIndex).toLowerCase();
                 String configuration = itemExpression.substring(keyValueSeparatorIndex + PREDICATE_CONFIGURATION_ITEM_SEPARATOR.length());
                 HttpRequestPredicateConfigItem item = new HttpRequestPredicateConfigItem();
                 item.setKey(key);

@@ -5,7 +5,7 @@ import com.jn.agileway.web.servlet.RR;
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
 
-public class HeadMatchPredicate implements HttpRequestPredicate {
+public class HeaderMatchPredicate implements HttpRequestPredicate {
     @NotEmpty
     private String header;
     @Nullable

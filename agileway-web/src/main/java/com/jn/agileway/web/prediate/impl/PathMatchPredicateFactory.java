@@ -13,7 +13,7 @@ import java.util.List;
 public class PathMatchPredicateFactory extends HttpRequestPredicateFactory {
 
     public PathMatchPredicateFactory() {
-        setName(HttpRequestPredicates.PREDICATE_TYPE_PATH);
+        setName(HttpRequestPredicates.PREDICATE_KEY_PATH);
     }
 
     @Override
