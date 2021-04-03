@@ -1,4 +1,4 @@
-package com.jn.agileway.web.prediates;
+package com.jn.agileway.web.prediate.impl;
 
 import com.jn.langx.util.Objs;
 

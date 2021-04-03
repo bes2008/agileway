@@ -1,6 +1,6 @@
 package com.jn.agileway.web.filter.waf.sqlinjection;
 
-import com.jn.agileway.web.prediates.HttpRequestPredicateGroupProperties;
+import com.jn.agileway.web.prediate.HttpRequestPredicateGroupProperties;
 
 public class SqlInjectionProperties {
     private boolean enabled = false;

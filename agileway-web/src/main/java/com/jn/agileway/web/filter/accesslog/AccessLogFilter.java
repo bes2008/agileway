@@ -1,9 +1,8 @@
 package com.jn.agileway.web.filter.accesslog;
 
 import com.jn.agileway.web.filter.OncePerRequestFilter;
-import com.jn.agileway.web.prediates.HttpRequestPredicateGroup;
-import com.jn.agileway.web.prediates.HttpRequestPredicateGroupFactory;
-import com.jn.agileway.web.prediates.PathMatchPredicate;
+import com.jn.agileway.web.prediate.HttpRequestPredicateGroup;
+import com.jn.agileway.web.prediate.HttpRequestPredicateGroupFactory;
 import com.jn.agileway.web.servlet.RR;
 import com.jn.agileway.web.servlet.Servlets;
 import com.jn.easyjson.core.JSONBuilderProvider;

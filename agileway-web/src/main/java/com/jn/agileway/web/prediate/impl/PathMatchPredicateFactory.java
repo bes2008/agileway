@@ -1,5 +1,8 @@
-package com.jn.agileway.web.prediates;
+package com.jn.agileway.web.prediate.impl;
 
+import com.jn.agileway.web.prediate.HttpRequestPredicate;
+import com.jn.agileway.web.prediate.HttpRequestPredicateFactory;
+import com.jn.agileway.web.prediate.HttpRequestPredicates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Arrs;
@@ -10,8 +13,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static com.jn.agileway.web.prediates.PathPatternExpressions.EXCLUDES;
-import static com.jn.agileway.web.prediates.PathPatternExpressions.INCLUDES;
+import static com.jn.agileway.web.prediate.impl.PathPatternExpressions.EXCLUDES;
+import static com.jn.agileway.web.prediate.impl.PathPatternExpressions.INCLUDES;
 
 public class PathMatchPredicateFactory extends HttpRequestPredicateFactory {
 

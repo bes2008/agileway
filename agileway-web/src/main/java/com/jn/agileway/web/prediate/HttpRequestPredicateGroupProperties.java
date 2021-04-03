@@ -1,13 +1,15 @@
-package com.jn.agileway.web.prediates;
+package com.jn.agileway.web.prediate;
 
+import com.jn.agileway.web.prediate.impl.PathMatchPredicateFactory;
+import com.jn.agileway.web.prediate.impl.PathPatternExpressions;
 import com.jn.langx.annotation.Name;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Pipeline;
 
 import java.util.List;
 
-import static com.jn.agileway.web.prediates.HttpRequestPredicates.PREDICATE_TYPE_METHOD;
-import static com.jn.agileway.web.prediates.HttpRequestPredicates.PREDICATE_TYPE_PATH;
+import static com.jn.agileway.web.prediate.HttpRequestPredicates.PREDICATE_TYPE_METHOD;
+import static com.jn.agileway.web.prediate.HttpRequestPredicates.PREDICATE_TYPE_PATH;
 
 /**
  * 这里面的每一个字段，都代表一个类限制条件。如果为 null ，则代表无此项限制。

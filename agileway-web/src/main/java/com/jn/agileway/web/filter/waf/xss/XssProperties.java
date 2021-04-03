@@ -1,6 +1,6 @@
 package com.jn.agileway.web.filter.waf.xss;
 
-import com.jn.agileway.web.prediates.HttpRequestPredicateGroupProperties;
+import com.jn.agileway.web.prediate.HttpRequestPredicateGroupProperties;
 
 import java.util.Set;
 

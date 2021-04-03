@@ -1,6 +1,6 @@
 package com.jn.agileway.web.filter.waf;
 
-import com.jn.agileway.web.prediates.HttpRequestPredicateGroup;
+import com.jn.agileway.web.prediate.HttpRequestPredicateGroup;
 import com.jn.agileway.web.servlet.RR;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;

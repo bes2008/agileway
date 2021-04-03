@@ -1,7 +1,7 @@
 package com.jn.agileway.web.filter.accesslog;
 
 
-import com.jn.agileway.web.prediates.HttpRequestPredicateGroupProperties;
+import com.jn.agileway.web.prediate.HttpRequestPredicateGroupProperties;
 import com.jn.langx.util.Objects;
 
 /**

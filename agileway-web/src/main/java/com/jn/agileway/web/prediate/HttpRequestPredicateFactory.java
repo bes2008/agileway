@@ -1,4 +1,4 @@
-package com.jn.agileway.web.prediates;
+package com.jn.agileway.web.prediate;
 
 import com.jn.langx.Named;
 import com.jn.langx.factory.Factory;

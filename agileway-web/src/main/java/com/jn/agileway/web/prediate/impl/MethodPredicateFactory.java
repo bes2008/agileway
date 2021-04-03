@@ -1,5 +1,8 @@
-package com.jn.agileway.web.prediates;
+package com.jn.agileway.web.prediate.impl;
 
+import com.jn.agileway.web.prediate.HttpRequestPredicate;
+import com.jn.agileway.web.prediate.HttpRequestPredicateFactory;
+import com.jn.agileway.web.prediate.HttpRequestPredicates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
@@ -24,6 +27,7 @@ public class MethodPredicateFactory extends HttpRequestPredicateFactory {
                 methods = Pipeline.of(Collects.asIterable(args))
                         .clearNulls()
                         .map(Functions.toStringFunction())
+                        .map(Functions.toUpperCase())
                         .asList();
             }
             predicate.setMethods(methods);

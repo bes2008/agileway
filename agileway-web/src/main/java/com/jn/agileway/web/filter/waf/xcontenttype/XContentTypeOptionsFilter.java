@@ -1,7 +1,7 @@
 package com.jn.agileway.web.filter.waf.xcontenttype;
 
 import com.jn.agileway.web.filter.OncePerRequestFilter;
-import com.jn.agileway.web.prediates.HttpRequestPredicateGroup;
+import com.jn.agileway.web.prediate.HttpRequestPredicateGroup;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

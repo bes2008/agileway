@@ -1,6 +1,6 @@
 package com.jn.agileway.web.filter.waf.xcontenttype;
 
-import com.jn.agileway.web.prediates.HttpRequestPredicateGroupProperties;
+import com.jn.agileway.web.prediate.HttpRequestPredicateGroupProperties;
 
 public class XContentTypeOptionsProperties {
     private boolean enabled;
