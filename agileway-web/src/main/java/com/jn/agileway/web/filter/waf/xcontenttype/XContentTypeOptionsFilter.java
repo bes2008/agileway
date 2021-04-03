@@ -32,7 +32,7 @@ public class XContentTypeOptionsFilter extends OncePerRequestFilter {
     protected void doFilterInternal(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         if (properties.isEnabled()) {
             if (request instanceof HttpServletRequest) {
-                if (predicates.match(getRR(request, response))) {
+                if (predicates!=null && predicates.match(getRR(request, response))) {
                     ((HttpServletResponse) response).setHeader("X-Content-Type-Options", "nosniff");
                 }
             }
