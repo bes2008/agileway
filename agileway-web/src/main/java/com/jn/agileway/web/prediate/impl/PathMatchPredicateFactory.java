@@ -5,6 +5,7 @@ import com.jn.agileway.web.prediate.HttpRequestPredicateFactory;
 import com.jn.agileway.web.prediate.HttpRequestPredicates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.Collects;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class PathMatchPredicateFactory extends HttpRequestPredicateFactory {
         PathMatchPredicate predicate = new PathMatchPredicate();
 
         if (Strings.isNotBlank(configuration)) {
-            List<String> expressions = HttpRequestPredicates.toStringList(configuration, null);
+            List<String> expressions = Collects.asList(Strings.split(configuration, " "));
             if (Objs.isNotEmpty(expressions)) {
                 String includePatternExpression = expressions.get(0);
                 predicate.setIncludePatterns(includePatternExpression);

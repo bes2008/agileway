@@ -4,6 +4,8 @@ import com.jn.agileway.web.prediate.HttpRequestPredicate;
 import com.jn.agileway.web.prediate.HttpRequestPredicateFactory;
 import com.jn.agileway.web.prediate.HttpRequestPredicates;
 import com.jn.langx.util.Objs;
+import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Functions;
 
@@ -16,12 +18,11 @@ public class MethodPredicateFactory extends HttpRequestPredicateFactory {
     }
 
     @Override
-    public HttpRequestPredicate get(String args) {
+    public HttpRequestPredicate get(String configuration) {
         MethodPredicate predicate = new MethodPredicate();
-        if (Objs.isNotEmpty(args)) {
-            List<String> methods = HttpRequestPredicates.toStringList(args, ", ");
+        if (Objs.isNotEmpty(configuration)) {
+            List<String> methods = Collects.asList(Strings.split(configuration, ", "));
             methods = Pipeline.of(methods)
-                    .clearNulls()
                     .map(Functions.toUpperCase())
                     .asList();
             predicate.setMethods(methods);

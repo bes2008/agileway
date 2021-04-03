@@ -1,5 +1,7 @@
 package com.jn.agileway.web.prediate;
 
+import com.jn.langx.text.StringTemplates;
+
 public class HttpRequestPredicateConfigItem {
     private String key;
     private String configuration;
@@ -18,5 +20,10 @@ public class HttpRequestPredicateConfigItem {
 
     public void setConfiguration(String configuration) {
         this.configuration = configuration;
+    }
+
+    @Override
+    public String toString() {
+        return StringTemplates.formatWithPlaceholder("{}={}", key,configuration);
     }
 }

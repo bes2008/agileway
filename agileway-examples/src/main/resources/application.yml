@@ -18,20 +18,16 @@ agileway:
       xcontent:
         enabled: true
         predicates:
-          paths:
-            includes: /**
+          - paths=/**
       xss:
         enabled: true
         predicates:
-          paths:
-            includes: /**
-            excludes: /swagger-ui.html
+          - paths=/** /swagger-ui.html
       sql-injection:
         enabled: true
         predicates:
-          paths:
-            includes: /**
-          methods: GET,POST
+          - paths=/**
+          - methods=GET,POST
   httpclient:
     enabled: true
   redis:

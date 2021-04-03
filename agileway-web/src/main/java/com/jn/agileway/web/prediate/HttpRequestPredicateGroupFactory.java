@@ -21,6 +21,8 @@ public class HttpRequestPredicateGroupFactory implements Factory<HttpRequestPred
             @Override
             public void accept(HttpRequestPredicateConfigItem configItem) {
                 HttpRequestPredicate predicate = null;
+
+                logger.info("parse http-request-predicate: {}", configItem);
                 String key = configItem.getKey();
 
                 HttpRequestPredicateFactory factory = HttpRequestPredicateFactoryRegistry.getInstance().get(key);
@@ -28,8 +30,9 @@ public class HttpRequestPredicateGroupFactory implements Factory<HttpRequestPred
                 if (factory == null) {
                     logger.warn("Can't find a http-request-predicate factory for {}", key);
                 } else {
-                    if (Strings.isNotBlank(configItem.getConfiguration())) {
-                        predicate = factory.get(configItem.getConfiguration());
+                    String configuration = configItem.getConfiguration();
+                    if (Strings.isNotBlank(configuration)) {
+                        predicate = factory.get(configuration);
                     }
                 }
 
