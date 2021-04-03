@@ -2,9 +2,8 @@ package com.jn.agileway.web.filter.waf.sqlinjection;
 
 import com.jn.agileway.web.prediate.HttpRequestPredicateConfigItems;
 
-public class SqlInjectionProperties {
+public class SqlInjectionProperties extends HttpRequestPredicateConfigItems {
     private boolean enabled = false;
-    private HttpRequestPredicateConfigItems predicates;
 
     public boolean isEnabled() {
         return enabled;
@@ -14,11 +13,4 @@ public class SqlInjectionProperties {
         this.enabled = enabled;
     }
 
-    public HttpRequestPredicateConfigItems getPredicates() {
-        return predicates;
-    }
-
-    public void setPredicates(HttpRequestPredicateConfigItems predicates) {
-        this.predicates = predicates;
-    }
 }

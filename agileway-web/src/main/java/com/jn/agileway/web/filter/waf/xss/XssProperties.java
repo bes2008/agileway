@@ -4,13 +4,11 @@ import com.jn.agileway.web.prediate.HttpRequestPredicateConfigItems;
 
 import java.util.Set;
 
-public class XssProperties {
+public class XssProperties extends HttpRequestPredicateConfigItems {
     /**
      * 是否启用 xss firewall
      */
     private boolean enabled = false;
-
-    private HttpRequestPredicateConfigItems predicates;
 
     private String contentSecurityPolicy = "default-src 'self'";
 
@@ -62,14 +60,6 @@ public class XssProperties {
 
     public void setJavascriptEnabled(boolean javascriptEnabled) {
         this.javascriptEnabled = javascriptEnabled;
-    }
-
-    public HttpRequestPredicateConfigItems getPredicates() {
-        return predicates;
-    }
-
-    public void setPredicates(HttpRequestPredicateConfigItems predicates) {
-        this.predicates = predicates;
     }
 
     public boolean isHtmlEventHandlersEnabled() {

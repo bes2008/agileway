@@ -2,9 +2,8 @@ package com.jn.agileway.web.filter.waf.xcontenttype;
 
 import com.jn.agileway.web.prediate.HttpRequestPredicateConfigItems;
 
-public class XContentTypeOptionsProperties {
+public class XContentTypeOptionsProperties extends HttpRequestPredicateConfigItems {
     private boolean enabled;
-    private HttpRequestPredicateConfigItems predicates;
 
     public boolean isEnabled() {
         return enabled;
@@ -14,11 +13,4 @@ public class XContentTypeOptionsProperties {
         this.enabled = enabled;
     }
 
-    public HttpRequestPredicateConfigItems getPredicates() {
-        return predicates;
-    }
-
-    public void setPredicates(HttpRequestPredicateConfigItems predicates) {
-        this.predicates = predicates;
-    }
 }

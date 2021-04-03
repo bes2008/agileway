@@ -12,7 +12,7 @@ public class XssWafFactory implements Factory<XssProperties, XssFirewall> {
         firewall.setName("XSS-Firewall");
         firewall.setConfig(xssProps);
 
-        HttpRequestPredicateGroup predicates = new HttpRequestPredicateGroupFactory().get(xssProps.getPredicates());
+        HttpRequestPredicateGroup predicates = new HttpRequestPredicateGroupFactory().get(xssProps);
 
         WAFStrategy xssStrategy = new WAFStrategy();
         xssStrategy.setPredicates(predicates);

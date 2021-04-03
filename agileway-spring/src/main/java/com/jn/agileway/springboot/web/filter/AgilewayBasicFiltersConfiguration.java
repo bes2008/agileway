@@ -106,7 +106,7 @@ public class AgilewayBasicFiltersConfiguration {
     public FilterRegistrationBean xContentTypeOptionsRegistrationBean(XContentTypeOptionsProperties properties) {
         XContentTypeOptionsFilter filter = new XContentTypeOptionsFilter();
         filter.setProperties(properties);
-        HttpRequestPredicateGroup predicates = new HttpRequestPredicateGroupFactory().get(properties.getPredicates());
+        HttpRequestPredicateGroup predicates = new HttpRequestPredicateGroupFactory().get(properties);
         filter.setPredicates(predicates);
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setName("X-ContentType-Options Filter");
