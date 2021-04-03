@@ -63,6 +63,10 @@ public class PathMatchPredicateFactory extends HttpRequestPredicateFactory {
                         }
                     }
                 });
+            } else if (o instanceof PathPatternExpressions) {
+                PathPatternExpressions o0 = (PathPatternExpressions) o;
+                path.setIncludes(o0.getIncludes());
+                path.setExcludes(o0.getExcludes());
             }
 
             predicate = new PathMatchPredicate(path);

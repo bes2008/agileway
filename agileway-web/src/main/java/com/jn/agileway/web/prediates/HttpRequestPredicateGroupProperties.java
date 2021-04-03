@@ -1,34 +1,34 @@
 package com.jn.agileway.web.prediates;
 
 import com.jn.langx.util.Objs;
+import com.jn.langx.util.collection.Pipeline;
 
 import java.util.List;
-import java.util.Map;
 
 public class HttpRequestPredicateGroupProperties {
 
-    private List<String> methods;
+    private String[] methods;
 
     /**
      * @see PathMatchPredicateFactory
      * <p>
      * 可选类型：Map<String,String>,PathPatternExpressions
      */
-    private Map<String, String> paths = new PathPatternExpressions("/**").toMap();
+    private PathPatternExpressions paths = new PathPatternExpressions("/**");
 
-    public Map<String, String> getPaths() {
+    public PathPatternExpressions getPaths() {
         return paths;
     }
 
-    public void setPaths(Map<String, String> paths) {
+    public void setPaths(PathPatternExpressions paths) {
         this.paths = paths;
     }
 
     public List<String> getMethods() {
-        return methods;
+        return Pipeline.of(this.methods).clearNulls().asList();
     }
 
-    public void setMethods(List<String> methods) {
+    public void setMethods(String[] methods) {
         if (Objs.isNotEmpty(methods)) {
             this.methods = methods;
         }

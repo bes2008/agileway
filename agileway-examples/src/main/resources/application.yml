@@ -20,21 +20,17 @@ agileway:
         predicates:
           paths:
             includes: /**
-          methods: GET,POST
       xss:
         enabled: true
         predicates:
           paths:
             includes: /**
-          methods: [GET,POST]
       sql-injection:
         enabled: true
         predicates:
           paths:
             includes: /**
-          methods:
-            - GET
-            - POST
+          methods: GET,POST
   httpclient:
     enabled: true
   redis:
