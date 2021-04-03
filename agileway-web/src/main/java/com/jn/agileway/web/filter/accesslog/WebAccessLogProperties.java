@@ -1,7 +1,7 @@
 package com.jn.agileway.web.filter.accesslog;
 
 
-import com.jn.agileway.web.prediate.HttpRequestPredicateGroupProperties;
+import com.jn.agileway.web.prediate.HttpRequestPredicateConfigItems;
 import com.jn.langx.util.Objects;
 
 /**
@@ -10,7 +10,7 @@ import com.jn.langx.util.Objects;
 public class WebAccessLogProperties {
     private AccessLogLevel level = AccessLogLevel.BASIC;
     private boolean logResponse = true;
-    private HttpRequestPredicateGroupProperties predicates;
+    private HttpRequestPredicateConfigItems predicates;
 
     public AccessLogLevel getLevel() {
         return Objects.useValueIfNull(level, AccessLogLevel.BASIC);
@@ -28,11 +28,11 @@ public class WebAccessLogProperties {
         this.logResponse = logResponse;
     }
 
-    public HttpRequestPredicateGroupProperties getPredicates() {
+    public HttpRequestPredicateConfigItems getPredicates() {
         return predicates;
     }
 
-    public void setPredicates(HttpRequestPredicateGroupProperties predicates) {
+    public void setPredicates(HttpRequestPredicateConfigItems predicates) {
         this.predicates = predicates;
     }
 }

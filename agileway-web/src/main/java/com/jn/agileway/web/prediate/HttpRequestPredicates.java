@@ -12,10 +12,10 @@ import java.util.Collection;
 import java.util.List;
 
 public class HttpRequestPredicates {
+    public final static String PREDICATE_CONFIGURATION_ITEM_SEPARATOR = "=";
 
-
-    final static String PREDICATE_TYPE_PATH = "paths";
-    final static String PREDICATE_TYPE_METHOD = "methods";
+    public final static String PREDICATE_TYPE_PATH = "paths";
+    public final static String PREDICATE_TYPE_METHOD = "methods";
 
 
     /**
@@ -37,7 +37,12 @@ public class HttpRequestPredicates {
             List<String> ret = Pipeline.of(Collects.asIterable(o)).filter(new Predicate<Object>() {
                 @Override
                 public boolean test(Object o) {
-                    return o instanceof String;
+                    if (o instanceof String) {
+                        String s = (String) o;
+                        return Strings.isNotBlank(s);
+                    } else {
+                        return false;
+                    }
                 }
             }).map(Functions.toStringFunction()).asList();
             return ret;

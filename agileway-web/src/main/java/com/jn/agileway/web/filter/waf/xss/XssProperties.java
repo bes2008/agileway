@@ -1,6 +1,6 @@
 package com.jn.agileway.web.filter.waf.xss;
 
-import com.jn.agileway.web.prediate.HttpRequestPredicateGroupProperties;
+import com.jn.agileway.web.prediate.HttpRequestPredicateConfigItems;
 
 import java.util.Set;
 
@@ -10,7 +10,7 @@ public class XssProperties {
      */
     private boolean enabled = false;
 
-    private HttpRequestPredicateGroupProperties predicates;
+    private HttpRequestPredicateConfigItems predicates;
 
     private String contentSecurityPolicy = "default-src 'self'";
 
@@ -64,11 +64,11 @@ public class XssProperties {
         this.javascriptEnabled = javascriptEnabled;
     }
 
-    public HttpRequestPredicateGroupProperties getPredicates() {
+    public HttpRequestPredicateConfigItems getPredicates() {
         return predicates;
     }
 
-    public void setPredicates(HttpRequestPredicateGroupProperties predicates) {
+    public void setPredicates(HttpRequestPredicateConfigItems predicates) {
         this.predicates = predicates;
     }
 

@@ -1,10 +1,10 @@
 package com.jn.agileway.web.filter.waf.sqlinjection;
 
-import com.jn.agileway.web.prediate.HttpRequestPredicateGroupProperties;
+import com.jn.agileway.web.prediate.HttpRequestPredicateConfigItems;
 
 public class SqlInjectionProperties {
     private boolean enabled = false;
-    private HttpRequestPredicateGroupProperties predicates;
+    private HttpRequestPredicateConfigItems predicates;
 
     public boolean isEnabled() {
         return enabled;
@@ -14,11 +14,11 @@ public class SqlInjectionProperties {
         this.enabled = enabled;
     }
 
-    public HttpRequestPredicateGroupProperties getPredicates() {
+    public HttpRequestPredicateConfigItems getPredicates() {
         return predicates;
     }
 
-    public void setPredicates(HttpRequestPredicateGroupProperties predicates) {
+    public void setPredicates(HttpRequestPredicateConfigItems predicates) {
         this.predicates = predicates;
     }
 }
