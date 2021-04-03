@@ -2,10 +2,18 @@ package com.jn.agileway.web.prediate.impl;
 
 import com.jn.agileway.web.prediate.HttpRequestPredicate;
 import com.jn.agileway.web.servlet.RR;
-import com.jn.langx.util.pattern.patternset.RegexpPatternSetMatcher;
+import com.jn.langx.util.pattern.PatternMatcher;
 
 public class HostMatchPredicate implements HttpRequestPredicate {
-    private RegexpPatternSetMatcher matcher;
+    private PatternMatcher matcher;
+
+    public PatternMatcher getMatcher() {
+        return matcher;
+    }
+
+    public void setMatcher(PatternMatcher matcher) {
+        this.matcher = matcher;
+    }
 
     @Override
     public boolean test(RR holder) {
