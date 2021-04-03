@@ -15,7 +15,6 @@ import com.jn.agileway.web.filter.waf.xss.XssProperties;
 import com.jn.agileway.web.filter.waf.xss.XssWafFactory;
 import com.jn.agileway.web.prediates.HttpRequestPredicateGroup;
 import com.jn.agileway.web.prediates.HttpRequestPredicateGroupFactory;
-import com.jn.agileway.web.prediates.HttpRequestPredicateGroupProperties;
 import com.jn.langx.util.collection.Collects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -68,7 +67,6 @@ public class AgilewayBasicFiltersConfiguration {
         filter.setConfig(accessLogProperties);
         registration.setFilter(filter);
         registration.setName("AccessLog Filter");
-        registration.setUrlPatterns(accessLogProperties.getUrlPatterns());
         registration.setOrder(-101);
         return registration;
     }
