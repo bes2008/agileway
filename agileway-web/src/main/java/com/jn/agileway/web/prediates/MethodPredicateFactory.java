@@ -10,7 +10,7 @@ import java.util.List;
 public class MethodPredicateFactory extends HttpRequestPredicateFactory {
 
     public MethodPredicateFactory() {
-        setName("method");
+        setName("methods");
     }
 
     @Override

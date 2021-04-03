@@ -56,6 +56,10 @@ public final class HttpRequestPredicateGroup implements Listable<HttpRequestPred
         if (Objs.isEmpty(rr)) {
             return false;
         }
+        // 没有任何的限制条件
+        if (Objs.isEmpty(predicates)) {
+            return true;
+        }
         return Functions.allPredicate(Collects.toArray(predicates, HttpRequestPredicate[].class)).test(rr);
     }
 }

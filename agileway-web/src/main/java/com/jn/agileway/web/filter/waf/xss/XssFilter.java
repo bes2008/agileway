@@ -34,11 +34,7 @@ public class XssFilter extends OncePerRequestFilter {
         WAFs.JAVA_SCRIPT_XSS_HANDLER.remove();
         if (Objs.isNotEmpty(xssFirewall) && xssFirewall.isEnabled() && request instanceof HttpServletRequest) {
 
-            RR rr = RRHolder.get();
-            if (rr == null) {
-                RRHolder.set((HttpServletRequest) request, (HttpServletResponse) response);
-                rr = RRHolder.get();
-            }
+            RR rr = getRR(request, response);
             WAFStrategy strategy = xssFirewall.findStrategy(rr);
             if (Objs.isNotEmpty(strategy)) {
                 JavaScriptXssHandler javaScriptXssHandler = (JavaScriptXssHandler) Collects.findFirst(strategy.getHandlers(), new Predicate<WAFHandler>() {

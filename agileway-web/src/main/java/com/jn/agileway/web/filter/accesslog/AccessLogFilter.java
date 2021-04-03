@@ -47,9 +47,8 @@ public class AccessLogFilter extends OncePerRequestFilter {
         if (this.config != null) {
             this.predicates = new HttpRequestPredicateGroupFactory().get(this.config.getPredicates());
         }
-        if (this.predicates == null) {
+        if(this.predicates==null){
             this.predicates = new HttpRequestPredicateGroup();
-            this.predicates.add(new PathMatchPredicate("/**"));
         }
     }
 

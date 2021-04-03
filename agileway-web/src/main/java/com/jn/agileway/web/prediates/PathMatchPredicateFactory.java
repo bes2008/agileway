@@ -16,7 +16,7 @@ import static com.jn.agileway.web.prediates.PathPatternExpressions.INCLUDES;
 public class PathMatchPredicateFactory extends HttpRequestPredicateFactory {
 
     public PathMatchPredicateFactory() {
-        setName("path");
+        setName("paths");
     }
 
     @Override
