@@ -13,8 +13,12 @@ import java.util.List;
 
 public class HttpRequestPredicates {
 
+
+    final static String PREDICATE_TYPE_PATH = "paths";
+    final static String PREDICATE_TYPE_METHOD = "methods";
+
+
     /**
-     *
      * @param o
      * @param specIfString 如果参数 o 是String，则用 该参数作为分隔符
      * @return 处理后的字符串列表

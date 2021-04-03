@@ -1,9 +1,13 @@
 package com.jn.agileway.web.prediates;
 
+import com.jn.langx.annotation.Name;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Pipeline;
 
 import java.util.List;
+
+import static com.jn.agileway.web.prediates.HttpRequestPredicates.PREDICATE_TYPE_METHOD;
+import static com.jn.agileway.web.prediates.HttpRequestPredicates.PREDICATE_TYPE_PATH;
 
 /**
  * 这里面的每一个字段，都代表一个类限制条件。如果为 null ，则代表无此项限制。
@@ -12,6 +16,7 @@ import java.util.List;
 
 public class HttpRequestPredicateGroupProperties {
 
+    @Name(PREDICATE_TYPE_METHOD)
     private String[] methods;
 
     /**
@@ -19,6 +24,7 @@ public class HttpRequestPredicateGroupProperties {
      * <p>
      * 可选类型：Map<String,String>,PathPatternExpressions
      */
+    @Name(PREDICATE_TYPE_PATH)
     private PathPatternExpressions paths;
 
     public PathPatternExpressions getPaths() {

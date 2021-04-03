@@ -1,5 +1,6 @@
 package com.jn.agileway.web.prediates;
 
+import com.jn.langx.annotation.Name;
 import com.jn.langx.factory.Factory;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Preconditions;
@@ -28,7 +29,19 @@ public class HttpRequestPredicateGroupFactory implements Factory<HttpRequestPred
             public void accept(Field field) {
                 HttpRequestPredicate predicate = null;
                 String fieldName = field.getName();
-                HttpRequestPredicateFactory factory = HttpRequestPredicateFactoryRegistry.getInstance().get(fieldName);
+
+                HttpRequestPredicateFactory factory = null;
+                String alias = null;
+                if (Reflects.hasAnnotation(field, Name.class)) {
+                    Name n = Reflects.getAnnotation(field, Name.class);
+                    alias = n.value();
+                }
+                if (Objs.isNotEmpty(alias)) {
+                    factory = HttpRequestPredicateFactoryRegistry.getInstance().get(alias);
+                }
+                if (factory == null) {
+                    factory = HttpRequestPredicateFactoryRegistry.getInstance().get(fieldName);
+                }
 
                 if (factory == null) {
                     logger.warn("Can't find a http-request-predicate factory for {}", fieldName);
