@@ -10,6 +10,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * 用于对多个 HttpRequestPredicate 进行 and 操作
+ */
 public final class HttpRequestPredicateGroup implements Listable<HttpRequestPredicate> {
     private final List<HttpRequestPredicate> predicates = Collects.emptyArrayList();
 
@@ -52,6 +55,9 @@ public final class HttpRequestPredicateGroup implements Listable<HttpRequestPred
         return false;
     }
 
+    /**
+     * 一个Predicate Group内的所有 Predicate都得 满足的情况下，才是匹配的
+     */
     public boolean match(RR rr) {
         if (Objs.isEmpty(rr)) {
             return false;
