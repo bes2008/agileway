@@ -1,6 +1,10 @@
 package com.jn.agileway.web.filter.accesslog;
 
 import com.jn.agileway.web.filter.OncePerRequestFilter;
+import com.jn.agileway.web.prediates.HttpRequestPredicateGroup;
+import com.jn.agileway.web.prediates.HttpRequestPredicateGroupFactory;
+import com.jn.agileway.web.prediates.PathMatchPredicate;
+import com.jn.agileway.web.servlet.RR;
 import com.jn.agileway.web.servlet.Servlets;
 import com.jn.easyjson.core.JSONBuilderProvider;
 import com.jn.langx.util.Emptys;
@@ -21,6 +25,7 @@ import java.util.List;
 public class AccessLogFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(AccessLogFilter.class);
     private WebAccessLogProperties config = new WebAccessLogProperties();
+    private HttpRequestPredicateGroup predicates;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -35,19 +40,46 @@ public class AccessLogFilter extends OncePerRequestFilter {
                 }
             }
         }
+        init();
+    }
+
+    private void init() {
+        if (this.config != null) {
+            this.predicates = new HttpRequestPredicateGroupFactory().get(this.config.getPredicates());
+        }
+        if (this.predicates == null) {
+            this.predicates = new HttpRequestPredicateGroup();
+            this.predicates.add(new PathMatchPredicate("/**"));
+        }
     }
 
     public void setConfig(WebAccessLogProperties properties) {
-        this.config = properties;
+        if (properties != null) {
+            this.config = properties;
+        }
+        init();
     }
 
 
     @Override
     public void doFilterInternal(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         // 记录请求
+        boolean doLog = true;
         if (request instanceof HttpServletRequest) {
             HttpServletRequest r = (HttpServletRequest) request;
-            if (logger.isDebugEnabled() && config.getLevel() != AccessLogLevel.NONE) {
+
+
+            if (!logger.isDebugEnabled() || config.getLevel() == AccessLogLevel.NONE) {
+                doLog = false;
+            }
+            if (doLog) {
+                RR rr = getRR(request, response);
+                if (!predicates.match(rr)) {
+                    doLog = false;
+                }
+            }
+            if (doLog) {
+
                 StringBuilder b = null;
 
                 switch (config.getLevel()) {
@@ -68,6 +100,8 @@ public class AccessLogFilter extends OncePerRequestFilter {
                     logger.debug("====http request===>\n{}", b.toString());
                 }
             }
+        } else {
+            doLog = false;
         }
 
         chain.doFilter(request, response);
@@ -76,7 +110,7 @@ public class AccessLogFilter extends OncePerRequestFilter {
         if (response instanceof HttpServletResponse) {
             HttpServletResponse resp = (HttpServletResponse) response;
             HttpServletRequest req = (HttpServletRequest) request;
-            if (logger.isDebugEnabled() && config.getLevel() != AccessLogLevel.NONE) {
+            if (doLog) {
                 StringBuilder b = null;
 
                 switch (config.getLevel()) {

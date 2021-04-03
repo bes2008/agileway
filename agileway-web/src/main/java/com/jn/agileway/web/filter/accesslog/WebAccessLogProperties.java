@@ -1,10 +1,8 @@
 package com.jn.agileway.web.filter.accesslog;
 
 
+import com.jn.agileway.web.prediates.HttpRequestPredicateGroupProperties;
 import com.jn.langx.util.Objects;
-import com.jn.langx.util.collection.Collects;
-
-import java.util.List;
 
 /**
  * 不提供基于URL pattern的过滤方式，原因是注册 filter时，规范就要求指定 url pattern
@@ -12,7 +10,7 @@ import java.util.List;
 public class WebAccessLogProperties {
     private AccessLogLevel level = AccessLogLevel.BASIC;
     private boolean logResponse = true;
-    private List<String> urlPatterns;
+    private HttpRequestPredicateGroupProperties predicates;
 
     public AccessLogLevel getLevel() {
         return Objects.useValueIfNull(level, AccessLogLevel.BASIC);
@@ -30,11 +28,11 @@ public class WebAccessLogProperties {
         this.logResponse = logResponse;
     }
 
-    public List<String> getUrlPatterns() {
-        return Objects.useValueIfEmpty(urlPatterns, Collects.newArrayList("/*"));
+    public HttpRequestPredicateGroupProperties getPredicates() {
+        return predicates;
     }
 
-    public void setUrlPatterns(List<String> urlPatterns) {
-        this.urlPatterns = urlPatterns;
+    public void setPredicates(HttpRequestPredicateGroupProperties predicates) {
+        this.predicates = predicates;
     }
 }

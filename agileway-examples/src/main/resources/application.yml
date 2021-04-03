@@ -25,6 +25,7 @@ agileway:
         predicates:
           paths:
             includes: /**
+            excludes: /swagger-ui.html
       sql-injection:
         enabled: true
         predicates:
