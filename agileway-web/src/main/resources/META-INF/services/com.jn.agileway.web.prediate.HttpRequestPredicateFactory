@@ -1,3 +1,4 @@
+com.jn.agileway.web.prediate.impl.CookieMatchPredicateFactory
 com.jn.agileway.web.prediate.impl.HeaderMatchPredicateFactory
 com.jn.agileway.web.prediate.impl.HostMatchPredicateFactory
 com.jn.agileway.web.prediate.impl.MethodPredicateFactory
