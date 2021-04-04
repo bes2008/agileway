@@ -1,6 +1,5 @@
 package com.jn.agileway.web.prediate.impl;
 
-import com.jn.agileway.web.prediate.HttpRequestPredicate;
 import com.jn.agileway.web.prediate.HttpRequestPredicateFactory;
 import com.jn.agileway.web.prediate.HttpRequestPredicates;
 import com.jn.langx.annotation.Name;
@@ -11,14 +10,14 @@ import com.jn.langx.util.collection.Collects;
 import java.util.List;
 
 @Name("Path")
-public class PathMatchPredicateFactory extends HttpRequestPredicateFactory {
+public class PathMatchPredicateFactory extends HttpRequestPredicateFactory<PathMatchPredicate> {
 
     public PathMatchPredicateFactory() {
         setName(HttpRequestPredicates.PREDICATE_KEY_PATH);
     }
 
     @Override
-    public HttpRequestPredicate get(String configuration) {
+    public PathMatchPredicate get(String configuration) {
         PathMatchPredicate predicate = new PathMatchPredicate();
 
         if (Strings.isNotBlank(configuration)) {

@@ -13,13 +13,13 @@ import java.util.regex.Pattern;
  * 当此断言匹配了请求的header名和值时，断言通过，进入到router的规则中去
  */
 @Name("Header")
-public class HeaderMatchPredicateFactory extends HttpRequestPredicateFactory {
+public class HeaderMatchPredicateFactory extends HttpRequestPredicateFactory<HeaderMatchPredicate> {
     public HeaderMatchPredicateFactory() {
         setName(HttpRequestPredicates.PREDICATE_KEY_HEADER);
     }
 
     @Override
-    public HttpRequestPredicate get(String configuration) {
+    public HeaderMatchPredicate get(String configuration) {
         HeaderMatchPredicate predicate = null;
         if (Strings.isNotBlank(configuration)) {
             String[] segments = Strings.split(configuration, ", ");

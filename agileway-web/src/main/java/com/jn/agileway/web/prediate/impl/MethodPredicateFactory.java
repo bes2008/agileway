@@ -13,14 +13,14 @@ import com.jn.langx.util.function.Functions;
 import java.util.List;
 
 @Name("Method")
-public class MethodPredicateFactory extends HttpRequestPredicateFactory {
+public class MethodPredicateFactory extends HttpRequestPredicateFactory<MethodPredicate> {
 
     public MethodPredicateFactory() {
         setName(HttpRequestPredicates.PREDICATE_KEY_METHOD);
     }
 
     @Override
-    public HttpRequestPredicate get(String configuration) {
+    public MethodPredicate get(String configuration) {
         MethodPredicate predicate = new MethodPredicate();
         if (Objs.isNotEmpty(configuration)) {
             List<String> methods = Collects.asList(Strings.split(configuration, ", "));
