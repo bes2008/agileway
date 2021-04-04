@@ -1,6 +1,7 @@
 package com.jn.agileway.web.filter.waf.xss;
 
 import com.jn.agileway.web.prediate.HttpRequestPredicateConfigItems;
+import com.jn.langx.util.collection.Pipeline;
 
 import java.util.Set;
 
@@ -16,14 +17,14 @@ public class XssProperties extends HttpRequestPredicateConfigItems {
     /**
      * @see HtmlEventHandlerXssHandler
      */
-    private Set<String> htmlEventHandlers = HtmlEventHandlerXssHandler.DEFAULT_ON_XXX_FUNCTION_NAMES;
+    private String[] htmlEventHandlers = HtmlEventHandlerXssHandler.DEFAULT_ON_XXX_FUNCTION_NAMES.toArray(new String[0]);
 
     private boolean htmlTagsEnabled = true;
 
     /**
      * @see HtmlTagXssHandler
      */
-    private Set<String> htmlTags = HtmlTagXssHandler.DEFAULT_TAGS;
+    private String[] htmlTags = HtmlTagXssHandler.DEFAULT_TAGS.toArray(new String[0]);
 
     /**
      * @see JavaScriptXssHandler
@@ -39,18 +40,18 @@ public class XssProperties extends HttpRequestPredicateConfigItems {
     }
 
     public Set<String> getHtmlEventHandlers() {
-        return htmlEventHandlers;
+        return Pipeline.of(htmlEventHandlers).asSet(true);
     }
 
-    public void setHtmlEventHandlers(Set<String> htmlEventHandlers) {
+    public void setHtmlEventHandlers(String[] htmlEventHandlers) {
         this.htmlEventHandlers = htmlEventHandlers;
     }
 
     public Set<String> getHtmlTags() {
-        return htmlTags;
+        return Pipeline.of(htmlTags).asSet(true);
     }
 
-    public void setHtmlTags(Set<String> htmlTags) {
+    public void setHtmlTags(String[] htmlTags) {
         this.htmlTags = htmlTags;
     }
 
