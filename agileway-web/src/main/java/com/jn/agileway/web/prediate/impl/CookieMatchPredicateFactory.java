@@ -1,12 +1,20 @@
 package com.jn.agileway.web.prediate.impl;
 
 import com.jn.agileway.web.prediate.HttpRequestPredicateFactory;
+import com.jn.langx.annotation.Name;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.pattern.patternset.GenericPatternSetExpressionParser;
 import com.jn.langx.util.pattern.patternset.RegexpPatternSetMatcher;
 import com.jn.langx.util.pattern.patternset.StringPatternEntry;
 
+import static com.jn.agileway.web.prediate.HttpRequestPredicates.PREDICATE_KEY_COOKIE;
+@Name("Cookie")
 public class CookieMatchPredicateFactory extends HttpRequestPredicateFactory<CookieMatchPredicate> {
+
+    public CookieMatchPredicateFactory() {
+        setName(PREDICATE_KEY_COOKIE);
+    }
+
     @Override
     public CookieMatchPredicate get(String configuration) {
         CookieMatchPredicate predicate = null;
