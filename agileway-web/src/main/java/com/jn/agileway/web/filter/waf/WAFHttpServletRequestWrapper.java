@@ -5,10 +5,10 @@ import com.jn.agileway.web.servlet.RR;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.util.List;
 
-public class WAFHttpServletWrapper extends HttpServletRequestWrapper {
+public class WAFHttpServletRequestWrapper extends HttpServletRequestWrapper {
     private List<WAFHandler> wafHandlers;
 
-    public WAFHttpServletWrapper(RR holder, List<WAFHandler> xssHandlers) {
+    public WAFHttpServletRequestWrapper(RR holder, List<WAFHandler> xssHandlers) {
         super(holder.getRequest());
         this.wafHandlers = xssHandlers;
     }

@@ -3,7 +3,7 @@ package com.jn.agileway.web.filter.waf.sqlinjection;
 import com.jn.agileway.web.filter.OncePerRequestFilter;
 import com.jn.agileway.web.filter.rr.RRHolder;
 import com.jn.agileway.web.filter.waf.WAF;
-import com.jn.agileway.web.filter.waf.WAFHttpServletWrapper;
+import com.jn.agileway.web.filter.waf.WAFHttpServletRequestWrapper;
 import com.jn.agileway.web.filter.waf.WAFStrategy;
 import com.jn.agileway.web.servlet.RR;
 import com.jn.langx.util.Objs;
@@ -37,7 +37,7 @@ public class SqlInjectionFilter extends OncePerRequestFilter {
             }
             WAFStrategy strategy = sqlWaf.findStrategy(rr);
             if(Objs.isNotEmpty(strategy)) {
-                request = new WAFHttpServletWrapper(rr, strategy.getHandlers());
+                request = new WAFHttpServletRequestWrapper(rr, strategy.getHandlers());
                 RRHolder.set((HttpServletRequest) request, (HttpServletResponse) response);
             }
         }
