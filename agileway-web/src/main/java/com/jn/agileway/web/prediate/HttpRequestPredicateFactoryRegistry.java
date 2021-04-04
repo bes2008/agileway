@@ -1,7 +1,9 @@
 package com.jn.agileway.web.prediate;
 
+import com.jn.langx.annotation.Name;
 import com.jn.langx.annotation.Singleton;
 import com.jn.langx.registry.Registry;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.reflect.Reflects;
@@ -28,6 +30,10 @@ public class HttpRequestPredicateFactoryRegistry implements Registry<String, Htt
 
     @Override
     public void register(HttpRequestPredicateFactory factory) {
+        Name name = Reflects.getAnnotation(factory.getClass(), Name.class);
+        if (name != null && Objs.isNotEmpty(name.value())) {
+            register(name.value(), factory);
+        }
         register(factory.getName(), factory);
     }
 
@@ -39,13 +45,14 @@ public class HttpRequestPredicateFactoryRegistry implements Registry<String, Htt
                 logger.warn("Can't find a valid name for http request predicate factory: {}", replacement);
                 key = replacement;
             }
+            key = key.toLowerCase();
             factories.put(key, factory);
         }
     }
 
     @Override
     public HttpRequestPredicateFactory get(String name) {
-        return factories.get(name);
+        return factories.get(name.toLowerCase());
     }
 
 

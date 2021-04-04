@@ -3,6 +3,7 @@ package com.jn.agileway.web.prediate.impl;
 import com.jn.agileway.web.prediate.HttpRequestPredicate;
 import com.jn.agileway.web.prediate.HttpRequestPredicateFactory;
 import com.jn.agileway.web.prediate.HttpRequestPredicates;
+import com.jn.langx.annotation.Name;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
@@ -11,6 +12,7 @@ import com.jn.langx.util.function.Functions;
 
 import java.util.List;
 
+@Name("Method")
 public class MethodPredicateFactory extends HttpRequestPredicateFactory {
 
     public MethodPredicateFactory() {
