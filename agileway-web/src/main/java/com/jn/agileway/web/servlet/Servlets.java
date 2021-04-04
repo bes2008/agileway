@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -327,4 +328,15 @@ public class Servlets {
         }
         writer.write(content);
     }
+
+    public static Cookie getCookie(HttpServletRequest request, final String name) {
+        return Pipeline.of(request.getCookies())
+                .findFirst(new Predicate<Cookie>() {
+                    @Override
+                    public boolean test(Cookie cookie) {
+                        return name.equals(cookie.getName());
+                    }
+                });
+    }
+
 }

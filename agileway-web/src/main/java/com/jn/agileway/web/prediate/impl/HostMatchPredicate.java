@@ -17,6 +17,6 @@ public class HostMatchPredicate implements HttpRequestPredicate {
 
     @Override
     public boolean test(RR holder) {
-        return false;
+        return matcher == null || matcher.match(holder.getRequest().getRemoteHost());
     }
 }
