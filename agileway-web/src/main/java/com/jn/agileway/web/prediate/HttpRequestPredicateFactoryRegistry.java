@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
 public class HttpRequestPredicateFactoryRegistry implements Registry<String, HttpRequestPredicateFactory> {
-    private static final Logger logger = LoggerFactory.getLogger(HttpRequestPredicateFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(HttpRequestPredicateFactoryRegistry.class);
     private ConcurrentHashMap<String, HttpRequestPredicateFactory> factories = new ConcurrentHashMap<String, HttpRequestPredicateFactory>();
 
 
