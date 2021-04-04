@@ -1,7 +1,6 @@
 package com.jn.agileway.web.filter.waf.xss;
 
 import com.jn.agileway.web.filter.OncePerRequestFilter;
-import com.jn.agileway.web.filter.rr.RRHolder;
 import com.jn.agileway.web.filter.waf.*;
 import com.jn.agileway.web.servlet.RR;
 import com.jn.langx.util.Objs;
@@ -34,7 +33,13 @@ public class XssFilter extends OncePerRequestFilter {
         WAFs.JAVA_SCRIPT_XSS_HANDLER.remove();
         if (Objs.isNotEmpty(xssFirewall) && xssFirewall.isEnabled() && request instanceof HttpServletRequest) {
 
+            HttpServletResponse resp = (HttpServletResponse) response;
+            WAFHttpServletResponseWrapper response2 = new WAFHttpServletResponseWrapper(resp);
+            response2.setHttpOnlyCookies(xssFirewall.getConfig().getHttpOnlyCookies());
+            response = response2;
             RR rr = getRR(request, response);
+            rr.setResponse(response2);
+
             WAFStrategy strategy = xssFirewall.findStrategy(rr);
             if (Objs.isNotEmpty(strategy)) {
                 JavaScriptXssHandler javaScriptXssHandler = (JavaScriptXssHandler) Collects.findFirst(strategy.getHandlers(), new Predicate<WAFHandler>() {
@@ -46,15 +51,15 @@ public class XssFilter extends OncePerRequestFilter {
                 if (javaScriptXssHandler != null) {
                     WAFs.JAVA_SCRIPT_XSS_HANDLER.set(javaScriptXssHandler);
                 }
-                request = new WAFHttpServletWrapper(rr, strategy.getHandlers());
-                RRHolder.set((HttpServletRequest) request, (HttpServletResponse) response);
+                request = new WAFHttpServletRequestWrapper(rr, strategy.getHandlers());
+                rr.setRequest((HttpServletRequest) request);
                 // ref: https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/X-XSS-Protection
                 ((HttpServletResponse) response).setHeader("X-XSS-Protection", "1;mode=block");
                 // ref: https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
                 // ref: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
                 // ref: http://www.ruanyifeng.com/blog/2016/09/csp.html
                 // ref: https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html
-                if(Objs.isNotEmpty(xssFirewall.getContentSecurityPolicy())) {
+                if (Objs.isNotEmpty(xssFirewall.getContentSecurityPolicy())) {
                     ((HttpServletResponse) response).setHeader("Content-Security-Policy", xssFirewall.getContentSecurityPolicy());
                 }
             }

@@ -19,4 +19,11 @@ public class RR {
     public HttpServletResponse getResponse() {
         return this.response;
     }
+
+    public void setRequest(HttpServletRequest request){
+        this.request = request;
+    }
+    public void setResponse(HttpServletResponse response){
+        this.response = response;
+    }
 }

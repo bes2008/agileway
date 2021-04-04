@@ -3,6 +3,7 @@ package com.jn.agileway.web.filter.waf.xss;
 import com.jn.agileway.web.prediate.HttpRequestPredicateConfigItems;
 import com.jn.langx.util.collection.Pipeline;
 
+import java.util.List;
 import java.util.Set;
 
 public class XssProperties extends HttpRequestPredicateConfigItems {
@@ -30,6 +31,8 @@ public class XssProperties extends HttpRequestPredicateConfigItems {
      * @see JavaScriptXssHandler
      */
     private boolean javascriptEnabled = true;
+
+    private String[] httpOnlyCookies;
 
     public boolean isEnabled() {
         return enabled;
@@ -85,5 +88,13 @@ public class XssProperties extends HttpRequestPredicateConfigItems {
 
     public void setContentSecurityPolicy(String contentSecurityPolicy) {
         this.contentSecurityPolicy = contentSecurityPolicy;
+    }
+
+    public void setHttpOnlyCookies(String[] httpOnlyCookies) {
+        this.httpOnlyCookies = httpOnlyCookies;
+    }
+
+    public List<String> getHttpOnlyCookies() {
+        return Pipeline.of(httpOnlyCookies).asList();
     }
 }
