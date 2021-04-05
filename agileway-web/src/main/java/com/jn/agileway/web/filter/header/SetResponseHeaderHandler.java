@@ -45,7 +45,7 @@ public class SetResponseHeaderHandler extends AbstractInitializable implements H
         if (Objs.isEmpty(setters)) {
             return;
         }
-
+        setters.handle(rr);
     }
 
     @Override
