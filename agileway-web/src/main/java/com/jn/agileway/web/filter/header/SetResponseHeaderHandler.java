@@ -14,23 +14,22 @@ import com.jn.langx.util.function.Function;
 import java.util.List;
 
 public class SetResponseHeaderHandler extends AbstractInitializable implements HttpRequestHandler {
-    private SetResponseHeaderProperties config;
+    private List<HttpResponseHeaderRule> rules;
     private HttpRequestHandlerChain setters;
 
     public SetResponseHeaderHandler() {
     }
 
-
-    public void setConfig(SetResponseHeaderProperties config) {
-        this.config = config;
+    public void setRules(List<HttpResponseHeaderRule> rules) {
+        this.rules = rules;
     }
 
     @Override
     protected void doInit() throws InitializationException {
-        if (config != null && Objs.isNotEmpty(config.getRules())) {
+        if (Objs.isNotEmpty(rules)) {
             HttpRequestHandlerChain chain = new HttpRequestHandlerChain();
 
-            List<HttpRequestHandler> setterList = Pipeline.of(config.getRules()).map(new Function<HttpResponseHeaderRule, HttpRequestHandler>() {
+            List<HttpRequestHandler> setterList = Pipeline.of(rules).map(new Function<HttpResponseHeaderRule, HttpRequestHandler>() {
                 @Override
                 public HttpRequestHandler apply(HttpResponseHeaderRule rule) {
                     return new HttpResponseHeaderSetterFactory().get(rule);
@@ -43,7 +42,7 @@ public class SetResponseHeaderHandler extends AbstractInitializable implements H
 
     @Override
     public void handle(RR rr) {
-        if (config == null || Objs.isEmpty(setters)) {
+        if (Objs.isEmpty(setters)) {
             return;
         }
 

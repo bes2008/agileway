@@ -15,10 +15,6 @@ agileway:
     access-log:
       level: BODY
     waf:
-      xcontent:
-        enabled: true
-        predicates:
-          - paths=/**
       xss:
         enabled: true
         predicates:
@@ -28,6 +24,16 @@ agileway:
         predicates:
           - paths=/**
           - methods=GET,POST
+    set-header:
+      rules:
+        - predicates:
+            - path=/**
+          header: X-ContentType-Options
+          value: nosniff
+        - predicates:
+            - path=/**
+          header: X-Frame-Options
+          value: sameorigin
   httpclient:
     enabled: true
   redis:

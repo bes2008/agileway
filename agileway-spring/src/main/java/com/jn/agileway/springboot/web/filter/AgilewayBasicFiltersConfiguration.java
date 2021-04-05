@@ -94,18 +94,21 @@ public class AgilewayBasicFiltersConfiguration {
         return registration;
     }
 
+    @ConfigurationProperties(prefix = "agileway.web.set-header")
     @Bean
     public SetResponseHeaderProperties setResponseHeaderProperties() {
         return new SetResponseHeaderProperties();
     }
 
-    @ConfigurationProperties(prefix = "agileway.web.waf.set-header")
     @Order(-98)
     @Bean
     public FilterRegistrationBean setResponseHeadersRegistrationBean(SetResponseHeaderProperties properties) {
-        HttpRequestHandlerFilter filter = new HttpRequestHandlerFilter();
+
         SetResponseHeaderHandler handler = new SetResponseHeaderHandler();
-        handler.setConfig(properties);
+        handler.setRules(properties.getRules());
+        handler.init();
+
+        HttpRequestHandlerFilter filter = new HttpRequestHandlerFilter();
         filter.setHandler(handler);
 
         FilterRegistrationBean registration = new FilterRegistrationBean();
