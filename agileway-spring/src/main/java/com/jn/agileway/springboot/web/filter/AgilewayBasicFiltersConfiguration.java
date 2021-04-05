@@ -1,20 +1,19 @@
 package com.jn.agileway.springboot.web.filter;
 
+import com.jn.agileway.web.filter.HttpRequestHandlerFilter;
 import com.jn.agileway.web.filter.accesslog.AccessLogFilter;
 import com.jn.agileway.web.filter.accesslog.WebAccessLogProperties;
+import com.jn.agileway.web.filter.header.SetResponseHeaderHandler;
+import com.jn.agileway.web.filter.header.SetResponseHeaderProperties;
 import com.jn.agileway.web.filter.rr.RRFilter;
 import com.jn.agileway.web.filter.waf.sqlinjection.SqlFirewall;
 import com.jn.agileway.web.filter.waf.sqlinjection.SqlInjectionFilter;
 import com.jn.agileway.web.filter.waf.sqlinjection.SqlInjectionProperties;
 import com.jn.agileway.web.filter.waf.sqlinjection.SqlInjectionWafFactory;
-import com.jn.agileway.web.filter.waf.xcontenttype.XContentTypeOptionsFilter;
-import com.jn.agileway.web.filter.waf.xcontenttype.XContentTypeOptionsProperties;
 import com.jn.agileway.web.filter.waf.xss.XssFilter;
 import com.jn.agileway.web.filter.waf.xss.XssFirewall;
 import com.jn.agileway.web.filter.waf.xss.XssProperties;
 import com.jn.agileway.web.filter.waf.xss.XssWafFactory;
-import com.jn.agileway.web.prediate.HttpRequestPredicateGroup;
-import com.jn.agileway.web.prediate.HttpRequestPredicateGroupFactory;
 import com.jn.langx.util.collection.Collects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -96,20 +95,21 @@ public class AgilewayBasicFiltersConfiguration {
     }
 
     @Bean
-    @ConfigurationProperties(prefix = "agileway.web.waf.xcontent")
-    public XContentTypeOptionsProperties xContentTypeOptionsProperties() {
-        return new XContentTypeOptionsProperties();
+    public SetResponseHeaderProperties setResponseHeaderProperties() {
+        return new SetResponseHeaderProperties();
     }
 
+    @ConfigurationProperties(prefix = "agileway.web.waf.set-header")
     @Order(-98)
     @Bean
-    public FilterRegistrationBean xContentTypeOptionsRegistrationBean(XContentTypeOptionsProperties properties) {
-        XContentTypeOptionsFilter filter = new XContentTypeOptionsFilter();
-        filter.setProperties(properties);
-        HttpRequestPredicateGroup predicates = new HttpRequestPredicateGroupFactory().get(properties);
-        filter.setPredicates(predicates);
+    public FilterRegistrationBean setResponseHeadersRegistrationBean(SetResponseHeaderProperties properties) {
+        HttpRequestHandlerFilter filter = new HttpRequestHandlerFilter();
+        SetResponseHeaderHandler handler = new SetResponseHeaderHandler();
+        handler.setConfig(properties);
+        filter.setHandler(handler);
+
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setName("X-ContentType-Options Filter");
+        registration.setName("Set-Response-Header Filter");
         registration.setFilter(filter);
         registration.setOrder(-98);
         return registration;

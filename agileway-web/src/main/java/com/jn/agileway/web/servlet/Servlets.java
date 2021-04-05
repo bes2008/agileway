@@ -38,6 +38,11 @@ import java.util.Map;
 public class Servlets {
     private static final Logger logger = LoggerFactory.getLogger(Servlets.class);
 
+    public static final String X_FRAME_OPTIONS_HEADER ="X-Frame-Options";
+    public static final String X_FRAME_OPTIONS_DENY = "deny";
+    public static final String X_FRAME_OPTIONS_SAME_ORIGIN = "sameorigin";
+
+
     public static final String getUTF8ContentType(@NonNull String mediaType) {
         return getContentType(mediaType, "UTF-8");
     }
