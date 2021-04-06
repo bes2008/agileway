@@ -9,6 +9,10 @@ import com.jn.langx.util.struct.Holder;
 
 import java.util.List;
 
+/**
+ * 目前这个做法，太过暴力，不适合将其运用到所有的参数上。
+ * 后续加强后，再开放使用
+ */
 public class SqlCharRemoveHandler extends SqlWAFHandler{
     private final List<Character> SINGLE_CHARS = Collects.asList(
             '|', '&', ';', '$', '%', '@', '\'', '"', '<', '>', '(', ')', '+', '\t', '\r', '\f', ',', '\\'
