@@ -10,7 +10,7 @@ import com.jn.agileway.web.security.WAF;
  * 对于SQL 注入， 主要的防御手段有：
  *
  * <pre>
- *     1. 访问数据库时，使用 Prepared Statements
+ *     1. 访问数据库时，使用 Prepared Statements，避免使用 字符串拼接方式的动态SQL
  *     2. 访问数据库时，使用 Stored Procedures
  *     3. 对用户输入内容进行 特殊字符验证
  *     4. 对用户输入的内容 进行Escaping
