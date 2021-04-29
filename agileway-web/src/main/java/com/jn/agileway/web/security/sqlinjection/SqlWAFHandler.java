@@ -1,6 +1,6 @@
-package com.jn.agileway.web.filter.waf.sqlinjection;
+package com.jn.agileway.web.security.sqlinjection;
 
-import com.jn.agileway.web.filter.waf.AbstractWAFHandler;
+import com.jn.agileway.web.security.AbstractWAFHandler;
 
 /**
  * 替换掉特殊字符

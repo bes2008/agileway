@@ -1,4 +1,4 @@
-package com.jn.agileway.web.filter.waf;
+package com.jn.agileway.web.security;
 
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.util.function.Function;

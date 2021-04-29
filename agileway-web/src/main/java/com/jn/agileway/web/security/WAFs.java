@@ -1,6 +1,6 @@
-package com.jn.agileway.web.filter.waf;
+package com.jn.agileway.web.security;
 
-import com.jn.agileway.web.filter.waf.xss.JavaScriptXssHandler;
+import com.jn.agileway.web.security.xss.JavaScriptXssHandler;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Supplier0;

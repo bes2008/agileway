@@ -1,4 +1,4 @@
-package com.jn.agileway.web.filter.waf;
+package com.jn.agileway.web.security;
 
 import com.jn.langx.lifecycle.AbstractInitializable;
 import org.slf4j.Logger;

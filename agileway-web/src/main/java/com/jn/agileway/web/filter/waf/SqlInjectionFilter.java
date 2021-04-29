@@ -1,10 +1,10 @@
-package com.jn.agileway.web.filter.waf.sqlinjection;
+package com.jn.agileway.web.filter.waf;
 
 import com.jn.agileway.web.filter.OncePerRequestFilter;
 import com.jn.agileway.web.filter.rr.RRHolder;
-import com.jn.agileway.web.filter.waf.WAF;
-import com.jn.agileway.web.filter.waf.WAFHttpServletRequestWrapper;
-import com.jn.agileway.web.filter.waf.WAFStrategy;
+import com.jn.agileway.web.security.WAF;
+import com.jn.agileway.web.security.WAFHttpServletRequestWrapper;
+import com.jn.agileway.web.security.WAFStrategy;
 import com.jn.agileway.web.servlet.RR;
 import com.jn.langx.util.Objs;
 

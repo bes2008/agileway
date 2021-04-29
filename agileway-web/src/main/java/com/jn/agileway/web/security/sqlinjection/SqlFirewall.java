@@ -1,6 +1,6 @@
-package com.jn.agileway.web.filter.waf.sqlinjection;
+package com.jn.agileway.web.security.sqlinjection;
 
-import com.jn.agileway.web.filter.waf.WAF;
+import com.jn.agileway.web.security.WAF;
 
 /**
  * https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html

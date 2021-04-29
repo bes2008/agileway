@@ -1,4 +1,4 @@
-package com.jn.agileway.web.filter.waf;
+package com.jn.agileway.web.security;
 
 import com.jn.agileway.web.prediate.HttpRequestPredicateGroup;
 import com.jn.agileway.web.servlet.RR;

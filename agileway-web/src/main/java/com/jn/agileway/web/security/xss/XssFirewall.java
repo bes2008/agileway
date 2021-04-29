@@ -1,6 +1,6 @@
-package com.jn.agileway.web.filter.waf.xss;
+package com.jn.agileway.web.security.xss;
 
-import com.jn.agileway.web.filter.waf.WAF;
+import com.jn.agileway.web.security.WAF;
 
 public class XssFirewall extends WAF {
     private XssProperties config;

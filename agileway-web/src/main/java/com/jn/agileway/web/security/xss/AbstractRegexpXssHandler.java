@@ -1,4 +1,4 @@
-package com.jn.agileway.web.filter.waf.xss;
+package com.jn.agileway.web.security.xss;
 
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;

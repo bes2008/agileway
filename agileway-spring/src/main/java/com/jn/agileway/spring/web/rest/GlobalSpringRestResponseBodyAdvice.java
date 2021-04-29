@@ -1,6 +1,6 @@
 package com.jn.agileway.spring.web.rest;
 
-import com.jn.agileway.web.filter.waf.WAFs;
+import com.jn.agileway.web.security.WAFs;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.function.Supplier0;
