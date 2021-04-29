@@ -6,7 +6,7 @@ import com.jn.agileway.web.security.WAF;
  * https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html
  * https://owasp.org/www-community/attacks/SQL_Injection
  * https://cheatsheetseries.owasp.org/cheatsheets/Query_Parameterization_Cheat_Sheet.html
- *
+ * <p>
  * 对于SQL 注入， 主要的防御手段有：
  *
  * <pre>
@@ -14,6 +14,7 @@ import com.jn.agileway.web.security.WAF;
  *     2. 访问数据库时，使用 Stored Procedures
  *     3. 对用户输入内容进行 特殊字符验证
  *     4. 对用户输入的内容 进行Escaping
+ *     5. 访问数据库时，需要进行密码校验，不能裸奔
  *
  *     由于1,2 是数据库访问层的做法，在这一层要做的是提供 3,4 的支持
  * </pre>

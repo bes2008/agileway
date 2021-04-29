@@ -23,15 +23,17 @@ public class WAFHttpServletRequestWrapper extends HttpServletRequestWrapper {
         String[] handledValues = new String[length];
         for (int i = 0; i < length; i++) {
             String handledValue = values[i];
-            handledValues[i] = applyXssHandlers(handledValue);
+            handledValues[i] = applyWAFHandlers(handledValue, false);
         }
         return handledValues;
     }
 
-    private String applyXssHandlers(String value) {
+    private String applyWAFHandlers(String value, boolean isRequestHeader) {
         if (value != null) {
-            for (WAFHandler xssHandler : wafHandlers) {
-                value = xssHandler.apply(value);
+            for (WAFHandler wafHandler : wafHandlers) {
+                if (!isRequestHeader || wafHandler.requestHeaderAware()) {
+                    value = wafHandler.apply(value);
+                }
             }
         }
         return value;
@@ -40,13 +42,13 @@ public class WAFHttpServletRequestWrapper extends HttpServletRequestWrapper {
     @Override
     public String getParameter(String parameter) {
         String value = super.getParameter(parameter);
-        return applyXssHandlers(value);
+        return applyWAFHandlers(value, false);
     }
 
     @Override
     public String getHeader(String name) {
         String value = super.getHeader(name);
-        return applyXssHandlers(value);
+        return applyWAFHandlers(value, true);
     }
 
 }

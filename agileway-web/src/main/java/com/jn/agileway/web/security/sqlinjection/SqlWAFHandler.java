@@ -19,4 +19,9 @@ public abstract class SqlWAFHandler extends AbstractWAFHandler {
     protected boolean isAttack(String value) {
         return false;
     }
+
+    @Override
+    public boolean requestHeaderAware() {
+        return false;
+    }
 }

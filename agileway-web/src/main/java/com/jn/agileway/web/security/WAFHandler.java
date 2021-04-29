@@ -8,4 +8,11 @@ public interface WAFHandler extends Function<String, String>, Initializable {
     String apply(String value);
 
     String getAttackName();
+
+    /**
+     * 是否处理请求头
+     *
+     * @return
+     */
+    boolean requestHeaderAware();
 }
