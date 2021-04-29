@@ -16,7 +16,7 @@ public class SqlInjectionWafFactory implements Factory<SqlInjectionProperties, S
 
         HttpRequestPredicateGroup predicates = new HttpRequestPredicateGroupFactory().get(props);
         strategy.setPredicates(predicates);
-        strategy.add(new SqlCharRemoveHandler());
+        strategy.add(new SqlSymbolsHandler());
 
         waf.addStrategy(strategy);
         return waf;

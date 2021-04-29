@@ -13,34 +13,38 @@ import java.util.List;
  * 目前这个做法，太过暴力，不适合将其运用到所有的参数上。
  * 后续加强后，再开放使用
  */
-public class SqlCharRemoveHandler extends SqlWAFHandler{
-    private final List<Character> SINGLE_CHARS = Collects.asList(
-            '|', '&', ';', '$', '%', '@', '\'', '"', '<', '>', '(', ')', '+', '\t', '\r', '\f', ',', '\\'
+public class SqlSymbolsHandler extends SqlWAFHandler{
+    private final List<String> DEFAULT_REMOVED_SYMBOLS = Collects.asList(
+            "--","/*","*/","waitfor delay",
+            "#","|", "&", ";", "$", "%", "@", "'", "\"", "<", ">", "(", ")", "+", "\t", "\r", "\f", ",", "\\"
+
     );
 
-    protected List<Character> removedChars = null;
 
-    public void setRemovedChars(List<Character> removed_chars) {
-        this.removedChars = removed_chars;
+
+    protected List<String> removedSymbols = null;
+
+    public void setRemovedSymbols(List<String> removedSymbols) {
+        this.removedSymbols = removedSymbols;
     }
 
-    public List<Character> getRemovedChars() {
-        return Objs.useValueIfEmpty(removedChars, SINGLE_CHARS);
+    public List<String> getRemovedSymbols() {
+        return Objs.useValueIfEmpty(removedSymbols, DEFAULT_REMOVED_SYMBOLS);
     }
 
     @Override
     public String apply(String value) {
         final Holder<String> stringHolder = new Holder<String>(value);
-        Collects.forEach(getRemovedChars(), new Consumer<Character>() {
+        Collects.forEach(getRemovedSymbols(), new Consumer<String>() {
             @Override
-            public void accept(Character character) {
+            public void accept(String str) {
                 String v = stringHolder.get();
-                v = Strings.remove(v, character);
+                v = Strings.remove(v, str);
                 stringHolder.set(v);
             }
-        }, new Predicate<Character>() {
+        }, new Predicate<String>() {
             @Override
-            public boolean test(Character character) {
+            public boolean test(String str) {
                 return stringHolder.isEmpty();
             }
         });
