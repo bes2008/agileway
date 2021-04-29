@@ -1,4 +1,4 @@
-package com.jn.agileway.web.filter.header;
+package com.jn.agileway.web.request.header;
 
 import com.jn.agileway.web.request.header.HttpResponseHeaderRule;
 
