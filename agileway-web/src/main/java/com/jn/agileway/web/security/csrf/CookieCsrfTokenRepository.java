@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.jn.agileway.web.filter.waf.csrf;
+package com.jn.agileway.web.security.csrf;
 
 import java.util.UUID;
 
