@@ -38,13 +38,14 @@ import java.util.Map;
 public class Servlets {
     private static final Logger logger = LoggerFactory.getLogger(Servlets.class);
 
-    public static final String X_FRAME_OPTIONS_HEADER ="X-Frame-Options";
+    public static final String X_FRAME_OPTIONS_HEADER = "X-Frame-Options";
     public static final String X_FRAME_OPTIONS_DENY = "deny";
     public static final String X_FRAME_OPTIONS_SAME_ORIGIN = "sameorigin";
+    public static final String ACCESS_DENIED_403 = "AGILEWAY_ECURITY_403_EXCEPTION";
 
 
     public static final String getUTF8ContentType(@NonNull String mediaType) {
-        return getContentType(mediaType, "UTF-8");
+        return getContentType(mediaType, "UTF-8" );
     }
 
     public static final String getContentType(@NonNull String mediaType, @Nullable String encoding) {
@@ -88,7 +89,7 @@ public class Servlets {
     public static Long getContentLength(HttpServletResponse response, boolean useZeroIfNull) {
         String contentLengthStr = response.getHeader(HttpHeaders.CONTENT_LENGTH);
         if (useZeroIfNull) {
-            contentLengthStr = Strings.useValueIfBlank(contentLengthStr, "0");
+            contentLengthStr = Strings.useValueIfBlank(contentLengthStr, "0" );
         }
         if (Emptys.isEmpty(contentLengthStr)) {
             return null;
@@ -150,7 +151,7 @@ public class Servlets {
         });
         String ip = Strings.isEmpty(header) ? request.getRemoteAddr() : request.getHeader(header);
         if (Strings.isNotEmpty(ip)) {
-            int index = ip.indexOf(",");
+            int index = ip.indexOf("," );
             if (index != -1) {
                 return ip.substring(0, index);
             }
@@ -227,7 +228,7 @@ public class Servlets {
             }
             response.setCharacterEncoding(Charsets.UTF_8.name());
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-            response.setHeader(HttpHeaders.ACCEPT_RANGES, "bytes");
+            response.setHeader(HttpHeaders.ACCEPT_RANGES, "bytes" );
             response.setHeader(HttpHeaders.CONTENT_RANGE, StringTemplates.formatWithPlaceholder("bytes {}-{}/{}", offset, end, file.length()));
             String disposition = StringTemplates.formatWithPlaceholder("attachment;filename={}", new String(fileName.getBytes(Charsets.UTF_8), Charsets.ISO_8859_1));
             response.setHeader(HttpHeaders.CONTENT_DISPOSITION, disposition);
@@ -299,7 +300,7 @@ public class Servlets {
             response.setCharacterEncoding(Charsets.UTF_8.name());
             contentType = Strings.useValueIfBlank(contentType, MediaType.APPLICATION_OCTET_STREAM_VALUE);
             response.setContentType(contentType);
-            response.setHeader(HttpHeaders.ACCEPT_RANGES, "bytes");
+            response.setHeader(HttpHeaders.ACCEPT_RANGES, "bytes" );
             response.setHeader(HttpHeaders.CONTENT_RANGE, StringTemplates.formatWithPlaceholder("bytes {}-{}/{}", offset, end, bytes.length));
             String disposition = StringTemplates.formatWithPlaceholder("attachment;filename={}", new String(fileName.getBytes(Charsets.UTF_8), Charsets.ISO_8859_1));
             response.setHeader(HttpHeaders.CONTENT_DISPOSITION, disposition);
@@ -342,6 +343,43 @@ public class Servlets {
                         return name.equals(cookie.getName());
                     }
                 });
+    }
+
+    public static String buildFullRequestUrl(HttpServletRequest r) {
+        return buildFullRequestUrl(r.getScheme(), r.getServerName(), r.getServerPort(), r.getRequestURI(),
+                r.getQueryString());
+    }
+
+    /**
+     * Obtains the full URL the client used to make the request.
+     * <p>
+     * Note that the server port will not be shown if it is the default server port for
+     * HTTP or HTTPS (80 and 443 respectively).
+     *
+     * @return the full URL, suitable for redirects (not decoded).
+     */
+    public static String buildFullRequestUrl(String scheme, String serverName, int serverPort, String requestURI,
+                                             String queryString) {
+        scheme = scheme.toLowerCase();
+        StringBuilder url = new StringBuilder();
+        url.append(scheme).append("://" ).append(serverName);
+        // Only add port if not default
+        if ("http".equals(scheme)) {
+            if (serverPort != 80) {
+                url.append(":" ).append(serverPort);
+            }
+        } else if ("https".equals(scheme)) {
+            if (serverPort != 443) {
+                url.append(":" ).append(serverPort);
+            }
+        }
+        // Use the requestURI as it is encoded (RFC 3986) and hence suitable for
+        // redirects.
+        url.append(requestURI);
+        if (queryString != null) {
+            url.append("?" ).append(queryString);
+        }
+        return url.toString();
     }
 
 }
