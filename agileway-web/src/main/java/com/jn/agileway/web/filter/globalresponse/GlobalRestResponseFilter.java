@@ -1,7 +1,7 @@
 package com.jn.agileway.web.filter.globalresponse;
 
 import com.jn.agileway.web.filter.OncePerRequestFilter;
-import com.jn.agileway.web.filter.waf.WAFs;
+import com.jn.agileway.web.security.WAFs;
 import com.jn.agileway.web.rest.GlobalRestResponseBodyHandlerConfiguration;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.Objs;

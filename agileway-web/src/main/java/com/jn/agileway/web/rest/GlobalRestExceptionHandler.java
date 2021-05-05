@@ -1,6 +1,6 @@
 package com.jn.agileway.web.rest;
 
-import com.jn.agileway.web.filter.waf.WAFs;
+import com.jn.agileway.web.security.WAFs;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
 import com.jn.easyjson.core.factory.JsonScope;
