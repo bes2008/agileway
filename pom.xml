@@ -22,7 +22,7 @@
         <module>agileway-shiro-redis-springdata2</module>
         <module>agileway-examples</module>
         <module>agileway-feign</module>
-        <module>agileway-pinyin</module>
+        <module>agileway-text</module>
     </modules>
 
     <name>agileway</name>

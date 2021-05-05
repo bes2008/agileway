@@ -1,4 +1,4 @@
-package com.jn.agileway.pinyin;
+package com.jn.agileway.text.pinyin;
 
 /**
  * 拼音引擎接口，具体的拼音实现通过实现此接口，完成具体实现功能

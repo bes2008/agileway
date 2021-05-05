@@ -1,4 +1,4 @@
-package com.jn.agileway.pinyin;
+package com.jn.agileway.text.pinyin;
 
 import com.jn.langx.annotation.Singleton;
 import com.jn.langx.registry.Registry;
