@@ -11,6 +11,9 @@
 
     <groupId>com.github.fangjinuo.agileway.text</groupId>
     <artifactId>agileway-text</artifactId>
-
+    <packaging>pom</packaging>
+    <modules>
+        <module>agileway-pinyin</module>
+    </modules>
 
 </project>
