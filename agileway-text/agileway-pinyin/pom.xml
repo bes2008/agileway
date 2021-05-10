@@ -11,5 +11,30 @@
 
     <artifactId>agileway-pinyin</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.rnkrsoft.bopomofo4j</groupId>
+            <artifactId>bopomofo4j</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.houbb</groupId>
+            <artifactId>pinyin</artifactId>
+            <version>0.2.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.stuxuhai</groupId>
+            <artifactId>jpinyin</artifactId>
+            <version>1.1.8</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.wnjustdoit</groupId>
+            <artifactId>pinyin4j</artifactId>
+            <version>2.6.0</version>
+        </dependency>
+
+    </dependencies>
 
 </project>
