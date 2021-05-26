@@ -23,6 +23,7 @@
         <module>agileway-examples</module>
         <module>agileway-feign</module>
         <module>agileway-text</module>
+        <module>agileway-vfs</module>
     </modules>
 
     <name>agileway</name>
@@ -136,6 +137,11 @@
             <dependency>
                 <groupId>com.github.fangjinuo.agileway</groupId>
                 <artifactId>agileway-httpclient</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fangjinuo.agileway</groupId>
+                <artifactId>agileway-sshclient</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
