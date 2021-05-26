@@ -1,13 +1,10 @@
 package com.jn.agileway.ssh.test.sftp;
 
-import com.jn.agileway.ssh.client.AbstractSshConnectionConfig;
 import com.jn.agileway.ssh.client.SshConnection;
+import com.jn.agileway.ssh.client.SshConnectionConfig;
 import com.jn.agileway.ssh.client.SshConnectionFactory;
-import com.jn.agileway.ssh.client.impl.jsch.JschConnectionConfig;
-import com.jn.agileway.ssh.client.impl.jsch.JschConnectionFactory;
-import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionConfig;
+import com.jn.agileway.ssh.client.SshConnectionFactoryRegistry;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionFactory;
-import com.jn.agileway.ssh.client.impl.trileadssh2.Ssh2ConnectionConfig;
 import com.jn.agileway.ssh.client.impl.trileadssh2.Ssh2ConnectionFactory;
 import com.jn.agileway.ssh.client.sftp.*;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
@@ -25,26 +22,28 @@ import java.util.List;
 
 public class SftpTests {
     private static final Logger logger = LoggerFactory.getLogger(SftpTests.class);
+    private SshConnectionFactoryRegistry registry = new SshConnectionFactoryRegistry();
 
     @Test
     public void testSftp_trilead_ssh2() throws IOException {
-        _test(new Ssh2ConnectionFactory(), new Ssh2ConnectionConfig(), "/home/fangjinuo/Templates/test_sftp_trilead_ssh2");
+        _test(registry.get("trileadssh2"), "/home/fangjinuo/Templates/test_sftp_trilead_ssh2");
     }
 
 
     @Test
     public void testSftp_jsch() throws IOException {
-        _test(new JschConnectionFactory(), new JschConnectionConfig(), "/home/fangjinuo/Templates/test_sftp_jsch");
+        _test(registry.get("jsch"), "/home/fangjinuo/Templates/test_sftp_jsch");
     }
 
     @Test
     public void testSftp_sshj() throws IOException {
-        _test(new SshjConnectionFactory(), new SshjConnectionConfig(), "/home/fangjinuo/Templates/test_sftp_sshj");
+        _test(registry.get("sshj"), "/home/fangjinuo/Templates/test_sftp_sshj");
     }
 
-    void _test(SshConnectionFactory connectionFactory, AbstractSshConnectionConfig connectionConfig, final String testWorkingDirectory) throws IOException {
-        connectionConfig.setHost("192.168.234.128");
-        //connectionConfig.setHost("192.168.1.79");
+    void _test(SshConnectionFactory connectionFactory, final String testWorkingDirectory) throws IOException {
+        SshConnectionConfig connectionConfig = connectionFactory.newConfig();
+        //connectionConfig.setHost("192.168.234.128");
+        connectionConfig.setHost("192.168.1.70");
         connectionConfig.setPort(22);
         connectionConfig.setUser("fangjinuo");
         connectionConfig.setPassword("fjn13570");

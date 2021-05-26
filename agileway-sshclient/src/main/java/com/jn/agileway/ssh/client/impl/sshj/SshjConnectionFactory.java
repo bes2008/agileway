@@ -17,6 +17,11 @@ import java.security.PublicKey;
 import java.util.List;
 
 public class SshjConnectionFactory extends AbstractSshConnectionFactory<SshjConnectionConfig> {
+
+    public SshjConnectionFactory(){
+        setName("sshj");
+    }
+
     @Override
     protected Class<?> getDefaultConnectionClass() {
         return SshjConnection.class;
@@ -63,6 +68,11 @@ public class SshjConnectionFactory extends AbstractSshConnectionFactory<SshjConn
             });
 
         }
+    }
 
+
+    @Override
+    public SshjConnectionConfig newConfig() {
+        return new SshjConnectionConfig();
     }
 }

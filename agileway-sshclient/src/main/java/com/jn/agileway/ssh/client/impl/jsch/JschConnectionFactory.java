@@ -18,6 +18,10 @@ public class JschConnectionFactory extends AbstractSshConnectionFactory<JschConn
     @Nullable
     private JSch jsch;
 
+    public JschConnectionFactory() {
+        setName("jsch");
+    }
+
     public void setJsch(JSch jsch) {
         this.jsch = jsch;
     }
@@ -103,5 +107,10 @@ public class JschConnectionFactory extends AbstractSshConnectionFactory<JschConn
                 }
             }
         }
+    }
+
+    @Override
+    public JschConnectionConfig newConfig() {
+        return new JschConnectionConfig();
     }
 }
