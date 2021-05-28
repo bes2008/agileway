@@ -11,5 +11,77 @@
 
     <artifactId>agileway-pinyin</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.belerweb</groupId>
+            <artifactId>pinyin4j</artifactId>
+            <version>2.5.0</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.houbb</groupId>
+            <artifactId>pinyin</artifactId>
+            <version>0.2.1</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>net.duguying.pinyin</groupId>
+            <artifactId>pinyin</artifactId>
+            <version>0.0.1</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.biezhi</groupId>
+            <artifactId>TinyPinyin</artifactId>
+            <version>2.0.3.RELEASE</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.mayabot.mynlp</groupId>
+            <artifactId>mynlp-pinyin</artifactId>
+            <version>3.1.7</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.nlpcn</groupId>
+            <artifactId>nlp-lang</artifactId>
+            <version>1.7.8</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch-analysis-pinyin</artifactId>
+            <version>5.2.2</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.luhuiguo</groupId>
+            <artifactId>chinese-utils</artifactId>
+            <version>1.0</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.stuxuhai</groupId>
+            <artifactId>jpinyin</artifactId>
+            <version>1.1.8</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.rnkrsoft.bopomofo4j</groupId>
+            <artifactId>bopomofo4j</artifactId>
+            <version>1.0.0</version>
+            <optional>true</optional>
+        </dependency>
+
+
+    </dependencies>
 
 </project>
