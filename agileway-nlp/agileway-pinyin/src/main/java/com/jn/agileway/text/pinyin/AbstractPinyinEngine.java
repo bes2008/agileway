@@ -9,12 +9,12 @@ import java.util.List;
 public abstract class AbstractPinyinEngine implements PinyinEngine {
 
     public char getFirstLetter(char c) {
-        return getPinyin(c).charAt(0);
+        return getPinyin(c).get(0).charAt(0);
     }
 
     public String getFirstLetterString(String str, String separator) {
         final String splitSeparator = Strings.isEmpty(separator) ? "#" : separator;
-        final String[] segments = Strings.split(getPinyin(str, splitSeparator), splitSeparator);
+        final List<String> segments = getPinyin(str);
         List<String> stringList = Pipeline.of(segments).map(new Function<String, String>() {
             @Override
             public String apply(String s) {

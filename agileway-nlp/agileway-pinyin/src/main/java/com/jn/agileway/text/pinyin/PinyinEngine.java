@@ -24,12 +24,23 @@ public interface PinyinEngine {
      */
     List<String> getPinyin(String str);
 
+    /**
+     * 把指定的字符转换成简体字，如果不具有简体写法，则返回本身
+     */
+    char toSimplified(char c);
 
-    char toSimplifiedPinyin(char c);
+    /**
+     * 把指定的字符转换成简体字
+     */
+    String toSimplified(String str);
 
-    String toSimplifiedPinyin(String str);
+    /**
+     * 把指定的字符转换成繁体字,如果不具有简体写法，则返回本身
+     */
+    char toTraditional(char c);
 
-    char toTraditionalPinyin(char c);
-
-    String toTraditionalPinyin(String str);
+    /**
+     * 把指定的字符串转换成繁体字
+     */
+    String toTraditional(String str);
 }
