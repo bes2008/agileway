@@ -22,7 +22,6 @@
         <module>agileway-shiro-redis-springdata2</module>
         <module>agileway-examples</module>
         <module>agileway-feign</module>
-        <module>agileway-nlp</module>
         <module>agileway-vfs</module>
     </modules>
 
