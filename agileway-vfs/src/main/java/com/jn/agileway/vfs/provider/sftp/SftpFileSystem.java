@@ -1,5 +1,6 @@
 package com.jn.agileway.vfs.provider.sftp;
 
+import com.jn.agileway.ssh.client.sftp.SftpSession;
 import org.apache.commons.vfs2.Capability;
 import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;
@@ -10,14 +11,20 @@ import org.apache.commons.vfs2.provider.AbstractFileSystem;
 import java.util.Collection;
 
 public class SftpFileSystem extends AbstractFileSystem {
+    private SftpSession sftpSession;
 
-    public SftpFileSystem(FileName rootName, FileObject parentLayer, FileSystemOptions fileSystemOptions) {
+    public SftpFileSystem(FileName rootName, SftpSession session,  FileObject parentLayer, FileSystemOptions fileSystemOptions) {
         super(rootName, parentLayer, fileSystemOptions);
+        this.sftpSession= session;
+    }
+
+    public SftpSession getSftpSession(){
+        return this.sftpSession;
     }
 
     @Override
     protected FileObject createFile(AbstractFileName name) throws Exception {
-        return null;
+        return new SftpFileObject(name, this);
     }
 
     @Override
