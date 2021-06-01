@@ -141,6 +141,13 @@ public class FileAttrs {
         return false;
     }
 
+    public FileType getFileType(){
+        if (this.fileMode != null) {
+            return this.fileMode.getType();
+        }
+        return FileType.UNKNOWN;
+    }
+
     @Override
     public String toString() {
         // https://www.cnblogs.com/gezp/p/12875219.html

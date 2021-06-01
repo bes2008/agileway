@@ -10,7 +10,9 @@ import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.function.Function;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.io.file.Files;
 import org.slf4j.Logger;
@@ -37,7 +39,7 @@ public class Sftps {
             FileAttrs fileAttrs = session.stat(filepath);
             return fileAttrs.getFileMode().getType();
         } catch (NoSuchFileSftpException ex) {
-            return null;
+            return FileType.UNKNOWN;
         } finally {
             IOs.close(file);
         }
@@ -280,5 +282,14 @@ public class Sftps {
         session.setStat(path, attrs2);
     }
 
+    public static List<String> children(final SftpSession session, String directory) throws IOException {
+        return Pipeline.of(session.listFiles(directory))
+                .map(new Function<SftpResourceInfo, String>() {
+                    @Override
+                    public String apply(SftpResourceInfo resourceInfo) {
+                        return resourceInfo.getName();
+                    }
+                }).asList();
+    }
 
 }
