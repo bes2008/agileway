@@ -29,7 +29,7 @@ public abstract class SftpFile implements Closeable {
      * |packet_type|req_id|file_handle|file_offset|length
      * <p>
      * 从file的 fileOffset 开始读取，最大读取 length 个 byte, 读取后放到 buffer中，从 buffer的 offset 开始放。
-     * 返回实际读取的数据。
+     * 返回实际读取的数据长度。
      * 若返回 -1，则代表结束
      */
     public abstract int read(long fileOffset, byte[] buffer, int bufferOffset, int length) throws IOException;
