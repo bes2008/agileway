@@ -9,11 +9,10 @@ import com.jn.langx.util.io.file.PosixFilePermissions;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileType;
-import org.apache.commons.vfs2.RandomAccessContent;
 import org.apache.commons.vfs2.provider.AbstractFileName;
 import org.apache.commons.vfs2.provider.AbstractFileObject;
 import org.apache.commons.vfs2.provider.UriParser;
-import org.apache.commons.vfs2.util.RandomAccessMode;
+import org.apache.commons.vfs2.util.FileObjectUtils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -80,18 +79,7 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
 
     @Override
     protected long doGetLastModifiedTime() throws Exception {
-        FileAttrs attrs = getFileAttrs();
-        return attrs.getModifyTime();
-    }
-
-    @Override
-    protected OutputStream doGetOutputStream(boolean bAppend) throws Exception {
-        return super.doGetOutputStream(bAppend);
-    }
-
-    @Override
-    protected RandomAccessContent doGetRandomAccessContent(RandomAccessMode mode) throws Exception {
-        return super.doGetRandomAccessContent(mode);
+        return getFileAttrs().getModifyTime() * 1000;
     }
 
     @Override
@@ -100,18 +88,8 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
     }
 
     @Override
-    protected boolean doIsHidden() throws Exception {
-        return super.doIsHidden();
-    }
-
-    @Override
     protected boolean doIsReadable() throws Exception {
         return Sftps.isReadable(getSftpSession().open(relPath, OpenMode.READ, null));
-    }
-
-    @Override
-    protected boolean doIsSameFile(FileObject destFile) throws FileSystemException {
-        return super.doIsSameFile(destFile);
     }
 
     @Override
@@ -125,18 +103,9 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
     }
 
     @Override
-    protected void doRemoveAttribute(String attrName) throws Exception {
-        super.doRemoveAttribute(attrName);
-    }
-
-    @Override
     protected void doRename(FileObject newFile) throws Exception {
-        super.doRename(newFile);
-    }
-
-    @Override
-    protected void doSetAttribute(String attrName, Object value) throws Exception {
-        super.doSetAttribute(attrName, value);
+        final SftpFileObject newSftpFileObject = (SftpFileObject) FileObjectUtils.getAbstractFileObject(newFile);
+        getSftpSession().mv(relPath, newSftpFileObject.relPath);
     }
 
     private void flushStat() throws IOException {
@@ -170,7 +139,9 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
 
     @Override
     protected boolean doSetLastModifiedTime(long modtime) throws Exception {
-        return super.doSetLastModifiedTime(modtime);
+        getFileAttrs().setModifyTime((int) (modtime / 1000));
+        flushStat();
+        return true;
     }
 
     @Override
@@ -225,12 +196,13 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
 
     @Override
     protected InputStream doGetInputStream() throws Exception {
-        SftpFile sftpFile = getSftpSession().open(getName().getPath(), OpenMode.READ, getFileAttrs());
+        SftpFile sftpFile = getSftpSession().open(relPath, OpenMode.READ, getFileAttrs());
         return new SftpFileInputStream(sftpFile);
     }
 
+
     @Override
-    public OutputStream getOutputStream(boolean bAppend) throws FileSystemException {
+    protected OutputStream doGetOutputStream(boolean bAppend) throws Exception {
         try {
             SftpFile sftpFile = getSftpSession().open(relPath, OpenMode.APPEND, fileAttrs);
             if (bAppend) {
