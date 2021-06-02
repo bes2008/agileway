@@ -29,6 +29,6 @@ public class SftpFileSystem extends AbstractFileSystem {
 
     @Override
     protected void addCapabilities(Collection<Capability> caps) {
-
+        caps.addAll(SftpFileProvider.capabilities);
     }
 }

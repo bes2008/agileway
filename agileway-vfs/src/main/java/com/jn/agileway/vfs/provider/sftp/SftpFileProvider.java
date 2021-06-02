@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-public class SftpProvider extends AbstractOriginatingFileProvider {
+public class SftpFileProvider extends AbstractOriginatingFileProvider {
 
 
     /**
