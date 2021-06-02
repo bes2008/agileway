@@ -33,4 +33,14 @@ public class SftpFileOutputStream extends OutputStream {
         filePosition = filePosition + byteBuffer.limit();
         byteBuffer.clear();
     }
+
+    @Override
+    public void flush() throws IOException {
+        doFlush();
+    }
+
+    @Override
+    public void close() throws IOException {
+        flush();
+    }
 }
