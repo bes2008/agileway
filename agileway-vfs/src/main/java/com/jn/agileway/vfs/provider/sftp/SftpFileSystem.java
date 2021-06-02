@@ -13,18 +13,23 @@ import java.util.Collection;
 public class SftpFileSystem extends AbstractFileSystem {
     private SftpSession sftpSession;
 
-    public SftpFileSystem(FileName rootName, SftpSession session,  FileObject parentLayer, FileSystemOptions fileSystemOptions) {
+    public SftpFileSystem(FileName rootName, SftpSession session, FileObject parentLayer, FileSystemOptions fileSystemOptions) {
         super(rootName, parentLayer, fileSystemOptions);
-        this.sftpSession= session;
+        this.sftpSession = session;
     }
 
-    public SftpSession getSftpSession(){
+    public SftpSession getSftpSession() {
         return this.sftpSession;
     }
 
     @Override
     protected FileObject createFile(AbstractFileName name) throws Exception {
         return new SftpFileObject(name, this);
+    }
+
+    @Override
+    public double getLastModTimeAccuracy() {
+        return 1000;
     }
 
     @Override
