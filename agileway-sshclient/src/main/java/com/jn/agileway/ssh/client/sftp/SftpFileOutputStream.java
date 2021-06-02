@@ -7,16 +7,29 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
 public class SftpFileOutputStream extends OutputStream {
-
+    private static final int DEFAULT_BUFFER_SIZE = 8192;
     private final SftpFile sftpFile;
-    private int filePosition = 0;
+    private long filePosition = 0;
     private final ByteBuffer byteBuffer;
 
-    public SftpFileOutputStream(SftpFile sftpFile, int bufferSize) {
+    public SftpFileOutputStream(SftpFile sftpFile){
+        this(sftpFile,DEFAULT_BUFFER_SIZE);
+    }
+
+    public SftpFileOutputStream(SftpFile sftpFile, int bufferSize){
+        this(sftpFile, bufferSize, 0);
+    }
+
+
+    public SftpFileOutputStream(SftpFile sftpFile, int bufferSize, long filePosition) {
         Preconditions.checkNotNull(sftpFile);
         this.sftpFile = sftpFile;
-        Preconditions.checkTrue(bufferSize > 0);
+        if(bufferSize<=0){
+            bufferSize = DEFAULT_BUFFER_SIZE;
+        }
         this.byteBuffer = ByteBuffer.allocate(bufferSize);
+        Preconditions.checkTrue(filePosition>=0);
+        this.filePosition = filePosition;
     }
 
     @Override

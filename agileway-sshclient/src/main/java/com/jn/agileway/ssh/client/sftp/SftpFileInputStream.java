@@ -11,7 +11,7 @@ public class SftpFileInputStream extends InputStream {
     private static final int DEFAULT_BUFFER_SIZE = 8192;
 
     private final SftpFile sftpFile;
-    private int filePosition = 0;
+    private long filePosition = 0;
     private transient final ByteBuffer byteBuffer;
 
     public SftpFileInputStream(SftpFile sftpFile) {
@@ -19,10 +19,16 @@ public class SftpFileInputStream extends InputStream {
     }
 
     public SftpFileInputStream(SftpFile sftpFile, int buffSize) {
+        this(sftpFile, buffSize, 0);
+    }
+
+    public SftpFileInputStream(SftpFile sftpFile, int buffSize, long filePosition) {
         Preconditions.checkNotNull(sftpFile);
         this.sftpFile = sftpFile;
         Preconditions.checkTrue(buffSize > 0);
         this.byteBuffer = ByteBuffer.allocate(buffSize);
+        Preconditions.checkTrue(filePosition >= 0);
+        this.filePosition = filePosition;
     }
 
     private int doRead() throws IOException {
