@@ -2,7 +2,10 @@ package com.jn.agileway.vfs.provider.sftp;
 
 import com.jn.agileway.ssh.client.sftp.*;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
+import com.jn.agileway.ssh.client.sftp.attrs.FileMode;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.io.file.FilePermission;
+import com.jn.langx.util.io.file.PosixFilePermissions;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileType;
@@ -136,9 +139,33 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
         super.doSetAttribute(attrName, value);
     }
 
+    private void flushStat() throws IOException {
+        getSftpSession().setStat(relPath, getFileAttrs());
+    }
+
     @Override
     protected boolean doSetExecutable(boolean executable, boolean ownerOnly) throws Exception {
-        return super.doSetExecutable(executable, ownerOnly);
+        PosixFilePermissions posixFilePermissions = Sftps.getPosixPermission(getSftpSession().open(relPath, OpenMode.READ, null));
+        int oldPerm = posixFilePermissions.getPermissions();
+        if (executable) {
+            posixFilePermissions.addPermission(FilePermission.USR_X);
+        } else {
+            posixFilePermissions.removePermission(FilePermission.USR_X);
+        }
+
+        if (!ownerOnly) {
+            posixFilePermissions.addPermission(FilePermission.GRP_X);
+            posixFilePermissions.addPermission(FilePermission.OTH_X);
+        }
+
+        if (posixFilePermissions.getPermissions() == oldPerm) {
+            return true;
+        }
+        FileMode fileMode = FileMode.createFileMode(getFileAttrs().getFileMode().getType(), posixFilePermissions.getPermissions());
+        getFileAttrs().setFileMode(fileMode);
+
+        flushStat();
+        return true;
     }
 
     @Override
@@ -148,12 +175,52 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
 
     @Override
     protected boolean doSetReadable(boolean readable, boolean ownerOnly) throws Exception {
-        return super.doSetReadable(readable, ownerOnly);
+        PosixFilePermissions posixFilePermissions = Sftps.getPosixPermission(getSftpSession().open(relPath, OpenMode.READ, null));
+        int oldPerm = posixFilePermissions.getPermissions();
+        if (readable) {
+            posixFilePermissions.addPermission(FilePermission.USR_R);
+        } else {
+            posixFilePermissions.removePermission(FilePermission.USR_R);
+        }
+
+        if (!ownerOnly) {
+            posixFilePermissions.addPermission(FilePermission.GRP_R);
+            posixFilePermissions.addPermission(FilePermission.OTH_R);
+        }
+
+        if (posixFilePermissions.getPermissions() == oldPerm) {
+            return true;
+        }
+        FileMode fileMode = FileMode.createFileMode(getFileAttrs().getFileMode().getType(), posixFilePermissions.getPermissions());
+        getFileAttrs().setFileMode(fileMode);
+
+        flushStat();
+        return true;
     }
 
     @Override
     protected boolean doSetWritable(boolean writable, boolean ownerOnly) throws Exception {
-        return super.doSetWritable(writable, ownerOnly);
+        PosixFilePermissions posixFilePermissions = Sftps.getPosixPermission(getSftpSession().open(relPath, OpenMode.READ, null));
+        int oldPerm = posixFilePermissions.getPermissions();
+        if (writable) {
+            posixFilePermissions.addPermission(FilePermission.USR_W);
+        } else {
+            posixFilePermissions.removePermission(FilePermission.USR_W);
+        }
+
+        if (!ownerOnly) {
+            posixFilePermissions.addPermission(FilePermission.GRP_W);
+            posixFilePermissions.addPermission(FilePermission.OTH_W);
+        }
+
+        if (posixFilePermissions.getPermissions() == oldPerm) {
+            return true;
+        }
+        FileMode fileMode = FileMode.createFileMode(getFileAttrs().getFileMode().getType(), posixFilePermissions.getPermissions());
+        getFileAttrs().setFileMode(fileMode);
+
+        flushStat();
+        return true;
     }
 
     @Override
