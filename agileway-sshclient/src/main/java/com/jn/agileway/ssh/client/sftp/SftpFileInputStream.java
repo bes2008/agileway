@@ -45,4 +45,16 @@ public class SftpFileInputStream extends InputStream {
         }
         return byteBuffer.get();
     }
+
+
+    @Override
+    public int available() throws IOException {
+        return (int) (sftpFile.getAttributes().getSize() - filePosition);
+    }
+
+    @Override
+    public void close() throws IOException {
+        sftpFile.close();
+    }
+
 }

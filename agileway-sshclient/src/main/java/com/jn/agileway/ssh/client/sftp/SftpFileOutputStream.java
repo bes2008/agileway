@@ -42,5 +42,6 @@ public class SftpFileOutputStream extends OutputStream {
     @Override
     public void close() throws IOException {
         flush();
+        sftpFile.close();
     }
 }
