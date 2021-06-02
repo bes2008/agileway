@@ -159,7 +159,9 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
         try {
             ChannelSftp channel = (ChannelSftp)this.delegate.openChannel("sftp");
             channel.connect();
-            return new JschSftpSession(channel);
+            JschSftpSession session= new JschSftpSession(channel);
+            session.setSshConnection(this);
+            return session;
         } catch (JSchException ex) {
             throw new SshException(ex);
         }

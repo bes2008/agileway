@@ -24,6 +24,10 @@ public abstract class SftpFile implements Closeable {
         this.path = path;
     }
 
+    public SftpSession getSession(){
+        return session;
+    }
+
     /**
      * packet:
      * |packet_type|req_id|file_handle|file_offset|length

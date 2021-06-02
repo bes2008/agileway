@@ -1,5 +1,6 @@
 package com.jn.agileway.ssh.client.sftp;
 
+import com.jn.agileway.ssh.client.SshConnection;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Functions;
@@ -9,6 +10,15 @@ import java.io.IOException;
 import java.util.List;
 
 public abstract class AbstractSftpSession implements SftpSession {
+    protected SshConnection connection;
+
+    public SshConnection getSshConnection() {
+        return connection;
+    }
+
+    public void setSshConnection(SshConnection connection) {
+        this.connection = connection;
+    }
 
     @Override
     public SftpFile open(String filepath, OpenMode openMode, FileAttrs attrs) throws IOException {

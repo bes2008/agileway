@@ -15,6 +15,7 @@ import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.io.file.Files;
+import com.jn.langx.util.io.file.PosixPermission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -292,4 +293,27 @@ public class Sftps {
                 }).asList();
     }
 
+    public static PosixPermission getPosixPermission(SftpFile sftpFile) throws IOException {
+        FileAttrs attrs = sftpFile.getAttributes();
+
+        int[] groupIds = sftpFile.getSession().getSshConnection().getGroupIds();
+        boolean inGroup = Collects.newArrayList(groupIds).contains(attrs.getGid());
+
+        int uid = sftpFile.getSession().getSshConnection().getUid();
+        boolean isOwner = attrs.getUid() == uid;
+
+        return new PosixPermission(attrs.getFileMode().getPermissionsMask(), isOwner, inGroup);
+    }
+
+    public static boolean isReadable(SftpFile sftpFile) throws IOException {
+        return getPosixPermission(sftpFile).isReadable();
+    }
+
+    public static boolean isWritable(SftpFile sftpFile) throws IOException {
+        return getPosixPermission(sftpFile).isWritable();
+    }
+
+    public static boolean isExecutable(SftpFile sftpFile) throws IOException {
+        return getPosixPermission(sftpFile).isExecutable();
+    }
 }
