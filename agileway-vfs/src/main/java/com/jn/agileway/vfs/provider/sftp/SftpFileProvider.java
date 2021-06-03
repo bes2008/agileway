@@ -15,7 +15,6 @@ import java.util.Collections;
 
 public class SftpFileProvider extends AbstractOriginatingFileProvider {
 
-
     /**
      * The provider's capabilities.
      */

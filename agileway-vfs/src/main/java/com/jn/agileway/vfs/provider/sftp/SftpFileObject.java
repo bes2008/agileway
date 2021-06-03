@@ -51,12 +51,6 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
         return fileAttrs;
     }
 
-    private void setFileAttrs() throws IOException {
-        if (fileAttrs != null) {
-            getSftpSession().setStat(getName().getPath(), fileAttrs);
-        }
-    }
-
     @Override
     protected void doCreateFolder() throws Exception {
         getSftpSession().mkdir(relPath, null);
@@ -74,7 +68,7 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
 
     @Override
     protected void doDelete() throws Exception {
-        getSftpSession().rm(getName().getPath());
+        getSftpSession().rm(relPath);
     }
 
     @Override
@@ -245,7 +239,7 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
 
     @Override
     protected String[] doListChildren() throws Exception {
-        List<String> children = Sftps.children(getSftpSession(), getName().getPath());
+        List<String> children = Sftps.children(getSftpSession(), relPath);
         return Collects.toArray(children, String[].class);
     }
 }
