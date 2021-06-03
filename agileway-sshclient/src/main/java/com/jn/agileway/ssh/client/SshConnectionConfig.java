@@ -62,6 +62,8 @@ public interface SshConnectionConfig {
     String getPrivateKeyfilePassphrase();
 
     String getKnownHostsPath();
+    void setKnownHostsPath(String knownHostsPath);
+
 
     void setProperty(String property, Object value);
 

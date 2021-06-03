@@ -21,7 +21,6 @@ import java.io.OutputStream;
 import java.util.List;
 
 public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
-    private static final long MOD_TIME_FACTOR = 1000L;
     private FileAttrs fileAttrs;
     private final String relPath;
 
