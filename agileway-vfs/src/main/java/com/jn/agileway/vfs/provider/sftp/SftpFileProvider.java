@@ -17,6 +17,11 @@ import java.util.Collections;
 
 public class SftpFileProvider extends AbstractOriginatingFileProvider {
 
+    public SftpFileProvider(){
+        super();
+        setFileNameParser(SftpFileNameParser.getInstance());
+    }
+
     /**
      * The provider's capabilities.
      */
