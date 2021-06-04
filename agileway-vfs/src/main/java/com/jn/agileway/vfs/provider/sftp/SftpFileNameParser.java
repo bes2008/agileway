@@ -10,7 +10,7 @@ import org.apache.commons.vfs2.provider.URLFileNameParser;
 public class SftpFileNameParser extends URLFileNameParser {
     private static final int DEFAULT_PORT = 22;
 
-    private static final org.apache.commons.vfs2.provider.sftp.SftpFileNameParser INSTANCE = new org.apache.commons.vfs2.provider.sftp.SftpFileNameParser();
+    private static final SftpFileNameParser INSTANCE = new SftpFileNameParser();
 
     /**
      * Creates a new instance with a the default port 22.

@@ -42,7 +42,7 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
     private FileAttrs getFileAttrs() throws IOException {
         if (this.fileAttrs == null) {
             try {
-                fileAttrs = getSftpSession().stat(getName().getPath());
+                fileAttrs = getSftpSession().stat(relPath);
             } catch (FileNotFoundException ex) {
                 fileAttrs = null;
             }
@@ -240,5 +240,10 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
     protected String[] doListChildren() throws Exception {
         List<String> children = Sftps.children(getSftpSession(), relPath);
         return Collects.toArray(children, String[].class);
+    }
+
+    @Override
+    public String toString() {
+        return relPath + " " + fileAttrs ;
     }
 }

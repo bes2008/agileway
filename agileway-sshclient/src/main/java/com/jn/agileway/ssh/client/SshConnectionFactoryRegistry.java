@@ -5,10 +5,11 @@ import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.registry.Registry;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
-import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.collection.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
@@ -20,18 +21,24 @@ public class SshConnectionFactoryRegistry extends AbstractInitializable implemen
     private static final Map<String, SshConnectionFactory> preinstall = new LinkedHashMap<String, SshConnectionFactory>();
 
     static {
-        Collects.forEach(ServiceLoader.load(SshConnectionFactory.class), new Consumer<SshConnectionFactory>() {
-            @Override
-            public void accept(SshConnectionFactory sshConnectionFactory) {
+
+        Iterator<SshConnectionFactory> iterator = ServiceLoader.load(SshConnectionFactory.class).iterator();
+
+        while (iterator.hasNext()) {
+            try {
+                SshConnectionFactory sshConnectionFactory = iterator.next();
                 preinstall.put(sshConnectionFactory.getName(), sshConnectionFactory);
+            } catch (Throwable ex) {
+                logger.error(ex.getMessage());
             }
-        });
-        if(preinstall.size()==0){
+        }
+
+        if (preinstall.size() == 0) {
             logger.warn("Can't find any valid ssh-client library, the recommend ssh client libraries: net.schmizz:sshj, com.trilead:trilead-ssh2, com.airlenet.yang:ganymed-ssh2, com.jcraft:jsch");
         }
     }
 
-    public SshConnectionFactoryRegistry(){
+    public SshConnectionFactoryRegistry() {
         init();
     }
 
@@ -51,7 +58,6 @@ public class SshConnectionFactoryRegistry extends AbstractInitializable implemen
     }
 
 
-
     @Override
     protected void doInit() throws InitializationException {
         registry.putAll(preinstall);
@@ -59,7 +65,7 @@ public class SshConnectionFactoryRegistry extends AbstractInitializable implemen
 
     public SshConnectionFactory getDefault() {
         Preconditions.checkNotEmpty(registry);
-        String first = Collects.findFirst(registry.keySet());
+        String first = Pipeline.of(registry.keySet()).findFirst();
         return get(first);
     }
 }
