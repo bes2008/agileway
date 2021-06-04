@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>agileway-vfs</artifactId>
-
+    <name>${groupId}:${artifactId}:${version}</name>
     <dependencies>
         <dependency>
             <groupId>org.apache.commons</groupId>

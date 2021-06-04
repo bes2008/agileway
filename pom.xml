@@ -6,8 +6,10 @@
 
     <groupId>com.github.fangjinuo.agileway</groupId>
     <artifactId>agileway</artifactId>
-    <packaging>pom</packaging>
     <version>2.5.0</version>
+    <packaging>pom</packaging>
+
+    <name>${groupId}:${artifactId}:${version}</name>
     <modules>
         <module>agileway-codec</module>
         <module>agileway-web</module>
@@ -24,8 +26,6 @@
         <module>agileway-feign</module>
         <module>agileway-vfs</module>
     </modules>
-
-    <name>agileway</name>
 
     <description>
         Java frameworks extensions: servlet, httpclient, spring, ... etc

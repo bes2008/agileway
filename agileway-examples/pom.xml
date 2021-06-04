@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>agileway-examples</artifactId>
-
+    <name>${groupId}:${artifactId}:${version}</name>
     <dependencies>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

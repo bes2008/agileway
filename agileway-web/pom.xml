@@ -10,6 +10,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>agileway-web</artifactId>
+
+    <name>${groupId}:${artifactId}:${version}</name>
+
     <description>Provide many web tools for servlet : global exception handler, global restful response, global filters,
         access logs, downloads, etc...
     </description>
