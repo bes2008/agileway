@@ -5,6 +5,7 @@ import com.jn.agileway.vfs.provider.sftp.SftpFileSystemConfigBuilder;
 import com.jn.langx.util.Strings;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemOptions;
+import org.apache.commons.vfs2.Selectors;
 import org.apache.commons.vfs2.VFS;
 import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
 import org.junit.BeforeClass;
@@ -31,6 +32,12 @@ public class AgilewaySftpProviderTests {
         FileObject fileObject = fileSystemManager.resolveFile(url, fileSystemOptions);
         showFile(0, fileObject);
 
+        url ="file://d:/tmp002";
+        FileObject localFileObject = fileSystemManager.resolveFile(url);
+        if(!localFileObject.exists()){
+            localFileObject.createFolder();
+        }
+        localFileObject.copyFrom(fileObject, Selectors.EXCLUDE_SELF);
     }
 
     void showFile(int ident, FileObject fileObject) throws Throwable {

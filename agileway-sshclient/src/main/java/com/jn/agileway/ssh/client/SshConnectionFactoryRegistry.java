@@ -65,7 +65,7 @@ public class SshConnectionFactoryRegistry extends AbstractInitializable implemen
 
     public SshConnectionFactory getDefault() {
         Preconditions.checkNotEmpty(registry);
-        String first = Pipeline.of(registry.keySet()).findFirst();
+        String first = Pipeline.of(Collects.<String>asIterable(registry.keys())).findFirst();
         return get(first);
     }
 }

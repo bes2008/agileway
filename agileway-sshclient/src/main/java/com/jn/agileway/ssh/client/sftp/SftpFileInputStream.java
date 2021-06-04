@@ -32,6 +32,7 @@ public class SftpFileInputStream extends InputStream {
     }
 
     private int doRead() throws IOException {
+        byteBuffer.clear();
         int length = sftpFile.read(filePosition, byteBuffer.array(), 0, this.byteBuffer.capacity());
         if (length != -1) {
             filePosition = filePosition + length;
@@ -43,7 +44,7 @@ public class SftpFileInputStream extends InputStream {
 
     @Override
     public int read() throws IOException {
-        if (!byteBuffer.hasRemaining()) {
+        if (byteBuffer.position() == 0 || !byteBuffer.hasRemaining()) {
             int length = doRead();
             if (length == -1) {
                 return -1;
