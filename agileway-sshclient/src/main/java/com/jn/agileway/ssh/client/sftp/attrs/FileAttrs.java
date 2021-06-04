@@ -172,7 +172,7 @@ public class FileAttrs {
         }
 
         if (this.mtime != null) {
-            builder.append(Dates.format(new Date(this.mtime * 1000), Dates.yyyy_MM_dd_HH_mm_ss));
+            builder.append(Dates.format(new Date(this.mtime * 1000L), Dates.yyyy_MM_dd_HH_mm_ss));
 
         }
 

@@ -72,7 +72,7 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
 
     @Override
     protected long doGetLastModifiedTime() throws Exception {
-        return getFileAttrs().getModifyTime() * 1000;
+        return getFileAttrs().getModifyTime() * 1000L;
     }
 
     @Override
@@ -132,7 +132,7 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
 
     @Override
     protected boolean doSetLastModifiedTime(long modtime) throws Exception {
-        getFileAttrs().setModifyTime((int) (modtime / 1000));
+        getFileAttrs().setModifyTime((int) (modtime / 1000L));
         flushStat();
         return true;
     }
