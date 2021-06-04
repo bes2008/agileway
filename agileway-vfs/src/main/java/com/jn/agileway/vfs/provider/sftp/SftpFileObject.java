@@ -3,6 +3,7 @@ package com.jn.agileway.vfs.provider.sftp;
 import com.jn.agileway.ssh.client.sftp.*;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.attrs.FileMode;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.io.file.FilePermission;
 import com.jn.langx.util.io.file.PosixFilePermissions;
@@ -103,6 +104,32 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
 
     private void flushStat() throws IOException {
         getSftpSession().setStat(relPath, getFileAttrs());
+    }
+
+    @Override
+    protected boolean doIsHidden() throws Exception {
+        if(exists()){
+            if(isFolder()){
+                return true;
+            }else{
+                String[] segments =Strings.split(relPath,"/");
+                String name = segments[segments.length-1];
+                if(name.startsWith(".") && !name.startsWith("..")){
+                    return true;
+                }
+                return false;
+            }
+        }
+        return false;
+    }
+
+
+    protected boolean doIsSameFile(final FileObject destFile) throws FileSystemException {
+        if(destFile.getFileSystem() == this.getFileSystem() && (destFile instanceof SftpFileObject)){
+            SftpFileObject dest = (SftpFileObject)destFile;
+            return this.relPath.equals(dest.relPath);
+        }
+        return false;
     }
 
     @Override

@@ -35,13 +35,15 @@ public class AgilewaySftpProviderTests {
 
     void showFile(int ident, FileObject fileObject) throws Throwable {
         if (fileObject.isFile()) {
-            System.out.println(Strings.repeat("\t", ident) + " " + fileObject + " " + fileObject.getContent().getSize());
+            System.out.println(Strings.repeat("\t", ident) + " " + fileObject + " " + fileObject.getContent().getSize() + " " + fileObject.isHidden());
         } else {
-            FileObject[] children = fileObject.getChildren();
-            System.out.println(Strings.repeat("\t", ident) + " " + fileObject);
-            int childIdent = ident + 1;
-            for (int i = 0; i < children.length; i++) {
-                showFile(childIdent, children[i]);
+            if(fileObject.isFolder()) {
+                FileObject[] children = fileObject.getChildren();
+                System.out.println(Strings.repeat("\t", ident) + " " + fileObject);
+                int childIdent = ident + 1;
+                for (int i = 0; i < children.length; i++) {
+                    showFile(childIdent, children[i]);
+                }
             }
         }
     }
