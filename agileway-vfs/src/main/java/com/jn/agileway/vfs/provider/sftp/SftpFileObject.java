@@ -244,6 +244,12 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
 
     @Override
     public String toString() {
-        return relPath + " " + fileAttrs ;
+        FileAttrs attrs = null;
+        try {
+            attrs = getFileAttrs();
+        } catch (Throwable ex) {
+            // ignore it
+        }
+        return relPath + " " + attrs;
     }
 }
