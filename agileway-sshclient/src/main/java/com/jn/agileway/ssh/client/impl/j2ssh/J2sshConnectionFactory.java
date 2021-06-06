@@ -2,6 +2,7 @@ package com.jn.agileway.ssh.client.impl.j2ssh;
 
 import com.jn.agileway.ssh.client.AbstractSshConnectionFactory;
 import com.jn.agileway.ssh.client.SshConnection;
+import com.jn.agileway.ssh.client.SshConnectionConfig;
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.impl.j2ssh.verifier.FromJ2ssHostKeyVerifier;
 import com.jn.agileway.ssh.client.impl.j2ssh.verifier.KnownHostsVerifier;
@@ -13,6 +14,10 @@ import java.io.File;
 import java.util.List;
 
 public class J2sshConnectionFactory extends AbstractSshConnectionFactory<J2sshConnectionConfig> {
+
+    public J2sshConnectionFactory(){
+        setName("j2ssh");
+    }
 
     @Override
     protected Class<?> getDefaultConnectionClass() {
@@ -40,4 +45,11 @@ public class J2sshConnectionFactory extends AbstractSshConnectionFactory<J2sshCo
         }
         connection.addHostKeyVerifier(new FromJ2ssHostKeyVerifier(verifier));
     }
+
+    @Override
+    public J2sshConnectionConfig newConfig() {
+        return new J2sshConnectionConfig();
+    }
+
+
 }

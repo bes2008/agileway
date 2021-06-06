@@ -1,0 +1,5 @@
+com.jn.agileway.ssh.client.impl.sshj.SshjConnectionFactory
+com.jn.agileway.ssh.client.impl.trileadssh2.Ssh2ConnectionFactory
+com.jn.agileway.ssh.client.impl.ganymedssh2.Ssh2ConnectionFactory
+com.jn.agileway.ssh.client.impl.jsch.JschConnectionFactory
+com.jn.agileway.ssh.client.impl.j2ssh.J2sshConnectionFactory

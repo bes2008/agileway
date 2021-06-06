@@ -15,6 +15,8 @@ public abstract class AbstractSshConnection<CONF extends SshConnectionConfig> im
     protected CONF sshConfig;
     private SshConnectionStatus status = SshConnectionStatus.INITIALING;
     protected AnyHostKeyVerifier hostKeyVerifier = new AnyHostKeyVerifier();
+    private int uid = -1;
+    private int[] groupIds;
 
     @Override
     public String getId() {
@@ -103,4 +105,26 @@ public abstract class AbstractSshConnection<CONF extends SshConnectionConfig> im
     }
 
     protected abstract void doClose() throws IOException;
+
+    @Override
+    public int getUid() {
+        if (uid < 0 || groupIds == null) {
+            refreshUidGroupIds();
+        }
+        return uid;
+    }
+
+    @Override
+    public int[] getGroupIds() {
+        if (uid < 0 || groupIds == null) {
+            refreshUidGroupIds();
+        }
+        return groupIds;
+    }
+
+    @Override
+    public final void refreshUidGroupIds() {
+        uid = SshClients.getUid(this);
+        groupIds = SshClients.getGroupIds(this);
+    }
 }

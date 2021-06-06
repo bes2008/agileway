@@ -161,4 +161,5 @@ public class AbstractSshConnectionConfig implements SshConnectionConfig {
         }
         return this.props.containsKey(property);
     }
+
 }

@@ -97,7 +97,7 @@ class SshjSftps {
         }
         FileAttrs attrs = new FileAttrs();
 
-        if (attributes.getSize() != 0L) {
+        if (attributes.getSize() >= 0L) {
             attrs.setSize(attributes.getSize());
         }
 

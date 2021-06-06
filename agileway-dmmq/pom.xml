@@ -10,6 +10,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>agileway-dmmq</artifactId>
+
+    <name>${groupId}:${artifactId}:${version}</name>
+
     <description>a memory message queue based on disruptor</description>
     <properties>
         <disruptor.version>3.4.2</disruptor.version>

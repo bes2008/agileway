@@ -105,6 +105,7 @@ public class Ssh2Connection extends AbstractSshConnection<Ssh2ConnectionConfig> 
         try {
             SFTPv3Client sftpClient = new SFTPv3Client(this.delegate);
             Ssh2SftpSession session = new Ssh2SftpSession(sftpClient);
+            session.setSshConnection(this);
             return session;
         } catch (Throwable ex) {
             throw new SshException(ex.getMessage(), ex);

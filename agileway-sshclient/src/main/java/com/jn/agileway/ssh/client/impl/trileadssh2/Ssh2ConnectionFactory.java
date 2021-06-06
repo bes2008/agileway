@@ -10,6 +10,11 @@ import java.io.File;
 import java.util.List;
 
 public class Ssh2ConnectionFactory extends AbstractSshConnectionFactory<Ssh2ConnectionConfig> {
+
+    public Ssh2ConnectionFactory(){
+        setName("trileadssh2");
+    }
+
     @Override
     protected Class<?> getDefaultConnectionClass() {
         return Ssh2Connection.class;
@@ -27,5 +32,10 @@ public class Ssh2ConnectionFactory extends AbstractSshConnectionFactory<Ssh2Conn
             KnownHostsVerifier verifier = new KnownHostsVerifier(paths);
             connection.addHostKeyVerifier(new FromSsh2HostKeyVerifierAdapter(verifier));
         }
+    }
+
+    @Override
+    public Ssh2ConnectionConfig newConfig() {
+        return new Ssh2ConnectionConfig();
     }
 }

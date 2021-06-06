@@ -158,4 +158,10 @@ public interface SshConnection<CONF extends SshConnectionConfig> extends Closeab
     Channel openForwardChannel() throws SshException;
 
     SftpSession openSftpSession() throws SshException;
+
+    int getUid();
+
+    int[] getGroupIds();
+
+    void refreshUidGroupIds();
 }

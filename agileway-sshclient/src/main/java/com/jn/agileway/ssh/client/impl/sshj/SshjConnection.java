@@ -185,7 +185,9 @@ public class SshjConnection extends AbstractSshConnection<SshjConnectionConfig> 
     public SftpSession openSftpSession() throws SshException {
         try {
             SFTPClient client = sshClient.newSFTPClient();
-            return new SshjSftpSession(client);
+            SshjSftpSession session= new SshjSftpSession(client);
+            session.setSshConnection(this);
+            return session;
         } catch (Throwable ex) {
             throw new SshException(ex);
         }

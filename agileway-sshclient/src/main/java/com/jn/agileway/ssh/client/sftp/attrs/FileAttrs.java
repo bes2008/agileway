@@ -141,6 +141,13 @@ public class FileAttrs {
         return false;
     }
 
+    public FileType getFileType() {
+        if (this.fileMode != null) {
+            return this.fileMode.getType();
+        }
+        return FileType.UNKNOWN;
+    }
+
     @Override
     public String toString() {
         // https://www.cnblogs.com/gezp/p/12875219.html
@@ -164,9 +171,8 @@ public class FileAttrs {
             builder.append(this.size).append(" ");
         }
 
-        if(this.mtime!=null){
-            builder.append(Dates.format(new Date(this.mtime * 1000), Dates.yyyy_MM_dd_HH_mm_ss))
-                    .append(" ");
+        if (this.mtime != null) {
+            builder.append(Dates.format(new Date(this.mtime * 1000L), Dates.yyyy_MM_dd_HH_mm_ss));
 
         }
 

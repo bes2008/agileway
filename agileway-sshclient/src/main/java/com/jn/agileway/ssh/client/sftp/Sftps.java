@@ -10,9 +10,12 @@ import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.function.Function;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.io.file.Files;
+import com.jn.langx.util.io.file.PosixFilePermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +40,7 @@ public class Sftps {
             FileAttrs fileAttrs = session.stat(filepath);
             return fileAttrs.getFileMode().getType();
         } catch (NoSuchFileSftpException ex) {
-            return null;
+            return FileType.UNKNOWN;
         } finally {
             IOs.close(file);
         }
@@ -280,5 +283,37 @@ public class Sftps {
         session.setStat(path, attrs2);
     }
 
+    public static List<String> children(final SftpSession session, String directory) throws IOException {
+        return Pipeline.of(session.listFiles(directory))
+                .map(new Function<SftpResourceInfo, String>() {
+                    @Override
+                    public String apply(SftpResourceInfo resourceInfo) {
+                        return resourceInfo.getName();
+                    }
+                }).asList();
+    }
 
+    public static PosixFilePermissions getPosixPermission(SftpFile sftpFile) throws IOException {
+        FileAttrs attrs = sftpFile.getAttributes();
+
+        int[] groupIds = sftpFile.getSession().getSshConnection().getGroupIds();
+        boolean inGroup = Collects.newArrayList(groupIds).contains(attrs.getGid());
+
+        int uid = sftpFile.getSession().getSshConnection().getUid();
+        boolean isOwner = attrs.getUid() == uid;
+
+        return new PosixFilePermissions(attrs.getFileMode().getPermissionsMask(), isOwner, inGroup);
+    }
+
+    public static boolean isReadable(SftpFile sftpFile) throws IOException {
+        return getPosixPermission(sftpFile).isReadable();
+    }
+
+    public static boolean isWritable(SftpFile sftpFile) throws IOException {
+        return getPosixPermission(sftpFile).isWritable();
+    }
+
+    public static boolean isExecutable(SftpFile sftpFile) throws IOException {
+        return getPosixPermission(sftpFile).isExecutable();
+    }
 }
