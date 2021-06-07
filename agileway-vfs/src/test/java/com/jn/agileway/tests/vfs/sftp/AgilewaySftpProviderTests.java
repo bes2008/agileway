@@ -22,7 +22,7 @@ public class AgilewaySftpProviderTests {
     public void testListChildren() throws Throwable {
         DefaultFileSystemManager fileSystemManager = (DefaultFileSystemManager) VFS.getManager();
 
-        String url = "sftp://fangjinuo:fjn13570@192.168.1.70:22/vfs_sftp_test";
+        String url = "sftp://fangjinuo:fjn13570@192.168.1.70:22/test2/vfs_sftp_test";
 
 
         FileSystemOptions fileSystemOptions = new FileSystemOptions();
@@ -31,13 +31,28 @@ public class AgilewaySftpProviderTests {
 
         FileObject fileObject = fileSystemManager.resolveFile(url, fileSystemOptions);
         showFile(0, fileObject);
+        System.out.println("=============================");
+
 
         url ="file://d:/tmp002";
         FileObject localFileObject = fileSystemManager.resolveFile(url);
         if(!localFileObject.exists()){
             localFileObject.createFolder();
+        }else{
+            localFileObject.delete(Selectors.EXCLUDE_SELF);
         }
         localFileObject.copyFrom(fileObject, Selectors.EXCLUDE_SELF);
+
+
+        System.out.println("=============================");
+        url = "sftp://fangjinuo:fjn13570@192.168.1.70:22/test2/vfs_sftp_test2";
+        fileObject = fileSystemManager.resolveFile(url, fileSystemOptions);
+        if(!fileObject.exists()){
+            fileObject.createFolder();
+        }else{
+            fileObject.delete(Selectors.EXCLUDE_SELF);
+        }
+        fileObject.copyFrom(localFileObject, Selectors.SELECT_ALL);
     }
 
     void showFile(int ident, FileObject fileObject) throws Throwable {
