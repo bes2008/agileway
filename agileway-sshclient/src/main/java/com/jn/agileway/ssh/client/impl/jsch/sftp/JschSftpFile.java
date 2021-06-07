@@ -24,7 +24,6 @@ public class JschSftpFile extends SftpFile {
         try {
             inputStream = channel.get(this.path, null, fileOffset);
             int readLength = inputStream.read(buffer, bufferOffset, length);
-            IOs.close(inputStream);
             return readLength;
         } catch (Throwable ex) {
             throw new SftpException(ex);

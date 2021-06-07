@@ -50,7 +50,8 @@ public class SftpFileInputStream extends InputStream {
                 return -1;
             }
         }
-        return byteBuffer.get();
+        int v = byteBuffer.get();
+        return v < 0 ? (v + 256) : v;
     }
 
 

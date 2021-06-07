@@ -21,25 +21,30 @@
             <groupId>com.github.fangjinuo.agileway</groupId>
             <artifactId>agileway-sshclient</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.55</version>
+            <scope>test</scope>
+        </dependency>
 
         <!--
-                <dependency>
-                    <groupId>net.schmizz</groupId>
-                    <artifactId>sshj</artifactId>
-                    <version>0.10.0</version>
-                    <optional>true</optional>
-                </dependency>
+               <dependency>
+                   <groupId>net.schmizz</groupId>
+                   <artifactId>sshj</artifactId>
+                   <version>0.10.0</version>
+                           <scope>test</scope>
+               </dependency>
 
-         -->
 
-                <dependency>
-                    <groupId>com.jcraft</groupId>
-                    <artifactId>jsch</artifactId>
-                    <version>0.1.55</version>
+
+        <dependency>
+            <groupId>com.trilead</groupId>
+            <artifactId>trilead-ssh2</artifactId>
+            <version>1.0.0-build222</version>
                     <scope>test</scope>
-                </dependency>
-
-
+        </dependency>
+-->
 
     </dependencies>
 </project>

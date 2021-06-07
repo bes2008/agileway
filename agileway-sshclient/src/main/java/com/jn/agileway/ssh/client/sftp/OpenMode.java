@@ -45,7 +45,7 @@ public enum OpenMode implements CommonEnum {
     APPEND(0x0e, "a", "append"),
 
     /**
-     * read/write (w+):
+     * read/write (r+):
      * Open a file for update (both for input and output).
      * The stream is positioned at the beginning of the file.
      * The file must exist.

@@ -2,6 +2,7 @@ package com.jn.agileway.tests.vfs.sftp;
 
 import com.jn.agileway.vfs.provider.AgilewayVFSManagerBootstrap;
 import com.jn.agileway.vfs.provider.sftp.SftpFileSystemConfigBuilder;
+import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemOptions;
@@ -36,12 +37,20 @@ public class AgilewaySftpProviderTests {
 
         url ="file://d:/tmp002";
         FileObject localFileObject = fileSystemManager.resolveFile(url);
-        if(!localFileObject.exists()){
-            localFileObject.createFolder();
+        if(fileObject.isFolder()) {
+            if (!localFileObject.exists()) {
+                localFileObject.createFolder();
+            } else {
+                localFileObject.delete(Selectors.EXCLUDE_SELF);
+            }
+            localFileObject.copyFrom(fileObject, Selectors.EXCLUDE_SELF);
         }else{
-            localFileObject.delete(Selectors.EXCLUDE_SELF);
+            // 单独测试 文件时，将上面的 url 改成一个 文件的url即可
+            long writeSize= fileObject.getContent().write(localFileObject);
+            long expectedSize= fileObject.getContent().getSize();
+            Preconditions.checkTrue(writeSize==expectedSize);
+            // localFileObject.copyFrom(fileObject, Selectors.SELECT_SELF);
         }
-        localFileObject.copyFrom(fileObject, Selectors.EXCLUDE_SELF);
 
 
         System.out.println("=============================");
@@ -53,6 +62,7 @@ public class AgilewaySftpProviderTests {
             fileObject.delete(Selectors.EXCLUDE_SELF);
         }
         fileObject.copyFrom(localFileObject, Selectors.SELECT_ALL);
+
     }
 
     void showFile(int ident, FileObject fileObject) throws Throwable {
