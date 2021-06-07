@@ -69,7 +69,7 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
 
     @Override
     protected void doAttach() throws Exception {
-        getFileAttrs();
+        // ignore it
     }
 
     @Override

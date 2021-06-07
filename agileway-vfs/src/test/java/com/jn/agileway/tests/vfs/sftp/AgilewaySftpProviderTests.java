@@ -31,37 +31,38 @@ public class AgilewaySftpProviderTests {
         configBuilder.setUserDirIsRoot(fileSystemOptions, true);
 
         FileObject fileObject = fileSystemManager.resolveFile(url, fileSystemOptions);
+        System.out.println("===============Show remote directory==============");
         showFile(0, fileObject);
-        System.out.println("=============================");
+        System.out.println("===============Copy remote files to local==============");
 
 
-        url ="file://d:/tmp002";
+        url = "file://d:/tmp002";
         FileObject localFileObject = fileSystemManager.resolveFile(url);
-        if(fileObject.isFolder()) {
+        if (fileObject.isFolder()) {
             if (!localFileObject.exists()) {
                 localFileObject.createFolder();
             } else {
                 localFileObject.delete(Selectors.EXCLUDE_SELF);
             }
             localFileObject.copyFrom(fileObject, Selectors.EXCLUDE_SELF);
-        }else{
+        } else {
             // 单独测试 文件时，将上面的 url 改成一个 文件的url即可
-            long writeSize= fileObject.getContent().write(localFileObject);
-            long expectedSize= fileObject.getContent().getSize();
-            Preconditions.checkTrue(writeSize==expectedSize);
-            // localFileObject.copyFrom(fileObject, Selectors.SELECT_SELF);
+            long writeSize = fileObject.getContent().write(localFileObject);
+            long expectedSize = fileObject.getContent().getSize();
+            Preconditions.checkTrue(writeSize == expectedSize);
+            localFileObject.copyFrom(fileObject, Selectors.SELECT_SELF);
         }
 
 
-        System.out.println("=============================");
+        System.out.println("================Copy local files to remote=============");
         url = "sftp://fangjinuo:fjn13570@192.168.1.70:22/test2/vfs_sftp_test2";
         fileObject = fileSystemManager.resolveFile(url, fileSystemOptions);
-        if(!fileObject.exists()){
+        if (!fileObject.exists()) {
             fileObject.createFolder();
-        }else{
+        } else {
             fileObject.delete(Selectors.EXCLUDE_SELF);
         }
-        fileObject.copyFrom(localFileObject, Selectors.SELECT_ALL);
+        fileObject.copyFrom(localFileObject, Selectors.EXCLUDE_SELF);
 
     }
 
@@ -69,7 +70,7 @@ public class AgilewaySftpProviderTests {
         if (fileObject.isFile()) {
             System.out.println(Strings.repeat("\t", ident) + " |--" + fileObject + " " + fileObject.getContent().getSize() + " " + fileObject.isHidden());
         } else {
-            if(fileObject.isFolder()) {
+            if (fileObject.isFolder()) {
                 FileObject[] children = fileObject.getChildren();
                 System.out.println(Strings.repeat("\t", ident) + " |--" + fileObject);
                 int childIdent = ident + 1;
