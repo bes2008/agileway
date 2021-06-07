@@ -53,7 +53,7 @@ public class Ssh2SftpSession extends AbstractSftpSession {
     @Override
     public SftpFile open(String filepath, int openMode, FileAttrs attrs) throws IOException {
         SFTPv3FileHandle handle = null;
-        if (!Sftps.exist(this, filepath)) {
+        if (!Sftps.exists(this, filepath)) {
             if (attrs == null) {
                 attrs = new FileAttrs();
 

@@ -46,8 +46,8 @@ public class Sftps {
         }
     }
 
-    public static boolean exist(SftpSession session, String filepath) throws IOException {
-        return exist(session, filepath, null);
+    public static boolean exists(SftpSession session, String filepath) throws IOException {
+        return exists(session, filepath, null);
     }
 
     /**
@@ -58,7 +58,7 @@ public class Sftps {
      * @return
      * @throws IOException
      */
-    public static boolean exist(SftpSession session, String filepath, FileType fileType) throws IOException {
+    public static boolean exists(SftpSession session, String filepath, FileType fileType) throws IOException {
         FileType type = getFileType(session, filepath);
         if (fileType == null) {
             return type != null;
@@ -75,7 +75,7 @@ public class Sftps {
      * @throws IOException
      */
     public static boolean existFile(SftpSession session, String filepath) throws IOException {
-        return exist(session, filepath, FileType.REGULAR);
+        return exists(session, filepath, FileType.REGULAR);
     }
 
     /**
@@ -87,7 +87,7 @@ public class Sftps {
      * @throws IOException
      */
     public static boolean existDirectory(SftpSession session, String directoryPath) throws IOException {
-        return exist(session, directoryPath, FileType.DIRECTORY);
+        return exists(session, directoryPath, FileType.DIRECTORY);
     }
 
     public static void remove(SftpSession session, String path) throws IOException {

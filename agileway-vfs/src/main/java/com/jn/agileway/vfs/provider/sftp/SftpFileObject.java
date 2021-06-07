@@ -239,10 +239,11 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
     @Override
     protected OutputStream doGetOutputStream(boolean bAppend) throws Exception {
         try {
-            SftpFile sftpFile = getSftpSession().open(relPath, OpenMode.APPEND, fileAttrs);
             if (bAppend) {
+                SftpFile sftpFile = getSftpSession().open(relPath, OpenMode.APPEND, fileAttrs);
                 return new SftpFileOutputStream(sftpFile, -1, fileAttrs.getSize());
             } else {
+                SftpFile sftpFile = getSftpSession().open(relPath, OpenMode.WRITE, fileAttrs);
                 return new SftpFileOutputStream(sftpFile);
             }
         } catch (IOException ex) {
