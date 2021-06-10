@@ -1,8 +1,8 @@
 package com.jn.agileway.codec.serialization.xson;
 
-import com.jn.agileway.codec.CodecException;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.codec.CodecException;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.reflect.Reflects;

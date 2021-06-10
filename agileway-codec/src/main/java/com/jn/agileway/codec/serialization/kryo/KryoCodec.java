@@ -2,7 +2,7 @@ package com.jn.agileway.codec.serialization.kryo;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.jn.agileway.codec.AbstractCodec;
-import com.jn.agileway.codec.CodecException;
+import com.jn.langx.codec.CodecException;
 import com.jn.langx.util.Emptys;
 
 public class KryoCodec<T> extends AbstractCodec<T> {

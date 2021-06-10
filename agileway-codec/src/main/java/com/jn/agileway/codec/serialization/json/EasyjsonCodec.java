@@ -1,10 +1,10 @@
 package com.jn.agileway.codec.serialization.json;
 
 import com.jn.agileway.codec.AbstractCodec;
-import com.jn.agileway.codec.CodecException;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
 import com.jn.easyjson.core.factory.JsonScope;
+import com.jn.langx.codec.CodecException;
 import com.jn.langx.util.ClassLoaders;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.io.Charsets;

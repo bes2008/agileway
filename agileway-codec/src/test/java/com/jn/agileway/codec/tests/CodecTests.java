@@ -1,7 +1,6 @@
 package com.jn.agileway.codec.tests;
 
 import com.jn.agileway.codec.Codec;
-import com.jn.agileway.codec.CodecException;
 import com.jn.agileway.codec.serialization.cbor.CborJacksonCodec;
 import com.jn.agileway.codec.serialization.fse.FseCodec;
 import com.jn.agileway.codec.serialization.fst.FstCodec;
@@ -13,6 +12,7 @@ import com.jn.agileway.codec.serialization.kryo.KryoCodec;
 import com.jn.agileway.codec.serialization.msgpack.MsgPackCodec;
 import com.jn.agileway.codec.serialization.protostuff.ProtostuffCodec;
 import com.jn.agileway.codec.serialization.xson.XsonCodec;
+import com.jn.langx.codec.CodecException;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -2,10 +2,10 @@ package com.jn.agileway.codec.serialization.fse;
 
 import com.jfireframework.fse.ByteArray;
 import com.jfireframework.fse.Fse;
-import com.jn.agileway.codec.CodecException;
 import com.jn.agileway.codec.serialization.fst.Fsts;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.codec.CodecException;
 import com.jn.langx.factory.Factory;
 import com.jn.langx.factory.ThreadLocalFactory;
 import com.jn.langx.text.StringTemplates;

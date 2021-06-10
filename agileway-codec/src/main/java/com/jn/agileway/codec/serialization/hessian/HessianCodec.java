@@ -2,7 +2,7 @@ package com.jn.agileway.codec.serialization.hessian;
 
 
 import com.jn.agileway.codec.AbstractCodec;
-import com.jn.agileway.codec.CodecException;
+import com.jn.langx.codec.CodecException;
 
 import java.io.IOException;
 
