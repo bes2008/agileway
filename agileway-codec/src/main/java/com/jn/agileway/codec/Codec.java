@@ -5,6 +5,11 @@ import com.jn.langx.codec.CodecException;
 import com.jn.langx.codec.ICodec;
 
 public interface Codec<T> extends ICodec<T> {
+    @Override
+    T decode(byte[] bytes) throws CodecException;
+
+    @Override
+    byte[] encode(T t) throws CodecException;
 
     @Nullable
     T decode(@Nullable byte[] bytes, Class<T> targetType) throws CodecException;
