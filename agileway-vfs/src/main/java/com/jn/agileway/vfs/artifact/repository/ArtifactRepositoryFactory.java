@@ -5,7 +5,7 @@ import com.jn.langx.registry.Registry;
 public interface ArtifactRepositoryFactory{
     void setArtifactRepositoryLayoutRegistry(Registry<String, ArtifactRepositoryLayout> registry);
 
-    Registry<String, ArtifactRepositoryLayout> getRegistry();
+    Registry<String, ArtifactRepositoryLayout> getLayoutRegistry();
 
     ArtifactRepository get(ArtifactRepositoryProperties props);
 }
