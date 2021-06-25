@@ -26,7 +26,7 @@ public class DefaultArtifactRepositoryFactory extends GenericRegistry<ArtifactRe
         repository.setName(props.getName());
         repository.setUrl(props.getUrl());
         ArtifactRepositoryLayout layout = layoutRegistry.get(props.getLayout());
-        Preconditions.checkNotNull(layout);
+        Preconditions.checkNotNull(layout,"Can't find the specified layout: {} for the artifact repository ()", props.getLayout(), props.getName());
         repository.setLayout(layout);
         register(repository);
         return repository;
