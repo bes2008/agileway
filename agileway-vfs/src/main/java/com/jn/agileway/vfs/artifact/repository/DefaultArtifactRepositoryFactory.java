@@ -1,10 +1,11 @@
 package com.jn.agileway.vfs.artifact.repository;
 
 
+import com.jn.langx.registry.GenericRegistry;
 import com.jn.langx.registry.Registry;
 import com.jn.langx.util.Preconditions;
 
-public class DefaultArtifactRepositoryFactory implements ArtifactRepositoryFactory {
+public class DefaultArtifactRepositoryFactory extends GenericRegistry<ArtifactRepository> implements ArtifactRepositoryFactory {
     private Registry<String, ArtifactRepositoryLayout> registry;
 
     @Override
@@ -27,6 +28,7 @@ public class DefaultArtifactRepositoryFactory implements ArtifactRepositoryFacto
         ArtifactRepositoryLayout layout = registry.get(props.getName());
         Preconditions.checkNotNull(layout);
         repository.setLayout(layout);
+        register(repository);
         return repository;
     }
 }

@@ -75,15 +75,15 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
         return null;
     }
 
-    public void setSrcArtifactRepositories(List<ArtifactRepository> srcArtifactRepositories) {
-        this.srcArtifactRepositories = srcArtifactRepositories;
+    public void setSrcArtifactRepositories(List<ArtifactRepository> srouces) {
+        this.srcArtifactRepositories = srouces;
     }
 
-    public void setDestArtifactRepository(ArtifactRepository destArtifactRepository) {
-        this.destArtifactRepository = destArtifactRepository;
+    public void setDestArtifactRepository(ArtifactRepository dest) {
+        this.destArtifactRepository = dest;
     }
 
-    public void addSourceArtifactRepository(ArtifactRepository remote) {
-        this.srcArtifactRepositories.add(remote);
+    public void addSourceArtifactRepository(ArtifactRepository source) {
+        this.srcArtifactRepositories.add(source);
     }
 }

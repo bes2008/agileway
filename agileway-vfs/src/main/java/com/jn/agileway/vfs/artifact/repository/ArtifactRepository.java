@@ -1,13 +1,11 @@
 package com.jn.agileway.vfs.artifact.repository;
 
 import com.jn.agileway.vfs.artifact.Artifact;
+import com.jn.langx.Named;
 
-public interface ArtifactRepository {
+public interface ArtifactRepository extends Named {
     String getId();
     void setId(String id);
-
-    String getName();
-    void setName(String name);
 
     String getUrl();
     void setUrl(String url);
