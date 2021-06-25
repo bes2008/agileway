@@ -19,20 +19,20 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
     private static final Logger logger = LoggerFactory.getLogger(SynchronizedArtifactManager.class);
 
     @Nullable
-    private List<ArtifactRepository> srcArtifactRepositories;
+    private List<ArtifactRepository> sources;
 
     @NonNull
-    private ArtifactRepository destArtifactRepository;
+    private ArtifactRepository destination;
 
 
     public FileObject getArtifactFile(final Artifact artifact) {
         try {
-            String localPath = destArtifactRepository.getPath(artifact);
+            String localPath = destination.getPath(artifact);
             FileObject localFileObject = getFileSystemManager().resolveFile(localPath);
             if (!localFileObject.exists()) {
-                if (Objs.isNotEmpty(srcArtifactRepositories)) {
+                if (Objs.isNotEmpty(sources)) {
                     final Holder<FileObject> remoteFileObjHolder = new Holder<FileObject>();
-                    Collects.forEach(srcArtifactRepositories, new Predicate<ArtifactRepository>() {
+                    Collects.forEach(sources, new Predicate<ArtifactRepository>() {
                                 @Override
                                 public boolean test(ArtifactRepository repository) {
                                     return repository.isEnabled();
@@ -75,15 +75,15 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
         return null;
     }
 
-    public void setSrcArtifactRepositories(List<ArtifactRepository> srouces) {
-        this.srcArtifactRepositories = srouces;
+    public void setSources(List<ArtifactRepository> sources) {
+        this.sources = sources;
     }
 
-    public void setDestArtifactRepository(ArtifactRepository dest) {
-        this.destArtifactRepository = dest;
+    public void setDestination(ArtifactRepository dest) {
+        this.destination = dest;
     }
 
-    public void addSourceArtifactRepository(ArtifactRepository source) {
-        this.srcArtifactRepositories.add(source);
+    public void addSource(ArtifactRepository source) {
+        this.sources.add(source);
     }
 }
