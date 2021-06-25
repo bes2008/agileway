@@ -5,6 +5,7 @@ public class ArtifactRepositoryProperties {
     private String url;
     private String basedir;
     private boolean enabled;
+    private String layout;
 
     public String getName() {
         return name;
@@ -36,5 +37,13 @@ public class ArtifactRepositoryProperties {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getLayout() {
+        return layout;
+    }
+
+    public void setLayout(String layout) {
+        this.layout = layout;
     }
 }
