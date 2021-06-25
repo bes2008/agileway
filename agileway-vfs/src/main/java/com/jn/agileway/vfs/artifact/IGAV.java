@@ -7,7 +7,7 @@ public interface IGAV {
 
     String getVersion();
 
-    void setGroup(String groupId);
+    void setGroupId(String groupId);
 
     void setArtifactId(String artifactId);
 
