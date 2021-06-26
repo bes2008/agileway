@@ -35,6 +35,9 @@ public class RestServiceProvider implements Initializable {
     private volatile boolean inited = false;
     private ConcurrentHashMap<Class, Object> serviceMap = new ConcurrentHashMap<Class, Object>();
     private JSONFactory jsonFactory;
+    /**
+     * 如果项目中，没有对返回值进行统一处理，则可以设置为 Object.class
+     */
     private Class unifiedRestResponseClass = RestRespBody.class;
     private boolean unifiedRestResponseEnabled = true;
 

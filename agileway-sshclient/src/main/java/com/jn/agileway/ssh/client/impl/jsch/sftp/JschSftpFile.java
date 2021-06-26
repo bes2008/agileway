@@ -5,10 +5,11 @@ import com.jn.agileway.ssh.client.sftp.SftpFile;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.exception.SftpException;
-import com.jn.langx.io.stream.ByteArrayOutputStream;
+import com.jn.langx.util.io.IOs;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class JschSftpFile extends SftpFile {
 
@@ -19,13 +20,15 @@ public class JschSftpFile extends SftpFile {
     @Override
     public int read(long fileOffset, byte[] buffer, int bufferOffset, int length) throws IOException {
         ChannelSftp channel = ((JschSftpSession) this.session).getChannel();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream(length);
+        InputStream inputStream = null;
         try {
-            channel.get(this.path, stream, null, ChannelSftp.RESUME, fileOffset);
-            stream.write(buffer, bufferOffset, length);
-            return length;
+            inputStream = channel.get(this.path, null, fileOffset);
+            int readLength = inputStream.read(buffer, bufferOffset, length);
+            return readLength;
         } catch (Throwable ex) {
             throw new SftpException(ex);
+        } finally {
+            IOs.close(inputStream);
         }
     }
 

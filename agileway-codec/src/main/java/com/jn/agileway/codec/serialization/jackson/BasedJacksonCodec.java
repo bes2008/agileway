@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.jn.agileway.codec.AbstractCodec;
-import com.jn.agileway.codec.CodecException;
+import com.jn.langx.codec.CodecException;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Emptys;
 

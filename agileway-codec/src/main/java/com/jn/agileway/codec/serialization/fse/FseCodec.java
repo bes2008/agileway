@@ -1,7 +1,7 @@
 package com.jn.agileway.codec.serialization.fse;
 
 import com.jn.agileway.codec.AbstractCodec;
-import com.jn.agileway.codec.CodecException;
+import com.jn.langx.codec.CodecException;
 
 public class FseCodec<T> extends AbstractCodec<T> {
 

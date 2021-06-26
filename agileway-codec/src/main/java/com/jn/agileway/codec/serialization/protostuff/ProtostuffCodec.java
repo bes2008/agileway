@@ -1,7 +1,7 @@
 package com.jn.agileway.codec.serialization.protostuff;
 
 import com.jn.agileway.codec.AbstractCodec;
-import com.jn.agileway.codec.CodecException;
+import com.jn.langx.codec.CodecException;
 import com.jn.langx.util.reflect.Reflects;
 
 public class ProtostuffCodec<T> extends AbstractCodec<T> {

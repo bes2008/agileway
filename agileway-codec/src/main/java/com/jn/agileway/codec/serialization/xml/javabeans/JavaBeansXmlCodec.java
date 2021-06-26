@@ -1,7 +1,7 @@
 package com.jn.agileway.codec.serialization.xml.javabeans;
 
 import com.jn.agileway.codec.AbstractCodec;
-import com.jn.agileway.codec.CodecException;
+import com.jn.langx.codec.CodecException;
 import com.jn.langx.util.reflect.type.Primitives;
 
 import java.beans.XMLDecoder;

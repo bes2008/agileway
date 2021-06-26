@@ -1,7 +1,7 @@
 package com.jn.agileway.codec.serialization.jdk;
 
 import com.jn.agileway.codec.AbstractCodec;
-import com.jn.agileway.codec.CodecException;
+import com.jn.langx.codec.CodecException;
 import com.jn.langx.util.io.ObjectIOs;
 
 import java.io.IOException;

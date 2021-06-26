@@ -1,7 +1,7 @@
 package com.jn.agileway.codec.serialization.xson;
 
 import com.jn.agileway.codec.AbstractCodec;
-import com.jn.agileway.codec.CodecException;
+import com.jn.langx.codec.CodecException;
 
 public class XsonCodec<T> extends AbstractCodec<T> {
     @Override

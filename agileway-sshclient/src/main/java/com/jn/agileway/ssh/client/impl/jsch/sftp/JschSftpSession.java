@@ -62,7 +62,7 @@ public class JschSftpSession extends AbstractSftpSession {
 
     @Override
     public SftpFile open(String filepath, int openMode, FileAttrs attrs) throws IOException {
-        if (!Sftps.exist(this, filepath)) {
+        if (!Sftps.exists(this, filepath)) {
             if (OpenMode.isCreatable(openMode)) {
                 // 创建文件
                 try {

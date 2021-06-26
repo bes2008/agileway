@@ -3,6 +3,7 @@ package com.jn.agileway.vfs.provider.sftp;
 import com.jn.agileway.ssh.client.sftp.*;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.attrs.FileMode;
+import com.jn.agileway.ssh.client.sftp.exception.NoSuchFileSftpException;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.io.file.FilePermission;
@@ -19,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.NoSuchFileException;
 import java.util.List;
 
 public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
@@ -42,11 +44,7 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
 
     private FileAttrs getFileAttrs() throws IOException {
         if (this.fileAttrs == null) {
-            try {
-                fileAttrs = getSftpSession().stat(relPath);
-            } catch (FileNotFoundException ex) {
-                fileAttrs = null;
-            }
+            fileAttrs = getSftpSession().stat(relPath);
         }
         return fileAttrs;
     }
@@ -57,8 +55,21 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
     }
 
     @Override
+    public FileType getType() throws FileSystemException {
+        try {
+            return super.getType();
+        } catch (FileSystemException ex) {
+            Throwable cause = ex.getCause();
+            if ((cause instanceof NoSuchFileSftpException) || (cause instanceof FileNotFoundException) || (cause instanceof NoSuchFileException)) {
+                return FileType.IMAGINARY;
+            }
+            throw ex;
+        }
+    }
+
+    @Override
     protected void doAttach() throws Exception {
-        getFileAttrs();
+        // ignore it
     }
 
     @Override
@@ -68,7 +79,11 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
 
     @Override
     protected void doDelete() throws Exception {
-        getSftpSession().rm(relPath);
+        if(isFile()){
+            getSftpSession().rm(relPath);
+        }else{
+            getSftpSession().rmdir(relPath);
+        }
     }
 
     @Override
@@ -108,13 +123,13 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
 
     @Override
     protected boolean doIsHidden() throws Exception {
-        if(exists()){
-            if(isFolder()){
+        if (exists()) {
+            if (isFolder()) {
                 return true;
-            }else{
-                String[] segments =Strings.split(relPath,"/");
-                String name = segments[segments.length-1];
-                if(name.startsWith(".") && !name.startsWith("..")){
+            } else {
+                String[] segments = Strings.split(relPath, "/");
+                String name = segments[segments.length - 1];
+                if (name.startsWith(".") && !name.startsWith("..")) {
                     return true;
                 }
                 return false;
@@ -125,8 +140,8 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
 
 
     protected boolean doIsSameFile(final FileObject destFile) throws FileSystemException {
-        if(destFile.getFileSystem() == this.getFileSystem() && (destFile instanceof SftpFileObject)){
-            SftpFileObject dest = (SftpFileObject)destFile;
+        if (destFile.getFileSystem() == this.getFileSystem() && (destFile instanceof SftpFileObject)) {
+            SftpFileObject dest = (SftpFileObject) destFile;
             return this.relPath.equals(dest.relPath);
         }
         return false;
@@ -224,10 +239,11 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
     @Override
     protected OutputStream doGetOutputStream(boolean bAppend) throws Exception {
         try {
-            SftpFile sftpFile = getSftpSession().open(relPath, OpenMode.APPEND, fileAttrs);
             if (bAppend) {
+                SftpFile sftpFile = getSftpSession().open(relPath, OpenMode.APPEND, fileAttrs);
                 return new SftpFileOutputStream(sftpFile, -1, fileAttrs.getSize());
             } else {
+                SftpFile sftpFile = getSftpSession().open(relPath, OpenMode.WRITE, fileAttrs);
                 return new SftpFileOutputStream(sftpFile);
             }
         } catch (IOException ex) {

@@ -3,9 +3,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>agileway</artifactId>
         <groupId>com.github.fangjinuo.agileway</groupId>
-        <version>2.5.0</version>
+        <artifactId>agileway</artifactId>
+        <version>2.5.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -22,14 +22,12 @@
             <artifactId>agileway-sshclient</artifactId>
         </dependency>
 
-
         <dependency>
-            <groupId>net.schmizz</groupId>
-            <artifactId>sshj</artifactId>
-            <version>0.10.0</version>
-            <optional>true</optional>
+            <groupId>com.trilead</groupId>
+            <artifactId>trilead-ssh2</artifactId>
+            <version>1.0.0-build222</version>
+            <scope>test</scope>
         </dependency>
-
 
         <!--
         <dependency>
@@ -38,8 +36,15 @@
             <version>0.1.55</version>
             <scope>test</scope>
         </dependency>
+      <dependency>
+            <groupId>net.schmizz</groupId>
+            <artifactId>sshj</artifactId>
+            <version>0.10.0</version>
+            <scope>test</scope>
+        </dependency>
 
-        -->
+
+-->
 
     </dependencies>
 </project>
