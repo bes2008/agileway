@@ -9,6 +9,12 @@ public class LocalArtifactRepositoryLayout implements ArtifactRepositoryLayout {
     }
 
     @Override
+    public String getDigitPath(ArtifactRepository repository, Artifact artifact, String digit) {
+        String artifactPath = getPath(repository, artifact);
+        return artifactPath + "." + digit.toLowerCase();
+    }
+
+    @Override
     public void setName(String s) {
 
     }
