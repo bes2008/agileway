@@ -9,5 +9,5 @@ public interface Artifact extends IGAV {
      * @return
      */
     String getExtension();
-    void setExtension();
+    void setExtension(String extension);
 }
