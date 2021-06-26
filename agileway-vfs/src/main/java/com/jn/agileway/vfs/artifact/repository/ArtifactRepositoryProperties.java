@@ -1,11 +1,14 @@
 package com.jn.agileway.vfs.artifact.repository;
 
+import java.util.List;
+
 public class ArtifactRepositoryProperties {
     private String name;
     private String url;
     private String basedir;
     private boolean enabled;
     private String layout;
+    private List<String> supportedDigits;
 
     public String getName() {
         return name;
@@ -45,5 +48,13 @@ public class ArtifactRepositoryProperties {
 
     public void setLayout(String layout) {
         this.layout = layout;
+    }
+
+    public List<String> getSupportedDigits() {
+        return supportedDigits;
+    }
+
+    public void setSupportedDigits(List<String> supportedDigits) {
+        this.supportedDigits = supportedDigits;
     }
 }

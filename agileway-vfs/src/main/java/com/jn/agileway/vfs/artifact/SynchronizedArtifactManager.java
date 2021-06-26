@@ -1,13 +1,15 @@
 package com.jn.agileway.vfs.artifact;
 
+import com.jn.agileway.vfs.artifact.repository.ArtifactRepository;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.struct.Holder;
-import com.jn.agileway.vfs.artifact.repository.ArtifactRepository;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.Selectors;
 import org.slf4j.Logger;
@@ -85,5 +87,26 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
 
     public void addSource(ArtifactRepository source) {
         this.sources.add(source);
+    }
+
+    @Override
+    public List<ArtifactDigit> getDigits(final Artifact artifact) {
+        return Pipeline.of(sources)
+                .add(destination)
+                .reverse(false)
+                .filter(new Predicate<ArtifactRepository>() {
+                    @Override
+                    public boolean test(ArtifactRepository repository) {
+                        return repository.isDigitSupports();
+                    }
+                })
+                .map(new Function<ArtifactRepository, List<ArtifactDigit>>() {
+                    @Override
+                    public List<ArtifactDigit> apply(ArtifactRepository repository) {
+                        return getDigits(repository, artifact);
+                    }
+                })
+                .<ArtifactDigit>flat()
+                .asList();
     }
 }
