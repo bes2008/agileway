@@ -1,6 +1,6 @@
 package com.jn.agileway.vfs.artifact;
 
-import com.jn.agileway.vfs.VFSUtils;
+import com.jn.agileway.vfs.FileObjects;
 import com.jn.agileway.vfs.VfsException;
 import com.jn.agileway.vfs.artifact.repository.ArtifactRepository;
 import com.jn.langx.annotation.NonNull;
@@ -57,7 +57,7 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
                                 @Override
                                 public boolean test(ArtifactRepository repository) {
                                     try {
-                                        return VFSUtils.isExists(remoteFileObjHolder.get());
+                                        return FileObjects.isExists(remoteFileObjHolder.get());
                                     } catch (VfsException ex) {
                                         logger.error(ex.getMessage(), ex);
                                         return false;
@@ -65,7 +65,7 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
                                 }
                             });
 
-                    if (VFSUtils.isExists(remoteFileObjHolder.get())) {
+                    if (FileObjects.isExists(remoteFileObjHolder.get())) {
                         if (remoteFileObjHolder.get().isFile()) {
                             localFileObject.copyFrom(remoteFileObjHolder.get(), Selectors.SELECT_SELF);
                         }

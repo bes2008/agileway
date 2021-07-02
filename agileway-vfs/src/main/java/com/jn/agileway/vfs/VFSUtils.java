@@ -64,14 +64,4 @@ public class VFSUtils {
     }
 
 
-    public static boolean isExists(FileObject fileObject){
-        if(fileObject==null){
-            return false;
-        }
-        try {
-            return fileObject.exists();
-        }catch (FileSystemException fileSystemException){
-            throw new VfsException(fileSystemException);
-        }
-    }
 }
