@@ -6,7 +6,7 @@ public class ArtifactRepositoryProperties {
     private String name;
     private String url;
     private String basedir;
-    private boolean enabled;
+    private boolean enabled = true;
     private String layout;
     private List<String> supportedDigits;
 

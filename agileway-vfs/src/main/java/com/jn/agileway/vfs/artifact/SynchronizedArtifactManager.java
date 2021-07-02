@@ -23,7 +23,7 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
     private static final Logger logger = LoggerFactory.getLogger(SynchronizedArtifactManager.class);
 
     @Nullable
-    private List<ArtifactRepository> sources;
+    private List<ArtifactRepository> sources = Collects.emptyArrayList();
 
     @NonNull
     private ArtifactRepository destination;

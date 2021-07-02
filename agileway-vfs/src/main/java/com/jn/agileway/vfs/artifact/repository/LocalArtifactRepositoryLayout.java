@@ -8,7 +8,9 @@ public class LocalArtifactRepositoryLayout implements ArtifactRepositoryLayout {
     @Override
     public String getPath(ArtifactRepository repository, Artifact artifact) {
         String path = repository.getUrl();
-        path = addSegment(path, repository.getBasedir());
+        if (Strings.isNotEmpty(repository.getBasedir())) {
+            path = addSegment(path, repository.getBasedir());
+        }
         path = addSegment(path, artifact.getArtifactId());
         if (Strings.isNotEmpty(artifact.getVersion())) {
             path = addSegment(path, artifact.getVersion());

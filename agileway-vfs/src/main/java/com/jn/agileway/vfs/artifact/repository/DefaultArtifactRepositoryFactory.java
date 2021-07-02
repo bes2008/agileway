@@ -28,6 +28,7 @@ public class DefaultArtifactRepositoryFactory extends GenericRegistry<ArtifactRe
         ArtifactRepositoryLayout layout = layoutRegistry.get(props.getLayout());
         Preconditions.checkNotNull(layout, "Can't find the specified layout: {} for the artifact repository ()", props.getLayout(), props.getName());
         repository.setLayout(layout);
+        repository.setEnabled(props.isEnabled());
         repository.setSupportedDigits(props.getSupportedDigits());
         register(repository);
         return repository;
