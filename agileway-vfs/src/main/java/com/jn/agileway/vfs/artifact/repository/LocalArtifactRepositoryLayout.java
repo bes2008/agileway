@@ -10,8 +10,10 @@ public class LocalArtifactRepositoryLayout implements ArtifactRepositoryLayout {
         String path = repository.getUrl();
         path = addSegment(path, repository.getBasedir());
         path = addSegment(path, artifact.getArtifactId());
-        path = addSegment(path, artifact.getVersion());
-        path = addSegment(path, artifact.getArtifactId() + "-" + artifact.getVersion() + (Objs.isEmpty(artifact.getClassifier()) ? "" : ("." + artifact.getClassifier())) + "." + artifact.getExtension());
+        if (Strings.isNotEmpty(artifact.getVersion())) {
+            path = addSegment(path, artifact.getVersion());
+            path = addSegment(path, artifact.getArtifactId() + "-" + artifact.getVersion() + (Objs.isEmpty(artifact.getClassifier()) ? "" : ("." + artifact.getClassifier())) + "." + artifact.getExtension());
+        }
         return path;
     }
 
