@@ -65,7 +65,7 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
                                 }
                             });
 
-                    if (!remoteFileObjHolder.isNull() && remoteFileObjHolder.get().exists()) {
+                    if (VFSUtils.isExists(remoteFileObjHolder.get())) {
                         if (remoteFileObjHolder.get().isFile()) {
                             localFileObject.copyFrom(remoteFileObjHolder.get(), Selectors.SELECT_SELF);
                         }
