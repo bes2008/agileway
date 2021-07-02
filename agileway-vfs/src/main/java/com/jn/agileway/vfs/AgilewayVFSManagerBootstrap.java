@@ -1,4 +1,4 @@
-package com.jn.agileway.vfs.provider;
+package com.jn.agileway.vfs;
 
 import com.jn.agileway.vfs.provider.sftp.SftpFileProvider;
 import org.apache.commons.vfs2.FileSystemManager;

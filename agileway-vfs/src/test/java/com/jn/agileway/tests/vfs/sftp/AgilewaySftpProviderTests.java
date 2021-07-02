@@ -1,6 +1,6 @@
 package com.jn.agileway.tests.vfs.sftp;
 
-import com.jn.agileway.vfs.provider.AgilewayVFSManagerBootstrap;
+import com.jn.agileway.vfs.AgilewayVFSManagerBootstrap;
 import com.jn.agileway.vfs.provider.sftp.SftpFileSystemConfigBuilder;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
