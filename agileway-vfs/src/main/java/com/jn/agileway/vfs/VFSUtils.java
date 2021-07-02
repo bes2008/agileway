@@ -71,7 +71,7 @@ public class VFSUtils {
         try {
             return fileObject.exists();
         }catch (FileSystemException fileSystemException){
-            throw new VfsException();
+            throw new VfsException(fileSystemException);
         }
     }
 }
