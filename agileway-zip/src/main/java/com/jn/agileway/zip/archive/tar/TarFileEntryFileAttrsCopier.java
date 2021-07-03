@@ -1,5 +1,6 @@
-package com.jn.agileway.zip.archive;
+package com.jn.agileway.zip.archive.tar;
 
+import com.jn.agileway.zip.archive.FileAttrsCopier;
 import com.jn.langx.util.io.file.PosixFilePermissions;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;

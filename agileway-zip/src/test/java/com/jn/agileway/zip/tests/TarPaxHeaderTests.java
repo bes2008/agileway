@@ -1,7 +1,7 @@
 package com.jn.agileway.zip.tests;
 
 import com.jn.agileway.zip.archive.Expander;
-import com.jn.agileway.zip.archive.TarFileEntryFileAttrsCopier;
+import com.jn.agileway.zip.archive.tar.TarFileEntryFileAttrsCopier;
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.io.resource.Resources;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
