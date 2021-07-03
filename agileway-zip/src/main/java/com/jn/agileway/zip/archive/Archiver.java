@@ -7,16 +7,20 @@ import com.jn.langx.util.Objs;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.function.Predicate;
+import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.io.file.FileFilter;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
 public class Archiver implements Closeable {
+    private static final Logger logger = LoggerFactory.getLogger(Archiver.class);
 
     @NonNull
     private ArchiveOutputStream archiveOutputStream;
@@ -47,7 +51,7 @@ public class Archiver implements Closeable {
         if (!(out instanceof BufferedOutputStream)) {
             out = new BufferedOutputStream(out);
         }
-        archiveOutputStream = new ArchiveStreamFactory().createArchiveOutputStream(format, out);
+        archiveOutputStream = new ArchiveStreamFactory(Charsets.UTF_8.name()).createArchiveOutputStream(format, out);
         if(customizer!=null) {
             customizer.customize(archiveOutputStream);
         }
@@ -160,8 +164,11 @@ public class Archiver implements Closeable {
             InputStream fileInput = null;
             try {
                 fileInput = new BufferedInputStream(new FileInputStream(file));
-                IOs.copy(fileInput, archiveOutputStream, 8192);
+                long writeLength = IOs.copy(fileInput, archiveOutputStream, 8192);
+                Preconditions.checkTrue(file.length()==writeLength);
             } catch (Throwable ex) {
+                logger.error(ex.getMessage(),ex);
+            }finally {
                 IOs.close(fileInput);
             }
         }
@@ -191,6 +198,7 @@ public class Archiver implements Closeable {
     public void close() throws IOException {
         if (archiveOutputStream != null) {
             archiveOutputStream.finish();
+            IOs.close(archiveOutputStream);
             archiveOutputStream = null;
         }
     }

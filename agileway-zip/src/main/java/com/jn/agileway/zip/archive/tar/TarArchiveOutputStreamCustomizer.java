@@ -9,6 +9,7 @@ public class TarArchiveOutputStreamCustomizer implements ArchiveOutputStreamCust
     public void customize(ArchiveOutputStream archiveOutputStream) {
         TarArchiveOutputStream tarOut = (TarArchiveOutputStream)archiveOutputStream;
         tarOut.setAddPaxHeadersForNonAsciiNames(true);
-        tarOut.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
+        tarOut.setLongFileMode(TarArchiveOutputStream.LONGFILE_GNU);
+        tarOut.setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_STAR);
     }
 }
