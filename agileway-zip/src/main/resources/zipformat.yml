@@ -1,0 +1,70 @@
+# gzip 压缩算法相关的
+- format: tar.gz
+  compress: gz # gzip
+  archive: tar
+  uncompressSuffix: tar
+  desc: tar 包压缩后，可以为 .tar.gz, .tgz, .taz
+- format: tgz
+  compress: gz # gzip
+  archive: tar
+  uncompressSuffix: tar
+  desc: tar 包压缩后，可以为 .tar.gz, .tgz, .taz
+- format: taz
+  compress: gz # gzip
+  archive: tar
+  uncompressSuffix: tar
+  desc: tar 包压缩后，可以为 .tar.gz, .tgz, .taz
+- format: svgz
+  compress: gz # gzip
+  archive:
+  uncompressSuffix: svg
+  desc: svg 的压缩后的格式为 svgz, 不包含归档格式
+- format: cpgz
+  compress: gz # gzip
+  archive: cpio
+  uncompressSuffix: cpio
+  desc: 采用cpio归档后进行gzip压缩，便是cpgz
+- format: wmz
+  compress: gz # gzip
+  archive:
+  uncompressSuffix: wmf
+- format: emz
+  compress: gz # gzip
+  archive:
+  uncompressSuffix: emf
+- format: gz
+  compress: gz # gzip
+
+# Z 压缩
+- format: z
+  compress: z
+
+# XZ 压缩算法相关
+- format: txz
+  compress: xz
+  archive: tar
+  uncompressSuffix: tar
+- format: xz
+  compress: xz
+
+# LZMA 压缩算法
+- format: lzma
+  compress: lzma
+
+# BZip2 压缩算法
+- format: tar.bz2
+  compress: bzip2
+  archive: tar
+  uncompressSuffix: tar
+- format: tbz2
+  compress: bzip2
+  archive: tar
+  uncompressSuffix: tar
+- format: tbz
+  compress: bzip2
+  archive: tar
+  uncompressSuffix: tar
+- format: bz2
+  compress: bzip2
+- format: bz
+  compress: bzip2
