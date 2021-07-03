@@ -22,11 +22,25 @@ public class Expander implements Closeable {
     @NonNull
     private ArchiveInputStream archiveInputStream;
 
+    /**
+     * 用于筛选出期望展开的文件
+     */
     @NonNull
     private ArchiveEntryFilter filter = new ArchiveEntryFilter() {
         @Override
         public boolean accept(ArchiveEntry archiveEntry) {
             return true;
+        }
+    };
+
+    /**
+     * 避免展开文件时，把文件属性丢失了。譬如说一个可执行文件，copy后，执行的权限丢失了
+     */
+    @NonNull
+    private FileAttrCopier fileAttrCopier = new FileAttrCopier() {
+        @Override
+        public void accept(ArchiveEntry archiveEntry, File file) {
+            // NOOP
         }
     };
 
@@ -80,6 +94,8 @@ public class Expander implements Closeable {
             } finally {
                 IOs.close(bout);
             }
+
+            fileAttrCopier.accept(entry, f);
             entry = findNextReadableEntry();
         }
 
