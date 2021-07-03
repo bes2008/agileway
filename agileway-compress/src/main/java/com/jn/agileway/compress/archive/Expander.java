@@ -44,6 +44,9 @@ public class Expander implements Closeable {
         }
     };
 
+    public void setFileAttrCopier(FileAttrCopier fileAttrCopier) {
+        this.fileAttrCopier = fileAttrCopier;
+    }
 
     public Expander(String format, InputStream in) throws ArchiveException {
         if (!(in instanceof BufferedInputStream)) {
