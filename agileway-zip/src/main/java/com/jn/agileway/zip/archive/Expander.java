@@ -140,6 +140,9 @@ public class Expander implements Closeable {
                     entry = null;
                 }
             } catch (IOException ex) {
+                if(ex instanceof EOFException){
+                    return null;
+                }
                 logger.error(ex.getMessage(), ex);
             }
         }

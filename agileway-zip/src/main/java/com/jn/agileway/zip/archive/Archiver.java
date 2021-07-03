@@ -43,19 +43,22 @@ public class Archiver implements Closeable {
 
     private boolean ignoreEmptyDirectory = true;
 
-    public Archiver(String format, OutputStream out) throws ArchiveException {
+    public Archiver(@NonNull String format, @NonNull OutputStream out, @Nullable ArchiveOutputStreamCustomizer customizer) throws ArchiveException {
         if (!(out instanceof BufferedOutputStream)) {
             out = new BufferedOutputStream(out);
         }
         archiveOutputStream = new ArchiveStreamFactory().createArchiveOutputStream(format, out);
+        if(customizer!=null) {
+            customizer.customize(archiveOutputStream);
+        }
     }
 
-    public Archiver(String format, String filepath) throws IOException, ArchiveException {
-        this(format, new FileOutputStream(filepath));
+    public Archiver(@NonNull String format, @NonNull String targetFilepath, @Nullable ArchiveOutputStreamCustomizer customizer) throws IOException, ArchiveException {
+        this(format, new FileOutputStream(targetFilepath),customizer);
     }
 
-    public Archiver(String format, File file) throws IOException, ArchiveException {
-        this(format, new FileOutputStream(file));
+    public Archiver(@NonNull String format, @NonNull File target, @Nullable ArchiveOutputStreamCustomizer customizer) throws IOException, ArchiveException {
+        this(format, new FileOutputStream(target), customizer);
     }
 
     public boolean isIgnoreEmptyDirectory() {
@@ -133,17 +136,17 @@ public class Archiver implements Closeable {
                 return;
             }
 
-            addArchiveEntry(directory, entryNamePrefix);
+            String entryName = addArchiveEntry(directory, entryNamePrefix);
 
             if (Objs.isNotEmpty(children)) {
                 for (File file : children) {
-                    addFile(file);
+                    addFile(file, entryName);
                 }
             }
         }
     }
 
-    private void addArchiveEntry(File file, String entryNamePrefix) throws IOException {
+    private String addArchiveEntry(File file, String entryNamePrefix) throws IOException {
         String entryName = getEntryName(entryNamePrefix, file);
 
         // 创建 entry
@@ -163,6 +166,7 @@ public class Archiver implements Closeable {
             }
         }
         archiveOutputStream.closeArchiveEntry();
+        return entryName;
     }
 
     private String getEntryName(String entryNamePrefix, File file) {
@@ -175,13 +179,17 @@ public class Archiver implements Closeable {
         }, "");
 
         String entryName = Preconditions.checkNotEmpty(entryNameFactory.get(file));
-        return entryNamePrefix + entryName;
+        entryName = entryNamePrefix + entryName;
+        if (file.isDirectory()) {
+            entryName = entryName + "/";
+        }
+        return entryName;
     }
 
 
     @Override
     public void close() throws IOException {
-        if(archiveOutputStream!=null) {
+        if (archiveOutputStream != null) {
             archiveOutputStream.finish();
             archiveOutputStream = null;
         }

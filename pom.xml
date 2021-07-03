@@ -25,7 +25,7 @@
         <module>agileway-examples</module>
         <module>agileway-feign</module>
         <module>agileway-vfs</module>
-        <module>agileway-compress</module>
+        <module>agileway-zip</module>
     </modules>
 
     <description>
