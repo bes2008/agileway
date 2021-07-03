@@ -105,6 +105,9 @@ public class DefaultArtifactRepository implements ArtifactRepository {
         return isEnabled;
     }
 
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
 
     @Override
     public boolean isDigitSupports() {

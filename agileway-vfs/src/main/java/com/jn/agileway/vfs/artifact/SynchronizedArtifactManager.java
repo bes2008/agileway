@@ -1,5 +1,7 @@
 package com.jn.agileway.vfs.artifact;
 
+import com.jn.agileway.vfs.FileObjects;
+import com.jn.agileway.vfs.VfsException;
 import com.jn.agileway.vfs.artifact.repository.ArtifactRepository;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
@@ -21,7 +23,7 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
     private static final Logger logger = LoggerFactory.getLogger(SynchronizedArtifactManager.class);
 
     @Nullable
-    private List<ArtifactRepository> sources;
+    private List<ArtifactRepository> sources = Collects.emptyArrayList();
 
     @NonNull
     private ArtifactRepository destination;
@@ -48,22 +50,22 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
                                         FileObject remoteFileObject = getFileSystemManager().resolveFile(remotePath);
                                         remoteFileObjHolder.set(remoteFileObject);
                                     } catch (Throwable ex) {
-
+                                        logger.error(ex.getMessage(), ex);
                                     }
                                 }
                             }, new Predicate<ArtifactRepository>() {
                                 @Override
                                 public boolean test(ArtifactRepository repository) {
                                     try {
-                                        return !remoteFileObjHolder.isNull() && remoteFileObjHolder.get().exists();
-                                    } catch (Throwable ex) {
-
+                                        return FileObjects.isExists(remoteFileObjHolder.get());
+                                    } catch (VfsException ex) {
+                                        logger.error(ex.getMessage(), ex);
+                                        return false;
                                     }
-                                    return false;
                                 }
                             });
 
-                    if (!remoteFileObjHolder.isNull() && remoteFileObjHolder.get().exists()) {
+                    if (FileObjects.isExists(remoteFileObjHolder.get())) {
                         if (remoteFileObjHolder.get().isFile()) {
                             localFileObject.copyFrom(remoteFileObjHolder.get(), Selectors.SELECT_SELF);
                         }
