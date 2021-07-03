@@ -1,4 +1,4 @@
-package com.jn.agileway.compress.archive;
+package com.jn.agileway.zip.archive;
 
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
