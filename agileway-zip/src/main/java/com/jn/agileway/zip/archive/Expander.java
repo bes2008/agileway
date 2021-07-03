@@ -3,6 +3,7 @@ package com.jn.agileway.zip.archive;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Preconditions;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.io.IOs;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
@@ -37,14 +38,20 @@ public class Expander implements Closeable {
      * 避免展开文件时，把文件属性丢失了。譬如说一个可执行文件，copy后，执行的权限丢失了
      */
     @NonNull
-    private FileAttrCopier fileAttrCopier = new FileAttrCopier() {
+    private FileAttrsCopier fileAttrCopier = new FileAttrsCopier() {
         @Override
         public void accept(ArchiveEntry archiveEntry, File file) {
             // NOOP
         }
     };
 
-    public void setFileAttrCopier(FileAttrCopier fileAttrCopier) {
+    private boolean overwriteExistsFiles = false;
+
+    public void setOverwriteExistsFiles(boolean overwriteExistsFiles) {
+        this.overwriteExistsFiles = overwriteExistsFiles;
+    }
+
+    public void setFileAttrCopier(FileAttrsCopier fileAttrCopier) {
         this.fileAttrCopier = fileAttrCopier;
     }
 
@@ -88,14 +95,27 @@ public class Expander implements Closeable {
                 throw new IOException(StringTemplates.formatWithPlaceholder("Can't expand {} to {}", entry.getName(), directory.getPath()));
             }
 
-            BufferedOutputStream bout = null;
-            try {
-                bout = new BufferedOutputStream(new FileOutputStream(f));
-                IOs.copy(archiveInputStream, bout, 8192);
-            } catch (IOException ex) {
-                logger.error(ex.getMessage(), ex);
-            } finally {
-                IOs.close(bout);
+            if (Strings.endsWith(entry.getName(), "/")) {
+                f.mkdirs();
+            } else {
+                if (f.exists()) {
+                    if (overwriteExistsFiles) {
+                        f.delete();
+                        f.createNewFile();
+                    }
+                } else {
+                    f.createNewFile();
+                }
+
+                BufferedOutputStream bout = null;
+                try {
+                    bout = new BufferedOutputStream(new FileOutputStream(f));
+                    IOs.copy(archiveInputStream, bout, 8192);
+                } catch (IOException ex) {
+                    logger.error(ex.getMessage(), ex);
+                } finally {
+                    IOs.close(bout);
+                }
             }
 
             fileAttrCopier.accept(entry, f);
@@ -105,12 +125,18 @@ public class Expander implements Closeable {
 
     }
 
+    /**
+     * @return 返回 找到的可读的 entry, 如果返回 null, 则代表没有了
+     */
     private ArchiveEntry findNextReadableEntry() {
         ArchiveEntry entry = null;
         while (entry == null) {
             try {
                 entry = archiveInputStream.getNextEntry();
-                if (entry == null || !archiveInputStream.canReadEntryData(entry) || !filter.accept(entry)) {
+                if (entry == null) {
+                    return null;
+                }
+                if (!archiveInputStream.canReadEntryData(entry) || !filter.accept(entry)) {
                     entry = null;
                 }
             } catch (IOException ex) {
