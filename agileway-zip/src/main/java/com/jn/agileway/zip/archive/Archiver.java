@@ -45,7 +45,7 @@ public class Archiver implements Closeable {
     @Nullable
     private FileFilter fileFilter;
 
-    private boolean ignoreEmptyDirectory = true;
+    private boolean ignoreEmptyDirectory = false;
 
     public Archiver(@NonNull String format, @NonNull OutputStream out, @Nullable ArchiveOutputStreamCustomizer customizer) throws ArchiveException {
         if (!(out instanceof BufferedOutputStream)) {
