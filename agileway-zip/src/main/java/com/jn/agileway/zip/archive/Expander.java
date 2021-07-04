@@ -4,6 +4,8 @@ import com.jn.langx.annotation.NonNull;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.struct.Entry;
 import org.apache.commons.compress.archivers.ArchiveEntry;
@@ -12,7 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.Stack;
+import java.util.Comparator;
+import java.util.TreeSet;
 
 /**
  * ArchiveInputStream API 有个缺点，就是因为被封装成了InputStream，所有就只能往前。
@@ -72,7 +75,20 @@ public class Expander implements Closeable {
             }
         }
 
-        Stack<Entry<ArchiveEntry, File>> directoryStack = new Stack<Entry<ArchiveEntry, File>>();
+        TreeSet<Entry<ArchiveEntry, File>> directorySet = new TreeSet<Entry<ArchiveEntry, File>>(new Comparator<Entry<ArchiveEntry, File>>() {
+            @Override
+            public int compare(Entry<ArchiveEntry, File> e1, Entry<ArchiveEntry, File> e2) {
+                String entryName1 = e1.getKey().getName();
+                String entryName2 = e2.getKey().getName();
+                if (Strings.startsWith(entryName1, entryName2)) {
+                    return -1;
+                }
+                if (Strings.startsWith(entryName2, entryName1)) {
+                    return 1;
+                }
+                return entryName2.compareTo(entryName1);
+            }
+        });
 
 
         while (iterator.hasNext()) {
@@ -89,7 +105,7 @@ public class Expander implements Closeable {
 
             if (Strings.endsWith(entry.getName(), "/")) {
                 f.mkdirs();
-                directoryStack.push(new Entry<ArchiveEntry, File>(entry, f));
+                directorySet.add(new Entry<ArchiveEntry, File>(entry, f));
             } else {
                 if (f.exists()) {
                     if (overwriteExistsFiles) {
@@ -112,14 +128,16 @@ public class Expander implements Closeable {
             }
             fileAttrCopier.accept(entry, f);
             f.setLastModified(entry.getLastModifiedDate().getTime());
-
-            // 当前目录遍历完毕
-            Entry<ArchiveEntry, File> currentDirectory = directoryStack.empty() ? null : directoryStack.peek();
-            if (currentDirectory != null && f != currentDirectory.getValue() && f.getParentFile() != currentDirectory.getValue()) {
-                currentDirectory.getValue().setLastModified(currentDirectory.getKey().getLastModifiedDate().getTime());
-                directoryStack.pop();
-            }
         }
+
+        Collects.forEach(directorySet, new Consumer<Entry<ArchiveEntry, File>>() {
+            @Override
+            public void accept(Entry<ArchiveEntry, File> pair) {
+                File directory = pair.getValue();
+                ArchiveEntry entry = pair.getKey();
+                directory.setLastModified(entry.getLastModifiedDate().getTime());
+            }
+        });
     }
 
     @Override
