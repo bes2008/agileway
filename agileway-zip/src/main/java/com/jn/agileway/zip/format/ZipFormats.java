@@ -1,4 +1,4 @@
-package com.jn.agileway.zip;
+package com.jn.agileway.zip.format;
 
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.io.resource.Resources;
@@ -52,6 +52,10 @@ public class ZipFormats {
         } catch (Throwable ex) {
             logger.error(ex.getMessage(), ex);
         }
+    }
+
+    private static void loadCustomizedZipFormats(){
+
     }
 
     public static void addZipFormat(ZipFormat format) {

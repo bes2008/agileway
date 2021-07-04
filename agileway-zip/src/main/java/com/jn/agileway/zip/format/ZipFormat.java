@@ -1,4 +1,4 @@
-package com.jn.agileway.zip;
+package com.jn.agileway.zip.format;
 
 import com.jn.langx.util.Strings;
 
