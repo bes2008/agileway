@@ -1,5 +1,7 @@
 package com.jn.agileway.zip;
 
+import com.jn.langx.util.Strings;
+
 public class ZipFormat {
     /**
      * 原始格式，也通常是文件的后缀
@@ -75,5 +77,13 @@ public class ZipFormat {
     @Override
     public String toString() {
         return format;
+    }
+
+    public boolean archiveEnabled(){
+        return Strings.isNotBlank(archive);
+    }
+
+    public boolean compressEnabled(){
+        return Strings.isNotBlank(compress);
     }
 }

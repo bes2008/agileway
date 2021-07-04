@@ -1,3 +1,28 @@
+##############################################################
+#   archive formats
+##############################################################
+
+- format: ar
+  archive: ar
+- fromat: arj
+  archive: arj
+- format: cpio
+  archive: cpio
+- format: dump
+  archive: dump
+- format: jar
+  archive: jar
+- format: 7z
+  archive: 7z
+- format: tar
+  archive: tar
+- fromat: zip
+  archive: zip
+
+##############################################################
+#   compress format + archive format
+##############################################################
+
 # gzip 压缩算法相关的
 - format: tar.gz
   compress: gz # gzip
@@ -68,3 +93,10 @@
   compress: bzip2
 - format: bz
   compress: bzip2
+
+- format: br
+  compress: br # brotli
+- format: pack
+  compress: pack200
+- format: deflate
+  compress: deflate
