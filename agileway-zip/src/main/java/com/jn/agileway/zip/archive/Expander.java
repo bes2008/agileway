@@ -5,12 +5,14 @@ import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.struct.Entry;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.Stack;
 
 /**
  * ArchiveInputStream API 有个缺点，就是因为被封装成了InputStream，所有就只能往前。
@@ -69,6 +71,10 @@ public class Expander implements Closeable {
                 throw new IOException(StringTemplates.formatWithPlaceholder("Can't expand {}", directory.getPath()));
             }
         }
+
+        Stack<Entry<ArchiveEntry, File>> directoryStack = new Stack<Entry<ArchiveEntry, File>>();
+
+
         while (iterator.hasNext()) {
             ArchiveIterator.ArchiveEntryWrapper entryWrapper = iterator.next();
             ArchiveEntry entry = entryWrapper.getEntry();
@@ -79,9 +85,11 @@ public class Expander implements Closeable {
             if (!f.getParentFile().exists() && !f.getParentFile().mkdirs()) {
                 throw new IOException(StringTemplates.formatWithPlaceholder("Can't expand {} to {}", entry.getName(), directory.getPath()));
             }
+            logger.info("expand {}", entry.getName());
 
             if (Strings.endsWith(entry.getName(), "/")) {
                 f.mkdirs();
+                directoryStack.push(new Entry<ArchiveEntry, File>(entry, f));
             } else {
                 if (f.exists()) {
                     if (overwriteExistsFiles) {
@@ -102,8 +110,15 @@ public class Expander implements Closeable {
                     IOs.close(bout);
                 }
             }
-
             fileAttrCopier.accept(entry, f);
+            f.setLastModified(entry.getLastModifiedDate().getTime());
+
+            // 当前目录遍历完毕
+            Entry<ArchiveEntry, File> currentDirectory = directoryStack.empty() ? null : directoryStack.peek();
+            if (currentDirectory != null && f != currentDirectory.getValue() && f.getParentFile() != currentDirectory.getValue()) {
+                currentDirectory.getValue().setLastModified(currentDirectory.getKey().getLastModifiedDate().getTime());
+                directoryStack.pop();
+            }
         }
     }
 

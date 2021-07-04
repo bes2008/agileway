@@ -52,13 +52,13 @@ public class Archiver implements Closeable {
             out = new BufferedOutputStream(out);
         }
         archiveOutputStream = new ArchiveStreamFactory(Charsets.UTF_8.name()).createArchiveOutputStream(format, out);
-        if(customizer!=null) {
+        if (customizer != null) {
             customizer.customize(archiveOutputStream);
         }
     }
 
     public Archiver(@NonNull String format, @NonNull String targetFilepath, @Nullable ArchiveOutputStreamCustomizer customizer) throws IOException, ArchiveException {
-        this(format, new FileOutputStream(targetFilepath),customizer);
+        this(format, new FileOutputStream(targetFilepath), customizer);
     }
 
     public Archiver(@NonNull String format, @NonNull File target, @Nullable ArchiveOutputStreamCustomizer customizer) throws IOException, ArchiveException {
@@ -140,17 +140,17 @@ public class Archiver implements Closeable {
                 return;
             }
 
-            String entryName = addArchiveEntry(directory, entryNamePrefix);
+            ArchiveEntry entry = addArchiveEntry(directory, entryNamePrefix);
 
             if (Objs.isNotEmpty(children)) {
                 for (File file : children) {
-                    addFile(file, entryName);
+                    addFile(file, entry.getName());
                 }
             }
         }
     }
 
-    private String addArchiveEntry(File file, String entryNamePrefix) throws IOException {
+    private ArchiveEntry addArchiveEntry(File file, String entryNamePrefix) throws IOException {
         String entryName = getEntryName(entryNamePrefix, file);
 
         // 创建 entry
@@ -165,15 +165,15 @@ public class Archiver implements Closeable {
             try {
                 fileInput = new BufferedInputStream(new FileInputStream(file));
                 long writeLength = IOs.copy(fileInput, archiveOutputStream, 8192);
-                Preconditions.checkTrue(file.length()==writeLength);
+                Preconditions.checkTrue(file.length() == writeLength);
             } catch (Throwable ex) {
-                logger.error(ex.getMessage(),ex);
-            }finally {
+                logger.error(ex.getMessage(), ex);
+            } finally {
                 IOs.close(fileInput);
             }
         }
         archiveOutputStream.closeArchiveEntry();
-        return entryName;
+        return entry;
     }
 
     private String getEntryName(String entryNamePrefix, File file) {

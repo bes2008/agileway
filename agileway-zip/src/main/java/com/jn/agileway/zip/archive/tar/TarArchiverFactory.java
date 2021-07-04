@@ -20,4 +20,9 @@ public class TarArchiverFactory implements ArchiverFactory {
         }
         return archiver;
     }
+
+    @Override
+    public String getArchiveFormat() {
+        return "tar";
+    }
 }

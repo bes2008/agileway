@@ -39,16 +39,24 @@ public class ZipFormats {
             Iterable<Object> objs = new Yaml().loadAll(stream);
             Collects.forEach(objs, new Consumer<Object>() {
                 @Override
-                public void accept(Object o) {
-                    Map<String, String> map = (Map<String, String>) o;
-                    ZipFormat zipFormat = new ZipFormat();
-                    if (Strings.isNotEmpty(map.get("format"))) {
-                        zipFormat.setFormat(map.get("format"));
-                        zipFormat.setArchive(map.get("archive"));
-                        zipFormat.setDesc(map.get("desc"));
-                        zipFormat.setUncompressSuffix(map.get("uncompressSuffix"));
-                        zipFormat.setCompress(map.get("compress"));
-                        addZipFormat(zipFormat);
+                public void accept(Object o0) {
+                    if (o0 instanceof List) {
+                        Collects.forEach((List) o0, new Consumer<Object>() {
+                            @Override
+                            public void accept(Object o) {
+                                Map<String, String> map = (Map<String, String>) o;
+                                ZipFormat zipFormat = new ZipFormat();
+                                if (Strings.isNotEmpty(map.get("format"))) {
+                                    zipFormat.setFormat(map.get("format"));
+                                    zipFormat.setArchive(map.get("archive"));
+                                    zipFormat.setDesc(map.get("desc"));
+                                    zipFormat.setUncompressSuffix(map.get("uncompressSuffix"));
+                                    zipFormat.setCompress(map.get("compress"));
+                                    addZipFormat(zipFormat);
+                                }
+                            }
+                        });
+
                     }
                 }
             });
