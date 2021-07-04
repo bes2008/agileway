@@ -1,15 +1,20 @@
 package com.jn.agileway.zip.archive;
 
+import com.jn.agileway.zip.format.ZipFormat;
+import com.jn.agileway.zip.format.ZipFormats;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.struct.Entry;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.compressors.CompressorInputStream;
+import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,19 +53,28 @@ public class Expander implements Closeable {
         this.fileAttrCopier = fileAttrCopier;
     }
 
-    public Expander(String format, InputStream in) throws ArchiveException {
+    public Expander(String format, InputStream in) {
+        ZipFormat zf = ZipFormats.getZipFormat(format);
+        if (zf.compressEnabled()) {
+            try {
+                if (!(in instanceof CompressorInputStream)) {
+                    in = new CompressorStreamFactory().createCompressorInputStream(zf.getCompress(), in);
+                }
+            } catch (Throwable ex) {
+                throw Throwables.wrapAsRuntimeException(ex);
+            }
+        }
         iterator = new ArchiveIterator(format, in);
         this.inputStream = in;
     }
 
-    public Expander(String format, String filepath) throws IOException, ArchiveException {
-        this(format, new FileInputStream(filepath));
+    public Expander(String filepath) throws IOException, ArchiveException {
+        this(ZipFormats.getFormat(filepath), new FileInputStream(filepath));
     }
 
-    public Expander(String format, File file) throws IOException, ArchiveException {
-        this(format, new FileInputStream(file));
+    public Expander(File file) throws IOException, ArchiveException {
+        this(file.getPath());
     }
-
 
     public void setFilter(ArchiveEntryFilter filter) {
         iterator.setFilter(filter);
