@@ -2,6 +2,7 @@ package com.jn.agileway.zip;
 
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.io.resource.Resources;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 import org.slf4j.Logger;
@@ -24,7 +25,7 @@ public class ZipFormats {
     private static Map<String, ZipFormat> registry = new ConcurrentHashMap<String, ZipFormat>();
 
     static {
-
+        loadBuiltinZipFormats();
     }
 
     private static void loadBuiltinZipFormats() {
@@ -38,11 +39,14 @@ public class ZipFormats {
                 public void accept(Object o) {
                     Map<String, String> map = (Map<String, String>) o;
                     ZipFormat zipFormat = new ZipFormat();
-                    zipFormat.setFormat(map.get("format"));
-                    zipFormat.setArchive(map.get("archive"));
-                    zipFormat.setDesc(map.get("desc"));
-                    zipFormat.setUncompressSuffix(map.get("uncompressSuffix"));
-                    zipFormat.setCompress(map.get("compress"));
+                    if(Strings.isNotEmpty(map.get("format"))) {
+                        zipFormat.setFormat(map.get("format"));
+                        zipFormat.setArchive(map.get("archive"));
+                        zipFormat.setDesc(map.get("desc"));
+                        zipFormat.setUncompressSuffix(map.get("uncompressSuffix"));
+                        zipFormat.setCompress(map.get("compress"));
+                        addZipFormat(zipFormat);
+                    }
                 }
             });
         } catch (Throwable ex) {

@@ -4,6 +4,7 @@ import com.jn.langx.annotation.NonNull;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
@@ -59,7 +60,7 @@ public class Expander implements Closeable {
         if (!(in instanceof BufferedInputStream)) {
             in = new BufferedInputStream(in);
         }
-        this.archiveInputStream = new ArchiveStreamFactory().createArchiveInputStream(format, in);
+        this.archiveInputStream = new ArchiveStreamFactory(Charsets.UTF_8.name()).createArchiveInputStream(format, in);
     }
 
     public Expander(String format, String filepath) throws IOException, ArchiveException {
