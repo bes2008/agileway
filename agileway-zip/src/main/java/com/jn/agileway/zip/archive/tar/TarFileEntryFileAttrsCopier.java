@@ -11,8 +11,6 @@ public class TarFileEntryFileAttrsCopier implements FileAttrsCopier {
     @Override
     public void accept(ArchiveEntry archiveEntry, File file) {
         TarArchiveEntry entry = (TarArchiveEntry) archiveEntry;
-        file.setLastModified(archiveEntry.getLastModifiedDate().getTime()/1000*1000L);
-
         PosixFilePermissions permissions = new PosixFilePermissions(entry.getMode(), true, true);
         file.setWritable(permissions.isWritable());
         file.setReadable(permissions.isReadable());
