@@ -86,4 +86,8 @@ public class ZipFormat {
     public boolean compressEnabled(){
         return Strings.isNotBlank(compress);
     }
+
+    public boolean isValid(){
+        return Strings.isNotBlank(format);
+    }
 }

@@ -10,7 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ZipFormats {
@@ -26,6 +28,7 @@ public class ZipFormats {
 
     static {
         loadBuiltinZipFormats();
+        loadCustomizedZipFormats();
     }
 
     private static void loadBuiltinZipFormats() {
@@ -39,7 +42,7 @@ public class ZipFormats {
                 public void accept(Object o) {
                     Map<String, String> map = (Map<String, String>) o;
                     ZipFormat zipFormat = new ZipFormat();
-                    if(Strings.isNotEmpty(map.get("format"))) {
+                    if (Strings.isNotEmpty(map.get("format"))) {
                         zipFormat.setFormat(map.get("format"));
                         zipFormat.setArchive(map.get("archive"));
                         zipFormat.setDesc(map.get("desc"));
@@ -54,12 +57,25 @@ public class ZipFormats {
         }
     }
 
-    private static void loadCustomizedZipFormats(){
-
+    private static void loadCustomizedZipFormats() {
+        Collects.forEach(ServiceLoader.load(ZipFormatFactory.class), new Consumer<ZipFormatFactory>() {
+            @Override
+            public void accept(ZipFormatFactory zipFormatFactory) {
+                List<ZipFormat> zfs = zipFormatFactory.get();
+                Collects.forEach(zfs, new Consumer<ZipFormat>() {
+                    @Override
+                    public void accept(ZipFormat zipFormat) {
+                        addZipFormat(zipFormat);
+                    }
+                });
+            }
+        });
     }
 
     public static void addZipFormat(ZipFormat format) {
-        registry.put(format.getFormat(), format);
+        if (format.isValid()) {
+            registry.put(format.getFormat(), format);
+        }
     }
 
     public static ZipFormat getZipFormat(String format) {
@@ -68,8 +84,11 @@ public class ZipFormats {
 
     public static boolean archiveEnabled(String format) {
         ZipFormat zf = getZipFormat(format);
-        return zf.archiveEnabled();
+        return zf != null && zf.archiveEnabled();
     }
 
-
+    public static String getArchiveFormat(String format) {
+        ZipFormat zf = getZipFormat(format);
+        return zf != null ? zf.getArchive() : null;
+    }
 }

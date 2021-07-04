@@ -15,4 +15,9 @@ public class SimpleArchiverFactory implements ArchiverFactory {
         }
         return archiver;
     }
+
+    @Override
+    public String getArchiveFormat() {
+        return "simple";
+    }
 }

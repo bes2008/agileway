@@ -7,4 +7,6 @@ import java.io.OutputStream;
 public interface ArchiverFactory extends Supplier2<String, OutputStream, Archiver> {
     @Override
     Archiver get(String format, OutputStream outputStream);
+
+    String getArchiveFormat();
 }
