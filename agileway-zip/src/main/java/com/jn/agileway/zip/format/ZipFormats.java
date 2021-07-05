@@ -1,6 +1,5 @@
 package com.jn.agileway.zip.format;
 
-import com.jn.langx.annotation.Nullable;
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.io.resource.Resources;
 import com.jn.langx.util.Strings;
@@ -25,6 +24,22 @@ public class ZipFormats {
      * key: ZipFormat#getFormat()
      */
     private static Map<String, ZipFormat> registry = new ConcurrentHashMap<String, ZipFormat>();
+    private static Set<String> supportedFormats = new TreeSet<String>(new Comparator<String>() {
+        @Override
+        public int compare(String o1, String o2) {
+            if (o1.equals(o2)) {
+                return 0;
+            }
+            if (Strings.startsWith(o1, o2)) {
+                return -1;
+            }
+            if (Strings.startsWith(o2, o1)) {
+                return 1;
+            }
+
+            return o2.compareTo(o1);
+        }
+    });
 
     static {
         loadBuiltinZipFormats();
@@ -83,6 +98,7 @@ public class ZipFormats {
     public static void addZipFormat(ZipFormat format) {
         if (format.isValid()) {
             registry.put(format.getFormat(), format);
+            supportedFormats.add(format.getFormat());
         }
     }
 
@@ -100,32 +116,8 @@ public class ZipFormats {
         return zf != null ? zf.getArchive() : null;
     }
 
-    public static TreeSet<String> getSupportedFormats() {
-        /**
-         * 根据字母进行降序排序
-         */
-        return getSupportedFormats(new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                if (o1.equals(o2)) {
-                    return 0;
-                }
-                if (Strings.startsWith(o1, o2)) {
-                    return -1;
-                }
-                if (Strings.startsWith(o2, o1)) {
-                    return 1;
-                }
-
-                return o2.compareTo(o1);
-            }
-        });
-    }
-
-    public static TreeSet<String> getSupportedFormats(@Nullable Comparator<String> comparator) {
-        TreeSet<String> set = comparator == null ? new TreeSet<String>() : new TreeSet<String>(comparator);
-        set.addAll(registry.keySet());
-        return set;
+    public static Set<String> getSupportedFormats() {
+        return supportedFormats;
     }
 
     public static String getFormat(final String filepath) {
