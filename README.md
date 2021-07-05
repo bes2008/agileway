@@ -1,5 +1,5 @@
 [![License](https://img.shields.io/badge/license-Apach2.0-green.svg)](https://github.com/fangjinuo/agileway/blob/master/LICENSE)
-[![maven](https://img.shields.io/badge/maven-v2.5.1-green.svg)](https://search.maven.org/search?q=g:com.github.fangjinuo.agileway%20AND%20v:2.5.1)
+[![maven](https://img.shields.io/badge/maven-v2.5.3-green.svg)](https://search.maven.org/search?q=g:com.github.fangjinuo.agileway%20AND%20v:2.5.3)
 
 
 
@@ -82,6 +82,12 @@ Java、Web开发工具套件，尽量避免996
       + com.airlenet.yang:ganymed-ssh2:1.2.0
       + net.schmizz:sshj:0.10.0
       + sshtools:j2ssh-core:0.2.9
++ agileway-vfs: 
+    + 对commons-vfs 进行二次封装
+    + 支持 agileway-sshclient
+    + 提供统一的 artifact管理抽象
++ agileway-zip
+    + 对commons-compress 进行二次封装，简化使用      
 
 | module | jdk | version |
 |---|---|---|
