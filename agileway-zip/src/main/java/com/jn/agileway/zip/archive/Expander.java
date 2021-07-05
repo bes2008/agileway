@@ -58,6 +58,9 @@ public class Expander implements Closeable {
         if (zf.compressEnabled()) {
             try {
                 if (!(in instanceof CompressorInputStream)) {
+                    if (!(in instanceof BufferedInputStream)) {
+                        in = new BufferedInputStream(in);
+                    }
                     in = new CompressorStreamFactory().createCompressorInputStream(zf.getCompress(), in);
                 }
             } catch (Throwable ex) {

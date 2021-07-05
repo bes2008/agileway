@@ -1,11 +1,14 @@
 package com.jn.agileway.zip.archive;
 
+import com.jn.agileway.zip.format.ZipFormat;
+import com.jn.agileway.zip.format.ZipFormats;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.factory.Factory;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.Throwables;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
@@ -14,6 +17,8 @@ import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.compress.compressors.CompressorOutputStream;
+import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,8 +53,18 @@ public class Archiver implements Closeable {
     private boolean ignoreEmptyDirectory = false;
 
     public Archiver(@NonNull String format, @NonNull OutputStream out, @Nullable ArchiveOutputStreamCustomizer customizer) throws ArchiveException {
-        if (!(out instanceof BufferedOutputStream)) {
-            out = new BufferedOutputStream(out);
+        ZipFormat zf = ZipFormats.getZipFormat(format);
+        if (zf.compressEnabled()) {
+            try {
+                if (!(out instanceof CompressorOutputStream)) {
+                    if (!(out instanceof BufferedOutputStream)) {
+                        out = new BufferedOutputStream(out);
+                    }
+                    out = new CompressorStreamFactory().createCompressorOutputStream(zf.getCompress(), out);
+                }
+            } catch (Throwable ex) {
+                throw Throwables.wrapAsRuntimeException(ex);
+            }
         }
         archiveOutputStream = new ArchiveStreamFactory(Charsets.UTF_8.name()).createArchiveOutputStream(format, out);
         if (customizer != null) {
