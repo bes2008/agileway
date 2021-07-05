@@ -3,10 +3,8 @@ package com.jn.agileway.zip.tests;
 import com.jn.agileway.zip.archive.Archiver;
 import com.jn.agileway.zip.archive.AutowiredArchiveSuiteFactory;
 import com.jn.agileway.zip.archive.Expander;
-import com.jn.agileway.zip.archive.tar.TarFileEntryFileAttrsCopier;
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.io.resource.Resources;
-import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.junit.Test;
 
 import java.io.File;
@@ -22,9 +20,8 @@ public class TarTests {
     public void testUncompress() throws Throwable {
         Resource resource = Resources.loadFileResource("file:" + sour_targz);
 
-        Expander expander = new Expander("tar", new CompressorStreamFactory().createCompressorInputStream("gz", resource.getInputStream()));
+        Expander expander = AutowiredArchiveSuiteFactory.getInstance().get("tar.gz", resource.getInputStream());
         expander.setOverwriteExistsFiles(true);
-        expander.setFileAttrCopier(new TarFileEntryFileAttrsCopier());
         expander.expandTo(new File("e:/tmp/t002"));
         expander.close();
     }
