@@ -9,11 +9,13 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
+import org.apache.commons.compress.compressors.CompressorInputStream;
 import org.apache.commons.compress.compressors.CompressorOutputStream;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -72,18 +74,37 @@ public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Regist
         if (Strings.isNotEmpty(zipFormat.getCompress())) {
             if (!(outputStream instanceof CompressorOutputStream)) {
                 try {
-                    outputStream = new CompressorStreamFactory().createCompressorOutputStream(zipFormat.getCompress(), new BufferedOutputStream(outputStream));
+                    if (!(outputStream instanceof BufferedOutputStream)) {
+                        outputStream = new BufferedOutputStream(outputStream);
+                    }
+                    outputStream = new CompressorStreamFactory().createCompressorOutputStream(zipFormat.getCompress(), outputStream);
                 } catch (Throwable ex) {
                     throw Throwables.wrapAsRuntimeException(ex);
                 }
             }
         }
-        ArchiveSuiteFactory factory = get(format);
+        SingleArchiveSuiteFactory factory = get(format);
         return factory.get(zipFormat.getArchive(), outputStream);
     }
 
     @Override
     public Expander get(String format, InputStream inputStream) {
-        return null;
+        ZipFormat zipFormat = ZipFormats.getZipFormat(format);
+        Preconditions.checkNotNull(zipFormat);
+        Preconditions.checkTrue(zipFormat.isValid());
+        if (Strings.isNotEmpty(zipFormat.getCompress())) {
+            if (!(inputStream instanceof CompressorInputStream)) {
+                try {
+                    if (!(inputStream instanceof BufferedInputStream)) {
+                        inputStream = new BufferedInputStream(inputStream);
+                    }
+                    inputStream = new CompressorStreamFactory().createCompressorInputStream(zipFormat.getCompress(), inputStream);
+                } catch (Throwable ex) {
+                    throw Throwables.wrapAsRuntimeException(ex);
+                }
+            }
+        }
+        SingleArchiveSuiteFactory factory = get(format);
+        return factory.get(zipFormat.getArchive(), inputStream);
     }
 }
