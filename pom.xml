@@ -150,6 +150,11 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.github.fangjinuo.agileway</groupId>
+                <artifactId>agileway-zip</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.github.fangjinuo.langx</groupId>
                 <artifactId>langx-java</artifactId>
                 <scope>provided</scope>
