@@ -1,7 +1,7 @@
 package com.jn.agileway.zip.tests;
 
 import com.jn.agileway.zip.archive.Archiver;
-import com.jn.agileway.zip.archive.AutowiredArchiverFactory;
+import com.jn.agileway.zip.archive.AutowiredArchiveSuiteFactory;
 import com.jn.agileway.zip.archive.Expander;
 import com.jn.agileway.zip.archive.tar.TarFileEntryFileAttrsCopier;
 import com.jn.langx.io.resource.Resource;
@@ -36,7 +36,7 @@ public class TarTests {
         target.delete();
         target.createNewFile();
 
-        Archiver archiver = AutowiredArchiverFactory.getInstance().get("tar.gz", new FileOutputStream(target));
+        Archiver archiver = AutowiredArchiveSuiteFactory.getInstance().get("tar.gz", new FileOutputStream(target));
         archiver.setIgnoreEmptyDirectory(false);
         archiver.addDirectory(new File("E:\\tmp\\t002\\apache-tomcat-9.0.48"));
         archiver.close();

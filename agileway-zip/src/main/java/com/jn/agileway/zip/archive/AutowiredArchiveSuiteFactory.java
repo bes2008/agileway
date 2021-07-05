@@ -15,44 +15,45 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
-public class AutowiredArchiverFactory implements ArchiverFactory, Registry<String, ArchiverFactory> {
-    private static final Logger logger = LoggerFactory.getLogger(AutowiredArchiverFactory.class);
-    private Map<String, ArchiverFactory> archiverFactoryMap = new ConcurrentHashMap<String, ArchiverFactory>();
+public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Registry<String, SingleArchiveSuiteFactory> {
+    private static final Logger logger = LoggerFactory.getLogger(AutowiredArchiveSuiteFactory.class);
+    private Map<String, SingleArchiveSuiteFactory> archiverFactoryMap = new ConcurrentHashMap<String, SingleArchiveSuiteFactory>();
 
-    private AutowiredArchiverFactory() {
-        Collects.forEach(ServiceLoader.load(ArchiverFactory.class), new Consumer<ArchiverFactory>() {
+    private AutowiredArchiveSuiteFactory() {
+        Collects.forEach(ServiceLoader.load(SingleArchiveSuiteFactory.class), new Consumer<SingleArchiveSuiteFactory>() {
             @Override
-            public void accept(ArchiverFactory archiverFactory) {
+            public void accept(SingleArchiveSuiteFactory archiverFactory) {
                 archiverFactoryMap.put(archiverFactory.getArchiveFormat(), archiverFactory);
             }
         });
     }
 
-    private static final AutowiredArchiverFactory INSTANCE = new AutowiredArchiverFactory();
+    private static final AutowiredArchiveSuiteFactory INSTANCE = new AutowiredArchiveSuiteFactory();
 
-    public static AutowiredArchiverFactory getInstance() {
+    public static AutowiredArchiveSuiteFactory getInstance() {
         return INSTANCE;
     }
 
     @Override
-    public void register(ArchiverFactory archiverFactory) {
+    public void register(SingleArchiveSuiteFactory archiverFactory) {
         register(archiverFactory.getArchiveFormat(), archiverFactory);
     }
 
     @Override
-    public void register(String s, ArchiverFactory archiverFactory) {
+    public void register(String s, SingleArchiveSuiteFactory archiverFactory) {
         archiverFactoryMap.put(s, archiverFactory);
     }
 
     @Override
-    public ArchiverFactory get(String format) {
-        ArchiverFactory factory = null;
+    public SingleArchiveSuiteFactory get(String format) {
+        SingleArchiveSuiteFactory factory = null;
         String archive = ZipFormats.getArchiveFormat(format);
         if (Strings.isNotEmpty(archive)) {
             factory = archiverFactoryMap.get(archive);
@@ -77,12 +78,12 @@ public class AutowiredArchiverFactory implements ArchiverFactory, Registry<Strin
                 }
             }
         }
-        ArchiverFactory factory = get(format);
+        ArchiveSuiteFactory factory = get(format);
         return factory.get(zipFormat.getArchive(), outputStream);
     }
 
     @Override
-    public String getArchiveFormat() {
-        return "autowired";
+    public Expander get(String format, InputStream inputStream) {
+        return null;
     }
 }
