@@ -1,20 +1,16 @@
 package com.jn.agileway.zip.archive;
 
-import com.jn.agileway.zip.format.ZipFormat;
 import com.jn.agileway.zip.format.ZipFormats;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
-import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.struct.Entry;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
-import org.apache.commons.compress.compressors.CompressorInputStream;
-import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,19 +50,6 @@ public class Expander implements Closeable {
     }
 
     public Expander(String format, InputStream in) {
-        ZipFormat zf = ZipFormats.getZipFormat(format);
-        if (zf.compressEnabled()) {
-            try {
-                if (!(in instanceof CompressorInputStream)) {
-                    if (!(in instanceof BufferedInputStream)) {
-                        in = new BufferedInputStream(in);
-                    }
-                    in = new CompressorStreamFactory().createCompressorInputStream(zf.getCompress(), in);
-                }
-            } catch (Throwable ex) {
-                throw Throwables.wrapAsRuntimeException(ex);
-            }
-        }
         iterator = new ArchiveIterator(format, in);
         this.inputStream = in;
     }
