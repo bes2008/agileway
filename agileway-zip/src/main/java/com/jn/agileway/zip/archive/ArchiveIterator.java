@@ -45,7 +45,7 @@ public class ArchiveIterator implements Iterator<ArchiveIterator.ArchiveEntryWra
     }
 
     public void setFilter(ArchiveEntryFilter filter) {
-        if(filter!=null) {
+        if (filter != null) {
             this.filter = filter;
         }
     }
@@ -61,7 +61,12 @@ public class ArchiveIterator implements Iterator<ArchiveIterator.ArchiveEntryWra
                 if (entry == null) {
                     return null;
                 }
-                if (!archiveInputStream.canReadEntryData(entry) || !filter.accept(entry)) {
+                if (!archiveInputStream.canReadEntryData(entry)) {
+                    String entryName = entry.getName();
+                    entry = null;
+                    logger.warn("An unreadable entry found: {}", entryName);
+                }
+                if (!filter.accept(entry)) {
                     entry = null;
                 }
             } catch (IOException ex) {
