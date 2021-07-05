@@ -11,7 +11,6 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
-import com.jn.langx.util.function.Predicate;
 import org.apache.commons.compress.compressors.CompressorInputStream;
 import org.apache.commons.compress.compressors.CompressorOutputStream;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
@@ -21,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.util.Map;
 import java.util.ServiceLoader;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
@@ -111,13 +109,7 @@ public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Regist
 
     public Archiver createArchiver(File outFile) {
         final String path = outFile.getPath();
-        Set<String> formats = ZipFormats.getSupportedFormats();
-        String format = Collects.findFirst(formats, new Predicate<String>() {
-            @Override
-            public boolean test(String fmt) {
-                return Strings.endsWith(path, "." + fmt);
-            }
-        });
+        String format = ZipFormats.getFormat(path);
         if (format == null) {
             throw new ArchiveFormatNotFoundException(StringTemplates.formatWithPlaceholder("Can't find a suite archive format for file: {}", path));
         }
@@ -138,13 +130,7 @@ public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Regist
 
     public Expander createExpander(File inFile) {
         final String path = inFile.getPath();
-        Set<String> formats = ZipFormats.getSupportedFormats();
-        String format = Collects.findFirst(formats, new Predicate<String>() {
-            @Override
-            public boolean test(String fmt) {
-                return Strings.endsWith(path, "." + fmt);
-            }
-        });
+        String format = ZipFormats.getFormat(path);
         if (format == null) {
             throw new ArchiveFormatNotFoundException(StringTemplates.formatWithPlaceholder("Can't find a suite archive format for file: {}", path));
         }
