@@ -66,8 +66,10 @@ public class ArchiveIterator implements Iterator<ArchiveIterator.ArchiveEntryWra
                     entry = null;
                     logger.warn("An unreadable entry found: {}", entryName);
                 }
-                if (!filter.accept(entry)) {
-                    entry = null;
+                if (entry != null) {
+                    if (!filter.accept(entry)) {
+                        entry = null;
+                    }
                 }
             } catch (IOException ex) {
                 if (ex instanceof EOFException) {
