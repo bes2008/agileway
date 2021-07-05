@@ -1,26 +1,27 @@
 package com.jn.agileway.zip.archive;
 
+import com.jn.agileway.zip.format.ArchiveFormatNotFoundException;
 import com.jn.agileway.zip.format.ZipFormat;
 import com.jn.agileway.zip.format.ZipFormats;
 import com.jn.langx.annotation.Singleton;
 import com.jn.langx.registry.Registry;
+import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.function.Predicate;
 import org.apache.commons.compress.compressors.CompressorInputStream;
 import org.apache.commons.compress.compressors.CompressorOutputStream;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
@@ -106,5 +107,51 @@ public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Regist
         }
         SingleArchiveSuiteFactory factory = get(format);
         return factory.get(zipFormat.getArchive(), inputStream);
+    }
+
+    public Archiver createArchiver(File outFile) {
+        final String path = outFile.getPath();
+        Set<String> formats = ZipFormats.getSupportedFormats();
+        String format = Collects.findFirst(formats, new Predicate<String>() {
+            @Override
+            public boolean test(String fmt) {
+                return Strings.endsWith(path, "." + fmt);
+            }
+        });
+        if (format == null) {
+            throw new ArchiveFormatNotFoundException(StringTemplates.formatWithPlaceholder("Can't find a suite archive format for file: {}", path));
+        }
+        try {
+            return get(format, new FileOutputStream(outFile));
+        } catch (IOException ex) {
+            throw Throwables.wrapAsRuntimeException(ex);
+        }
+    }
+
+    public Archiver createArchiver(String outFilepath) {
+        return createArchiver(new File(outFilepath));
+    }
+
+    public Expander createExpander(String inFilepath) {
+        return createExpander(new File(inFilepath));
+    }
+
+    public Expander createExpander(File inFile) {
+        final String path = inFile.getPath();
+        Set<String> formats = ZipFormats.getSupportedFormats();
+        String format = Collects.findFirst(formats, new Predicate<String>() {
+            @Override
+            public boolean test(String fmt) {
+                return Strings.endsWith(path, "." + fmt);
+            }
+        });
+        if (format == null) {
+            throw new ArchiveFormatNotFoundException(StringTemplates.formatWithPlaceholder("Can't find a suite archive format for file: {}", path));
+        }
+        try {
+            return get(format, new FileInputStream(inFile));
+        } catch (IOException ex) {
+            throw Throwables.wrapAsRuntimeException(ex);
+        }
     }
 }
