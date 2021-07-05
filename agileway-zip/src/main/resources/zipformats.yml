@@ -4,7 +4,7 @@
 
 - format: ar
   archive: ar
-- fromat: arj
+- format: arj
   archive: arj
 - format: cpio
   archive: cpio
@@ -16,7 +16,7 @@
   archive: 7z
 - format: tar
   archive: tar
-- fromat: zip
+- format: zip
   archive: zip
 
 ##############################################################
