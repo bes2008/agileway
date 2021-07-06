@@ -111,4 +111,12 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
                 .<ArtifactDigit>flat()
                 .asList();
     }
+
+    public List<ArtifactRepository> getSources() {
+        return sources;
+    }
+
+    public ArtifactRepository getDestination() {
+        return destination;
+    }
 }
