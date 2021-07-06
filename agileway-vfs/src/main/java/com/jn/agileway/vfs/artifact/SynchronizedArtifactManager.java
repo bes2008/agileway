@@ -14,6 +14,7 @@ import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.struct.Holder;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.Selectors;
+import org.apache.commons.vfs2.provider.AbstractFileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +30,7 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
     private ArtifactRepository destination;
 
 
-    public FileObject getArtifactFile(final Artifact artifact) {
+    public AbstractFileObject getArtifactFile(final Artifact artifact) {
         try {
             String localPath = destination.getPath(artifact);
             FileObject localFileObject = getFileSystemManager().resolveFile(localPath);
@@ -72,7 +73,7 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
                     }
                 }
             }
-            return localFileObject;
+            return (AbstractFileObject) localFileObject;
         } catch (Throwable ex) {
             logger.error(ex.getMessage());
         }
