@@ -13,19 +13,19 @@
     <modules>
         <module>agileway-codec</module>
         <module>agileway-web</module>
-        <module>agileway-spring</module>
+        <module>agileway-vfs</module>
         <module>agileway-redis</module>
         <module>agileway-shiro-redis</module>
         <module>agileway-httpclient</module>
-        <module>agileway-dmmq</module>
         <module>agileway-aop</module>
         <module>agileway-sshclient</module>
+        <module>agileway-spring</module>
         <module>agileway-redis-springdata2</module>
         <module>agileway-shiro-redis-springdata2</module>
         <module>agileway-examples</module>
         <module>agileway-feign</module>
-        <module>agileway-vfs</module>
         <module>agileway-zip</module>
+        <module>agileway-dmmq</module>
     </modules>
 
     <description>
