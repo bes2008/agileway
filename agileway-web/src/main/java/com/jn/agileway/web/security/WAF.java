@@ -1,7 +1,7 @@
 package com.jn.agileway.web.security;
 
 import com.jn.agileway.web.servlet.RR;
-import com.jn.langx.Named;
+import com.jn.langx.Nameable;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.EmptyEvalutible;
@@ -11,7 +11,7 @@ import com.jn.langx.util.function.Predicate;
 
 import java.util.List;
 
-public abstract class WAF implements Initializable, EmptyEvalutible, Named {
+public abstract class WAF implements Initializable, EmptyEvalutible, Nameable {
     private boolean inited = false;
     private String name;
     private final List<WAFStrategy> strategies = Collects.emptyArrayList();

@@ -1,11 +1,11 @@
 package com.jn.agileway.vfs.artifact.repository;
 
 import com.jn.agileway.vfs.artifact.Artifact;
-import com.jn.langx.Named;
+import com.jn.langx.Nameable;
 
 import java.util.List;
 
-public interface ArtifactRepository extends Named {
+public interface ArtifactRepository extends Nameable {
     String getId();
     void setId(String id);
 

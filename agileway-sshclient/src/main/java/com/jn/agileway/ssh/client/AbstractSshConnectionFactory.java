@@ -1,6 +1,6 @@
 package com.jn.agileway.ssh.client;
 
-import com.jn.langx.AbstractNamed;
+import com.jn.langx.AbstractNameable;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Emptys;
@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.net.InetAddress;
 
-public abstract class AbstractSshConnectionFactory<CONF extends SshConnectionConfig> extends AbstractNamed implements SshConnectionFactory<CONF> {
+public abstract class AbstractSshConnectionFactory<CONF extends SshConnectionConfig> extends AbstractNameable implements SshConnectionFactory<CONF> {
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
