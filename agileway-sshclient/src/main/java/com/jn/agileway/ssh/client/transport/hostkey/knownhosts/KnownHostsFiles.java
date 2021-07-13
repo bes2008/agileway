@@ -6,6 +6,7 @@ import com.jn.langx.codec.base64.Base64;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.enums.Enums;
 import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.io.file.Files;
 
 import java.io.*;
 import java.util.List;
@@ -40,7 +41,7 @@ public class KnownHostsFiles {
     public static List<KnownHostEntry> read(File knownHosts) throws IOException {
         char[] buff = new char[512];
         CharArrayWriter cw = new CharArrayWriter();
-        knownHosts.createNewFile();
+        Files.makeFile(knownHosts);
         FileReader fr = new FileReader(knownHosts);
         while (true) {
             int len = fr.read(buff);

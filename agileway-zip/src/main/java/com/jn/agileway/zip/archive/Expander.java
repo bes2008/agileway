@@ -8,6 +8,7 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.io.file.Files;
 import com.jn.langx.util.struct.Entry;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
@@ -104,16 +105,16 @@ public class Expander implements Closeable {
             logger.info("expand {}", entry.getName());
 
             if (Strings.endsWith(entry.getName(), "/")) {
-                f.mkdirs();
+                Files.makeDirs(f);
                 directorySet.add(new Entry<ArchiveEntry, File>(entry, f));
             } else {
                 if (f.exists()) {
                     if (overwriteExistsFiles) {
-                        f.delete();
-                        f.createNewFile();
+                        Files.deleteQuietly(f);
+                        Files.makeFile(f);
                     }
                 } else {
-                    f.createNewFile();
+                    Files.makeFile(f);
                 }
 
                 BufferedOutputStream bout = null;

@@ -11,11 +11,13 @@ import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.collection.PrimitiveArrays;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.io.file.Files;
 import com.jn.langx.util.io.file.PosixFilePermissions;
+import com.jn.langx.util.reflect.type.Primitives;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -297,7 +299,7 @@ public class Sftps {
         FileAttrs attrs = sftpFile.getAttributes();
 
         int[] groupIds = sftpFile.getSession().getSshConnection().getGroupIds();
-        boolean inGroup = Collects.newArrayList(groupIds).contains(attrs.getGid());
+        boolean inGroup = Collects.newArrayList(PrimitiveArrays.wrap(groupIds)).contains(attrs.getGid());
 
         int uid = sftpFile.getSession().getSshConnection().getUid();
         boolean isOwner = attrs.getUid() == uid;

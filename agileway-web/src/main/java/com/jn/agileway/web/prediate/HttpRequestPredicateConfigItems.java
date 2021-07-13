@@ -3,6 +3,7 @@ package com.jn.agileway.web.prediate;
 import com.jn.langx.util.EmptyEvalutible;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.Arrs;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Predicate;
@@ -27,11 +28,11 @@ public class HttpRequestPredicateConfigItems implements Iterable<HttpRequestPred
     private String[] predicates;
 
     public String[] getPredicates() {
-        return predicates;
+        return Arrs.copy(predicates);
     }
 
     public void setPredicates(String[] predicates) {
-        this.predicates = predicates;
+        this.predicates = Arrs.copy(predicates);
     }
 
     @Override

@@ -93,6 +93,7 @@ public final class LazyCsrfTokenRepository implements CsrfTokenRepository {
 
 	private static final class SaveOnAccessCsrfToken implements CsrfToken {
 
+		private static final long serialVersionUID = 1L;
 		private transient CsrfTokenRepository tokenRepository;
 
 		private transient HttpServletRequest request;

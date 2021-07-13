@@ -148,7 +148,7 @@ public class HttpAsyncClientProvider implements Initializable, Lifecycle, Suppli
         }
     }
 
-    private class AgilewayRetryHandler extends DefaultHttpRequestRetryHandler {
+    private static class AgilewayRetryHandler extends DefaultHttpRequestRetryHandler {
         private int retry;
 
         public AgilewayRetryHandler(int retry) {

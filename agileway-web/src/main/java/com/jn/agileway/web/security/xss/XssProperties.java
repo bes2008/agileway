@@ -1,6 +1,7 @@
 package com.jn.agileway.web.security.xss;
 
 import com.jn.agileway.web.prediate.HttpRequestPredicateConfigItems;
+import com.jn.langx.util.collection.Arrs;
 import com.jn.langx.util.collection.Pipeline;
 
 import java.util.List;
@@ -47,7 +48,7 @@ public class XssProperties extends HttpRequestPredicateConfigItems {
     }
 
     public void setHtmlEventHandlers(String[] htmlEventHandlers) {
-        this.htmlEventHandlers = htmlEventHandlers;
+        this.htmlEventHandlers = Arrs.copy(htmlEventHandlers);
     }
 
     public Set<String> getHtmlTags() {
@@ -55,7 +56,7 @@ public class XssProperties extends HttpRequestPredicateConfigItems {
     }
 
     public void setHtmlTags(String[] htmlTags) {
-        this.htmlTags = htmlTags;
+        this.htmlTags = Arrs.copy(htmlTags);
     }
 
     public boolean isJavascriptEnabled() {
@@ -91,7 +92,7 @@ public class XssProperties extends HttpRequestPredicateConfigItems {
     }
 
     public void setHttpOnlyCookies(String[] httpOnlyCookies) {
-        this.httpOnlyCookies = httpOnlyCookies;
+        this.httpOnlyCookies = Arrs.copy(httpOnlyCookies);
     }
 
     public List<String> getHttpOnlyCookies() {
