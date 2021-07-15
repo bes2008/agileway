@@ -41,7 +41,6 @@ public class RestServiceProvider implements Initializable {
      * 如果项目中，没有对返回值进行统一处理，则可以设置为 Object.class
      */
     private Class unifiedRestResponseClass = RestRespBody.class;
-    private boolean unifiedRestResponseEnabled = true;
 
     public JSONFactory getJsonFactory() {
         return jsonFactory;
@@ -67,6 +66,10 @@ public class RestServiceProvider implements Initializable {
             inited = true;
             builder = createFeignBuilder();
         }
+    }
+
+    private boolean unifiedRestResponseEnabled() {
+        return unifiedRestResponseClass != null;
     }
 
     private Feign.Builder createFeignBuilder() {
@@ -115,7 +118,7 @@ public class RestServiceProvider implements Initializable {
                 .decoder(new EasyjsonDecoder(jsonFactory))
                 .errorDecoder(new EasyjsonErrorDecoder());
 
-        if (unifiedRestResponseEnabled) {
+        if (unifiedRestResponseEnabled()) {
             UnifiedResponseInvocationHandlerFactory invocationHandlerFactory = new UnifiedResponseInvocationHandlerFactory();
             invocationHandlerFactory.setJsonFactory(jsonFactory);
             invocationHandlerFactory.setUnifiedResponseClass(unifiedRestResponseClass);

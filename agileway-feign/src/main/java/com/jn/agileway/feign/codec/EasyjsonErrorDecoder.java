@@ -9,11 +9,9 @@ import java.io.IOException;
 public class EasyjsonErrorDecoder implements ErrorDecoder {
     @Override
     public Exception decode(String methodKey, Response response) {
-        FeignRestRespBodyException exception = new FeignRestRespBodyException();
+        FeignRestRespBodyException exception = new FeignRestRespBodyException(methodKey, response);
         try {
             String body = IOs.readAsString(response.body().asReader());
-            exception.setMethodKey(methodKey);
-            exception.setStatusCode(response.status());
             exception.setResponseBody(body);
         } catch (IOException ex) {
             return new Default().decode(methodKey, response);
