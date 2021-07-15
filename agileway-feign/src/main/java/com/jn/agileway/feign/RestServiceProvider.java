@@ -9,6 +9,7 @@ import com.jn.agileway.feign.supports.unifiedresponse.UnifiedResponseInvocationH
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
 import com.jn.easyjson.core.factory.JsonScope;
+import com.jn.langx.Nameable;
 import com.jn.langx.annotation.Prototype;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.lifecycle.Initializable;
@@ -36,7 +37,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class RestServiceProvider implements Initializable {
+public class RestServiceProvider implements Initializable, RestStubProvider, Nameable {
     private static final Logger logger = LoggerFactory.getLogger(RestServiceProvider.class);
     private Feign.Builder builder;
     private HttpConnectionContext context;
@@ -47,6 +48,7 @@ public class RestServiceProvider implements Initializable {
     private Decoder decoder;
     private ErrorDecoder errorDecoder;
     private InvocationHandlerFactory invocationHandlerFactory;
+    private String name;
 
 
     /**
@@ -60,6 +62,16 @@ public class RestServiceProvider implements Initializable {
 
     public void setJsonFactory(JSONFactory jsonFactory) {
         this.jsonFactory = jsonFactory;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setContext(HttpConnectionContext context) {
@@ -154,6 +166,10 @@ public class RestServiceProvider implements Initializable {
 
     }
 
+    @Override
+    public <Stub> Stub getStub(Class<Stub> stubInterface) {
+        return getService(stubInterface);
+    }
 
     public <Service> Service getService(Class<Service> serviceInterface) {
         if (!inited) {
