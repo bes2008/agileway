@@ -19,6 +19,10 @@ import com.jn.langx.util.net.NetworkAddress;
 import com.jn.langx.util.reflect.Reflects;
 import feign.Client;
 import feign.Feign;
+import feign.InvocationHandlerFactory;
+import feign.codec.Decoder;
+import feign.codec.Encoder;
+import feign.codec.ErrorDecoder;
 import feign.form.FormEncoder;
 import feign.httpclient.ApacheHttpClient;
 import feign.ribbon.LBClientFactory;
@@ -37,6 +41,12 @@ public class RestServiceProvider implements Initializable {
     private volatile boolean inited = false;
     private ConcurrentHashMap<Class, Object> serviceMap = new ConcurrentHashMap<Class, Object>();
     private JSONFactory jsonFactory;
+    private Encoder encoder;
+    private Decoder decoder;
+    private ErrorDecoder errorDecoder;
+    private InvocationHandlerFactory invocationHandlerFactory;
+
+
     /**
      * 如果项目中，没有对返回值进行统一处理，则可以设置为 Object.class
      */
@@ -58,6 +68,10 @@ public class RestServiceProvider implements Initializable {
 
     public void setContext(HttpConnectionContext context) {
         this.context = context;
+    }
+
+    public void setDecoder(Decoder decoder) {
+        this.decoder = decoder;
     }
 
     @Override
@@ -110,19 +124,30 @@ public class RestServiceProvider implements Initializable {
         if (jsonFactory == null) {
             jsonFactory = JsonFactorys.getJSONFactory(JsonScope.SINGLETON);
         }
+        if (encoder == null) {
+            encoder = new FormEncoder(new EasyjsonEncoder(jsonFactory));
+        }
+        if (decoder == null) {
+            decoder = new EasyjsonDecoder(jsonFactory);
+        }
+        if (errorDecoder == null) {
+            errorDecoder = new EasyjsonErrorDecoder();
+        }
         Feign.Builder apiBuilder = Feign.builder()
                 .logger(new Slf4jLogger(loggerName))
                 .logLevel(accessLogLevel)
                 .client(client)
-                .encoder(new FormEncoder(new EasyjsonEncoder(jsonFactory)))
-                .decoder(new EasyjsonDecoder(jsonFactory))
-                .errorDecoder(new EasyjsonErrorDecoder());
+                .encoder(encoder)
+                .decoder(decoder)
+                .errorDecoder(errorDecoder);
 
         if (unifiedRestResponseEnabled()) {
-            UnifiedResponseInvocationHandlerFactory invocationHandlerFactory = new UnifiedResponseInvocationHandlerFactory();
-            invocationHandlerFactory.setJsonFactory(jsonFactory);
-            invocationHandlerFactory.setUnifiedResponseClass(unifiedRestResponseClass);
-
+            if (this.invocationHandlerFactory == null) {
+                UnifiedResponseInvocationHandlerFactory factory = new UnifiedResponseInvocationHandlerFactory();
+                factory.setJsonFactory(jsonFactory);
+                factory.setUnifiedResponseClass(unifiedRestResponseClass);
+                this.invocationHandlerFactory = factory;
+            }
             apiBuilder.invocationHandlerFactory(invocationHandlerFactory);
         }
         return apiBuilder;
