@@ -82,6 +82,18 @@ public class RestServiceProvider implements Initializable, RestStubProvider, Nam
         this.decoder = decoder;
     }
 
+    public void setEncoder(Encoder encoder) {
+        this.encoder = encoder;
+    }
+
+    public void setErrorDecoder(ErrorDecoder errorDecoder) {
+        this.errorDecoder = errorDecoder;
+    }
+
+    public void setInvocationHandlerFactory(InvocationHandlerFactory invocationHandlerFactory) {
+        this.invocationHandlerFactory = invocationHandlerFactory;
+    }
+
     public void setUnifiedRestResponseClass(Class unifiedRestResponseClass) {
         if (unifiedRestResponseClass != null) {
             this.unifiedRestResponseClass = unifiedRestResponseClass;
