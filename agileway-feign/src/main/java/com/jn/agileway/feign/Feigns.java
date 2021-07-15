@@ -27,7 +27,7 @@ public class Feigns {
         return jsonFactory.get().fromJson(response.body().asReader(), dataClass == RestRespBody.class ? dataClass : Types.getParameterizedType(RestRespBody.class, dataClass));
     }
 
-    public static Response copyAsByteArrayResponse(Response response) throws IOException {
+    public static Response toByteArrayResponse(Response response) throws IOException {
         if (response == null || response.body() == null) {
             return null;
         }
@@ -35,7 +35,13 @@ public class Feigns {
 
         if (!body.isRepeatable()) {
             byte[] bytes = IOs.readFully(body.asInputStream(), body.length());
-            Response response2 = Response.create(response.status(), response.reason(), response.headers(), bytes);
+            Response response2 = Response
+                    .builder()
+                    .headers(response.headers())
+                    .status(response.status())
+                    .reason(response.reason())
+                    .body(bytes)
+                    .build();
             response = response2;
         }
         return response;

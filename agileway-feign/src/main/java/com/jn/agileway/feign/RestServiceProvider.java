@@ -4,6 +4,8 @@ import com.jn.agileway.feign.codec.EasyjsonDecoder;
 import com.jn.agileway.feign.codec.EasyjsonEncoder;
 import com.jn.agileway.feign.codec.EasyjsonErrorDecoder;
 import com.jn.agileway.feign.loadbalancer.DynamicLBClientFactory;
+import com.jn.agileway.feign.supports.unifiedresponse.UnifiedResponseBodyDecoder;
+import com.jn.agileway.feign.supports.unifiedresponse.UnifiedResponseInvocationHandlerFactory;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
 import com.jn.easyjson.core.factory.JsonScope;
@@ -56,12 +58,6 @@ public class RestServiceProvider implements Initializable {
         return jsonFactory;
     }
 
-    public void setUnifiedRestResponseClass(Class unifiedRestResponseClass) {
-        if (unifiedRestResponseClass != null) {
-            this.unifiedRestResponseClass = unifiedRestResponseClass;
-        }
-    }
-
     public void setJsonFactory(JSONFactory jsonFactory) {
         this.jsonFactory = jsonFactory;
     }
@@ -73,6 +69,16 @@ public class RestServiceProvider implements Initializable {
     public void setDecoder(Decoder decoder) {
         this.decoder = decoder;
     }
+    public void setUnifiedRestResponseClass(Class unifiedRestResponseClass) {
+        if (unifiedRestResponseClass != null) {
+            this.unifiedRestResponseClass = unifiedRestResponseClass;
+        }
+    }
+
+    public void setUnifiedRestResponse(Class unifiedRestResponseClass, UnifiedResponseBodyDecoder decoder){
+        setUnifiedRestResponseClass(unifiedRestResponseClass);
+        setDecoder(decoder);
+    }
 
     @Override
     public void init() throws InitializationException {
@@ -80,10 +86,6 @@ public class RestServiceProvider implements Initializable {
             inited = true;
             builder = createFeignBuilder();
         }
-    }
-
-    private boolean unifiedRestResponseEnabled() {
-        return unifiedRestResponseClass != null;
     }
 
     private Feign.Builder createFeignBuilder() {
@@ -141,15 +143,13 @@ public class RestServiceProvider implements Initializable {
                 .decoder(decoder)
                 .errorDecoder(errorDecoder);
 
-        if (unifiedRestResponseEnabled()) {
-            if (this.invocationHandlerFactory == null) {
-                UnifiedResponseInvocationHandlerFactory factory = new UnifiedResponseInvocationHandlerFactory();
-                factory.setJsonFactory(jsonFactory);
-                factory.setUnifiedResponseClass(unifiedRestResponseClass);
-                this.invocationHandlerFactory = factory;
-            }
-            apiBuilder.invocationHandlerFactory(invocationHandlerFactory);
+        if (this.invocationHandlerFactory == null) {
+            UnifiedResponseInvocationHandlerFactory factory = new UnifiedResponseInvocationHandlerFactory();
+            factory.setJsonFactory(jsonFactory);
+            factory.setUnifiedResponseClass(unifiedRestResponseClass);
+            this.invocationHandlerFactory = factory;
         }
+        apiBuilder.invocationHandlerFactory(invocationHandlerFactory);
         return apiBuilder;
 
     }

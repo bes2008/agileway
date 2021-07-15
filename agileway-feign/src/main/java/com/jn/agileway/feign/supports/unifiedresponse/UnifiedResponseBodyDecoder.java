@@ -1,4 +1,4 @@
-package com.jn.agileway.feign.codec.restresponsebody;
+package com.jn.agileway.feign.supports.unifiedresponse;
 
 import com.jn.agileway.feign.Feigns;
 import com.jn.langx.annotation.NonNull;
@@ -14,11 +14,11 @@ import java.lang.reflect.Type;
 /**
  * 尽最大的可能，将返回值转换为期望的结果
  */
-public class RestResponseBodyTransformer implements Decoder {
+public class UnifiedResponseBodyDecoder implements Decoder {
     private Decoder decoder;
-    private RestResponseBodyAdapter adapter;
+    private UnifiedResponseBodyAdapter adapter;
 
-    public RestResponseBodyTransformer(@NonNull Decoder decoder, @NonNull RestResponseBodyAdapter adapter) {
+    public UnifiedResponseBodyDecoder(@NonNull Decoder decoder, @NonNull UnifiedResponseBodyAdapter adapter) {
         this.decoder = decoder;
         this.adapter = adapter;
     }
@@ -35,7 +35,7 @@ public class RestResponseBodyTransformer implements Decoder {
         Response.Body body = response.body();
         Response response1 = response;
         if (!body.isRepeatable()) {
-            response1 = Feigns.copyAsByteArrayResponse(response1);
+            response1 = Feigns.toByteArrayResponse(response1);
         }
 
         Object result = decoder.decode(response1, type);

@@ -1,4 +1,4 @@
-package com.jn.agileway.feign;
+package com.jn.agileway.feign.supports.unifiedresponse;
 
 import com.jn.agileway.feign.codec.FeignRestRespBodyException;
 import com.jn.easyjson.core.JSONFactory;
@@ -21,6 +21,10 @@ public class UnifiedResponseInvocationHandlerFactory implements InvocationHandle
     private static final Logger logger = LoggerFactory.getLogger(UnifiedResponseInvocationHandlerFactory.class);
 
     private JSONFactory jsonFactory;
+
+    /**
+     * 如果项目中，没有对返回值进行统一处理，则可以设置为 Object.class
+     */
     private Class unifiedResponseClass = RestRespBody.class;
 
     public void setUnifiedResponseClass(Class unifiedResponseClass) {
