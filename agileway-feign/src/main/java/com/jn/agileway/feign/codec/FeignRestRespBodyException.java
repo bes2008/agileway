@@ -31,6 +31,9 @@ public class FeignRestRespBodyException extends RuntimeException {
         return methodKey;
     }
 
+    public Response originalResponse() {
+        return this.response;
+    }
 
     @Override
     public String getMessage() {
