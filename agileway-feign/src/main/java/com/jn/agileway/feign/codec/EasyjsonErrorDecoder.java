@@ -14,6 +14,7 @@ public class EasyjsonErrorDecoder implements ErrorDecoder {
         try {
             Response response2 = Feigns.toByteArrayResponse(response);
             IOs.close(response);
+            response = response2;
             exception.setResponse(response2);
         } catch (IOException ex) {
             return new Default().decode(methodKey, response);
