@@ -40,6 +40,7 @@ public class Feigns {
                     .headers(response.headers())
                     .status(response.status())
                     .reason(response.reason())
+                    .request(response.request())
                     .body(bytes)
                     .build();
             response = response2;

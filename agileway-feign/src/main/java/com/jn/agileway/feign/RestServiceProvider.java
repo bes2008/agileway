@@ -81,13 +81,14 @@ public class RestServiceProvider implements Initializable, RestStubProvider, Nam
     public void setDecoder(Decoder decoder) {
         this.decoder = decoder;
     }
+
     public void setUnifiedRestResponseClass(Class unifiedRestResponseClass) {
         if (unifiedRestResponseClass != null) {
             this.unifiedRestResponseClass = unifiedRestResponseClass;
         }
     }
 
-    public void setUnifiedRestResponse(Class unifiedRestResponseClass, UnifiedResponseBodyDecoder decoder){
+    public void setUnifiedRestResponse(Class unifiedRestResponseClass, UnifiedResponseBodyDecoder decoder) {
         setUnifiedRestResponseClass(unifiedRestResponseClass);
         setDecoder(decoder);
     }
@@ -143,6 +144,9 @@ public class RestServiceProvider implements Initializable, RestStubProvider, Nam
         }
         if (decoder == null) {
             decoder = new EasyjsonDecoder(jsonFactory);
+        }
+        if (unifiedRestResponseClass != null && !(decoder instanceof UnifiedResponseBodyDecoder)) {
+            decoder = new UnifiedResponseBodyDecoder(decoder);
         }
         if (errorDecoder == null) {
             errorDecoder = new EasyjsonErrorDecoder();

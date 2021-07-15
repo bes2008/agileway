@@ -15,12 +15,10 @@ import java.lang.reflect.Type;
  * 尽最大的可能，将返回值转换为期望的结果
  */
 public class UnifiedResponseBodyDecoder implements Decoder {
-    private Decoder decoder;
-    private UnifiedResponseBodyAdapter adapter;
+    private Decoder delegate;
 
-    public UnifiedResponseBodyDecoder(@NonNull Decoder decoder, @NonNull UnifiedResponseBodyAdapter adapter) {
-        this.decoder = decoder;
-        this.adapter = adapter;
+    public UnifiedResponseBodyDecoder(@NonNull Decoder delegate) {
+        this.delegate = delegate;
     }
 
     @Override
@@ -38,10 +36,7 @@ public class UnifiedResponseBodyDecoder implements Decoder {
             response1 = Feigns.toByteArrayResponse(response1);
         }
 
-        Object result = decoder.decode(response1, type);
-        if (adapter.accept(result)) {
-            result = adapter.adapt(response1, type, result);
-        }
+        Object result = delegate.decode(response1, type);
         if (response1 != response) {
             IOs.close(response);
         }
