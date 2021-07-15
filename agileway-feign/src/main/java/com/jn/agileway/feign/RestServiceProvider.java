@@ -5,6 +5,8 @@ import com.jn.agileway.feign.codec.EasyjsonEncoder;
 import com.jn.agileway.feign.codec.EasyjsonErrorDecoder;
 import com.jn.agileway.feign.loadbalancer.DynamicLBClientFactory;
 import com.jn.easyjson.core.JSONFactory;
+import com.jn.easyjson.core.factory.JsonFactorys;
+import com.jn.easyjson.core.factory.JsonScope;
 import com.jn.langx.annotation.Prototype;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.lifecycle.Initializable;
@@ -102,17 +104,18 @@ public class RestServiceProvider implements Initializable {
             client = RibbonClient.builder().delegate(client).lbClientFactory(clientFactory).build();
         }
 
-
-
+        if (jsonFactory == null) {
+            jsonFactory = JsonFactorys.getJSONFactory(JsonScope.SINGLETON);
+        }
         Feign.Builder apiBuilder = Feign.builder()
                 .logger(new Slf4jLogger(loggerName))
                 .logLevel(accessLogLevel)
                 .client(client)
-                .encoder(new FormEncoder(new EasyjsonEncoder()))
-                .decoder(new EasyjsonDecoder())
+                .encoder(new FormEncoder(new EasyjsonEncoder(jsonFactory)))
+                .decoder(new EasyjsonDecoder(jsonFactory))
                 .errorDecoder(new EasyjsonErrorDecoder());
 
-        if(unifiedRestResponseEnabled){
+        if (unifiedRestResponseEnabled) {
             UnifiedResponseInvocationHandlerFactory invocationHandlerFactory = new UnifiedResponseInvocationHandlerFactory();
             invocationHandlerFactory.setJsonFactory(jsonFactory);
             invocationHandlerFactory.setUnifiedResponseClass(unifiedRestResponseClass);
