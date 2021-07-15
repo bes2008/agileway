@@ -1,7 +1,6 @@
 package com.jn.agileway.zip.archive.tar;
 
 import com.jn.agileway.zip.archive.Archiver;
-import com.jn.agileway.zip.archive.ArchiveSuiteFactory;
 import com.jn.agileway.zip.archive.Expander;
 import com.jn.agileway.zip.archive.SingleArchiveSuiteFactory;
 import com.jn.langx.util.Throwables;
