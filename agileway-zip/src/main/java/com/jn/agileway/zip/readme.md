@@ -9,7 +9,11 @@ https://commons.apache.org/proper/commons-compress/limitations.html
 
 ### 1. zip
 
-zip 规范:  http://www.pkware.com/documents/casestudies/APPNOTE.TXT
+zip 规范:  
+
+    http://www.pkware.com/documents/casestudies/APPNOTE.TXT
+    https://libzip.org/specifications/
+
 
 #### 关于加密、解密
 ```text
