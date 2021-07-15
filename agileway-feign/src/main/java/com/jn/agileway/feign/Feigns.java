@@ -16,13 +16,28 @@ package com.jn.agileway.feign;
 
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.langx.http.rest.RestRespBody;
+import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.reflect.type.Types;
 import feign.Response;
 
 import java.io.IOException;
 
 public class Feigns {
-    public static <T>RestRespBody<T> toRestRespBody(Response response, JSONFactory jsonFactory, Class<T> dataClass) throws IOException {
-        return jsonFactory.get().fromJson(response.body().asReader(), Types.getParameterizedType(RestRespBody.class, dataClass));
+    public static <T> RestRespBody<T> toRestRespBody(Response response, JSONFactory jsonFactory, Class<T> dataClass) throws IOException {
+        return jsonFactory.get().fromJson(response.body().asReader(), dataClass == RestRespBody.class ? dataClass : Types.getParameterizedType(RestRespBody.class, dataClass));
+    }
+
+    public static Response copyAsByteArrayResponse(Response response) throws IOException {
+        if (response == null || response.body() == null) {
+            return null;
+        }
+        Response.Body body = response.body();
+
+        if (!body.isRepeatable()) {
+            byte[] bytes = IOs.readFully(body.asInputStream(), body.length());
+            Response response2 = Response.create(response.status(), response.reason(), response.headers(), bytes);
+            response = response2;
+        }
+        return response;
     }
 }
