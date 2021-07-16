@@ -34,7 +34,7 @@ public class Feigns {
         Response.Body body = response.body();
 
         if (!body.isRepeatable()) {
-            byte[] bytes = IOs.readFully(body.asInputStream(), body.length());
+            byte[] bytes = IOs.toByteArray(body.asInputStream());
             Response response2 = Response
                     .builder()
                     .headers(response.headers())

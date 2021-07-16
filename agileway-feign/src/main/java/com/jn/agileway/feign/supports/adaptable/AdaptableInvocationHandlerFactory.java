@@ -1,4 +1,4 @@
-package com.jn.agileway.feign.supports.unifiedresponse;
+package com.jn.agileway.feign.supports.adaptable;
 
 import com.jn.agileway.feign.codec.FeignRestRespBodyException;
 import com.jn.easyjson.core.JSONFactory;
@@ -17,8 +17,8 @@ import java.util.Map;
 
 import static feign.Util.checkNotNull;
 
-public class UnifiedResponseInvocationHandlerFactory implements InvocationHandlerFactory {
-    private static final Logger logger = LoggerFactory.getLogger(UnifiedResponseInvocationHandlerFactory.class);
+public class AdaptableInvocationHandlerFactory implements InvocationHandlerFactory {
+    private static final Logger logger = LoggerFactory.getLogger(AdaptableInvocationHandlerFactory.class);
 
     private JSONFactory jsonFactory;
 

@@ -4,8 +4,9 @@ import com.jn.agileway.feign.codec.EasyjsonDecoder;
 import com.jn.agileway.feign.codec.EasyjsonEncoder;
 import com.jn.agileway.feign.codec.EasyjsonErrorDecoder;
 import com.jn.agileway.feign.loadbalancer.DynamicLBClientFactory;
-import com.jn.agileway.feign.supports.unifiedresponse.UnifiedResponseBodyDecoder;
-import com.jn.agileway.feign.supports.unifiedresponse.UnifiedResponseInvocationHandlerFactory;
+import com.jn.agileway.feign.supports.adaptable.AdaptableDecoder;
+import com.jn.agileway.feign.supports.adaptable.AdaptableInvocationHandlerFactory;
+import com.jn.agileway.feign.supports.adaptable.ResponseBodyAdapter;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
 import com.jn.easyjson.core.factory.JsonScope;
@@ -46,6 +47,7 @@ public class RestServiceProvider implements Initializable, RestStubProvider, Nam
     private JSONFactory jsonFactory;
     private Encoder encoder;
     private Decoder decoder;
+    private ResponseBodyAdapter responseBodyAdapter;
     private ErrorDecoder errorDecoder;
     private InvocationHandlerFactory invocationHandlerFactory;
     private String name;
@@ -78,6 +80,10 @@ public class RestServiceProvider implements Initializable, RestStubProvider, Nam
         this.context = context;
     }
 
+    public void setResponseBodyAdapter(ResponseBodyAdapter responseBodyAdapter) {
+        this.responseBodyAdapter = responseBodyAdapter;
+    }
+
     public void setDecoder(Decoder decoder) {
         this.decoder = decoder;
     }
@@ -98,11 +104,6 @@ public class RestServiceProvider implements Initializable, RestStubProvider, Nam
         if (unifiedRestResponseClass != null) {
             this.unifiedRestResponseClass = unifiedRestResponseClass;
         }
-    }
-
-    public void setUnifiedRestResponse(Class unifiedRestResponseClass, UnifiedResponseBodyDecoder decoder) {
-        setUnifiedRestResponseClass(unifiedRestResponseClass);
-        setDecoder(decoder);
     }
 
     @Override
@@ -157,8 +158,12 @@ public class RestServiceProvider implements Initializable, RestStubProvider, Nam
         if (decoder == null) {
             decoder = new EasyjsonDecoder(jsonFactory);
         }
-        if (unifiedRestResponseClass != null && !(decoder instanceof UnifiedResponseBodyDecoder)) {
-            decoder = new UnifiedResponseBodyDecoder(decoder);
+        if (responseBodyAdapter != null) {
+            if (decoder instanceof AdaptableDecoder) {
+                ((AdaptableDecoder) decoder).setAdapter(responseBodyAdapter);
+            } else {
+                decoder = new AdaptableDecoder(decoder, responseBodyAdapter);
+            }
         }
         if (errorDecoder == null) {
             errorDecoder = new EasyjsonErrorDecoder();
@@ -172,7 +177,7 @@ public class RestServiceProvider implements Initializable, RestStubProvider, Nam
                 .errorDecoder(errorDecoder);
 
         if (this.invocationHandlerFactory == null) {
-            UnifiedResponseInvocationHandlerFactory factory = new UnifiedResponseInvocationHandlerFactory();
+            AdaptableInvocationHandlerFactory factory = new AdaptableInvocationHandlerFactory();
             factory.setJsonFactory(jsonFactory);
             factory.setUnifiedResponseClass(unifiedRestResponseClass);
             this.invocationHandlerFactory = factory;
