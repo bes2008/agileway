@@ -1,4 +1,4 @@
-package com.jn.agileway.feign.codec;
+package com.jn.agileway.feign.supports.rpc;
 
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.io.IOs;
@@ -8,13 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class FeignRestRespBodyException extends RuntimeException {
-    private static final Logger logger = LoggerFactory.getLogger(FeignRestRespBodyException.class);
+public class FeignRPCException extends RuntimeException {
+    private static final Logger logger = LoggerFactory.getLogger(FeignRPCException.class);
     private String methodKey;
     private Response response;
     private Holder<String> responseBody;
 
-    public FeignRestRespBodyException(String methodKey, Response response) {
+    public FeignRPCException(String methodKey, Response response) {
         this.methodKey = methodKey;
         this.response = response;
     }
