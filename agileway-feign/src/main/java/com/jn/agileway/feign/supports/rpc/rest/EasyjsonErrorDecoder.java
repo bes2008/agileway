@@ -1,6 +1,7 @@
-package com.jn.agileway.feign.codec;
+package com.jn.agileway.feign.supports.rpc.rest;
 
 import com.jn.agileway.feign.Feigns;
+import com.jn.agileway.feign.supports.rpc.FeignRPCException;
 import com.jn.langx.util.io.IOs;
 import feign.Response;
 import feign.codec.ErrorDecoder;
@@ -10,12 +11,12 @@ import java.io.IOException;
 public class EasyjsonErrorDecoder implements ErrorDecoder {
     @Override
     public Exception decode(String methodKey, Response response){
-        FeignRestRespBodyException exception = new FeignRestRespBodyException(methodKey, response);
+        FeignRPCException exception = new FeignRPCException(methodKey, response);
         try {
-            Response response2 = Feigns.toByteArrayResponse(response);
+            Response repeatableResponse = Feigns.toByteArrayResponse(response);
             IOs.close(response);
-            response = response2;
-            exception.setResponse(response2);
+            response = repeatableResponse;
+            exception.setResponse(repeatableResponse);
         } catch (IOException ex) {
             return new Default().decode(methodKey, response);
         }

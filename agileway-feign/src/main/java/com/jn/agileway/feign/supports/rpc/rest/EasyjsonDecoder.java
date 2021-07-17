@@ -1,4 +1,4 @@
-package com.jn.agileway.feign.codec;
+package com.jn.agileway.feign.supports.rpc.rest;
 
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
