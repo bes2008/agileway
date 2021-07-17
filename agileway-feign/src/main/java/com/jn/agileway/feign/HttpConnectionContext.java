@@ -1,5 +1,6 @@
 package com.jn.agileway.feign;
 
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Strings;
@@ -14,6 +15,9 @@ import org.apache.http.impl.client.HttpClients;
 import java.util.List;
 
 public class HttpConnectionContext {
+    @Nullable
+    private String serviceName;
+
     private HttpConnectionProperties configuration;
     /**
      * license server nodes
@@ -77,5 +81,14 @@ public class HttpConnectionContext {
             return url;
         }
         return url + "/" + urlPrefix;
+    }
+
+
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
     }
 }

@@ -12,7 +12,7 @@ public class HttpConnectionProperties {
     /**
      * 默认端口， http 协议是 80， https协议是 443
      */
-    private static final int DEFAULT_PORT = 6666;
+    private static final int DEFAULT_PORT = 80;
 
     private String accessLoggerName = ACCESS_LOG_NAME;
 

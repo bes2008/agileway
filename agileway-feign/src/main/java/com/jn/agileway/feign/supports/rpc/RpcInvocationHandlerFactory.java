@@ -18,6 +18,10 @@ public class RpcInvocationHandlerFactory implements InvocationHandlerFactory {
 
     private ErrorHandler errorHandler;
 
+    public void setErrorHandler(ErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
+    }
+
     @Override
     public InvocationHandler create(Target target, Map<Method, MethodHandler> dispatch) {
         return new RpcInvocationHandler(target, dispatch);

@@ -1,33 +1,30 @@
 package com.jn.agileway.feign;
 
-import com.jn.agileway.feign.supports.rpc.rest.EasyjsonDecoder;
-import com.jn.agileway.feign.supports.rpc.rest.EasyjsonEncoder;
-import com.jn.agileway.feign.supports.rpc.rest.EasyjsonErrorDecoder;
 import com.jn.agileway.feign.loadbalancer.DynamicLBClientFactory;
 import com.jn.agileway.feign.supports.adaptable.AdaptableDecoder;
-import com.jn.agileway.feign.supports.rpc.RpcInvocationHandlerFactory;
 import com.jn.agileway.feign.supports.adaptable.ResponseBodyAdapter;
-import com.jn.easyjson.core.JSONFactory;
-import com.jn.easyjson.core.factory.JsonFactorys;
-import com.jn.easyjson.core.factory.JsonScope;
+import com.jn.agileway.feign.supports.rpc.RpcInvocationHandlerFactory;
 import com.jn.langx.Nameable;
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.annotation.Prototype;
-import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.text.StringTemplates;
+import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
+import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Maps;
 import com.jn.langx.util.function.Supplier;
 import com.jn.langx.util.net.NetworkAddress;
 import com.jn.langx.util.reflect.Reflects;
 import feign.Client;
 import feign.Feign;
-import feign.InvocationHandlerFactory;
+import feign.RequestInterceptor;
 import feign.codec.Decoder;
 import feign.codec.Encoder;
 import feign.codec.ErrorDecoder;
-import feign.form.FormEncoder;
 import feign.httpclient.ApacheHttpClient;
 import feign.ribbon.LBClientFactory;
 import feign.ribbon.RibbonClient;
@@ -40,31 +37,28 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SimpleStubProvider implements Initializable, StubProvider, Nameable {
     private static final Logger logger = LoggerFactory.getLogger(SimpleStubProvider.class);
-    private Feign.Builder builder;
+    @NonNull
+    protected Feign.Builder apiBuilder;
+    @NonNull
     private HttpConnectionContext context;
-    private volatile boolean inited = false;
+    private volatile boolean initialed = false;
     private ConcurrentHashMap<Class, Object> serviceMap = new ConcurrentHashMap<Class, Object>();
-    private JSONFactory jsonFactory;
+    @NonNull
     private Encoder encoder;
+    @NonNull
     private Decoder decoder;
+    @Nullable
     private ResponseBodyAdapter responseBodyAdapter;
+    @NonNull
     private ErrorDecoder errorDecoder;
-    private InvocationHandlerFactory invocationHandlerFactory;
+    @NonNull
+    private ErrorHandler errorHandler;
+    @NonNull
     private String name;
 
+    private List<RequestInterceptor> requestInterceptors = Collects.emptyArrayList();
 
-    /**
-     * 如果项目中，没有对返回值进行统一处理，则可以设置为 Object.class
-     */
-    private Class unifiedRestResponseClass = RestRespBody.class;
-
-    public JSONFactory getJsonFactory() {
-        return jsonFactory;
-    }
-
-    public void setJsonFactory(JSONFactory jsonFactory) {
-        this.jsonFactory = jsonFactory;
-    }
+    private StubProviderCustomizer customizer;
 
     @Override
     public String getName() {
@@ -74,6 +68,10 @@ public class SimpleStubProvider implements Initializable, StubProvider, Nameable
     @Override
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setCustomizer(StubProviderCustomizer customizer) {
+        this.customizer = customizer;
     }
 
     public void setContext(HttpConnectionContext context) {
@@ -96,25 +94,45 @@ public class SimpleStubProvider implements Initializable, StubProvider, Nameable
         this.errorDecoder = errorDecoder;
     }
 
-    public void setInvocationHandlerFactory(InvocationHandlerFactory invocationHandlerFactory) {
-        this.invocationHandlerFactory = invocationHandlerFactory;
+    public void setErrorHandler(ErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
     }
 
-    public void setUnifiedRestResponseClass(Class unifiedRestResponseClass) {
-        if (unifiedRestResponseClass != null) {
-            this.unifiedRestResponseClass = unifiedRestResponseClass;
+    public void addRequestInterceptor(RequestInterceptor requestInterceptor) {
+        if (requestInterceptor != null) {
+            this.requestInterceptors.add(requestInterceptor);
         }
+    }
+
+    public Encoder getEncoder() {
+        return encoder;
+    }
+
+    public Decoder getDecoder() {
+        return decoder;
+    }
+
+    public ResponseBodyAdapter getResponseBodyAdapter() {
+        return responseBodyAdapter;
+    }
+
+    public ErrorDecoder getErrorDecoder() {
+        return errorDecoder;
+    }
+
+    public ErrorHandler getErrorHandler() {
+        return errorHandler;
     }
 
     @Override
     public void init() throws InitializationException {
-        if (!inited) {
-            inited = true;
-            builder = createFeignBuilder();
+        if (!initialed) {
+            initialed = true;
+            apiBuilder = createApiBuilder();
         }
     }
 
-    private Feign.Builder createFeignBuilder() {
+    private Feign.Builder createApiBuilder() {
         Preconditions.checkNotNull(context, "the connection context is null");
 
         // server addresses
@@ -149,15 +167,24 @@ public class SimpleStubProvider implements Initializable, StubProvider, Nameable
             client = RibbonClient.builder().delegate(client).lbClientFactory(clientFactory).build();
         }
 
-        if (jsonFactory == null) {
-            jsonFactory = JsonFactorys.getJSONFactory(JsonScope.SINGLETON);
+        // 设置 name
+        if (Strings.isEmpty(name)) {
+            name = context.getServiceName();
+            if (Strings.isEmpty(name)) {
+                name = context.getConfiguration().getProtocol() + " " + context.getNodesString();
+            }
         }
-        if (encoder == null) {
-            encoder = new FormEncoder(new EasyjsonEncoder(jsonFactory));
+
+        if(Emptys.isAnyEmpty(encoder, decoder, errorDecoder, errorHandler)){
+            if(customizer!=null){
+                customizer.customize(this);
+            }
         }
-        if (decoder == null) {
-            decoder = new EasyjsonDecoder(jsonFactory);
-        }
+
+        Preconditions.checkNotNull(encoder, "the encoder is null");
+        Preconditions.checkNotNull(errorDecoder, "the error-decoder is null");
+        Preconditions.checkNotNull(decoder, "the decoder is null");
+        Preconditions.checkNotNull(errorHandler, "the error-handler is null");
         if (responseBodyAdapter != null) {
             if (decoder instanceof AdaptableDecoder) {
                 ((AdaptableDecoder) decoder).setAdapter(responseBodyAdapter);
@@ -165,9 +192,7 @@ public class SimpleStubProvider implements Initializable, StubProvider, Nameable
                 decoder = new AdaptableDecoder(decoder, responseBodyAdapter);
             }
         }
-        if (errorDecoder == null) {
-            errorDecoder = new EasyjsonErrorDecoder();
-        }
+
         Feign.Builder apiBuilder = Feign.builder()
                 .logger(new Slf4jLogger(loggerName))
                 .logLevel(accessLogLevel)
@@ -176,21 +201,24 @@ public class SimpleStubProvider implements Initializable, StubProvider, Nameable
                 .decoder(decoder)
                 .errorDecoder(errorDecoder);
 
-        if (this.invocationHandlerFactory == null) {
-            RpcInvocationHandlerFactory factory = new RpcInvocationHandlerFactory();
-            this.invocationHandlerFactory = factory;
-        }
+        RpcInvocationHandlerFactory invocationHandlerFactory = new RpcInvocationHandlerFactory();
+        invocationHandlerFactory.setErrorHandler(errorHandler);
         apiBuilder.invocationHandlerFactory(invocationHandlerFactory);
+
+        if (!requestInterceptors.isEmpty()) {
+            apiBuilder.requestInterceptors(requestInterceptors);
+        }
+
         return apiBuilder;
 
     }
 
     @Override
     public <Stub> Stub getStub(Class<Stub> stubInterface) {
-        if (!inited) {
+        if (!initialed) {
             init();
         }
-        Preconditions.checkTrue(inited, "service provider is not inited");
+        Preconditions.checkTrue(initialed, "service provider is not initialed");
         Preconditions.checkArgument(stubInterface.isInterface(), new Supplier<Object[], String>() {
             @Override
             public String get(Object[] objects) {
@@ -214,6 +242,6 @@ public class SimpleStubProvider implements Initializable, StubProvider, Nameable
     private <Service> Service createStub(Class<Service> serviceClass) {
         String url = context.getUrl();
         logger.info("create a service [{}] at the [{}] url: {}", Reflects.getFQNClassName(serviceClass), context.getConfiguration().getLoadbalancerHost(), url);
-        return builder.target(serviceClass, url);
+        return apiBuilder.target(serviceClass, url);
     }
 }
