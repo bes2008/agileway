@@ -1,8 +1,8 @@
 package com.jn.agileway.feign;
 
-import com.jn.agileway.feign.codec.EasyjsonDecoder;
-import com.jn.agileway.feign.codec.EasyjsonEncoder;
-import com.jn.agileway.feign.codec.EasyjsonErrorDecoder;
+import com.jn.agileway.feign.supports.rpc.rest.EasyjsonDecoder;
+import com.jn.agileway.feign.supports.rpc.rest.EasyjsonEncoder;
+import com.jn.agileway.feign.supports.rpc.rest.EasyjsonErrorDecoder;
 import com.jn.agileway.feign.loadbalancer.DynamicLBClientFactory;
 import com.jn.agileway.feign.supports.adaptable.AdaptableDecoder;
 import com.jn.agileway.feign.supports.adaptable.AdaptableInvocationHandlerFactory;
@@ -38,8 +38,8 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class RestServiceProvider implements Initializable, RestStubProvider, Nameable {
-    private static final Logger logger = LoggerFactory.getLogger(RestServiceProvider.class);
+public class SimpleStubProvider implements Initializable, StubProvider, Nameable {
+    private static final Logger logger = LoggerFactory.getLogger(SimpleStubProvider.class);
     private Feign.Builder builder;
     private HttpConnectionContext context;
     private volatile boolean inited = false;
@@ -189,35 +189,31 @@ public class RestServiceProvider implements Initializable, RestStubProvider, Nam
 
     @Override
     public <Stub> Stub getStub(Class<Stub> stubInterface) {
-        return getService(stubInterface);
-    }
-
-    public <Service> Service getService(Class<Service> serviceInterface) {
         if (!inited) {
             init();
         }
         Preconditions.checkTrue(inited, "service provider is not inited");
-        Preconditions.checkArgument(serviceInterface.isInterface(), new Supplier<Object[], String>() {
+        Preconditions.checkArgument(stubInterface.isInterface(), new Supplier<Object[], String>() {
             @Override
             public String get(Object[] objects) {
                 return StringTemplates.formatWithPlaceholder("the service class {} is not interface");
             }
-        }, Reflects.getFQNClassName(serviceInterface));
+        }, Reflects.getFQNClassName(stubInterface));
 
-        boolean isNotSingleton = Reflects.isAnnotationPresent(serviceInterface, Prototype.class);
+        boolean isNotSingleton = Reflects.isAnnotationPresent(stubInterface, Prototype.class);
         if (isNotSingleton) {
-            return createService(serviceInterface);
+            return createStub(stubInterface);
         }
-        return (Service) Maps.putIfAbsent(serviceMap, serviceInterface, (Supplier<Class<Service>, Service>) new Supplier<Class<Service>, Service>() {
+        return (Stub) Maps.putIfAbsent(serviceMap, stubInterface, (Supplier<Class<Stub>, Stub>) new Supplier<Class<Stub>, Stub>() {
             @Override
-            public Service get(Class<Service> clazz) {
-                return createService(clazz);
+            public Stub get(Class<Stub> clazz) {
+                return createStub(clazz);
             }
         });
 
     }
 
-    private <Service> Service createService(Class<Service> serviceClass) {
+    private <Service> Service createStub(Class<Service> serviceClass) {
         String url = context.getUrl();
         logger.info("create a service [{}] at the [{}] url: {}", Reflects.getFQNClassName(serviceClass), context.getConfiguration().getLoadbalancerHost(), url);
         return builder.target(serviceClass, url);

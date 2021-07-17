@@ -1,5 +1,5 @@
 package com.jn.agileway.feign;
 
-public interface RestStubProvider {
+public interface StubProvider {
     <Stub> Stub getStub(Class<Stub> stubInterface);
 }
