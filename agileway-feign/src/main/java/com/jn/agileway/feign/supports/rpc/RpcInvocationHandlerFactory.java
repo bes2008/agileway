@@ -1,12 +1,10 @@
-package com.jn.agileway.feign.supports.adaptable;
+package com.jn.agileway.feign.supports.rpc;
 
-import com.jn.agileway.feign.supports.rpc.FeignRPCException;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.reflect.Reflects;
 import feign.*;
-import feign.codec.ErrorDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,11 +16,10 @@ import java.util.Map;
 
 import static feign.Util.checkNotNull;
 
-public class AdaptableInvocationHandlerFactory implements InvocationHandlerFactory {
-    private static final Logger logger = LoggerFactory.getLogger(AdaptableInvocationHandlerFactory.class);
+public class RpcInvocationHandlerFactory implements InvocationHandlerFactory {
+    private static final Logger logger = LoggerFactory.getLogger(RpcInvocationHandlerFactory.class);
 
     private JSONFactory jsonFactory;
-    private ErrorDecoder errorDecoder;
     /**
      * 如果项目中，没有对返回值进行统一处理，则可以设置为 Object.class
      */
@@ -80,7 +77,7 @@ public class AdaptableInvocationHandlerFactory implements InvocationHandlerFacto
                 if (result instanceof Response) {
                     return result;
                 }
-            } catch (FeignRPCException ex) {
+            } catch (FeignRpcException ex) {
                 Type type = ((MethodMetadata) Reflects.getAnyFieldValue(methodHandler, "metadata", true, false)).returnType();
                 return jsonFactory.get().fromJson(ex.getResponseBody(), type);
 

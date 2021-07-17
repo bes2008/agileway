@@ -8,13 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class FeignRPCException extends RuntimeException {
-    private static final Logger logger = LoggerFactory.getLogger(FeignRPCException.class);
+public class FeignRpcException extends RuntimeException {
+    private static final Logger logger = LoggerFactory.getLogger(FeignRpcException.class);
     private String methodKey;
     private Response response;
     private Holder<String> responseBody;
 
-    public FeignRPCException(String methodKey, Response response) {
+    public FeignRpcException(String methodKey, Response response) {
         this.methodKey = methodKey;
         this.response = response;
     }

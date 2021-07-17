@@ -5,7 +5,7 @@ import com.jn.agileway.feign.supports.rpc.rest.EasyjsonEncoder;
 import com.jn.agileway.feign.supports.rpc.rest.EasyjsonErrorDecoder;
 import com.jn.agileway.feign.loadbalancer.DynamicLBClientFactory;
 import com.jn.agileway.feign.supports.adaptable.AdaptableDecoder;
-import com.jn.agileway.feign.supports.adaptable.AdaptableInvocationHandlerFactory;
+import com.jn.agileway.feign.supports.rpc.RpcInvocationHandlerFactory;
 import com.jn.agileway.feign.supports.adaptable.ResponseBodyAdapter;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
@@ -177,7 +177,7 @@ public class SimpleStubProvider implements Initializable, StubProvider, Nameable
                 .errorDecoder(errorDecoder);
 
         if (this.invocationHandlerFactory == null) {
-            AdaptableInvocationHandlerFactory factory = new AdaptableInvocationHandlerFactory();
+            RpcInvocationHandlerFactory factory = new RpcInvocationHandlerFactory();
             factory.setJsonFactory(jsonFactory);
             factory.setUnifiedResponseClass(unifiedRestResponseClass);
             this.invocationHandlerFactory = factory;
