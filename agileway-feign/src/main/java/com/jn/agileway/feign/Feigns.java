@@ -17,7 +17,10 @@ package com.jn.agileway.feign;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.type.Types;
+import feign.InvocationHandlerFactory;
+import feign.MethodMetadata;
 import feign.Response;
 
 import java.io.IOException;
@@ -46,5 +49,10 @@ public class Feigns {
             response = repeatableResponse;
         }
         return response;
+    }
+
+    public static MethodMetadata getMethodMetadata(InvocationHandlerFactory.MethodHandler methodHandler) {
+        MethodMetadata metadata = ((MethodMetadata) Reflects.getAnyFieldValue(methodHandler, "metadata", true, false));
+        return metadata;
     }
 }

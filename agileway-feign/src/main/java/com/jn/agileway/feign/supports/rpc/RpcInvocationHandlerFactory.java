@@ -1,8 +1,6 @@
 package com.jn.agileway.feign.supports.rpc;
 
-import com.jn.easyjson.core.JSONFactory;
-import com.jn.langx.http.rest.RestRespBody;
-import com.jn.langx.util.Preconditions;
+import com.jn.agileway.feign.ErrorHandler;
 import com.jn.langx.util.reflect.Reflects;
 import feign.*;
 import org.slf4j.Logger;
@@ -11,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.lang.reflect.Type;
 import java.util.Map;
 
 import static feign.Util.checkNotNull;
@@ -19,33 +16,18 @@ import static feign.Util.checkNotNull;
 public class RpcInvocationHandlerFactory implements InvocationHandlerFactory {
     private static final Logger logger = LoggerFactory.getLogger(RpcInvocationHandlerFactory.class);
 
-    private JSONFactory jsonFactory;
-    /**
-     * 如果项目中，没有对返回值进行统一处理，则可以设置为 Object.class
-     */
-    private Class unifiedResponseClass = RestRespBody.class;
-
-    public void setUnifiedResponseClass(Class unifiedResponseClass) {
-        if (unifiedResponseClass != null) {
-            this.unifiedResponseClass = unifiedResponseClass;
-        }
-    }
-
-    public void setJsonFactory(JSONFactory jsonFactory) {
-        this.jsonFactory = jsonFactory;
-    }
+    private ErrorHandler errorHandler;
 
     @Override
     public InvocationHandler create(Target target, Map<Method, MethodHandler> dispatch) {
-        Preconditions.checkNotNull(jsonFactory, "the json factory is null");
-        return new UnifiedResponseInvocationHandler(target, dispatch);
+        return new RpcInvocationHandler(target, dispatch);
     }
 
-    class UnifiedResponseInvocationHandler implements InvocationHandler {
+    class RpcInvocationHandler implements InvocationHandler {
         private final Target target;
         private final Map<Method, MethodHandler> dispatch;
 
-        UnifiedResponseInvocationHandler(Target target, Map<Method, MethodHandler> dispatch) {
+        RpcInvocationHandler(Target target, Map<Method, MethodHandler> dispatch) {
             this.target = checkNotNull(target, "target");
             this.dispatch = checkNotNull(dispatch, "dispatch for %s", target);
         }
@@ -68,27 +50,16 @@ public class RpcInvocationHandlerFactory implements InvocationHandlerFactory {
             MethodHandler methodHandler = dispatch.get(method);
             try {
                 result = methodHandler.invoke(args);
-                if (result == null) {
-                    return null;
-                }
-                if (Reflects.isSubClassOrEquals(unifiedResponseClass, result.getClass())) {
-                    return result;
-                }
-                if (result instanceof Response) {
-                    return result;
-                }
+                return result;
             } catch (FeignRpcException ex) {
-                Type type = ((MethodMetadata) Reflects.getAnyFieldValue(methodHandler, "metadata", true, false)).returnType();
-                return jsonFactory.get().fromJson(ex.getResponseBody(), type);
-
+                return errorHandler.apply(ex, methodHandler);
             } catch (FeignException ex) {
                 String message = ex.getMessage();
                 String errorStatusMessageFlag = "; content:";
                 int errorStatusIndex = message.indexOf(errorStatusMessageFlag);
                 if (errorStatusIndex > 0) {
                     String responseBody = message.substring(errorStatusIndex + errorStatusMessageFlag.length());
-                    Type type = ((MethodMetadata) Reflects.getAnyFieldValue(methodHandler, "metadata", true, false)).returnType();
-                    return jsonFactory.get().fromJson(responseBody, type);
+                  //  Response response = Response.builder().request();
                 } else {
                     logger.error("error occur when execute {}", Reflects.getMethodString(method), ex);
                 }
@@ -98,8 +69,8 @@ public class RpcInvocationHandlerFactory implements InvocationHandlerFactory {
 
         @Override
         public boolean equals(Object obj) {
-            if (obj instanceof UnifiedResponseInvocationHandler) {
-                UnifiedResponseInvocationHandler other = (UnifiedResponseInvocationHandler) obj;
+            if (obj instanceof RpcInvocationHandler) {
+                RpcInvocationHandler other = (RpcInvocationHandler) obj;
                 return target.equals(other.target);
             }
             return false;

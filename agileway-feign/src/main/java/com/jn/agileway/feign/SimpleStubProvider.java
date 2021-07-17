@@ -178,8 +178,6 @@ public class SimpleStubProvider implements Initializable, StubProvider, Nameable
 
         if (this.invocationHandlerFactory == null) {
             RpcInvocationHandlerFactory factory = new RpcInvocationHandlerFactory();
-            factory.setJsonFactory(jsonFactory);
-            factory.setUnifiedResponseClass(unifiedRestResponseClass);
             this.invocationHandlerFactory = factory;
         }
         apiBuilder.invocationHandlerFactory(invocationHandlerFactory);
