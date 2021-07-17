@@ -54,10 +54,8 @@ public class RestStubProviderCustomizer implements SimpleStubProviderCustomizer 
         ErrorHandler errorHandler = stubProvider.getErrorHandler();
         if (errorHandler == null) {
             UnifiedResponseRestErrorHandler handler = new UnifiedResponseRestErrorHandler();
-            handler.setDecoder(decoder);
             stubProvider.setErrorHandler(handler);
         }
-
 
     }
 }

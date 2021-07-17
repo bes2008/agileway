@@ -195,6 +195,7 @@ public class SimpleStubProvider extends AbstractInitializable implements Initial
                 decoder = new AdaptableDecoder(decoder, responseBodyAdapter);
             }
         }
+        errorHandler.setDecoder(decoder);
 
         Feign.Builder apiBuilder = Feign.builder()
                 .logger(new Slf4jLogger(loggerName))

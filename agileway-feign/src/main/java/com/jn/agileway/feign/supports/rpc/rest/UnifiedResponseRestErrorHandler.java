@@ -22,6 +22,11 @@ public class UnifiedResponseRestErrorHandler implements ErrorHandler<Throwable> 
     }
 
     @Override
+    public Decoder getDecoder() {
+        return decoder;
+    }
+
+    @Override
     public Object apply(Throwable e, InvocationHandlerFactory.MethodHandler methodHandler) {
         if(e instanceof FeignRpcException) {
             FeignRpcException rpcException = (FeignRpcException)e;
