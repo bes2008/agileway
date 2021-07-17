@@ -1,4 +1,4 @@
-package com.jn.agileway.feign.param;
+package com.jn.agileway.feign.supports.rpc.rest.param;
 
 import com.jn.easyjson.core.JSON;
 import com.jn.easyjson.core.JSONBuilderProvider;

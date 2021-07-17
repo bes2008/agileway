@@ -1,11 +1,12 @@
 package com.jn.agileway.feign.supports.adaptable;
 
-import com.jn.agileway.feign.codec.FeignRestRespBodyException;
+import com.jn.agileway.feign.supports.rpc.FeignRPCException;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.reflect.Reflects;
 import feign.*;
+import feign.codec.ErrorDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +22,7 @@ public class AdaptableInvocationHandlerFactory implements InvocationHandlerFacto
     private static final Logger logger = LoggerFactory.getLogger(AdaptableInvocationHandlerFactory.class);
 
     private JSONFactory jsonFactory;
-
+    private ErrorDecoder errorDecoder;
     /**
      * 如果项目中，没有对返回值进行统一处理，则可以设置为 Object.class
      */
@@ -79,9 +80,10 @@ public class AdaptableInvocationHandlerFactory implements InvocationHandlerFacto
                 if (result instanceof Response) {
                     return result;
                 }
-            } catch (FeignRestRespBodyException ex) {
+            } catch (FeignRPCException ex) {
                 Type type = ((MethodMetadata) Reflects.getAnyFieldValue(methodHandler, "metadata", true, false)).returnType();
                 return jsonFactory.get().fromJson(ex.getResponseBody(), type);
+
             } catch (FeignException ex) {
                 String message = ex.getMessage();
                 String errorStatusMessageFlag = "; content:";

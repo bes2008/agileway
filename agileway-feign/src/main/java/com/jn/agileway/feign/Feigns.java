@@ -35,7 +35,7 @@ public class Feigns {
 
         if (!body.isRepeatable()) {
             byte[] bytes = IOs.toByteArray(body.asInputStream());
-            Response response2 = Response
+            Response repeatableResponse = Response
                     .builder()
                     .headers(response.headers())
                     .status(response.status())
@@ -43,7 +43,7 @@ public class Feigns {
                     .request(response.request())
                     .body(bytes)
                     .build();
-            response = response2;
+            response = repeatableResponse;
         }
         return response;
     }
