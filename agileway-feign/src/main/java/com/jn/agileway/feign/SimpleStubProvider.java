@@ -3,6 +3,7 @@ package com.jn.agileway.feign;
 import com.jn.agileway.feign.loadbalancer.DynamicLBClientFactory;
 import com.jn.agileway.feign.supports.adaptable.AdaptableDecoder;
 import com.jn.agileway.feign.supports.adaptable.ResponseBodyAdapter;
+import com.jn.agileway.feign.supports.rpc.ClientWrapper;
 import com.jn.agileway.feign.supports.rpc.RpcInvocationHandlerFactory;
 import com.jn.langx.Nameable;
 import com.jn.langx.annotation.NonNull;
@@ -198,7 +199,7 @@ public class SimpleStubProvider extends AbstractInitializable implements Initial
         Feign.Builder apiBuilder = Feign.builder()
                 .logger(new Slf4jLogger(loggerName))
                 .logLevel(accessLogLevel)
-                .client(client)
+                .client(new ClientWrapper(client))
                 .encoder(encoder)
                 .decoder(decoder)
                 .errorDecoder(errorDecoder);

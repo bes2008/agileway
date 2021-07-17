@@ -17,8 +17,15 @@ public class FeignRpcException extends RuntimeException {
     private Holder<String> responseBody;
 
     public FeignRpcException(String methodKey, Response response) {
+        this(methodKey, response, null);
+    }
+
+    public FeignRpcException(String methodKey, Response response, Throwable cause) {
         this.methodKey = methodKey;
         this.response = response;
+        if (cause != null) {
+            initCause(cause);
+        }
     }
 
     public void setResponse(Response response) {

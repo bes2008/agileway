@@ -1,5 +1,6 @@
 package com.jn.agileway.feign.supports.rpc.rest;
 
+import com.jn.agileway.feign.ErrorHandler;
 import com.jn.agileway.feign.SimpleStubProvider;
 import com.jn.agileway.feign.SimpleStubProviderCustomizer;
 import com.jn.easyjson.core.JSONFactory;
@@ -9,6 +10,7 @@ import feign.codec.Decoder;
 import feign.codec.Encoder;
 import feign.codec.ErrorDecoder;
 import feign.form.FormEncoder;
+
 /**
  * @since 2.6.0
  */
@@ -48,6 +50,14 @@ public class RestStubProviderCustomizer implements SimpleStubProviderCustomizer 
             decoder = new EasyjsonDecoder(jsonFactory);
             stubProvider.setDecoder(decoder);
         }
+
+        ErrorHandler errorHandler = stubProvider.getErrorHandler();
+        if (errorHandler == null) {
+            UnifiedResponseRestErrorHandler handler = new UnifiedResponseRestErrorHandler();
+            handler.setDecoder(decoder);
+            stubProvider.setErrorHandler(handler);
+        }
+
 
     }
 }

@@ -1,8 +1,11 @@
 package com.jn.agileway.feign.supports.rpc;
 
 import com.jn.agileway.feign.ErrorHandler;
-import com.jn.langx.util.reflect.Reflects;
-import feign.*;
+import com.jn.agileway.feign.Feigns;
+import feign.FeignException;
+import feign.InvocationHandlerFactory;
+import feign.MethodMetadata;
+import feign.Target;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,17 +64,16 @@ public class RpcInvocationHandlerFactory implements InvocationHandlerFactory {
             } catch (FeignRpcException ex) {
                 return errorHandler.apply(ex, methodHandler);
             } catch (FeignException ex) {
-                String message = ex.getMessage();
-                String errorStatusMessageFlag = "; content:";
-                int errorStatusIndex = message.indexOf(errorStatusMessageFlag);
-                if (errorStatusIndex > 0) {
-                    String responseBody = message.substring(errorStatusIndex + errorStatusMessageFlag.length());
-                  //  Response response = Response.builder().request();
-                } else {
-                    logger.error("error occur when execute {}", Reflects.getMethodString(method), ex);
-                }
+                // 此时 Response 可能已被关闭
+                FeignRR feignRR = ClientWrapper.feignRRHolder.get();
+                MethodMetadata metadata = Feigns.getMethodMetadata(methodHandler);
+                String methodKey = metadata.configKey();
+                FeignRpcException exception = new FeignRpcException(methodKey, feignRR.getResponse(),ex);
+                return errorHandler.apply(exception, methodHandler);
+            } finally {
+                ClientWrapper.feignRRHolder.reset();
             }
-            return result;
+
         }
 
         @Override
