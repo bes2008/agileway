@@ -8,7 +8,9 @@ import feign.codec.EncodeException;
 import feign.codec.Encoder;
 
 import java.lang.reflect.Type;
-
+/**
+ * @since 2.6.0
+ */
 public class EasyjsonEncoder implements Encoder {
 
     private JSONFactory jsonFactory;

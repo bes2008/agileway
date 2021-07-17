@@ -36,6 +36,11 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * 重构代码，由原来的面向Rest提升为针对任何类型的http服务
+ *
+ * @since 2.6.0
+ */
 public class SimpleStubProvider extends AbstractInitializable implements Initializable, StubProvider, Nameable {
     private static final Logger logger = LoggerFactory.getLogger(SimpleStubProvider.class);
     @NonNull
@@ -58,7 +63,7 @@ public class SimpleStubProvider extends AbstractInitializable implements Initial
 
     private List<RequestInterceptor> requestInterceptors = Collects.emptyArrayList();
 
-    protected StubProviderCustomizer customizer;
+    protected SimpleStubProviderCustomizer customizer;
 
     @Override
     public String getName() {
@@ -70,7 +75,7 @@ public class SimpleStubProvider extends AbstractInitializable implements Initial
         this.name = name;
     }
 
-    public void setCustomizer(StubProviderCustomizer customizer) {
+    public void setCustomizer(SimpleStubProviderCustomizer customizer) {
         this.customizer = customizer;
     }
 

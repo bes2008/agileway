@@ -6,6 +6,7 @@ import com.jn.langx.lifecycle.InitializationException;
 
 /**
  * @see SimpleStubProvider
+ * @since 2.6.0
  */
 @Deprecated
 public class RestStubProvider extends SimpleStubProvider {

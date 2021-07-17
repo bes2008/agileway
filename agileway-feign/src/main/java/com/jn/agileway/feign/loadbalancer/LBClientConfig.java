@@ -6,6 +6,7 @@ import com.netflix.client.config.IClientConfigKey;
 
 /**
  * 由框架控制，只创建一个实例，不需要我们代码调用
+ * @since 1.0.0
  */
 public class LBClientConfig extends DefaultClientConfigImpl {
     IClientConfigKey<String> retryableStatusCodes = new CommonClientConfigKey<String>("RetryableStatusCodes") {

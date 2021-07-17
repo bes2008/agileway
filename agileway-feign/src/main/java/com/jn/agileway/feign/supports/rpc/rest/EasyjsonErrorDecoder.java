@@ -9,7 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-
+/**
+ * @since 2.6.0
+ */
 public class EasyjsonErrorDecoder implements ErrorDecoder {
     private static final Logger logger = LoggerFactory.getLogger(EasyjsonErrorDecoder.class);
 

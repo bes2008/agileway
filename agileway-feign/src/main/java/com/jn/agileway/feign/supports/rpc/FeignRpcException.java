@@ -7,7 +7,9 @@ import feign.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+/**
+ * @since 2.6.0
+ */
 public class FeignRpcException extends RuntimeException {
     private static final Logger logger = LoggerFactory.getLogger(FeignRpcException.class);
     private String methodKey;

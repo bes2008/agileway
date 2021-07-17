@@ -6,7 +6,9 @@ import com.jn.langx.util.reflect.Reflects;
 import feign.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+/**
+ * @since 2.6.0
+ */
 public class ToJsonExpander implements Param.Expander {
     private static final Logger logger = LoggerFactory.getLogger(ToJsonExpander.class);
     private final JSON jsons = JSONBuilderProvider.simplest();

@@ -1,7 +1,7 @@
 package com.jn.agileway.feign.supports.rpc.rest;
 
 import com.jn.agileway.feign.SimpleStubProvider;
-import com.jn.agileway.feign.StubProviderCustomizer;
+import com.jn.agileway.feign.SimpleStubProviderCustomizer;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
 import com.jn.easyjson.core.factory.JsonScope;
@@ -9,8 +9,10 @@ import feign.codec.Decoder;
 import feign.codec.Encoder;
 import feign.codec.ErrorDecoder;
 import feign.form.FormEncoder;
-
-public class RestStubProviderCustomizer implements StubProviderCustomizer {
+/**
+ * @since 2.6.0
+ */
+public class RestStubProviderCustomizer implements SimpleStubProviderCustomizer {
     private JSONFactory jsonFactory = JsonFactorys.getJSONFactory(JsonScope.SINGLETON);
 
     public void setJsonFactory(JSONFactory jsonFactory) {

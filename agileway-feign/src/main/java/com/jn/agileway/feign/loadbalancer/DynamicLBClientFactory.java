@@ -13,6 +13,9 @@ import org.slf4j.LoggerFactory;
 
 import static com.netflix.client.config.CommonClientConfigKey.ListOfServers;
 
+/**
+ * @since 1.0.0
+ */
 public class DynamicLBClientFactory implements LBClientFactory {
     private static final Logger logger = LoggerFactory.getLogger(DynamicLBClientFactory.class);
     private HttpConnectionContext context;

@@ -9,6 +9,9 @@ import feign.Param;
 
 import java.util.Map;
 
+/**
+ * @since 1.0.0
+ */
 public class ToQueryStringExpander implements Param.Expander {
     private static JSON jsons = JSONBuilderProvider.simplest();
 

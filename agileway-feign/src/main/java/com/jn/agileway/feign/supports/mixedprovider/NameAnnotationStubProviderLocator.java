@@ -7,7 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-
+/**
+ * @since 2.6.0
+ */
 public class NameAnnotationStubProviderLocator implements StubProviderLocator {
     private static final Logger logger = LoggerFactory.getLogger(NameAnnotationStubProviderLocator.class);
 

@@ -11,7 +11,9 @@ import feign.codec.Decoder;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Type;
-
+/**
+ * @since 2.6.0
+ */
 public class EasyjsonDecoder implements Decoder {
     private JSONFactory jsonFactory;
 

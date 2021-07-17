@@ -5,6 +5,7 @@ import com.jn.agileway.feign.supports.rpc.rest.RestStubProvider;
 
 /**
  * @see SimpleStubProvider
+ * @since 1.0.0
  */
 @Deprecated
 public class RestServiceProvider extends RestStubProvider {

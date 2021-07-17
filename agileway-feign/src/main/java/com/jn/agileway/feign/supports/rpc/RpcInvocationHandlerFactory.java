@@ -13,6 +13,9 @@ import java.util.Map;
 
 import static feign.Util.checkNotNull;
 
+/**
+ * @since 2.6.0
+ */
 public class RpcInvocationHandlerFactory implements InvocationHandlerFactory {
     private static final Logger logger = LoggerFactory.getLogger(RpcInvocationHandlerFactory.class);
 

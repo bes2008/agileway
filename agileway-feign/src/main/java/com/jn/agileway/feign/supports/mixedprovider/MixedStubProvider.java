@@ -8,7 +8,9 @@ import com.jn.langx.util.reflect.Reflects;
 
 import java.util.HashMap;
 import java.util.List;
-
+/**
+ * @since 2.6.0
+ */
 public class MixedStubProvider extends GenericRegistry<SimpleStubProvider> implements StubProvider {
 
     private StubProviderLocator locator;

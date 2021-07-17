@@ -14,6 +14,7 @@ import java.lang.reflect.Type;
 
 /**
  * 尽最大的可能，将返回值转换为期望的结果
+ * @since 2.6.0
  */
 public class AdaptableDecoder implements Decoder {
     private Decoder delegate;
