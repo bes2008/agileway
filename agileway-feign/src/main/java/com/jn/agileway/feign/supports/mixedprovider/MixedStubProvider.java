@@ -27,12 +27,12 @@ public class MixedStubProvider extends GenericRegistry<SimpleStubProvider> imple
         List<SimpleStubProvider> providers = instances();
         Preconditions.checkNotEmpty(providers, "has no any restful stub provider, please register them");
         if (providers.size() == 1) {
-            return providers.get(0).getService(stubInterface);
+            return providers.get(0).getStub(stubInterface);
         }
         String providerName = locator.apply(providers, stubInterface);
         Preconditions.checkNotEmpty(providerName, "Can't find any valid restful stub provider for stub [{}]", Reflects.getFQNClassName(stubInterface));
         SimpleStubProvider provider = get(providerName);
         Preconditions.checkNotNull(provider, "Can't find a restful stub provider named [{}]", providerName);
-        return provider.getService(stubInterface);
+        return provider.getStub(stubInterface);
     }
 }
