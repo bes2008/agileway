@@ -8,6 +8,7 @@ import com.jn.langx.Nameable;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.annotation.Prototype;
+import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.text.StringTemplates;
@@ -35,13 +36,12 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SimpleStubProvider implements Initializable, StubProvider, Nameable {
+public class SimpleStubProvider extends AbstractInitializable implements Initializable, StubProvider, Nameable {
     private static final Logger logger = LoggerFactory.getLogger(SimpleStubProvider.class);
     @NonNull
     protected Feign.Builder apiBuilder;
     @NonNull
     private HttpConnectionContext context;
-    private volatile boolean initialed = false;
     private ConcurrentHashMap<Class, Object> serviceMap = new ConcurrentHashMap<Class, Object>();
     @NonNull
     private Encoder encoder;
@@ -58,7 +58,7 @@ public class SimpleStubProvider implements Initializable, StubProvider, Nameable
 
     private List<RequestInterceptor> requestInterceptors = Collects.emptyArrayList();
 
-    private StubProviderCustomizer customizer;
+    protected StubProviderCustomizer customizer;
 
     @Override
     public String getName() {
@@ -125,11 +125,8 @@ public class SimpleStubProvider implements Initializable, StubProvider, Nameable
     }
 
     @Override
-    public void init() throws InitializationException {
-        if (!initialed) {
-            initialed = true;
-            apiBuilder = createApiBuilder();
-        }
+    public void doInit() throws InitializationException {
+        apiBuilder = createApiBuilder();
     }
 
     private Feign.Builder createApiBuilder() {
@@ -175,8 +172,8 @@ public class SimpleStubProvider implements Initializable, StubProvider, Nameable
             }
         }
 
-        if(Emptys.isAnyEmpty(encoder, decoder, errorDecoder, errorHandler)){
-            if(customizer!=null){
+        if (Emptys.isAnyEmpty(encoder, decoder, errorDecoder, errorHandler)) {
+            if (customizer != null) {
                 customizer.customize(this);
             }
         }
@@ -215,10 +212,7 @@ public class SimpleStubProvider implements Initializable, StubProvider, Nameable
 
     @Override
     public <Stub> Stub getStub(Class<Stub> stubInterface) {
-        if (!initialed) {
-            init();
-        }
-        Preconditions.checkTrue(initialed, "service provider is not initialed");
+        init();
         Preconditions.checkArgument(stubInterface.isInterface(), new Supplier<Object[], String>() {
             @Override
             public String get(Object[] objects) {
@@ -239,9 +233,9 @@ public class SimpleStubProvider implements Initializable, StubProvider, Nameable
 
     }
 
-    private <Service> Service createStub(Class<Service> serviceClass) {
+    private <Stub> Stub createStub(Class<Stub> stubInterface) {
         String url = context.getUrl();
-        logger.info("create a service [{}] at the [{}] url: {}", Reflects.getFQNClassName(serviceClass), context.getConfiguration().getLoadbalancerHost(), url);
-        return apiBuilder.target(serviceClass, url);
+        logger.info("create a stub [{}] at the [{}] url: {}", Reflects.getFQNClassName(stubInterface), context.getConfiguration().getLoadbalancerHost(), url);
+        return apiBuilder.target(stubInterface, url);
     }
 }

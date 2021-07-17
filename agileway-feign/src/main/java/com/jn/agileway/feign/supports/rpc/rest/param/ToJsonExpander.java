@@ -7,8 +7,8 @@ import feign.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ToJsonStringExpander implements Param.Expander {
-    private static final Logger logger = LoggerFactory.getLogger(ToJsonStringExpander.class);
+public class ToJsonExpander implements Param.Expander {
+    private static final Logger logger = LoggerFactory.getLogger(ToJsonExpander.class);
     private final JSON jsons = JSONBuilderProvider.simplest();
 
     @Override
