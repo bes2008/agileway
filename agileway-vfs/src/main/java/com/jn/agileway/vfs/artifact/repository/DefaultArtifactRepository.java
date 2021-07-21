@@ -1,7 +1,7 @@
 package com.jn.agileway.vfs.artifact.repository;
 
 import com.jn.agileway.vfs.artifact.Artifact;
-import com.jn.langx.security.MessageDigests;
+import com.jn.langx.security.crypto.digest.MessageDigests;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
