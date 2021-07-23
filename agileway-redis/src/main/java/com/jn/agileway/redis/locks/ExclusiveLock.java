@@ -3,6 +3,7 @@ package com.jn.agileway.redis.locks;
 import com.jn.agileway.redis.core.RedisTemplate;
 import com.jn.langx.Builder;
 import com.jn.langx.annotation.NotThreadSafe;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.concurrent.lock.DistributedLock;
 
@@ -27,82 +28,81 @@ public class ExclusiveLock extends DistributedLock {
     private Builder<String> lockRandomValueBuilder = new LockRandomValueBuilder();
 
     @Override
-    public void lock() {
-        String v = value;
-        if (v == null) {
-            v = lockRandomValueBuilder.build();
-        }
-        boolean locked = false;
-        while (!locked) {
-            locked = redisTemplate.opsForValue().setIfAbsent(resource, v);
-            if (!locked) {
-                try {
-                    synchronized (this) {
-                        this.wait(50);
-                    }
-                } catch (InterruptedException ex) {
-                    // ignore
-                }
-            }
-        }
-        value = v;
+    public void lockInterruptibly() throws InterruptedException {
+        lock(-1, TimeUnit.MILLISECONDS, true);
     }
 
     @Override
-    public void lockInterruptibly() throws InterruptedException {
+    public void lock() {
+        try {
+            lock(-1, TimeUnit.MILLISECONDS, false);
+        } catch (InterruptedException ex) {
+            // ignore it
+        }
+    }
+
+
+    public void lock(long ttl, TimeUnit ttlUnit, boolean interruptibly) throws InterruptedException {
         String v = value;
         if (v == null) {
             v = lockRandomValueBuilder.build();
         }
         boolean locked = false;
         while (!locked) {
-            locked = redisTemplate.opsForValue().setIfAbsent(resource, v);
+            locked = doLock(v, ttl, ttlUnit);
             if (!locked) {
                 try {
                     synchronized (this) {
                         this.wait(50);
                     }
                 } catch (InterruptedException ex) {
-                    throw ex;
+                    if (interruptibly) {
+                        throw ex;
+                    }
                 }
             }
         }
-        value = v;
+        if (locked) {
+            value = v;
+        }
     }
 
     @Override
     public boolean tryLock() {
-        String v = value;
-        if (v == null) {
-            v = lockRandomValueBuilder.build();
-        }
-        boolean locked = redisTemplate.opsForValue().setIfAbsent(resource, v);
-        if (locked) {
-            value = v;
-        }
-        return locked;
+        return tryLock(-1, TimeUnit.MILLISECONDS);
     }
 
     @Override
-    public boolean tryLock(long time, TimeUnit unit) throws InterruptedException {
+    public boolean tryLock(long time, TimeUnit unit) {
+        return tryLock(time, unit, -1, null);
+    }
+
+    public boolean tryLock(long lockTime, @Nullable TimeUnit lockUnit, long ttl, @Nullable TimeUnit ttlUnit) {
         String v = value;
         if (v == null) {
             v = lockRandomValueBuilder.build();
         }
+        lockUnit = lockUnit == null ? TimeUnit.MILLISECONDS : lockUnit;
+        ttlUnit = ttlUnit == null ? TimeUnit.MILLISECONDS : ttlUnit;
+
         boolean locked = false;
+
         long start = System.currentTimeMillis();
-        boolean willWaitWhenLockFail = time > 0;
-        long delta = unit.toMillis(time);
+        boolean willWaitWhenLockFail = lockTime > 0;
+        long delta = willWaitWhenLockFail ? lockUnit.toMillis(lockTime) : 5L;
         long endTime = start + delta;
         while (!locked && System.currentTimeMillis() < endTime) {
-            locked = redisTemplate.opsForValue().setIfAbsent(resource, v);
+            long lockTime2 = endTime - System.currentTimeMillis();
+            if (lockTime2 > 0) {
+                locked = doLock(v, ttl, ttlUnit);
+            }
             if (!locked && willWaitWhenLockFail) {
                 try {
                     synchronized (this) {
                         this.wait(50);
                     }
                 } catch (InterruptedException ex) {
-                    throw ex;
+                    // ignore it
                 }
             }
         }
@@ -112,6 +112,25 @@ public class ExclusiveLock extends DistributedLock {
         return locked;
     }
 
+    private boolean doLock(String expectedValue, long ttl, TimeUnit ttlTime) {
+        boolean locked = false;
+        if (ttl > 0) {
+            // 有 过期时间的 Lock
+            Object value = redisTemplate.opsForValue().get(resource);
+            if (value != null) {
+                locked = false;
+            } else {
+                if (ttlTime == null) {
+                    ttlTime = TimeUnit.MICROSECONDS;
+                }
+                redisTemplate.opsForValue().set(resource, expectedValue, ttl, ttlTime);
+                locked = true;
+            }
+        } else {
+            locked = redisTemplate.opsForValue().setIfAbsent(resource, expectedValue);
+        }
+        return locked;
+    }
 
     public void forceUnlock() {
         unlockOnce(true);
@@ -123,7 +142,7 @@ public class ExclusiveLock extends DistributedLock {
             return;
         }
         long start = System.currentTimeMillis();
-        long delta = 60 * 1000; // 1 min
+        long delta = 3 * 1000; // 3s
         long endTime = start + delta;
         boolean unlocked = false;
         while (!unlocked && System.currentTimeMillis() < endTime) {
@@ -144,7 +163,14 @@ public class ExclusiveLock extends DistributedLock {
     }
 
     private boolean unlockOnce(boolean force) {
-        boolean unlocked = (boolean) redisTemplate.executeScript("UnlockExclusiveLock", Collects.newArrayList(this.resource), value, force);
+        boolean unlocked = false;
+
+        if (value == null) {
+            redisTemplate.delete(this.resource);
+            unlocked = true;
+        } else {
+            unlocked = (boolean) redisTemplate.executeScript("UnlockExclusiveLock", Collects.newArrayList(this.resource), value, force);
+        }
         if (unlocked) {
             value = null;
         }
