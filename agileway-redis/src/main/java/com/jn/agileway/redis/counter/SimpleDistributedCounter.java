@@ -11,6 +11,16 @@ public class SimpleDistributedCounter implements DistributedCounter {
         setCounterKey(key);
     }
 
+    public Long getAndIncrement() {
+        return getAndIncrement(1L);
+    }
+
+    public Long getAndIncrement(Long delta) {
+        Long ret = get();
+        increment(delta);
+        return ret;
+    }
+
     @Override
     public Long increment() {
         return increment(1L);

@@ -33,6 +33,16 @@ public class HashedDistributedCounter implements DistributedCounter {
         return this.redisTemplate.opsForHash().increment(this.key, counterKey, -aLong);
     }
 
+    public Long getAndIncrement() {
+        return getAndIncrement(1L);
+    }
+
+    public Long getAndIncrement(Long delta) {
+        Long ret = get();
+        increment(delta);
+        return ret;
+    }
+
     @Override
     public Long get() {
         return (Long)this.redisTemplate.opsForHash().get(this.key, counterKey);
