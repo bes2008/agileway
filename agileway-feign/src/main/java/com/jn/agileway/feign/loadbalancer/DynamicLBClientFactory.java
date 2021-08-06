@@ -1,6 +1,6 @@
 package com.jn.agileway.feign.loadbalancer;
 
-import com.jn.agileway.feign.supports.rpc.HttpConnectionContext;
+import com.jn.agileway.feign.HttpConnectionContext;
 import com.jn.langx.util.Objs;
 import com.netflix.client.ClientFactory;
 import com.netflix.client.config.CommonClientConfigKey;
