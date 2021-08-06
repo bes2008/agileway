@@ -85,7 +85,7 @@ public class HttpAsyncClientProvider implements Initializable, Lifecycle, Suppli
                 .setConnectTimeout(config.getConnectTimeoutInMills())
                 .setAuthenticationEnabled(config.isAuthcEnabled());
 
-        if(config.isContentCompressionEnabled()){
+        if (config.isContentCompressionEnabled()) {
             Method method = Reflects.getPublicMethod(RequestConfig.Builder.class, "setContentCompressionEnabled");
             Reflects.invoke(method, requestConfigBuilder, new Object[]{true}, true, true);
         }
@@ -98,11 +98,13 @@ public class HttpAsyncClientProvider implements Initializable, Lifecycle, Suppli
         });
 
         RequestConfig requestConfig = requestConfigBuilder.build();
+
         final HttpAsyncClientBuilder httpClientBuilder = HttpAsyncClientBuilder.create()
                 .setDefaultRequestConfig(requestConfig)
                 .setKeepAliveStrategy(new AgilewayConnectionKeepAliveStrategy())
                 .setMaxConnPerRoute(config.getPoolMaxPerRoute())
-                .setMaxConnTotal(config.getPoolMaxConnections());
+                .setMaxConnTotal(config.getPoolMaxConnections())
+                .setDefaultCookieSpecRegistry(CookieSpecs.createDefaultCookieSpecProviderBuilder().build());
 
         Pipeline.of(this.customizers).forEach(new Consumer<HttpAsyncClientCustomizer>() {
             @Override
