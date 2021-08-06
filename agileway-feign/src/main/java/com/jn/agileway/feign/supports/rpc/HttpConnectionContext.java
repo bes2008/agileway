@@ -1,4 +1,4 @@
-package com.jn.agileway.feign;
+package com.jn.agileway.feign.supports.rpc;
 
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.text.StringTemplates;

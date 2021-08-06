@@ -1,4 +1,4 @@
-package com.jn.agileway.feign;
+package com.jn.agileway.feign.supports.rpc;
 
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Maths;

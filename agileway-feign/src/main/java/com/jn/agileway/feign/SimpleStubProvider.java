@@ -5,6 +5,7 @@ import com.jn.agileway.feign.supports.adaptable.AdaptableDecoder;
 import com.jn.agileway.feign.supports.adaptable.ResponseBodyAdapter;
 import com.jn.agileway.feign.supports.rpc.ClientWrapper;
 import com.jn.agileway.feign.supports.rpc.RpcInvocationHandlerFactory;
+import com.jn.agileway.feign.supports.rpc.HttpConnectionContext;
 import com.jn.langx.Nameable;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
