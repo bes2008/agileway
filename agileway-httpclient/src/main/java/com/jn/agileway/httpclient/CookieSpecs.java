@@ -13,6 +13,10 @@ import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import java.util.List;
 
 public class CookieSpecs {
+    private CookieSpecs() {
+
+    }
+
     private static final List<String> COOKIE_DATE_PATTERNS = Collects.asList(
             "EEE',' dd-MMM-yyyy HH:mm:ss 'GMT'",
             "EEE',' dd MMM yyyy HH:mm:ss 'GMT'",

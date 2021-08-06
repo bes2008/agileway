@@ -1,5 +1,6 @@
 package com.jn.agileway.feign;
 
+import com.jn.agileway.httpclient.CookieSpecs;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Emptys;
@@ -51,7 +52,9 @@ public class HttpConnectionContext {
 
     public HttpClient getHttpClient() {
         if (httpClient == null) {
-            return HttpClients.createDefault();
+            return HttpClients.custom()
+                    .setDefaultCookieSpecRegistry(CookieSpecs.createDefaultCookieSpecProviderBuilder().build())
+                    .build();
         }
         return httpClient;
     }
