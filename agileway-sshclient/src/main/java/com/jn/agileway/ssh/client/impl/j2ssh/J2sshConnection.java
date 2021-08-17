@@ -69,11 +69,11 @@ public class J2sshConnection extends AbstractSshConnection<J2sshConnectionConfig
     }
 
     @Override
-    public boolean authenticateWithPublicKey(String user, char[] pemPrivateKey, String passphrase) throws SshException {
+    public boolean authenticateWithPublicKey(String user, byte[] pemPrivateKey, String passphrase) throws SshException {
         PublicKeyAuthenticationClient authenticationClient = new PublicKeyAuthenticationClient();
 
         try {
-            SshPrivateKeyFile privateKeyFile = SshPrivateKeyFile.parse(new String(pemPrivateKey).getBytes(Charsets.UTF_8));
+            SshPrivateKeyFile privateKeyFile = SshPrivateKeyFile.parse(pemPrivateKey);
             SshPrivateKey privateKey = privateKeyFile.toPrivateKey(passphrase);
 
             authenticationClient.setUsername(user);

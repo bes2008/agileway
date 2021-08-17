@@ -123,7 +123,7 @@ public interface SshConnection<CONF extends SshConnectionConfig> extends Closeab
      * @return whether the connection is now authenticated.
      * @throws IOException when error
      */
-    boolean authenticateWithPublicKey(String user, char[] pemPrivateKey, String passphrase) throws SshException;
+    boolean authenticateWithPublicKey(String user, byte[] pemPrivateKey, String passphrase) throws SshException;
 
     /**
      * A convenience wrapper function which reads in a private key (PEM format, either DSA or RSA)

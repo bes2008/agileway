@@ -72,6 +72,26 @@ class JschSessionedChannel implements SessionedChannel {
     }
 
     @Override
+    public void startLocalForwarding(String bindToHost, int bindToPort, String destHost, int destPort) throws SshException {
+
+    }
+
+    @Override
+    public void stopLocalForwarding(String bindToHost, int bindToPort) {
+
+    }
+
+    @Override
+    public void startRemoteForwarding(String bindToHost, int bindToPort, String destHost, int destPort) throws SshException {
+
+    }
+
+    @Override
+    public void stopRemoteForwarding(String bindToHost, int bindToPort) {
+
+    }
+
+    @Override
     public void exec(String command) throws SshException {
         Preconditions.checkNotEmpty(command, "the command is illegal : {}", command);
         Preconditions.checkState(session != null && session.isConnected(), "the session is not connected");

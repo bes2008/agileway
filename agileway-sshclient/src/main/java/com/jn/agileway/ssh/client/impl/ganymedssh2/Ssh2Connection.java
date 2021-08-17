@@ -12,6 +12,7 @@ import com.jn.agileway.ssh.client.impl.ganymedssh2.sftp.Ssh2SftpSession;
 import com.jn.agileway.ssh.client.impl.ganymedssh2.verifier.ToSsh2HostKeyVerifierAdapter;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.langx.util.Preconditions;
+import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.net.Nets;
 
 import java.io.IOException;
@@ -70,10 +71,10 @@ public class Ssh2Connection extends AbstractSshConnection<Ssh2ConnectionConfig> 
     }
 
     @Override
-    public boolean authenticateWithPublicKey(String user, char[] pemPrivateKey, String passphrase) throws SshException {
+    public boolean authenticateWithPublicKey(String user, byte[] pemPrivateKey, String passphrase) throws SshException {
         Preconditions.checkState(delegate != null);
         try {
-            return delegate.authenticateWithPublicKey(user, pemPrivateKey, passphrase);
+            return delegate.authenticateWithPublicKey(user, new String(pemPrivateKey, Charsets.UTF_8).toCharArray(), passphrase);
         } catch (Throwable ex) {
             throw new SshException(ex);
         }

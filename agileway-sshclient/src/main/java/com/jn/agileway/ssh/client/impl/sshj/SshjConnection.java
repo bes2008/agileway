@@ -94,7 +94,7 @@ public class SshjConnection extends AbstractSshConnection<SshjConnectionConfig> 
     }
 
     @Override
-    public boolean authenticateWithPublicKey(String user, char[] pemPrivateKey, String passphrase) throws SshException {
+    public boolean authenticateWithPublicKey(String user, byte[] pemPrivateKey, String passphrase) throws SshException {
         Preconditions.checkNotNull(sshClient);
 
         String keyContent = new String(pemPrivateKey);

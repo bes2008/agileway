@@ -67,6 +67,13 @@
             <optional>true</optional>
         </dependency>
 
+        <dependency>
+            <groupId>com.sshtools</groupId>
+            <artifactId>maverick-synergy-client</artifactId>
+            <version>3.0.3-FINAL</version>
+            <optional>true</optional>
+        </dependency>
+
     </dependencies>
 
 </project>

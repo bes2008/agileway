@@ -4,6 +4,7 @@ import com.jn.agileway.ssh.client.transport.hostkey.verifier.AnyHostKeyVerifier;
 import com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.PrimitiveArrays;
+import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
 
 import java.io.CharArrayWriter;
@@ -73,9 +74,7 @@ public abstract class AbstractSshConnection<CONF extends SshConnectionConfig> im
         } finally {
             IOs.close(fr);
         }
-
-
-        return authenticateWithPublicKey(user, cw.toCharArray(), passphrase);
+        return authenticateWithPublicKey(user, new String(cw.toCharArray()).getBytes(Charsets.UTF_8), passphrase);
     }
 
     @Override

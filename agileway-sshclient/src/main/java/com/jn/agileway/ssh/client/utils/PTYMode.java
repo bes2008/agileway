@@ -155,5 +155,7 @@ public enum PTYMode {
     public byte getOpcode() {
         return opcode;
     }
-
+    public int getOpcodeInt() {
+        return opcode;
+    }
 }

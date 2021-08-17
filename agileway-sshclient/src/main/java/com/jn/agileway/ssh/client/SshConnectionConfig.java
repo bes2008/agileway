@@ -4,9 +4,6 @@ import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
 
 public interface SshConnectionConfig {
 
@@ -15,26 +12,34 @@ public interface SshConnectionConfig {
      */
     @NonNull
     String getHost();
+
     void setHost(String host);
+
     /**
      * @return 服务端端口
      */
     @NotEmpty
     int getPort();
+
     void setPort(int port);
+
     /**
      * @return 本地地址
      */
 
     @Nullable
     String getLocalHost();
+
     void setLocalHost(String localHost);
+
     /**
      * @return 本地端口
      */
     @Nullable
     int getLocalPort();
+
     void setLocalPort(int localPort);
+
     /**
      * 获取用户名称
      *
@@ -42,6 +47,7 @@ public interface SshConnectionConfig {
      */
     @NotEmpty
     String getUser();
+
     void setUser(String user);
 
     /**
@@ -49,7 +55,9 @@ public interface SshConnectionConfig {
      */
     @Nullable
     String getPassword();
+
     void setPassword(String password);
+
     /**
      * 私钥文件在本地的路径
      */
@@ -62,6 +70,7 @@ public interface SshConnectionConfig {
     String getPrivateKeyfilePassphrase();
 
     String getKnownHostsPath();
+
     void setKnownHostsPath(String knownHostsPath);
 
 
