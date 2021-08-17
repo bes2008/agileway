@@ -3,8 +3,6 @@ package com.jn.agileway.feign.param;
 import com.jn.easyjson.core.JSON;
 import com.jn.easyjson.core.JSONBuilderProvider;
 import com.jn.langx.http.HttpQueryStrings;
-import com.jn.langx.util.io.Charsets;
-import com.jn.langx.util.net.UrlEncoder;
 import feign.Param;
 
 import java.util.Map;
@@ -22,8 +20,7 @@ public class ToQueryStringExpander implements Param.Expander {
         }
         String jsonString = jsons.toJson(value);
         Map<String, Object> map = jsons.fromJson(jsonString, Map.class);
-        String queryString = HttpQueryStrings.toQueryString(map, null);
-        queryString = new UrlEncoder().encode(queryString, Charsets.UTF_8);
+        String queryString = HttpQueryStrings.toQueryString(map, true, null, null);
         return queryString;
     }
 }
