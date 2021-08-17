@@ -52,25 +52,6 @@ class Ssh2SessionedChannel implements SessionedChannel {
         }
     }
 
-    @Override
-    public void startLocalForwarding(String bindToHost, int bindToPort, String destHost, int destPort) throws SshException {
-
-    }
-
-    @Override
-    public void stopLocalForwarding(String bindToHost, int bindToPort) {
-
-    }
-
-    @Override
-    public void startRemoteForwarding(String bindToHost, int bindToPort, String destHost, int destPort) throws SshException {
-
-    }
-
-    @Override
-    public void stopRemoteForwarding(String bindToHost, int bindToPort) {
-
-    }
 
     @Override
     public void env(String variableName, String variableValue) throws SshException {

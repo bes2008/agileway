@@ -7,8 +7,8 @@ import com.jcraft.jsch.Session;
 import com.jn.agileway.ssh.client.AbstractSshConnection;
 import com.jn.agileway.ssh.client.SshConnectionStatus;
 import com.jn.agileway.ssh.client.SshException;
-import com.jn.agileway.ssh.client.channel.Channel;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
+import com.jn.agileway.ssh.client.channel.forwarding.ForwardingClient;
 import com.jn.agileway.ssh.client.impl.jsch.authc.PasswordUserInfo;
 import com.jn.agileway.ssh.client.impl.jsch.sftp.JschSftpSession;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
@@ -143,8 +143,8 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
     }
 
     @Override
-    public Channel openForwardChannel() throws SshException {
-        return null;
+    public ForwardingClient forwardingClient() {
+        return new JschForwardingClient(this);
     }
 
     @Override
@@ -157,13 +157,18 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
     @Override
     public SftpSession openSftpSession() throws SshException {
         try {
-            ChannelSftp channel = (ChannelSftp)this.delegate.openChannel("sftp");
+            ChannelSftp channel = (ChannelSftp) this.delegate.openChannel("sftp");
             channel.connect();
-            JschSftpSession session= new JschSftpSession(channel);
+            JschSftpSession session = new JschSftpSession(channel);
             session.setSshConnection(this);
             return session;
         } catch (JSchException ex) {
             throw new SshException(ex);
         }
     }
+
+    Session delegate() {
+        return delegate;
+    }
+
 }

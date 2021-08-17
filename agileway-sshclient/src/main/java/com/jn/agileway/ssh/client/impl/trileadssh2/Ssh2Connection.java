@@ -3,8 +3,8 @@ package com.jn.agileway.ssh.client.impl.trileadssh2;
 import com.jn.agileway.ssh.client.AbstractSshConnection;
 import com.jn.agileway.ssh.client.SshConnectionStatus;
 import com.jn.agileway.ssh.client.SshException;
-import com.jn.agileway.ssh.client.channel.Channel;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
+import com.jn.agileway.ssh.client.channel.forwarding.ForwardingClient;
 import com.jn.agileway.ssh.client.impl.trileadssh2.sftp.Ssh2SftpSession;
 import com.jn.agileway.ssh.client.impl.trileadssh2.verifier.ToSsh2HostKeyVerifierAdapter;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
@@ -89,10 +89,9 @@ public class Ssh2Connection extends AbstractSshConnection<Ssh2ConnectionConfig> 
     }
 
     @Override
-    public Channel openForwardChannel() throws SshException {
-        return null;
+    public ForwardingClient forwardingClient() {
+        return new Ssh2ForwardingClient(this);
     }
-
 
     @Override
     protected void doClose() throws IOException {
@@ -111,5 +110,9 @@ public class Ssh2Connection extends AbstractSshConnection<Ssh2ConnectionConfig> 
         } catch (Throwable ex) {
             throw new SshException(ex.getMessage(), ex);
         }
+    }
+
+    Connection getDelegate() {
+        return delegate;
     }
 }
