@@ -1,7 +1,7 @@
 package com.jn.agileway.ssh.client.impl.j2ssh;
 
 import com.jn.agileway.ssh.client.SshException;
-import com.jn.agileway.ssh.client.channel.SessionedChannel;
+import com.jn.agileway.ssh.client.channel.AbstarctSessionedChannel;
 import com.jn.agileway.ssh.client.utils.PTYMode;
 import com.jn.agileway.ssh.client.utils.Signal;
 import com.jn.langx.util.Emptys;
@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
-class J2sshSessionedChannel implements SessionedChannel {
+class J2sshSessionedChannel extends AbstarctSessionedChannel {
     private SessionChannelClient sessionChannelClient;
 
     J2sshSessionedChannel(SessionChannelClient sessionChannelClient) {
@@ -38,7 +38,7 @@ class J2sshSessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void x11Forwarding(String hostname, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) throws SshException {
+    protected void internalX11Forwarding(String hostname, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) throws SshException {
         try {
             sessionChannelClient.requestX11Forwarding(x11ScreenNumber, x11AuthenticationCookie);
         } catch (Throwable ex) {
@@ -57,7 +57,7 @@ class J2sshSessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void exec(String command) throws SshException {
+    protected void internalExec(String command) throws SshException {
         try {
             sessionChannelClient.executeCommand(command);
         } catch (Throwable ex) {
@@ -66,7 +66,7 @@ class J2sshSessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void subsystem(String subsystem) throws SshException {
+    protected void internalSubsystem(String subsystem) throws SshException {
         try {
             sessionChannelClient.startSubsystem(subsystem);
         } catch (Throwable ex) {
@@ -75,7 +75,7 @@ class J2sshSessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void shell() throws SshException {
+    protected void internalShell() throws SshException {
         try {
             sessionChannelClient.startShell();
         } catch (Throwable ex) {
@@ -114,10 +114,6 @@ class J2sshSessionedChannel implements SessionedChannel {
         }
     }
 
-    @Override
-    public String getType() {
-        return sessionChannelClient.getSessionType();
-    }
 
     @Override
     public InputStream getInputStream() throws SshException {

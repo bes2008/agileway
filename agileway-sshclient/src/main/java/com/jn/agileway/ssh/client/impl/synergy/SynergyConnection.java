@@ -1,6 +1,7 @@
 package com.jn.agileway.ssh.client.impl.synergy;
 
 import com.jn.agileway.ssh.client.AbstractSshConnection;
+import com.jn.agileway.ssh.client.SshConnectionStatus;
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
 import com.jn.agileway.ssh.client.channel.forwarding.ForwardingClient;
@@ -52,6 +53,9 @@ public class SynergyConnection extends AbstractSshConnection<SynergyConnectionCo
     public boolean authenticateWithPassword(String user, String password) throws SshException {
         try {
             client = new SshClient(sshConfig.getHost(), sshConfig.getPort(), user, password.toCharArray());
+            if (client.isConnected()) {
+                setStatus(SshConnectionStatus.CONNECTED);
+            }
             return true;
         } catch (Throwable ex) {
             throw new SshException(ex);
@@ -67,6 +71,9 @@ public class SynergyConnection extends AbstractSshConnection<SynergyConnectionCo
             context.setUsername(user);
             context.setHostKeyVerification(new ToSynergyHostKeyVerifierAdapter(this.hostKeyVerifier));
             client = new SshClient(sshConfig.getHost(), sshConfig.getPort(), user, context, keyPair);
+            if (client.isConnected()) {
+                setStatus(SshConnectionStatus.CONNECTED);
+            }
             return true;
         } catch (Throwable ex) {
             throw new SshException(ex);

@@ -3,7 +3,7 @@ package com.jn.agileway.ssh.client.impl.ganymedssh2;
 import ch.ethz.ssh2.ChannelCondition;
 import ch.ethz.ssh2.Session;
 import com.jn.agileway.ssh.client.SshException;
-import com.jn.agileway.ssh.client.channel.SessionedChannel;
+import com.jn.agileway.ssh.client.channel.AbstarctSessionedChannel;
 import com.jn.agileway.ssh.client.utils.PTYMode;
 import com.jn.agileway.ssh.client.utils.Signal;
 import com.jn.langx.annotation.NonNull;
@@ -16,9 +16,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
-class Ssh2SessionedChannel implements SessionedChannel {
+class Ssh2SessionedChannel extends AbstarctSessionedChannel {
     private Session session;
-    private String channelType = "session";
 
     Ssh2SessionedChannel(@NonNull Session session) {
         Preconditions.checkNotNull(session);
@@ -44,7 +43,7 @@ class Ssh2SessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void x11Forwarding(String host, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) throws SshException {
+    protected void internalX11Forwarding(String host, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) throws SshException {
         try {
             this.session.requestX11Forwarding(host, port, Strings.isBlank(x11AuthenticationCookie) ? null : x11AuthenticationCookie.getBytes(Charsets.UTF_8), singleConnection);
         } catch (Throwable ex) {
@@ -58,9 +57,8 @@ class Ssh2SessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void exec(String command) throws SshException {
+    protected void internalExec(String command) throws SshException {
         Preconditions.checkNotEmpty(command, "the command is illegal : {}", command);
-        this.channelType = "exec";
         try {
             this.session.execCommand(command);
         } catch (Throwable ex) {
@@ -69,9 +67,8 @@ class Ssh2SessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void subsystem(String subsystem) throws SshException {
+    protected void internalSubsystem(String subsystem) throws SshException {
         Preconditions.checkNotEmpty(subsystem, "the subsystem is illegal : {}", subsystem);
-        this.channelType = "subsystem";
         try {
             this.session.startSubSystem(subsystem);
         } catch (Throwable ex) {
@@ -80,8 +77,7 @@ class Ssh2SessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void shell() throws SshException {
-        this.channelType = "shell";
+    protected void internalShell() throws SshException {
         try {
             this.session.startShell();
         } catch (Throwable ex) {
@@ -104,10 +100,6 @@ class Ssh2SessionedChannel implements SessionedChannel {
         return exitStatus;
     }
 
-    @Override
-    public String getType() {
-        return this.channelType;
-    }
 
     @Override
     public void close() {

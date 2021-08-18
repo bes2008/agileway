@@ -4,26 +4,29 @@ import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.utils.PTYMode;
 import com.jn.agileway.ssh.client.utils.Signal;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
 /**
  * https://datatracker.ietf.org/doc/rfc4254/?include_text=1
- *
+ * <p>
  * 在执行完 exec, subsystem, shell 方法后，必须执行 close方法，因为sessioned channel 是不可重用的。
  * 在执行exec, subsystem, shell 方法之前，pty, x11forwarding 最好不要执行多次
  * 在执行exec, subsystem, shell 方法之前，env 方法可以执行多次
  */
 public interface SessionedChannel extends Channel {
-
+    public static final String TYPE_DEFAULT = "session";
+    public static final String TYPE_EXEC = "exec";
+    public static final String TYPE_SUBSYSTEM = "subsystem";
+    public static final String TYPE_SHELL = "shell";
+    public static final String TYPE_X11 = "x11";
 
     /**
      * pseudo-terminal 请求。 要在 {@link #exec(String)}, {@link #env(String, String)}, {@link #subsystem(String)} 请求之前。
      * <p>
      * equality: pty(term, 0, 0, 0, 0, null)
      */
-    void pty(String term)  throws SshException;
+    void pty(String term) throws SshException;
 
     /**
      * 发起 pseudo-terminal 请求， 要在 {@link #exec(String)}, {@link #env(String, String)}, {@link #subsystem(String)} 请求之前。
@@ -35,7 +38,7 @@ public interface SessionedChannel extends Channel {
      * @param termHeightPixels     terminal height, pixels (e.g., 480)
      * @param terminalModes        encoded terminal modes
      */
-    void pty(String term, int termWidthCharacters, int termHeightCharacters, int termWidthPixels, int termHeightPixels, Map<PTYMode, Integer> terminalModes)  throws SshException;
+    void pty(String term, int termWidthCharacters, int termHeightCharacters, int termWidthPixels, int termHeightPixels, Map<PTYMode, Integer> terminalModes) throws SshException;
 
 
     /**
@@ -46,7 +49,7 @@ public interface SessionedChannel extends Channel {
      * @param x11AuthenticationCookie   x11 authentication cookie
      * @param x11ScreenNumber           x11 screen number
      */
-    void x11Forwarding(String hostname, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber)  throws SshException;
+    void x11Forwarding(String hostname, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) throws SshException;
 
     /**
      * 发起 env 请求， 用于设置环境变量。
@@ -78,8 +81,9 @@ public interface SessionedChannel extends Channel {
 
     /**
      * 在内部获取 exit status 时，时通过 ssh 命令来完成的，所以内部在获取值时，可能不在一个线程里，因此需要有个等待的过程。
-     *
+     * <p>
      * 此外也不是所有的 ssh server 都会实现返回 exit status 的功能的，
+     *
      * @return
      */
     int getExitStatus();

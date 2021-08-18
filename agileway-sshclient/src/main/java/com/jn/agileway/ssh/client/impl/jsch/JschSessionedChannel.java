@@ -2,7 +2,7 @@ package com.jn.agileway.ssh.client.impl.jsch;
 
 import com.jcraft.jsch.*;
 import com.jn.agileway.ssh.client.SshException;
-import com.jn.agileway.ssh.client.channel.SessionedChannel;
+import com.jn.agileway.ssh.client.channel.AbstarctSessionedChannel;
 import com.jn.agileway.ssh.client.utils.PTYMode;
 import com.jn.agileway.ssh.client.utils.Signal;
 import com.jn.langx.util.Emptys;
@@ -15,11 +15,11 @@ import java.io.OutputStream;
 import java.util.Hashtable;
 import java.util.Map;
 
-class JschSessionedChannel implements SessionedChannel {
+class JschSessionedChannel extends AbstarctSessionedChannel {
     private Session session;
 
     private Channel channel;
-    private JschChannelType channelType = JschChannelType.SESSION;
+    private JschChannelType type = JschChannelType.SESSION;
 
     private boolean agentForwarding = false;
     /**
@@ -64,7 +64,7 @@ class JschSessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void x11Forwarding(String host, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) throws SshException {
+    protected void internalX11Forwarding(String host, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) throws SshException {
         this.x11Forwarding = true;
         session.setX11Host(host);
         session.setX11Port(port);
@@ -72,12 +72,12 @@ class JschSessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void exec(String command) throws SshException {
+    protected void internalExec(String command) throws SshException {
         Preconditions.checkNotEmpty(command, "the command is illegal : {}", command);
         Preconditions.checkState(session != null && session.isConnected(), "the session is not connected");
-        this.channelType = JschChannelType.EXEC;
+        this.type = JschChannelType.EXEC;
         try {
-            ChannelExec channel = (ChannelExec) session.openChannel(channelType.getName());
+            ChannelExec channel = (ChannelExec) session.openChannel(type.getName());
             channel.setCommand(command);
             this.channel = channel;
             startChannel();
@@ -87,12 +87,12 @@ class JschSessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void subsystem(String subsystem) throws SshException {
+    protected void internalSubsystem(String subsystem) throws SshException {
         Preconditions.checkNotEmpty(subsystem, "the subsystem is illegal : {}", subsystem);
         Preconditions.checkState(session != null && session.isConnected(), "the session is not connected");
         try {
-            this.channelType = JschChannelType.SUBSYSTEM;
-            ChannelSubsystem channel = (ChannelSubsystem) session.openChannel(channelType.getName());
+            this.type = JschChannelType.SUBSYSTEM;
+            ChannelSubsystem channel = (ChannelSubsystem) session.openChannel(type.getName());
             channel.setSubsystem(subsystem);
             this.channel = channel;
             startChannel();
@@ -102,11 +102,11 @@ class JschSessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void shell() throws SshException {
+    protected void internalShell() throws SshException {
         Preconditions.checkState(session != null && session.isConnected(), "the session is not connected");
         try {
-            this.channelType = JschChannelType.SHELL;
-            this.channel = session.openChannel(channelType.getName());
+            this.type = JschChannelType.SHELL;
+            this.channel = session.openChannel(type.getName());
             startChannel();
         } catch (Throwable ex) {
             throw new SshException(ex);
@@ -121,7 +121,7 @@ class JschSessionedChannel implements SessionedChannel {
     private void prepareConnect() {
         // agent forward:
         {
-            switch (channelType) {
+            switch (type) {
                 case SUBSYSTEM:
                     ((ChannelSubsystem) channel).setAgentForwarding(agentForwarding);
                     break;
@@ -145,7 +145,7 @@ class JschSessionedChannel implements SessionedChannel {
             terminalModesBytes = PTYMode.encode(terminalModes);
         }
         // pty:
-        switch (channelType) {
+        switch (type) {
             case SUBSYSTEM:
                 ChannelSubsystem subsystem = (ChannelSubsystem) channel;
                 subsystem.setPtyType(term, termWidthCharacters, termHeightCharacters, termWidthPixels, termHeightPixels);
@@ -167,7 +167,7 @@ class JschSessionedChannel implements SessionedChannel {
 
         // env:
         if (!this.envVariables.isEmpty()) {
-            switch (channelType) {
+            switch (type) {
                 case SUBSYSTEM:
                     Collects.forEach(this.envVariables, new Consumer2<String, String>() {
                         @Override
@@ -234,7 +234,7 @@ class JschSessionedChannel implements SessionedChannel {
 
     @Override
     public String getType() {
-        return this.channelType.getName();
+        return this.type.getName();
     }
 
     @Override
@@ -268,7 +268,7 @@ class JschSessionedChannel implements SessionedChannel {
         Preconditions.checkState(channel != null);
         try {
             InputStream errorInputStream = null;
-            switch (channelType) {
+            switch (type) {
                 case EXEC:
                     errorInputStream = ((ChannelExec) channel).getErrStream();
                     break;

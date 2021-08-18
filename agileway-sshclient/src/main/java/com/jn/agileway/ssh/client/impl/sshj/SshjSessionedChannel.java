@@ -1,7 +1,7 @@
 package com.jn.agileway.ssh.client.impl.sshj;
 
 import com.jn.agileway.ssh.client.SshException;
-import com.jn.agileway.ssh.client.channel.SessionedChannel;
+import com.jn.agileway.ssh.client.channel.AbstarctSessionedChannel;
 import com.jn.agileway.ssh.client.utils.PTYMode;
 import com.jn.agileway.ssh.client.utils.Signal;
 import com.jn.langx.annotation.NonNull;
@@ -17,7 +17,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-class SshjSessionedChannel implements SessionedChannel {
+class SshjSessionedChannel extends AbstarctSessionedChannel {
 
     private Session session;
 
@@ -55,15 +55,6 @@ class SshjSessionedChannel implements SessionedChannel {
         }
     }
 
-    @Override
-    public void x11Forwarding(String hostname, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) throws SshException {
-        try {
-            this.session.reqX11Forwarding(x11AuthenticationProtocol, x11AuthenticationCookie, x11ScreenNumber);
-        } catch (Throwable ex) {
-            throw new SshException(ex);
-        }
-    }
-
 
     @Override
     public void env(String variableName, String variableValue) throws SshException {
@@ -75,9 +66,19 @@ class SshjSessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void exec(String command) throws SshException {
+    protected void internalX11Forwarding(String hostname, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) throws SshException {
+        try {
+            this.session.reqX11Forwarding(x11AuthenticationProtocol, x11AuthenticationCookie, x11ScreenNumber);
+        } catch (Throwable ex) {
+            throw new SshException(ex);
+        }
+    }
+
+    @Override
+    protected void internalExec(String command) throws SshException {
         Preconditions.checkNotEmpty(command, "the command is illegal : {}", command);
         try {
+            clean();
             this.command = this.session.exec(command);
         } catch (Throwable ex) {
             throw new SshException(ex);
@@ -85,9 +86,10 @@ class SshjSessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void subsystem(String subsystem) throws SshException {
+    protected void internalSubsystem(String subsystem) throws SshException {
         Preconditions.checkNotEmpty(subsystem, "the subsystem is illegal : {}", subsystem);
         try {
+            clean();
             this.subsystem = this.session.startSubsystem(subsystem);
         } catch (Throwable ex) {
             throw new SshException(ex);
@@ -95,8 +97,9 @@ class SshjSessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void shell() throws SshException {
+    protected void internalShell() throws SshException {
         try {
+            clean();
             this.shell = this.session.startShell();
         } catch (Throwable ex) {
             throw new SshException(ex);
@@ -123,20 +126,6 @@ class SshjSessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public String getType() {
-        if (shell != null) {
-            return "shell";
-        }
-        if (subsystem != null) {
-            return "subsystem";
-        }
-        if (command != null) {
-            return "exec";
-        }
-        return "session";
-    }
-
-    @Override
     public void close() throws IOException {
         this.session.close();
     }
@@ -157,7 +146,7 @@ class SshjSessionedChannel implements SessionedChannel {
 
                 exitStatus = subsystem.getExitStatus();
             }
-            return exitStatus==null ? 0 : exitStatus;
+            return exitStatus == null ? 0 : exitStatus;
         }
         if (command != null) {
             long maxWait = 5000;
@@ -173,7 +162,7 @@ class SshjSessionedChannel implements SessionedChannel {
 
                 exitStatus = command.getExitStatus();
             }
-            return exitStatus==null ? 0 : exitStatus;
+            return exitStatus == null ? 0 : exitStatus;
         }
         return 0;
     }
@@ -215,5 +204,11 @@ class SshjSessionedChannel implements SessionedChannel {
             return command.getOutputStream();
         }
         return null;
+    }
+
+    private void clean() {
+        this.shell = null;
+        this.command = null;
+        this.subsystem = null;
     }
 }
