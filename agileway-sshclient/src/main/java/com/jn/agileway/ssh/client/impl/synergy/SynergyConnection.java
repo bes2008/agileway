@@ -4,9 +4,11 @@ import com.jn.agileway.ssh.client.AbstractSshConnection;
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
 import com.jn.agileway.ssh.client.channel.forwarding.ForwardingClient;
+import com.jn.agileway.ssh.client.impl.synergy.verifier.ToSynergyHostKeyVerifierAdapter;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.sshtools.client.SessionChannelNG;
 import com.sshtools.client.SshClient;
+import com.sshtools.client.SshClientContext;
 import com.sshtools.common.publickey.SshKeyUtils;
 import com.sshtools.common.ssh.components.SshKeyPair;
 
@@ -16,6 +18,10 @@ import java.net.InetAddress;
 
 public class SynergyConnection extends AbstractSshConnection<SynergyConnectionConfig> {
     private SshClient client;
+
+    public SynergyConnection() {
+
+    }
 
     @Override
     protected void doClose() throws IOException {
@@ -57,7 +63,10 @@ public class SynergyConnection extends AbstractSshConnection<SynergyConnectionCo
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(pemPrivateKey);
             SshKeyPair keyPair = SshKeyUtils.getPrivateKey(inputStream, passphrase);
-            client = new SshClient(sshConfig.getHost(), sshConfig.getPort(), user, keyPair);
+            SshClientContext context = new SshClientContext();
+            context.setUsername(user);
+            context.setHostKeyVerification(new ToSynergyHostKeyVerifierAdapter(this.hostKeyVerifier));
+            client = new SshClient(sshConfig.getHost(), sshConfig.getPort(), user, context, keyPair);
             return true;
         } catch (Throwable ex) {
             throw new SshException(ex);
@@ -69,7 +78,7 @@ public class SynergyConnection extends AbstractSshConnection<SynergyConnectionCo
         SessionChannelNG channelNG = null;
         try {
             channelNG = client.openSessionChannel();
-            return new SynergySessionedChannel( channelNG);
+            return new SynergySessionedChannel(channelNG);
         } catch (Throwable ex) {
             throw new SshException(ex);
         }

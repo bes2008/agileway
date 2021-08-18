@@ -9,6 +9,8 @@ import com.jn.agileway.ssh.client.impl.jsch.JschConnectionConfig;
 import com.jn.agileway.ssh.client.impl.jsch.JschConnectionFactory;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionConfig;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionFactory;
+import com.jn.agileway.ssh.client.impl.synergy.SynergyConnectionConfig;
+import com.jn.agileway.ssh.client.impl.synergy.SynergyConnectionFactory;
 import com.jn.agileway.ssh.client.supports.command.SshCommandResponse;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -41,6 +43,11 @@ public class SshClients_CommandLineTests {
     @Test
     public void testSshj() throws Throwable {
         testExec(new SshjConnectionFactory(), new SshjConnectionConfig());
+    }
+
+    @Test
+    public void testSynergy() throws Throwable {
+        testExec(new SynergyConnectionFactory(), new SynergyConnectionConfig());
     }
 
     /**
