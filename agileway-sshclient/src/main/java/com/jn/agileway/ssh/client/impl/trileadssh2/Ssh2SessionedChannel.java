@@ -99,7 +99,7 @@ class Ssh2SessionedChannel implements SessionedChannel {
     public int getExitStatus() {
         Integer exitStatus = this.session.getExitStatus();
         if (exitStatus == null) {
-            session.waitForCondition(ChannelCondition.STDOUT_DATA | ChannelCondition.STDERR_DATA | ChannelCondition.EXIT_STATUS, 5000);
+            session.waitForCondition(ChannelCondition.EXIT_STATUS, 5000);
             exitStatus = this.session.getExitStatus();
         }
         return exitStatus;
