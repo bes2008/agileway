@@ -1,20 +1,21 @@
 package com.jn.agileway.ssh.client.impl.synergy;
 
 import com.jn.agileway.ssh.client.SshException;
-import com.jn.agileway.ssh.client.channel.SessionedChannel;
+import com.jn.agileway.ssh.client.channel.AbstarctSessionedChannel;
 import com.jn.agileway.ssh.client.utils.PTYMode;
 import com.jn.agileway.ssh.client.utils.Signal;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer2;
 import com.sshtools.client.PseudoTerminalModes;
 import com.sshtools.client.SessionChannelNG;
+import com.sshtools.common.ssh.RequestFuture;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
-class SynergySessionedChannel implements SessionedChannel {
+class SynergySessionedChannel extends AbstarctSessionedChannel {
     private SessionChannelNG channel;
 
     SynergySessionedChannel(SessionChannelNG channel) {
@@ -45,30 +46,49 @@ class SynergySessionedChannel implements SessionedChannel {
     }
 
     @Override
-    public void x11Forwarding(String hostname, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) throws SshException {
-
+    protected void internalX11Forwarding(String hostname, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) throws SshException {
+        //
     }
-
 
 
     @Override
     public void env(String variableName, String variableValue) throws SshException {
-
+        try {
+            RequestFuture future = channel.setEnvironmentVariable(variableName, variableValue);
+            future.waitForever();
+        } catch (Throwable ex) {
+            throw new SshException(ex);
+        }
     }
 
     @Override
-    public void exec(String command) throws SshException {
-
+    protected void internalExec(String command) throws SshException {
+        try {
+            RequestFuture future = channel.executeCommand(command);
+            future.waitForever();
+        } catch (Throwable ex) {
+            throw new SshException(ex);
+        }
     }
 
     @Override
-    public void subsystem(String subsystem) throws SshException {
-
+    protected void internalSubsystem(String subsystem) throws SshException {
+        try {
+            RequestFuture future = channel.startSubsystem(subsystem);
+            future.waitForever();
+        } catch (Throwable ex) {
+            throw new SshException(ex);
+        }
     }
 
     @Override
-    public void shell() throws SshException {
-
+    protected void internalShell() throws SshException {
+        try {
+            RequestFuture future = channel.startShell();
+            future.waitForever();
+        } catch (Throwable ex) {
+            throw new SshException(ex);
+        }
     }
 
     @Override
@@ -78,31 +98,26 @@ class SynergySessionedChannel implements SessionedChannel {
 
     @Override
     public int getExitStatus() {
-        return 0;
+        return channel.getExitCode();
     }
 
     @Override
     public InputStream getErrorInputStream() throws SshException {
-        return null;
-    }
-
-    @Override
-    public String getType() {
-        return null;
+        return channel.getStderrStream();
     }
 
     @Override
     public InputStream getInputStream() throws SshException {
-        return null;
+        return channel.getInputStream();
     }
 
     @Override
     public OutputStream getOutputStream() throws SshException {
-        return null;
+        return channel.getOutputStream();
     }
 
     @Override
     public void close() throws IOException {
-
+        channel.close();
     }
 }
