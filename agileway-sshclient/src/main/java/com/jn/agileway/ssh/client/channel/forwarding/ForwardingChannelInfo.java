@@ -2,7 +2,7 @@ package com.jn.agileway.ssh.client.channel.forwarding;
 
 import com.jn.langx.text.StringTemplates;
 
-public class ForwardingChannel {
+public class ForwardingChannelInfo {
 
 
     private static final String REMOTE_FORWARD_REQUEST = "tcpip-forward";
@@ -18,12 +18,16 @@ public class ForwardingChannel {
     public static final String LOCAL_FORWARDING_CHANNEL = "direct-tcpip";
     public static final String REMOTE_FORWARDING_CHANNEL = "forwarded-tcpip";
 
+    /**
+     * @see #LOCAL_FORWARDING_CHANNEL
+     * @see #REMOTE_FORWARDING_CHANNEL
+     */
     private String channel;
 
-    public ForwardingChannel() {
+    public ForwardingChannelInfo() {
     }
 
-    public ForwardingChannel(String channel, String bindingHost, int bindingPort, String destHost, int destPort) {
+    public ForwardingChannelInfo(String channel, String bindingHost, int bindingPort, String destHost, int destPort) {
         setBindingHost(bindingHost);
         setBindingPort(bindingPort);
         setDestHost(destHost);

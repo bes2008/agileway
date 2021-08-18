@@ -3,7 +3,6 @@ package com.jn.agileway.ssh.client.channel;
 import com.jn.agileway.ssh.client.SshException;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 

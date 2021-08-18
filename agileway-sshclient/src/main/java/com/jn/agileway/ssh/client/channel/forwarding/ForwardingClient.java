@@ -17,8 +17,8 @@ public interface ForwardingClient {
      * @param destHost      the destination host you will to access
      * @param destPort      the destination port you will to access
      */
-    ForwardingChannel startLocalForwarding(String bindToHost, int bindToPort, String destHost, int destPort) throws SshException;
-    void stopLocalForwarding(ForwardingChannel channel) throws SshException;
+    ForwardingChannelInfo startLocalForwarding(String bindToHost, int bindToPort, String destHost, int destPort) throws SshException;
+    void stopLocalForwarding(ForwardingChannelInfo channel) throws SshException;
     /**
      * 建立remote forwarding 隧道
      *
@@ -33,7 +33,7 @@ public interface ForwardingClient {
      * @param destHost      the destination host you will to access
      * @param destPort      the destination port you will to access
      */
-    ForwardingChannel startRemoteForwarding(String bindToHost, int bindToPort, String destHost, int destPort) throws SshException;
-    void stopRemoteForwarding(ForwardingChannel channel) throws SshException;
+    ForwardingChannelInfo startRemoteForwarding(String bindToHost, int bindToPort, String destHost, int destPort) throws SshException;
+    void stopRemoteForwarding(ForwardingChannelInfo channel) throws SshException;
 
 }

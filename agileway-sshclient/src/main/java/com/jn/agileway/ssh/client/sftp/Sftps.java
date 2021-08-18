@@ -17,7 +17,6 @@ import com.jn.langx.util.function.Function;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.io.file.Files;
 import com.jn.langx.util.io.file.PosixFilePermissions;
-import com.jn.langx.util.reflect.type.Primitives;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
