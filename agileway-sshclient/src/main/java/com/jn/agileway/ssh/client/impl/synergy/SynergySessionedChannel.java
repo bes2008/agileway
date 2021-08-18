@@ -98,7 +98,22 @@ class SynergySessionedChannel extends AbstarctSessionedChannel {
 
     @Override
     public int getExitStatus() {
-        return channel.getExitCode();
+        int exitCode = channel.getExitCode();
+
+        long deadline = System.currentTimeMillis() + 30 * 1000;
+        while (exitCode == -2147483648) {
+            synchronized (this) {
+                if (System.currentTimeMillis() <= deadline) {
+                    try {
+                        this.wait(50);
+                    } catch (InterruptedException ex) {
+                        // ignore it
+                    }
+                }
+                exitCode = channel.getExitCode();
+            }
+        }
+        return exitCode;
     }
 
     @Override
@@ -119,5 +134,9 @@ class SynergySessionedChannel extends AbstarctSessionedChannel {
     @Override
     public void close() throws IOException {
         channel.close();
+    }
+
+    @Override
+    protected void beforeAction() {
     }
 }

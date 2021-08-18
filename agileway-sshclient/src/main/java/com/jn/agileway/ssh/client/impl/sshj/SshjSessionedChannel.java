@@ -78,7 +78,6 @@ class SshjSessionedChannel extends AbstarctSessionedChannel {
     protected void internalExec(String command) throws SshException {
         Preconditions.checkNotEmpty(command, "the command is illegal : {}", command);
         try {
-            clean();
             this.command = this.session.exec(command);
         } catch (Throwable ex) {
             throw new SshException(ex);
@@ -89,7 +88,6 @@ class SshjSessionedChannel extends AbstarctSessionedChannel {
     protected void internalSubsystem(String subsystem) throws SshException {
         Preconditions.checkNotEmpty(subsystem, "the subsystem is illegal : {}", subsystem);
         try {
-            clean();
             this.subsystem = this.session.startSubsystem(subsystem);
         } catch (Throwable ex) {
             throw new SshException(ex);
@@ -99,7 +97,6 @@ class SshjSessionedChannel extends AbstarctSessionedChannel {
     @Override
     protected void internalShell() throws SshException {
         try {
-            clean();
             this.shell = this.session.startShell();
         } catch (Throwable ex) {
             throw new SshException(ex);
@@ -206,7 +203,7 @@ class SshjSessionedChannel extends AbstarctSessionedChannel {
         return null;
     }
 
-    private void clean() {
+    protected void beforeAction() {
         this.shell = null;
         this.command = null;
         this.subsystem = null;
