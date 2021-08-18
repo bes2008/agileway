@@ -26,7 +26,7 @@ public class Ssh2ForwardingClient implements ForwardingClient {
             try {
                 ch.ethz.ssh2.Connection delegate = this.connection.getDelegate();
                 forwarder = delegate.createLocalPortForwarder(bindToPort, destHost, destPort);
-                localForwarderMap.put(channel.toString(), forwarder);
+                localForwarderMap.put(ForwardingChannelInfo.id(channel), forwarder);
             } catch (Throwable ex) {
                 throw new SshException(ex);
             }
@@ -36,7 +36,7 @@ public class Ssh2ForwardingClient implements ForwardingClient {
 
     @Override
     public void stopLocalForwarding(ForwardingChannelInfo channel) throws SshException {
-        LocalPortForwarder forwarder = localForwarderMap.remove(channel.toString());
+        LocalPortForwarder forwarder = localForwarderMap.remove(ForwardingChannelInfo.id(channel));
         if (forwarder != null) {
             IOs.close(forwarder);
         }

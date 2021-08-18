@@ -32,6 +32,7 @@ public class ForwardingChannelInfo {
         setBindingPort(bindingPort);
         setDestHost(destHost);
         setDestPort(destPort);
+        setChannel(channel);
     }
 
     public String getBindingHost() {
@@ -74,9 +75,12 @@ public class ForwardingChannelInfo {
         this.channel = channel;
     }
 
+    public static String id(ForwardingChannelInfo channel) {
+        return StringTemplates.formatWithPlaceholder("{}({}:{}->{}:{})", channel, channel.bindingHost, channel.bindingPort, channel.destHost, channel.destPort);
+    }
 
     @Override
     public String toString() {
-        return StringTemplates.formatWithPlaceholder("{}({}:{}->{}:{})", channel, bindingHost, bindingPort, destHost, destPort);
+        return id(this);
     }
 }

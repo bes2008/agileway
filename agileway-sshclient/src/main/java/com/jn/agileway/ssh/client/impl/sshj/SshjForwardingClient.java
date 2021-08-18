@@ -41,7 +41,7 @@ public class SshjForwardingClient implements ForwardingClient {
     public ForwardingChannelInfo startLocalForwarding(String bindToHost, int bindToPort, String destHost, int destPort) throws SshException {
         SSHClient delegate = connection.getDelegate();
         ForwardingChannelInfo channel = new ForwardingChannelInfo(ForwardingChannelInfo.LOCAL_FORWARDING_CHANNEL, bindToHost, bindToPort, destHost, destPort);
-        if (!localForwardingMap.containsKey(channel.toString())) {
+        if (!localForwardingMap.containsKey(ForwardingChannelInfo.id(channel))) {
             SocketAddress address = new InetSocketAddress(bindToHost, bindToPort);
             try {
                 ServerSocket serverSocket = new ServerSocket();
@@ -64,7 +64,7 @@ public class SshjForwardingClient implements ForwardingClient {
                 ctx.thread = t;
                 ctx.channel = channel;
                 ctx.forwarder = forwarder;
-                localForwardingMap.put(channel.toString(), ctx);
+                localForwardingMap.put(ForwardingChannelInfo.id(channel), ctx);
             } catch (Throwable ex) {
                 throw new SshException(ex);
             }
@@ -74,8 +74,8 @@ public class SshjForwardingClient implements ForwardingClient {
 
     @Override
     public void stopLocalForwarding(ForwardingChannelInfo channel) throws SshException {
-        if (localForwardingMap.containsKey(channel.toString())) {
-            LocalForwardingChannelCtx ctx = localForwardingMap.remove(channel.toString());
+        if (localForwardingMap.containsKey(ForwardingChannelInfo.id(channel))) {
+            LocalForwardingChannelCtx ctx = localForwardingMap.remove(ForwardingChannelInfo.id(channel));
             IOs.close(ctx);
         }
     }

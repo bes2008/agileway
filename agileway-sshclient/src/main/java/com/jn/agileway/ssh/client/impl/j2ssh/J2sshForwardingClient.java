@@ -20,10 +20,10 @@ public class J2sshForwardingClient implements ForwardingClient {
         com.sshtools.j2ssh.forwarding.ForwardingClient delegate = sshClient.getForwardingClient();
 
         try {
-            if (!delegate.getLocalForwardings().containsKey(channel.toString())) {
-                delegate.addLocalForwarding(channel.toString(), bindToHost, bindToPort, destHost, destPort);
+            if (!delegate.getLocalForwardings().containsKey(ForwardingChannelInfo.id(channel))) {
+                delegate.addLocalForwarding(ForwardingChannelInfo.id(channel), bindToHost, bindToPort, destHost, destPort);
             }
-            delegate.startLocalForwarding(channel.toString());
+            delegate.startLocalForwarding(ForwardingChannelInfo.id(channel));
         } catch (Throwable ex) {
             throw new SshException(ex);
         }
@@ -35,7 +35,7 @@ public class J2sshForwardingClient implements ForwardingClient {
         SshClient sshClient = this.connection.getDelegate();
         com.sshtools.j2ssh.forwarding.ForwardingClient delegate = sshClient.getForwardingClient();
         try {
-            delegate.stopLocalForwarding(channel.toString());
+            delegate.stopLocalForwarding(ForwardingChannelInfo.id(channel));
         } catch (Throwable ex) {
             throw new SshException(ex);
         }
@@ -49,10 +49,10 @@ public class J2sshForwardingClient implements ForwardingClient {
         com.sshtools.j2ssh.forwarding.ForwardingClient delegate = sshClient.getForwardingClient();
 
         try {
-            if (!delegate.getRemoteForwardings().containsKey(channel.toString())) {
-                delegate.addRemoteForwarding(channel.toString(), bindToHost, bindToPort, destHost, destPort);
+            if (!delegate.getRemoteForwardings().containsKey(ForwardingChannelInfo.id(channel))) {
+                delegate.addRemoteForwarding(ForwardingChannelInfo.id(channel), bindToHost, bindToPort, destHost, destPort);
             }
-            delegate.startRemoteForwarding(channel.toString());
+            delegate.startRemoteForwarding(ForwardingChannelInfo.id(channel));
         } catch (Throwable ex) {
             throw new SshException(ex);
         }
@@ -65,7 +65,7 @@ public class J2sshForwardingClient implements ForwardingClient {
         SshClient sshClient = this.connection.getDelegate();
         com.sshtools.j2ssh.forwarding.ForwardingClient delegate = sshClient.getForwardingClient();
         try {
-            delegate.stopRemoteForwarding(channel.toString());
+            delegate.stopRemoteForwarding(ForwardingChannelInfo.id(channel));
         } catch (Throwable ex) {
             throw new SshException(ex);
         }
