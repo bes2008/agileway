@@ -1,8 +1,6 @@
 package com.jn.agileway.ssh.client.impl.synergy.sftp;
 
-import com.jn.agileway.ssh.client.sftp.AbstractSftpSession;
-import com.jn.agileway.ssh.client.sftp.SftpFile;
-import com.jn.agileway.ssh.client.sftp.SftpResourceInfo;
+import com.jn.agileway.ssh.client.sftp.*;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.exception.SftpException;
 import com.jn.langx.util.collection.Pipeline;
@@ -51,7 +49,20 @@ public class SynergySftpSession extends AbstractSftpSession {
 
     @Override
     public SftpFile open(String filepath, int openMode, FileAttrs attrs) throws IOException {
-        return null;
+        try {
+            com.sshtools.client.sftp.SftpFile sf = null;
+            if (!Sftps.exists(this, filepath)) {
+                if (OpenMode.isCreatable(openMode)) {
+                    sf = this.client.getSubsystemChannel().openFile(filepath, 16);
+
+                }
+            } else {
+                sf = this.client.getSubsystemChannel().openFile(filepath, 1);
+            }
+            return new SynergySftpFile(this, filepath, sf);
+        } catch (Throwable ex) {
+            throw new SftpException(ex);
+        }
     }
 
     @Override
