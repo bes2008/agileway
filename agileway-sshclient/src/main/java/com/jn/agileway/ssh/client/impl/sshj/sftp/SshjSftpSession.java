@@ -7,6 +7,7 @@ import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.exception.SftpException;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
+import com.jn.langx.util.function.Predicate;
 import net.schmizz.sshj.sftp.RemoteFile;
 import net.schmizz.sshj.sftp.RemoteResourceInfo;
 import net.schmizz.sshj.sftp.SFTPClient;
@@ -103,12 +104,19 @@ public class SshjSftpSession extends AbstractSftpSession {
     protected List<SftpResourceInfo> doListFiles(String directory) throws IOException {
         try {
             List<RemoteResourceInfo> list = sftpClient.ls(directory);
-            return Pipeline.of(list).map(new Function<RemoteResourceInfo, SftpResourceInfo>() {
-                @Override
-                public SftpResourceInfo apply(RemoteResourceInfo remoteResourceInfo) {
-                    return SshjSftps.fromRemoteResourceInfo(remoteResourceInfo);
-                }
-            }).asList();
+            return Pipeline.of(list)
+                    .filter(new Predicate<RemoteResourceInfo>() {
+                        @Override
+                        public boolean test(RemoteResourceInfo remoteResourceInfo) {
+                            return !".".equals(remoteResourceInfo.getName()) && !"..".equals(remoteResourceInfo.getName());
+                        }
+                    })
+                    .map(new Function<RemoteResourceInfo, SftpResourceInfo>() {
+                        @Override
+                        public SftpResourceInfo apply(RemoteResourceInfo remoteResourceInfo) {
+                            return SshjSftps.fromRemoteResourceInfo(remoteResourceInfo);
+                        }
+                    }).asList();
         } catch (SFTPException ex) {
             throw SshjSftps.wrapSftpException(ex);
         }

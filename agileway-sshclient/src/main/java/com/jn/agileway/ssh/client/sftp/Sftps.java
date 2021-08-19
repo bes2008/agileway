@@ -100,6 +100,13 @@ public class Sftps {
         }
     }
 
+    /**
+     * 递归移除
+     * @param session
+     * @param directory
+     * @param retainDirectory
+     * @throws IOException
+     */
     public static void removeDir(final SftpSession session, String directory, boolean retainDirectory) throws IOException {
         List<SftpResourceInfo> children = session.listFiles(directory);
         if (!children.isEmpty()) {

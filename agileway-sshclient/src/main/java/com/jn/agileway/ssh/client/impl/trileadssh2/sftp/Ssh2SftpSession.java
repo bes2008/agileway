@@ -30,18 +30,19 @@ public class Ssh2SftpSession extends AbstractSftpSession {
     @Override
     protected List<SftpResourceInfo> doListFiles(final String directory) throws IOException {
         Vector<SFTPv3DirectoryEntry> vector = sftpClient.ls(directory);
-        return Pipeline.of(vector).filter(new Predicate<SFTPv3DirectoryEntry>() {
-            @Override
-            public boolean test(SFTPv3DirectoryEntry entry) {
-                return !".".equals(entry.filename) && !"..".equals(entry.filename);
-            }
-        }).map(new Function<SFTPv3DirectoryEntry, SftpResourceInfo>() {
-            @Override
-            public SftpResourceInfo apply(SFTPv3DirectoryEntry entry) {
-                FileAttrs attrs = Ssh2Sftps.fromSsh2FileAttributes(entry.attributes);
-                return new SftpResourceInfo(directory + "/" + entry.filename, attrs);
-            }
-        }).asList();
+        return Pipeline.of(vector)
+                .filter(new Predicate<SFTPv3DirectoryEntry>() {
+                    @Override
+                    public boolean test(SFTPv3DirectoryEntry entry) {
+                        return !".".equals(entry.filename) && !"..".equals(entry.filename);
+                    }
+                }).map(new Function<SFTPv3DirectoryEntry, SftpResourceInfo>() {
+                    @Override
+                    public SftpResourceInfo apply(SFTPv3DirectoryEntry entry) {
+                        FileAttrs attrs = Ssh2Sftps.fromSsh2FileAttributes(entry.attributes);
+                        return new SftpResourceInfo(directory + "/" + entry.filename, attrs);
+                    }
+                }).asList();
 
     }
 

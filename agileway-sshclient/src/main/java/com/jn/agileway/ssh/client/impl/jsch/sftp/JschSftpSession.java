@@ -43,18 +43,19 @@ public class JschSftpSession extends AbstractSftpSession {
     protected List<SftpResourceInfo> doListFiles(final String directory) throws IOException {
         try {
             Vector<ChannelSftp.LsEntry> vector = channel.ls(directory);
-            return Pipeline.of(vector).filter(new Predicate<ChannelSftp.LsEntry>() {
-                @Override
-                public boolean test(ChannelSftp.LsEntry entry) {
-                    return !".".equals(entry.getFilename()) && !"..".equals(entry.getFilename());
-                }
-            }).map(new Function<ChannelSftp.LsEntry, SftpResourceInfo>() {
-                @Override
-                public SftpResourceInfo apply(ChannelSftp.LsEntry entry) {
-                    FileAttrs attrs =  JschSftps.fromSftpATTRS(entry.getAttrs());
-                    return new SftpResourceInfo(directory + "/" + entry.getFilename(), attrs);
-                }
-            }).asList();
+            return Pipeline.of(vector)
+                    .filter(new Predicate<ChannelSftp.LsEntry>() {
+                        @Override
+                        public boolean test(ChannelSftp.LsEntry entry) {
+                            return !".".equals(entry.getFilename()) && !"..".equals(entry.getFilename());
+                        }
+                    }).map(new Function<ChannelSftp.LsEntry, SftpResourceInfo>() {
+                        @Override
+                        public SftpResourceInfo apply(ChannelSftp.LsEntry entry) {
+                            FileAttrs attrs = JschSftps.fromSftpATTRS(entry.getAttrs());
+                            return new SftpResourceInfo(directory + "/" + entry.getFilename(), attrs);
+                        }
+                    }).asList();
         } catch (com.jcraft.jsch.SftpException ex) {
             throw JschSftps.wrapSftpException(ex);
         }

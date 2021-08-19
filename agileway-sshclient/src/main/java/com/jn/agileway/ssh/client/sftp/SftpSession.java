@@ -105,6 +105,8 @@ public interface SftpSession extends Closeable {
     List<SftpResourceInfo> listFiles(String directory) throws IOException;
 
     /**
+     * 列出目录直接子项
+     *
      * packet:
      * |packet_type|req_id|file_handle|
      *
@@ -116,6 +118,8 @@ public interface SftpSession extends Closeable {
     List<SftpResourceInfo> listFiles(String directory, Predicate<SftpResourceInfo> predicate) throws IOException;
 
     /**
+     * 递归创建目录
+     *
      * packet:
      * |packet_type|req_id|path|file_attributes_flags_mask|file_attributes|
      *
@@ -128,6 +132,8 @@ public interface SftpSession extends Closeable {
     void mkdir(String directory, FileAttrs attributes) throws IOException;
 
     /**
+     * 移除一个空目录
+     *
      * packet:
      * |packet_type|req_id|path|
      *
@@ -142,6 +148,8 @@ public interface SftpSession extends Closeable {
     void rmdir(String directory) throws IOException;
 
     /**
+     * 移除一个文件
+     *
      * packet:
      * |packet_type|req_id|path|
      *
@@ -151,6 +159,8 @@ public interface SftpSession extends Closeable {
     void rm(String filepath) throws IOException;
 
     /**
+     * 移动（重命名）一个文件
+     *
      * packet:
      * |packet_type|req_id|path|
      *
