@@ -12,6 +12,8 @@ import com.jn.agileway.ssh.client.impl.jsch.JschConnectionConfig;
 import com.jn.agileway.ssh.client.impl.jsch.JschConnectionFactory;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionConfig;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionFactory;
+import com.jn.agileway.ssh.client.impl.synergy.SynergyConnectionConfig;
+import com.jn.agileway.ssh.client.impl.synergy.SynergyConnectionFactory;
 import com.jn.agileway.ssh.client.supports.command.executor.SshCommandLineExecutor;
 import com.jn.langx.commandline.CommandLine;
 import com.jn.langx.commandline.DefaultExecuteResultHandler;
@@ -53,6 +55,11 @@ public class SshCommandLineExecutorTest {
     @Test
     public void testJ2ssh() throws Throwable {
         testExec(new J2sshConnectionFactory(), new J2sshConnectionConfig());
+    }
+
+    @Test
+    public void testSynergy() throws Throwable {
+        testExec(new SynergyConnectionFactory(), new SynergyConnectionConfig());
     }
 
 
