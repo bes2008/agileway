@@ -3,6 +3,7 @@ package com.jn.agileway.ssh.client.impl.synergy.sftp;
 import com.jn.agileway.ssh.client.sftp.SftpFile;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
+import com.jn.agileway.ssh.client.sftp.exception.SftpException;
 
 import java.io.IOException;
 
@@ -34,7 +35,11 @@ public class SynergySftpFile extends SftpFile {
 
     @Override
     public void setAttributes(FileAttrs attrs) throws IOException {
-
+        try {
+            getSession().setStat(path, attrs);
+        } catch (Throwable ex) {
+            throw new SftpException(ex);
+        }
     }
 
     @Override

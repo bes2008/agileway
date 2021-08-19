@@ -2,9 +2,12 @@ package com.jn.agileway.ssh.client.impl.synergy.sftp;
 
 import com.jn.agileway.ssh.client.sftp.*;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
+import com.jn.agileway.ssh.client.sftp.exception.NoSuchFileSftpException;
 import com.jn.agileway.ssh.client.sftp.exception.SftpException;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
+import com.jn.langx.util.function.Predicate;
 import com.sshtools.client.sftp.SftpClient;
 import com.sshtools.common.sftp.SftpFileAttributes;
 
@@ -22,17 +25,24 @@ public class SynergySftpSession extends AbstractSftpSession {
     protected List<SftpResourceInfo> doListFiles(String directory) throws IOException {
         try {
             com.sshtools.client.sftp.SftpFile[] files = this.client.ls(directory);
-            return Pipeline.of(files).map(new Function<com.sshtools.client.sftp.SftpFile, SftpResourceInfo>() {
-                @Override
-                public SftpResourceInfo apply(com.sshtools.client.sftp.SftpFile sftpFile) {
-                    try {
-                        SftpResourceInfo resourceInfo = new SftpResourceInfo(sftpFile.getAbsolutePath(), SynergySftps.fromSftpFileAttributes(sftpFile.getAttributes()));
-                        return resourceInfo;
-                    } catch (Throwable ex) {
-                        throw new SftpException(ex);
-                    }
-                }
-            }).asList();
+            return Pipeline.of(files)
+                    .filter(new Predicate<com.sshtools.client.sftp.SftpFile>() {
+                        @Override
+                        public boolean test(com.sshtools.client.sftp.SftpFile sftpFile) {
+                            return !".".equals(sftpFile.getFilename()) && !"..".equals(sftpFile.getFilename());
+                        }
+                    })
+                    .map(new Function<com.sshtools.client.sftp.SftpFile, SftpResourceInfo>() {
+                        @Override
+                        public SftpResourceInfo apply(com.sshtools.client.sftp.SftpFile sftpFile) {
+                            try {
+                                SftpResourceInfo resourceInfo = new SftpResourceInfo(sftpFile.getAbsolutePath(), SynergySftps.fromSftpFileAttributes(sftpFile.getAttributes()));
+                                return resourceInfo;
+                            } catch (Throwable ex) {
+                                throw new SftpException(ex);
+                            }
+                        }
+                    }).asList();
         } catch (Throwable ex) {
             throw new SftpException(ex);
         }
@@ -51,13 +61,13 @@ public class SynergySftpSession extends AbstractSftpSession {
     public SftpFile open(String filepath, int openMode, FileAttrs attrs) throws IOException {
         try {
             com.sshtools.client.sftp.SftpFile sf = null;
+
             if (!Sftps.exists(this, filepath)) {
                 if (OpenMode.isCreatable(openMode)) {
-                    sf = this.client.getSubsystemChannel().openFile(filepath, 16);
-
+                    sf = this.client.getSubsystemChannel().openFile(filepath, openMode);
                 }
             } else {
-                sf = this.client.getSubsystemChannel().openFile(filepath, 1);
+                sf = this.client.getSubsystemChannel().openFile(filepath, openMode);
             }
             return new SynergySftpFile(this, filepath, sf);
         } catch (Throwable ex) {
@@ -98,7 +108,11 @@ public class SynergySftpSession extends AbstractSftpSession {
             SftpFileAttributes attributes = this.client.stat(filepath);
             return SynergySftps.fromSftpFileAttributes(attributes);
         } catch (Throwable ex) {
+            if ("No such file".equals(ex.getMessage())) {
+                throw new NoSuchFileSftpException(ex);
+            }
             throw new SftpException(ex);
+
         }
     }
 
@@ -114,12 +128,26 @@ public class SynergySftpSession extends AbstractSftpSession {
 
     @Override
     public void setStat(String path, FileAttrs attrs) throws IOException {
-
+        if (attrs != null && Strings.isNotBlank(path)) {
+            try {
+                this.client.getSubsystemChannel().setAttributes(path, SynergySftps.toSftpFileAttributes(attrs, this.client.getSubsystemChannel().getCharsetEncoding()));
+            } catch (Throwable ex) {
+                throw new SftpException(ex);
+            }
+        }
     }
 
     @Override
     public void mkdir(String directory, FileAttrs attrs) throws IOException {
-
+        try {
+            if (attrs != null) {
+                this.client.getSubsystemChannel().makeDirectory(directory, SynergySftps.toSftpFileAttributes(attrs, this.client.getSubsystemChannel().getCharsetEncoding()));
+            } else {
+                this.client.getSubsystemChannel().makeDirectory(directory);
+            }
+        } catch (Throwable ex) {
+            throw new SftpException(ex);
+        }
     }
 
     @Override
