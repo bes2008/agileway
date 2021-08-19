@@ -5,33 +5,18 @@ import com.jn.langx.util.function.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.security.PublicKey;
 import java.util.List;
 
-public class AnyHostKeyVerifier implements HostKeyVerifier {
-    private final List<HostKeyVerifier> verifiers = Collects.emptyArrayList();
+public class AnyHostKeyVerifier<PUBKEY> implements HostKeyVerifier<PUBKEY> {
+    private final List<HostKeyVerifier<PUBKEY>> verifiers = Collects.emptyArrayList();
     private static final Logger logger = LoggerFactory.getLogger(AnyHostKeyVerifier.class);
 
-    @Override
-    public boolean verify(final String hostname, final int port, final String serverHostKeyAlgorithm, final byte[] key) {
-        return Collects.anyMatch(verifiers, new Predicate<HostKeyVerifier>() {
-            @Override
-            public boolean test(HostKeyVerifier verifier) {
-                try {
-                    return verifier.verify(hostname, port, serverHostKeyAlgorithm, key);
-                } catch (Throwable ex) {
-                    logger.warn(ex.getMessage(), ex);
-                    return false;
-                }
-            }
-        });
-    }
 
     @Override
-    public boolean verify(final String hostname, final int port, final String serverHostKeyAlgorithm, final PublicKey key) {
-        return Collects.anyMatch(verifiers, new Predicate<HostKeyVerifier>() {
+    public boolean verify(final String hostname, final int port, final String serverHostKeyAlgorithm, final PUBKEY key) {
+        return Collects.anyMatch(verifiers, new Predicate<HostKeyVerifier<PUBKEY>>() {
             @Override
-            public boolean test(HostKeyVerifier verifier) {
+            public boolean test(HostKeyVerifier<PUBKEY> verifier) {
                 try {
                     return verifier.verify(hostname, port, serverHostKeyAlgorithm, key);
                 } catch (Throwable ex) {

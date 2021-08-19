@@ -4,7 +4,7 @@ import com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier;
 
 import java.security.PublicKey;
 
-public class FromSshHostKeyVerifierAdapter implements HostKeyVerifier {
+public class FromSshHostKeyVerifierAdapter implements HostKeyVerifier<PublicKey> {
     private net.schmizz.sshj.transport.verification.HostKeyVerifier delegate;
 
     public FromSshHostKeyVerifierAdapter(net.schmizz.sshj.transport.verification.HostKeyVerifier delegate) {
@@ -12,12 +12,8 @@ public class FromSshHostKeyVerifierAdapter implements HostKeyVerifier {
     }
 
     @Override
-    public boolean verify(String hostname, int port, String serverHostKeyAlgorithm, byte[] key) {
-        return false;
-    }
-
-    @Override
     public boolean verify(String hostname, int port, String serverHostKeyAlgorithm, PublicKey key) {
         return this.delegate.verify(hostname, port, key);
     }
+
 }

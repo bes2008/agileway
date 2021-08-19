@@ -6,15 +6,15 @@ import com.sshtools.common.ssh.SshException;
 import com.sshtools.common.ssh.components.SshPublicKey;
 
 public class ToSynergyHostKeyVerifierAdapter implements HostKeyVerification {
-    private HostKeyVerifier verifier;
+    private HostKeyVerifier<SshPublicKey> verifier;
 
-    public ToSynergyHostKeyVerifierAdapter(HostKeyVerifier verifier) {
+    public ToSynergyHostKeyVerifierAdapter(HostKeyVerifier<SshPublicKey> verifier) {
         this.verifier = verifier;
     }
 
     @Override
     public boolean verifyHost(String host, SshPublicKey sshPublicKey) throws SshException {
-        this.verifier.verify(host, -1, null, sshPublicKey.getJCEPublicKey().getEncoded());
-        return false;
+        boolean ret = this.verifier.verify(host, -1, sshPublicKey.getAlgorithm(), sshPublicKey);
+        return ret;
     }
 }
