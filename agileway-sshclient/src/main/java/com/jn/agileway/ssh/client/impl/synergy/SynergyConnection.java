@@ -52,7 +52,9 @@ public class SynergyConnection extends AbstractSshConnection<SynergyConnectionCo
     @Override
     public boolean authenticateWithPassword(String user, String password) throws SshException {
         try {
-            client = new SshClient(sshConfig.getHost(), sshConfig.getPort(), user, password.toCharArray());
+            SshClientContext context = new SshClientContext();
+            context.setHostKeyVerification(new ToSynergyHostKeyVerifierAdapter(this.hostKeyVerifier));
+            client = new SshClient(sshConfig.getHost(), sshConfig.getPort(), user, context, 30000L, password.toCharArray());
             if (client.isConnected()) {
                 setStatus(SshConnectionStatus.CONNECTED);
             }
