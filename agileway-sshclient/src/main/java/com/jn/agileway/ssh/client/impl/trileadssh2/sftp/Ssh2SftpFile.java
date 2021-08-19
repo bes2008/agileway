@@ -43,11 +43,7 @@ public class Ssh2SftpFile extends SftpFile {
 
     @Override
     public void setAttributes(FileAttrs attrs) throws IOException {
-        try {
-            session.setStat(path, attrs);
-        } catch (SFTPException ex) {
-            throw Ssh2Sftps.wrapSftpException(ex);
-        }
+        session.setStat(path, attrs);
     }
 
     @Override

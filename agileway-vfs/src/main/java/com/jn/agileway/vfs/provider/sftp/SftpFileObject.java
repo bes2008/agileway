@@ -4,6 +4,7 @@ import com.jn.agileway.ssh.client.sftp.*;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.attrs.FileMode;
 import com.jn.agileway.ssh.client.sftp.exception.NoSuchFileSftpException;
+import com.jn.agileway.ssh.client.sftp.exception.SftpException;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.io.file.FilePermission;
@@ -246,7 +247,7 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
                 SftpFile sftpFile = getSftpSession().open(relPath, OpenMode.WRITE, fileAttrs);
                 return new SftpFileOutputStream(sftpFile);
             }
-        } catch (IOException ex) {
+        } catch (SftpException ex) {
             throw new FileSystemException(ex);
         }
     }

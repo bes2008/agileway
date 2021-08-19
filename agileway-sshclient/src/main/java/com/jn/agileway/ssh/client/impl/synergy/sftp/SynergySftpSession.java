@@ -22,7 +22,7 @@ public class SynergySftpSession extends AbstractSftpSession {
     }
 
     @Override
-    protected List<SftpResourceInfo> doListFiles(String directory) throws IOException {
+    protected List<SftpResourceInfo> doListFiles(String directory) throws SftpException {
         try {
             com.sshtools.client.sftp.SftpFile[] files = this.client.ls(directory);
             return Pipeline.of(files)
@@ -58,7 +58,7 @@ public class SynergySftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public SftpFile open(String filepath, int openMode, FileAttrs attrs) throws IOException {
+    public SftpFile open(String filepath, int openMode, FileAttrs attrs) throws SftpException {
         try {
             com.sshtools.client.sftp.SftpFile sf = null;
 
@@ -76,7 +76,7 @@ public class SynergySftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public void createSymlink(String src, String target) throws IOException {
+    public void createSymlink(String src, String target) throws SftpException {
         try {
             this.client.getSubsystemChannel().createSymbolicLink(target, src);
         } catch (Throwable ex) {
@@ -85,7 +85,7 @@ public class SynergySftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public String readLink(String path) throws IOException {
+    public String readLink(String path) throws SftpException {
         try {
             return this.client.getSymbolicLinkTarget(path);
         } catch (Throwable ex) {
@@ -94,7 +94,7 @@ public class SynergySftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public String canonicalPath(String path) throws IOException {
+    public String canonicalPath(String path) throws SftpException {
         try {
             return this.client.getAbsolutePath(path);
         } catch (Throwable ex) {
@@ -103,7 +103,7 @@ public class SynergySftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public FileAttrs stat(String filepath) throws IOException {
+    public FileAttrs stat(String filepath) throws SftpException {
         try {
             SftpFileAttributes attributes = this.client.stat(filepath);
             return SynergySftps.fromSftpFileAttributes(attributes);
@@ -117,7 +117,7 @@ public class SynergySftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public FileAttrs lstat(String filepath) throws IOException {
+    public FileAttrs lstat(String filepath) throws SftpException {
         try {
             SftpFileAttributes attributes = this.client.stat(filepath);
             return SynergySftps.fromSftpFileAttributes(attributes);
@@ -127,7 +127,7 @@ public class SynergySftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public void setStat(String path, FileAttrs attrs) throws IOException {
+    public void setStat(String path, FileAttrs attrs) throws SftpException {
         if (attrs != null && Strings.isNotBlank(path)) {
             try {
                 this.client.getSubsystemChannel().setAttributes(path, SynergySftps.toSftpFileAttributes(attrs, this.client.getSubsystemChannel().getCharsetEncoding()));
@@ -138,7 +138,7 @@ public class SynergySftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public void mkdir(String directory, FileAttrs attrs) throws IOException {
+    public void mkdir(String directory, FileAttrs attrs) throws SftpException {
         try {
             if (attrs != null) {
                 this.client.getSubsystemChannel().makeDirectory(directory, SynergySftps.toSftpFileAttributes(attrs, this.client.getSubsystemChannel().getCharsetEncoding()));
@@ -151,7 +151,7 @@ public class SynergySftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public void rmdir(String directory) throws IOException {
+    public void rmdir(String directory) throws SftpException {
         try {
             this.client.getSubsystemChannel().removeDirectory(directory);
         } catch (Throwable ex) {
@@ -160,7 +160,7 @@ public class SynergySftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public void rm(String filepath) throws IOException {
+    public void rm(String filepath) throws SftpException {
         try {
             this.client.rm(filepath);
         } catch (Throwable ex) {
@@ -169,7 +169,7 @@ public class SynergySftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public void mv(String oldFilepath, String newFilepath) throws IOException {
+    public void mv(String oldFilepath, String newFilepath) throws SftpException {
         try {
             this.client.getSubsystemChannel().renameFile(oldFilepath, newFilepath);
         } catch (Throwable ex) {

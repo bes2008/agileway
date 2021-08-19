@@ -4,6 +4,7 @@ import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.attrs.FileMode;
 import com.jn.agileway.ssh.client.sftp.attrs.FileType;
 import com.jn.agileway.ssh.client.sftp.exception.NoSuchFileSftpException;
+import com.jn.agileway.ssh.client.sftp.exception.SftpException;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
@@ -35,7 +36,7 @@ public class Sftps {
      * @param filepath
      * @return null 代表该路径不存在
      */
-    public static FileType getFileType(SftpSession session, String filepath) throws IOException {
+    public static FileType getFileType(SftpSession session, String filepath) throws SftpException {
         SftpFile file = null;
         try {
             FileAttrs fileAttrs = session.stat(filepath);
@@ -47,7 +48,7 @@ public class Sftps {
         }
     }
 
-    public static boolean exists(SftpSession session, String filepath) throws IOException {
+    public static boolean exists(SftpSession session, String filepath) throws SftpException {
         return exists(session, filepath, null);
     }
 
@@ -59,7 +60,7 @@ public class Sftps {
      * @return
      * @throws IOException
      */
-    public static boolean exists(SftpSession session, String filepath, FileType fileType) throws IOException {
+    public static boolean exists(SftpSession session, String filepath, FileType fileType) throws SftpException {
         FileType type = getFileType(session, filepath);
         if (fileType == null) {
             return type != null;
@@ -75,7 +76,7 @@ public class Sftps {
      * @return
      * @throws IOException
      */
-    public static boolean existFile(SftpSession session, String filepath) throws IOException {
+    public static boolean existFile(SftpSession session, String filepath) throws SftpException {
         return exists(session, filepath, FileType.REGULAR);
     }
 
@@ -87,11 +88,11 @@ public class Sftps {
      * @return
      * @throws IOException
      */
-    public static boolean existDirectory(SftpSession session, String directoryPath) throws IOException {
+    public static boolean existDirectory(SftpSession session, String directoryPath) throws SftpException {
         return exists(session, directoryPath, FileType.DIRECTORY);
     }
 
-    public static void remove(SftpSession session, String path) throws IOException {
+    public static void remove(SftpSession session, String path) throws SftpException {
         FileAttrs attrs = session.stat(path);
         if (attrs.isDirectory()) {
             removeDir(session, path, false);
@@ -102,12 +103,13 @@ public class Sftps {
 
     /**
      * 递归移除
+     *
      * @param session
      * @param directory
      * @param retainDirectory
      * @throws IOException
      */
-    public static void removeDir(final SftpSession session, String directory, boolean retainDirectory) throws IOException {
+    public static void removeDir(final SftpSession session, String directory, boolean retainDirectory) throws SftpException {
         List<SftpResourceInfo> children = session.listFiles(directory);
         if (!children.isEmpty()) {
             Collects.forEach(children, new Consumer<SftpResourceInfo>() {
@@ -126,7 +128,7 @@ public class Sftps {
         }
     }
 
-    public static void copy(@NonNull SftpSession session, @NonNull File file, @NotEmpty String remoteDir) throws IOException {
+    public static void copy(@NonNull SftpSession session, @NonNull File file, @NotEmpty String remoteDir) throws SftpException {
         Preconditions.checkArgument(file.exists(), "the file {} is not exist", file.getPath());
         if (file.isFile()) {
             copyFile(session, file, remoteDir, null);
@@ -144,7 +146,7 @@ public class Sftps {
      * @return
      * @throws IOException
      */
-    public static int copyFile(@NonNull SftpSession session, @NonNull File file, @NotEmpty String remoteDir, @Nullable String newName) throws IOException {
+    public static int copyFile(@NonNull SftpSession session, @NonNull File file, @NotEmpty String remoteDir, @Nullable String newName) throws SftpException {
         boolean remoteDirExist = Sftps.existDirectory(session, remoteDir);
         if (!remoteDirExist) {
             session.mkdir(remoteDir, null);
@@ -164,6 +166,9 @@ public class Sftps {
                 sftpFile.write(sum, buffer, 0, readLength);
                 sum += readLength;
             }
+
+        } catch (Throwable ex) {
+            throw new SftpException(ex);
         } finally {
             IOs.close(sftpFile);
             IOs.close(inputStream);
@@ -180,7 +185,7 @@ public class Sftps {
      * @return
      * @throws IOException
      */
-    public static void copyDir(final SftpSession session, File localDirectory, final String remoteDir) throws IOException {
+    public static void copyDir(final SftpSession session, File localDirectory, final String remoteDir) throws SftpException {
         boolean remoteDirExist = Sftps.existDirectory(session, remoteDir);
         if (!remoteDirExist) {
             session.mkdir(remoteDir, null);

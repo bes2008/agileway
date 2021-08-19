@@ -10,16 +10,20 @@ import com.trilead.ssh2.SFTPException;
 import com.trilead.ssh2.SFTPv3FileAttributes;
 
 public class Ssh2Sftps {
-    public static SftpException wrapSftpException(SFTPException ex) {
-        ResponseStatusCode statusCode = Enums.ofCode(ResponseStatusCode.class, ex.getServerErrorCode());
-        SftpException exception = null;
-        if (statusCode == ResponseStatusCode.NO_SUCH_FILE) {
-            exception = new NoSuchFileSftpException(ex);
+    public static SftpException wrapSftpException(Throwable ex) {
+        if (ex instanceof SFTPException) {
+            ResponseStatusCode statusCode = Enums.ofCode(ResponseStatusCode.class, ((SFTPException) ex).getServerErrorCode());
+            SftpException exception = null;
+            if (statusCode == ResponseStatusCode.NO_SUCH_FILE) {
+                exception = new NoSuchFileSftpException(ex);
+            } else {
+                exception = new SftpException(ex);
+            }
+            exception.setStatusCode(statusCode);
+            return exception;
         } else {
-            exception = new SftpException(ex);
+            return new SftpException(ex);
         }
-        exception.setStatusCode(statusCode);
-        return exception;
     }
 
     public static SFTPv3FileAttributes toSsh2FileAttributes(FileAttrs attributes) {

@@ -30,7 +30,7 @@ public class SshjSftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public SftpFile open(String filepath, int openMode, final FileAttrs attrs) throws IOException {
+    public SftpFile open(String filepath, int openMode, final FileAttrs attrs) throws SftpException {
         try {
             Set<net.schmizz.sshj.sftp.OpenMode> openModes = SshjSftps.toSshjOpenModeSet(openMode);
             net.schmizz.sshj.sftp.FileAttributes attributes = SshjSftps.toFileAttributes(attrs);
@@ -38,70 +38,70 @@ public class SshjSftpSession extends AbstractSftpSession {
             SshjSftpFile file = new SshjSftpFile(this, filepath);
             file.setRemoteFile(remoteFile);
             return file;
-        } catch (SFTPException ex) {
+        } catch (Throwable ex) {
             throw SshjSftps.wrapSftpException(ex);
         }
     }
 
     @Override
-    public void createSymlink(String src, String target) throws IOException {
+    public void createSymlink(String src, String target) throws SftpException {
         try {
             sftpClient.symlink(src, target);
-        } catch (SFTPException ex) {
+        } catch (Throwable ex) {
             throw SshjSftps.wrapSftpException(ex);
         }
     }
 
     @Override
-    public String readLink(String path) throws IOException {
+    public String readLink(String path) throws SftpException {
         try {
             return sftpClient.readlink(path);
-        } catch (SFTPException ex) {
+        } catch (Throwable ex) {
             throw SshjSftps.wrapSftpException(ex);
         }
     }
 
     @Override
-    public String canonicalPath(String path) throws IOException {
+    public String canonicalPath(String path) throws SftpException {
         try {
             return sftpClient.canonicalize(path);
-        } catch (SFTPException ex) {
+        } catch (Throwable ex) {
             throw SshjSftps.wrapSftpException(ex);
         }
     }
 
 
     @Override
-    public FileAttrs stat(String filepath) throws IOException {
+    public FileAttrs stat(String filepath) throws SftpException {
         try {
             net.schmizz.sshj.sftp.FileAttributes fileAttributes = sftpClient.stat(filepath);
             return SshjSftps.fromFileAttributes(fileAttributes);
-        } catch (SFTPException ex) {
+        } catch (Throwable ex) {
             throw SshjSftps.wrapSftpException(ex);
         }
     }
 
     @Override
-    public FileAttrs lstat(String filepath) throws IOException {
+    public FileAttrs lstat(String filepath) throws SftpException {
         try {
             net.schmizz.sshj.sftp.FileAttributes fileAttributes = sftpClient.lstat(filepath);
             return SshjSftps.fromFileAttributes(fileAttributes);
-        } catch (SFTPException ex) {
+        } catch (Throwable ex) {
             throw SshjSftps.wrapSftpException(ex);
         }
     }
 
     @Override
-    public void setStat(String path, FileAttrs attrs) throws IOException {
+    public void setStat(String path, FileAttrs attrs) throws SftpException {
         try {
             sftpClient.setattr(path, SshjSftps.toFileAttributes(attrs));
-        } catch (SFTPException ex) {
+        } catch (Throwable ex) {
             throw SshjSftps.wrapSftpException(ex);
         }
     }
 
     @Override
-    protected List<SftpResourceInfo> doListFiles(String directory) throws IOException {
+    protected List<SftpResourceInfo> doListFiles(String directory) throws SftpException {
         try {
             List<RemoteResourceInfo> list = sftpClient.ls(directory);
             return Pipeline.of(list)
@@ -117,44 +117,44 @@ public class SshjSftpSession extends AbstractSftpSession {
                             return SshjSftps.fromRemoteResourceInfo(remoteResourceInfo);
                         }
                     }).asList();
-        } catch (SFTPException ex) {
+        } catch (Throwable ex) {
             throw SshjSftps.wrapSftpException(ex);
         }
     }
 
 
     @Override
-    public void mkdir(String directory, FileAttrs attributes) throws IOException {
+    public void mkdir(String directory, FileAttrs attributes) throws SftpException {
         try {
             sftpClient.mkdirs(directory);
-        } catch (SFTPException ex) {
+        } catch (Throwable ex) {
             throw SshjSftps.wrapSftpException(ex);
         }
     }
 
     @Override
-    public void rmdir(String directory) throws IOException {
+    public void rmdir(String directory) throws SftpException {
         try {
             sftpClient.rmdir(directory);
-        } catch (SFTPException ex) {
+        } catch (Throwable ex) {
             throw SshjSftps.wrapSftpException(ex);
         }
     }
 
     @Override
-    public void rm(String filepath) throws IOException {
+    public void rm(String filepath) throws SftpException {
         try {
             sftpClient.rm(filepath);
-        } catch (SFTPException ex) {
+        } catch (Throwable ex) {
             throw SshjSftps.wrapSftpException(ex);
         }
     }
 
     @Override
-    public void mv(String oldFilepath, String newFilepath) throws IOException {
+    public void mv(String oldFilepath, String newFilepath) throws SftpException {
         try {
             sftpClient.rename(oldFilepath, newFilepath);
-        } catch (SFTPException ex) {
+        } catch (Throwable ex) {
             throw SshjSftps.wrapSftpException(ex);
         }
     }

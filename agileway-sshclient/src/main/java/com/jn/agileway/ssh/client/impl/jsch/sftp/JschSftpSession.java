@@ -40,7 +40,7 @@ public class JschSftpSession extends AbstractSftpSession {
     }
 
     @Override
-    protected List<SftpResourceInfo> doListFiles(final String directory) throws IOException {
+    protected List<SftpResourceInfo> doListFiles(final String directory) throws SftpException {
         try {
             Vector<ChannelSftp.LsEntry> vector = channel.ls(directory);
             return Pipeline.of(vector)
@@ -62,7 +62,7 @@ public class JschSftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public SftpFile open(String filepath, int openMode, FileAttrs attrs) throws IOException {
+    public SftpFile open(String filepath, int openMode, FileAttrs attrs) throws SftpException {
         if (!Sftps.exists(this, filepath)) {
             if (OpenMode.isCreatable(openMode)) {
                 // 创建文件
@@ -79,7 +79,7 @@ public class JschSftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public void createSymlink(String src, String target) throws IOException {
+    public void createSymlink(String src, String target) throws SftpException {
         try {
             channel.symlink(src, target);
         } catch (com.jcraft.jsch.SftpException ex) {
@@ -88,7 +88,7 @@ public class JschSftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public String readLink(String path) throws IOException {
+    public String readLink(String path) throws SftpException {
         try {
             return channel.readlink(path);
         } catch (com.jcraft.jsch.SftpException ex) {
@@ -97,7 +97,7 @@ public class JschSftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public String canonicalPath(String path) throws IOException {
+    public String canonicalPath(String path) throws SftpException {
         try {
             return channel.realpath(path);
         } catch (com.jcraft.jsch.SftpException ex) {
@@ -106,7 +106,7 @@ public class JschSftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public FileAttrs stat(String filepath) throws IOException {
+    public FileAttrs stat(String filepath) throws SftpException {
         try {
             SftpATTRS sftpATTRS = channel.stat(filepath);
             return JschSftps.fromSftpATTRS(sftpATTRS);
@@ -116,7 +116,7 @@ public class JschSftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public FileAttrs lstat(String filepath) throws IOException {
+    public FileAttrs lstat(String filepath) throws SftpException {
         try {
             SftpATTRS sftpATTRS = channel.lstat(filepath);
             return JschSftps.fromSftpATTRS(sftpATTRS);
@@ -126,7 +126,7 @@ public class JschSftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public void setStat(String path, FileAttrs attrs) throws IOException {
+    public void setStat(String path, FileAttrs attrs) throws SftpException {
         try {
             SftpATTRS sftpATTRS = channel.lstat(path);
             sftpATTRS = JschSftps.toSftpATTRS(sftpATTRS, attrs);
@@ -137,7 +137,7 @@ public class JschSftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public void mkdir(String directory, FileAttrs attributes) throws IOException {
+    public void mkdir(String directory, FileAttrs attributes) throws SftpException {
         try {
             channel.mkdir(directory);
         } catch (com.jcraft.jsch.SftpException ex) {
@@ -146,7 +146,7 @@ public class JschSftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public void rmdir(String directory) throws IOException {
+    public void rmdir(String directory) throws SftpException {
         try {
             channel.rmdir(directory);
         } catch (com.jcraft.jsch.SftpException ex) {
@@ -155,7 +155,7 @@ public class JschSftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public void rm(String filepath) throws IOException {
+    public void rm(String filepath) throws SftpException {
         try {
             channel.rm(filepath);
         } catch (com.jcraft.jsch.SftpException ex) {
@@ -164,7 +164,7 @@ public class JschSftpSession extends AbstractSftpSession {
     }
 
     @Override
-    public void mv(String oldFilepath, String newFilepath) throws IOException {
+    public void mv(String oldFilepath, String newFilepath) throws SftpException {
         try {
             channel.rename(oldFilepath, newFilepath);
         } catch (com.jcraft.jsch.SftpException ex) {

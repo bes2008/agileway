@@ -35,9 +35,9 @@ public interface SftpSession extends Closeable {
      * @param attrs    the file attributes if create
      * @return the opened file
      */
-    SftpFile open(String filepath, OpenMode openMode, @Nullable FileAttrs attrs) throws IOException;
+    SftpFile open(String filepath, OpenMode openMode, @Nullable FileAttrs attrs) throws SftpException;
 
-    SftpFile open(String filepath, int openMode, @Nullable FileAttrs attrs) throws IOException;
+    SftpFile open(String filepath, int openMode, @Nullable FileAttrs attrs) throws SftpException;
 
     /**
      * Create a symbolic link on the server. Creates a link "src" that points
@@ -47,7 +47,7 @@ public interface SftpSession extends Closeable {
      *
      * @throws IOException
      */
-    void createSymlink(String src, String target) throws IOException;
+    void createSymlink(String src, String target) throws SftpException;
 
     /**
      * Read the target of a symbolic link.
@@ -56,7 +56,7 @@ public interface SftpSession extends Closeable {
      * @return The target of the link.
      * @throws IOException
      */
-    String readLink(String path) throws IOException;
+    String readLink(String path) throws SftpException;
 
     /**
      * packet_type: REALPATH
@@ -65,7 +65,7 @@ public interface SftpSession extends Closeable {
      * @return
      * @throws IOException
      */
-    String canonicalPath(String path) throws IOException;
+    String canonicalPath(String path) throws SftpException;
 
 
     /**
@@ -78,7 +78,7 @@ public interface SftpSession extends Closeable {
      * @throws IOException
      * @see #lstat(String)
      */
-    FileAttrs stat(String filepath) throws IOException;
+    FileAttrs stat(String filepath) throws SftpException;
 
     /**
      * packet_type: LSTAT
@@ -87,7 +87,7 @@ public interface SftpSession extends Closeable {
      * @return
      * @throws IOException
      */
-    FileAttrs lstat(String filepath) throws IOException;
+    FileAttrs lstat(String filepath) throws SftpException;
 
     /**
      * Modify the attributes of a file. Used for operations such as changing
@@ -100,9 +100,9 @@ public interface SftpSession extends Closeable {
      *              made to the attributes of the file. Empty fields will be ignored.
      * @throws IOException
      */
-    void setStat(String path, FileAttrs attrs) throws IOException;
+    void setStat(String path, FileAttrs attrs) throws SftpException;
 
-    List<SftpResourceInfo> listFiles(String directory) throws IOException;
+    List<SftpResourceInfo> listFiles(String directory) throws SftpException;
 
     /**
      * 列出目录直接子项
@@ -115,7 +115,7 @@ public interface SftpSession extends Closeable {
      * @param directory
      * @return
      */
-    List<SftpResourceInfo> listFiles(String directory, Predicate<SftpResourceInfo> predicate) throws IOException;
+    List<SftpResourceInfo> listFiles(String directory, Predicate<SftpResourceInfo> predicate) throws SftpException;
 
     /**
      * 递归创建目录
@@ -129,7 +129,7 @@ public interface SftpSession extends Closeable {
      * @param attributes
      * @return
      */
-    void mkdir(String directory, FileAttrs attributes) throws IOException;
+    void mkdir(String directory, FileAttrs attributes) throws SftpException;
 
     /**
      * 移除一个空目录
@@ -145,7 +145,7 @@ public interface SftpSession extends Closeable {
      *
      * @see Sftps#removeDir(SftpSession, String, boolean)
      */
-    void rmdir(String directory) throws IOException;
+    void rmdir(String directory) throws SftpException;
 
     /**
      * 移除一个文件
@@ -156,7 +156,7 @@ public interface SftpSession extends Closeable {
      * @param filepath
      * @return
      */
-    void rm(String filepath) throws IOException;
+    void rm(String filepath) throws SftpException;
 
     /**
      * 移动（重命名）一个文件
@@ -170,7 +170,7 @@ public interface SftpSession extends Closeable {
      * @param newFilepath
      * @return
      */
-    void mv(String oldFilepath, String newFilepath) throws IOException;
+    void mv(String oldFilepath, String newFilepath) throws SftpException;
 
     /**
      * 关闭 sftp session

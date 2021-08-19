@@ -16,16 +16,20 @@ import java.util.Set;
 
 class SshjSftps {
 
-    public static SftpException wrapSftpException(SFTPException ex) {
-        ResponseStatusCode statusCode = Enums.ofName(ResponseStatusCode.class, ex.getStatusCode().name());
-        SftpException exception = null;
-        if (statusCode == ResponseStatusCode.NO_SUCH_FILE) {
-            exception = new NoSuchFileSftpException(ex);
+    public static SftpException wrapSftpException(Throwable ex) {
+        if (ex instanceof SFTPException) {
+            ResponseStatusCode statusCode = Enums.ofName(ResponseStatusCode.class, ((SFTPException) ex).getStatusCode().name());
+            SftpException exception = null;
+            if (statusCode == ResponseStatusCode.NO_SUCH_FILE) {
+                exception = new NoSuchFileSftpException(ex);
+            } else {
+                exception = new SftpException(ex);
+            }
+            exception.setStatusCode(statusCode);
+            return exception;
         } else {
-            exception = new SftpException(ex);
+            return new SftpException(ex);
         }
-        exception.setStatusCode(statusCode);
-        return exception;
     }
 
     public static Set<OpenMode> toSshjOpenModeSet(int openMode) {
