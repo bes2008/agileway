@@ -16,6 +16,10 @@ import java.util.List;
 public class SynergyConnectionFactory extends AbstractSshConnectionFactory<SynergyConnectionConfig> {
     private static final Logger logger = LoggerFactory.getLogger(SynergyConnectionFactory.class);
 
+    public SynergyConnectionFactory(){
+        setName("synergy");
+    }
+
     @Override
     protected void postConstructConnection(SshConnection connection, SynergyConnectionConfig sshConfig) {
         configKnownHosts(connection, sshConfig);

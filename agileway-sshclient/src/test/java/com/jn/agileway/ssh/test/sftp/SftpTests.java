@@ -4,8 +4,6 @@ import com.jn.agileway.ssh.client.SshConnection;
 import com.jn.agileway.ssh.client.SshConnectionConfig;
 import com.jn.agileway.ssh.client.SshConnectionFactory;
 import com.jn.agileway.ssh.client.SshConnectionFactoryRegistry;
-import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionFactory;
-import com.jn.agileway.ssh.client.impl.trileadssh2.Ssh2ConnectionFactory;
 import com.jn.agileway.ssh.client.sftp.*;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.langx.util.SystemPropertys;
@@ -38,6 +36,11 @@ public class SftpTests {
     @Test
     public void testSftp_sshj() throws IOException {
         _test(registry.get("sshj"), "/home/fangjinuo/Templates/test_sftp_sshj");
+    }
+
+    @Test
+    public void testSftp_synergy() throws IOException {
+        _test(registry.get("synergy"), "/home/fangjinuo/Templates/test_sftp_synergy");
     }
 
     void _test(SshConnectionFactory connectionFactory, final String testWorkingDirectory) throws IOException {

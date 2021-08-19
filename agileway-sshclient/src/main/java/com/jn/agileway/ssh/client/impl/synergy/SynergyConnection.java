@@ -5,11 +5,13 @@ import com.jn.agileway.ssh.client.SshConnectionStatus;
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
 import com.jn.agileway.ssh.client.channel.forwarding.ForwardingClient;
+import com.jn.agileway.ssh.client.impl.synergy.sftp.SynergySftpSession;
 import com.jn.agileway.ssh.client.impl.synergy.verifier.ToSynergyHostKeyVerifierAdapter;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.sshtools.client.SessionChannelNG;
 import com.sshtools.client.SshClient;
 import com.sshtools.client.SshClientContext;
+import com.sshtools.client.sftp.SftpClient;
 import com.sshtools.common.publickey.SshKeyUtils;
 import com.sshtools.common.ssh.components.SshKeyPair;
 
@@ -100,7 +102,11 @@ public class SynergyConnection extends AbstractSshConnection<SynergyConnectionCo
 
     @Override
     public SftpSession openSftpSession() throws SshException {
-        return null;
+        try {
+            return new SynergySftpSession(new SftpClient(this.client));
+        } catch (Throwable ex) {
+            throw new SshException(ex);
+        }
     }
 
     SshClient getClient() {
