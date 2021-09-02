@@ -1,6 +1,6 @@
 package com.jn.agileway.web.filter;
 
-import com.jn.agileway.web.filter.rr.RRHolder;
+import com.jn.agileway.web.servlet.RRHolder;
 import com.jn.agileway.web.servlet.RR;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

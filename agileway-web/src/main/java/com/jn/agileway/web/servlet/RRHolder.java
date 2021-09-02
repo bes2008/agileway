@@ -1,6 +1,4 @@
-package com.jn.agileway.web.filter.rr;
-
-import com.jn.agileway.web.servlet.RR;
+package com.jn.agileway.web.servlet;
 
 import javax.servlet.http.*;
 
