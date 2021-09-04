@@ -1,8 +1,8 @@
 package com.jn.agileway.zip.archive;
 
+import com.jn.langx.Factory;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
-import com.jn.langx.factory.Factory;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;

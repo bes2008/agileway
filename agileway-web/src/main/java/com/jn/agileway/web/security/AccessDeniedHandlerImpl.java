@@ -2,8 +2,8 @@ package com.jn.agileway.web.security;
 
 
 import com.jn.agileway.web.servlet.Servlets;
-import com.jn.langx.http.HttpStatus;
 import com.jn.langx.util.Preconditions;
+import com.jn.langx.util.net.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

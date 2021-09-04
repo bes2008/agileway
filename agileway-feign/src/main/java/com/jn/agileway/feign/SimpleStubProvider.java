@@ -23,6 +23,7 @@ import com.jn.langx.util.net.NetworkAddress;
 import com.jn.langx.util.reflect.Reflects;
 import feign.Client;
 import feign.Feign;
+import feign.InvocationHandlerFactory;
 import feign.RequestInterceptor;
 import feign.codec.Decoder;
 import feign.codec.Encoder;
@@ -65,7 +66,7 @@ public class SimpleStubProvider extends AbstractInitializable implements Initial
     private List<RequestInterceptor> requestInterceptors = Collects.emptyArrayList();
 
     protected SimpleStubProviderCustomizer customizer;
-
+    protected InvocationHandlerFactory invocationHandlerFactory;
     @Override
     public String getName() {
         return name;
@@ -130,6 +131,10 @@ public class SimpleStubProvider extends AbstractInitializable implements Initial
         return errorHandler;
     }
 
+    protected final void setInvocationHandlerFactory(InvocationHandlerFactory invocationHandlerFactory) {
+        this.invocationHandlerFactory = invocationHandlerFactory;
+    }
+
     @Override
     public void doInit() throws InitializationException {
         apiBuilder = createApiBuilder();
@@ -142,7 +147,7 @@ public class SimpleStubProvider extends AbstractInitializable implements Initial
         final List<NetworkAddress> licenseServerAddresses = context.getNodes();
         Preconditions.checkNotEmpty(licenseServerAddresses, new Supplier<Object[], String>() {
             @Override
-            public String get(Object[] input) {
+            public String get(Object[] args) {
                 return StringTemplates.formatWithPlaceholder("server addresses is invalid : {}", licenseServerAddresses);
             }
         });

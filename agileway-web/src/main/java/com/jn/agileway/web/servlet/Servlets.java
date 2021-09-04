@@ -3,9 +3,6 @@ package com.jn.agileway.web.servlet;
 
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
-import com.jn.langx.http.HttpHeaders;
-import com.jn.langx.http.HttpRange;
-import com.jn.langx.http.mime.MediaType;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.*;
 import com.jn.langx.util.collection.Collects;
@@ -18,6 +15,9 @@ import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.io.file.FileIOMode;
+import com.jn.langx.util.net.http.HttpHeaders;
+import com.jn.langx.util.net.http.HttpRange;
+import com.jn.langx.util.net.mime.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

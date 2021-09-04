@@ -62,18 +62,28 @@ public class RpcInvocationHandlerFactory implements InvocationHandlerFactory {
                 result = methodHandler.invoke(args);
                 return result;
             } catch (FeignRpcException ex) {
-                return errorHandler.apply(ex, methodHandler);
+                if (ex.hasResponse()) {
+                    return errorHandler.apply(ex, methodHandler);
+                } else {
+                    logger.error(ex.getMessage(), ex);
+                }
             } catch (FeignException ex) {
-                // 此时 Response 可能已被关闭
+                // 此时 Response 可能已被关闭，也可能是 null
                 FeignRR feignRR = ClientWrapper.feignRRHolder.get();
-                MethodMetadata metadata = Feigns.getMethodMetadata(methodHandler);
-                String methodKey = metadata.configKey();
-                FeignRpcException exception = new FeignRpcException(methodKey, feignRR.getResponse(),ex);
-                return errorHandler.apply(exception, methodHandler);
+                if (feignRR.getResponse() == null) {
+                    logger.error(ex.getMessage(), ex);
+                } else {
+                    MethodMetadata metadata = Feigns.getMethodMetadata(methodHandler);
+                    String methodKey = metadata.configKey();
+                    FeignRpcException exception = new FeignRpcException(methodKey, feignRR.getResponse(), ex);
+                    return errorHandler.apply(exception, methodHandler);
+                }
+            } catch (Throwable ex) {
+                logger.error(ex.getMessage(), ex);
             } finally {
                 ClientWrapper.feignRRHolder.reset();
             }
-
+            return null;
         }
 
         @Override

@@ -1,6 +1,6 @@
 package com.jn.agileway.web.prediate;
 
-import com.jn.langx.factory.Factory;
+import com.jn.langx.Factory;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;

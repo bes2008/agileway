@@ -2,11 +2,11 @@ package com.jn.agileway.codec.serialization.hessian;
 
 import com.caucho.hessian.io.Hessian2Input;
 import com.caucho.hessian.io.Hessian2Output;
+import com.jn.langx.Factory;
+import com.jn.langx.ThreadLocalFactory;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.codec.CodecException;
-import com.jn.langx.factory.Factory;
-import com.jn.langx.factory.ThreadLocalFactory;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.io.IOs;

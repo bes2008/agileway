@@ -1,9 +1,9 @@
 package com.jn.agileway.codec.serialization.fst;
 
+import com.jn.langx.Factory;
+import com.jn.langx.ThreadLocalFactory;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
-import com.jn.langx.factory.Factory;
-import com.jn.langx.factory.ThreadLocalFactory;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Collects;

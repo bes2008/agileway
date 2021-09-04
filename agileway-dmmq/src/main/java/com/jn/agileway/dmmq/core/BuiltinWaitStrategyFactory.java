@@ -1,7 +1,7 @@
 package com.jn.agileway.dmmq.core;
 
 import com.jn.agileway.dmmq.core.utils.MQs;
-import com.jn.langx.factory.Factory;
+import com.jn.langx.Factory;
 import com.lmax.disruptor.WaitStrategy;
 
 public class BuiltinWaitStrategyFactory implements Factory<String, WaitStrategy> {

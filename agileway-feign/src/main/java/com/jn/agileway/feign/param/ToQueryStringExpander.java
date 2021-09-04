@@ -2,7 +2,7 @@ package com.jn.agileway.feign.param;
 
 import com.jn.easyjson.core.JSON;
 import com.jn.easyjson.core.JSONBuilderProvider;
-import com.jn.langx.http.HttpQueryStrings;
+import com.jn.langx.util.net.http.HttpQueryStrings;
 import feign.Param;
 
 import java.util.Map;

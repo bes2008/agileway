@@ -2,7 +2,7 @@ package com.jn.agileway.web.rest;
 
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
-import com.jn.langx.http.HttpStatus;
+import com.jn.langx.util.net.http.HttpStatus;
 
 /**
  * @see RestActionException

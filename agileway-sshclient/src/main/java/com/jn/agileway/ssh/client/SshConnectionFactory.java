@@ -1,7 +1,7 @@
 package com.jn.agileway.ssh.client;
 
+import com.jn.langx.Factory;
 import com.jn.langx.Named;
-import com.jn.langx.factory.Factory;
 
 public interface SshConnectionFactory<CONF extends SshConnectionConfig> extends Factory<CONF, SshConnection>, Named {
     /**

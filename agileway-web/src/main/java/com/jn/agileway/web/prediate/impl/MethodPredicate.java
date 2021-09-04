@@ -2,11 +2,11 @@ package com.jn.agileway.web.prediate.impl;
 
 import com.jn.agileway.web.prediate.HttpRequestPredicate;
 import com.jn.agileway.web.servlet.RR;
-import com.jn.langx.http.HttpMethod;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
+import com.jn.langx.util.net.http.HttpMethod;
 
 import java.util.List;
 

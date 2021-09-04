@@ -11,14 +11,13 @@ import com.jn.langx.lifecycle.InitializationException;
 @Deprecated
 public class RestStubProvider extends SimpleStubProvider {
     private JSONFactory jsonFactory;
-    private Class unifiedRestResponseClass;
 
     public void setJsonFactory(JSONFactory jsonFactory) {
         this.jsonFactory = jsonFactory;
     }
 
+    @Deprecated
     public void setUnifiedRestResponseClass(Class unifiedRestResponseClass) {
-        this.unifiedRestResponseClass = unifiedRestResponseClass;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.jn.agileway.web.rest;
 
 import com.jn.agileway.web.servlet.Servlets;
-import com.jn.langx.http.mime.MediaType;
+import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.reflect.Reflects;
 
 public class GlobalRestHandlers {

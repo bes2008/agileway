@@ -1,5 +1,7 @@
 package com.jn.agileway.feign.supports.rpc;
 
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.struct.Holder;
@@ -16,11 +18,11 @@ public class FeignRpcException extends RuntimeException {
     private Response response;
     private Holder<String> responseBody;
 
-    public FeignRpcException(String methodKey, Response response) {
+    public FeignRpcException(@NonNull String methodKey, @Nullable Response response) {
         this(methodKey, response, null);
     }
 
-    public FeignRpcException(String methodKey, Response response, Throwable cause) {
+    public FeignRpcException(@NonNull String methodKey, @Nullable Response response, Throwable cause) {
         this.methodKey = methodKey;
         this.response = response;
         if (cause != null) {
@@ -48,6 +50,9 @@ public class FeignRpcException extends RuntimeException {
         }
     }
 
+    public boolean hasResponse() {
+        return this.response != null;
+    }
 
     public int getStatusCode() {
         return response.status();

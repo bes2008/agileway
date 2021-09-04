@@ -2,7 +2,7 @@ package com.jn.agileway.web.request.header;
 
 import com.jn.agileway.web.prediate.HttpRequestPredicateGroup;
 import com.jn.agileway.web.prediate.HttpRequestPredicateGroupFactory;
-import com.jn.langx.factory.Factory;
+import com.jn.langx.Factory;
 
 public class HttpResponseHeaderSetterFactory implements Factory<HttpResponseHeaderRule, HttpResponseHeaderSetter> {
     @Override
