@@ -20,8 +20,6 @@ public class EasyjsonErrorDecoder implements ErrorDecoder {
         FeignRpcException exception = new FeignRpcException(methodKey, response);
         try {
             Response repeatableResponse = Feigns.toByteArrayResponse(response);
-            IOs.close(response);
-            response = repeatableResponse;
             exception.setResponse(repeatableResponse);
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
