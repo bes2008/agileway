@@ -47,10 +47,6 @@ public class AdaptableDecoder implements Decoder {
 
         Object result = delegate.decode(repeatableResponse, expected);
         result = adapter.adapt(repeatableResponse, expected, result);
-
-        if (repeatableResponse != response) {
-            IOs.close(response);
-        }
         return result;
     }
 
