@@ -1,6 +1,7 @@
 package com.jn.agileway.spring.web.rest;
 
 import com.jn.agileway.web.rest.*;
+import com.jn.agileway.web.servlet.Servlets;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.io.Charsets;
@@ -65,6 +66,8 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
         response.setContentType(GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8);
         response.setCharacterEncoding(Charsets.UTF_8.name());
         request.setAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN, true);
+        body.setMethod(Servlets.getMethod(request));
+        body.setRequestHeaders(Servlets.headersToMultiValueMap(request));
         return body;
     }
 

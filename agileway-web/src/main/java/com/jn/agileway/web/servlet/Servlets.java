@@ -16,6 +16,7 @@ import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.io.file.FileIOMode;
 import com.jn.langx.util.net.http.HttpHeaders;
+import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.http.HttpRange;
 import com.jn.langx.util.net.mime.MediaType;
 import org.slf4j.Logger;
@@ -115,6 +116,10 @@ public class Servlets {
 
     public static HttpHeaders getRequestHeaders(HttpServletRequest request) {
         return new HttpHeaders(headersToMultiValueMap(request));
+    }
+
+    public static HttpMethod getMethod(HttpServletRequest request){
+        return HttpMethod.valueOf(request.getMethod());
     }
 
     public static MultiValueMap<String, String> headersToMultiValueMap(final HttpServletRequest request) {

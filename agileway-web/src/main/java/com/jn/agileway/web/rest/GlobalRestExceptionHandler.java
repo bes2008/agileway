@@ -1,6 +1,7 @@
 package com.jn.agileway.web.rest;
 
 import com.jn.agileway.web.security.WAFs;
+import com.jn.agileway.web.servlet.Servlets;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
 import com.jn.easyjson.core.factory.JsonScope;
@@ -10,7 +11,9 @@ import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.lifecycle.Lifecycle;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.io.Charsets;
+import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Enumeration;
 
 import static com.jn.agileway.web.rest.GlobalRestHandlers.GLOBAL_REST_EXCEPTION_HANDLER;
 import static com.jn.agileway.web.rest.GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN;
@@ -73,12 +77,11 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
             // 找那些注册好了的异常处理
             RestActionExceptionHandlerRegistration restHandlerExceptionResolverRegistration = exceptionHandlerRegistry.findExceptionResolver(ex, causeScanEnabled);
 
-
             if (restHandlerExceptionResolverRegistration != null) {
                 respBody = restHandlerExceptionResolverRegistration.getExceptionHandler().handle(request, response, action, ex);
                 if (respBody == null) {
                     RestActionExceptionHandlerDefinition element = restHandlerExceptionResolverRegistration.findMatchedRegistration(ex, causeScanEnabled);
-                    RestRespBody.error(element.getDefaultStatusCode(), element.getDefaultErrorCode(), element.getDefaultErrorMessage());
+                    respBody = RestRespBody.error(element.getDefaultStatusCode(), element.getDefaultErrorCode(), element.getDefaultErrorMessage());
                 }
             }
 
@@ -117,6 +120,11 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
                     logger.warn(ioe.getMessage(), ioe);
                 }
             }
+        }
+        if (respBody != null) {
+            respBody.setMethod(HttpMethod.valueOf(request.getMethod()));
+            MultiValueMap<String, String> headers = Servlets.headersToMultiValueMap(request);
+            respBody.setRequestHeaders(headers);
         }
         return respBody;
     }
