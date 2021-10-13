@@ -37,23 +37,33 @@ public class WAFStrategy implements Listable<WAFHandler>, Initializable {
     }
 
     @Override
-    public void add(WAFHandler wafHandler) {
-        this.handlers.add(wafHandler);
+    public boolean add(WAFHandler wafHandler) {
+        return this.handlers.add(wafHandler);
     }
 
     @Override
-    public void remove(WAFHandler wafHandler) {
-        this.handlers.remove(wafHandler);
+    public boolean remove(Object wafHandler) {
+        return this.handlers.remove(wafHandler);
     }
 
     @Override
-    public void clear(WAFHandler wafHandler) {
+    public void clear() {
         this.handlers.clear();
     }
 
     @Override
-    public void addAll(Collection<WAFHandler> collection) {
-        Collects.addAll(this.handlers, collection);
+    public boolean addAll(Collection<? extends WAFHandler> collection) {
+        Collection wafs = collection;
+        Collects.addAll(this.handlers, wafs);
+        return true;
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> collection) {
+        if (collection != null) {
+            this.handlers.removeAll(collection);
+        }
+        return true;
     }
 
     @Override
@@ -68,7 +78,7 @@ public class WAFStrategy implements Listable<WAFHandler>, Initializable {
 
     @Override
     public boolean isNull() {
-        return handlers == null;
+        return false;
     }
 
     public void setPredicates(HttpRequestPredicateGroup predicates) {

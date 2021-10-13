@@ -17,27 +17,39 @@ public final class HttpRequestPredicateGroup implements Listable<HttpRequestPred
     private final List<HttpRequestPredicate> predicates = Collects.emptyArrayList();
 
     @Override
-    public void add(HttpRequestPredicate httpRequestPredicate) {
+    public boolean add(HttpRequestPredicate httpRequestPredicate) {
         if (httpRequestPredicate != null) {
-            predicates.add(httpRequestPredicate);
+            return predicates.add(httpRequestPredicate);
         }
+        return false;
     }
 
     @Override
-    public void remove(HttpRequestPredicate httpRequestPredicate) {
+    public boolean remove(Object httpRequestPredicate) {
         if (httpRequestPredicate != null) {
-            predicates.remove(httpRequestPredicate);
+            return predicates.remove(httpRequestPredicate);
         }
+        return false;
     }
 
     @Override
-    public void clear(HttpRequestPredicate httpRequestPredicate) {
+    public void clear() {
         this.predicates.clear();
     }
 
     @Override
-    public void addAll(Collection<HttpRequestPredicate> elements) {
-        Collects.addAll(this.predicates, elements);
+    public boolean addAll(Collection<? extends HttpRequestPredicate> elements) {
+        Collection es = elements;
+        Collects.addAll(this.predicates, es);
+        return true;
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> collection) {
+        if (collection != null) {
+            this.predicates.removeAll(collection);
+        }
+        return true;
     }
 
     @Override
