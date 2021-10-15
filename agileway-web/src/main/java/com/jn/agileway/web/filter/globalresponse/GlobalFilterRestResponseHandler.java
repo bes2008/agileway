@@ -84,7 +84,7 @@ public class GlobalFilterRestResponseHandler implements GlobalRestResponseBodyHa
                     defaultRestErrorMessageHandler.handler(request.getLocale(), respBody);
                     String json = jsonFactory.get().toJson(respBody);
                     try {
-                        respBody.setRequestHeaders(Servlets.headersToMultiValueMap(request));
+                        respBody.withRequestHeaders(Servlets.headersToMultiValueMap(request));
                         respBody.setMethod(Servlets.getMethod(request));
                         String xssFilteredData = WAFs.clearIfContainsJavaScript(json);
                         if (Objs.isEmpty(xssFilteredData)) {

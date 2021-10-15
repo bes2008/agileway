@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Enumeration;
 
 import static com.jn.agileway.web.rest.GlobalRestHandlers.GLOBAL_REST_EXCEPTION_HANDLER;
 import static com.jn.agileway.web.rest.GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN;
@@ -124,7 +123,7 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
         if (respBody != null) {
             respBody.setMethod(HttpMethod.valueOf(request.getMethod()));
             MultiValueMap<String, String> headers = Servlets.headersToMultiValueMap(request);
-            respBody.setRequestHeaders(headers);
+            respBody.withRequestHeaders(headers);
         }
         return respBody;
     }

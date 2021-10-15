@@ -67,7 +67,7 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
         response.setCharacterEncoding(Charsets.UTF_8.name());
         request.setAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN, true);
         body.setMethod(Servlets.getMethod(request));
-        body.setRequestHeaders(Servlets.headersToMultiValueMap(request));
+        body.withRequestHeaders(Servlets.headersToMultiValueMap(request));
         return body;
     }
 
