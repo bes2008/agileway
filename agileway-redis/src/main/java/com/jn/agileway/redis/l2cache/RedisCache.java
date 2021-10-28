@@ -7,14 +7,15 @@ import com.jn.langx.annotation.Nullable;
 import com.jn.langx.cache.*;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Collects;
-import com.jn.langx.util.function.Consumer2;
-import com.jn.langx.util.function.Supplier;
+import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.function.*;
+import com.jn.langx.util.timing.timer.Timeout;
 import org.springframework.data.redis.core.BoundValueOperations;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-public class RedisCache<V> implements Cache<String, V> {
+public class RedisCache<V> extends BaseCache<String, V> {
     @NonNull
     private RedisTemplate<String, V> redisTemplate;
     @Nullable
@@ -162,22 +163,47 @@ public class RedisCache<V> implements Cache<String, V> {
         }
     }
 
+    @Override
+    protected void refreshAllAsync(@Nullable final Timeout timeout) {
+        Set<String> keys = this.keys();
+        Pipeline.of(keys)
+                .map(new Function<String, String>() {
+                    @Override
+                    public String apply(String wrappedKey) {
+                        return keyWrapper.unwrap(wrappedKey);
+                    }
+                }).forEach(new Consumer<String>() {
+                    public void accept(String key) {
+                        refresh(key);
+                    }
+                });
+    }
+
+    @Override
+    public void evictExpired() {
+        // noop
+    }
+
+    @Override
+    public Set<String> keys() {
+        return redisTemplate.keys(keyWrapper.wrap("*"));
+    }
 
     @Override
     public void clean() {
-        Set<String> wrappedKeys = redisTemplate.keys(keyWrapper.wrap("*"));
+        Set<String> wrappedKeys = keys();
         redisTemplate.delete(wrappedKeys);
     }
 
     @Override
     public int size() {
-        Set<String> wrappedKeys = redisTemplate.keys(keyWrapper.wrap("*"));
+        Set<String> wrappedKeys = keys();
         return com.jn.langx.util.Objects.length(wrappedKeys);
     }
 
     @Override
     public Map<String, V> toMap() {
-        Set<String> wrappedKeys = redisTemplate.keys(keyWrapper.wrap("*"));
+        Set<String> wrappedKeys = keys();
         final List<V> values = redisTemplate.opsForValue().multiGet(wrappedKeys);
         final Map<String, V> map = Collects.<String, V>emptyHashMap();
         Collects.forEach(wrappedKeys, new Consumer2<Integer, String>() {
