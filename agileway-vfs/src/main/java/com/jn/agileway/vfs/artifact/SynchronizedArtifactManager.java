@@ -30,7 +30,7 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
     private ArtifactRepository destination;
 
 
-    public AbstractFileObject getArtifactFile(final Artifact artifact) {
+    public FileObject getArtifactFile(final Artifact artifact) {
         try {
             String localPath = destination.getPath(artifact);
             FileObject localFileObject = getFileSystemManager().resolveFile(localPath);
