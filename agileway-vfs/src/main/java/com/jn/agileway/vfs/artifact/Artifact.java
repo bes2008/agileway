@@ -10,4 +10,6 @@ public interface Artifact extends IGAV {
      */
     String getExtension();
     void setExtension(String extension);
+
+    boolean isSupportSynchronized();
 }

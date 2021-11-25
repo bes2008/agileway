@@ -6,6 +6,7 @@ public abstract class AbstractArtifact implements Artifact{
     private String version;
     private String classifier;
     private String extension;
+    private boolean supportSynchronized = false;
 
     @Override
     public String getGroupId() {
@@ -55,5 +56,13 @@ public abstract class AbstractArtifact implements Artifact{
     @Override
     public void setExtension(String extension) {
         this.extension = extension;
+    }
+
+    public boolean isSupportSynchronized() {
+        return supportSynchronized;
+    }
+
+    public void setSupportSynchronized(boolean supportSynchronized) {
+        this.supportSynchronized = supportSynchronized;
     }
 }

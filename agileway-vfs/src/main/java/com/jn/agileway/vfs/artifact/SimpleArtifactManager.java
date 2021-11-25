@@ -23,7 +23,7 @@ public class SimpleArtifactManager extends AbstractArtifactManager {
     @Override
     public FileObject getArtifactFile(Artifact artifact) throws FileSystemException {
         String localPath = repository.getPath(artifact);
-        return (AbstractFileObject) getFileSystemManager().resolveFile(localPath);
+        return getFileSystemManager().resolveFile(localPath);
     }
 
     @Override

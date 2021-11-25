@@ -14,7 +14,6 @@ import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.struct.Holder;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.Selectors;
-import org.apache.commons.vfs2.provider.AbstractFileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,10 +30,11 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
 
 
     public FileObject getArtifactFile(final Artifact artifact) {
+        FileObject localFileObject = null;
         try {
             String localPath = destination.getPath(artifact);
-            FileObject localFileObject = getFileSystemManager().resolveFile(localPath);
-            if (!localFileObject.exists()) {
+            localFileObject = getFileSystemManager().resolveFile(localPath);
+            if (!localFileObject.exists() && artifact.isSupportSynchronized()) {
                 if (Objs.isNotEmpty(sources)) {
                     final Holder<FileObject> remoteFileObjHolder = new Holder<FileObject>();
                     Collects.forEach(sources, new Predicate<ArtifactRepository>() {
@@ -73,11 +73,11 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
                     }
                 }
             }
-            return (AbstractFileObject) localFileObject;
+            return localFileObject;
         } catch (Throwable ex) {
             logger.error(ex.getMessage());
         }
-        return null;
+        return localFileObject;
     }
 
     public void setSources(List<ArtifactRepository> sources) {
