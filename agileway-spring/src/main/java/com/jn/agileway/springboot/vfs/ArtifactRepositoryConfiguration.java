@@ -1,7 +1,7 @@
 package com.jn.agileway.springboot.vfs;
 
 import com.jn.agileway.vfs.AgilewayVFSManagerBootstrap;
-import com.jn.agileway.vfs.artifact.ArtifactProperties;
+import com.jn.agileway.vfs.artifact.ArtifactManagerProperties;
 import com.jn.agileway.vfs.artifact.repository.ArtifactRepositoryLayout;
 import com.jn.agileway.vfs.artifact.repository.ArtifactRepositoryProperties;
 import com.jn.agileway.vfs.artifact.repository.DefaultArtifactRepositoryFactory;
@@ -34,8 +34,8 @@ public class ArtifactRepositoryConfiguration {
 
     @Bean(name = "artifactProperties")
     @ConfigurationProperties(prefix = "agileway.artifact")
-    public ArtifactProperties artifactProperties() {
-        return new ArtifactProperties();
+    public ArtifactManagerProperties artifactProperties() {
+        return new ArtifactManagerProperties();
     }
 
     @ConditionalOnMissingBean(name = "artifactRepositoryLayoutRegistry")
@@ -55,7 +55,7 @@ public class ArtifactRepositoryConfiguration {
     public DefaultArtifactRepositoryFactory artifactRepositoryFactory(
             @Qualifier("artifactRepositoryLayoutRegistry")
                     GenericRegistry<ArtifactRepositoryLayout> layoutRegistry,
-            ArtifactProperties artifactProperties,
+            ArtifactManagerProperties artifactProperties,
             ObjectProvider<List<ArtifactRepositoryLayout>> layoutObjectProvider) {
         final GenericRegistry<ArtifactRepositoryLayout> _layoutRegistry = layoutRegistry;
         // 所有的layout

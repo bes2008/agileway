@@ -4,7 +4,7 @@ import com.jn.agileway.vfs.artifact.repository.ArtifactRepositoryProperties;
 
 import java.util.List;
 
-public class ArtifactProperties {
+public class ArtifactManagerProperties {
     private boolean enabled = false;
     private List<ArtifactRepositoryProperties> repositories;
 
