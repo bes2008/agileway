@@ -12,6 +12,17 @@ import java.util.List;
 public abstract class AbstractArtifactManager implements ArtifactManager {
     private FileSystemManager fileSystemManager;
     private ArtifactDigitExtractor digitExtractor;
+    private ArtifactRepository repository;
+
+    @Override
+    public ArtifactRepository getRepository() {
+        return repository;
+    }
+
+    @Override
+    public void setRepository(ArtifactRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public FileSystemManager getFileSystemManager() {

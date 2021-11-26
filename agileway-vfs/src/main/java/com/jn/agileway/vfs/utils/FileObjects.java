@@ -1,5 +1,6 @@
-package com.jn.agileway.vfs;
+package com.jn.agileway.vfs.utils;
 
+import com.jn.agileway.vfs.VfsException;
 import com.jn.langx.annotation.Nullable;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;

@@ -1,4 +1,4 @@
-package com.jn.agileway.vfs;
+package com.jn.agileway.vfs.utils;
 
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;

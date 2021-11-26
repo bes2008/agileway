@@ -1,9 +1,8 @@
 package com.jn.agileway.vfs.artifact;
 
-import com.jn.agileway.vfs.FileObjects;
+import com.jn.agileway.vfs.utils.FileObjects;
 import com.jn.agileway.vfs.VfsException;
 import com.jn.agileway.vfs.artifact.repository.ArtifactRepository;
-import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
@@ -25,14 +24,11 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
     @Nullable
     private List<ArtifactRepository> sources = Collects.emptyArrayList();
 
-    @NonNull
-    private ArtifactRepository destination;
-
 
     public FileObject getArtifactFile(final Artifact artifact) {
         FileObject localFileObject = null;
         try {
-            String localPath = destination.getPath(artifact);
+            String localPath = getRepository().getPath(artifact);
             localFileObject = getFileSystemManager().resolveFile(localPath);
             if (!localFileObject.exists() && artifact.isSupportSynchronized()) {
                 if (Objs.isNotEmpty(sources)) {
@@ -85,7 +81,7 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
     }
 
     public void setDestination(ArtifactRepository dest) {
-        this.destination = dest;
+        this.setRepository(dest);
     }
 
     public void addSource(ArtifactRepository source) {
@@ -95,7 +91,7 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
     @Override
     public List<ArtifactDigit> getDigits(final Artifact artifact) {
         return Pipeline.of(sources)
-                .add(destination)
+                .add(getDestination())
                 .reverse(false)
                 .filter(new Predicate<ArtifactRepository>() {
                     @Override
@@ -118,6 +114,6 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
     }
 
     public ArtifactRepository getDestination() {
-        return destination;
+        return getRepository();
     }
 }
