@@ -75,7 +75,6 @@ public class Expander implements Closeable {
                 throw new IOException(StringTemplates.formatWithPlaceholder("Can't expand {}", directory.getPath()));
             }
         }
-
         TreeSet<Entry<ArchiveEntry, File>> directorySet = new TreeSet<Entry<ArchiveEntry, File>>(new Comparator<Entry<ArchiveEntry, File>>() {
             @Override
             public int compare(Entry<ArchiveEntry, File> e1, Entry<ArchiveEntry, File> e2) {
@@ -139,6 +138,7 @@ public class Expander implements Closeable {
                 directory.setLastModified(entry.getLastModifiedDate().getTime());
             }
         });
+
     }
 
     @Override

@@ -71,7 +71,7 @@ public class ArchiveIterator implements Iterator<ArchiveIterator.ArchiveEntryWra
                         entry = null;
                     }
                 }
-            } catch (IOException ex) {
+            } catch (Throwable ex) {
                 if (ex instanceof EOFException) {
                     return null;
                 }
