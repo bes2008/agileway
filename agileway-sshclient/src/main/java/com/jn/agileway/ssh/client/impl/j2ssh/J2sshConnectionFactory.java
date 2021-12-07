@@ -6,12 +6,14 @@ import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.impl.j2ssh.verifier.FromJ2ssHostKeyVerifier;
 import com.jn.agileway.ssh.client.impl.j2ssh.verifier.KnownHostsVerifier;
 import com.jn.agileway.ssh.client.utils.SshConfigs;
+import com.jn.langx.annotation.OnClasses;
 import com.sshtools.j2ssh.transport.HostKeyVerification;
 import com.sshtools.j2ssh.transport.IgnoreHostKeyVerification;
 
 import java.io.File;
 import java.util.List;
 
+@OnClasses({"com.sshtools.j2ssh.SshClient"})
 public class J2sshConnectionFactory extends AbstractSshConnectionFactory<J2sshConnectionConfig> {
 
     public J2sshConnectionFactory(){

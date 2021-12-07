@@ -1,13 +1,17 @@
 package com.jn.agileway.ssh.client;
 
+import com.jn.langx.annotation.OnClasses;
 import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.registry.Registry;
+import com.jn.langx.util.ClassLoaders;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.function.Predicate;
+import com.jn.langx.util.logging.Loggers;
+import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -17,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SshConnectionFactoryRegistry extends AbstractInitializable implements Registry<String, SshConnectionFactory> {
     private ConcurrentHashMap<String, SshConnectionFactory> registry = new ConcurrentHashMap<String, SshConnectionFactory>();
-    private static final Logger logger = LoggerFactory.getLogger(SshConnectionFactoryRegistry.class);
+    private static final Logger logger = Loggers.getLogger(SshConnectionFactoryRegistry.class);
     private static final Map<String, SshConnectionFactory> preinstall = new LinkedHashMap<String, SshConnectionFactory>();
 
     static {
@@ -27,13 +31,15 @@ public class SshConnectionFactoryRegistry extends AbstractInitializable implemen
         while (iterator.hasNext()) {
             try {
                 SshConnectionFactory sshConnectionFactory = iterator.next();
-                preinstall.put(sshConnectionFactory.getName(), sshConnectionFactory);
+                if (checkSshConnectionFactory(sshConnectionFactory)) {
+                    preinstall.put(sshConnectionFactory.getName(), sshConnectionFactory);
+                }
             } catch (Throwable ex) {
                 logger.error(ex.getMessage());
             }
         }
 
-        if (preinstall.size() == 0) {
+        if (preinstall.isEmpty()) {
             logger.warn("Can't find any valid ssh-client library, the recommend ssh client libraries: net.schmizz:sshj, com.trilead:trilead-ssh2, com.airlenet.yang:ganymed-ssh2, com.jcraft:jsch");
         }
     }
@@ -47,9 +53,31 @@ public class SshConnectionFactoryRegistry extends AbstractInitializable implemen
         register(sshConnectionFactory.getName(), sshConnectionFactory);
     }
 
+    private static boolean checkSshConnectionFactory(final SshConnectionFactory factory) {
+        Class clazz = factory.getClass();
+        OnClasses onClasses = Reflects.getAnnotation(clazz, OnClasses.class);
+        if (onClasses != null) {
+            String[] classes = onClasses.value();
+            return Pipeline.of(classes).allMatch(new Predicate<String>() {
+                @Override
+                public boolean test(String className) {
+                    boolean hasClass = ClassLoaders.hasClass(className, factory.getClass().getClassLoader());
+                    if (!hasClass) {
+                        logger.warn("Class {} not found for ssh connection factory: {}", className, factory.getName());
+                    }
+                    return hasClass;
+                }
+            });
+        } else {
+            return true;
+        }
+    }
+
     @Override
     public void register(String key, SshConnectionFactory sshConnectionFactory) {
-        registry.put(key, sshConnectionFactory);
+        if (sshConnectionFactory != null) {
+            registry.put(key, sshConnectionFactory);
+        }
     }
 
     @Override

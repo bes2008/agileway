@@ -5,10 +5,12 @@ import com.jn.agileway.ssh.client.SshConnection;
 import com.jn.agileway.ssh.client.impl.trileadssh2.verifier.FromSsh2HostKeyVerifierAdapter;
 import com.jn.agileway.ssh.client.impl.trileadssh2.verifier.KnownHostsVerifier;
 import com.jn.agileway.ssh.client.utils.SshConfigs;
+import com.jn.langx.annotation.OnClasses;
 
 import java.io.File;
 import java.util.List;
 
+@OnClasses({"com.trilead.ssh2.Connection"})
 public class Ssh2ConnectionFactory extends AbstractSshConnectionFactory<Ssh2ConnectionConfig> {
 
     public Ssh2ConnectionFactory(){

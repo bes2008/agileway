@@ -6,6 +6,7 @@ import com.jn.agileway.ssh.client.AbstractSshConnectionFactory;
 import com.jn.agileway.ssh.client.SshConnection;
 import com.jn.agileway.ssh.client.utils.SshConfigs;
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.annotation.OnClasses;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
@@ -14,6 +15,7 @@ import com.jn.langx.util.function.Predicate;
 import java.io.File;
 import java.util.List;
 
+@OnClasses({"com.jcraft.jsch.JSch"})
 public class JschConnectionFactory extends AbstractSshConnectionFactory<JschConnectionConfig> {
     @Nullable
     private JSch jsch;

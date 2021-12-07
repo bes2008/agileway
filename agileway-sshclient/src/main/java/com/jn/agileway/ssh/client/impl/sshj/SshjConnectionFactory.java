@@ -4,6 +4,7 @@ import com.jn.agileway.ssh.client.AbstractSshConnectionFactory;
 import com.jn.agileway.ssh.client.SshConnection;
 import com.jn.agileway.ssh.client.impl.sshj.verifier.FromSshHostKeyVerifierAdapter;
 import com.jn.agileway.ssh.client.utils.SshConfigs;
+import com.jn.langx.annotation.OnClasses;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.io.file.Files;
@@ -16,6 +17,7 @@ import java.io.File;
 import java.security.PublicKey;
 import java.util.List;
 
+@OnClasses({"net.schmizz.sshj.SSHClient"})
 public class SshjConnectionFactory extends AbstractSshConnectionFactory<SshjConnectionConfig> {
 
     public SshjConnectionFactory(){
