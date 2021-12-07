@@ -5,6 +5,7 @@ import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.registry.Registry;
 import com.jn.langx.util.ClassLoaders;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
@@ -58,19 +59,20 @@ public class SshConnectionFactoryRegistry extends AbstractInitializable implemen
         OnClasses onClasses = Reflects.getAnnotation(clazz, OnClasses.class);
         if (onClasses != null) {
             String[] classes = onClasses.value();
-            return Pipeline.of(classes).allMatch(new Predicate<String>() {
-                @Override
-                public boolean test(String className) {
-                    boolean hasClass = ClassLoaders.hasClass(className, factory.getClass().getClassLoader());
-                    if (!hasClass) {
-                        logger.warn("Class {} not found for ssh connection factory: {}", className, factory.getName());
+            if (Objs.isNotEmpty(classes)) {
+                return Pipeline.of(classes).allMatch(new Predicate<String>() {
+                    @Override
+                    public boolean test(String className) {
+                        boolean hasClass = ClassLoaders.hasClass(className, factory.getClass().getClassLoader());
+                        if (!hasClass) {
+                            logger.warn("Class {} not found for ssh connection factory: {}", className, factory.getName());
+                        }
+                        return hasClass;
                     }
-                    return hasClass;
-                }
-            });
-        } else {
-            return true;
+                });
+            }
         }
+        return true;
     }
 
     @Override
