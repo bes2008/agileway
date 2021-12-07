@@ -4,6 +4,7 @@ import com.jn.agileway.redis.core.RedisTemplate;
 import com.jn.agileway.redis.core.key.RedisKeyWrapper;
 import com.jn.langx.IdGenerator;
 import com.jn.langx.annotation.NonNull;
+import com.jn.langx.util.logging.Loggers;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.session.mgt.SimpleSession;
@@ -16,7 +17,7 @@ import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 public class RedisSessionDAO extends AbstractSessionDAO {
-    private static final Logger logger = LoggerFactory.getLogger(RedisSessionDAO.class);
+    private static final Logger logger = Loggers.getLogger(RedisSessionDAO.class);
     private RedisTemplate<String, Session> redisTemplate;
 
     private RedisKeyWrapper sessionKeyWrapper = new RedisKeyWrapper().prefix("shiro:session");

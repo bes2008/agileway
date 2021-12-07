@@ -9,11 +9,11 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.io.file.Files;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.struct.Entry;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.Comparator;
@@ -24,7 +24,7 @@ import java.util.TreeSet;
  * 如果想要先知道是否有指定的entry存在
  */
 public class Expander implements Closeable {
-    private static Logger logger = LoggerFactory.getLogger(Expander.class);
+    private static Logger logger = Loggers.getLogger(Expander.class);
     private ArchiveIterator iterator;
     @NonNull
     private InputStream inputStream;

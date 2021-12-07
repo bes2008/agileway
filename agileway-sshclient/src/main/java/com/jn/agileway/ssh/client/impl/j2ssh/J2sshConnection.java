@@ -8,6 +8,7 @@ import com.jn.agileway.ssh.client.channel.forwarding.ForwardingClient;
 import com.jn.agileway.ssh.client.impl.j2ssh.verifier.ToJ2sshHostKeyVerifier;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.langx.util.Preconditions;
+import com.jn.langx.util.logging.Loggers;
 import com.sshtools.j2ssh.SshClient;
 import com.sshtools.j2ssh.authentication.PasswordAuthenticationClient;
 import com.sshtools.j2ssh.authentication.PublicKeyAuthenticationClient;
@@ -15,14 +16,13 @@ import com.sshtools.j2ssh.session.SessionChannelClient;
 import com.sshtools.j2ssh.transport.publickey.SshPrivateKey;
 import com.sshtools.j2ssh.transport.publickey.SshPrivateKeyFile;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class J2sshConnection extends AbstractSshConnection<J2sshConnectionConfig> {
-    private static Logger logger = LoggerFactory.getLogger(J2sshConnection.class);
+    private static Logger logger = Loggers.getLogger(J2sshConnection.class);
     private SshClient sshClient = new SshClient();
 
     public J2sshConnection() {

@@ -17,10 +17,10 @@ import com.jn.langx.util.concurrent.threadlocal.ThreadLocalFactory;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.type.Primitives;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -35,7 +35,7 @@ public class Kryos {
     private Kryos() {
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(Kryos.class);
+    private static final Logger logger = Loggers.getLogger(Kryos.class);
 
     private static final Map<String, KryoCustomizer> kryoCustomizerRegistry = new ConcurrentHashMap<String, KryoCustomizer>();
 

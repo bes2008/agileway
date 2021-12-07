@@ -10,16 +10,16 @@ import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Predicate;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.struct.Holder;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.Selectors;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class SynchronizedArtifactManager extends AbstractArtifactManager {
-    private static final Logger logger = LoggerFactory.getLogger(SynchronizedArtifactManager.class);
+    private static final Logger logger = Loggers.getLogger(SynchronizedArtifactManager.class);
 
     @Nullable
     private List<ArtifactRepository> sources = Collects.emptyArrayList();

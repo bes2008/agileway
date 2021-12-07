@@ -10,17 +10,17 @@ import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.io.file.FileFilter;
+import com.jn.langx.util.logging.Loggers;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
 public class Archiver implements Closeable {
-    private static final Logger logger = LoggerFactory.getLogger(Archiver.class);
+    private static final Logger logger = Loggers.getLogger(Archiver.class);
 
     @NonNull
     private ArchiveOutputStream archiveOutputStream;

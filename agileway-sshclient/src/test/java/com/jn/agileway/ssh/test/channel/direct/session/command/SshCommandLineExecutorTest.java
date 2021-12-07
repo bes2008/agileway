@@ -18,15 +18,15 @@ import com.jn.agileway.ssh.client.supports.command.executor.SshCommandLineExecut
 import com.jn.langx.commandline.CommandLine;
 import com.jn.langx.commandline.DefaultExecuteResultHandler;
 import com.jn.langx.commandline.streamhandler.OutputAsStringExecuteStreamHandler;
+import com.jn.langx.util.logging.Loggers;
 import org.junit.Test;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 
 public class SshCommandLineExecutorTest {
-    private static Logger logger = LoggerFactory.getLogger(SshCommandLineExecutorTest.class);
+    private static Logger logger = Loggers.getLogger(SshCommandLineExecutorTest.class);
 
 
     @Test

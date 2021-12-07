@@ -11,11 +11,11 @@ import com.jn.langx.util.concurrent.threadlocal.ThreadLocalFactory;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.logging.Loggers;
 import org.nustaq.serialization.FSTConfiguration;
 import org.nustaq.serialization.FSTObjectInput;
 import org.nustaq.serialization.FSTObjectOutput;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class Fsts {
     private Fsts() {
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(Fsts.class);
+    private static final Logger logger = Loggers.getLogger(Fsts.class);
 
     private static final Map<String, FstCustomizer> fstCustomizerRegistry = new ConcurrentHashMap<String, FstCustomizer>();
 

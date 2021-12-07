@@ -4,12 +4,12 @@ import com.jn.langx.io.resource.Location;
 import com.jn.langx.io.resource.ResourceLocationProvider;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class BuiltinLuaScriptLocationProvider implements ResourceLocationProvider<String>, Initializable {
-    private static final Logger logger = LoggerFactory.getLogger(BuiltinLuaScriptLocationProvider.class);
+    private static final Logger logger = Loggers.getLogger(BuiltinLuaScriptLocationProvider.class);
     private String builtinPackageClassPath;
 
 

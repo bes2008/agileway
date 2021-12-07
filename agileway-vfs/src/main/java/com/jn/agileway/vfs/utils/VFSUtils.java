@@ -2,13 +2,13 @@ package com.jn.agileway.vfs.utils;
 
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
 import org.apache.commons.vfs2.provider.FileProvider;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 
 public class VFSUtils {
-    private static final Logger logger = LoggerFactory.getLogger(VFSUtils.class);
+    private static final Logger logger = Loggers.getLogger(VFSUtils.class);
 
     public static DefaultFileSystemManager getAsDefaultFSManager(FileSystemManager fileSystemManager) {
         if (fileSystemManager instanceof DefaultFileSystemManager) {

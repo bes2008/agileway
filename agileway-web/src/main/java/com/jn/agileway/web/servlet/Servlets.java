@@ -15,12 +15,12 @@ import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.io.file.FileIOMode;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.http.HttpRange;
 import com.jn.langx.util.net.mime.MediaType;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletOutputStream;
@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Servlets {
-    private static final Logger logger = LoggerFactory.getLogger(Servlets.class);
+    private static final Logger logger = Loggers.getLogger(Servlets.class);
 
     public static final String X_FRAME_OPTIONS_HEADER = "X-Frame-Options";
     public static final String X_FRAME_OPTIONS_DENY = "deny";

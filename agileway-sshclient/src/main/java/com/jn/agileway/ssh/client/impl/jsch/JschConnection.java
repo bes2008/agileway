@@ -15,8 +15,8 @@ import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.MapAccessor;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -25,7 +25,7 @@ import java.net.InetAddress;
  * 基于 JSch 的实现。
  */
 public class JschConnection extends AbstractSshConnection<JschConnectionConfig> {
-    private Logger logger = LoggerFactory.getLogger(JschConnection.class);
+    private Logger logger = Loggers.getLogger(JschConnection.class);
     private JSch jsch;
     private Session delegate;
 

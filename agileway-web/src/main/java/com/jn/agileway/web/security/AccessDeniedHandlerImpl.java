@@ -3,9 +3,9 @@ package com.jn.agileway.web.security;
 
 import com.jn.agileway.web.servlet.Servlets;
 import com.jn.langx.util.Preconditions;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.net.http.HttpStatus;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
 
-    protected static final Logger logger = LoggerFactory.getLogger(AccessDeniedHandlerImpl.class);
+    protected static final Logger logger = Loggers.getLogger(AccessDeniedHandlerImpl.class);
 
     private String errorPage;
 

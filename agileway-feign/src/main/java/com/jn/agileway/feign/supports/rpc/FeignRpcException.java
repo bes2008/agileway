@@ -4,16 +4,16 @@ import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.struct.Holder;
 import feign.Response;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @since 2.6.0
  */
 public class FeignRpcException extends RuntimeException {
-    private static final Logger logger = LoggerFactory.getLogger(FeignRpcException.class);
+    private static final Logger logger = Loggers.getLogger(FeignRpcException.class);
     private String methodKey;
     private Response response;
     private Holder<String> responseBody;

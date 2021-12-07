@@ -4,14 +4,14 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 
 public class JdkProxySerializer extends Serializer<Object> {
-    private static Logger logger = LoggerFactory.getLogger(JdkProxySerializer.class);
+    private static Logger logger = Loggers.getLogger(JdkProxySerializer.class);
 
     @Override
     public Object read(final Kryo kryo, final Input input, final Class<? extends Object> type) {

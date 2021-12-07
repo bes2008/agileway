@@ -13,10 +13,10 @@ import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.io.Charsets;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +29,7 @@ import static com.jn.agileway.web.rest.GlobalRestHandlers.GLOBAL_REST_RESPONSE_H
  * 通常在 Controller层调用
  */
 public abstract class GlobalRestExceptionHandler implements RestActionExceptionHandler, Initializable, Lifecycle {
-    private static Logger logger = LoggerFactory.getLogger(GlobalRestExceptionHandler.class);
+    private static Logger logger = Loggers.getLogger(GlobalRestExceptionHandler.class);
     private JSONFactory jsonFactory = JsonFactorys.getJSONFactory(JsonScope.SINGLETON);
 
     /**

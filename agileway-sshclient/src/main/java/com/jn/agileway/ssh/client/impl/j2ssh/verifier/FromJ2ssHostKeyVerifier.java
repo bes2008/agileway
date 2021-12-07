@@ -1,14 +1,14 @@
 package com.jn.agileway.ssh.client.impl.j2ssh.verifier;
 
 import com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier;
+import com.jn.langx.util.logging.Loggers;
 import com.sshtools.j2ssh.transport.HostKeyVerification;
 import com.sshtools.j2ssh.transport.publickey.SshPublicKey;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public class FromJ2ssHostKeyVerifier implements HostKeyVerifier<SshPublicKey> {
-    private static final Logger logger = LoggerFactory.getLogger(FromJ2ssHostKeyVerifier.class);
+    private static final Logger logger = Loggers.getLogger(FromJ2ssHostKeyVerifier.class);
     private HostKeyVerification delegate;
 
     public FromJ2ssHostKeyVerifier(HostKeyVerification delegate) {

@@ -6,16 +6,16 @@ import com.jn.langx.registry.Registry;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
 public class HttpRequestPredicateFactoryRegistry implements Registry<String, HttpRequestPredicateFactory> {
-    private static final Logger logger = LoggerFactory.getLogger(HttpRequestPredicateFactoryRegistry.class);
+    private static final Logger logger = Loggers.getLogger(HttpRequestPredicateFactoryRegistry.class);
     private ConcurrentHashMap<String, HttpRequestPredicateFactory> factories = new ConcurrentHashMap<String, HttpRequestPredicateFactory>();
 
 

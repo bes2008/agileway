@@ -5,9 +5,9 @@ import com.jn.agileway.web.servlet.Servlets;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.io.Charsets;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
  * </pre>
  */
 public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBodyHandler<Method>, InitializingBean {
-    private static final Logger logger = LoggerFactory.getLogger(GlobalSpringRestResponseBodyHandler.class);
+    private static final Logger logger = Loggers.getLogger(GlobalSpringRestResponseBodyHandler.class);
     private GlobalRestResponseBodyHandlerConfiguration configuration = new GlobalRestResponseBodyHandlerConfiguration();
     private JSONFactory jsonFactory;
     private RestErrorMessageHandler restErrorMessageHandler = NoopRestErrorMessageHandler.INSTANCE;

@@ -2,6 +2,7 @@ package com.jn.agileway.feign.loadbalancer;
 
 import com.jn.agileway.feign.HttpConnectionContext;
 import com.jn.langx.util.Objs;
+import com.jn.langx.util.logging.Loggers;
 import com.netflix.client.ClientFactory;
 import com.netflix.client.config.CommonClientConfigKey;
 import com.netflix.client.config.IClientConfig;
@@ -9,7 +10,6 @@ import com.netflix.loadbalancer.ILoadBalancer;
 import feign.ribbon.LBClient;
 import feign.ribbon.LBClientFactory;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static com.netflix.client.config.CommonClientConfigKey.ListOfServers;
 
@@ -17,7 +17,7 @@ import static com.netflix.client.config.CommonClientConfigKey.ListOfServers;
  * @since 1.0.0
  */
 public class DynamicLBClientFactory implements LBClientFactory {
-    private static final Logger logger = LoggerFactory.getLogger(DynamicLBClientFactory.class);
+    private static final Logger logger = Loggers.getLogger(DynamicLBClientFactory.class);
     private HttpConnectionContext context;
 
     public DynamicLBClientFactory(HttpConnectionContext context) {

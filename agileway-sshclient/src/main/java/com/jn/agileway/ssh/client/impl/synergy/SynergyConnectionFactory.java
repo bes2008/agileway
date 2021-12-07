@@ -7,16 +7,16 @@ import com.jn.agileway.ssh.client.utils.SshConfigs;
 import com.jn.langx.annotation.OnClasses;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.logging.Loggers;
 import com.sshtools.common.knownhosts.KnownHostsFile;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.List;
 
 @OnClasses({"com.sshtools.client.SshClient"})
 public class SynergyConnectionFactory extends AbstractSshConnectionFactory<SynergyConnectionConfig> {
-    private static final Logger logger = LoggerFactory.getLogger(SynergyConnectionFactory.class);
+    private static final Logger logger = Loggers.getLogger(SynergyConnectionFactory.class);
 
     public SynergyConnectionFactory(){
         setName("synergy");

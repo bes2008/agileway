@@ -3,8 +3,8 @@ package com.jn.agileway.redis.core.script;
 import com.jn.langx.configuration.resource.ResourceConfigurationLoader;
 import com.jn.langx.io.resource.*;
 import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 
 import java.io.File;
@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class RedisLuaScriptResourceLoader extends ResourceConfigurationLoader<RedisLuaScript> {
-    private static final Logger logger = LoggerFactory.getLogger(RedisLuaScriptResourceLoader.class);
+    private static final Logger logger = Loggers.getLogger(RedisLuaScriptResourceLoader.class);
 
     @Override
     public RedisLuaScript load(String configurationId) {

@@ -2,15 +2,15 @@ package com.jn.agileway.feign.supports.rpc.rest.param;
 
 import com.jn.easyjson.core.JSON;
 import com.jn.easyjson.core.JSONBuilderProvider;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import feign.Param;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 /**
  * @since 2.6.0
  */
 public class ToJsonExpander implements Param.Expander {
-    private static final Logger logger = LoggerFactory.getLogger(ToJsonExpander.class);
+    private static final Logger logger = Loggers.getLogger(ToJsonExpander.class);
     private final JSON jsons = JSONBuilderProvider.simplest();
 
     @Override

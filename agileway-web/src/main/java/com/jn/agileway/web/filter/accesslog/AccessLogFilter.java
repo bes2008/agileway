@@ -10,8 +10,8 @@ import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.enums.Enums;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +22,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 public class AccessLogFilter extends OncePerRequestFilter {
-    private static final Logger logger = LoggerFactory.getLogger(AccessLogFilter.class);
+    private static final Logger logger = Loggers.getLogger(AccessLogFilter.class);
     private WebAccessLogProperties config = new WebAccessLogProperties();
     private HttpRequestPredicateGroup predicates;
 

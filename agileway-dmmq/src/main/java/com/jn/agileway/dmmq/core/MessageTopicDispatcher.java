@@ -10,14 +10,14 @@ import com.jn.langx.util.Objects;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer2;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
 
 public class MessageTopicDispatcher implements Lifecycle, Registry<String,MessageTopic> {
-    private static final Logger logger = LoggerFactory.getLogger(MessageTopicDispatcher.class);
+    private static final Logger logger = Loggers.getLogger(MessageTopicDispatcher.class);
     private final Map<String, MessageTopic> topicMap = Collects.emptyHashMap();
     private EventPublisher<TopicEvent> topicEventPublisher;
     private volatile boolean running = false;

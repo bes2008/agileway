@@ -2,12 +2,12 @@ package com.jn.agileway.feign.supports.rpc;
 
 import com.jn.agileway.feign.ErrorHandler;
 import com.jn.agileway.feign.Feigns;
+import com.jn.langx.util.logging.Loggers;
 import feign.FeignException;
 import feign.InvocationHandlerFactory;
 import feign.MethodMetadata;
 import feign.Target;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -20,7 +20,7 @@ import static feign.Util.checkNotNull;
  * @since 2.6.0
  */
 public class RpcInvocationHandlerFactory implements InvocationHandlerFactory {
-    private static final Logger logger = LoggerFactory.getLogger(RpcInvocationHandlerFactory.class);
+    private static final Logger logger = Loggers.getLogger(RpcInvocationHandlerFactory.class);
 
     private ErrorHandler errorHandler;
 

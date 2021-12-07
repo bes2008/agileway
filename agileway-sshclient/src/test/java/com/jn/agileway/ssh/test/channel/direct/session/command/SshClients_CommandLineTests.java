@@ -12,14 +12,14 @@ import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionFactory;
 import com.jn.agileway.ssh.client.impl.synergy.SynergyConnectionConfig;
 import com.jn.agileway.ssh.client.impl.synergy.SynergyConnectionFactory;
 import com.jn.agileway.ssh.client.supports.command.SshCommandResponse;
+import com.jn.langx.util.logging.Loggers;
 import org.junit.Test;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 public class SshClients_CommandLineTests {
-    private static Logger logger = LoggerFactory.getLogger(SshClients_CommandLineTests.class);
+    private static Logger logger = Loggers.getLogger(SshClients_CommandLineTests.class);
 
 
     @Test

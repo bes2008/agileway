@@ -4,20 +4,19 @@ import com.jn.langx.annotation.NonNull;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.logging.Loggers;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
 import java.io.EOFException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 
 public class ArchiveIterator implements Iterator<ArchiveIterator.ArchiveEntryWrapper> {
-    private static Logger logger = LoggerFactory.getLogger(ArchiveIterator.class);
+    private static Logger logger = Loggers.getLogger(ArchiveIterator.class);
 
     @NonNull
     private ArchiveInputStream archiveInputStream;

@@ -10,8 +10,6 @@ import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.net.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,7 +18,6 @@ import java.lang.reflect.Method;
 
 public class GlobalFilterRestResponseHandler implements GlobalRestResponseBodyHandler<Method> {
 
-    private static final Logger logger = LoggerFactory.getLogger(GlobalFilterRestResponseHandler.class);
     private GlobalRestResponseBodyHandlerConfiguration configuration = new GlobalRestResponseBodyHandlerConfiguration();
     private JSONFactory jsonFactory = JsonFactorys.getJSONFactory(JsonScope.SINGLETON);
     private GlobalRestExceptionHandlerProperties globalRestExceptionHandlerProperties = new GlobalRestExceptionHandlerProperties();

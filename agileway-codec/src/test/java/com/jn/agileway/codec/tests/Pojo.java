@@ -3,8 +3,8 @@ package com.jn.agileway.codec.tests;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.hash.HashCodeBuilder;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.*;
@@ -13,7 +13,7 @@ import static com.jn.langx.util.Dates.MINUTES_TO_MILLIS;
 
 public class Pojo implements Serializable {
     private static final long serialVersionUID = -1L;
-    private transient static final Logger logger = LoggerFactory.getLogger(Pojo.class);
+    private transient static final Logger logger = Loggers.getLogger(Pojo.class);
 
     private Serializable id;
     private Date startTimestamp;

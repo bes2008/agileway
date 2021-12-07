@@ -11,6 +11,7 @@ import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.net.Nets;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.connection.channel.direct.Session;
@@ -23,7 +24,6 @@ import net.schmizz.sshj.userauth.keyprovider.PuTTYKeyFile;
 import net.schmizz.sshj.userauth.password.PasswordFinder;
 import net.schmizz.sshj.userauth.password.PasswordUtils;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -32,7 +32,7 @@ import java.net.UnknownHostException;
 import java.util.List;
 
 public class SshjConnection extends AbstractSshConnection<SshjConnectionConfig> {
-    private Logger logger = LoggerFactory.getLogger(SshjConnection.class);
+    private Logger logger = Loggers.getLogger(SshjConnection.class);
     private SSHClient sshClient;
 
     private void makeSureSshClient() {

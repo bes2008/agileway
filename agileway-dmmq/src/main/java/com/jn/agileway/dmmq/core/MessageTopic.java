@@ -9,16 +9,16 @@ import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Functions;
+import com.jn.langx.util.logging.Loggers;
 import com.lmax.disruptor.TimeoutException;
 import com.lmax.disruptor.dsl.Disruptor;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 public class MessageTopic<M> implements Destroyable, Initializable, Lifecycle {
-    private static final Logger logger = LoggerFactory.getLogger(MessageTopic.class);
+    private static final Logger logger = Loggers.getLogger(MessageTopic.class);
     private String name = DefaultTopicAllocator.TOPIC_DEFAULT;
     private Disruptor<MessageHolder<M>> disruptor;
     private MessageTopicConfiguration configuration;

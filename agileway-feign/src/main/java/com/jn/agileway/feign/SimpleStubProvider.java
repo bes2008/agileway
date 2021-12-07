@@ -19,6 +19,7 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Maps;
 import com.jn.langx.util.function.Supplier;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.net.NetworkAddress;
 import com.jn.langx.util.reflect.Reflects;
 import feign.Client;
@@ -33,7 +34,6 @@ import feign.ribbon.LBClientFactory;
 import feign.ribbon.RibbonClient;
 import feign.slf4j.Slf4jLogger;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,7 +44,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 2.6.0
  */
 public class SimpleStubProvider extends AbstractInitializable implements Initializable, StubProvider, Nameable {
-    private static final Logger logger = LoggerFactory.getLogger(SimpleStubProvider.class);
+    private static final Logger logger = Loggers.getLogger(SimpleStubProvider.class);
     @NonNull
     protected Feign.Builder apiBuilder;
     @NonNull
@@ -153,7 +153,7 @@ public class SimpleStubProvider extends AbstractInitializable implements Initial
         });
 
         String loggerName = context.getConfiguration().getAccessLoggerName();
-        Logger accessLogger = LoggerFactory.getLogger(loggerName);
+        Logger accessLogger = Loggers.getLogger(loggerName);
 
         // access log level
         feign.Logger.Level accessLogLevel = context.getAccessLogLevel();

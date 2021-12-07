@@ -4,8 +4,8 @@ import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Just send message to the 'DEFAULT' topic if the topicName is not specified
@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * @param <M>
  */
 public class SimpleProducer<M> implements Producer<M> {
-    private static final Logger logger = LoggerFactory.getLogger(SimpleProducer.class);
+    private static final Logger logger = Loggers.getLogger(SimpleProducer.class);
     private TopicAllocator<M> topicAllocator;
     private MessageTopicDispatcher dispatcher;
 

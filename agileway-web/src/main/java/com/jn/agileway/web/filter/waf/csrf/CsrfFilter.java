@@ -39,8 +39,8 @@ import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.function.Predicate;
 
 import com.jn.langx.util.io.Charsets;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -78,7 +78,7 @@ public final class CsrfFilter extends OncePerRequestFilter {
      */
     private static final String SHOULD_NOT_FILTER = "SHOULD_NOT_FILTER" + CsrfFilter.class.getName();
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = Loggers.getLogger(getClass());
 
     private final CsrfTokenRepository tokenRepository;
 

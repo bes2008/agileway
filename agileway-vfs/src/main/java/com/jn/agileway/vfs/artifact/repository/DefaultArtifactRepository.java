@@ -9,14 +9,14 @@ import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Predicate;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.List;
 
 public class DefaultArtifactRepository implements ArtifactRepository {
-    private static final Logger logger = LoggerFactory.getLogger(DefaultArtifactRepository.class);
+    private static final Logger logger = Loggers.getLogger(DefaultArtifactRepository.class);
     private String id;
     private String name;
     private String url;

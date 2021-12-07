@@ -2,12 +2,12 @@ package com.jn.agileway.dmmq.core.consumer;
 
 import com.jn.agileway.dmmq.core.Consumer;
 import com.jn.agileway.dmmq.core.MessageHolder;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.struct.Holder;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class DebugConsumer<M> implements Consumer<M> {
-    private static final Logger logger = LoggerFactory.getLogger(DebugConsumer.class);
+    private static final Logger logger = Loggers.getLogger(DebugConsumer.class);
 
     @Override
     public String getName() {

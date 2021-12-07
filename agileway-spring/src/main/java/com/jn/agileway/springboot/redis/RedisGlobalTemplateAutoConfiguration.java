@@ -4,8 +4,8 @@ import com.jn.agileway.redis.core.RedisTemplate;
 import com.jn.agileway.redis.core.RedisTemplates;
 import com.jn.agileway.redis.core.conf.RedisTemplateProperties;
 import com.jn.agileway.redis.core.script.RedisLuaScriptRepository;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -23,7 +23,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
         RedisConnectionFactory.class
 })
 public class RedisGlobalTemplateAutoConfiguration {
-    private static final Logger logger = LoggerFactory.getLogger(RedisGlobalTemplateAutoConfiguration.class);
+    private static final Logger logger = Loggers.getLogger(RedisGlobalTemplateAutoConfiguration.class);
 
     @ConditionalOnMissingBean(name = "globalRedisTemplateProperties")
     @Bean(name = "globalRedisTemplateProperties")

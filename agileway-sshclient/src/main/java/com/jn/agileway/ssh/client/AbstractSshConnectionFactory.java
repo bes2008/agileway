@@ -7,16 +7,16 @@ import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.net.Nets;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.InetAddress;
 
 public abstract class AbstractSshConnectionFactory<CONF extends SshConnectionConfig> extends AbstractNameable implements SshConnectionFactory<CONF> {
-    protected Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected Logger logger = Loggers.getLogger(this.getClass());
 
     @Override
     public SshConnection get(CONF sshConfig) {

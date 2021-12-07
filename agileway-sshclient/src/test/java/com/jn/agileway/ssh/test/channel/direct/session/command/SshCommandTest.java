@@ -5,14 +5,14 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 public class SshCommandTest {
-    private static final Logger logger = LoggerFactory.getLogger(SshCommandTest.class);
+    private static final Logger logger = Loggers.getLogger(SshCommandTest.class);
 
     public static void main(String[] args) throws JSchException, IOException {
         String password = "fjn13570";

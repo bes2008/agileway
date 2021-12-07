@@ -11,6 +11,7 @@ import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Supplier0;
 import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
@@ -27,7 +28,6 @@ import org.apache.http.nio.client.HttpAsyncClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -35,7 +35,7 @@ import java.net.SocketTimeoutException;
 import java.util.List;
 
 public class HttpAsyncClientProvider implements Initializable, Lifecycle, Supplier0<HttpAsyncClient> {
-    private static final Logger logger = LoggerFactory.getLogger(HttpClientProvider.class);
+    private static final Logger logger = Loggers.getLogger(HttpClientProvider.class);
 
     private CloseableHttpAsyncClient httpClient;
 

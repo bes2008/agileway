@@ -5,15 +5,15 @@ import com.jn.langx.util.ClassLoaders;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Predicate;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
 
 public class GlobalRestResponseBodyHandlerConfigurationBuilder implements Builder<GlobalRestResponseBodyHandlerConfiguration> {
-    private static final Logger logger = LoggerFactory.getLogger(GlobalRestResponseBodyHandlerConfigurationBuilder.class);
+    private static final Logger logger = Loggers.getLogger(GlobalRestResponseBodyHandlerConfigurationBuilder.class);
     private GlobalRestResponseBodyHandlerProperties properties;
 
     public GlobalRestResponseBodyHandlerConfigurationBuilder setProperties(GlobalRestResponseBodyHandlerProperties properties) {

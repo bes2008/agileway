@@ -2,8 +2,8 @@ package com.jn.agileway.web.filter;
 
 import com.jn.agileway.web.servlet.RRHolder;
 import com.jn.agileway.web.servlet.RR;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +29,7 @@ public abstract class OncePerRequestFilter implements Filter {
     /**
      * Private internal log instance.
      */
-    private static final Logger logger = LoggerFactory.getLogger(OncePerRequestFilter.class);
+    private static final Logger logger = Loggers.getLogger(OncePerRequestFilter.class);
     private String name;
 
     @Override

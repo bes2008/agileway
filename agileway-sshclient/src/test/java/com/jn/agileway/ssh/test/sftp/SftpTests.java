@@ -10,16 +10,16 @@ import com.jn.langx.util.SystemPropertys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.logging.Loggers;
 import org.junit.Test;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 public class SftpTests {
-    private static final Logger logger = LoggerFactory.getLogger(SftpTests.class);
+    private static final Logger logger = Loggers.getLogger(SftpTests.class);
     private SshConnectionFactoryRegistry registry = new SshConnectionFactoryRegistry();
 
     @Test

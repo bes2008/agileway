@@ -6,8 +6,8 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ZipFormats {
-    private static final Logger logger = LoggerFactory.getLogger(ZipFormats.class);
+    private static final Logger logger = Loggers.getLogger(ZipFormats.class);
 
     private ZipFormats() {
     }

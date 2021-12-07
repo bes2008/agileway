@@ -4,11 +4,8 @@ import com.esotericsoftware.kryo.Kryo;
 import com.jn.agileway.codec.serialization.kryo.KryoCustomizer;
 import com.jn.langx.util.ClassLoaders;
 import de.javakaffee.kryoserializers.guava.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class GuavaKryoCustomizer implements KryoCustomizer {
-    private static Logger logger = LoggerFactory.getLogger(GuavaKryoCustomizer.class);
 
     @Override
     public String getName() {

@@ -10,8 +10,6 @@ import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Predicate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -19,7 +17,6 @@ import java.util.List;
 import java.util.Vector;
 
 public class JschSftpSession extends AbstractSftpSession {
-    private static final Logger logger = LoggerFactory.getLogger(JschSftpSession.class);
     private ChannelSftp channel;
 
     public JschSftpSession(ChannelSftp channel) {

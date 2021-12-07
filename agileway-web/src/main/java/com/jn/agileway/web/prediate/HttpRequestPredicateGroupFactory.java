@@ -5,11 +5,11 @@ import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class HttpRequestPredicateGroupFactory implements Factory<HttpRequestPredicateConfigItems, HttpRequestPredicateGroup> {
-    private static final Logger logger = LoggerFactory.getLogger(HttpRequestPredicateGroupFactory.class);
+    private static final Logger logger = Loggers.getLogger(HttpRequestPredicateGroupFactory.class);
 
     @Override
     public final HttpRequestPredicateGroup get(final HttpRequestPredicateConfigItems configItems) {

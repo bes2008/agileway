@@ -18,8 +18,8 @@ import com.jn.langx.util.function.Function;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.io.file.Files;
 import com.jn.langx.util.io.file.PosixFilePermissions;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class Sftps {
-    private static final Logger logger = LoggerFactory.getLogger(Sftps.class);
+    private static final Logger logger = Loggers.getLogger(Sftps.class);
 
 
     /**

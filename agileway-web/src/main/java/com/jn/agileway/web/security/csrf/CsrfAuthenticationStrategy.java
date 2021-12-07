@@ -20,8 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.jn.langx.util.Preconditions;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class CsrfAuthenticationStrategy {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = Loggers.getLogger(getClass());
 
     private final CsrfTokenRepository csrfTokenRepository;
 

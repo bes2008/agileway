@@ -10,9 +10,9 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Maps;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.ServiceLoader;
@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 同一个web应用中，可能有多级的GlobalRestExceptionHandler，例如 Spring Controller级别的，有 javax.servlet.Filter级别的
  */
 public class GlobalRestExceptionHandlerRegistry implements Registry<String, RestActionExceptionHandlerRegistration>, Initializable {
-    private static final Logger logger = LoggerFactory.getLogger(GlobalRestExceptionHandlerRegistry.class);
+    private static final Logger logger = Loggers.getLogger(GlobalRestExceptionHandlerRegistry.class);
     private volatile boolean inited = false;
     /**
      * Key: Exception 类

@@ -14,8 +14,6 @@ import com.jn.langx.util.function.Consumer;
 import org.apache.commons.compress.compressors.CompressorInputStream;
 import org.apache.commons.compress.compressors.CompressorOutputStream;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.Map;
@@ -24,7 +22,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
 public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Registry<String, SingleArchiveSuiteFactory> {
-    private static final Logger logger = LoggerFactory.getLogger(AutowiredArchiveSuiteFactory.class);
     private Map<String, SingleArchiveSuiteFactory> archiverFactoryMap = new ConcurrentHashMap<String, SingleArchiveSuiteFactory>();
 
     private AutowiredArchiveSuiteFactory() {

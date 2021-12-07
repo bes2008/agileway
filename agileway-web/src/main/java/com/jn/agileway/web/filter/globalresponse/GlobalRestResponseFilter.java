@@ -5,9 +5,9 @@ import com.jn.agileway.web.security.WAFs;
 import com.jn.agileway.web.rest.GlobalRestResponseBodyHandlerConfiguration;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.Objs;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
  * 配置 该 filter的url pattern时，只能配置在那些 restful api上，不然会出现意想不到的彩蛋
  */
 public class GlobalRestResponseFilter extends OncePerRequestFilter {
-    private static final Logger logger = LoggerFactory.getLogger(GlobalRestResponseFilter.class);
+    private static final Logger logger = Loggers.getLogger(GlobalRestResponseFilter.class);
 
     private GlobalFilterRestExceptionHandler exceptionHandler;
     private GlobalFilterRestResponseHandler restResponseBodyHandler;

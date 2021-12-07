@@ -6,15 +6,15 @@ import com.jn.agileway.web.servlet.RRHolder;
 import com.jn.langx.util.BooleanEvaluator;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Throwables;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class RRFilter extends OncePerRequestFilter {
-    private static final Logger logger = LoggerFactory.getLogger(RRFilter.class);
+    private static final Logger logger = Loggers.getLogger(RRFilter.class);
     private boolean streamWrapperEnabled = false;
     private String encoding = "UTF-8";
 

@@ -4,9 +4,9 @@ import com.jn.agileway.web.security.WAFs;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.function.Supplier0;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestControllerAdvice
 public class GlobalSpringRestResponseBodyAdvice implements ResponseBodyAdvice, InitializingBean {
-    private static final Logger logger = LoggerFactory.getLogger(GlobalSpringRestResponseBodyAdvice.class);
+    private static final Logger logger = Loggers.getLogger(GlobalSpringRestResponseBodyAdvice.class);
     private GlobalSpringRestResponseBodyHandler responseBodyHandler;
 
     public GlobalSpringRestResponseBodyAdvice() {

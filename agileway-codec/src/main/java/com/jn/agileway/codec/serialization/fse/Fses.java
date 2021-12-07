@@ -15,11 +15,11 @@ import com.jn.langx.util.concurrent.threadlocal.ThreadLocalFactory;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.struct.Entry;
 import com.jn.langx.util.struct.Pair;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class Fses {
     private Fses() {
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(Fsts.class);
+    private static final Logger logger = Loggers.getLogger(Fsts.class);
 
     private static final Map<String, FseCustomizer> fseCustomizerRegistry = new ConcurrentHashMap<String, FseCustomizer>();
 
