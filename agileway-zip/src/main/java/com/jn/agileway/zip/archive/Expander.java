@@ -2,6 +2,7 @@ package com.jn.agileway.zip.archive;
 
 import com.jn.agileway.zip.format.ZipFormats;
 import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
@@ -29,7 +30,11 @@ public class Expander implements Closeable {
     private ArchiveIterator iterator;
     @NonNull
     private InputStream inputStream;
-
+    /**
+     * just for log
+     */
+    @Nullable
+    private String filepath;
     /**
      * 避免展开文件时，把文件属性丢失了。譬如说一个可执行文件，copy后，执行的权限丢失了
      */
@@ -58,10 +63,15 @@ public class Expander implements Closeable {
 
     public Expander(String filepath) throws IOException, ArchiveException {
         this(ZipFormats.getFormat(filepath), new FileInputStream(filepath));
+        setFilepath(filepath);
     }
 
     public Expander(File file) throws IOException, ArchiveException {
         this(file.getPath());
+    }
+
+    public void setFilepath(String filepath) {
+        this.filepath = filepath;
     }
 
     public void setFilter(ArchiveEntryFilter filter) {
@@ -102,7 +112,7 @@ public class Expander implements Closeable {
             if (!f.getParentFile().exists() && !f.getParentFile().mkdirs()) {
                 throw new IOException(StringTemplates.formatWithPlaceholder("Can't expand {} to {}", entry.getName(), directory.getPath()));
             }
-            logger.info("expand {}", entry.getName());
+            logger.debug("expand {}", entry.getName());
 
             if (Strings.endsWith(entry.getName(), "/")) {
                 Files.makeDirs(f);
@@ -122,7 +132,7 @@ public class Expander implements Closeable {
                     bout = new BufferedOutputStream(new FileOutputStream(f));
                     IOs.copy(entryWrapper.getInputStream(), bout, 8192);
                 } catch (IOException ex) {
-                    Loggers.log(logger, Level.WARN, ex, ex.getMessage());
+                    logger.error("error occur when expand entry: {} in file:{}, error: {}", entry.getName(), filepath, ex.getMessage());
                 } finally {
                     IOs.close(bout);
                 }

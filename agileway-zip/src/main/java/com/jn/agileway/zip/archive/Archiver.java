@@ -25,6 +25,16 @@ public class Archiver implements Closeable {
     @NonNull
     private ArchiveOutputStream archiveOutputStream;
 
+    /**
+     * 压缩后的文件路径，只是为了日志
+     */
+    @Nullable
+    private String filepath;
+
+    public void setFilepath(String filepath) {
+        this.filepath = filepath;
+    }
+
     @NonNull
     private ArchiveEntryCustomizer archiveEntryCustomizer = new ArchiveEntryCustomizer() {
         @Override
@@ -56,10 +66,12 @@ public class Archiver implements Closeable {
 
     public Archiver(@NonNull String format, @NonNull String targetFilepath, @Nullable ArchiveOutputStreamCustomizer customizer) throws IOException, ArchiveException {
         this(format, new FileOutputStream(targetFilepath), customizer);
+        setFilepath(targetFilepath);
     }
 
     public Archiver(@NonNull String format, @NonNull File target, @Nullable ArchiveOutputStreamCustomizer customizer) throws IOException, ArchiveException {
         this(format, new FileOutputStream(target), customizer);
+        setFilepath(target.getPath());
     }
 
     public boolean isIgnoreEmptyDirectory() {
@@ -164,6 +176,7 @@ public class Archiver implements Closeable {
                 long writeLength = IOs.copy(fileInput, archiveOutputStream, 8192);
                 Preconditions.checkTrue(file.length() == writeLength);
             } catch (Throwable ex) {
+                logger.error("error occur when compress file: {} to path: {}", file.getAbsolutePath(), filepath);
                 logger.error(ex.getMessage(), ex);
             } finally {
                 IOs.close(fileInput);
