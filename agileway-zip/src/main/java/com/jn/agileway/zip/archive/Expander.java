@@ -9,6 +9,7 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.io.file.Files;
+import com.jn.langx.util.logging.Level;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.struct.Entry;
 import org.apache.commons.compress.archivers.ArchiveEntry;
@@ -121,7 +122,7 @@ public class Expander implements Closeable {
                     bout = new BufferedOutputStream(new FileOutputStream(f));
                     IOs.copy(entryWrapper.getInputStream(), bout, 8192);
                 } catch (IOException ex) {
-                    logger.error(ex.getMessage(), ex);
+                    Loggers.log(logger, Level.WARN, ex, ex.getMessage());
                 } finally {
                     IOs.close(bout);
                 }
