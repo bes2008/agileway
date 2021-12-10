@@ -2,8 +2,10 @@ package com.jn.agileway.vfs.utils;
 
 import com.jn.agileway.vfs.VfsException;
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.util.Preconditions;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.Selectors;
 
 public class FileObjects {
     private FileObjects(){}
@@ -22,4 +24,21 @@ public class FileObjects {
     public static String getFileName(FileObject fileObject){
         return fileObject.getName().getBaseName();
     }
+
+    public static boolean delete(FileObject fileObject){
+        Preconditions.checkNotNull(fileObject);
+        if(isExists(fileObject)){
+            try {
+                fileObject.delete(Selectors.EXCLUDE_SELF);
+            }catch (FileSystemException ex){
+                if(!isExists(fileObject)){
+                    return true;
+                }
+                throw new VfsException(ex);
+            }
+        }
+        return true;
+    }
+
+
 }
