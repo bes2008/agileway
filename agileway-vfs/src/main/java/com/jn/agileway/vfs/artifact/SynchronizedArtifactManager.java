@@ -30,7 +30,7 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
         try {
             String localPath = getRepository().getPath(artifact);
             localFileObject = getFileSystemManager().resolveFile(localPath);
-            if (!localFileObject.exists() && artifact.isSupportSynchronized()) {
+            if (!FileObjects.isExists(localFileObject) && artifact.isSupportSynchronized()) {
                 if (Objs.isNotEmpty(sources)) {
                     final Holder<FileObject> remoteFileObjHolder = new Holder<FileObject>();
                     Collects.forEach(sources, new Predicate<ArtifactRepository>() {
@@ -64,6 +64,7 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
 
                     if (FileObjects.isExists(remoteFileObjHolder.get())) {
                         if (remoteFileObjHolder.get().isFile()) {
+                            logger.info("sync {} ==> {}",remoteFileObjHolder.get().getName().getURI(), localFileObject.getName().getURI());
                             localFileObject.copyFrom(remoteFileObjHolder.get(), Selectors.SELECT_SELF);
                         }
                     }
@@ -71,7 +72,7 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
             }
             return localFileObject;
         } catch (Throwable ex) {
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(), ex);
         }
         return localFileObject;
     }
