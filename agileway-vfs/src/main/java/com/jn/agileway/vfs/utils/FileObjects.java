@@ -29,7 +29,7 @@ public class FileObjects {
         Preconditions.checkNotNull(fileObject);
         if(isExists(fileObject)){
             try {
-                fileObject.delete(Selectors.EXCLUDE_SELF);
+                fileObject.delete(Selectors.SELECT_SELF);
             }catch (FileSystemException ex){
                 if(!isExists(fileObject)){
                     return true;
