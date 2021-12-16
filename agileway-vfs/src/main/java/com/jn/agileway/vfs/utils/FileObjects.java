@@ -1,11 +1,16 @@
 package com.jn.agileway.vfs.utils;
 
 import com.jn.agileway.vfs.VfsException;
+import com.jn.agileway.vfs.filter.FileObjectFilter;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Preconditions;
+import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.collection.Pipeline;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.Selectors;
+
+import java.util.List;
 
 public class FileObjects {
     private FileObjects() {
@@ -46,5 +51,16 @@ public class FileObjects {
         return true;
     }
 
+    public static List<FileObject> findChildren(FileObject directory, FileObjectFilter filter) {
+        try {
+            if (isExists(directory) && directory.isFolder()) {
+                FileObject[] children = directory.getChildren();
+                return Pipeline.of(children).filter(filter).asList();
+            }
+            return null;
+        } catch (FileSystemException ex) {
+            throw new VfsException(ex.getMessage());
+        }
+    }
 
 }
