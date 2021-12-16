@@ -5,34 +5,33 @@ import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 
 public class LocalArtifactRepositoryLayout implements ArtifactRepositoryLayout {
+
     @Override
-    public String getPath(ArtifactRepository repository, Artifact artifact) {
+    public String getPath(ArtifactRepository repository, String relativePath) {
         String path = repository.getUrl();
         if (Strings.isNotEmpty(repository.getBasedir())) {
             path = addSegment(path, repository.getBasedir());
         }
-        path = addSegment(path, artifact.getArtifactId());
-        if (Strings.isNotEmpty(artifact.getVersion())) {
-            path = addSegment(path, artifact.getVersion());
-            path = addSegment(path, artifact.getArtifactId() + "-" + artifact.getVersion() + (Objs.isEmpty(artifact.getClassifier()) ? "" : ("." + artifact.getClassifier())) + "." + artifact.getExtension());
-        }
         return path;
     }
 
+    @Override
+    public String getPath(ArtifactRepository repository, Artifact artifact) {
+        String relativePath = "";
+        relativePath = addSegment(relativePath, artifact.getArtifactId());
+        if (Strings.isNotEmpty(artifact.getVersion())) {
+            relativePath = addSegment(relativePath, artifact.getVersion());
+            relativePath = addSegment(relativePath, artifact.getArtifactId() + "-" + artifact.getVersion() + (Objs.isEmpty(artifact.getClassifier()) ? "" : ("." + artifact.getClassifier())) + "." + artifact.getExtension());
+        }
+        return getPath(repository, relativePath);
+    }
+
     private String addSegment(String path, String segment) {
-
-        while (Strings.endsWith(segment, "/")) {
-            segment = segment.substring(0, segment.length() - 1);
+        if (Strings.isNotEmpty(segment)) {
+            segment = Strings.strip(segment, "/");
         }
-
-        while (Strings.startsWith(segment, "/")) {
-            segment = segment.substring(1);
-        }
-
-        while (Strings.endsWith(path, "/")) {
-            path = path.substring(0, path.length() - 1);
-        }
-        return path + "/" + segment;
+        path = Strings.stripEnd(path, "/");
+        return Strings.isEmpty(segment) ? path : (path + "/" + segment);
     }
 
     @Override

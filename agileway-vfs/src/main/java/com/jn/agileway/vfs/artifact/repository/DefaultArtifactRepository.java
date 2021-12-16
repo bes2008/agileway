@@ -90,6 +90,11 @@ public class DefaultArtifactRepository implements ArtifactRepository {
     }
 
     @Override
+    public String getPath(String relativePath) {
+        return layout.getPath(this, relativePath);
+    }
+
+    @Override
     public String getPath(Artifact artifact) {
         return layout.getPath(this, artifact);
     }
