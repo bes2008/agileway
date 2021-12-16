@@ -1,17 +1,22 @@
 package com.jn.agileway.vfs.artifact.repository;
 
 import com.jn.agileway.vfs.artifact.Artifact;
-import com.jn.langx.AbstractNameable;
+import com.jn.agileway.vfs.management.repository.AbstractFileRepositoryLayout;
 import com.jn.langx.util.Strings;
 
-public abstract class AbstractArtifactRepositoryLayout extends AbstractNameable implements ArtifactRepositoryLayout {
+public abstract class AbstractArtifactRepositoryLayout extends AbstractFileRepositoryLayout<ArtifactRepository> implements ArtifactRepositoryLayout{
     @Override
-    public String getPath(ArtifactRepository repository, String relativePath) {
+    public String getFilePath(ArtifactRepository repository, String relativePath) {
         String path = repository.getUrl();
         if (Strings.isNotEmpty(repository.getBasedir())) {
             path = addSegment(path, repository.getBasedir());
         }
         return path;
+    }
+    @Override
+    public String getPath(ArtifactRepository repository, Artifact artifact) {
+        String relativePath = toRelativePath(repository, artifact);
+        return getFilePath(repository, relativePath);
     }
 
     protected String addSegment(String path, String segment) {
@@ -27,4 +32,5 @@ public abstract class AbstractArtifactRepositoryLayout extends AbstractNameable 
         String artifactPath = getPath(repository, artifact);
         return artifactPath + "." + digit.toLowerCase();
     }
+
 }

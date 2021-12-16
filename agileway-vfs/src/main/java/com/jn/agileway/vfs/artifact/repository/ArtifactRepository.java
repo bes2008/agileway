@@ -1,9 +1,7 @@
 package com.jn.agileway.vfs.artifact.repository;
 
 import com.jn.agileway.vfs.artifact.Artifact;
-import com.jn.langx.Nameable;
-
-import java.util.List;
+import com.jn.agileway.vfs.management.repository.FileRepository;
 
 /**
  *
@@ -12,47 +10,14 @@ import java.util.List;
  * ${url}/${basedir}/${artifact}
  *
  */
-public interface ArtifactRepository extends Nameable {
-    String getId();
-
-    void setId(String id);
-
-    /**
-     * root path
-     *
-     * @return
-     */
-    String getUrl();
-
-    void setUrl(String url);
-
-    /**
-     * @param basedir the base dir after root
-     */
-    void setBasedir(String basedir);
-
-    String getBasedir();
-
-    String getProtocol();
+public interface ArtifactRepository extends FileRepository<ArtifactRepositoryLayout> {
 
     void setLayout(ArtifactRepositoryLayout layout);
 
     ArtifactRepositoryLayout getLayout();
 
-    String getPath(Artifact artifact);
 
-    String getDigitPath(Artifact artifact, String digit);
+     String getPath(Artifact artifact);
 
-    /**
-     * 获取 ${url}/${basedir}/${relativePath}
-     */
-    String getPath(String relativePath);
-
-    boolean isEnabled();
-
-    boolean isDigitSupports();
-
-    List<String> getSupportedDigits();
-
-    void setSupportedDigits(List<String> digits);
+    String getDigitPath(Artifact artifact, String digest) ;
 }

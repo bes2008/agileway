@@ -10,14 +10,15 @@ public class LocalArtifactRepositoryLayout extends AbstractArtifactRepositoryLay
         setName("local");
     }
 
+
     @Override
-    public String getPath(ArtifactRepository repository, Artifact artifact) {
+    public String toRelativePath(ArtifactRepository repository, Artifact artifact) {
         String relativePath = "";
         relativePath = addSegment(relativePath, artifact.getArtifactId());
         if (Strings.isNotEmpty(artifact.getVersion())) {
             relativePath = addSegment(relativePath, artifact.getVersion());
             relativePath = addSegment(relativePath, artifact.getArtifactId() + "-" + artifact.getVersion() + (Objs.isEmpty(artifact.getClassifier()) ? "" : ("." + artifact.getClassifier())) + "." + artifact.getExtension());
         }
-        return getPath(repository, relativePath);
+        return relativePath;
     }
 }

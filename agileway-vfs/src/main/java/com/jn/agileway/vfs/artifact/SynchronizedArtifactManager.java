@@ -1,5 +1,6 @@
 package com.jn.agileway.vfs.artifact;
 
+import com.jn.agileway.vfs.management.FileDigit;
 import com.jn.agileway.vfs.utils.FileObjects;
 import com.jn.agileway.vfs.VfsException;
 import com.jn.agileway.vfs.artifact.repository.ArtifactRepository;
@@ -90,7 +91,7 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
     }
 
     @Override
-    public List<ArtifactDigit> getDigits(final Artifact artifact) {
+    public List<FileDigit> getDigits(final Artifact artifact) {
         return Pipeline.of(sources)
                 .add(getDestination())
                 .reverse(false)
@@ -100,13 +101,13 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
                         return repository.isDigitSupports();
                     }
                 })
-                .map(new Function<ArtifactRepository, List<ArtifactDigit>>() {
+                .map(new Function<ArtifactRepository, List<FileDigit>>() {
                     @Override
-                    public List<ArtifactDigit> apply(ArtifactRepository repository) {
+                    public List<FileDigit> apply(ArtifactRepository repository) {
                         return getDigits(repository, artifact);
                     }
                 })
-                .<ArtifactDigit>flat()
+                .<FileDigit>flat()
                 .asList();
     }
 
