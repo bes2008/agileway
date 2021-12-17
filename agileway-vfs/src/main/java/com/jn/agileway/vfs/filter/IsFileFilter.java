@@ -1,25 +1,9 @@
 package com.jn.agileway.vfs.filter;
 
-import com.jn.agileway.vfs.VfsException;
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileType;
 
-public class IsFileFilter implements FileObjectFilter {
-    private boolean isFile;
-
+public class IsFileFilter extends FileTypeFilter{
     public IsFileFilter() {
-        this(true);
-    }
-
-    public IsFileFilter(boolean isFile) {
-        this.isFile = isFile;
-    }
-
-    @Override
-    public boolean test(FileObject fileObject) {
-        try {
-            return fileObject.isFile() ? isFile : !isFile;
-        } catch (Throwable ex) {
-            throw new VfsException(ex);
-        }
+        super(FileType.FILE);
     }
 }
