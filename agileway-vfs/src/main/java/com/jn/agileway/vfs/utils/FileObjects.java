@@ -9,7 +9,9 @@ import com.jn.langx.util.collection.Pipeline;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.Selectors;
+import org.apache.commons.vfs2.provider.local.LocalFile;
 
+import java.io.File;
 import java.util.List;
 
 public class FileObjects {
