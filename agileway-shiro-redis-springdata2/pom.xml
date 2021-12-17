@@ -52,7 +52,7 @@
                         <executions>
                             <execution>
                                 <id>clean_shiro_redis_springdata2</id>
-                                <phase>generate-sources</phase>
+                                <phase>clean</phase>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
