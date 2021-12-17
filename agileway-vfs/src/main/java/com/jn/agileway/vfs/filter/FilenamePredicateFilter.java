@@ -12,9 +12,13 @@ public class FilenamePredicateFilter  implements FileObjectFilter{
     }
 
     @Override
-    public boolean test(FileObject fileObject) {
+    public final boolean test(FileObject fileObject) {
         FileName fileName = fileObject.getName();
         String name = fileName.getBaseName();
-        return predicate.test(name);
+        return  doTest(name);
+    }
+
+    protected boolean doTest(String filename){
+        return predicate.test(filename);
     }
 }
