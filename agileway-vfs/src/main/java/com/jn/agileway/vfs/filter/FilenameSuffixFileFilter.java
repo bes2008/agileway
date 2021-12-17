@@ -5,16 +5,16 @@ import com.jn.langx.util.io.file.Filenames;
 
 import java.util.List;
 
-public class FilenameSuffixFilter extends FilenameEndsWithFileFilter {
-    public FilenameSuffixFilter(boolean ignoreCase, String suffix) {
+public class FilenameSuffixFileFilter extends FilenameEndsWithFileFilter {
+    public FilenameSuffixFileFilter(boolean ignoreCase, String suffix) {
         this(ignoreCase, Collects.asList(suffix));
     }
 
-    public FilenameSuffixFilter(boolean ignoreCase, String... suffixes) {
+    public FilenameSuffixFileFilter(boolean ignoreCase, String... suffixes) {
         this(ignoreCase, Collects.asList(suffixes));
     }
 
-    public FilenameSuffixFilter(boolean ignoreCase, List<String> suffixes) {
+    public FilenameSuffixFileFilter(boolean ignoreCase, List<String> suffixes) {
         super(ignoreCase, suffixes);
     }
 
