@@ -4,7 +4,7 @@ import com.jn.agileway.vfs.artifact.Artifact;
 import com.jn.agileway.vfs.management.repository.AbstractFileRepositoryLayout;
 import com.jn.langx.util.Strings;
 
-public abstract class AbstractArtifactRepositoryLayout extends AbstractFileRepositoryLayout<ArtifactRepository> implements ArtifactRepositoryLayout{
+public abstract class AbstractArtifactRepositoryLayout extends AbstractFileRepositoryLayout<ArtifactRepository> implements ArtifactRepositoryLayout {
     @Override
     public String getFilePath(ArtifactRepository repository, String relativePath) {
         String path = repository.getUrl();
@@ -13,6 +13,7 @@ public abstract class AbstractArtifactRepositoryLayout extends AbstractFileRepos
         }
         return path;
     }
+
     @Override
     public String getPath(ArtifactRepository repository, Artifact artifact) {
         String relativePath = toRelativePath(repository, artifact);

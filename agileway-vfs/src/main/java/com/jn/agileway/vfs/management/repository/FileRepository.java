@@ -5,11 +5,9 @@ import com.jn.langx.Nameable;
 import java.util.List;
 
 /**
- *
  * 代表仓库元数据信息，并可以根据它来计算指定的 路径的全路径
- *
+ * <p>
  * ${url}/${basedir}/${relativePath}
- *
  */
 public interface FileRepository<L extends FileRepositoryLayout> extends Nameable {
     String getId();

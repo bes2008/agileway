@@ -4,10 +4,10 @@ import com.jn.langx.util.function.Predicate;
 import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;
 
-public class FilenamePredicateFilter  implements FileObjectFilter{
+public class FilenamePredicateFilter implements FileObjectFilter {
     private Predicate<String> predicate;
 
-    public FilenamePredicateFilter(Predicate<String> predicate){
+    public FilenamePredicateFilter(Predicate<String> predicate) {
         this.predicate = predicate;
     }
 
@@ -15,10 +15,10 @@ public class FilenamePredicateFilter  implements FileObjectFilter{
     public final boolean test(FileObject fileObject) {
         FileName fileName = fileObject.getName();
         String name = fileName.getBaseName();
-        return  doTest(name);
+        return doTest(name);
     }
 
-    protected boolean doTest(String filename){
+    protected boolean doTest(String filename) {
         return predicate.test(filename);
     }
 }

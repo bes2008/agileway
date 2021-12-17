@@ -80,9 +80,9 @@ public class SftpFileObject extends AbstractFileObject<SftpFileSystem> {
 
     @Override
     protected void doDelete() throws Exception {
-        if(isFile()){
+        if (isFile()) {
             getSftpSession().rm(relPath);
-        }else{
+        } else {
             getSftpSession().rmdir(relPath);
         }
     }

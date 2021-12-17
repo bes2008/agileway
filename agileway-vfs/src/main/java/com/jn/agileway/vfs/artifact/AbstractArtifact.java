@@ -1,6 +1,6 @@
 package com.jn.agileway.vfs.artifact;
 
-public abstract class AbstractArtifact implements Artifact{
+public abstract class AbstractArtifact implements Artifact {
     private String groupId;
     private String artifactId;
     private String version;

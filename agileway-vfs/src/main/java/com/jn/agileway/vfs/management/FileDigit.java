@@ -4,12 +4,14 @@ public class FileDigit {
     private String algorithm;
     private String digit;
 
-    public FileDigit(){}
+    public FileDigit() {
+    }
 
-    public FileDigit(String algorithm, String digit){
+    public FileDigit(String algorithm, String digit) {
         setAlgorithm(algorithm);
         setDigit(digit);
     }
+
     public String getAlgorithm() {
         return algorithm;
     }

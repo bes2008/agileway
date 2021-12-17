@@ -5,7 +5,7 @@ import com.jn.langx.util.function.predicate.StringEndsWithPredicate;
 
 import java.util.List;
 
-public class FilenameEndsWithFileFilter extends FilenamePredicateFilter{
+public class FilenameEndsWithFileFilter extends FilenamePredicateFilter {
     public FilenameEndsWithFileFilter(boolean ignoreCase, String suffix) {
         this(ignoreCase, Collects.asList(suffix));
     }

@@ -10,7 +10,7 @@ import java.util.List;
 public class AnyMatchFileFilter implements FileObjectFilter {
     private List<Predicate<FileObject>> predicates;
 
-    public AnyMatchFileFilter(FileObjectFilter... predicates){
+    public AnyMatchFileFilter(FileObjectFilter... predicates) {
         this(Collects.asList(predicates));
     }
 
