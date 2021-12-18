@@ -15,7 +15,7 @@
 
     <description>a memory message queue based on disruptor</description>
     <properties>
-        <disruptor.version>3.4.2</disruptor.version>
+        <disruptor.version>3.4.4</disruptor.version>
     </properties>
 
 
