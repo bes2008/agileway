@@ -6,6 +6,7 @@ import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.cache.*;
 import com.jn.langx.util.Emptys;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.*;
@@ -198,7 +199,7 @@ public class RedisCache<V> extends BaseCache<String, V> {
     @Override
     public int size() {
         Set<String> wrappedKeys = keys();
-        return com.jn.langx.util.Objects.length(wrappedKeys);
+        return Objs.length(wrappedKeys);
     }
 
     @Override

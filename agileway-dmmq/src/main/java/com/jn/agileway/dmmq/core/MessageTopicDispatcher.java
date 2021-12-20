@@ -6,7 +6,7 @@ import com.jn.langx.annotation.NonNull;
 import com.jn.langx.event.EventPublisher;
 import com.jn.langx.lifecycle.Lifecycle;
 import com.jn.langx.registry.Registry;
-import com.jn.langx.util.Objects;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer2;
@@ -87,7 +87,7 @@ public class MessageTopicDispatcher implements Lifecycle, Registry<String,Messag
         }
 
         MessageTopic topic = topicMap.get(topicName);
-        if (Objects.isNull(topic)) {
+        if (Objs.isNull(topic)) {
             logger.warn("Can't find the specified topic : {}", topicName);
         } else {
             topic.publish(message);
@@ -104,7 +104,7 @@ public class MessageTopicDispatcher implements Lifecycle, Registry<String,Messag
             });
         } else {
             MessageTopic topic = topicMap.get(topicName);
-            if (Objects.isNull(topic)) {
+            if (Objs.isNull(topic)) {
                 logger.warn("Can't find a topic : {}", topicName);
             } else {
                 topic.subscribe(consumer, dependencies);
