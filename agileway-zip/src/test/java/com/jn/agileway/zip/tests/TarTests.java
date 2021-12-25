@@ -20,10 +20,15 @@ public class TarTests {
     public void testUncompress() throws Throwable {
         doUncompress(sour_targz, "e:/tmp/t002");
     }
-
     private void doUncompress(String sour_targz, String destDir) throws Throwable {
+        doUncompress(null, sour_targz, destDir);
+    }
+    private void doUncompress(String format, String sour_targz, String destDir) throws Throwable {
+        if(format ==null){
+            format = "tar.gz";
+        }
         Resource resource = Resources.loadFileResource("file:" + sour_targz);
-        Expander expander = AutowiredArchiveSuiteFactory.getInstance().get("tar.gz", resource.getInputStream());
+        Expander expander = AutowiredArchiveSuiteFactory.getInstance().get(format, resource.getInputStream());
         expander.setOverwriteExistsFiles(true);
         expander.expandTo(new File(destDir));
         expander.close();
@@ -49,9 +54,13 @@ public class TarTests {
 
     @Test
     public void testUncompress2() throws Throwable {
-        doUncompress("D:\\pip_repo\\setuptools\\40.4.3\\setuptools-40.4.3-py2.py3-none-any.whl", "D:\\pip_repo\\setuptools\\40.4.3\\setuptools-40_4_3-py2_py3-none-any_whl");
+        doUncompress("whl","D:\\pip_repo\\setuptools\\40.4.3\\setuptools-40.4.3-py2.py3-none-any.whl", "D:\\pip_repo\\setuptools\\40.4.3\\setuptools-40_4_3-py2_py3-none-any_whl");
         Thread.sleep(3000);
     }
 
-
+    @Test
+    public void testUncompress3() throws Throwable {
+        doUncompress("whl","D:\\pip_repo\\django\\1.8.19\\django-1.8.19-py2.py3-none-any.whl", "D:\\pip_repo\\django\\1.8.19\\django-1_8_19-py2_py3-none-any_whl");
+        Thread.sleep(3000);
+    }
 }

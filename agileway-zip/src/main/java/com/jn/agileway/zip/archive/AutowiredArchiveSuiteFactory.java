@@ -115,7 +115,9 @@ public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Regist
             throw new UnsupportedArchiveFormatException(StringTemplates.formatWithPlaceholder("Can't find a suite archive format for file: {}", path));
         }
         try {
-            return get(format, new FileOutputStream(outFile));
+            Archiver archiver = get(format, new FileOutputStream(outFile));
+            archiver.setFilepath(outFile.getPath());
+            return archiver;
         } catch (IOException ex) {
             throw Throwables.wrapAsRuntimeException(ex);
         }
@@ -136,7 +138,9 @@ public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Regist
             throw new UnsupportedArchiveFormatException(StringTemplates.formatWithPlaceholder("Can't find a suite archive format for file: {}", path));
         }
         try {
-            return get(format, new FileInputStream(inFile));
+            Expander expander = get(format, new FileInputStream(inFile));
+            expander.setFilepath(inFile.getAbsolutePath());
+            return expander;
         } catch (IOException ex) {
             throw Throwables.wrapAsRuntimeException(ex);
         }

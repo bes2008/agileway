@@ -84,7 +84,7 @@ public class Servlets {
      * @return
      */
     public static long getContentLength(HttpServletResponse response) {
-        return Objects.useValueIfNull(getContentLength(response, true), 0L);
+        return Objs.useValueIfNull(getContentLength(response, true), 0L);
     }
 
     public static Long getContentLength(HttpServletResponse response, boolean useZeroIfNull) {

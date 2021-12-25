@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.github.fangjinuo.agileway</groupId>
         <artifactId>agileway</artifactId>
-        <version>2.6.10</version>
+        <version>2.6.13</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,7 +16,7 @@
     <description>Provide an unified codec API for hession, kryo, protostuff, fst, fes, xson, cbor, jackson, json, etc....</description>
     <properties>
         <hessian.version>4.0.63</hessian.version>
-        <kryo.version>5.0.0-RC9</kryo.version>
+        <kryo.version>5.2.0</kryo.version>
         <kryo.serializers.version>0.45</kryo.serializers.version>
         <joda-time.version>2.10.6</joda-time.version>
         <protostuff.version>1.7.2</protostuff.version>

@@ -1,5 +1,6 @@
 package com.jn.agileway.vfs.artifact;
 
+import com.jn.agileway.vfs.management.FileDigit;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 
@@ -14,7 +15,7 @@ public class SimpleArtifactManager extends AbstractArtifactManager {
     }
 
     @Override
-    public List<ArtifactDigit> getDigits(Artifact artifact) {
+    public List<FileDigit> getDigits(Artifact artifact) {
         return getDigits(this.getRepository(), artifact);
     }
 }

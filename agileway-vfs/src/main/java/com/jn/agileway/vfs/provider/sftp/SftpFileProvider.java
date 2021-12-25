@@ -17,7 +17,7 @@ import java.util.Collections;
 
 public class SftpFileProvider extends AbstractOriginatingFileProvider {
 
-    public SftpFileProvider(){
+    public SftpFileProvider() {
         super();
         setFileNameParser(SftpFileNameParser.getInstance());
     }
@@ -58,7 +58,7 @@ public class SftpFileProvider extends AbstractOriginatingFileProvider {
             connectionConfig.setProperty("ConnectTimeout", timout);
         }
         String strictHostKeyChecking = configBuilder.getStrictHostKeyChecking(fileSystemOptions);
-        if(Strings.isNotEmpty(strictHostKeyChecking)){
+        if (Strings.isNotEmpty(strictHostKeyChecking)) {
             connectionConfig.setProperty("StrictHostKeyChecking", strictHostKeyChecking);
         }
 
@@ -73,7 +73,6 @@ public class SftpFileProvider extends AbstractOriginatingFileProvider {
             connectionConfig.setProperty("compression.s2c", compression);
             connectionConfig.setProperty("compression.c2s", compression);
         }
-
 
 
         SshConnection sshConnection = sshConnectionFactory.get(connectionConfig);

@@ -1,5 +1,6 @@
 package com.jn.agileway.vfs.artifact;
 
+import com.jn.agileway.vfs.management.FileDigit;
 import com.jn.agileway.vfs.utils.FileObjects;
 import com.jn.agileway.vfs.VfsException;
 import com.jn.agileway.vfs.artifact.repository.ArtifactRepository;
@@ -30,7 +31,7 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
         try {
             String localPath = getRepository().getPath(artifact);
             localFileObject = getFileSystemManager().resolveFile(localPath);
-            if (!localFileObject.exists() && artifact.isSupportSynchronized()) {
+            if (!FileObjects.isExists(localFileObject) && artifact.isSupportSynchronized()) {
                 if (Objs.isNotEmpty(sources)) {
                     final Holder<FileObject> remoteFileObjHolder = new Holder<FileObject>();
                     Collects.forEach(sources, new Predicate<ArtifactRepository>() {
@@ -64,6 +65,7 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
 
                     if (FileObjects.isExists(remoteFileObjHolder.get())) {
                         if (remoteFileObjHolder.get().isFile()) {
+                            logger.info("sync {} ==> {}", remoteFileObjHolder.get().getName().getURI(), localFileObject.getName().getURI());
                             localFileObject.copyFrom(remoteFileObjHolder.get(), Selectors.SELECT_SELF);
                         }
                     }
@@ -71,7 +73,7 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
             }
             return localFileObject;
         } catch (Throwable ex) {
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(), ex);
         }
         return localFileObject;
     }
@@ -89,7 +91,7 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
     }
 
     @Override
-    public List<ArtifactDigit> getDigits(final Artifact artifact) {
+    public List<FileDigit> getDigits(final Artifact artifact) {
         return Pipeline.of(sources)
                 .add(getDestination())
                 .reverse(false)
@@ -99,13 +101,13 @@ public class SynchronizedArtifactManager extends AbstractArtifactManager {
                         return repository.isDigitSupports();
                     }
                 })
-                .map(new Function<ArtifactRepository, List<ArtifactDigit>>() {
+                .map(new Function<ArtifactRepository, List<FileDigit>>() {
                     @Override
-                    public List<ArtifactDigit> apply(ArtifactRepository repository) {
+                    public List<FileDigit> apply(ArtifactRepository repository) {
                         return getDigits(repository, artifact);
                     }
                 })
-                .<ArtifactDigit>flat()
+                .<FileDigit>flat()
                 .asList();
     }
 

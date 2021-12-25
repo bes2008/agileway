@@ -4,50 +4,21 @@ import com.jn.agileway.vfs.artifact.Artifact;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 
-public class LocalArtifactRepositoryLayout implements ArtifactRepositoryLayout {
+public class LocalArtifactRepositoryLayout extends AbstractArtifactRepositoryLayout {
+
+    public LocalArtifactRepositoryLayout() {
+        setName("local");
+    }
+
+
     @Override
-    public String getPath(ArtifactRepository repository, Artifact artifact) {
-        String path = repository.getUrl();
-        if (Strings.isNotEmpty(repository.getBasedir())) {
-            path = addSegment(path, repository.getBasedir());
-        }
-        path = addSegment(path, artifact.getArtifactId());
+    public String toRelativePath(ArtifactRepository repository, Artifact artifact) {
+        String relativePath = "";
+        relativePath = addSegment(relativePath, artifact.getArtifactId());
         if (Strings.isNotEmpty(artifact.getVersion())) {
-            path = addSegment(path, artifact.getVersion());
-            path = addSegment(path, artifact.getArtifactId() + "-" + artifact.getVersion() + (Objs.isEmpty(artifact.getClassifier()) ? "" : ("." + artifact.getClassifier())) + "." + artifact.getExtension());
+            relativePath = addSegment(relativePath, artifact.getVersion());
+            relativePath = addSegment(relativePath, artifact.getArtifactId() + "-" + artifact.getVersion() + (Objs.isEmpty(artifact.getClassifier()) ? "" : ("." + artifact.getClassifier())) + "." + artifact.getExtension());
         }
-        return path;
-    }
-
-    private String addSegment(String path, String segment) {
-
-        while (Strings.endsWith(segment, "/")) {
-            segment = segment.substring(0, segment.length() - 1);
-        }
-
-        while (Strings.startsWith(segment, "/")) {
-            segment = segment.substring(1);
-        }
-
-        while (Strings.endsWith(path, "/")) {
-            path = path.substring(0, path.length() - 1);
-        }
-        return path + "/" + segment;
-    }
-
-    @Override
-    public String getDigitPath(ArtifactRepository repository, Artifact artifact, String digit) {
-        String artifactPath = getPath(repository, artifact);
-        return artifactPath + "." + digit.toLowerCase();
-    }
-
-    @Override
-    public void setName(String s) {
-
-    }
-
-    @Override
-    public String getName() {
-        return "local";
+        return relativePath;
     }
 }

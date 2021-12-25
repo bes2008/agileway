@@ -1,5 +1,9 @@
 package com.jn.agileway.ssh.client.sftp;
 
+import com.jn.agileway.ssh.client.SshConnection;
+import com.jn.agileway.ssh.client.SshConnectionConfig;
+import com.jn.agileway.ssh.client.SshConnectionFactory;
+import com.jn.agileway.ssh.client.SshConnectionFactoryRegistry;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.attrs.FileMode;
 import com.jn.agileway.ssh.client.sftp.attrs.FileType;
@@ -8,8 +12,10 @@ import com.jn.agileway.ssh.client.sftp.exception.SftpException;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.collection.PrimitiveArrays;
@@ -21,15 +27,17 @@ import com.jn.langx.util.io.file.PosixFilePermissions;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 public class Sftps {
     private static final Logger logger = Loggers.getLogger(Sftps.class);
+    private static final SshConnectionFactoryRegistry SSH_CONNECTION_FACTORY_REGISTRY;
 
+    static {
+        SSH_CONNECTION_FACTORY_REGISTRY = new SshConnectionFactoryRegistry();
+        SSH_CONNECTION_FACTORY_REGISTRY.init();
+    }
 
     /**
      * @param session
@@ -128,12 +136,27 @@ public class Sftps {
         }
     }
 
-    public static void copy(@NonNull SftpSession session, @NonNull File file, @NotEmpty String remoteDir) throws SftpException {
+    public static void copy(@NonNull SftpSession session, @NonNull File file, @NotEmpty String remotePath) throws SftpException {
         Preconditions.checkArgument(file.exists(), "the file {} is not exist", file.getPath());
         if (file.isFile()) {
-            copyFile(session, file, remoteDir, null);
+            if (remotePath.endsWith("/")) {
+                copyFile(session, file, remotePath, null);
+            } else {
+                int index = remotePath.lastIndexOf("/");
+                String remoteDir = null;
+                String filename = null;
+                if (index == -1) {
+                    remoteDir = "~";
+                    filename = remotePath;
+                } else {
+                    remoteDir = remotePath.substring(0, index);
+                    filename = remotePath.substring(index + 1);
+                }
+
+                copyFile(session, file, remoteDir, filename);
+            }
         } else {
-            copyDir(session, file, remoteDir);
+            copyDir(session, file, remotePath);
         }
     }
 
@@ -329,4 +352,46 @@ public class Sftps {
     public static boolean isExecutable(SftpFile sftpFile) throws IOException {
         return getPosixPermission(sftpFile).isExecutable();
     }
+
+    public static void scp(@NotEmpty String localPath, @NotEmpty String remotePath, @NotEmpty String remoteHost, int remotePort, @NotEmpty String remoteUser, String remotePswd, boolean reverse) throws IOException, SftpException {
+        Preconditions.checkNotEmpty(localPath, "the local path is required");
+        Preconditions.checkNotEmpty(remotePath, "the remote path is required");
+        if (remotePort <= 0) {
+            remotePort = 22;
+        }
+
+        SshConnectionFactory connectionFactory = SSH_CONNECTION_FACTORY_REGISTRY.getDefault();
+        SshConnectionConfig connectionConfig = connectionFactory.newConfig();
+        connectionConfig.setHost(remoteHost);
+        connectionConfig.setPort(remotePort);
+        connectionConfig.setUser(remoteUser);
+        connectionConfig.setPassword(remotePswd);
+
+        SshConnection connection = null;
+        SftpSession session = null;
+
+        try {
+            connection = connectionFactory.get(connectionConfig);
+            session = connection.openSftpSession();
+            if (reverse) {
+                File localDir = new File(localPath);
+                if (localDir.exists() && !localDir.isDirectory()) {
+                    String error = StringTemplates.formatWithIndex("local path is not a directory: {}", localPath);
+                    throw new IOException(error);
+                }
+                reverseCopy(session, localDir, remotePath);
+            } else {
+                File localFile = new File(localPath);
+                if (!localFile.exists()) {
+                    logger.error("local path is not exists: {}", localPath);
+                    throw new FileNotFoundException(localPath);
+                }
+                copy(session, localFile, remotePath);
+            }
+        } finally {
+            IOs.close(session);
+            IOs.close(connection);
+        }
+    }
+
 }

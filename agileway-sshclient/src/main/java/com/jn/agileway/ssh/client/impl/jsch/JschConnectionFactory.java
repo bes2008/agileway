@@ -47,6 +47,7 @@ public class JschConnectionFactory extends AbstractSshConnectionFactory<JschConn
                     return null;
                 }
             });
+            JSch.setLogger(new JschLoggerToSlf4jLogger());
         }
         conn.setJsch(jsch);
         setKnownHosts(conn, sshConfig);

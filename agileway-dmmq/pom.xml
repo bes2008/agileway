@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.github.fangjinuo.agileway</groupId>
         <artifactId>agileway</artifactId>
-        <version>2.6.10</version>
+        <version>2.6.13</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,7 +15,7 @@
 
     <description>a memory message queue based on disruptor</description>
     <properties>
-        <disruptor.version>3.4.2</disruptor.version>
+        <disruptor.version>3.4.4</disruptor.version>
     </properties>
 
 
