@@ -66,7 +66,9 @@ public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Regist
     public Archiver get(String format, OutputStream outputStream) {
         ZipFormat zipFormat = ZipFormats.getZipFormat(format);
         Preconditions.checkNotNull(zipFormat);
-        Preconditions.checkTrue(zipFormat.isValid());
+        if (!zipFormat.isValid()) {
+            throw new UnsupportedArchiveFormatException(StringTemplates.formatWithPlaceholder("unsupported archive format: {}", format));
+        }
         if (zipFormat.compressEnabled()) {
             if (!(outputStream instanceof CompressorOutputStream)) {
                 try {
@@ -87,7 +89,9 @@ public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Regist
     public Expander get(String format, InputStream inputStream) {
         ZipFormat zipFormat = ZipFormats.getZipFormat(format);
         Preconditions.checkNotNull(zipFormat);
-        Preconditions.checkTrue(zipFormat.isValid());
+        if (!zipFormat.isValid()) {
+            throw new UnsupportedArchiveFormatException(StringTemplates.formatWithPlaceholder("unsupported archive format: {}", format));
+        }
         if (zipFormat.compressEnabled()) {
             if (!(inputStream instanceof CompressorInputStream)) {
                 try {
