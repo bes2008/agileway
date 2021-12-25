@@ -15,7 +15,7 @@ import java.io.EOFException;
 import java.io.InputStream;
 import java.util.Iterator;
 
-public class ArchiveIterator implements Iterator<ArchiveIterator.ArchiveEntryWrapper> {
+class ArchiveIterator implements Iterator<ArchiveIterator.ArchiveEntryWrapper> {
     private static Logger logger = Loggers.getLogger(ArchiveIterator.class);
 
     @NonNull

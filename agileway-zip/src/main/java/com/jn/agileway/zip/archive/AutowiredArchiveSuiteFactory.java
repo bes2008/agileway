@@ -1,6 +1,6 @@
 package com.jn.agileway.zip.archive;
 
-import com.jn.agileway.zip.format.ArchiveFormatNotFoundException;
+import com.jn.agileway.zip.format.UnsupportedArchiveFormatException;
 import com.jn.agileway.zip.format.ZipFormat;
 import com.jn.agileway.zip.format.ZipFormats;
 import com.jn.langx.annotation.Singleton;
@@ -22,13 +22,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
 public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Registry<String, SingleArchiveSuiteFactory> {
-    private Map<String, SingleArchiveSuiteFactory> archiverFactoryMap = new ConcurrentHashMap<String, SingleArchiveSuiteFactory>();
+    private Map<String, SingleArchiveSuiteFactory> archiveFactoryMap = new ConcurrentHashMap<String, SingleArchiveSuiteFactory>();
 
     private AutowiredArchiveSuiteFactory() {
         Collects.forEach(ServiceLoader.load(SingleArchiveSuiteFactory.class), new Consumer<SingleArchiveSuiteFactory>() {
             @Override
             public void accept(SingleArchiveSuiteFactory archiverFactory) {
-                archiverFactoryMap.put(archiverFactory.getArchiveFormat(), archiverFactory);
+                archiveFactoryMap.put(archiverFactory.getArchiveFormat(), archiverFactory);
             }
         });
     }
@@ -46,7 +46,7 @@ public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Regist
 
     @Override
     public void register(String s, SingleArchiveSuiteFactory archiverFactory) {
-        archiverFactoryMap.put(s, archiverFactory);
+        archiveFactoryMap.put(s, archiverFactory);
     }
 
     @Override
@@ -54,9 +54,9 @@ public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Regist
         SingleArchiveSuiteFactory factory = null;
         String archive = ZipFormats.getArchiveFormat(format);
         if (Strings.isNotEmpty(archive)) {
-            factory = archiverFactoryMap.get(archive);
+            factory = archiveFactoryMap.get(archive);
             if (factory == null) {
-                factory = archiverFactoryMap.get("simple");
+                factory = archiveFactoryMap.get("simple");
             }
         }
         return factory;
@@ -67,7 +67,7 @@ public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Regist
         ZipFormat zipFormat = ZipFormats.getZipFormat(format);
         Preconditions.checkNotNull(zipFormat);
         Preconditions.checkTrue(zipFormat.isValid());
-        if (Strings.isNotEmpty(zipFormat.getCompress())) {
+        if (zipFormat.compressEnabled()) {
             if (!(outputStream instanceof CompressorOutputStream)) {
                 try {
                     if (!(outputStream instanceof BufferedOutputStream)) {
@@ -88,7 +88,7 @@ public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Regist
         ZipFormat zipFormat = ZipFormats.getZipFormat(format);
         Preconditions.checkNotNull(zipFormat);
         Preconditions.checkTrue(zipFormat.isValid());
-        if (Strings.isNotEmpty(zipFormat.getCompress())) {
+        if (zipFormat.compressEnabled()) {
             if (!(inputStream instanceof CompressorInputStream)) {
                 try {
                     if (!(inputStream instanceof BufferedInputStream)) {
@@ -108,7 +108,7 @@ public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Regist
         final String path = outFile.getPath();
         String format = ZipFormats.getFormat(path);
         if (format == null) {
-            throw new ArchiveFormatNotFoundException(StringTemplates.formatWithPlaceholder("Can't find a suite archive format for file: {}", path));
+            throw new UnsupportedArchiveFormatException(StringTemplates.formatWithPlaceholder("Can't find a suite archive format for file: {}", path));
         }
         try {
             return get(format, new FileOutputStream(outFile));
@@ -129,7 +129,7 @@ public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Regist
         final String path = inFile.getPath();
         String format = ZipFormats.getFormat(path);
         if (format == null) {
-            throw new ArchiveFormatNotFoundException(StringTemplates.formatWithPlaceholder("Can't find a suite archive format for file: {}", path));
+            throw new UnsupportedArchiveFormatException(StringTemplates.formatWithPlaceholder("Can't find a suite archive format for file: {}", path));
         }
         try {
             return get(format, new FileInputStream(inFile));
