@@ -12,6 +12,8 @@ import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
+import com.jn.langx.util.reflect.annotation.OnClassesConditions;
+import com.jn.langx.util.spi.AllPresentServiceProvider;
 import org.slf4j.Logger;
 
 import java.util.Iterator;
@@ -32,7 +34,7 @@ public class SshConnectionFactoryRegistry extends AbstractInitializable implemen
         while (iterator.hasNext()) {
             try {
                 SshConnectionFactory sshConnectionFactory = iterator.next();
-                if (checkSshConnectionFactory(sshConnectionFactory)) {
+                if (OnClassesConditions.allPresent(sshConnectionFactory.getClass(), true)) {
                     preinstall.put(sshConnectionFactory.getName(), sshConnectionFactory);
                 }
             } catch (Throwable ex) {
@@ -55,24 +57,7 @@ public class SshConnectionFactoryRegistry extends AbstractInitializable implemen
     }
 
     private static boolean checkSshConnectionFactory(final SshConnectionFactory factory) {
-        Class clazz = factory.getClass();
-        OnClasses onClasses = Reflects.getAnnotation(clazz, OnClasses.class);
-        if (onClasses != null) {
-            String[] classes = onClasses.value();
-            if (Objs.isNotEmpty(classes)) {
-                return Pipeline.of(classes).allMatch(new Predicate<String>() {
-                    @Override
-                    public boolean test(String className) {
-                        boolean hasClass = ClassLoaders.hasClass(className, factory.getClass().getClassLoader());
-                        if (!hasClass) {
-                            logger.warn("Class {} not found for ssh connection factory: {}", className, factory.getName());
-                        }
-                        return hasClass;
-                    }
-                });
-            }
-        }
-        return true;
+        return OnClassesConditions.allPresent(factory.getClass(), true);
     }
 
     @Override
