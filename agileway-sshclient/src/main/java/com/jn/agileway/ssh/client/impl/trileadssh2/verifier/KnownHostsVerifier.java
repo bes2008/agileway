@@ -15,6 +15,7 @@ public class KnownHostsVerifier implements ServerHostKeyVerifier {
     private static final Logger logger = Loggers.getLogger(KnownHostsVerifier.class);
     private final KnownHosts knownHosts = new KnownHosts();
     private final List<File> knownHostsFiles = Collects.emptyArrayList();
+    private static final List<String> supportedAlgorithms = Collects.immutableArrayList("ssh-rsa", "ssh-dss");
 
     public KnownHostsVerifier(final List<File> files) {
         Collects.forEach(files, new Consumer<File>() {
@@ -36,21 +37,25 @@ public class KnownHostsVerifier implements ServerHostKeyVerifier {
         if (result == KnownHosts.HOSTKEY_IS_OK) {
             return true;
         }
+        if (!supportedAlgorithms.contains(serverHostKeyAlgorithm)) {
+            return true;
+        }
         if (result == KnownHosts.HOSTKEY_IS_NEW) {
             Collects.forEach(this.knownHostsFiles, new Consumer<File>() {
                 @Override
                 public void accept(File file) {
                     try {
+                        knownHosts.addHostkey(new String[]{hostname}, serverHostKeyAlgorithm, serverHostKey);
                         KnownHostsFiles.appendHostKeysToFile(file, new String[]{hostname}, serverHostKeyAlgorithm, serverHostKey);
                     } catch (Throwable ex) {
                         logger.error("write to known_hosts file {} fail, error: {}", file.getPath(), ex.getMessage(), ex);
                     }
                 }
             });
-
             return true;
         }
         if (result == KnownHosts.HOSTKEY_HAS_CHANGED) {
+
             return false;
         }
         return false;
