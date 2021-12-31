@@ -1,6 +1,5 @@
 package com.jn.agileway.ssh.client.impl.ganymedssh2.verifier;
 
-import ch.ethz.ssh2.KnownHosts;
 import ch.ethz.ssh2.ServerHostKeyVerifier;
 import com.jn.agileway.ssh.client.transport.hostkey.knownhosts.KnownHostsFiles;
 import com.jn.langx.util.collection.Collects;
