@@ -49,11 +49,39 @@ public class SshjConnectionFactory extends AbstractSshConnectionFactory<SshjConn
                     try {
                         Files.makeFile(file);
                         HostKeyVerifier verifier = new OpenSSHKnownHosts(file) {
+
+
                             @Override
                             protected boolean hostKeyUnverifiableAction(String hostname, PublicKey key) {
                                 try {
                                     KeyType keyType = KeyType.fromKey(key);
-                                    this.write(new SimpleEntry(null, hostname, keyType, key));
+                                    if(keyType==KeyType.UNKNOWN){
+                                        return true;
+                                    }
+                                    List<HostEntry> entries = this.entries();
+                                    entries.add(new SimpleEntry(null, hostname, keyType, key));
+                                    this.write();
+                                    return true;
+                                } catch (Throwable ex) {
+                                    logger.error(ex.getMessage(), ex);
+                                    return false;
+                                }
+                            }
+
+                            @Override
+                            protected boolean hostKeyChangedAction(HostEntry entry, String hostname, PublicKey key) {
+                                try {
+                                    // 删除整行，我们自用时，每一个Host，一个算法对应一行
+                                    List<HostEntry> entries = this.entries();
+                                    entries.remove(entry);
+
+                                    // 创建新的entry
+                                    KeyType keyType = KeyType.fromKey(key);
+                                    HostEntry newEntry = new SimpleEntry(null, hostname, keyType, key);
+                                    entries.add(newEntry);
+
+                                    // 重写文件
+                                    this.write();
                                     return true;
                                 } catch (Throwable ex) {
                                     logger.error(ex.getMessage(), ex);
