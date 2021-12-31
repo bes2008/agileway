@@ -55,8 +55,7 @@ public class KnownHostsVerifier implements ServerHostKeyVerifier {
             return true;
         }
         if (result == KnownHosts.HOSTKEY_HAS_CHANGED) {
-
-            return false;
+            return true;
         }
         return false;
     }
