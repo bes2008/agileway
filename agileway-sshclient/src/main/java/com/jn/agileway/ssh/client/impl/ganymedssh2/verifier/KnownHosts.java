@@ -154,7 +154,7 @@ public class KnownHosts {
     }
 
     private final boolean checkHashed(String entry, String hostname) {
-        if (entry.startsWith("|1|") == false)
+        if (!entry.startsWith("|1|"))
             return false;
 
         int delim_idx = entry.indexOf('|', 3);
@@ -177,16 +177,17 @@ public class KnownHosts {
 
         SHA1 sha1 = new SHA1();
 
-        if (salt.length != sha1.getDigestLength())
+        if (salt.length != sha1.getDigestLength()) {
             return false;
+        }
 
         byte[] dig = hmacSha1Hash(salt, hostname);
 
-        for (int i = 0; i < dig.length; i++)
+        for (int i = 0; i < dig.length; i++) {
             if (dig[i] != hash[i]) {
                 return false;
             }
-
+        }
         return true;
     }
 
