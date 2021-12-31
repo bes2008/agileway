@@ -9,10 +9,13 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.logging.Loggers;
 import com.sshtools.common.knownhosts.KnownHostsFile;
+import com.sshtools.common.ssh.SshException;
+import com.sshtools.common.ssh.components.SshPublicKey;
 import org.slf4j.Logger;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 @OnClasses({"com.sshtools.client.SshClient"})
 public class SynergyConnectionFactory extends AbstractSshConnectionFactory<SynergyConnectionConfig> {
@@ -47,7 +50,14 @@ public class SynergyConnectionFactory extends AbstractSshConnectionFactory<Syner
             @Override
             public void accept(File file) {
                 try {
-                    KnownHostsFile f = new KnownHostsFile(file);
+                    KnownHostsFile f = new KnownHostsFile(file){
+
+                        @Override
+                        protected void onUnknownHost(String host, SshPublicKey key) throws SshException {
+                            this.addEntry(key,null,host);
+                        }
+
+                    };
                     connection.addHostKeyVerifier(new FromSynergyHostKeyVerificationAdapter(f));
                 } catch (Throwable ex) {
                     logger.error(ex.getMessage(), ex);
