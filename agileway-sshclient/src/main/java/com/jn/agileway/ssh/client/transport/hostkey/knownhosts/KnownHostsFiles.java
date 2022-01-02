@@ -2,6 +2,7 @@ package com.jn.agileway.ssh.client.transport.hostkey.knownhosts;
 
 import com.jn.agileway.ssh.client.transport.hostkey.HostKeyType;
 import com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier;
+import com.jn.agileway.ssh.client.utils.Buffer;
 import com.jn.langx.codec.base64.Base64;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
@@ -12,6 +13,7 @@ import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
 import java.io.*;
+import java.security.PublicKey;
 import java.util.Collection;
 import java.util.List;
 
@@ -63,10 +65,11 @@ public class KnownHostsFiles {
 
                 if (keyType != null) {
                     String hosts = segments.get(0);
+                    PublicKey publicKey = new Buffer.PlainBuffer(Base64.decodeBase64(publicKeyBase64)).readPublicKey();
                     if (hosts.startsWith(HashedHostsKeyEntry.HOSTS_FLAG)) {
-                        entries.add(new HashedHostsKeyEntry(marker, hosts, keyType, publicKeyBase64));
+                        entries.add(new HashedHostsKeyEntry(marker, hosts, keyType, publicKey));
                     } else {
-                        entries.add(new SimpleHostsKeyEntry(marker, hosts, keyType, publicKeyBase64));
+                        entries.add(new SimpleHostsKeyEntry(marker, hosts, keyType, publicKey));
                     }
                 } else {
                     logger.warn("unsupported known_hosts key algorithm: {} ", segments.get(1));
@@ -91,11 +94,12 @@ public class KnownHostsFiles {
     }
 
     public static void appendHostKeysToFile(File knownHosts, String[] hostnames, String serverHostKeyAlgorithm, byte[] serverHostKey) throws IOException {
+        PublicKey publicKey = new Buffer.PlainBuffer(serverHostKey).readPublicKey();
         appendHostKeysToFile(knownHosts, new SimpleHostsKeyEntry(
                 null,
                 Strings.join(",", hostnames),
                 Enums.ofName(HostKeyType.class, serverHostKeyAlgorithm),
-                Base64.encodeBase64String(serverHostKey)
+                publicKey
         ));
     }
 
@@ -124,7 +128,7 @@ public class KnownHostsFiles {
         }
     }
 
-    public static void rewrite(File knownHosts, Collection<HostsKeyEntry> entries) throws IOException{
+    public static void rewrite(File knownHosts, Collection<HostsKeyEntry> entries) throws IOException {
         BufferedWriter bos = null;
         try {
             Files.makeFile(knownHosts);

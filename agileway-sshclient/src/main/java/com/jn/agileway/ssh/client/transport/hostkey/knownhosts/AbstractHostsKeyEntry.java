@@ -89,13 +89,17 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
     public String getLine() {
         if (isValid()) {
             if (getMarker() == null) {
-                return StringTemplates.format("{} {} {}", getHosts(), getKeyType(), getPublicKey());
+                return StringTemplates.formatWithPlaceholder("{} {} {}", getHosts(), getKeyType(), getPublicKey());
             } else {
-                return StringTemplates.format("{} {} {} {}", getMarker().getName(), getHosts(), getKeyType(), getPublicKey());
+                return StringTemplates.formatWithPlaceholder("{} {} {} {}", getMarker().getName(), getHosts(), getKeyType(), getPublicKey());
             }
         } else {
             return "invalid";
         }
     }
 
+    @Override
+    public String toString() {
+        return getLine();
+    }
 }

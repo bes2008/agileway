@@ -30,9 +30,7 @@ public abstract class OpenSSHKnownHosts extends AbstractInitializable implements
             List<HostsKeyEntry> entries = null;
             try {
                 entries = KnownHostsFiles.read(khFile);
-                if (entries != null) {
-                    this.entries.addAll(entries);
-                }
+                this.entries.addAll(entries);
             } catch (IOException ex) {
                 logger.error(ex.getMessage(), ex);
             }

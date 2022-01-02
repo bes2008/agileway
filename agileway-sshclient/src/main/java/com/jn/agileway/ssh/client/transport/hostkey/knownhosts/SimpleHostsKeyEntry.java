@@ -8,7 +8,7 @@ import java.security.PublicKey;
 import java.util.Set;
 
 public class SimpleHostsKeyEntry extends AbstractHostsKeyEntry {
-    private transient final Set<String> hostList = Collects.emptyHashSet();
+    private transient Set<String> hostList = null;
 
     public SimpleHostsKeyEntry() {
     }
@@ -23,6 +23,9 @@ public class SimpleHostsKeyEntry extends AbstractHostsKeyEntry {
 
     @Override
     public void setHosts(String hosts) {
+        if (this.hostList == null) {
+            this.hostList = Collects.emptyHashSet();
+        }
         super.setHosts(hosts);
         if (hosts != null) {
             this.hostList.addAll(Collects.asSet(Strings.split(hosts, ",")));
@@ -31,6 +34,9 @@ public class SimpleHostsKeyEntry extends AbstractHostsKeyEntry {
 
     @Override
     protected boolean containsHost(String host) {
+        if (this.hostList == null) {
+            return false;
+        }
         return hostList.contains(host);
     }
 }
