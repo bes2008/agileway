@@ -1,6 +1,8 @@
 package com.jn.agileway.ssh.client.transport.hostkey.knownhosts;
 
 import com.jn.agileway.ssh.client.transport.hostkey.HostKeyType;
+import com.jn.agileway.ssh.client.transport.hostkey.IllegalSshKeyException;
+import com.jn.agileway.ssh.client.transport.hostkey.UnsupportedHostsKeyTypeException;
 import com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier;
 import com.jn.agileway.ssh.client.utils.Buffer;
 import com.jn.langx.codec.base64.Base64;
@@ -66,6 +68,9 @@ public class KnownHostsFiles {
                 publicKey = new Buffer.PlainBuffer(Base64.decodeBase64(publicKeyBase64)).readPublicKey();
             } catch (UnsupportedHostsKeyTypeException ex) {
                 publicKey = publicKeyBase64;
+            } catch (IllegalSshKeyException ex) {
+                logger.error("bad ssh hash key: {}", line);
+                return null;
             }
             if (hosts.startsWith(HashedHostsKeyEntry.HOSTS_FLAG)) {
                 return new HashedHostsKeyEntry(marker, hosts, keyTypeString, publicKey);

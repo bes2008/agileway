@@ -61,8 +61,8 @@ public class SshClients_CommandLineTests {
 
 
     private void testExec(SshConnectionFactory connectionFactory, AbstractSshConnectionConfig connectionConfig) throws SshException, IOException {
-        //connectionConfig.setHost("192.168.234.128");
-        connectionConfig.setHost("192.168.1.70");
+        connectionConfig.setHost("192.168.234.128"); //pc
+        // connectionConfig.setHost("192.168.1.70"); //work station
         connectionConfig.setPort(22);
         connectionConfig.setUser("fangjinuo");
         connectionConfig.setPassword("fjn13570");

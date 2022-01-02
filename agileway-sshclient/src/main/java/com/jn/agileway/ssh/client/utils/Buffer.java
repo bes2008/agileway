@@ -3,8 +3,8 @@ package com.jn.agileway.ssh.client.utils;
 
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.transport.hostkey.HostKeyType;
-import com.jn.agileway.ssh.client.transport.hostkey.knownhosts.UnsupportedHostsKeyTypeException;
-import com.jn.langx.security.crypto.IllegalKeyException;
+import com.jn.agileway.ssh.client.transport.hostkey.IllegalSshKeyException;
+import com.jn.agileway.ssh.client.transport.hostkey.UnsupportedHostsKeyTypeException;
 import com.jn.langx.util.enums.Enums;
 import com.jn.langx.util.io.Charsets;
 
@@ -418,8 +418,8 @@ public class Buffer<T extends Buffer<T>> {
                 throw new UnsupportedHostsKeyTypeException(keyTypeString);
             }
             return keyType.read(this);
-        } catch (IllegalKeyException e) {
-            throw new BufferException(e);
+        } catch (BufferException e) {
+            throw new IllegalSshKeyException(e);
         }
     }
 

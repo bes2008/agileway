@@ -44,7 +44,7 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
 
     @Override
     public boolean verify(Object key) {
-        return Objs.equals(toPublicKeyBytes(this.publicKey), toPublicKeyBytes(key)) && marker != Marker.REVOKED;
+        return Objs.deepEquals(toPublicKeyBytes(this.publicKey), toPublicKeyBytes(key)) && marker != Marker.REVOKED;
     }
 
     public boolean isValid() {

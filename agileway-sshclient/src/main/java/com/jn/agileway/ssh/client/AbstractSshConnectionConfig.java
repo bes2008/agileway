@@ -58,7 +58,7 @@ public class AbstractSshConnectionConfig implements SshConnectionConfig {
      *
      * @return
      */
-    private StrictHostKeyChecking strictHostKeyChecking = StrictHostKeyChecking.YES;
+    private StrictHostKeyChecking strictHostKeyChecking = StrictHostKeyChecking.NO;
 
     private HostKeyVerifier hostKeyVerifier;
 

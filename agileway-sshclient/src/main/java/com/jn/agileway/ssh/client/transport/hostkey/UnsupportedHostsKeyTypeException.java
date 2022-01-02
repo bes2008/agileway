@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.transport.hostkey.knownhosts;
+package com.jn.agileway.ssh.client.transport.hostkey;
 
 import com.jn.agileway.ssh.client.SshException;
 

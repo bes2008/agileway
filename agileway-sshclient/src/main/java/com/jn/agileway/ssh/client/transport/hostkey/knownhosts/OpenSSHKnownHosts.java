@@ -46,12 +46,15 @@ public abstract class OpenSSHKnownHosts extends AbstractInitializable implements
             return false;
         }
 
-        final String adjustedHostname = (port != 22) ? "[" + hostname + "]:" + port : hostname;
+        final String adjustedHostname = (port != 22 && port > 0) ? ("[" + hostname + "]:" + port) : hostname;
 
         for (HostsKeyEntry e : entries) {
             try {
                 if (e.applicableTo(adjustedHostname, serverHostKeyAlgorithm)) {
-                    return e.verify(publicKey) || hostKeyChanged(e, adjustedHostname, publicKey);
+                    if (!e.verify(publicKey)) {
+                        return hostKeyChanged(e, adjustedHostname, publicKey);
+                    }
+                    return true;
                 }
             } catch (IOException ioe) {
                 logger.error("Error with {}: {}", e, ioe);

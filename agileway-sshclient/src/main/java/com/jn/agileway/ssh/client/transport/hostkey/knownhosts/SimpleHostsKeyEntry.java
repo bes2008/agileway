@@ -6,7 +6,7 @@ import com.jn.langx.util.collection.Collects;
 import java.util.Set;
 
 public class SimpleHostsKeyEntry extends AbstractHostsKeyEntry {
-    private transient Set<String> hostList = null;
+    private transient Set<String> hostList;
 
     public SimpleHostsKeyEntry() {
     }
@@ -33,7 +33,7 @@ public class SimpleHostsKeyEntry extends AbstractHostsKeyEntry {
     @Override
     protected boolean containsHost(String host) {
         if (this.hostList == null) {
-            return false;
+            return this.getHosts().contains(host);
         }
         return hostList.contains(host);
     }
