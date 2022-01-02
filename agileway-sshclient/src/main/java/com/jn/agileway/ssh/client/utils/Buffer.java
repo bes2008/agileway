@@ -3,6 +3,7 @@ package com.jn.agileway.ssh.client.utils;
 
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.transport.hostkey.HostKeyType;
+import com.jn.agileway.ssh.client.transport.hostkey.knownhosts.UnsupportedHostsKeyTypeException;
 import com.jn.langx.security.crypto.IllegalKeyException;
 import com.jn.langx.util.enums.Enums;
 import com.jn.langx.util.io.Charsets;
@@ -274,6 +275,11 @@ public class Buffer<T extends Buffer<T>> {
         return (T) this;
     }
 
+    /**
+     * // 读取4个字节
+     *
+     * @return
+     */
     public int readUInt32AsInt() {
         return (int) readUInt32();
     }
@@ -354,12 +360,7 @@ public class Buffer<T extends Buffer<T>> {
             throw new BufferException("Bad item length: " + len);
         }
         ensureAvailable(len);
-        String s;
-        try {
-            s = new String(data, rpos, len, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new SshException(e);
-        }
+        String s = new String(data, rpos, len, Charsets.UTF_8);
         rpos += len;
         return s;
     }
@@ -382,11 +383,7 @@ public class Buffer<T extends Buffer<T>> {
     }
 
     public T putString(String string) {
-        try {
-            return putString(string.getBytes(Charsets.UTF_8.name()));
-        } catch (UnsupportedEncodingException e) {
-            throw new BufferException(e);
-        }
+        return putString(string.getBytes(Charsets.UTF_8));
     }
 
     /**
@@ -405,24 +402,33 @@ public class Buffer<T extends Buffer<T>> {
         }
         putUInt32(str.length);
         ensureCapacity(str.length);
-        for (char c : str)
+        for (char c : str) {
             data[wpos++] = (byte) c;
+        }
         Arrays.fill(str, ' ');
         return (T) this;
     }
 
     public PublicKey readPublicKey() {
         try {
-            final String keyType = readString();
-            return Enums.ofName(HostKeyType.class, keyType).read(this);
+            final String keyTypeString = readString();
+            HostKeyType keyType = Enums.ofName(HostKeyType.class, keyTypeString);
+            if (keyType == null) {
+                throw new UnsupportedHostsKeyTypeException(keyTypeString);
+            }
+            return keyType.read(this);
         } catch (IllegalKeyException e) {
             throw new SshException(e);
         }
     }
 
     @SuppressWarnings("unchecked")
-    public T putPublicKey(String keyAlgorithm, PublicKey key) {
-        Enums.ofName(HostKeyType.class, keyAlgorithm).write(key, this);
+    public T putPublicKey(String keyType, PublicKey key) {
+        HostKeyType hostKeyType = Enums.ofName(HostKeyType.class, keyType);
+        if (hostKeyType == null) {
+            throw new UnsupportedHostsKeyTypeException(keyType);
+        }
+        hostKeyType.write(key, this);
         return (T) this;
     }
 
