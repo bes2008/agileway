@@ -1,6 +1,5 @@
 package com.jn.agileway.ssh.client.transport.hostkey.knownhosts;
 
-import com.jn.agileway.ssh.client.transport.hostkey.HostKeyType;
 import com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier;
 import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.lifecycle.InitializationException;
@@ -9,12 +8,11 @@ import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.PublicKey;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public abstract class OpenSSHKnownHosts extends AbstractInitializable implements HostKeyVerifier<PublicKey> {
+public abstract class OpenSSHKnownHosts extends AbstractInitializable implements HostKeyVerifier {
     private static final Logger logger = Loggers.getLogger(OpenSSHKnownHosts.class);
     protected final File khFile;
     protected final Set<HostsKeyEntry> entries = new LinkedHashSet<HostsKeyEntry>();
@@ -43,10 +41,8 @@ public abstract class OpenSSHKnownHosts extends AbstractInitializable implements
     }
 
     @Override
-    public boolean verify(String hostname, int port, String serverHostKeyAlgorithm, PublicKey publicKey) {
-        final HostKeyType type = HostKeyType.guessKeyType(publicKey);
-
-        if (type == null) {
+    public boolean verify(String hostname, int port, String serverHostKeyAlgorithm, Object publicKey) {
+        if (serverHostKeyAlgorithm == null) {
             return false;
         }
 
@@ -54,7 +50,7 @@ public abstract class OpenSSHKnownHosts extends AbstractInitializable implements
 
         for (HostsKeyEntry e : entries) {
             try {
-                if (e.applicableTo(adjustedHostname, type.getName())) {
+                if (e.applicableTo(adjustedHostname, serverHostKeyAlgorithm)) {
                     return e.verify(publicKey) || hostKeyChanged(e, adjustedHostname, publicKey);
                 }
             } catch (IOException ioe) {
@@ -63,12 +59,12 @@ public abstract class OpenSSHKnownHosts extends AbstractInitializable implements
             }
         }
 
-        return unknownHostKey(adjustedHostname, publicKey);
+        return unknownHostKey(adjustedHostname, serverHostKeyAlgorithm, publicKey);
     }
 
-    protected abstract boolean hostKeyChanged(HostsKeyEntry entry, String hostname, PublicKey publicKey) throws IOException;
+    protected abstract boolean hostKeyChanged(HostsKeyEntry entry, String hostname, Object publicKey) throws IOException;
 
-    protected abstract boolean unknownHostKey(String hostname, PublicKey publicKey);
+    protected abstract boolean unknownHostKey(String hostname, String keyType, Object publicKey);
 
     public void rewrite() throws IOException {
         KnownHostsFiles.rewrite(this.khFile, this.entries);
@@ -76,8 +72,10 @@ public abstract class OpenSSHKnownHosts extends AbstractInitializable implements
 
     public void add(HostsKeyEntry entry) throws IOException {
         if (entry != null) {
-            if (this.entries.add(entry)) {
-                KnownHostsFiles.appendHostKeysToFile(this.khFile, entry);
+            synchronized (this) {
+                if (this.entries.add(entry)) {
+                    KnownHostsFiles.appendHostKeysToFile(this.khFile, entry);
+                }
             }
         }
     }
