@@ -12,14 +12,14 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
     private Marker marker;
     private String hosts;
     private HostKeyType keyType;
-    private String publicKey;
+    private PublicKey publicKey;
 
 
     protected AbstractHostsKeyEntry() {
 
     }
 
-    protected AbstractHostsKeyEntry(Marker marker, String hosts, HostKeyType keyType, String publicKey) {
+    protected AbstractHostsKeyEntry(Marker marker, String hosts, HostKeyType keyType, PublicKey publicKey) {
         setMarker(marker);
         setHosts(hosts);
         setKeyType(keyType);
@@ -41,7 +41,7 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
 
     @Override
     public boolean verify(PublicKey key) {
-        return false;
+        return key.equals(this.publicKey) && marker != Marker.REVOKED;
     }
 
     public boolean isValid() {
@@ -67,7 +67,7 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
         this.keyType = keyType;
     }
 
-    public void setPublicKey(String publicKey) {
+    public void setPublicKey(PublicKey publicKey) {
         this.publicKey = publicKey;
     }
 
@@ -81,7 +81,7 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
     }
 
     @Override
-    public String getPublicKey() {
+    public PublicKey getPublicKey() {
         return publicKey;
     }
 

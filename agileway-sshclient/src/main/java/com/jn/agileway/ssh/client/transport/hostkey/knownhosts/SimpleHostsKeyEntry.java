@@ -4,6 +4,7 @@ import com.jn.agileway.ssh.client.transport.hostkey.HostKeyType;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 
+import java.security.PublicKey;
 import java.util.Set;
 
 public class SimpleHostsKeyEntry extends AbstractHostsKeyEntry {
@@ -12,7 +13,11 @@ public class SimpleHostsKeyEntry extends AbstractHostsKeyEntry {
     public SimpleHostsKeyEntry() {
     }
 
-    public SimpleHostsKeyEntry(Marker marker, String hosts, HostKeyType keyType, String publicKey) {
+    public SimpleHostsKeyEntry(String hosts, HostKeyType keyType, PublicKey publicKey) {
+        this(null, hosts, keyType, publicKey);
+    }
+
+    public SimpleHostsKeyEntry(Marker marker, String hosts, HostKeyType keyType, PublicKey publicKey) {
         super(marker, hosts, keyType, publicKey);
     }
 

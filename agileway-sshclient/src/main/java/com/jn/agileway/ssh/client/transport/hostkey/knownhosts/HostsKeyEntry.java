@@ -33,7 +33,7 @@ public interface HostsKeyEntry extends Serializable {
      * base64 格式的 public key，同时也是 known_hosts 中完全一样
      * @return
      */
-    String getPublicKey();
+    PublicKey getPublicKey();
 
     String getLine();
 }

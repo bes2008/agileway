@@ -9,6 +9,8 @@ import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 
+import java.security.PublicKey;
+
 public class HashedHostsKeyEntry extends AbstractHostsKeyEntry {
     public static final String HOSTS_FLAG = "|1|";
 
@@ -18,7 +20,11 @@ public class HashedHostsKeyEntry extends AbstractHostsKeyEntry {
     public HashedHostsKeyEntry() {
     }
 
-    public HashedHostsKeyEntry(Marker marker, String hosts, HostKeyType keyType, String publicKey) {
+    public HashedHostsKeyEntry(String hosts, HostKeyType keyType, PublicKey publicKey) {
+        this(null, hosts, keyType, publicKey);
+    }
+
+    public HashedHostsKeyEntry(Marker marker, String hosts, HostKeyType keyType, PublicKey publicKey) {
         super(marker, null, keyType, publicKey);
         if (hosts.startsWith(HOSTS_FLAG)) {
             final String[] hostParts = Strings.split(hosts, "\\|");
