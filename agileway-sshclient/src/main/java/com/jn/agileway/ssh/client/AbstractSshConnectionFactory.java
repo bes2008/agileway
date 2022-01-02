@@ -2,6 +2,9 @@ package com.jn.agileway.ssh.client;
 
 import com.jn.agileway.ssh.client.transport.hostkey.StrictHostKeyChecking;
 import com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier;
+import com.jn.agileway.ssh.client.transport.hostkey.verifier.KnownHostsVerifier;
+import com.jn.agileway.ssh.client.transport.hostkey.verifier.PromiscuousHostKeyVerifier;
+import com.jn.agileway.ssh.client.utils.SshConfigs;
 import com.jn.langx.AbstractNameable;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
@@ -16,6 +19,7 @@ import org.slf4j.Logger;
 
 import java.io.File;
 import java.net.InetAddress;
+import java.util.List;
 
 public abstract class AbstractSshConnectionFactory<CONF extends SshConnectionConfig> extends AbstractNameable implements SshConnectionFactory<CONF> {
     protected Logger logger = Loggers.getLogger(this.getClass());
@@ -57,15 +61,23 @@ public abstract class AbstractSshConnectionFactory<CONF extends SshConnectionCon
         }
 
         StrictHostKeyChecking strictHostKeyChecking = sshConfig.getStrictHostKeyChecking();
-        if(strictHostKeyChecking==StrictHostKeyChecking.ASK){
+        if (strictHostKeyChecking != StrictHostKeyChecking.NO) {
             sshConfig.setStrictHostKeyChecking(StrictHostKeyChecking.YES);
-            strictHostKeyChecking = sshConfig.getStrictHostKeyChecking();
         }
 
-        setKnownHosts( connection, sshConfig);
+        setKnownHosts(connection, sshConfig);
     }
 
-    protected abstract void setKnownHosts(@NonNull SshConnection connection, @NonNull CONF sshConfig);
+    protected void setKnownHosts(@NonNull SshConnection connection, @NonNull CONF sshConfig) {
+        String filepath = sshConfig.getKnownHostsPath();
+        List<File> files = SshConfigs.getKnownHostsFiles(filepath);
+        HostKeyVerifier verifier = null;
+        if (files.isEmpty()) {
+            verifier = new PromiscuousHostKeyVerifier(sshConfig.getStrictHostKeyChecking() == StrictHostKeyChecking.NO);
+        }
+        verifier = new KnownHostsVerifier(files.get(0), sshConfig.getStrictHostKeyChecking());
+        connection.addHostKeyVerifier(verifier);
+    }
 
     /**
      * 创建连接并进行身份认证
