@@ -1,18 +1,15 @@
 package com.jn.agileway.ssh.client.transport.hostkey.knownhosts;
 
-import com.jn.agileway.ssh.client.transport.hostkey.HostKeyType;
-
 import java.io.Serializable;
-import java.security.PublicKey;
 
 public interface HostsKeyEntry extends Serializable {
     /**
      * 判断是否可用于指定的 host, key algorithm
      * @param host
-     * @param keyAlgorithm
+     * @param keyType
      * @return
      */
-    boolean applicableTo(String host, String keyAlgorithm);
+    boolean applicableTo(String host, String keyType);
 
     /**
      * 进行验证
@@ -25,7 +22,7 @@ public interface HostsKeyEntry extends Serializable {
 
     Marker getMarker();
 
-    HostKeyType getKeyType();
+    String getKeyType();
 
     String getHosts();
 

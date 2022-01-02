@@ -41,7 +41,8 @@ public class KnownHostsFiles {
                 segments = segments.subList(1, segments.size());
             }
             if (segments.size() >= 3) {
-                HostKeyType keyType = Enums.ofName(HostKeyType.class, segments.get(1));
+                String keyTypeString = segments.get(1);
+                HostKeyType keyType = Enums.ofName(HostKeyType.class, keyTypeString);
                 String publicKeyBase64 = segments.get(2);
 
                 if (keyType == null) {
@@ -67,9 +68,9 @@ public class KnownHostsFiles {
                     String hosts = segments.get(0);
                     PublicKey publicKey = new Buffer.PlainBuffer(Base64.decodeBase64(publicKeyBase64)).readPublicKey();
                     if (hosts.startsWith(HashedHostsKeyEntry.HOSTS_FLAG)) {
-                        entries.add(new HashedHostsKeyEntry(marker, hosts, keyType, publicKey));
+                        entries.add(new HashedHostsKeyEntry(marker, hosts, keyTypeString, publicKey));
                     } else {
-                        entries.add(new SimpleHostsKeyEntry(marker, hosts, keyType, publicKey));
+                        entries.add(new SimpleHostsKeyEntry(marker, hosts, keyTypeString, publicKey));
                     }
                 } else {
                     logger.warn("unsupported known_hosts key algorithm: {} ", segments.get(1));
@@ -98,7 +99,7 @@ public class KnownHostsFiles {
         appendHostKeysToFile(knownHosts, new SimpleHostsKeyEntry(
                 null,
                 Strings.join(",", hostnames),
-                Enums.ofName(HostKeyType.class, serverHostKeyAlgorithm),
+                serverHostKeyAlgorithm,
                 publicKey
         ));
     }

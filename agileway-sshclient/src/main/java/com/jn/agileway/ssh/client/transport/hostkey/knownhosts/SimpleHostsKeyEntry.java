@@ -1,6 +1,5 @@
 package com.jn.agileway.ssh.client.transport.hostkey.knownhosts;
 
-import com.jn.agileway.ssh.client.transport.hostkey.HostKeyType;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 
@@ -12,11 +11,11 @@ public class SimpleHostsKeyEntry extends AbstractHostsKeyEntry {
     public SimpleHostsKeyEntry() {
     }
 
-    public SimpleHostsKeyEntry(String hosts, HostKeyType keyType, Object publicKey) {
+    public SimpleHostsKeyEntry(String hosts, String keyType, Object publicKey) {
         this(null, hosts, keyType, publicKey);
     }
 
-    public SimpleHostsKeyEntry(Marker marker, String hosts, HostKeyType keyType, Object publicKey) {
+    public SimpleHostsKeyEntry(Marker marker, String hosts, String keyType, Object publicKey) {
         super(marker, hosts, keyType, publicKey);
     }
 

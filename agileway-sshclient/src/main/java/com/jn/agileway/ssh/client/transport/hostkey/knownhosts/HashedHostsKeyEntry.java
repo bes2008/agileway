@@ -1,7 +1,6 @@
 package com.jn.agileway.ssh.client.transport.hostkey.knownhosts;
 
 import com.jn.agileway.ssh.client.SshException;
-import com.jn.agileway.ssh.client.transport.hostkey.HostKeyType;
 import com.jn.langx.codec.base64.Base64;
 import com.jn.langx.security.Securitys;
 import com.jn.langx.security.crypto.mac.HMacs;
@@ -9,7 +8,6 @@ import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 
-import java.security.PublicKey;
 
 public class HashedHostsKeyEntry extends AbstractHostsKeyEntry {
     public static final String HOSTS_FLAG = "|1|";
@@ -20,11 +18,11 @@ public class HashedHostsKeyEntry extends AbstractHostsKeyEntry {
     public HashedHostsKeyEntry() {
     }
 
-    public HashedHostsKeyEntry(String hosts, HostKeyType keyType, Object publicKey) {
+    public HashedHostsKeyEntry(String hosts, String keyType, Object publicKey) {
         this(null, hosts, keyType, publicKey);
     }
 
-    public HashedHostsKeyEntry(Marker marker, String hosts, HostKeyType keyType, Object publicKey) {
+    public HashedHostsKeyEntry(Marker marker, String hosts, String keyType, Object publicKey) {
         super(marker, null, keyType, publicKey);
         if (hosts.startsWith(HOSTS_FLAG)) {
             final String[] hostParts = Strings.split(hosts, "\\|");

@@ -1,6 +1,5 @@
 package com.jn.agileway.ssh.client.transport.hostkey.knownhosts;
 
-import com.jn.agileway.ssh.client.transport.hostkey.HostKeyType;
 import com.jn.langx.codec.base64.Base64;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Emptys;
@@ -12,7 +11,7 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
 
     private Marker marker;
     private String hosts;
-    private HostKeyType keyType;
+    private String keyType;
     /**
      * 可选类型：byte[], byte[] 的 base64 String， java.security.PublicKey
      */
@@ -23,7 +22,7 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
 
     }
 
-    protected AbstractHostsKeyEntry(Marker marker, String hosts, HostKeyType keyType, Object publicKey) {
+    protected AbstractHostsKeyEntry(Marker marker, String hosts, String keyType, Object publicKey) {
         setMarker(marker);
         setHosts(hosts);
         setKeyType(keyType);
@@ -31,11 +30,11 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
     }
 
     @Override
-    public boolean applicableTo(String host, String type) {
+    public boolean applicableTo(String host, String keyType) {
         if (!isValid()) {
             return false;
         }
-        if (!Objs.equals(keyType.getName(), type)) {
+        if (!Objs.equals(this.keyType, keyType)) {
             return false;
         }
         return containsHost(host);
@@ -45,7 +44,7 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
 
     @Override
     public boolean verify(Object key) {
-        return key.equals(this.publicKey) && marker != Marker.REVOKED;
+        return Objs.equals(toPublicKeyBytes(this.publicKey) , toPublicKeyBytes(key))  && marker != Marker.REVOKED;
     }
 
     public boolean isValid() {
@@ -53,7 +52,7 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
     }
 
     @Override
-    public HostKeyType getKeyType() {
+    public String getKeyType() {
         return keyType;
     }
 
@@ -67,7 +66,7 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
         this.hosts = hosts;
     }
 
-    public void setKeyType(HostKeyType keyType) {
+    public void setKeyType(String keyType) {
         this.keyType = keyType;
     }
 
@@ -119,8 +118,7 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
         return publicKey.toString();
     }
 
-    @Override
-    public byte[] getPublicKeyBytes() {
+    public static byte[] toPublicKeyBytes(Object publicKey) {
         if (publicKey == null) {
             return null;
         }
@@ -134,6 +132,11 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
             return Base64.decodeBase64((String) publicKey);
         }
         return publicKey.toString().getBytes();
+    }
+
+    @Override
+    public byte[] getPublicKeyBytes() {
+        return toPublicKeyBytes(publicKey);
     }
 
     @Override

@@ -413,8 +413,8 @@ public class Buffer<T extends Buffer<T>> {
 
     public PublicKey readPublicKey() {
         try {
-            final String type = readString();
-            return Enums.ofName(HostKeyType.class, type).read(this);
+            final String keyType = readString();
+            return Enums.ofName(HostKeyType.class, keyType).read(this);
         } catch (IllegalKeyException e) {
             throw new SshException(e);
         }
