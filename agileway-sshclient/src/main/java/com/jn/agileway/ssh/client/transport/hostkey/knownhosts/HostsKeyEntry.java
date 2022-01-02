@@ -16,10 +16,10 @@ public interface HostsKeyEntry extends Serializable {
 
     /**
      * 进行验证
-     * @param key
+     * @param key 可选类型有3种： byte[], byte[]的base64, java.security.PublicKey
      * @return
      */
-    boolean verify(PublicKey key);
+    boolean verify(Object key);
 
     boolean isValid();
 
@@ -33,7 +33,9 @@ public interface HostsKeyEntry extends Serializable {
      * base64 格式的 public key，同时也是 known_hosts 中完全一样
      * @return
      */
-    PublicKey getPublicKey();
+    Object getPublicKey();
+    byte[] getPublicKeyBytes();
+    String getPublicKeyBase64();
 
     String getLine();
 }

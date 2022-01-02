@@ -20,11 +20,11 @@ public class HashedHostsKeyEntry extends AbstractHostsKeyEntry {
     public HashedHostsKeyEntry() {
     }
 
-    public HashedHostsKeyEntry(String hosts, HostKeyType keyType, PublicKey publicKey) {
+    public HashedHostsKeyEntry(String hosts, HostKeyType keyType, Object publicKey) {
         this(null, hosts, keyType, publicKey);
     }
 
-    public HashedHostsKeyEntry(Marker marker, String hosts, HostKeyType keyType, PublicKey publicKey) {
+    public HashedHostsKeyEntry(Marker marker, String hosts, HostKeyType keyType, Object publicKey) {
         super(marker, null, keyType, publicKey);
         if (hosts.startsWith(HOSTS_FLAG)) {
             final String[] hostParts = Strings.split(hosts, "\\|");
