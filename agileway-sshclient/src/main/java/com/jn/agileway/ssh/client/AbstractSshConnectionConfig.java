@@ -1,5 +1,7 @@
 package com.jn.agileway.ssh.client;
 
+import com.jn.agileway.ssh.client.transport.hostkey.StrictHostKeyChecking;
+import com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 
@@ -51,6 +53,14 @@ public class AbstractSshConnectionConfig implements SshConnectionConfig {
      * 由分号分割的路径集合
      */
     private String knownHostsPath = "${user.home}/.ssh/known_hosts";
+    /**
+     * 当设置为true 且没有自定义 host key verifier时，会自动根据 known_hosts文件进行验证
+     *
+     * @return
+     */
+    private StrictHostKeyChecking strictHostKeyChecking = StrictHostKeyChecking.YES;
+
+    private HostKeyVerifier hostKeyVerifier;
 
     private Map<String, Object> props = Collects.emptyHashMap();
 
@@ -128,12 +138,34 @@ public class AbstractSshConnectionConfig implements SshConnectionConfig {
     }
 
     @Override
+    public StrictHostKeyChecking getStrictHostKeyChecking() {
+        return this.strictHostKeyChecking;
+    }
+
+    @Override
+    public void setStrictHostKeyChecking(StrictHostKeyChecking checking) {
+        if(checking!=null) {
+            this.strictHostKeyChecking = checking;
+        }
+    }
+
+    @Override
     public String getKnownHostsPath() {
         return knownHostsPath;
     }
 
     public void setKnownHostsPath(String knownHostsPath) {
         this.knownHostsPath = knownHostsPath;
+    }
+
+    @Override
+    public HostKeyVerifier getHostKeyVerifier() {
+        return hostKeyVerifier;
+    }
+
+    @Override
+    public void setHostKeyVerifier(HostKeyVerifier hostKeyVerifier) {
+        this.hostKeyVerifier = hostKeyVerifier;
     }
 
     public void setProps(Map<String, Object> props) {

@@ -10,6 +10,11 @@ import ch.ethz.ssh2.signature.DSAPublicKey;
 import ch.ethz.ssh2.signature.DSASHA1Verify;
 import ch.ethz.ssh2.signature.RSAPublicKey;
 import ch.ethz.ssh2.signature.RSASHA1Verify;
+import com.jn.langx.util.Emptys;
+import com.jn.langx.util.Objs;
+import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.function.Consumer;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -40,8 +45,8 @@ public class KnownHosts {
     public static final int HOSTKEY_IS_NEW = 1;
     public static final int HOSTKEY_HAS_CHANGED = 2;
 
-    private class KnownHostsEntry {
-        String[] patterns;
+    class KnownHostsEntry {
+        private String[] patterns;
         Object key;
 
         KnownHostsEntry(String[] patterns, Object key) {
@@ -90,8 +95,38 @@ public class KnownHosts {
             synchronized (publicKeys) {
                 publicKeys.add(new KnownHostsEntry(hostnames, dpk));
             }
-        } else
+        } else {
             throw new IOException("Unknown host key type (" + serverHostKeyAlgorithm + ")");
+        }
+    }
+
+    public void removeHostKeys(String[] hosts, final String keyType) {
+        Collects.forEach(hosts, new Consumer<String>() {
+            @Override
+            public void accept(String host) {
+                Iterator<KnownHostsEntry> iter = publicKeys.iterator();
+                while (iter.hasNext()) {
+                    KnownHostsEntry entry = iter.next();
+                    if (hostnameMatches(entry.patterns, host)) {
+                        Object key = entry.key;
+                        if (key instanceof RSAPublicKey || key instanceof DSAPublicKey) {
+                            String currentKeyType = key instanceof RSAPublicKey ? "ssh-rsa":"ssh-dss";
+                            if(Objs.equals(currentKeyType, keyType)) {
+                                String[] newPatterns = Pipeline.of(entry.patterns)
+                                        .remove(host)
+                                        .toArray(String[].class);
+                                if (Emptys.isEmpty(newPatterns)) {
+                                    // 此时需要移除
+                                    iter.remove();
+                                } else {
+                                    entry.patterns = newPatterns;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -154,13 +189,14 @@ public class KnownHosts {
     }
 
     private final boolean checkHashed(String entry, String hostname) {
-        if (!entry.startsWith("|1|"))
+        if (!entry.startsWith("|1|")) {
             return false;
-
+        }
         int delim_idx = entry.indexOf('|', 3);
 
-        if (delim_idx == -1)
+        if (delim_idx == -1) {
             return false;
+        }
 
         String salt_base64 = entry.substring(3, delim_idx);
         String hash_base64 = entry.substring(delim_idx + 1);
@@ -338,6 +374,7 @@ public class KnownHosts {
             }
         }
     }
+
 
     private void initialize(File knownHosts) throws IOException {
         char[] buff = new char[512];

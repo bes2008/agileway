@@ -1,5 +1,7 @@
 package com.jn.agileway.ssh.client;
 
+import com.jn.agileway.ssh.client.transport.hostkey.StrictHostKeyChecking;
+import com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier;
 import com.jn.langx.AbstractNameable;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
@@ -41,9 +43,29 @@ public abstract class AbstractSshConnectionFactory<CONF extends SshConnectionCon
      * @param connection
      * @param sshConfig
      */
-    protected abstract void postConstructConnection(@NonNull SshConnection connection, @NonNull CONF sshConfig);
+    protected void postConstructConnection(@NonNull SshConnection connection, @NonNull CONF sshConfig) {
+        setHostKeyVerifier(connection, sshConfig);
+    }
 
     protected abstract Class<?> getDefaultConnectionClass();
+
+    protected void setHostKeyVerifier(@NonNull SshConnection connection, @NonNull CONF sshConfig) {
+        HostKeyVerifier hostKeyVerifier = sshConfig.getHostKeyVerifier();
+        if (hostKeyVerifier != null) {
+            connection.addHostKeyVerifier(hostKeyVerifier);
+            return;
+        }
+
+        StrictHostKeyChecking strictHostKeyChecking = sshConfig.getStrictHostKeyChecking();
+        if(strictHostKeyChecking==StrictHostKeyChecking.ASK){
+            sshConfig.setStrictHostKeyChecking(StrictHostKeyChecking.YES);
+            strictHostKeyChecking = sshConfig.getStrictHostKeyChecking();
+        }
+
+        setKnownHosts( connection, sshConfig);
+    }
+
+    protected abstract void setKnownHosts(@NonNull SshConnection connection, @NonNull CONF sshConfig);
 
     /**
      * 创建连接并进行身份认证

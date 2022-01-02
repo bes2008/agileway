@@ -56,9 +56,12 @@ public class JschConnectionFactory extends AbstractSshConnectionFactory<JschConn
         }
     }
 
+
+
+
     private static final List<String> strictHostKeyCheckingValues = Collects.newArrayList("yes", "ask", "no");
 
-    private void setKnownHosts(final SshConnection connection, final JschConnectionConfig sshConfig) {
+    protected void setKnownHosts(final SshConnection connection, final JschConnectionConfig sshConfig) {
         String knownHostsPath = sshConfig.getKnownHostsPath();
         List<File> paths = SshConfigs.getKnownHostsFiles(knownHostsPath);
         boolean found = false;

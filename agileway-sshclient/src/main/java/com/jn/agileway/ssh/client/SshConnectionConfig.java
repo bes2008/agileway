@@ -1,5 +1,7 @@
 package com.jn.agileway.ssh.client;
 
+import com.jn.agileway.ssh.client.transport.hostkey.StrictHostKeyChecking;
+import com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
@@ -69,10 +71,20 @@ public interface SshConnectionConfig {
      */
     String getPrivateKeyfilePassphrase();
 
+    /**
+     * 当设置为true 且没有自定义 host key verifier时，会自动根据 known_hosts文件进行验证
+     * @return
+     */
+    StrictHostKeyChecking getStrictHostKeyChecking();
+
+    void setStrictHostKeyChecking(StrictHostKeyChecking checking);
+
     String getKnownHostsPath();
 
     void setKnownHostsPath(String knownHostsPath);
 
+    HostKeyVerifier getHostKeyVerifier();
+    void setHostKeyVerifier(HostKeyVerifier hostKeyVerifier);
 
     void setProperty(String property, Object value);
 

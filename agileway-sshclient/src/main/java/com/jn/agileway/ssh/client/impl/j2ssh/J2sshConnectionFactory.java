@@ -25,12 +25,7 @@ public class J2sshConnectionFactory extends AbstractSshConnectionFactory<J2sshCo
         return J2sshConnection.class;
     }
 
-    @Override
-    protected void postConstructConnection(SshConnection connection, J2sshConnectionConfig sshConfig) {
-        setKnownHosts(connection, sshConfig);
-    }
-
-    private void setKnownHosts(SshConnection connection, J2sshConnectionConfig sshConfig) {
+    protected void setKnownHosts(SshConnection connection, J2sshConnectionConfig sshConfig) {
         String filepath = sshConfig.getKnownHostsPath();
         List<File> files = SshConfigs.getKnownHostsFiles(filepath);
 

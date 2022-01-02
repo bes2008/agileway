@@ -1,5 +1,6 @@
 package com.jn.agileway.ssh.client.impl.trileadssh2.verifier;
 
+import com.jn.agileway.ssh.client.transport.hostkey.StrictHostKeyChecking;
 import com.jn.agileway.ssh.client.transport.hostkey.knownhosts.KnownHostsFiles;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
@@ -16,7 +17,7 @@ public class KnownHostsVerifier implements ServerHostKeyVerifier {
     private final KnownHosts knownHosts = new KnownHosts();
     private final List<File> knownHostsFiles = Collects.emptyArrayList();
     private static final List<String> supportedAlgorithms = Collects.immutableArrayList("ssh-rsa", "ssh-dss");
-
+    private StrictHostKeyChecking strictHostKeyChecking;
     public KnownHostsVerifier(final List<File> files) {
         Collects.forEach(files, new Consumer<File>() {
             @Override
@@ -29,6 +30,14 @@ public class KnownHostsVerifier implements ServerHostKeyVerifier {
                 }
             }
         });
+    }
+
+    public StrictHostKeyChecking getStrictHostKeyChecking() {
+        return strictHostKeyChecking;
+    }
+
+    public void setStrictHostKeyChecking(StrictHostKeyChecking strictHostKeyChecking) {
+        this.strictHostKeyChecking = strictHostKeyChecking;
     }
 
     @Override

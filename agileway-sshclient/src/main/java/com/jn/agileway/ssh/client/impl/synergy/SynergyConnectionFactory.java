@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 
 import java.io.File;
 import java.util.List;
-import java.util.Set;
 
 @OnClasses({"com.sshtools.client.SshClient"})
 public class SynergyConnectionFactory extends AbstractSshConnectionFactory<SynergyConnectionConfig> {
@@ -28,6 +27,11 @@ public class SynergyConnectionFactory extends AbstractSshConnectionFactory<Syner
     @Override
     protected void postConstructConnection(SshConnection connection, SynergyConnectionConfig sshConfig) {
         configKnownHosts(connection, sshConfig);
+    }
+
+    @Override
+    protected void setKnownHosts(SshConnection connection, SynergyConnectionConfig sshConfig) {
+
     }
 
     @Override

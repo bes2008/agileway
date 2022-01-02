@@ -22,15 +22,11 @@ public class Ssh2ConnectionFactory extends AbstractSshConnectionFactory<Ssh2Conn
     }
 
     @Override
-    protected void postConstructConnection(SshConnection connection, Ssh2ConnectionConfig sshConfig) {
-        addHostKeyVerifiers(connection, sshConfig);
-    }
-
-    private void addHostKeyVerifiers(SshConnection connection, Ssh2ConnectionConfig sshConfig) {
+    protected void setKnownHosts(SshConnection connection, Ssh2ConnectionConfig sshConfig) {
         List<File> paths = SshConfigs.getKnownHostsFiles(sshConfig.getKnownHostsPath());
-
         if (!paths.isEmpty()) {
             KnownHostsVerifier verifier = new KnownHostsVerifier(paths);
+            verifier.setStrictHostKeyChecking(sshConfig.getStrictHostKeyChecking());
             connection.addHostKeyVerifier(new FromSsh2HostKeyVerifierAdapter(verifier));
         }
     }

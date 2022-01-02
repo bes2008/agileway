@@ -1,12 +1,14 @@
 package com.jn.agileway.ssh.client.transport.hostkey.verifier;
 
 
+import java.io.Serializable;
+
 /**
  * A callback interface used to implement a client specific method of checking
  * server host keys.
  */
 
-public interface HostKeyVerifier<PUBKEY> {
+public interface HostKeyVerifier<PUBKEY> extends Serializable {
     /**
      * The actual verifier method, it will be called by the key exchange code
      * on EVERY key exchange - this can happen several times during the lifetime
