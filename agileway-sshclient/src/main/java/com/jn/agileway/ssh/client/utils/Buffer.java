@@ -31,8 +31,7 @@ public class Buffer<T extends Buffer<T>> {
         }
     }
 
-    public static final class PlainBuffer
-            extends Buffer<PlainBuffer> {
+    public static final class PlainBuffer extends Buffer<PlainBuffer> {
 
         public PlainBuffer() {
             super();
@@ -207,8 +206,9 @@ public class Buffer<T extends Buffer<T>> {
      */
     public byte[] readBytes() {
         int len = readUInt32AsInt();
-        if (len < 0 || len > 32768)
+        if (len < 0 || len > 32768) {
             throw new BufferException("Bad item length: " + len);
+        }
         byte[] b = new byte[len];
         readRawBytes(b);
         return b;
@@ -328,8 +328,9 @@ public class Buffer<T extends Buffer<T>> {
 
     public long readUInt64() throws BufferException {
         long uint64 = (readUInt32() << 32) + (readUInt32() & 0xffffffffL);
-        if (uint64 < 0)
+        if (uint64 < 0) {
             throw new BufferException("Cannot handle values > Long.MAX_VALUE");
+        }
         return uint64;
     }
 
@@ -418,7 +419,7 @@ public class Buffer<T extends Buffer<T>> {
             }
             return keyType.read(this);
         } catch (IllegalKeyException e) {
-            throw new SshException(e);
+            throw new BufferException(e);
         }
     }
 

@@ -20,66 +20,73 @@ import java.util.List;
 public class KnownHostsFiles {
     private static final Logger logger = Loggers.getLogger(KnownHostsFiles.class);
 
-    public static List<HostsKeyEntry> read(byte[] knownHostsData) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(knownHostsData)));
-
-        List<HostsKeyEntry> entries = Collects.emptyArrayList();
-        while (true) {
-            String line = br.readLine();
-            if (line == null) {
-                break;
-            }
-            line = line.trim();
-            // 注释行
-            if (line.isEmpty() || line.startsWith("#")) {
-                entries.add(new CommentHostsKeyEntry(line));
-                continue;
-            }
-            List<String> segments = Collects.asList(line.split(" "));
-            Marker marker = Enums.ofName(Marker.class, segments.get(0));
-            if (marker != null) {
-                segments = segments.subList(1, segments.size());
-            }
-            if (segments.size() >= 3) {
-                String keyTypeString = segments.get(1);
-                HostKeyType keyType = Enums.ofName(HostKeyType.class, keyTypeString);
-                String publicKeyBase64 = segments.get(2);
-
-                if (keyType == null) {
-                    byte[] pkBytes = Base64.decodeBase64(publicKeyBase64);
-
-                    if (pkBytes[8] == 'd') {
-                        keyType = HostKeyType.SSH_DSS;
-                    } else if (pkBytes[8] == 'r') {
-                        keyType = HostKeyType.SSH_RSA;
-                    }
-                    /*
-                    else if (pkBytes[8] == 'a' && pkBytes[20] == '2') {
-                        keyType = HostKeyType.ECDSA_SHA2_NISTP256;
-                    } else if (pkBytes[8] == 'a' && pkBytes[20] == '3') {
-                        keyType = HostKeyType.ECDSA_SHA2_NISTP384;
-                    } else if (pkBytes[8] == 'a' && pkBytes[20] == '5') {
-                        keyType = HostKeyType.ECDSA_SHA2_NISTP521;
-                    }
-                    */
-                }
-
-                if (keyType != null) {
-                    String hosts = segments.get(0);
-                    PublicKey publicKey = new Buffer.PlainBuffer(Base64.decodeBase64(publicKeyBase64)).readPublicKey();
-                    if (hosts.startsWith(HashedHostsKeyEntry.HOSTS_FLAG)) {
-                        entries.add(new HashedHostsKeyEntry(marker, hosts, keyTypeString, publicKey));
-                    } else {
-                        entries.add(new SimpleHostsKeyEntry(marker, hosts, keyTypeString, publicKey));
-                    }
+    public static HostsKeyEntry parseLine(String line) throws Buffer.BufferException {
+        if (line == null) {
+            return null;
+        }
+        line = line.trim();
+        // 注释行
+        if (line.isEmpty() || line.startsWith("#")) {
+            return new CommentHostsKeyEntry(line);
+        }
+        List<String> segments = Collects.asList(line.split(" "));
+        Marker marker = Enums.ofName(Marker.class, segments.get(0));
+        if (marker != null) {
+            segments = segments.subList(1, segments.size());
+        }
+        if (segments.size() >= 2) {
+            String hosts = segments.get(0);
+            String keyTypeString = segments.get(1);
+            String publicKeyBase64 = null;
+            if (segments.size() == 2) {
+                if (segments.get(1).length() < 25) {
+                    logger.warn("invalid known_hosts line: {} ", line);
+                    return null;
                 } else {
-                    logger.warn("unsupported known_hosts key algorithm: {} ", segments.get(1));
+                    // 猜猜是不是 public key:
+                    Buffer.PlainBuffer buff = new Buffer.PlainBuffer(Base64.decodeBase64(segments.get(1)));
+                    keyTypeString = buff.readString();
+                    if (buff.available() < 4) {
+                        logger.warn("invalid known_hosts line: {} ", line);
+                        return null;
+                    } else {
+                        publicKeyBase64 = segments.get(1);
+                    }
                 }
             } else {
-                logger.warn("invalid known_hosts line: {} ", line);
+                publicKeyBase64 = segments.get(2);
+            }
+            HostKeyType keyType = Enums.ofName(HostKeyType.class, keyTypeString);
+            if (keyType == null) {
+                logger.warn("unsupported ssh hosts key type: {} ", segments.get(1));
+            }
+            Object publicKey = null;
+            try {
+                publicKey = new Buffer.PlainBuffer(Base64.decodeBase64(publicKeyBase64)).readPublicKey();
+            } catch (UnsupportedHostsKeyTypeException ex) {
+                publicKey = publicKeyBase64;
+            }
+            if (hosts.startsWith(HashedHostsKeyEntry.HOSTS_FLAG)) {
+                return new HashedHostsKeyEntry(marker, hosts, keyTypeString, publicKey);
+            } else {
+                return new SimpleHostsKeyEntry(marker, hosts, keyTypeString, publicKey);
+            }
+        } else {
+            logger.warn("invalid known_hosts line: {} ", line);
+            return null;
+        }
+    }
+
+    public static List<HostsKeyEntry> read(byte[] knownHostsData) throws IOException {
+
+        List<HostsKeyEntry> entries = Collects.emptyArrayList();
+        List<String> lines = IOs.readLines(new ByteArrayInputStream(knownHostsData));
+        for (String line : lines) {
+            HostsKeyEntry hostsKeyEntry = parseLine(line);
+            if (hostsKeyEntry != null) {
+                entries.add(hostsKeyEntry);
             }
         }
-
         return entries;
     }
 
