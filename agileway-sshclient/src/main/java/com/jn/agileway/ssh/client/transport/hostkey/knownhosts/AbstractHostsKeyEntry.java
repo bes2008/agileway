@@ -44,7 +44,7 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
 
     @Override
     public boolean verify(Object key) {
-        return Objs.equals(toPublicKeyBytes(this.publicKey) , toPublicKeyBytes(key))  && marker != Marker.REVOKED;
+        return Objs.equals(toPublicKeyBytes(this.publicKey), toPublicKeyBytes(key)) && marker != Marker.REVOKED;
     }
 
     public boolean isValid() {
@@ -90,12 +90,15 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
 
     @Override
     public String getLine() {
-        if (isValid()) {
+        return getLine(true);
+    }
 
+    protected String getLine(boolean dumpPublicKey) {
+        if (isValid()) {
             if (getMarker() == null) {
-                return StringTemplates.formatWithPlaceholder("{} {} {}", getHosts(), getKeyType(), getPublicKeyBase64());
+                return StringTemplates.formatWithPlaceholder("{} {}{}", getHosts(), getKeyType(), dumpPublicKey ? (" " + getPublicKeyBase64()) : "");
             } else {
-                return StringTemplates.formatWithPlaceholder("{} {} {} {}", getMarker().getName(), getHosts(), getKeyType(), getPublicKeyBase64());
+                return StringTemplates.formatWithPlaceholder("{} {} {}{}", getMarker().getName(), getHosts(), getKeyType(), dumpPublicKey ? (" " + getPublicKeyBase64()) : "");
             }
         } else {
             return "invalid";
@@ -141,6 +144,6 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
 
     @Override
     public String toString() {
-        return getLine();
+        return getLine(false);
     }
 }
