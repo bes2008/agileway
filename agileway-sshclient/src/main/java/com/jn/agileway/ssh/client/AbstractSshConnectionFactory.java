@@ -11,6 +11,8 @@ import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.net.Nets;
@@ -68,15 +70,22 @@ public abstract class AbstractSshConnectionFactory<CONF extends SshConnectionCon
         setKnownHosts(connection, sshConfig);
     }
 
-    protected void setKnownHosts(@NonNull SshConnection connection, @NonNull CONF sshConfig) {
+    protected void setKnownHosts(@NonNull final SshConnection connection, @NonNull final CONF sshConfig) {
         String filepath = sshConfig.getKnownHostsPath();
         List<File> files = SshConfigs.getKnownHostsFiles(filepath);
-        HostKeyVerifier verifier = null;
         if (files.isEmpty()) {
-            verifier = new PromiscuousHostKeyVerifier(sshConfig.getStrictHostKeyChecking() == StrictHostKeyChecking.NO);
+            HostKeyVerifier verifier = new PromiscuousHostKeyVerifier(sshConfig.getStrictHostKeyChecking() == StrictHostKeyChecking.NO);
+            connection.addHostKeyVerifier(verifier);
+            return;
         }
-        verifier = new KnownHostsVerifier(files.get(0), sshConfig.getStrictHostKeyChecking());
-        connection.addHostKeyVerifier(verifier);
+        Collects.forEach(files, new Consumer<File>() {
+            @Override
+            public void accept(File file) {
+                HostKeyVerifier verifier = new KnownHostsVerifier(file, sshConfig.getStrictHostKeyChecking());
+                connection.addHostKeyVerifier(verifier);
+            }
+        });
+
     }
 
     /**
