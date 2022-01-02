@@ -19,6 +19,7 @@ import java.util.List;
 
 public class KnownHostsFiles {
     private static final Logger logger = Loggers.getLogger(KnownHostsFiles.class);
+    private static final String INVALID_KNOWN_HOSTS_LINE_LOG = "invalid known_hosts line: {}";
 
     public static HostsKeyEntry parseLine(String line) throws Buffer.BufferException {
         if (line == null) {
@@ -40,14 +41,14 @@ public class KnownHostsFiles {
             String publicKeyBase64 = null;
             if (segments.size() == 2) {
                 if (segments.get(1).length() < 25) {
-                    logger.warn("invalid known_hosts line: {} ", line);
+                    logger.warn(INVALID_KNOWN_HOSTS_LINE_LOG, line);
                     return null;
                 } else {
                     // 猜猜是不是 public key:
                     Buffer.PlainBuffer buff = new Buffer.PlainBuffer(Base64.decodeBase64(segments.get(1)));
                     keyTypeString = buff.readString();
                     if (buff.available() < 4) {
-                        logger.warn("invalid known_hosts line: {} ", line);
+                        logger.warn(INVALID_KNOWN_HOSTS_LINE_LOG, line);
                         return null;
                     } else {
                         publicKeyBase64 = segments.get(1);
@@ -72,7 +73,7 @@ public class KnownHostsFiles {
                 return new SimpleHostsKeyEntry(marker, hosts, keyTypeString, publicKey);
             }
         } else {
-            logger.warn("invalid known_hosts line: {} ", line);
+            logger.warn(INVALID_KNOWN_HOSTS_LINE_LOG, line);
             return null;
         }
     }
