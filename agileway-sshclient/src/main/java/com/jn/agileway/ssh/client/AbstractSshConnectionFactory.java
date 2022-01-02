@@ -75,17 +75,21 @@ public abstract class AbstractSshConnectionFactory<CONF extends SshConnectionCon
         List<File> files = SshConfigs.getKnownHostsFiles(filepath);
         if (files.isEmpty()) {
             HostKeyVerifier verifier = new PromiscuousHostKeyVerifier(sshConfig.getStrictHostKeyChecking() == StrictHostKeyChecking.NO);
-            connection.addHostKeyVerifier(verifier);
+            addHostKeyVerifier(connection, verifier);
             return;
         }
         Collects.forEach(files, new Consumer<File>() {
             @Override
             public void accept(File file) {
                 HostKeyVerifier verifier = new KnownHostsVerifier(file, sshConfig.getStrictHostKeyChecking());
-                connection.addHostKeyVerifier(verifier);
+                addHostKeyVerifier(connection, verifier);
             }
         });
 
+    }
+
+    protected void addHostKeyVerifier(SshConnection connection,HostKeyVerifier verifier  ){
+        connection.addHostKeyVerifier(verifier);
     }
 
     /**

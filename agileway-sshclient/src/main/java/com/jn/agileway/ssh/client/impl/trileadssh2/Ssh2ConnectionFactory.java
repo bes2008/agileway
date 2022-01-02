@@ -22,8 +22,7 @@ public class Ssh2ConnectionFactory extends AbstractSshConnectionFactory<Ssh2Conn
         return Ssh2Connection.class;
     }
 
-    @Override
-    protected void setKnownHosts(SshConnection connection, Ssh2ConnectionConfig sshConfig) {
+    protected void setKnownHosts0(SshConnection connection, Ssh2ConnectionConfig sshConfig) {
         List<File> paths = SshConfigs.getKnownHostsFiles(sshConfig.getKnownHostsPath());
         if (!paths.isEmpty()) {
             KnownHostsVerifier verifier = new KnownHostsVerifier(paths);

@@ -24,15 +24,6 @@ public class SynergyConnectionFactory extends AbstractSshConnectionFactory<Syner
         setName("synergy");
     }
 
-    @Override
-    protected void postConstructConnection(SshConnection connection, SynergyConnectionConfig sshConfig) {
-        configKnownHosts(connection, sshConfig);
-    }
-
-    @Override
-    protected void setKnownHosts(SshConnection connection, SynergyConnectionConfig sshConfig) {
-
-    }
 
     @Override
     protected Class<?> getDefaultConnectionClass() {
@@ -45,7 +36,7 @@ public class SynergyConnectionFactory extends AbstractSshConnectionFactory<Syner
     }
 
 
-    private void configKnownHosts(final SshConnection connection, SynergyConnectionConfig sshConfig) {
+    private void setKnownHosts0(final SshConnection connection, SynergyConnectionConfig sshConfig) {
         List<File> paths = SshConfigs.getKnownHostsFiles(sshConfig.getKnownHostsPath());
         if (paths.isEmpty()) {
             paths = SshConfigs.getKnownHostsFiles(sshConfig.getKnownHostsPath(), false);
