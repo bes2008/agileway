@@ -3,7 +3,6 @@ package com.jn.agileway.ssh.client.transport.hostkey;
 import com.jn.agileway.ssh.client.utils.Buffer;
 import com.jn.langx.security.crypto.IllegalKeyException;
 import com.jn.langx.security.crypto.key.PKIs;
-import com.jn.langx.util.Strings;
 import com.jn.langx.util.enums.base.CommonEnum;
 import com.jn.langx.util.enums.base.EnumDelegate;
 
@@ -131,14 +130,4 @@ public enum HostKeyType implements CommonEnum {
         return this.delegate.getDisplayText();
     }
 
-    public static HostKeyType guessKeyType(PublicKey publicKey) {
-        String algorithm = publicKey.getAlgorithm();
-        if (Strings.contains(algorithm, "DSA", true)) {
-            return SSH_DSS;
-        }
-        if (Strings.contains(algorithm, "RSA", true)) {
-            return SSH_RSA;
-        }
-        return null;
-    }
 }

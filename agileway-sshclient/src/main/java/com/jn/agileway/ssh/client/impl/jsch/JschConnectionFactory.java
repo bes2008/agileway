@@ -11,12 +11,10 @@ import com.jn.agileway.ssh.client.utils.SshConfigs;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.annotation.OnClasses;
 import com.jn.langx.util.collection.Collects;
-import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.function.Predicate;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 @OnClasses({"com.jcraft.jsch.JSch"})
 public class JschConnectionFactory extends AbstractSshConnectionFactory<JschConnectionConfig> {
@@ -41,7 +39,7 @@ public class JschConnectionFactory extends AbstractSshConnectionFactory<JschConn
         JschConnection conn = (JschConnection) connection;
         if (jsch == null) {
             jsch = new JSch();
-            /*
+
             jsch.setConfigRepository(new ConfigRepository() {
                 @Override
                 public Config getConfig(String host) {
@@ -52,27 +50,14 @@ public class JschConnectionFactory extends AbstractSshConnectionFactory<JschConn
                 }
             });
 
-             */
+
             JSch.setLogger(new JschLoggerToSlf4jLogger());
         }
         conn.setJsch(jsch);
         setHostKeyVerifier(conn, sshConfig);
-        /*
         if (!sshConfig.hasProperty("ConnectTimeout")) {
-            sshConfig.getProps().put("ConnectTimeout", "5000"); // 5s
+            sshConfig.getProps().put("ConnectTimeout", "3000"); // 3s
         }
-
-         */
-        Map<String, Object> props =sshConfig.getProps();
-        Collects.forEach(props, new Consumer2<String, Object>() {
-            @Override
-            public void accept(String s, Object o) {
-                if(o instanceof String) {
-                    JSch.setConfig(s, (String)o);
-                }
-            }
-        });
-
     }
 
     protected void setKnownHosts(final SshConnection connection, final JschConnectionConfig sshConfig) {
