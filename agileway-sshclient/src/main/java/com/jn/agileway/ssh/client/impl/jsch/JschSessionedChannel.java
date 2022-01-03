@@ -9,6 +9,7 @@ import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer2;
+import com.jn.langx.util.io.IOs;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -41,6 +42,10 @@ class JschSessionedChannel extends AbstarctSessionedChannel {
     private int termWidthPixels = 640;
     private int termHeightPixels = 480;
     private Map<PTYMode, Integer> terminalModes = null;
+
+    private InputStream inputStream;
+    private InputStream errorInputStream;
+    private OutputStream outputStream;
 
     JschSessionedChannel(Session session) {
         Preconditions.checkNotNull(session);
@@ -114,8 +119,11 @@ class JschSessionedChannel extends AbstarctSessionedChannel {
     }
 
     private void startChannel() throws JSchException {
-       prepareConnect();
+        prepareConnect();
         channel.connect();
+        this.outputStream = getOutputStream();
+        this.inputStream = getInputStream();
+        this.errorInputStream = getErrorInputStream();
     }
 
     private void prepareConnect() {
@@ -239,6 +247,12 @@ class JschSessionedChannel extends AbstarctSessionedChannel {
 
     @Override
     public void close() {
+        IOs.close(this.outputStream);
+        this.outputStream = null;
+        IOs.close(this.errorInputStream);
+        this.errorInputStream = null;
+        IOs.close(this.inputStream);
+        this.inputStream = null;
         session = null;
         if (this.channel != null) {
             this.channel.disconnect();
@@ -247,44 +261,52 @@ class JschSessionedChannel extends AbstarctSessionedChannel {
 
     @Override
     public InputStream getInputStream() throws SshException {
-        try {
-            return this.channel.getInputStream();
-        } catch (Throwable ex) {
-            throw new SshException(ex);
+        if (this.inputStream == null) {
+            try {
+                this.inputStream = this.channel.getInputStream();
+            } catch (Throwable ex) {
+                throw new SshException(ex);
+            }
         }
+        return this.inputStream;
     }
 
     @Override
     public OutputStream getOutputStream() throws SshException {
-        try {
-            return this.channel.getOutputStream();
-        } catch (Throwable ex) {
-            throw new SshException(ex);
+        if (this.outputStream == null) {
+            try {
+                this.outputStream = this.channel.getOutputStream();
+            } catch (Throwable ex) {
+                throw new SshException(ex);
+            }
         }
+        return this.outputStream;
     }
 
     @Override
     public InputStream getErrorInputStream() throws SshException {
         Preconditions.checkState(channel != null);
-        try {
-            InputStream errorInputStream = null;
-            switch (type) {
-                case EXEC:
-                    errorInputStream = ((ChannelExec) channel).getErrStream();
-                    break;
-
-                case SUBSYSTEM:
-                    errorInputStream = ((ChannelSubsystem) channel).getErrStream();
-                    break;
-                case SHELL:
-                    break;
-                default:
-                    break;
+        if (this.errorInputStream == null) {
+            try {
+                InputStream errorInputStream = null;
+                switch (type) {
+                    case EXEC:
+                        errorInputStream = ((ChannelExec) channel).getErrStream();
+                        break;
+                    case SUBSYSTEM:
+                        errorInputStream = ((ChannelSubsystem) channel).getErrStream();
+                        break;
+                    case SHELL:
+                        break;
+                    default:
+                        break;
+                }
+                this.errorInputStream = errorInputStream;
+            } catch (Throwable ex) {
+                throw new SshException(ex);
             }
-            return errorInputStream;
-        } catch (Throwable ex) {
-            throw new SshException(ex);
         }
+        return this.errorInputStream;
     }
 
 }

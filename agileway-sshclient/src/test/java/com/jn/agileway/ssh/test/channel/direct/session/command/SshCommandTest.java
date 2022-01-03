@@ -22,14 +22,14 @@ public class SshCommandTest {
     private static final Logger logger = Loggers.getLogger(SshCommandTest.class);
 
     @Test
-    public void testUseJschAPI() throws Throwable{
+    public void testUseJschAPI() throws Throwable {
         String password = "fjn13570";
         String username = "fangjinuo";
         //  String host = "192.168.1.79";
         String host = "192.168.234.128";
         int port = 22;
 
-        JSch.setConfig("StrictHostKeyChecking","false");
+        JSch.setConfig("StrictHostKeyChecking", "false");
 
         JSch jsch = new JSch();
         // jsch.setKnownHosts("known_hosts");
@@ -63,7 +63,7 @@ public class SshCommandTest {
     }
 
     @Test
-    public void testUseAgilewayJschAPI() throws Throwable{
+    public void testUseAgilewayJschAPI() throws Throwable {
 
         SshConnectionFactoryRegistry registry = new SshConnectionFactoryRegistry();
         SshConnectionFactory connectionFactory = registry.get("jsch");
@@ -82,7 +82,6 @@ public class SshCommandTest {
         SshConnection connection = connectionFactory.get(connectionConfig);
 
 
-
         executeAndDump(connection, "route");
         executeAndDump(connection, "ifconfig");
         executeAndDump(connection, "cd ~/.java;ls -al");
@@ -94,6 +93,8 @@ public class SshCommandTest {
         SessionedChannel channel = connection.openSession();
 
         channel.exec(command);
+
+        //   System.out.println(channel.getExitStatus());
         InputStream outStream = channel.getInputStream();
         String content = IOs.readAsString(outStream);
         logger.info(content);
