@@ -83,12 +83,17 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
             }
 
             try {
+                // 设置认证方式的顺序，让密码方式认证优先执行
+                JSch.setConfig("PreferredAuthentications", "password,publickey,gssapi-with-mic,keyboard-interactive");
                 delegate = jsch.getSession(user, getHost(), getPort());
+                delegate.setPassword(password);
+                /*
                 PasswordUserInfo userInfo = new PasswordUserInfo();
                 userInfo.setPassword(password);
                 delegate.setUserInfo(userInfo);
-
-                delegate.connect(getConnectTimeout());
+                 */
+                delegate.connect();
+                // delegate.connect(getConnectTimeout());
                 setStatus(SshConnectionStatus.CONNECTED);
                 return true;
             } catch (Throwable ex) {

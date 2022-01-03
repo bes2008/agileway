@@ -76,9 +76,8 @@ public class SshClients {
                 response.setExitErrorMessage(error);
             } else {
                 InputStream inputStream = channel.getInputStream();
-                byte[] outputContent = IOs.toByteArray(inputStream);
-                String output = new String(outputContent, charset);
-                response.setResult(output);
+                String content = IOs.readAsString(inputStream);
+                response.setResult(content);
             }
         } catch (Throwable ex) {
             logger.error(ex.getMessage(), ex);

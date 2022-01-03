@@ -54,7 +54,7 @@ public class SshClients_CommandLineTests {
      * J2ssh 问题较多，目前无法进行测试
      * @throws Throwable
      */
-    @Test
+    //@Test
     public void testJ2ssh() throws Throwable {
         testExec(new J2sshConnectionFactory(), new J2sshConnectionConfig());
     }
@@ -69,7 +69,8 @@ public class SshClients_CommandLineTests {
         SshConnection connection = connectionFactory.get(connectionConfig);
 
         SshCommandResponse response = null;
-
+        response = SshClients.exec(connection, "route");
+        showResult(response);
         response = SshClients.exec(connection, "ifconfig");
         showResult(response);
 

@@ -114,7 +114,7 @@ class JschSessionedChannel extends AbstarctSessionedChannel {
     }
 
     private void startChannel() throws JSchException {
-        prepareConnect();
+       prepareConnect();
         channel.connect();
     }
 
