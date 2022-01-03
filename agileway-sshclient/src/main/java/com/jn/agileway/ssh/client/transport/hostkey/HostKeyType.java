@@ -1,71 +1,39 @@
 package com.jn.agileway.ssh.client.transport.hostkey;
 
+import com.jn.agileway.ssh.client.transport.hostkey.codec.SshDssPublicKeyCodec;
+import com.jn.agileway.ssh.client.transport.hostkey.codec.SshRsaPublicKeyCodec;
 import com.jn.agileway.ssh.client.utils.Buffer;
 import com.jn.langx.security.crypto.IllegalKeyException;
-import com.jn.langx.security.crypto.key.PKIs;
 import com.jn.langx.util.enums.base.CommonEnum;
 import com.jn.langx.util.enums.base.EnumDelegate;
 
-import java.math.BigInteger;
 import java.security.PublicKey;
-import java.security.interfaces.DSAPublicKey;
-import java.security.interfaces.RSAPublicKey;
-import java.security.spec.DSAPublicKeySpec;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.RSAPublicKeySpec;
 
 public enum HostKeyType implements CommonEnum {
     SSH_DSS(1, "ssh-dss", "ssh-dss") {
         @Override
         public PublicKey read(Buffer<?> buf) throws IllegalKeyException {
-            BigInteger p, q, g, y;
-            try {
-                p = buf.readMPInt();
-                q = buf.readMPInt();
-                g = buf.readMPInt();
-                y = buf.readMPInt();
-            } catch (Buffer.BufferException be) {
-                throw new IllegalKeyException(be);
-            }
-            try {
-                return PKIs.getKeyFactory("DSA", null).generatePublic(new DSAPublicKeySpec(y, p, q, g));
-            } catch (InvalidKeySpecException ex) {
-                throw new IllegalKeyException();
-            }
+            byte[] bytes = buf.remainingRawBytes();
+            return new SshDssPublicKeyCodec().decode(bytes);
         }
 
         @Override
         public void write(PublicKey pk, Buffer<?> buf) {
-            final DSAPublicKey dsaKey = (DSAPublicKey) pk;
-            buf.putString(getName())
-                    .putMPInt(dsaKey.getParams().getP()) // p
-                    .putMPInt(dsaKey.getParams().getQ()) // q
-                    .putMPInt(dsaKey.getParams().getG()) // g
-                    .putMPInt(dsaKey.getY()); // y
+            byte[] bytes = new SshDssPublicKeyCodec().encode(pk);
+            buf.putRawBytes(bytes);
         }
     },
     SSH_RSA(2, "ssh-rsa", "ssh-rsa") {
         @Override
         public PublicKey read(Buffer<?> buf) throws IllegalKeyException {
-            final BigInteger e, n;
-            try {
-                e = buf.readMPInt();
-                n = buf.readMPInt();
-
-                return PKIs.getKeyFactory("RSA", null).generatePublic(new RSAPublicKeySpec(n, e));
-            } catch (Buffer.BufferException be) {
-                throw new IllegalKeyException(be);
-            } catch (InvalidKeySpecException ex) {
-                throw new IllegalKeyException(ex);
-            }
+            byte[] bytes = buf.remainingRawBytes();
+            return new SshRsaPublicKeyCodec().decode(bytes);
         }
 
         @Override
         public void write(PublicKey pk, Buffer<?> buf) {
-            final RSAPublicKey rsaKey = (RSAPublicKey) pk;
-            buf.putString(getName())
-                    .putMPInt(rsaKey.getPublicExponent()) // e
-                    .putMPInt(rsaKey.getModulus()); // n
+            byte[] bytes = new SshRsaPublicKeyCodec().encode(pk);
+            buf.putRawBytes(bytes);
         }
     }
 

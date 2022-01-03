@@ -236,6 +236,15 @@ public class Buffer<T extends Buffer<T>> {
         return putUInt32(len - off).putRawBytes(b, off, len);
     }
 
+    public byte[] remainingRawBytes() {
+        if (available() > 0) {
+            byte[] bytes = new byte[available()];
+            readRawBytes(bytes);
+            return bytes;
+        }
+        return new byte[0];
+    }
+
     public void readRawBytes(byte[] buf) {
         readRawBytes(buf, 0, buf.length);
     }

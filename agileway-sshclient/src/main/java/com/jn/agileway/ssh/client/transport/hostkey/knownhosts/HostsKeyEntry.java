@@ -31,8 +31,6 @@ public interface HostsKeyEntry extends Serializable {
      * @return
      */
     Object getPublicKey();
-    byte[] getPublicKeyBytes();
-    String getPublicKeyBase64();
 
     String getLine();
 }

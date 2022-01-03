@@ -126,7 +126,7 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
             return null;
         }
         if (publicKey instanceof PublicKey) {
-            return ((PublicKey) publicKey).getEncoded();
+            return ((PublicKey) publicKey).getEncoded();// 目前的写法是原始的jca key，并不是ssh 格式的key
         }
         if (publicKey instanceof byte[]) {
             return (byte[]) publicKey;
@@ -137,10 +137,6 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
         return publicKey.toString().getBytes();
     }
 
-    @Override
-    public byte[] getPublicKeyBytes() {
-        return toPublicKeyBytes(publicKey);
-    }
 
     @Override
     public String toString() {
