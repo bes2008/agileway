@@ -76,8 +76,11 @@ public class SshClients {
                 response.setExitErrorMessage(error);
             } else {
                 InputStream inputStream = channel.getInputStream();
-                String content = IOs.readAsString(inputStream);
-                response.setResult(content);
+                if (inputStream.available() > 0) {
+                    byte[] bytes = IOs.toByteArray(inputStream);
+                    String content = new String(bytes, charset);
+                    response.setResult(content);
+                }
             }
         } catch (Throwable ex) {
             logger.error(ex.getMessage(), ex);
@@ -87,12 +90,13 @@ public class SshClients {
 
     /**
      * 获取当前用户的 user id
+     *
      * @param connection
      * @return
      */
-    public static int getUid(SshConnection connection){
-        SshCommandResponse response = SshClients.exec(connection,"id -u");
-        if(!response.hasError()){
+    public static int getUid(SshConnection connection) {
+        SshCommandResponse response = SshClients.exec(connection, "id -u");
+        if (!response.hasError()) {
             return Integer.parseInt(response.getResult());
         }
         return -1;
@@ -100,12 +104,13 @@ public class SshClients {
 
     /**
      * 获取当前用户所属的Group的id集
+     *
      * @param connection
      * @return
      */
-    public static int[] getGroupIds(SshConnection connection){
-        SshCommandResponse response = SshClients.exec(connection,"id -G");
-        if(!response.hasError()){
+    public static int[] getGroupIds(SshConnection connection) {
+        SshCommandResponse response = SshClients.exec(connection, "id -G");
+        if (!response.hasError()) {
             final String[] groups = response.getResult().trim().split("\\s+");
 
             final int[] groupsIds = new int[groups.length];
