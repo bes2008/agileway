@@ -74,8 +74,6 @@ public class SshClients_CommandLineTests {
         response = SshClients.exec(connection, "ifconfig");
         showResult(response);
 
-        System.out.println("====================================");
-
         response = SshClients.exec(connection, "ls -al");
         showResult(response);
 
@@ -91,5 +89,6 @@ public class SshClients_CommandLineTests {
         } else {
             logger.info(response.getResult());
         }
+        System.out.println("========================");
     }
 }

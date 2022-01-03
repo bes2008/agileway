@@ -31,6 +31,8 @@ public class SshjConnectionFactory extends AbstractSshConnectionFactory<SshjConn
 
     @Override
     protected void postConstructConnection(final SshConnection connection, final SshjConnectionConfig sshConfig) {
+        // 确保扩展的算法已经注册
+        SecurityUtils.getSecurityProvider();
         setKnownHosts(connection, sshConfig);
     }
 

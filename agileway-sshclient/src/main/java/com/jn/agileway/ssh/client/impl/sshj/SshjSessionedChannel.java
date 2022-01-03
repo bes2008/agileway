@@ -9,6 +9,7 @@ import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.enums.Enums;
 import com.jn.langx.util.function.Consumer2;
+import com.jn.langx.util.io.IOs;
 import net.schmizz.sshj.connection.channel.direct.Session;
 
 import java.io.IOException;
@@ -24,6 +25,11 @@ class SshjSessionedChannel extends AbstarctSessionedChannel {
     private Session.Command command;
     private Session.Subsystem subsystem;
     private Session.Shell shell;
+
+    private InputStream inputStream;
+    private InputStream errorInputStream;
+    private OutputStream outputStream;
+
 
     SshjSessionedChannel(@NonNull Session session) {
         Preconditions.checkNotNull(session);
@@ -79,6 +85,7 @@ class SshjSessionedChannel extends AbstarctSessionedChannel {
         Preconditions.checkNotEmpty(command, "the command is illegal : {}", command);
         try {
             this.command = this.session.exec(command);
+            initStreams();
         } catch (Throwable ex) {
             throw new SshException(ex);
         }
@@ -89,6 +96,7 @@ class SshjSessionedChannel extends AbstarctSessionedChannel {
         Preconditions.checkNotEmpty(subsystem, "the subsystem is illegal : {}", subsystem);
         try {
             this.subsystem = this.session.startSubsystem(subsystem);
+            initStreams();
         } catch (Throwable ex) {
             throw new SshException(ex);
         }
@@ -98,9 +106,25 @@ class SshjSessionedChannel extends AbstarctSessionedChannel {
     protected void internalShell() throws SshException {
         try {
             this.shell = this.session.startShell();
+            initStreams();
         } catch (Throwable ex) {
             throw new SshException(ex);
         }
+    }
+
+    private void initStreams() {
+        getInputStream();
+        getErrorInputStream();
+        getOutputStream();
+    }
+
+    private void closeStreams() {
+        IOs.close(this.outputStream);
+        this.outputStream = null;
+        IOs.close(this.inputStream);
+        this.inputStream = null;
+        IOs.close(this.errorInputStream);
+        this.errorInputStream = null;
     }
 
     @Override
@@ -124,8 +148,10 @@ class SshjSessionedChannel extends AbstarctSessionedChannel {
 
     @Override
     public void close() throws IOException {
+        closeStreams();
         this.session.close();
     }
+
 
     @Override
     public int getExitStatus() {
@@ -166,44 +192,50 @@ class SshjSessionedChannel extends AbstarctSessionedChannel {
 
     @Override
     public InputStream getErrorInputStream() throws SshException {
-        if (shell != null) {
-            return shell.getErrorStream();
+        if (this.errorInputStream == null) {
+            if (shell != null) {
+                this.errorInputStream = shell.getErrorStream();
+            } else if (command != null) {
+                this.errorInputStream = command.getErrorStream();
+            }
         }
-        if (command != null) {
-            return command.getErrorStream();
-        }
-        return null;
+        return this.errorInputStream;
     }
 
     @Override
     public InputStream getInputStream() throws SshException {
-        if (shell != null) {
-            return shell.getInputStream();
+        if (this.inputStream == null) {
+            if (shell != null) {
+                this.inputStream = shell.getInputStream();
+            }
+            if (subsystem != null) {
+                this.inputStream = subsystem.getInputStream();
+            }
+            if (command != null) {
+                this.inputStream = command.getInputStream();
+            }
         }
-        if (subsystem != null) {
-            return subsystem.getInputStream();
-        }
-        if (command != null) {
-            return command.getInputStream();
-        }
-        return null;
+        return this.inputStream;
     }
 
     @Override
     public OutputStream getOutputStream() throws SshException {
-        if (shell != null) {
-            return shell.getOutputStream();
+        if (this.outputStream == null) {
+            if (shell != null) {
+                this.outputStream = shell.getOutputStream();
+            }
+            if (subsystem != null) {
+                this.outputStream = subsystem.getOutputStream();
+            }
+            if (command != null) {
+                this.outputStream = command.getOutputStream();
+            }
         }
-        if (subsystem != null) {
-            return subsystem.getOutputStream();
-        }
-        if (command != null) {
-            return command.getOutputStream();
-        }
-        return null;
+        return this.outputStream;
     }
 
     protected void beforeAction() {
+        closeStreams();
         this.shell = null;
         this.command = null;
         this.subsystem = null;

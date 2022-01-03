@@ -76,11 +76,11 @@ public class SshClients {
                 response.setExitErrorMessage(error);
             } else {
                 InputStream inputStream = channel.getInputStream();
-                if (inputStream.available() > 0) {
-                    byte[] bytes = IOs.toByteArray(inputStream);
-                    String content = new String(bytes, charset);
-                    response.setResult(content);
-                }
+                //    if (inputStream.available() > 0) { // 这行代码可以避免阻塞，但又容易导致某些ssh 库获取不到任何内容
+                byte[] bytes = IOs.toByteArray(inputStream);
+                String content = new String(bytes, charset);
+                response.setResult(content);
+                //    }
             }
         } catch (Throwable ex) {
             logger.error(ex.getMessage(), ex);
