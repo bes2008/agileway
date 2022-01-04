@@ -1,5 +1,6 @@
 package com.jn.agileway.ssh.client.transport.hostkey.knownhosts;
 
+import com.jn.agileway.ssh.client.transport.hostkey.codec.PublicKeyCodecs;
 import com.jn.langx.codec.base64.Base64;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.io.Charsets;
@@ -18,7 +19,7 @@ public class HostsKeyEntrys {
             return new byte[0];
         }
         if (publicKey instanceof PublicKey) {
-            return ((PublicKey) publicKey).getEncoded();// 目前的写法是原始的jca key，并不是ssh 格式的key
+            return PublicKeyCodecs.encode(null, (PublicKey) publicKey);
         }
         if (publicKey instanceof byte[]) {
             return (byte[]) publicKey;

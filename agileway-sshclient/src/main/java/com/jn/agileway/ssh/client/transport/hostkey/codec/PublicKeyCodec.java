@@ -1,12 +1,12 @@
 package com.jn.agileway.ssh.client.transport.hostkey.codec;
 
 import com.jn.langx.Named;
-import com.jn.langx.codec.CodecException;
+import com.jn.langx.codec.ICodec;
 
 import java.security.PublicKey;
 
-public interface PublicKeyCodec extends Named {
-    PublicKey decode(byte[] bytes) throws CodecException;
+public interface PublicKeyCodec extends ICodec<PublicKey>, Named {
+    PublicKey decode(byte[] bytes);
 
-    byte[] encode(PublicKey publicKey) throws CodecException;
+    byte[] encode(PublicKey publicKey);
 }
