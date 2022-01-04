@@ -4,6 +4,7 @@ import com.jn.langx.codec.base64.Base64;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Objs;
+import com.jn.langx.util.Strings;
 
 import java.security.PublicKey;
 
@@ -34,7 +35,8 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
         if (!isValid()) {
             return false;
         }
-        if (!Objs.equals(this.keyType, keyType)) {
+
+        if (Strings.isNotBlank(keyType) && !Objs.equals(this.keyType, keyType)) {
             return false;
         }
         return containsHost(host);
@@ -44,7 +46,7 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
 
     @Override
     public boolean verify(Object key) {
-        return Objs.deepEquals(toPublicKeyBytes(this.publicKey), toPublicKeyBytes(key)) && marker != Marker.REVOKED;
+        return Objs.deepEquals(HostsKeyEntrys.getPublicKeyBytes(this), HostsKeyEntrys.getPublicKeyBytes(this)) && marker != Marker.REVOKED;
     }
 
     public boolean isValid() {
@@ -121,25 +123,38 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
         return publicKey.toString();
     }
 
-    public static byte[] toPublicKeyBytes(Object publicKey) {
-        if (publicKey == null) {
-            return null;
-        }
-        if (publicKey instanceof PublicKey) {
-            return ((PublicKey) publicKey).getEncoded();// 目前的写法是原始的jca key，并不是ssh 格式的key
-        }
-        if (publicKey instanceof byte[]) {
-            return (byte[]) publicKey;
-        }
-        if (publicKey instanceof String) {
-            return Base64.decodeBase64((String) publicKey);
-        }
-        return publicKey.toString().getBytes();
-    }
-
-
     @Override
     public String toString() {
         return getLine(false);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        AbstractHostsKeyEntry that = (AbstractHostsKeyEntry) o;
+        if (!Objs.equals(this.marker, that.marker)) {
+            return false;
+        }
+        if (!Objs.equals(this.hosts, that.hosts)) {
+            return false;
+        }
+        if (!Objs.equals(this.keyType, that.keyType)) {
+            return false;
+        }
+        if (!Objs.equals(HostsKeyEntrys.toPublicKeyBytes(this.publicKey), HostsKeyEntrys.toPublicKeyBytes(that.publicKey))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objs.hash(this.marker, this.hosts, this.keyType, HostsKeyEntrys.toPublicKeyBytes(this.publicKey));
     }
 }
