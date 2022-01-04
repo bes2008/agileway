@@ -1,7 +1,6 @@
 package com.jn.agileway.ssh.client.transport.hostkey.codec;
 
 import com.jn.agileway.ssh.client.utils.Buffer;
-import com.jn.langx.AbstractNameable;
 import com.jn.langx.codec.CodecException;
 import com.jn.langx.security.crypto.IllegalKeyException;
 import com.jn.langx.security.crypto.key.PKIs;
@@ -12,7 +11,7 @@ import java.security.interfaces.DSAPublicKey;
 import java.security.spec.DSAPublicKeySpec;
 import java.security.spec.InvalidKeySpecException;
 
-public class SshDssPublicKeyCodec extends AbstractNameable implements PublicKeyCodec {
+public class SshDssPublicKeyCodec extends AbstractPublicKeyCodec {
     public SshDssPublicKeyCodec() {
         setName("ssh-dss");
     }
@@ -47,5 +46,10 @@ public class SshDssPublicKeyCodec extends AbstractNameable implements PublicKeyC
                 .putMPInt(dsaKey.getY()); // y
 
         return buf.array();
+    }
+
+    @Override
+    protected boolean isPublicKeyMatched(PublicKey publicKey, String algorithm) {
+        return "DSA".equals(algorithm);
     }
 }

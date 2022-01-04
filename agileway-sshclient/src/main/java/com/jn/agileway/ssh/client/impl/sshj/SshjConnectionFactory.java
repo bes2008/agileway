@@ -2,20 +2,8 @@ package com.jn.agileway.ssh.client.impl.sshj;
 
 import com.jn.agileway.ssh.client.AbstractSshConnectionFactory;
 import com.jn.agileway.ssh.client.SshConnection;
-import com.jn.agileway.ssh.client.impl.sshj.verifier.FromSshHostKeyVerifierAdapter;
-import com.jn.agileway.ssh.client.utils.SshConfigs;
 import com.jn.langx.annotation.OnClasses;
-import com.jn.langx.util.collection.Collects;
-import com.jn.langx.util.function.Consumer;
-import com.jn.langx.util.io.file.Files;
-import net.schmizz.sshj.common.KeyType;
 import net.schmizz.sshj.common.SecurityUtils;
-import net.schmizz.sshj.transport.verification.HostKeyVerifier;
-import net.schmizz.sshj.transport.verification.OpenSSHKnownHosts;
-
-import java.io.File;
-import java.security.PublicKey;
-import java.util.List;
 
 @OnClasses({"net.schmizz.sshj.SSHClient"})
 public class SshjConnectionFactory extends AbstractSshConnectionFactory<SshjConnectionConfig> {
@@ -35,7 +23,7 @@ public class SshjConnectionFactory extends AbstractSshConnectionFactory<SshjConn
         SecurityUtils.getSecurityProvider();
         setKnownHosts(connection, sshConfig);
     }
-
+/*
     protected void setKnownHosts0(final SshConnection connection, final SshjConnectionConfig sshConfig) {
         List<File> paths = SshConfigs.getKnownHostsFiles(sshConfig.getKnownHostsPath());
         if (paths.isEmpty()) {
@@ -102,7 +90,7 @@ public class SshjConnectionFactory extends AbstractSshConnectionFactory<SshjConn
         }
     }
 
-
+*/
     @Override
     public SshjConnectionConfig newConfig() {
         return new SshjConnectionConfig();

@@ -1,5 +1,7 @@
 package com.jn.agileway.ssh.client.transport.hostkey.codec;
 
+import com.jn.agileway.ssh.client.transport.hostkey.keytype.DefaultPublicKeyHostKeyTypeExtractor;
+import com.jn.agileway.ssh.client.transport.hostkey.keytype.PublicKeyHostKeyTypeExtractor;
 import com.jn.langx.annotation.Singleton;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.registry.GenericRegistry;
@@ -20,13 +22,14 @@ public class PublicKeyCodecRegistry extends GenericRegistry<PublicKeyCodec> {
 
     @Override
     protected void doInit() throws InitializationException {
-        register(new SshDssPublicKeyCodec());
-        register(new SshRsaPublicKeyCodec());
         Iterator<PublicKeyCodec> loader = ServiceLoader.load(PublicKeyCodec.class).iterator();
         while (loader.hasNext()) {
             try {
                 PublicKeyCodec codec = loader.next();
                 register(codec);
+                if (codec instanceof PublicKeyHostKeyTypeExtractor) {
+                    DefaultPublicKeyHostKeyTypeExtractor.getInstance().addPublicKeyHostKeyTypeExtractor(codec.getName(), codec);
+                }
             } catch (Throwable ex) {
                 Loggers.getLogger(PublicKeyCodecRegistry.class).warn(ex.getMessage(), ex);
             }

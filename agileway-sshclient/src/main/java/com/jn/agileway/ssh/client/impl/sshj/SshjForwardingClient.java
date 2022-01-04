@@ -6,6 +6,7 @@ import com.jn.agileway.ssh.client.channel.forwarding.ForwardingClient;
 import com.jn.langx.util.io.IOs;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.connection.channel.direct.LocalPortForwarder;
+import net.schmizz.sshj.connection.channel.direct.Parameters;
 import net.schmizz.sshj.connection.channel.forwarded.RemotePortForwarder;
 import net.schmizz.sshj.connection.channel.forwarded.SocketForwardingConnectListener;
 
@@ -46,7 +47,7 @@ public class SshjForwardingClient implements ForwardingClient {
             try {
                 ServerSocket serverSocket = new ServerSocket();
                 serverSocket.bind(address);
-                LocalPortForwarder.Parameters parameters = new LocalPortForwarder.Parameters(bindToHost, bindToPort, destHost, destPort);
+                Parameters parameters = new Parameters(bindToHost, bindToPort, destHost, destPort);
                 final LocalPortForwarder forwarder = delegate.newLocalPortForwarder(parameters, serverSocket);
                 Thread t = new Thread() {
                     @Override

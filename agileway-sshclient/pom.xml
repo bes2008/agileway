@@ -11,6 +11,11 @@
 
     <artifactId>agileway-sshclient</artifactId>
     <name>${groupId}:${artifactId}:${version}</name>
+
+    <properties>
+        <bouncycastle.version>1.69</bouncycastle.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -29,12 +34,31 @@
 
 
         <!--License: Apache 2.0-->
+        <!--
         <dependency>
             <groupId>net.schmizz</groupId>
             <artifactId>sshj</artifactId>
             <version>0.10.0</version>
             <optional>true</optional>
         </dependency>
+        -->
+        <dependency>
+            <groupId>com.hierynomus</groupId>
+            <artifactId>sshj</artifactId>
+            <version>0.32.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>${bouncycastle.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk15on</artifactId>
+            <version>${bouncycastle.version}</version>
+            <optional>true</optional>
+        </dependency>
+
 
         <!--License: Apache 2.0-->
         <dependency>

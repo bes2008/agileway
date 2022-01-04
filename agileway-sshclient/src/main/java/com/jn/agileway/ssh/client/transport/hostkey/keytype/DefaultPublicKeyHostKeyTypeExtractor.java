@@ -1,24 +1,47 @@
 package com.jn.agileway.ssh.client.transport.hostkey.keytype;
 
-import java.security.PublicKey;
+import com.jn.langx.annotation.Singleton;
+import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.function.Predicate;
+import com.jn.langx.util.struct.Holder;
 
+import java.security.PublicKey;
+import java.util.HashMap;
+import java.util.Map;
+
+@Singleton
 public class DefaultPublicKeyHostKeyTypeExtractor implements PublicKeyHostKeyTypeExtractor {
+    private static final DefaultPublicKeyHostKeyTypeExtractor INSTANCE = new DefaultPublicKeyHostKeyTypeExtractor();
+    private Map<String, PublicKeyHostKeyTypeExtractor> extractorMap = new HashMap<String, PublicKeyHostKeyTypeExtractor>();
+
+    private DefaultPublicKeyHostKeyTypeExtractor() {
+
+    }
+
+    public static DefaultPublicKeyHostKeyTypeExtractor getInstance() {
+        return INSTANCE;
+    }
+
+    public void addPublicKeyHostKeyTypeExtractor(String name, PublicKeyHostKeyTypeExtractor extractor){
+        extractorMap.put(name,extractor);
+    }
+
     @Override
-    public String get(PublicKey publicKey) {
-        if (publicKey == null) {
-            return null;
-        }
-        String algorithm = publicKey.getAlgorithm();
-        if ("RSA".equals(algorithm)) {
-            return "ssh-rsa";
-        }
-        if ("DSA".equals(algorithm)) {
-            return "ssh-dss";
-        }
-        if ("ECDSA".equals(publicKey.getAlgorithm())) {
-            // 此时可能有多种，按 nistp256 曲线来
-            return "ecdsa-sha2-nistp256";
-        }
-        return null;
+    public String get(final PublicKey publicKey) {
+        final Holder<String> keyType = new Holder<String>();
+        Collects.forEach(this.extractorMap.values(), new Consumer<PublicKeyHostKeyTypeExtractor>() {
+            @Override
+            public void accept(PublicKeyHostKeyTypeExtractor extractor) {
+                String t = extractor.get(publicKey);
+                keyType.set(t);
+            }
+        }, new Predicate<PublicKeyHostKeyTypeExtractor>() {
+            @Override
+            public boolean test(PublicKeyHostKeyTypeExtractor extractor) {
+                return !keyType.isEmpty();
+            }
+        });
+        return keyType.get();
     }
 }

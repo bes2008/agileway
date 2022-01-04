@@ -1,7 +1,6 @@
 package com.jn.agileway.ssh.client.transport.hostkey.codec;
 
 import com.jn.agileway.ssh.client.utils.Buffer;
-import com.jn.langx.AbstractNameable;
 import com.jn.langx.codec.CodecException;
 import com.jn.langx.security.crypto.IllegalKeyException;
 import com.jn.langx.security.crypto.key.PKIs;
@@ -12,7 +11,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
 
-public class SshRsaPublicKeyCodec extends AbstractNameable implements PublicKeyCodec {
+public class SshRsaPublicKeyCodec extends AbstractPublicKeyCodec {
     public SshRsaPublicKeyCodec() {
         setName("ssh-rsa");
     }
@@ -41,5 +40,10 @@ public class SshRsaPublicKeyCodec extends AbstractNameable implements PublicKeyC
                 .putMPInt(rsaKey.getPublicExponent()) // e
                 .putMPInt(rsaKey.getModulus()); // n
         return buf.array();
+    }
+
+    @Override
+    protected boolean isPublicKeyMatched(PublicKey publicKey, String algorithm) {
+        return "RSA".equals(algorithm);
     }
 }
