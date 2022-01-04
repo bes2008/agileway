@@ -1,8 +1,8 @@
 package com.jn.agileway.ssh.client.transport.hostkey.knownhosts;
 
-import com.jn.agileway.ssh.client.transport.hostkey.HostKeyType;
 import com.jn.agileway.ssh.client.transport.hostkey.IllegalSshKeyException;
 import com.jn.agileway.ssh.client.transport.hostkey.UnsupportedHostsKeyTypeException;
+import com.jn.agileway.ssh.client.transport.hostkey.codec.PublicKeyCodecs;
 import com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier;
 import com.jn.agileway.ssh.client.utils.Buffer;
 import com.jn.langx.codec.base64.Base64;
@@ -59,13 +59,10 @@ public class KnownHostsFiles {
             } else {
                 publicKeyBase64 = segments.get(2);
             }
-            HostKeyType keyType = Enums.ofName(HostKeyType.class, keyTypeString);
-            if (keyType == null) {
-                logger.warn("unsupported ssh hosts key type: {} ", segments.get(1));
-            }
+
             Object publicKey = null;
             try {
-                publicKey = new Buffer.PlainBuffer(Base64.decodeBase64(publicKeyBase64)).readPublicKey();
+                publicKey = PublicKeyCodecs.decode(Base64.decodeBase64(publicKeyBase64));
             } catch (UnsupportedHostsKeyTypeException ex) {
                 publicKey = publicKeyBase64;
             } catch (IllegalSshKeyException ex) {
@@ -108,7 +105,7 @@ public class KnownHostsFiles {
     }
 
     public static void appendHostKeysToFile(File knownHosts, String[] hostnames, String serverHostKeyAlgorithm, byte[] serverHostKey) throws IOException {
-        PublicKey publicKey = new Buffer.PlainBuffer(serverHostKey).readPublicKey();
+        PublicKey publicKey = PublicKeyCodecs.decode(serverHostKey);
         appendHostKeysToFile(knownHosts, new SimpleHostsKeyEntry(
                 null,
                 Strings.join(",", hostnames),

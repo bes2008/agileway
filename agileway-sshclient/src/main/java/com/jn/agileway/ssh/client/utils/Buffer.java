@@ -2,15 +2,10 @@ package com.jn.agileway.ssh.client.utils;
 
 
 import com.jn.agileway.ssh.client.SshException;
-import com.jn.agileway.ssh.client.transport.hostkey.HostKeyType;
-import com.jn.agileway.ssh.client.transport.hostkey.IllegalSshKeyException;
-import com.jn.agileway.ssh.client.transport.hostkey.UnsupportedHostsKeyTypeException;
-import com.jn.langx.util.enums.Enums;
 import com.jn.langx.util.io.Charsets;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.security.PublicKey;
 import java.util.Arrays;
 
 /**
@@ -419,28 +414,6 @@ public class Buffer<T extends Buffer<T>> {
         return (T) this;
     }
 
-    public PublicKey readPublicKey() {
-        try {
-            final String keyTypeString = readString();
-            HostKeyType keyType = Enums.ofName(HostKeyType.class, keyTypeString);
-            if (keyType == null) {
-                throw new UnsupportedHostsKeyTypeException(keyTypeString);
-            }
-            return keyType.read(this);
-        } catch (BufferException e) {
-            throw new IllegalSshKeyException(e);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public T putPublicKey(String keyType, PublicKey key) {
-        HostKeyType hostKeyType = Enums.ofName(HostKeyType.class, keyType);
-        if (hostKeyType == null) {
-            throw new UnsupportedHostsKeyTypeException(keyType);
-        }
-        hostKeyType.write(key, this);
-        return (T) this;
-    }
 
     public T putSignature(String sigFormat, byte[] sigData) throws UnsupportedEncodingException {
         final byte[] sig = new PlainBuffer().putString(sigFormat).putBytes(sigData).getCompactData();

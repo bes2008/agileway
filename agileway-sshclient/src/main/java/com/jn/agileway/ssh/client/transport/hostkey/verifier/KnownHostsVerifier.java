@@ -1,8 +1,8 @@
 package com.jn.agileway.ssh.client.transport.hostkey.verifier;
 
-import com.jn.agileway.ssh.client.transport.hostkey.HostKeyType;
 import com.jn.agileway.ssh.client.transport.hostkey.HostsKeyRepository;
 import com.jn.agileway.ssh.client.transport.hostkey.StrictHostKeyChecking;
+import com.jn.agileway.ssh.client.transport.hostkey.codec.PublicKeyCodecs;
 import com.jn.agileway.ssh.client.transport.hostkey.knownhosts.HostsKeyEntry;
 import com.jn.agileway.ssh.client.transport.hostkey.knownhosts.SimpleHostsKeyEntry;
 import com.jn.langx.annotation.NonNull;
@@ -15,8 +15,6 @@ import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.security.PublicKey;
-import java.security.interfaces.DSAPublicKey;
-import java.security.interfaces.RSAPublicKey;
 import java.util.List;
 
 public class KnownHostsVerifier implements HostKeyVerifier {
@@ -29,19 +27,6 @@ public class KnownHostsVerifier implements HostKeyVerifier {
         this.strictHostKeyChecking = strictHostKeyChecking;
     }
 
-    protected String getKeyType(PublicKey publicKey) {
-        if (publicKey instanceof RSAPublicKey) {
-            return HostKeyType.SSH_RSA.getName();
-        }
-        if (publicKey instanceof DSAPublicKey) {
-            return HostKeyType.SSH_DSS.getName();
-        }
-        if ("ECDSA".equals(publicKey.getAlgorithm())) {
-            // 此时可能有多种，按 nistp256 曲线来
-            return "ecdsa-sha2-nistp256";
-        }
-        return null;
-    }
 
     @Override
     public boolean verify(@NonNull String hostname, int port, @Nullable String serverHostKeyAlgorithm, @NonNull Object publicKey) {
@@ -49,7 +34,7 @@ public class KnownHostsVerifier implements HostKeyVerifier {
         Preconditions.checkNotNull(publicKey);
 
         if (serverHostKeyAlgorithm == null && publicKey instanceof PublicKey) {
-            serverHostKeyAlgorithm = getKeyType((PublicKey) publicKey);
+            serverHostKeyAlgorithm = PublicKeyCodecs.extractKeyType((PublicKey) publicKey);
         }
         if (Strings.isEmpty(serverHostKeyAlgorithm)) {
             return false;
