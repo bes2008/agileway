@@ -40,4 +40,9 @@ public class AnyHostKeyVerifier<PUBKEY> implements HostKeyVerifier<PUBKEY> {
     public void clear() {
         this.verifiers.clear();
     }
+
+    @Override
+    public List<String> findExistingAlgorithms(String hostname, int port) {
+        return null;
+    }
 }

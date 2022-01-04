@@ -5,6 +5,9 @@ import com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier;
 import com.sshtools.common.knownhosts.HostKeyVerification;
 import com.sshtools.common.ssh.components.SshPublicKey;
 
+import java.util.List;
+
+@Deprecated
 public class FromSynergyHostKeyVerificationAdapter implements HostKeyVerifier<SshPublicKey> {
     private HostKeyVerification verification;
 
@@ -20,5 +23,10 @@ public class FromSynergyHostKeyVerificationAdapter implements HostKeyVerifier<Ss
         } catch (Throwable ex) {
             throw new SshException(ex);
         }
+    }
+
+    @Override
+    public List<String> findExistingAlgorithms(String hostname, int port) {
+        return null;
     }
 }

@@ -6,7 +6,9 @@ import com.sshtools.j2ssh.transport.HostKeyVerification;
 import com.sshtools.j2ssh.transport.publickey.SshPublicKey;
 import org.slf4j.Logger;
 
+import java.util.List;
 
+@Deprecated
 public class FromJ2ssHostKeyVerifier implements HostKeyVerifier<SshPublicKey> {
     private static final Logger logger = Loggers.getLogger(FromJ2ssHostKeyVerifier.class);
     private HostKeyVerification delegate;
@@ -23,5 +25,10 @@ public class FromJ2ssHostKeyVerifier implements HostKeyVerifier<SshPublicKey> {
             logger.error(ex.getMessage(), ex);
             return false;
         }
+    }
+
+    @Override
+    public List<String> findExistingAlgorithms(String hostname, int port) {
+        return null;
     }
 }

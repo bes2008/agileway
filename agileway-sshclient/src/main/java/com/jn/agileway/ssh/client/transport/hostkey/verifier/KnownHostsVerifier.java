@@ -94,4 +94,9 @@ public class KnownHostsVerifier implements HostKeyVerifier {
             return false;
         }
     }
+
+    @Override
+    public List<String> findExistingAlgorithms(String hostname, int port) {
+        return null;
+    }
 }

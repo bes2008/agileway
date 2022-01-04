@@ -3,7 +3,9 @@ package com.jn.agileway.ssh.client.impl.sshj.verifier;
 import com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier;
 
 import java.security.PublicKey;
+import java.util.List;
 
+@Deprecated
 public class FromSshHostKeyVerifierAdapter implements HostKeyVerifier<PublicKey> {
     private net.schmizz.sshj.transport.verification.HostKeyVerifier delegate;
 
@@ -16,4 +18,8 @@ public class FromSshHostKeyVerifierAdapter implements HostKeyVerifier<PublicKey>
         return this.delegate.verify(hostname, port, key);
     }
 
+    @Override
+    public List<String> findExistingAlgorithms(String hostname, int port) {
+        return null;
+    }
 }

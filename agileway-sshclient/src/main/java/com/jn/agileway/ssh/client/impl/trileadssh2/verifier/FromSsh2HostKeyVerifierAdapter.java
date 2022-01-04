@@ -3,6 +3,9 @@ package com.jn.agileway.ssh.client.impl.trileadssh2.verifier;
 import com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier;
 import com.trilead.ssh2.ServerHostKeyVerifier;
 
+import java.util.List;
+
+@Deprecated
 public class FromSsh2HostKeyVerifierAdapter implements HostKeyVerifier<byte[]> {
     private ServerHostKeyVerifier delegate;
 
@@ -19,4 +22,8 @@ public class FromSsh2HostKeyVerifierAdapter implements HostKeyVerifier<byte[]> {
         }
     }
 
+    @Override
+    public List<String> findExistingAlgorithms(String hostname, int port) {
+        return null;
+    }
 }
