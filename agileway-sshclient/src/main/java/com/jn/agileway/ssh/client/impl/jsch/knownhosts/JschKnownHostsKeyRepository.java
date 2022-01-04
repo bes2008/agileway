@@ -3,6 +3,7 @@ package com.jn.agileway.ssh.client.impl.jsch.knownhosts;
 import com.jcraft.jsch.HostKey;
 import com.jcraft.jsch.HostKeyRepository;
 import com.jcraft.jsch.UserInfo;
+import com.jn.agileway.ssh.client.transport.hostkey.codec.PublicKeyCodecs;
 import com.jn.agileway.ssh.client.transport.hostkey.knownhosts.*;
 import com.jn.agileway.ssh.client.utils.Buffer;
 import com.jn.langx.util.Objs;
@@ -118,7 +119,7 @@ public class JschKnownHostsKeyRepository implements HostKeyRepository {
     private static HostKey toJschHostKey(HostsKeyEntry entry) {
         if (entry != null && entry.isValid()) {
             try {
-                return new HostKey(entry.getMarker().getName(), entry.getHosts(), 0, HostsKeyEntrys.toPublicKeyBytes(entry.getPublicKey()), null);
+                return new HostKey(entry.getMarker().getName(), entry.getHosts(), 0, PublicKeyCodecs.toPublicKeyBytes(entry.getPublicKey()), null);
             } catch (Throwable ex) {
                 return null;
             }

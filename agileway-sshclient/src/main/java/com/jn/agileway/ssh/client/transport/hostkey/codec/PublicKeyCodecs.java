@@ -7,8 +7,12 @@ import com.jn.agileway.ssh.client.transport.hostkey.keytype.DefaultPublicKeyHost
 import com.jn.agileway.ssh.client.transport.hostkey.keytype.KeyBufferHostKeyTypeExtractor;
 import com.jn.agileway.ssh.client.transport.hostkey.keytype.KeyBytesHostKeyTypeExtractor;
 import com.jn.agileway.ssh.client.transport.hostkey.keytype.PublicKeyHostKeyTypeExtractor;
+import com.jn.agileway.ssh.client.transport.hostkey.knownhosts.HostsKeyEntry;
 import com.jn.agileway.ssh.client.utils.Buffer;
+import com.jn.langx.codec.base64.Base64;
+import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.io.Charsets;
 
 import java.security.PublicKey;
 import java.util.ServiceLoader;
@@ -74,5 +78,27 @@ public class PublicKeyCodecs {
 
     public static String extractKeyType(Buffer<?> publicKey) {
         return KeyBufferHostKeyTypeExtractor.INSTANCE.get(publicKey);
+    }
+
+    public static byte[] getPublicKeyBytes(HostsKeyEntry entry) {
+        Preconditions.checkNotNull(entry);
+        Object publicKey = entry.getPublicKey();
+        return toPublicKeyBytes(publicKey);
+    }
+
+    public static byte[] toPublicKeyBytes(Object publicKey) {
+        if (publicKey == null) {
+            return new byte[0];
+        }
+        if (publicKey instanceof PublicKey) {
+            return PublicKeyCodecs.encode(null, (PublicKey) publicKey);
+        }
+        if (publicKey instanceof byte[]) {
+            return (byte[]) publicKey;
+        }
+        if (publicKey instanceof String) {
+            return Base64.decodeBase64((String) publicKey);
+        }
+        return publicKey.toString().getBytes(Charsets.UTF_8);
     }
 }

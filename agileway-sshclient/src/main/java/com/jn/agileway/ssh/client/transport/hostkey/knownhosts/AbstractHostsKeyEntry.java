@@ -1,5 +1,6 @@
 package com.jn.agileway.ssh.client.transport.hostkey.knownhosts;
 
+import com.jn.agileway.ssh.client.transport.hostkey.codec.PublicKeyCodecs;
 import com.jn.langx.codec.base64.Base64;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Emptys;
@@ -46,7 +47,7 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
 
     @Override
     public boolean verify(Object key) {
-        return Objs.deepEquals(HostsKeyEntrys.getPublicKeyBytes(this), HostsKeyEntrys.getPublicKeyBytes(this)) && marker != Marker.REVOKED;
+        return Objs.deepEquals(PublicKeyCodecs.getPublicKeyBytes(this), PublicKeyCodecs.getPublicKeyBytes(this)) && marker != Marker.REVOKED;
     }
 
     public boolean isValid() {
@@ -107,12 +108,12 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
         }
     }
 
-    public String getPublicKeyBase64() {
+    private String getPublicKeyBase64() {
         if (publicKey == null) {
             return null;
         }
         if (publicKey instanceof PublicKey) {
-            return Base64.encodeBase64String(((PublicKey) publicKey).getEncoded());
+            return Base64.encodeBase64String(PublicKeyCodecs.encode((PublicKey) publicKey));
         }
         if (publicKey instanceof byte[]) {
             return Base64.encodeBase64String((byte[]) publicKey);
@@ -147,7 +148,7 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
         if (!Objs.equals(this.keyType, that.keyType)) {
             return false;
         }
-        if (!Objs.equals(HostsKeyEntrys.toPublicKeyBytes(this.publicKey), HostsKeyEntrys.toPublicKeyBytes(that.publicKey))) {
+        if (!Objs.equals(PublicKeyCodecs.toPublicKeyBytes(this.publicKey), PublicKeyCodecs.toPublicKeyBytes(that.publicKey))) {
             return false;
         }
         return true;
@@ -155,6 +156,6 @@ public abstract class AbstractHostsKeyEntry implements HostsKeyEntry {
 
     @Override
     public int hashCode() {
-        return Objs.hash(this.marker, this.hosts, this.keyType, HostsKeyEntrys.toPublicKeyBytes(this.publicKey));
+        return Objs.hash(this.marker, this.hosts, this.keyType, PublicKeyCodecs.toPublicKeyBytes(this.publicKey));
     }
 }
