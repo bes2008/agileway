@@ -10,6 +10,9 @@ import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.function.Function;
+import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
@@ -40,7 +43,7 @@ public class KnownHostsVerifier implements HostKeyVerifier {
             return false;
         }
 
-        final String adjustedHostname = (port != 22 && port > 0) ? ("[" + hostname + "]:" + port) : hostname;
+        final String adjustedHostname = adjustHostname(hostname, port);
 
         List<HostsKeyEntry> entries = repository.find(adjustedHostname, serverHostKeyAlgorithm);
 
@@ -95,8 +98,33 @@ public class KnownHostsVerifier implements HostKeyVerifier {
         }
     }
 
+
     @Override
     public List<String> findExistingAlgorithms(String hostname, int port) {
-        return null;
+        final String adjustedHostname = adjustHostname(hostname, port);
+
+        return Pipeline.of(repository.getAll())
+                .filter(new Predicate<HostsKeyEntry>() {
+                    @Override
+                    public boolean test(HostsKeyEntry e) {
+                        return e.applicableTo(adjustedHostname, e.getKeyType());
+                    }
+                })
+                .map(new Function<HostsKeyEntry, String>() {
+                    @Override
+                    public String apply(HostsKeyEntry entry) {
+                        return entry.getKeyType();
+                    }
+                })
+                .asList();
+
+    }
+
+    private String adjustHostname(final String hostname, final int port) {
+        String lowerHN = hostname.toLowerCase();
+        if (port != 22 && port > 0) {
+            return "[" + lowerHN + "]:" + port;
+        }
+        return lowerHN;
     }
 }

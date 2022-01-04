@@ -1,6 +1,8 @@
 package com.jn.agileway.ssh.client.transport.hostkey.verifier;
 
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
@@ -42,7 +44,15 @@ public class AnyHostKeyVerifier<PUBKEY> implements HostKeyVerifier<PUBKEY> {
     }
 
     @Override
-    public List<String> findExistingAlgorithms(String hostname, int port) {
-        return null;
+    public List<String> findExistingAlgorithms(final String hostname, final int port) {
+        return Pipeline.of(verifiers).map(new Function<HostKeyVerifier<PUBKEY>, List<String>>() {
+            @Override
+            public List<String> apply(HostKeyVerifier<PUBKEY> hostKeyVerifier) {
+                return hostKeyVerifier.findExistingAlgorithms(hostname, port);
+            }
+        })
+                .<String>flat()
+                .distinct()
+                .asList();
     }
 }
