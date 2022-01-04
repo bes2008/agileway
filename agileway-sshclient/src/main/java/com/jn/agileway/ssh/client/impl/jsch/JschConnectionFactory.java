@@ -4,14 +4,16 @@ import com.jcraft.jsch.ConfigRepository;
 import com.jcraft.jsch.JSch;
 import com.jn.agileway.ssh.client.AbstractSshConnectionFactory;
 import com.jn.agileway.ssh.client.SshConnection;
+import com.jn.agileway.ssh.client.impl.jsch.verifier.JschKnownHostsKeyRepository;
 import com.jn.agileway.ssh.client.transport.hostkey.StrictHostKeyChecking;
+import com.jn.agileway.ssh.client.transport.hostkey.knownhosts.OpenSSHKnownHosts;
 import com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier;
 import com.jn.agileway.ssh.client.transport.hostkey.verifier.PromiscuousHostKeyVerifier;
 import com.jn.agileway.ssh.client.utils.SshConfigs;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.annotation.OnClasses;
 import com.jn.langx.util.collection.Collects;
-import com.jn.langx.util.function.Predicate;
+import com.jn.langx.util.function.Consumer;
 
 import java.io.File;
 import java.util.List;
@@ -62,32 +64,21 @@ public class JschConnectionFactory extends AbstractSshConnectionFactory<JschConn
 
     protected void setKnownHosts(final SshConnection connection, final JschConnectionConfig sshConfig) {
         String filepath = sshConfig.getKnownHostsPath();
-        List<File> paths = SshConfigs.getKnownHostsFiles(filepath);
-        if (paths.isEmpty()) {
+        List<File> files = SshConfigs.getKnownHostsFiles(filepath);
+        if (files.isEmpty()) {
             HostKeyVerifier verifier = new PromiscuousHostKeyVerifier(sshConfig.getStrictHostKeyChecking() == StrictHostKeyChecking.NO);
             addHostKeyVerifier(connection, verifier);
             return;
         }
-        boolean found = false;
-        if (!paths.isEmpty()) {
-            found = Collects.anyMatch(paths, new Predicate<File>() {
-                @Override
-                public boolean test(File file) {
-                    try {
-                        jsch.setKnownHosts(file.getPath());
-                        return true;
-                    } catch (Throwable ex) {
-                        return false;
-                    }
-                }
-            });
-
-        }
-        if (!found) {
-            sshConfig.setProperty("StrictHostKeyChecking", StrictHostKeyChecking.NO.getName());
-        } else {
-            sshConfig.setProperty("StrictHostKeyChecking", sshConfig.getStrictHostKeyChecking().getName());
-        }
+        Collects.forEach(files, new Consumer<File>() {
+            @Override
+            public void accept(File file) {
+                JschKnownHostsKeyRepository knownHostsKeyRepository = new JschKnownHostsKeyRepository(new OpenSSHKnownHosts(file));
+                JSch jSch = ((JschConnection) connection).getJsch();
+                jSch.setHostKeyRepository(knownHostsKeyRepository);
+            }
+        });
+        sshConfig.setProperty("StrictHostKeyChecking", sshConfig.getStrictHostKeyChecking().getName());
     }
 
     @Override

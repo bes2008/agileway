@@ -37,6 +37,9 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
             this.jsch = jsch;
         }
     }
+    public JSch getJsch(){
+        return this.jsch;
+    }
 
     /**
      * 由于jsch 的 session.connect 方法内部完成了 连接创建、身份认证两个过程。
@@ -87,13 +90,13 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
                 JSch.setConfig("PreferredAuthentications", "password,publickey,gssapi-with-mic,keyboard-interactive");
                 delegate = jsch.getSession(user, getHost(), getPort());
                 delegate.setPassword(password);
-                /*
+
                 PasswordUserInfo userInfo = new PasswordUserInfo();
                 userInfo.setPassword(password);
                 delegate.setUserInfo(userInfo);
-                 */
-                delegate.connect();
-                // delegate.connect(getConnectTimeout());
+
+             //   delegate.connect();
+                delegate.connect(getConnectTimeout());
                 setStatus(SshConnectionStatus.CONNECTED);
                 return true;
             } catch (Throwable ex) {

@@ -1,6 +1,7 @@
 package com.jn.agileway.ssh.client;
 
 import com.jn.agileway.ssh.client.transport.hostkey.StrictHostKeyChecking;
+import com.jn.agileway.ssh.client.transport.hostkey.knownhosts.OpenSSHKnownHosts;
 import com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier;
 import com.jn.agileway.ssh.client.transport.hostkey.verifier.KnownHostsVerifier;
 import com.jn.agileway.ssh.client.transport.hostkey.verifier.PromiscuousHostKeyVerifier;
@@ -81,14 +82,15 @@ public abstract class AbstractSshConnectionFactory<CONF extends SshConnectionCon
         Collects.forEach(files, new Consumer<File>() {
             @Override
             public void accept(File file) {
-                HostKeyVerifier verifier = new KnownHostsVerifier(file, sshConfig.getStrictHostKeyChecking());
+                OpenSSHKnownHosts repository = new OpenSSHKnownHosts(file);
+                HostKeyVerifier verifier = new KnownHostsVerifier(repository, sshConfig.getStrictHostKeyChecking());
                 addHostKeyVerifier(connection, verifier);
             }
         });
 
     }
 
-    protected void addHostKeyVerifier(SshConnection connection,HostKeyVerifier verifier  ){
+    protected void addHostKeyVerifier(SshConnection connection, HostKeyVerifier verifier) {
         connection.addHostKeyVerifier(verifier);
     }
 
