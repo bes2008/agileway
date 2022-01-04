@@ -1,5 +1,8 @@
 package com.jn.agileway.ssh.client.transport.hostkey.knownhosts;
 
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
+
 import java.io.Serializable;
 
 public interface HostsKeyEntry extends Serializable {
@@ -9,7 +12,7 @@ public interface HostsKeyEntry extends Serializable {
      * @param keyType
      * @return
      */
-    boolean applicableTo(String host, String keyType);
+    boolean applicableTo(@NonNull String host, @Nullable String keyType);
 
     /**
      * 进行验证

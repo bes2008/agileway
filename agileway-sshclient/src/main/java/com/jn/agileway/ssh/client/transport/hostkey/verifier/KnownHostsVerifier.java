@@ -1,77 +1,106 @@
 package com.jn.agileway.ssh.client.transport.hostkey.verifier;
 
+import com.jn.agileway.ssh.client.transport.hostkey.HostKeyType;
+import com.jn.agileway.ssh.client.transport.hostkey.HostsKeyRepository;
 import com.jn.agileway.ssh.client.transport.hostkey.StrictHostKeyChecking;
-import com.jn.agileway.ssh.client.transport.hostkey.knownhosts.HashedHostsKeyEntry;
 import com.jn.agileway.ssh.client.transport.hostkey.knownhosts.HostsKeyEntry;
-import com.jn.agileway.ssh.client.transport.hostkey.knownhosts.OpenSSHKnownHosts;
 import com.jn.agileway.ssh.client.transport.hostkey.knownhosts.SimpleHostsKeyEntry;
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
-import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
-import java.io.File;
 import java.io.IOException;
+import java.security.PublicKey;
+import java.security.interfaces.DSAPublicKey;
+import java.security.interfaces.RSAPublicKey;
 import java.util.List;
 
-public class KnownHostsVerifier extends OpenSSHKnownHosts {
+public class KnownHostsVerifier implements HostKeyVerifier {
     private static final Logger logger = Loggers.getLogger(KnownHostsVerifier.class);
     private StrictHostKeyChecking strictHostKeyChecking;
+    private HostsKeyRepository repository;
 
-    public KnownHostsVerifier(File file, StrictHostKeyChecking strictHostKeyChecking) {
-        super(file);
+    public KnownHostsVerifier(HostsKeyRepository repository, StrictHostKeyChecking strictHostKeyChecking) {
+        this.repository = repository;
         this.strictHostKeyChecking = strictHostKeyChecking;
     }
 
+    protected String getKeyType(PublicKey publicKey) {
+        if (publicKey instanceof RSAPublicKey) {
+            return HostKeyType.SSH_RSA.getName();
+        }
+        if (publicKey instanceof DSAPublicKey) {
+            return HostKeyType.SSH_DSS.getName();
+        }
+        if ("ECDSA".equals(publicKey.getAlgorithm())) {
+            // 此时可能有多种，按 nistp256 曲线来
+            return "ecdsa-sha2-nistp256";
+        }
+        return null;
+    }
+
     @Override
+    public boolean verify(@NonNull String hostname, int port, @Nullable String serverHostKeyAlgorithm, @NonNull Object publicKey) {
+        Preconditions.checkNotNull(hostname);
+        Preconditions.checkNotNull(publicKey);
+
+        if (serverHostKeyAlgorithm == null && publicKey instanceof PublicKey) {
+            serverHostKeyAlgorithm = getKeyType((PublicKey) publicKey);
+        }
+        if (Strings.isEmpty(serverHostKeyAlgorithm)) {
+            return false;
+        }
+
+        final String adjustedHostname = (port != 22 && port > 0) ? ("[" + hostname + "]:" + port) : hostname;
+
+        List<HostsKeyEntry> entries = repository.find(adjustedHostname, serverHostKeyAlgorithm);
+
+        if (Objs.isNotEmpty(entries)) {
+            HostsKeyEntry e = entries.get(0);
+            try {
+                if (!e.verify(publicKey)) {
+                    return hostKeyChanged(e, adjustedHostname, publicKey);
+                }
+                return true;
+            } catch (IOException ioe) {
+                logger.error("Error with {}: {}", e, ioe);
+                return false;
+            }
+        }
+
+        return unknownHostKey(adjustedHostname, serverHostKeyAlgorithm, publicKey);
+    }
+
     protected boolean hostKeyChanged(HostsKeyEntry entry, String hostname, Object publicKey) throws IOException {
         Preconditions.checkNotNull(strictHostKeyChecking);
         logger.warn("host key changed: hostname: {}, keyType:{}", hostname, entry.getKeyType());
         if (this.strictHostKeyChecking == StrictHostKeyChecking.NO) {
-            if (entry instanceof SimpleHostsKeyEntry) {
-                synchronized (this) {
-                    SimpleHostsKeyEntry hostsKeyEntry = (SimpleHostsKeyEntry) entry;
-                    String hostsString = hostsKeyEntry.getHosts();
-                    List<String> hosts = Collects.asList(Strings.split(hostsString, ","));
-                    hosts.remove(hostname);
-                    if (hosts.isEmpty()) {
-                        this.entries.remove(entry);
-                    }
-                    this.entries.add(new SimpleHostsKeyEntry(hostname, entry.getKeyType(), publicKey));
-                    this.rewrite();
+            synchronized (repository) {
+                repository.remove(hostname, entry.getKeyType());
+                SimpleHostsKeyEntry newEntry = new SimpleHostsKeyEntry(hostname, entry.getKeyType(), publicKey);
+                if (newEntry.isValid()) {
+                    repository.add(newEntry);
+                    return true;
                 }
-                return true;
-            } else if (entry instanceof HashedHostsKeyEntry) {
-                synchronized (this) {
-                    this.entries.remove(entry);
-                    this.entries.add(new SimpleHostsKeyEntry(hostname, entry.getKeyType(), publicKey));
-                    this.rewrite();
-                }
-                return true;
+                return false;
             }
-            return false;
         } else {
             return false;
         }
     }
 
-    @Override
     protected boolean unknownHostKey(String hostname, String keyType, Object publicKey) {
         Preconditions.checkNotNull(strictHostKeyChecking);
         logger.info("unknown host key: hostname: {}, keyType:{}", hostname, keyType);
         if (this.strictHostKeyChecking == StrictHostKeyChecking.NO) {
             SimpleHostsKeyEntry entry = new SimpleHostsKeyEntry(hostname, keyType, publicKey);
             if (entry.isValid()) {
-                synchronized (this) {
-                    this.entries.add(entry);
-                    try {
-                        this.rewrite();
-                    } catch (IOException ex) {
-                        this.entries.remove(entry);
-                        logger.warn(ex.getMessage(), ex);
-                        return false;
-                    }
+                synchronized (repository) {
+                    repository.add(entry);
                 }
                 return true;
             }
