@@ -3,9 +3,9 @@ package com.jn.agileway.ssh.client.transport.hostkey.codec;
 import com.jn.langx.annotation.Singleton;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.registry.GenericRegistry;
-import com.jn.langx.util.collection.Pipeline;
-import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.logging.Loggers;
 
+import java.util.Iterator;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,13 +22,15 @@ public class PublicKeyCodecRegistry extends GenericRegistry<PublicKeyCodec> {
     protected void doInit() throws InitializationException {
         register(new SshDssPublicKeyCodec());
         register(new SshRsaPublicKeyCodec());
-        Pipeline.of(ServiceLoader.load(PublicKeyCodec.class))
-                .forEach(new Consumer<PublicKeyCodec>() {
-                    @Override
-                    public void accept(PublicKeyCodec publicKeyCodec) {
-                        register(publicKeyCodec);
-                    }
-                });
+        Iterator<PublicKeyCodec> loader = ServiceLoader.load(PublicKeyCodec.class).iterator();
+        while (loader.hasNext()) {
+            try {
+                PublicKeyCodec codec = loader.next();
+                register(codec);
+            } catch (Throwable ex) {
+                Loggers.getLogger(PublicKeyCodecRegistry.class).warn(ex.getMessage(), ex);
+            }
+        }
     }
 
     public static PublicKeyCodecRegistry getInstance() {
