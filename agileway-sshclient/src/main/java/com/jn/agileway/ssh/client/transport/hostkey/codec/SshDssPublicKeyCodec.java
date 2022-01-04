@@ -12,7 +12,7 @@ import java.security.interfaces.DSAPublicKey;
 import java.security.spec.DSAPublicKeySpec;
 import java.security.spec.InvalidKeySpecException;
 
-public class SshDssPublicKeyCodec extends AbstractNameable implements JcaPublicKeyCodec {
+public class SshDssPublicKeyCodec extends AbstractNameable implements PublicKeyCodec {
     public SshDssPublicKeyCodec() {
         setName("ssh-dss");
     }

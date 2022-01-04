@@ -12,7 +12,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
 
-public class SshRsaPublicKeyCodec extends AbstractNameable implements JcaPublicKeyCodec {
+public class SshRsaPublicKeyCodec extends AbstractNameable implements PublicKeyCodec {
     public SshRsaPublicKeyCodec() {
         setName("ssh-rsa");
     }
