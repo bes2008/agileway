@@ -3,11 +3,11 @@ package com.jn.agileway.ssh.client.plugins.codec;
 
 import com.jn.agileway.ssh.client.plugins.utils.SecurityUtils;
 import com.jn.agileway.ssh.client.utils.Buffer;
+import com.jn.langx.util.logging.Loggers;
 import org.bouncycastle.asn1.nist.NISTNamedCurves;
 import org.bouncycastle.asn1.x9.X9ECParameters;
 import org.bouncycastle.jce.spec.ECNamedCurveSpec;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;
@@ -26,7 +26,7 @@ public class ECDSAVariationsAdapter {
 
     private final static String BASE_ALGORITHM_NAME = "ecdsa-sha2-nistp";
 
-    private final static Logger log = LoggerFactory.getLogger(ECDSAVariationsAdapter.class);
+    private final static Logger log = Loggers.getLogger(ECDSAVariationsAdapter.class);
 
     public final static Map<String, String> SUPPORTED_CURVES = new HashMap<String, String>();
     public final static Map<String, String> NIST_CURVES_NAMES = new HashMap<String, String>();
