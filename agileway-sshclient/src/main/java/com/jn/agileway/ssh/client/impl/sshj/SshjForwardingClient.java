@@ -3,15 +3,17 @@ package com.jn.agileway.ssh.client.impl.sshj;
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.forwarding.ForwardingChannelInfo;
 import com.jn.agileway.ssh.client.channel.forwarding.ForwardingClient;
+import com.jn.langx.util.ClassLoaders;
 import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.reflect.Reflects;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.connection.channel.direct.LocalPortForwarder;
-import net.schmizz.sshj.connection.channel.direct.Parameters;
 import net.schmizz.sshj.connection.channel.forwarded.RemotePortForwarder;
 import net.schmizz.sshj.connection.channel.forwarded.SocketForwardingConnectListener;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.SocketAddress;
@@ -19,7 +21,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SshjForwardingClient implements ForwardingClient {
+    private static final Class LOCAL_PORT_FORWARDER_PARAMETERS;
+    private static final Method NEW_LOCAL_PORT_FORWARDER;
     private SshjConnection connection;
+
+    static {
+        LOCAL_PORT_FORWARDER_PARAMETERS = findLocalPortForwardingParametersClass();
+        NEW_LOCAL_PORT_FORWARDER=findNewLocalPortForwarder(LOCAL_PORT_FORWARDER_PARAMETERS);
+    }
 
     SshjForwardingClient(SshjConnection connection) {
         this.connection = connection;
@@ -37,6 +46,30 @@ public class SshjForwardingClient implements ForwardingClient {
             thread.interrupt();
         }
     }
+    private static Class findLocalPortForwardingParametersClass(){
+        ClassLoader expectedClassLoader= SSHClient.class.getClassLoader();
+        String parametersClassInHierynomusSshjJar="net.schmizz.sshj.connection.channel.direct.Parameters";
+        if(ClassLoaders.hasClass(parametersClassInHierynomusSshjJar, expectedClassLoader)) {
+            try {
+                return ClassLoaders.loadClass(parametersClassInHierynomusSshjJar, expectedClassLoader);
+            }catch (ClassNotFoundException e){
+                // ignore
+            }
+        }
+        String parametersClassInNetSchmizzJar="net.schmizz.sshj.connection.channel.direct.LocalPortForwarder$Parameters";
+        if(ClassLoaders.hasClass(parametersClassInNetSchmizzJar, expectedClassLoader)){
+            try {
+                return ClassLoaders.loadClass(parametersClassInNetSchmizzJar, expectedClassLoader);
+            }catch (ClassNotFoundException e){
+                // ignore
+            }
+        }
+        throw new IllegalStateException("sshj is error version");
+    }
+
+    private static Method findNewLocalPortForwarder(Class parametersClass){
+        return Reflects.getPublicMethod(SSHClient.class, "newLocalPortForwarder", new Class[]{parametersClass, ServerSocket.class});
+    }
 
     @Override
     public ForwardingChannelInfo startLocalForwarding(String bindToHost, int bindToPort, String destHost, int destPort) throws SshException {
@@ -47,8 +80,9 @@ public class SshjForwardingClient implements ForwardingClient {
             try {
                 ServerSocket serverSocket = new ServerSocket();
                 serverSocket.bind(address);
-                Parameters parameters = new Parameters(bindToHost, bindToPort, destHost, destPort);
-                final LocalPortForwarder forwarder = delegate.newLocalPortForwarder(parameters, serverSocket);
+                Object parameters = Reflects.newInstance(LOCAL_PORT_FORWARDER_PARAMETERS, new Class[]{String.class, int.class, String.class, int.class}, bindToHost, bindToPort, destHost, destPort);
+
+                final LocalPortForwarder forwarder = Reflects.invoke(NEW_LOCAL_PORT_FORWARDER, delegate, new Object[]{parameters, serverSocket}, true, true);
                 Thread t = new Thread() {
                     @Override
                     public void run() {
@@ -72,6 +106,9 @@ public class SshjForwardingClient implements ForwardingClient {
         }
         return channel;
     }
+
+
+
 
     @Override
     public void stopLocalForwarding(ForwardingChannelInfo channel) throws SshException {
