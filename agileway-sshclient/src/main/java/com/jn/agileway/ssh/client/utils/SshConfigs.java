@@ -20,9 +20,16 @@ public class SshConfigs {
     public static List<File> getKnownHostsFiles(String paths) {
         return getKnownHostsFiles(paths, true, true);
     }
-    public static List<File> getKnownHostsFiles(String paths, final boolean filterNotExist){
-        return getKnownHostsFiles(paths, filterNotExist,true);
+
+    public static List<File> getKnownHostsFiles(String paths, final boolean filterNotExist) {
+        return getKnownHostsFiles(paths, filterNotExist, true);
     }
+
+    private static String replaceUserHome(String path) {
+        String ret = path.replace("${user.home}", SystemPropertys.getUserHome().replace("\\", "/"));
+        return ret;
+    }
+
     public static List<File> getKnownHostsFiles(String paths, final boolean filterNotExist, final boolean mkIfDefaultNotExist) {
         final List<File> files = Collects.emptyArrayList();
         if (Strings.isNotBlank(paths)) {
@@ -33,15 +40,14 @@ public class SshConfigs {
                     if (Strings.startsWith(path, "~")) {
                         path = "${user.home}" + Strings.substring(path, 1);
                     }
-                    path = path.replace("${user.home}", SystemPropertys.getUserHome().replace("\\", "/"));
-
+                    path = replaceUserHome(path);
+                    boolean isDefaultPath = path.equals(replaceUserHome(AbstractSshConnectionConfig.KNOWN_HOSTS_PATH_DEFAULT));
                     File file = new File(path);
                     if (file.exists()) {
                         files.add(file);
                     } else {
                         boolean makeAndAdd = false;
                         if (filterNotExist && mkIfDefaultNotExist) {
-                            boolean isDefaultPath = AbstractSshConnectionConfig.KNOWN_HOSTS_PATH_DEFAULT.equals(path);
                             makeAndAdd = isDefaultPath;
                         } else {
                             makeAndAdd = true;
