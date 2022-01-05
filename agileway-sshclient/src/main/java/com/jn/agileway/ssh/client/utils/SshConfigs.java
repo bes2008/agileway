@@ -41,13 +41,13 @@ public class SshConfigs {
                         path = "${user.home}" + Strings.substring(path, 1);
                     }
                     path = replaceUserHome(path);
-                    boolean isDefaultPath = path.equals(replaceUserHome(AbstractSshConnectionConfig.KNOWN_HOSTS_PATH_DEFAULT));
                     File file = new File(path);
                     if (file.exists()) {
                         files.add(file);
                     } else {
                         boolean makeAndAdd = false;
                         if (filterNotExist && mkIfDefaultNotExist) {
+                            boolean isDefaultPath = path.equals(replaceUserHome(AbstractSshConnectionConfig.KNOWN_HOSTS_PATH_DEFAULT));
                             makeAndAdd = isDefaultPath;
                         } else {
                             makeAndAdd = true;
