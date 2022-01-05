@@ -21,7 +21,8 @@ public interface PublicKeyCodec extends ICodec<PublicKey>, Named, PublicKeyHostK
      *    ssh-rsa,
      *    ecdsa-sha2-nistp256,
      *    ecdsa-sha2-nistp384,
-     *    ecdsa-sha2-nistp521
+     *    ecdsa-sha2-nistp521,
+     *    ssh-ed25519
      *  </pre>
      */
     @Override

@@ -14,6 +14,7 @@
 
     <properties>
         <bouncycastle.version>1.69</bouncycastle.version>
+        <i2p.crypto.version>0.3.0</i2p.crypto.version>
     </properties>
 
     <dependencies>
@@ -47,6 +48,7 @@
             <artifactId>sshj</artifactId>
             <version>0.32.0</version>
         </dependency>
+        <!--使用 sshj 时，需要接下来的3个依赖-->
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
@@ -58,6 +60,13 @@
             <version>${bouncycastle.version}</version>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>net.i2p.crypto</groupId>
+            <artifactId>eddsa</artifactId>
+            <version>${i2p.crypto.version}</version>
+            <optional>true</optional>
+        </dependency>
+
 
 
         <!--License: Apache 2.0-->
