@@ -17,15 +17,17 @@ import java.util.List;
 public class SshConfigs {
     private static final Logger logger = Loggers.getLogger(SshConfigs.class);
 
-    public static List<File> getKnownHostsFiles(String _paths) {
-        return getKnownHostsFiles(_paths, true, true);
+    public static List<File> getKnownHostsFiles(String paths) {
+        return getKnownHostsFiles(paths, true, true);
     }
-
-    public static List<File> getKnownHostsFiles(String _paths, final boolean filterNotExist, boolean mkIfDefaultNotExist) {
+    public static List<File> getKnownHostsFiles(String paths, final boolean filterNotExist){
+        return getKnownHostsFiles(paths, filterNotExist,true);
+    }
+    public static List<File> getKnownHostsFiles(String paths, final boolean filterNotExist, final boolean mkIfDefaultNotExist) {
         final List<File> files = Collects.emptyArrayList();
-        if (Strings.isNotBlank(_paths)) {
-            String[] paths = Strings.split(_paths, ";");
-            Collects.forEach(paths, new Consumer<String>() {
+        if (Strings.isNotBlank(paths)) {
+            String[] paths2 = Strings.split(paths, ";");
+            Collects.forEach(paths2, new Consumer<String>() {
                 @Override
                 public void accept(String path) {
                     if (Strings.startsWith(path, "~")) {
@@ -38,7 +40,7 @@ public class SshConfigs {
                         files.add(file);
                     } else {
                         boolean makeAndAdd = false;
-                        if (filterNotExist) {
+                        if (filterNotExist && mkIfDefaultNotExist) {
                             boolean isDefaultPath = AbstractSshConnectionConfig.KNOWN_HOSTS_PATH_DEFAULT.equals(path);
                             makeAndAdd = isDefaultPath;
                         } else {
