@@ -13,7 +13,7 @@
     <name>${groupId}:${artifactId}:${version}</name>
 
     <properties>
-        <bouncycastle.version>1.69</bouncycastle.version>
+        <bouncycastle.version>1.70</bouncycastle.version>
         <i2p.crypto.version>0.3.0</i2p.crypto.version>
     </properties>
 
@@ -47,8 +47,14 @@
             <groupId>com.hierynomus</groupId>
             <artifactId>sshj</artifactId>
             <version>0.32.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcpkix-jdk15on</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
-        <!--使用 sshj 时，需要接下来的3个依赖-->
+        <!--使用 sshj 时，需要接下来的4个依赖-->
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
@@ -57,6 +63,12 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk15on</artifactId>
+            <version>${bouncycastle.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcutil-jdk15on</artifactId>
             <version>${bouncycastle.version}</version>
             <optional>true</optional>
         </dependency>
