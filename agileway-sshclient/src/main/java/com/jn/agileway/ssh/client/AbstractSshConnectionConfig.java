@@ -52,7 +52,8 @@ public class AbstractSshConnectionConfig implements SshConnectionConfig {
     /**
      * 由分号分割的路径集合
      */
-    private String knownHostsPath = "${user.home}/.ssh/known_hosts";
+    public static final String KNOWN_HOSTS_PATH_DEFAULT = "${user.home}/.ssh/known_hosts";
+    private String knownHostsPath = KNOWN_HOSTS_PATH_DEFAULT;
     /**
      * 当设置为true 且没有自定义 host key verifier时，会自动根据 known_hosts文件进行验证
      *
@@ -144,7 +145,7 @@ public class AbstractSshConnectionConfig implements SshConnectionConfig {
 
     @Override
     public void setStrictHostKeyChecking(StrictHostKeyChecking checking) {
-        if(checking!=null) {
+        if (checking != null) {
             this.strictHostKeyChecking = checking;
         }
     }
