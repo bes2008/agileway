@@ -12,7 +12,7 @@ public abstract class EcdsaXPublicKeyCodec extends AbstractPublicKeyCodec {
     public PublicKey decode(byte[] bytes) {
         Buffer buf = new Buffer.PlainBuffer(bytes);
         try {
-            return ECDSAVariationsAdapter.readPubKeyFromBuffer(buf, "" + getFieldSize());
+            return EcdsaXs.readPubKeyFromBuffer(buf, "" + getFieldSize());
         } catch (Throwable ex) {
             throw new IllegalKeyException();
         }
@@ -21,13 +21,13 @@ public abstract class EcdsaXPublicKeyCodec extends AbstractPublicKeyCodec {
     @Override
     public byte[] encode(PublicKey publicKey) {
         Buffer buf = new Buffer.PlainBuffer();
-        ECDSAVariationsAdapter.writePubKeyContentsIntoBuffer(publicKey, buf);
+        EcdsaXs.writePubKeyContentsIntoBuffer(publicKey, buf);
         return buf.array();
     }
 
     @Override
     protected boolean isPublicKeyMatched(PublicKey publicKey, String algorithm) {
-        return ECDSAVariationsAdapter.isECKeyWithFieldSize(publicKey, getFieldSize());
+        return EcdsaXs.isECKeyWithFieldSize(publicKey, getFieldSize());
     }
 
     protected abstract int getFieldSize();

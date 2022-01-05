@@ -22,11 +22,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ECDSAVariationsAdapter {
+class EcdsaXs {
 
     private final static String BASE_ALGORITHM_NAME = "ecdsa-sha2-nistp";
 
-    private final static Logger log = Loggers.getLogger(ECDSAVariationsAdapter.class);
+    private final static Logger log = Loggers.getLogger(EcdsaXs.class);
 
     public final static Map<String, String> SUPPORTED_CURVES = new HashMap<String, String>();
     public final static Map<String, String> NIST_CURVES_NAMES = new HashMap<String, String>();
