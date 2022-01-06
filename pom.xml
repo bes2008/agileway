@@ -91,7 +91,7 @@
         <langx.version>4.2.3</langx.version>
         <easyjson.version>3.2.12</easyjson.version>
         <httpclient.version>4.5.12</httpclient.version>
-        <httpasyncclient.version>4.1.4</httpasyncclient.version>
+        <httpasyncclient.version>4.1.5</httpasyncclient.version>
         <javassist.version>3.21.0-GA</javassist.version>
         <guava.version>20.0</guava.version>
         <slf4j.version>1.7.22</slf4j.version>
