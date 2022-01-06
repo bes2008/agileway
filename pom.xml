@@ -95,7 +95,7 @@
         <javassist.version>3.21.0-GA</javassist.version>
         <guava.version>20.0</guava.version>
         <slf4j.version>1.7.22</slf4j.version>
-        <snakeyaml.version>1.23</snakeyaml.version>
+        <snakeyaml.version>1.29</snakeyaml.version>
         <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
         <junit.version>4.13.1</junit.version>
         <logback.version>1.2.9</logback.version>
