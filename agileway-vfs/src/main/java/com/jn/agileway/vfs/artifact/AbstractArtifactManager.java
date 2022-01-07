@@ -7,32 +7,19 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
-import org.apache.commons.vfs2.FileSystemManager;
 
 import java.util.List;
 
 public abstract class AbstractArtifactManager extends AbstractFileManager<ArtifactRepository, ArtifactDigitExtractor> implements ArtifactManager {
-    private FileSystemManager fileSystemManager;
-    private ArtifactRepository repository;
-
-    @Override
-    public ArtifactRepository getRepository() {
-        return repository;
-    }
 
     @Override
     public void setRepository(ArtifactRepository repository) {
-        this.repository = repository;
+        super.setRepository(repository);
     }
 
     @Override
-    public FileSystemManager getFileSystemManager() {
-        return fileSystemManager;
-    }
-
-    @Override
-    public void setFileSystemManager(FileSystemManager fileSystemManager) {
-        this.fileSystemManager = fileSystemManager;
+    public ArtifactRepository getRepository() {
+        return super.getRepository();
     }
 
     @Override
