@@ -11,6 +11,9 @@ public abstract class AbstractArtifactRepositoryLayout extends AbstractFileRepos
         if (Strings.isNotEmpty(repository.getBasedir())) {
             path = addSegment(path, repository.getBasedir());
         }
+        if(Strings.isNotEmpty(relativePath)){
+            path = addSegment(path, relativePath);
+        }
         return path;
     }
 
