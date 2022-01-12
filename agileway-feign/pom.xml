@@ -15,7 +15,7 @@
 
     <description>Provide a simple method to use feign</description>
     <properties>
-        <openfeign.version>9.7.0</openfeign.version>
+        <openfeign.version>10.12</openfeign.version>
         <openfeign.form.version>3.4.1</openfeign.form.version>
         <ribbon.version>2.1.5</ribbon.version>
     </properties>
