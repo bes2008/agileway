@@ -17,7 +17,7 @@ public class ProtostuffCodec<T> extends AbstractCodec<T> {
     @Override
     public byte[] encode(T obj) throws CodecException {
         try {
-            return Protostuffs.serialize(obj);
+            return Protostuffs.serializeWithSchema(obj);
         } catch (Throwable ex) {
             throw new CodecException(ex.getMessage(), ex);
         }
@@ -31,7 +31,7 @@ public class ProtostuffCodec<T> extends AbstractCodec<T> {
     @Override
     public T decode(byte[] bytes, Class<T> targetType) throws CodecException {
         try {
-            return Protostuffs.deserialize(bytes, targetType);
+            return Protostuffs.deserializeWithSchema(bytes, targetType);
         } catch (Throwable ex) {
             throw new CodecException(ex.getMessage(), ex);
         }

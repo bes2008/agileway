@@ -1,5 +1,6 @@
 package com.jn.agileway.codec.serialization.protostuff;
 
+import com.jn.agileway.codec.serialization.WrappedStruct;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.*;
@@ -19,39 +20,28 @@ public class Protostuffs {
 
     private static final ConcurrentHashMap<Class<?>, Schema<?>> schemaMap = new ConcurrentHashMap<Class<?>, Schema<?>>();
 
-    public static <T> byte[] serialize(T o) {
+    public static <T> byte[] serializeWithSchema(T o) {
         if (o == null) {
             return null;
         }
         // 序列化 对象
-        byte[] data = _serialize(o);
+        byte[] data = serialize(o);
 
         // 将 对象进行包装，再次写数据
         WrappedStruct wrappedStruct = new WrappedStruct();
         wrappedStruct.setName(Reflects.getFQNClassName(o.getClass()));
         wrappedStruct.setValue(data);
-        data = _serialize(wrappedStruct);
+        data = serialize(wrappedStruct);
         return data;
     }
 
-    private static byte[] _serialize(Object o) {
-        if (o == null) {
-            return null;
-        }
-        // 序列化 对象
-        LinkedBuffer buffer = LinkedBuffer.allocate();
-        Class objClass = o.getClass();
-        Schema schema = getSchema(objClass);
-        return GraphIOUtil.toByteArray(o, schema, buffer);
-    }
-
-    public static <T> void serialize(@Nullable T o, @NonNull OutputStream outputStream) throws IOException {
+    public static <T> void serializeWithSchema(@Nullable T o, @NonNull OutputStream outputStream) throws IOException {
         if (o == null) {
             return;
         }
 
         // 序列化 对象
-        byte[] data = _serialize(o);
+        byte[] data = serialize(o);
 
         // 将 对象进行包装，再次写数据
         WrappedStruct wrappedStruct = new WrappedStruct();
@@ -63,14 +53,34 @@ public class Protostuffs {
         GraphIOUtil.writeTo(outputStream, o, schema, buffer);
     }
 
+    public static byte[] serialize(Object o) {
+        if (o == null) {
+            return null;
+        }
+        // 序列化 对象
+        LinkedBuffer buffer = LinkedBuffer.allocate();
+        Class objClass = o.getClass();
+        Schema schema = getSchema(objClass);
+        return GraphIOUtil.toByteArray(o, schema, buffer);
+    }
+
     public static <T> T deserialize(byte[] bytes, @NonNull Class<T> targetType) {
         if (Emptys.isEmpty(bytes)) {
             return null;
         }
 
-        Schema<WrappedStruct> schm = getSchema(WrappedStruct.class);
-        WrappedStruct wrappedStruct = schm.newMessage();
-        GraphIOUtil.mergeFrom(bytes, wrappedStruct, schm);
+        Schema<T> schema = getSchema(targetType);
+        T instance = schema.newMessage();
+        GraphIOUtil.mergeFrom(bytes, instance, schema);
+        return instance;
+    }
+
+    public static <T> T deserializeWithSchema(byte[] bytes, @Nullable Class<T> targetType) {
+        if (Emptys.isEmpty(bytes)) {
+            return null;
+        }
+
+        WrappedStruct wrappedStruct = deserialize(bytes, WrappedStruct.class);
 
         byte[] data = wrappedStruct.getValue();
         String actualClass = wrappedStruct.getName();
@@ -85,10 +95,7 @@ public class Protostuffs {
                 throw Throwables.wrapAsRuntimeException(ex);
             }
         }
-        Schema<T> schema = getSchema(targetType);
-        T instance = schema.newMessage();
-        GraphIOUtil.mergeFrom(data, instance, schema);
-        return instance;
+        return deserialize(data, targetType);
     }
 
 

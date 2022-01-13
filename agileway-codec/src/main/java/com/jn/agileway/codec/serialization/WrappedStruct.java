@@ -1,4 +1,4 @@
-package com.jn.agileway.codec.serialization.protostuff;
+package com.jn.agileway.codec.serialization;
 
 
 import com.jn.langx.util.struct.pair.NameValuePair;
