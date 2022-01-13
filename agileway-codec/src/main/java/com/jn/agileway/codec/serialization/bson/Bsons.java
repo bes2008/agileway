@@ -1,6 +1,6 @@
 package com.jn.agileway.codec.serialization.bson;
 
-import com.jn.agileway.codec.serialization.WrappedStruct;
+import com.jn.agileway.codec.serialization.SchemaedStruct;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.codec.CodecException;
@@ -54,8 +54,8 @@ public class Bsons {
     }
 
     public static <T> T deserializeWithSchema(byte[] bytes) {
-        Class<WrappedStruct> structClass = WrappedStruct.class;
-        WrappedStruct struct = deserialize(bytes, structClass);
+        Class<SchemaedStruct> structClass = SchemaedStruct.class;
+        SchemaedStruct struct = deserialize(bytes, structClass);
         byte[] data = struct.getValue();
         String schema = struct.getName();
         try {
@@ -80,7 +80,7 @@ public class Bsons {
     public static <T> byte[] serializeWithSchema(T obj){
         try {
             byte[] objBytes = serialize(obj);
-            WrappedStruct struct = new WrappedStruct();
+            SchemaedStruct struct = new SchemaedStruct();
             struct.setName(Reflects.getFQNClassName(obj.getClass()));
             struct.setValue(objBytes);
             return serialize(struct);

@@ -1,6 +1,6 @@
 package com.jn.agileway.codec.serialization.protostuff;
 
-import com.jn.agileway.codec.serialization.WrappedStruct;
+import com.jn.agileway.codec.serialization.SchemaedStruct;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.*;
@@ -28,7 +28,7 @@ public class Protostuffs {
         byte[] data = serialize(o);
 
         // 将 对象进行包装，再次写数据
-        WrappedStruct wrappedStruct = new WrappedStruct();
+        SchemaedStruct wrappedStruct = new SchemaedStruct();
         wrappedStruct.setName(Reflects.getFQNClassName(o.getClass()));
         wrappedStruct.setValue(data);
         data = serialize(wrappedStruct);
@@ -44,12 +44,12 @@ public class Protostuffs {
         byte[] data = serialize(o);
 
         // 将 对象进行包装，再次写数据
-        WrappedStruct wrappedStruct = new WrappedStruct();
+        SchemaedStruct wrappedStruct = new SchemaedStruct();
         wrappedStruct.setName(Reflects.getFQNClassName(o.getClass()));
         wrappedStruct.setValue(data);
 
         LinkedBuffer buffer = LinkedBuffer.allocate();
-        Schema<T> schema = getSchema(WrappedStruct.class);
+        Schema<T> schema = getSchema(SchemaedStruct.class);
         GraphIOUtil.writeTo(outputStream, o, schema, buffer);
     }
 
@@ -80,7 +80,7 @@ public class Protostuffs {
             return null;
         }
 
-        WrappedStruct wrappedStruct = deserialize(bytes, WrappedStruct.class);
+        SchemaedStruct wrappedStruct = deserialize(bytes, SchemaedStruct.class);
 
         byte[] data = wrappedStruct.getValue();
         String actualClass = wrappedStruct.getName();

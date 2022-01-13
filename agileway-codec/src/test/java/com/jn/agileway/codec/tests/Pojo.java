@@ -4,6 +4,7 @@ import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.hash.HashCodeBuilder;
 import com.jn.langx.util.logging.Loggers;
+import org.bson.codecs.pojo.annotations.BsonIgnore;
 import org.slf4j.Logger;
 
 import java.io.Serializable;
@@ -22,6 +23,7 @@ public class Pojo implements Serializable {
     private long timeout;
     private boolean expired;
     private String host;
+    @BsonIgnore
     private Map<Object, Object> attributes;
 
     public Pojo() {
@@ -202,6 +204,7 @@ public class Pojo implements Serializable {
         return attributes;
     }
 
+    @BsonIgnore
     public Collection<Object> getAttributeKeys() {
         Map<Object, Object> attributes = getAttributes();
         if (attributes == null) {
