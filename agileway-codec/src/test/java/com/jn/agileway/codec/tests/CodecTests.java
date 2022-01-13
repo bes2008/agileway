@@ -1,6 +1,7 @@
 package com.jn.agileway.codec.tests;
 
 import com.jn.agileway.codec.Codec;
+import com.jn.agileway.codec.serialization.bson.BsonCodec;
 import com.jn.agileway.codec.serialization.cbor.CborJacksonCodec;
 import com.jn.agileway.codec.serialization.fse.FseCodec;
 import com.jn.agileway.codec.serialization.fst.FstCodec;
@@ -130,6 +131,13 @@ public class CodecTests {
     @Test
     public void testXSON() throws CodecException {
         Codec<Pojo> codec = new XsonCodec<Pojo>();
+        testInternal(pojo_non_cycle, codec);
+        testInternal(pojo, codec);
+    }
+
+    @Test
+    public void testBson(){
+        Codec<Pojo> codec = new BsonCodec<Pojo>();
         testInternal(pojo_non_cycle, codec);
         testInternal(pojo, codec);
     }

@@ -8,6 +8,7 @@ import com.jn.langx.util.ClassLoaders;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import org.bson.BsonBinaryReader;
 import org.bson.BsonBinaryWriter;
@@ -17,6 +18,7 @@ import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.io.BasicOutputBuffer;
 
 import java.io.ByteArrayOutputStream;
@@ -34,9 +36,20 @@ public class Bsons {
         Iterator<CodecProvider> providerIterator = ServiceLoader.load(CodecProvider.class).iterator();
         List<CodecProvider> providers = Collects.newArrayList();
         while (providerIterator.hasNext()) {
-            CodecProvider provider = providerIterator.next();
-            providers.add(provider);
+            try {
+                CodecProvider provider = providerIterator.next();
+                providers.add(provider);
+            }catch (Throwable ex){
+                Loggers.getLogger(Bsons.class).warn(ex.getMessage(),ex);
+            }
         }
+
+        // Pojo
+        PojoCodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
+        providers.add(pojoCodecProvider);
+
+        // java.lang.Object
+
         codecRegistry = CodecRegistries.fromProviders(providers);
     }
 
@@ -57,7 +70,8 @@ public class Bsons {
         ByteBuffer buffer = ByteBuffer.wrap(bytes);
         BsonBinaryReader reader = new BsonBinaryReader(buffer);
         Codec<T> codec = codecRegistry.get(targetClass);
-        DecoderContext decoderContext = DecoderContext.builder().build();
+        DecoderContext decoderContext = DecoderContext.builder()
+                .build();
         T t = codec.decode(reader, decoderContext);
         return t;
     }
@@ -107,7 +121,9 @@ public class Bsons {
         buffer = (BasicOutputBuffer) writer.getBsonOutput();
         Class<T> tClass = (Class<T>) obj.getClass();
         Codec<T> codec = codecRegistry.get(tClass);
-        EncoderContext encoderContext = EncoderContext.builder().build();
+        EncoderContext encoderContext = EncoderContext.builder()
+                .isEncodingCollectibleDocument(true)
+                .build();
         codec.encode(writer, obj, encoderContext);
         writer.flush();
         buffer.pipe(stream);
