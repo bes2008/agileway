@@ -24,6 +24,7 @@
         <fse.version>aegean-2.1</fse.version>
         <xson.version>1.0.2</xson.version>
         <msgpack.version>0.8.22</msgpack.version>
+        <mangodb.bson.version>3.12.0</mangodb.bson.version>
     </properties>
 
     <dependencyManagement>
@@ -101,6 +102,12 @@
                 <artifactId>jackson-dataformat-msgpack</artifactId>
                 <version>${msgpack.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.mongodb</groupId>
+                <artifactId>bson</artifactId>
+                <version>${mangodb.bson.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -152,6 +159,12 @@
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
             <version>3.3.0</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>bson</artifactId>
             <optional>true</optional>
         </dependency>
 

@@ -11,5 +11,6 @@ public enum BuiltinCodecType {
     KRYO,
     MSGPACK,
     PROTOSTUFF,
-    XSON
+    XSON,
+    BSON
 }

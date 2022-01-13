@@ -1,0 +1,3 @@
+org.bson.codecs.ValueCodecProvider
+org.bson.codecs.pojo.PojoCodecProvider
+org.bson.codecs.jsr310.Jsr310CodecProvider

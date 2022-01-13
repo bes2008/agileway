@@ -1,6 +1,7 @@
 package com.jn.agileway.redis.core;
 
 import com.jn.agileway.codec.Codec;
+import com.jn.agileway.codec.serialization.bson.BsonCodec;
 import com.jn.agileway.codec.serialization.cbor.CborJacksonCodec;
 import com.jn.agileway.codec.serialization.fse.FseCodec;
 import com.jn.agileway.codec.serialization.fst.FstCodec;
@@ -220,8 +221,14 @@ public class RedisTemplates {
                 break;
             case XSON:
                 codec = new XsonCodec();
+                break;
+            case BSON:
+                codec = new BsonCodec();
+                break;
+            case EASYJSON:
             default:
-                codec = new EasyjsonCodec<>(true);;
+                codec = new EasyjsonCodec<>(true);
+                ;
                 break;
         }
         return codec;
