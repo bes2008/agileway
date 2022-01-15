@@ -57,7 +57,6 @@ public class StringValueController implements InitializingBean {
                 break;
             case EASYJSON_COMMON:
                 EasyjsonCodec jsonSerializer = new EasyjsonCodec();
-                jsonSerializer.setSerializeType(true);
                 DelegatableRedisSerializer valueSerializer = new DelegatableRedisSerializer(jsonSerializer);
 
                 RedisTemplate = RedisTemplates.createRedisTemplate(

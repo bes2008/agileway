@@ -89,7 +89,6 @@ public class CodecTests {
     @Test
     public void testEasyJson() {
         EasyjsonCodec<Pojo> codec = new EasyjsonCodec<>();
-        codec.setSerializeType(true);
         testInternal(pojo_non_cycle, codec);
         // 底层若是采用jackson，则不支持循环依赖
         // testInternal(pojo, codec);

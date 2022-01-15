@@ -47,7 +47,7 @@ public class RedisTemplates {
         Preconditions.checkNotNull(beanClass, "the target class is null");
         EasyjsonCodec easyjsonRedisSerializer = new EasyjsonCodec();
         easyjsonRedisSerializer.setJsonFactory(JsonFactorys.getJSONFactory(JsonScope.SINGLETON));
-        easyjsonRedisSerializer.setExpectedTargetType(beanClass);
+        easyjsonRedisSerializer.setTargetType(beanClass);
         return createRedisTemplate(connectionFactory, keyPrefix, new DelegatableRedisSerializer(easyjsonRedisSerializer), beanClass.getClassLoader(), null, hashKeySerializer, hashValueSerializer, redisLuaScriptRepository, enableTx, initIt);
     }
 
@@ -227,8 +227,7 @@ public class RedisTemplates {
                 break;
             case EASYJSON:
             default:
-                codec = new EasyjsonCodec<>(true);
-                ;
+                codec = new EasyjsonCodec();
                 break;
         }
         return codec;

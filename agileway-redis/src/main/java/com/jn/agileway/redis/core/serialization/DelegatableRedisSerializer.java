@@ -46,6 +46,6 @@ public class DelegatableRedisSerializer<T> implements RedisSerializer<T> {
     }
 
     public Class<?> getTargetType() {
-        return delegate.getExpectedTargetType();
+        return delegate.getTargetType();
     }
 }
