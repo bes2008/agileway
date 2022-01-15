@@ -63,6 +63,7 @@ public class ActivejSerializers {
         serializer.encode(outBufferFactory.get(), obj);
         BinaryOutput out = outBufferFactory.get();
         outputStream.write(out.array(), 0, out.pos());
+        out.pos(0);
     }
 
     public static <T> T deserializeWithSchema(byte[] bytes) {

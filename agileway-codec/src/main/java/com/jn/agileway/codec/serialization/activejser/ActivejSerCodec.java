@@ -2,7 +2,10 @@ package com.jn.agileway.codec.serialization.activejser;
 
 import com.jn.agileway.codec.AbstractCodec;
 import com.jn.langx.codec.CodecException;
-
+/**
+ * 要求字段得 是 public,
+ * 要求必须使用 @Serialize 或者 @Deserialize 注解
+ */
 public class ActivejSerCodec<T> extends AbstractCodec<T> {
 
     @Override
