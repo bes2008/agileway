@@ -9,32 +9,25 @@ public class FstCodec<T> extends AbstractCodec<T> {
     @Nullable
     private FSTConfiguration fst = Fsts.fstFactory.get();
 
+
     @Override
-    public byte[] encode(T obj) throws CodecException {
+    protected byte[] doEncode(T t, boolean withSchema) throws CodecException {
         try {
-            return Fsts.serialize(fst, obj);
+            return Fsts.serialize(fst, t);
         } catch (Throwable ex) {
             throw new CodecException(ex.getMessage(), ex);
         }
     }
 
     @Override
-    public T decode(byte[] bytes) throws CodecException {
-        try {
-            return Fsts.deserialize(fst, bytes, getTargetType());
-        } catch (Throwable ex) {
-            throw new CodecException(ex.getMessage(), ex);
-        }
-    }
-
-    @Override
-    public T decode(byte[] bytes, Class<T> targetType) throws CodecException {
+    protected T doDecode(byte[] bytes, boolean withSchema, Class<T> targetType) throws CodecException {
         try {
             return Fsts.deserialize(fst, bytes, targetType);
         } catch (Throwable ex) {
             throw new CodecException(ex.getMessage(), ex);
         }
     }
+
 
     public FSTConfiguration getFst() {
         return fst;

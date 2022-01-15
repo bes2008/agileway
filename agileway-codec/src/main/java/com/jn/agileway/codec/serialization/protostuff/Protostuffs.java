@@ -3,6 +3,7 @@ package com.jn.agileway.codec.serialization.protostuff;
 import com.jn.agileway.codec.serialization.SchemaedStruct;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.codec.CodecException;
 import com.jn.langx.util.*;
 import com.jn.langx.util.reflect.Reflects;
 import io.protostuff.GraphIOUtil;
@@ -75,27 +76,20 @@ public class Protostuffs {
         return instance;
     }
 
-    public static <T> T deserializeWithSchema(byte[] bytes, @Nullable Class<T> targetType) {
+    public static <T> T deserializeWithSchema(byte[] bytes) {
         if (Emptys.isEmpty(bytes)) {
             return null;
         }
+        try {
+            SchemaedStruct wrappedStruct = deserialize(bytes, SchemaedStruct.class);
 
-        SchemaedStruct wrappedStruct = deserialize(bytes, SchemaedStruct.class);
-
-        byte[] data = wrappedStruct.getValue();
-        String actualClass = wrappedStruct.getName();
-
-        String expectClass = (targetType == null || targetType == Object.class) ? null : Reflects.getFQNClassName(targetType);
-        if (expectClass != null) {
-            Preconditions.checkArgument(expectClass.equals(actualClass), "expect class: {}, actual class: {}", expectClass, actualClass);
-        } else {
-            try {
-                targetType = ClassLoaders.loadClass(actualClass);
-            } catch (Throwable ex) {
-                throw Throwables.wrapAsRuntimeException(ex);
-            }
+            byte[] data = wrappedStruct.getValue();
+            String actualClass = wrappedStruct.getName();
+            Class<T> targetType = ClassLoaders.loadClass(actualClass);
+            return deserialize(data, targetType);
+        }catch (Throwable ex){
+            throw new CodecException(ex);
         }
-        return deserialize(data, targetType);
     }
 
 

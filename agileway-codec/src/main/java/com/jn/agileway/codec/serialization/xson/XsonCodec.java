@@ -4,22 +4,19 @@ import com.jn.agileway.codec.AbstractCodec;
 import com.jn.langx.codec.CodecException;
 
 public class XsonCodec<T> extends AbstractCodec<T> {
+
     @Override
-    public byte[] encode(T obj) throws CodecException {
+    protected byte[] doEncode(T t, boolean withSchema) throws CodecException {
         try {
-            return Xsons.serialize(obj);
+            return Xsons.serialize(t);
         } catch (Throwable ex) {
             throw new CodecException(ex.getMessage(), ex);
         }
     }
 
     @Override
-    public T decode(byte[] bytes) throws CodecException {
-        return decode(bytes, getTargetType());
-    }
-
-    @Override
-    public T decode(byte[] bytes, Class<T> targetType) throws CodecException {
+    protected T doDecode(byte[] bytes, boolean withSchema, Class<T> targetType) throws CodecException {
         return Xsons.deserialize(bytes, targetType);
     }
+
 }

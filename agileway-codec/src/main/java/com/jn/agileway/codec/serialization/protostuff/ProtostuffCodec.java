@@ -2,7 +2,6 @@ package com.jn.agileway.codec.serialization.protostuff;
 
 import com.jn.agileway.codec.AbstractCodec;
 import com.jn.langx.codec.CodecException;
-import com.jn.langx.util.reflect.Reflects;
 
 public class ProtostuffCodec<T> extends AbstractCodec<T> {
 
@@ -15,30 +14,22 @@ public class ProtostuffCodec<T> extends AbstractCodec<T> {
     }
 
     @Override
-    public byte[] encode(T obj) throws CodecException {
+    protected byte[] doEncode(T t, boolean withSchema) throws CodecException {
         try {
-            return Protostuffs.serializeWithSchema(obj);
+            return withSchema ? Protostuffs.serializeWithSchema(t) : Protostuffs.serialize(t);
         } catch (Throwable ex) {
             throw new CodecException(ex.getMessage(), ex);
         }
     }
 
     @Override
-    public T decode(byte[] bytes) throws CodecException {
-        return decode(bytes, (Class<T>) getTargetType());
-    }
-
-    @Override
-    public T decode(byte[] bytes, Class<T> targetType) throws CodecException {
+    protected T doDecode(byte[] bytes, boolean withSchema, Class<T> targetType) throws CodecException {
         try {
-            return Protostuffs.deserializeWithSchema(bytes, targetType);
+            return withSchema ? Protostuffs.<T>deserializeWithSchema(bytes) : Protostuffs.deserialize(bytes, targetType);
         } catch (Throwable ex) {
             throw new CodecException(ex.getMessage(), ex);
         }
     }
 
-    @Override
-    public boolean canSerialize(Class type) {
-        return type != null && type != Object.class && Reflects.isSubClassOrEquals(type, getTargetType());
-    }
+
 }

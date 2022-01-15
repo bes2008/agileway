@@ -66,7 +66,9 @@ public class Bsons {
         }
     }
 
-    public static <T> T deserialize(byte[] bytes, Class<T> targetClass) {
+    public static <T> T deserialize(byte[] bytes, @NonNull Class<T> targetClass) {
+        Preconditions.checkNotNull(targetClass);
+
         ByteBuffer buffer = ByteBuffer.wrap(bytes);
         BsonBinaryReader reader = new BsonBinaryReader(buffer);
         Codec<T> codec = codecRegistry.get(targetClass);
@@ -114,6 +116,7 @@ public class Bsons {
      */
     public static <T> void serialize(T obj, @Nullable BsonBinaryWriter writer, @NonNull OutputStream stream) throws IOException {
         Preconditions.checkNotNull(stream);
+
         BasicOutputBuffer buffer = null;
         if (writer == null) {
             writer = new BsonBinaryWriter(new BasicOutputBuffer());

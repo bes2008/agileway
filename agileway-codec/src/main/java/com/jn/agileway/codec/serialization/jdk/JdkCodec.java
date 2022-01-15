@@ -7,27 +7,17 @@ import com.jn.langx.util.io.ObjectIOs;
 import java.io.IOException;
 
 public class JdkCodec<T> extends AbstractCodec<T> {
-
     @Override
-    public byte[] encode(T obj) throws CodecException {
+    protected byte[] doEncode(T t, boolean withSchema) throws CodecException {
         try {
-            return ObjectIOs.serialize(obj);
+            return ObjectIOs.serialize(t);
         } catch (IOException ex) {
             throw new CodecException(ex.getMessage(), ex);
         }
     }
 
     @Override
-    public T decode(byte[] bytes) throws CodecException {
-        try {
-            return ObjectIOs.deserialize(bytes);
-        } catch (Throwable ex) {
-            throw new CodecException(ex.getMessage(), ex);
-        }
-    }
-
-    @Override
-    public T decode(byte[] bytes, Class<T> targetType) throws CodecException {
+    protected T doDecode(byte[] bytes, boolean withSchema, Class<T> targetType) throws CodecException {
         try {
             return ObjectIOs.deserialize(bytes, targetType);
         } catch (Throwable ex) {

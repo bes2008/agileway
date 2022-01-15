@@ -3,7 +3,6 @@ package com.jn.agileway.codec.serialization.kryo;
 import com.esotericsoftware.kryo.Kryo;
 import com.jn.agileway.codec.AbstractCodec;
 import com.jn.langx.codec.CodecException;
-import com.jn.langx.util.Emptys;
 
 public class KryoCodec<T> extends AbstractCodec<T> {
     private Kryo kryo;
@@ -17,8 +16,8 @@ public class KryoCodec<T> extends AbstractCodec<T> {
     }
 
     @Override
-    public byte[] encode(T t) throws CodecException {
-        try {
+    protected byte[] doEncode(T t, boolean withSchema) throws CodecException {
+           try {
             return Kryos.serialize(getKryo(), t);
         } catch (Throwable ex) {
             throw new CodecException(ex.getMessage(), ex);
@@ -26,24 +25,13 @@ public class KryoCodec<T> extends AbstractCodec<T> {
     }
 
     @Override
-    public T decode(byte[] bytes) throws CodecException {
-        try {
-            return Kryos.deserialize(getKryo(), bytes, getTargetType());
-        } catch (Throwable ex) {
-            throw new CodecException(ex.getMessage(), ex);
-        }
-    }
-
-    @Override
-    public T decode(byte[] bytes, Class<T> targetType) throws CodecException {
-        if (Emptys.isEmpty(bytes)) {
-            return null;
-        }
+    protected T doDecode(byte[] bytes, boolean withSchema, Class<T> targetType) throws CodecException {
         try {
             return Kryos.deserialize(getKryo(), bytes, targetType);
         } catch (Throwable ex) {
             throw new CodecException(ex.getMessage(), ex);
         }
     }
+
 
 }

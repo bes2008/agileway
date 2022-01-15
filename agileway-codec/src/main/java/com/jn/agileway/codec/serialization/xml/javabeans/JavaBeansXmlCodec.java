@@ -2,7 +2,6 @@ package com.jn.agileway.codec.serialization.xml.javabeans;
 
 import com.jn.agileway.codec.AbstractCodec;
 import com.jn.langx.codec.CodecException;
-import com.jn.langx.util.reflect.type.Primitives;
 
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
@@ -26,25 +25,17 @@ import java.io.ByteArrayOutputStream;
 public class JavaBeansXmlCodec<T> extends AbstractCodec<T> {
 
     @Override
-    public byte[] encode(T obj) throws CodecException {
-        if (obj == null) {
-            String msg = "argument cannot be null.";
-            throw new IllegalArgumentException(msg);
-        }
-
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    protected byte[] doEncode(T t, boolean withSchema) throws CodecException {
+          ByteArrayOutputStream bos = new ByteArrayOutputStream();
         XMLEncoder encoder = new XMLEncoder(new BufferedOutputStream(bos));
-        encoder.writeObject(obj);
+        encoder.writeObject(t);
         encoder.close();
 
         return bos.toByteArray();
     }
 
     @Override
-    public T decode(byte[] bytes) throws CodecException {
-        if (bytes == null) {
-            throw new IllegalArgumentException("Argument cannot be null.");
-        }
+    protected T doDecode(byte[] bytes, boolean withSchema, Class<T> targetType) throws CodecException {
         ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
         XMLDecoder decoder = new XMLDecoder(new BufferedInputStream(bis));
         T o = (T) decoder.readObject();
@@ -52,16 +43,5 @@ public class JavaBeansXmlCodec<T> extends AbstractCodec<T> {
         return o;
     }
 
-    @Override
-    public T decode(byte[] bytes, Class<T> targetType) throws CodecException {
-        T x = decode(bytes);
-        if (targetType != null && targetType != Object.class && !Primitives.isPrimitiveOrPrimitiveWrapperType(targetType)) {
-            if (x.getClass() == targetType) {
-                return x;
-            }
 
-        }
-        return null;
-
-    }
 }

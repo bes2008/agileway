@@ -6,20 +6,14 @@ import com.jn.easyjson.core.factory.JsonFactorys;
 import com.jn.easyjson.core.factory.JsonScope;
 import com.jn.langx.codec.CodecException;
 import com.jn.langx.util.ClassLoaders;
-import com.jn.langx.util.Emptys;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.type.Primitives;
 
 public class EasyjsonCodec<T> extends AbstractCodec<T> {
-    private boolean serializeType = false;
     private JSONFactory jsonFactory = JsonFactorys.getJSONFactory(JsonScope.SINGLETON);
 
     public EasyjsonCodec() {
-    }
-
-    public EasyjsonCodec(boolean serializeType) {
-        setSerializeType(serializeType);
     }
 
     public EasyjsonCodec(Class<T> targetType) {
@@ -27,33 +21,22 @@ public class EasyjsonCodec<T> extends AbstractCodec<T> {
     }
 
     @Override
-    public byte[] encode(T t) throws CodecException {
-        if (t == null) {
-            return new byte[0];
-        }
+    protected byte[] doEncode(T t, boolean withSchema) throws CodecException {
         String json = jsonFactory.get().toJson(t);
-        if (serializeType) {
+        if (withSchema) {
             json = Reflects.getFQNClassName(Primitives.wrap(t.getClass())) + ";" + json;
         }
         return json.getBytes(Charsets.UTF_8);
     }
 
     @Override
-    public T decode(byte[] bytes) throws CodecException {
-        return decode(bytes, getTargetType());
-    }
-
-    @Override
-    public T decode(byte[] bytes, Class<T> targetType) throws CodecException {
-        if (Emptys.isEmpty(bytes)) {
-            return null;
-        }
+    protected T doDecode(byte[] bytes, boolean withSchema, Class<T> targetType) throws CodecException {
         String json = new String(bytes, Charsets.UTF_8);
         Class<T> javaType = targetType;
         if (javaType == null) {
             javaType = getTargetType();
         }
-        if (serializeType) {
+        if (withSchema) {
             int index = json.indexOf(";");
 
             if (index > 0) {
@@ -74,7 +57,6 @@ public class EasyjsonCodec<T> extends AbstractCodec<T> {
         }
     }
 
-
     public JSONFactory getJsonFactory() {
         return jsonFactory;
     }
@@ -83,11 +65,4 @@ public class EasyjsonCodec<T> extends AbstractCodec<T> {
         this.jsonFactory = jsonFactory;
     }
 
-    public boolean isSerializeType() {
-        return serializeType;
-    }
-
-    public void setSerializeType(boolean serializeType) {
-        this.serializeType = serializeType;
-    }
 }

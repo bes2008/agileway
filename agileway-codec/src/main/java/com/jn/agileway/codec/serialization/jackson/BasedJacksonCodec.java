@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.jn.agileway.codec.AbstractCodec;
 import com.jn.langx.codec.CodecException;
 import com.jn.langx.text.StringTemplates;
-import com.jn.langx.util.Emptys;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -97,38 +96,23 @@ public class BasedJacksonCodec<T> extends AbstractCodec<T> {
         mapObjectMapper.setDefaultTyping(mapTyper);
     }
 
+
     @Override
-    public byte[] encode(T obj) throws CodecException {
-        if (obj == null) {
-            return null;
-        }
+    protected byte[] doEncode(T t, boolean withSchema) throws CodecException {
         try {
-            return objectMapper.writeValueAsBytes(obj);
+            return objectMapper.writeValueAsBytes(t);
         } catch (Throwable ex) {
             throw new CodecException(ex);
         }
     }
 
     @Override
-    public T decode(byte[] bytes) throws CodecException {
-        Class t = getTargetType();
-        if (t == null) {
-            t = (Class<T>) Object.class;
-        }
-        return (T) this.decode(bytes, t);
-    }
-
-    @Override
-    public T decode(byte[] bytes, Class<T> targetType) throws CodecException {
-        if (Emptys.isEmpty(bytes)) {
-            return null;
-        } else {
-            try {
-                targetType = targetType == null ? (Class<T>) Object.class : targetType;
-                return this.objectMapper.readValue(bytes, targetType);
-            } catch (Exception ex) {
-                throw new CodecException(StringTemplates.formatWithPlaceholder("Could not read {}: {}", objectMapper.getFactory().getFormatName(), ex.getMessage()), ex);
-            }
+    protected T doDecode(byte[] bytes, boolean withSchema, Class<T> targetType) throws CodecException {
+        try {
+            targetType = targetType == null ? (Class<T>) Object.class : targetType;
+            return this.objectMapper.readValue(bytes, targetType);
+        } catch (Exception ex) {
+            throw new CodecException(StringTemplates.formatWithPlaceholder("Could not read {}: {}", objectMapper.getFactory().getFormatName(), ex.getMessage()), ex);
         }
     }
 }
