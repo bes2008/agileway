@@ -71,7 +71,16 @@ public abstract class AbstractCodec<T> implements Codec<T> {
         if (isCommonCodec()) {
             return true;
         }
-        return Reflects.isSubClassOrEquals(expectedTargetType, type);
+
+        if (!Reflects.isSubClassOrEquals(expectedTargetType, type)) {
+            return false;
+        }
+
+        return canSerializeIt(type);
+    }
+
+    protected boolean canSerializeIt(Class type) {
+        return true;
     }
 
 
