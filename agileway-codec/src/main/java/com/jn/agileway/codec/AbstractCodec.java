@@ -5,7 +5,6 @@ import com.jn.langx.annotation.Nullable;
 import com.jn.langx.codec.CodecException;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Emptys;
-import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.reflect.Reflects;
 
 public abstract class AbstractCodec<T> implements Codec<T> {
@@ -28,6 +27,7 @@ public abstract class AbstractCodec<T> implements Codec<T> {
 
     /**
      * 序列化
+     *
      * @param t
      * @param withSchema 是否写 schema， 对于本就支持 写 schema 的 序列化框架，该属性无效
      * @return
@@ -45,11 +45,12 @@ public abstract class AbstractCodec<T> implements Codec<T> {
         if (Emptys.isEmpty(bytes)) {
             return null;
         }
-        Preconditions.checkNotNull(targetType);
         if (canSerialize(targetType)) {
             T t = doDecode(bytes, isCommonCodec(), targetType);
-            if (t != null && !Reflects.isInstance(t, targetType)) {
-                throw new CodecException("error target type: {}" + Reflects.getFQNClassName(targetType));
+            if (!isCommonCodec()) {
+                if (t != null && !Reflects.isInstance(t, targetType)) {
+                    throw new CodecException("error target type: {}" + Reflects.getFQNClassName(targetType));
+                }
             }
             return t;
         }
@@ -85,7 +86,7 @@ public abstract class AbstractCodec<T> implements Codec<T> {
         return this.expectedTargetType;
     }
 
-    protected  boolean isCommonCodec() {
+    protected boolean isCommonCodec() {
         return this.expectedTargetType == null;
     }
 }
