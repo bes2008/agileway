@@ -1,21 +1,15 @@
 package com.jn.agileway.web.servlet;
 
-import com.jn.langx.util.Strings;
-import com.jn.langx.util.collection.Collects;
-import com.jn.langx.util.collection.Pipeline;
-import com.jn.langx.util.function.Function;
-import com.jn.langx.util.function.Predicate;
 
 import java.util.List;
 
 public class HttpRequestParameterController {
-    private static final List<String> TRUE_VALUES;
 
     protected String getParameter(final String name) {
         if (name == null) {
             throw new IllegalArgumentException("Get http parameter NULL");
         }
-        return RRHolder.getRequest().getParameter(name);
+        return Servlets.getParameter(RRHolder.getRequest(), name);
     }
 
     protected String getStringParameter(final String name) {
@@ -23,11 +17,7 @@ public class HttpRequestParameterController {
     }
 
     protected List<String> getParameters(final String name) {
-        final String[] values = RRHolder.getRequest().getParameterValues(name);
-        if (values != null) {
-            return Collects.asList(values);
-        }
-        return null;
+        return Servlets.getParameters(RRHolder.getRequest(), name);
     }
 
     protected List<String> getStringParameters(final String name) {
@@ -35,138 +25,51 @@ public class HttpRequestParameterController {
     }
 
     protected Integer getIntParameter(final String name) {
-        final String value = this.getParameter(name);
-        Integer ret = null;
-        if (!Strings.isBlank(value)) {
-            ret = Integer.parseInt(value);
-        }
-        return ret;
+        return Servlets.getIntParameter(RRHolder.getRequest(), name, null);
     }
 
     protected List<Integer> getIntParameters(final String name) {
-        final List<String> valueOpt = this.getParameters(name);
-        List<Integer> ret = null;
-        if (valueOpt != null) {
-            ret = Pipeline.of(valueOpt).map(new Function<String, Integer>() {
-                @Override
-                public Integer apply(String input) {
-                    return Integer.parseInt(input);
-                }
-            }).asList();
-        }
-        return ret;
+        return Servlets.getIntParameters(RRHolder.getRequest(), name, null);
     }
 
     protected Long getLongParameter(final String name) {
-        final String valueOpt = this.getParameter(name);
-        Long ret = null;
-        if (!Strings.isBlank(valueOpt)) {
-            ret = Long.parseLong(valueOpt);
-        }
-        return ret;
+        return Servlets.getLongParameter(RRHolder.getRequest(), name, null);
     }
 
     protected List<Long> getLongParameters(final String name) {
-        final List<String> valueOpt = this.getParameters(name);
-        List<Long> ret = null;
-        if (valueOpt != null) {
-            ret = Pipeline.of(valueOpt).map(new Function<String, Long>() {
-                @Override
-                public Long apply(String input) {
-                    return Long.parseLong(input);
-                }
-            }).asList();
-        }
-        return ret;
+        return Servlets.getLongParameters(RRHolder.getRequest(), name, null);
     }
 
     protected Float getFloatParameter(final String name) {
-        final String valueOpt = this.getParameter(name);
-        Float ret = null;
-        if (!Strings.isBlank(valueOpt)) {
-            ret = Float.parseFloat(valueOpt);
-        }
-        return ret;
+        return Servlets.getFloatParameter(RRHolder.getRequest(), name, null);
     }
 
     protected List<Float> getFloatParameters(final String name) {
-        final List<String> valueOpt = this.getParameters(name);
-        List<Float> ret = null;
-        if (valueOpt != null) {
-            ret = Pipeline.of(valueOpt).map(new Function<String, Float>() {
-                @Override
-                public Float apply(String input) {
-                    return Float.parseFloat(input);
-                }
-            }).asList();
-        }
-        return ret;
+        return Servlets.getFloatParameters(RRHolder.getRequest(), name, null);
     }
 
     protected Double getDoubleParameter(final String name) {
-        final String valueOpt = this.getParameter(name);
-        Double ret = null;
-        if (!Strings.isBlank(valueOpt)) {
-            ret = Double.parseDouble(valueOpt);
-        }
-        return ret;
+        return Servlets.getDoubleParameter(RRHolder.getRequest(), name, null);
     }
 
     protected List<Double> getDoubleParameters(final String name) {
-        final List<String> valueOpt = this.getParameters(name);
-        List<Double> ret = null;
-        if (valueOpt != null) {
-            ret = Pipeline.of(valueOpt).map(new Function<String, Double>() {
-                @Override
-                public Double apply(String input) {
-                    return Double.parseDouble(input);
-                }
-            }).asList();
-        }
-        return ret;
+        return Servlets.getDoubleParameters(RRHolder.getRequest(), name, null);
     }
 
-    protected static Boolean isTrue(final String value) {
-        return Pipeline.of(TRUE_VALUES).anyMatch(new Predicate<String>() {
-            @Override
-            public boolean test(String x) {
-                return x.equalsIgnoreCase(value);
-            }
-        });
+    protected final static Boolean isTrue(final String value) {
+        return Servlets.isTrue(value);
     }
 
     protected Boolean getBooleanParameter(final String name) {
-        final String valueOpt = this.getParameter(name);
-        if (!Strings.isBlank(valueOpt)) {
-            return isTrue(name);
-        }
-        return null;
+        return Servlets.getBooleanParameter(RRHolder.getRequest(), name, null);
     }
 
     protected Boolean getBooleanParameter(final String name, final boolean defaultValue) {
-        final String valueOpt = this.getParameter(name);
-        if (!Strings.isBlank(valueOpt)) {
-            return isTrue(name);
-        }
-        return defaultValue;
+        return Servlets.getBooleanParameter(RRHolder.getRequest(), name, defaultValue);
     }
 
     protected List<Boolean> getBooleanParameters(final String name) {
-        final List<String> valueOpt = this.getParameters(name);
-        List<Boolean> ret = null;
-        if (valueOpt != null) {
-            ret = Pipeline.of(valueOpt).map(new Function<String, Boolean>() {
-                @Override
-                public Boolean apply(String input) {
-                    return isTrue(input);
-                }
-            }).asList();
-        }
-        return ret;
-    }
-
-    static {
-        TRUE_VALUES = Collects.newArrayList("true", "1", "on", "yes");
+        return Servlets.getBooleanParameters(RRHolder.getRequest(), name, null);
     }
 }
 
