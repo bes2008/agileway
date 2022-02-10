@@ -12,7 +12,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.Provider;
 import java.security.Security;
 
-import static java.lang.String.format;
 
 /**
  * Static utility method relating to security facilities.
@@ -72,9 +71,9 @@ public class SecurityUtils {
                 return true;
             }
         } catch (NoSuchAlgorithmException e) {
-            LOG.info(format("Security Provider '%s' does not support necessary algorithm", providerClassName), e);
+            LOG.info("Security Provider '{}' does not support necessary algorithm", providerClassName, e);
         } catch (Exception e) {
-            LOG.info(format("Registration of Security Provider '%s' unexpectedly failed", providerClassName), e);
+            LOG.info("Registration of Security Provider '{}' unexpectedly failed", providerClassName, e);
         }
         return false;
     }

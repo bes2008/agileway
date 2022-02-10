@@ -9,6 +9,7 @@ import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer2;
+import com.jn.langx.util.function.Supplier;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.logging.Loggers;
@@ -36,7 +37,11 @@ public class SshClients {
      * @return
      * @throws SshException
      */
-    public static SshCommandResponse exec(@NonNull SshConnection connection, @Nullable Map<String, String> environmentVariables, @Nullable String workingDirectory, @NonNull String command, @Nullable String encoding) throws SshException {
+    public static SshCommandResponse exec(@NonNull SshConnection connection, @Nullable Map<String, String> environmentVariables, @Nullable String workingDirectory, @NonNull String command, @Nullable String encoding) throws SshException{
+        return exec(connection, environmentVariables, null, workingDirectory, command, encoding);
+    }
+
+    public static SshCommandResponse exec(@NonNull SshConnection connection, @Nullable Map<String, String> environmentVariables, @Nullable Supplier<Map<String, String>, String> environmentSettingsSupplier, @Nullable String workingDirectory, @NonNull String command, @Nullable String encoding) throws SshException {
         Preconditions.checkState(connection != null && connection.isConnected() && !connection.isClosed(), "connection status invalid");
         Preconditions.checkNotEmpty(command, "the command is not supplied");
         Charset charset = Charsets.UTF_8;
@@ -49,18 +54,27 @@ public class SshClients {
         }
 
         final SessionedChannel channel = connection.openSession();
-        if (Emptys.isNotEmpty(environmentVariables)) {
-            Collects.forEach(environmentVariables, new Consumer2<String, String>() {
-                @Override
-                public void accept(String variable, String value) {
-                    channel.env(variable, value);
-                }
-            });
-        }
+
 
         if (Strings.isNotEmpty(workingDirectory)) {
             workingDirectory = workingDirectory.replace("\\", "/");
             command = "cd " + workingDirectory + ";" + command;
+        }
+        if (Emptys.isNotEmpty(environmentVariables)) {
+            String envs = null;
+            if (environmentSettingsSupplier != null) {
+                envs = environmentSettingsSupplier.get(environmentVariables);
+            }
+            if (Strings.isNotEmpty(envs)) {
+                command = envs + command;
+            } else {
+                Collects.forEach(environmentVariables, new Consumer2<String, String>() {
+                    @Override
+                    public void accept(String variable, String value) {
+                        channel.env(variable, value);
+                    }
+                });
+            }
         }
 
         channel.exec(command);

@@ -41,9 +41,11 @@ public enum Signal {
      * @return the enum constant inferred
      */
     public static Signal fromString(String name) {
-        for (Signal sig : Signal.values())
-            if (sig.toString().equals(name))
+        for (Signal sig : Signal.values()) {
+            if (sig.toString().equals(name)) {
                 return sig;
+            }
+        }
         return UNKNOWN;
     }
 

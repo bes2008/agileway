@@ -15,7 +15,7 @@
  */
 package com.jn.agileway.ssh.client.plugins.codec;
 
-import net.schmizz.sshj.common.SSHRuntimeException;
+import com.jn.agileway.ssh.client.SshException;
 
 import java.math.BigInteger;
 import java.security.spec.ECPoint;
@@ -29,7 +29,7 @@ class Secg {
     public static ECPoint getDecoded(byte[] M, EllipticCurve curve) {
         int elementSize = getElementSize(curve);
         if (M.length != 2 * elementSize + 1 || M[0] != 0x04) {
-            throw new SSHRuntimeException("Invalid 'f' for Elliptic Curve " + curve.toString());
+            throw new SshException("Invalid 'f' for Elliptic Curve " + curve.toString());
         }
         byte[] xBytes = new byte[elementSize];
         byte[] yBytes = new byte[elementSize];
