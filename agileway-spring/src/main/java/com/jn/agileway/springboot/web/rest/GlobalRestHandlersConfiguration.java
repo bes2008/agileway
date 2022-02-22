@@ -56,12 +56,21 @@ public class GlobalRestHandlersConfiguration {
 
     @Bean
     @Autowired
+    public GlobalRestResponseBodyHandlerConfiguration globalRestResponseBodyHandlerConfiguration( GlobalRestResponseBodyHandlerProperties properties){
+        GlobalRestResponseBodyHandlerConfiguration configuration = new GlobalRestResponseBodyHandlerConfigurationBuilder()
+                .setProperties(properties)
+                .build();
+        return configuration;
+    }
+
+    @Bean
+    @Autowired
     @ConditionalOnMissingBean({GlobalSpringRestResponseBodyHandler.class})
     public GlobalSpringRestResponseBodyHandler globalSpringRestResponseBodyHandler(
-            GlobalRestResponseBodyHandlerProperties properties,
+            GlobalRestResponseBodyHandlerConfiguration configuration,
             JSONFactory jsonFactory,
             @Qualifier("globalRestErrorMessageHandler") RestErrorMessageHandler restErrorMessageHandler) {
-        GlobalRestResponseBodyHandlerConfiguration configuration = new GlobalRestResponseBodyHandlerConfigurationBuilder().setProperties(properties).build();
+
         GlobalSpringRestResponseBodyHandler unifiedResponseBodyHandler = new GlobalSpringRestResponseBodyHandler();
         unifiedResponseBodyHandler.setJsonFactory(jsonFactory);
         unifiedResponseBodyHandler.setConfiguration(configuration);
@@ -78,7 +87,8 @@ public class GlobalRestHandlersConfiguration {
     }
 
     @Autowired
-    public void registerExceptionHandlers(final GlobalRestExceptionHandlerRegistry registry, @Autowired(required = false) ObjectProvider<List<RestActionExceptionHandler>> restActionExceptionHandlersProvider) {
+    public void registerExceptionHandlers(final GlobalRestExceptionHandlerRegistry registry,
+                                          @Autowired(required = false) ObjectProvider<List<RestActionExceptionHandler>> restActionExceptionHandlersProvider) {
         Collects.forEach(restActionExceptionHandlersProvider.getIfAvailable(), new Consumer<RestActionExceptionHandler>() {
             @Override
             public void accept(RestActionExceptionHandler restActionExceptionHandler) {
@@ -110,7 +120,9 @@ public class GlobalRestHandlersConfiguration {
             GlobalRestExceptionHandlerRegistry registry,
             GlobalRestExceptionHandlerProperties globalRestExceptionHandlerProperties,
             @Qualifier("globalRestErrorMessageHandler")
-                    RestErrorMessageHandler restErrorMessageHandler) {
+                    RestErrorMessageHandler restErrorMessageHandler,
+            GlobalRestResponseBodyHandlerConfiguration globalRestResponseBodyHandlerConfiguration
+            ) {
         GlobalSpringRestExceptionHandler globalRestExceptionHandler = new GlobalSpringRestExceptionHandler();
 
         globalRestExceptionHandler.setDefaultErrorCode(globalRestExceptionHandlerProperties.getDefaultErrorCode());
@@ -122,6 +134,7 @@ public class GlobalRestHandlersConfiguration {
 
         globalRestExceptionHandler.setJsonFactory(jsonFactory);
         globalRestExceptionHandler.setExceptionHandlerRegistry(registry);
+        globalRestExceptionHandler.setConfiguration(globalRestResponseBodyHandlerConfiguration);
         globalRestExceptionHandler.startup();
         return globalRestExceptionHandler;
     }
@@ -151,7 +164,8 @@ public class GlobalRestHandlersConfiguration {
             GlobalRestExceptionHandlerRegistry registry,
             GlobalRestExceptionHandlerProperties globalRestExceptionHandlerProperties,
             @Qualifier("globalRestErrorMessageHandler")
-                    RestErrorMessageHandler restErrorMessageHandler) {
+                    RestErrorMessageHandler restErrorMessageHandler,
+            GlobalRestResponseBodyHandlerConfiguration globalRestResponseBodyHandlerConfiguration) {
         GlobalFilterRestExceptionHandler globalRestExceptionHandler = new GlobalFilterRestExceptionHandler();
 
         globalRestExceptionHandler.setDefaultErrorCode(globalRestExceptionHandlerProperties.getDefaultErrorCode());
@@ -164,6 +178,7 @@ public class GlobalRestHandlersConfiguration {
         globalRestExceptionHandler.setExceptionHandlerRegistry(registry);
         globalRestExceptionHandler.setErrorMessageHandler(restErrorMessageHandler);
 
+        globalRestExceptionHandler.setConfiguration(globalRestResponseBodyHandlerConfiguration);
         globalRestExceptionHandler.startup();
         return globalRestExceptionHandler;
     }

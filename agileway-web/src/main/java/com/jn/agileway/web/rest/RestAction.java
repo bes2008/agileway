@@ -9,4 +9,9 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface RestAction {
     public boolean value() default true;
+
+    /**
+     * @see com.jn.langx.http.rest.RestRespBody
+     */
+    public String[] ignoreFields() default {};
 }

@@ -6,6 +6,7 @@ import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.factory.JsonFactorys;
 import com.jn.easyjson.core.factory.JsonScope;
 import com.jn.langx.http.rest.RestRespBody;
+import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.lifecycle.Lifecycle;
@@ -28,10 +29,10 @@ import static com.jn.agileway.web.rest.GlobalRestHandlers.GLOBAL_REST_RESPONSE_H
 /**
  * 通常在 Controller层调用
  */
-public abstract class GlobalRestExceptionHandler implements RestActionExceptionHandler, Initializable, Lifecycle {
+public abstract class GlobalRestExceptionHandler extends AbstractInitializable implements RestActionExceptionHandler, Lifecycle {
     private static Logger logger = Loggers.getLogger(GlobalRestExceptionHandler.class);
     private JSONFactory jsonFactory = JsonFactorys.getJSONFactory(JsonScope.SINGLETON);
-
+    private GlobalRestResponseBodyHandlerConfiguration configuration;
     /**
      * 是否根据 异常链扫描
      * <p>
@@ -41,11 +42,14 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
 
     private DefaultRestErrorMessageHandler defaultErrorMessageHandler = new DefaultRestErrorMessageHandler();
 
-    private volatile boolean inited = false;
     private volatile boolean running = false;
     private boolean writeUnifiedResponse = true;
     private GlobalRestExceptionHandlerRegistry exceptionHandlerRegistry;
     private RestErrorMessageHandler errorMessageHandler = NoopRestErrorMessageHandler.INSTANCE;
+
+    public void setConfiguration(GlobalRestResponseBodyHandlerConfiguration configuration) {
+        this.configuration = configuration;
+    }
 
     public void setJsonFactory(JSONFactory jsonFactory) {
         if (jsonFactory != null) {
@@ -58,9 +62,7 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
     }
 
     public RestRespBody handle(HttpServletRequest request, HttpServletResponse response, Object action, Exception ex) {
-        if (!inited) {
-            init();
-        }
+        init();
         Object exceptionHandler = request.getAttribute(GLOBAL_REST_EXCEPTION_HANDLER);
         if (exceptionHandler != null) {
             return null;
@@ -89,7 +91,17 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
                 respBody = RestRespBody.error(defaultErrorMessageHandler.getDefaultErrorStatusCode(), defaultErrorMessageHandler.getDefaultErrorCode(), defaultErrorMessageHandler.getDefaultErrorMessage());
             }
             request.setAttribute(GLOBAL_REST_EXCEPTION_HANDLER, this);
-            respBody.setUrl(request.getRequestURL().toString());
+            if (!configuration.isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_URL)) {
+                respBody.setUrl(request.getRequestURL().toString());
+            }
+            if (!configuration.isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_METHOD)) {
+                respBody.setMethod(HttpMethod.valueOf(request.getMethod()));
+            }
+            if (!configuration.isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_REQUEST_HEADERS)) {
+                MultiValueMap<String, String> headers = Servlets.headersToMultiValueMap(request);
+                respBody.withRequestHeaders(headers);
+            }
+
             try {
                 errorMessageHandler.handler(request.getLocale(), respBody);
             } catch (Throwable ex1) {
@@ -97,7 +109,6 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
             } finally {
                 defaultErrorMessageHandler.handler(request.getLocale(), respBody);
             }
-
 
             if (writeUnifiedResponse) {
                 try {
@@ -120,11 +131,6 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
                 }
             }
         }
-        if (respBody != null) {
-            respBody.setMethod(HttpMethod.valueOf(request.getMethod()));
-            MultiValueMap<String, String> headers = Servlets.headersToMultiValueMap(request);
-            respBody.withRequestHeaders(headers);
-        }
         return respBody;
     }
 
@@ -133,7 +139,7 @@ public abstract class GlobalRestExceptionHandler implements RestActionExceptionH
 
 
     @Override
-    public void init() throws InitializationException {
+    public void doInit() {
         if (!inited) {
             logger.info("===[AGILE_WAY-GLOBAL_REST_EXCEPTION_HANDLER]=== Initial the global rest exception handler: {}", Reflects.getFQNClassName(getClass()));
             inited = true;

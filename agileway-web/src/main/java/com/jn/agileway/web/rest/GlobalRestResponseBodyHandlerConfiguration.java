@@ -1,6 +1,7 @@
 package com.jn.agileway.web.rest;
 
 import com.jn.langx.util.Emptys;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
@@ -46,6 +47,15 @@ public class GlobalRestResponseBodyHandlerConfiguration {
     private List<Class> excludedAnnotations = Collects.newArrayList();
 
     private Set<String> excludedMethods = new CopyOnWriteArraySet<String>();
+
+    /**
+     * 响应 体要忽略的字段，字段 只对标 @see com.jn.langx.http.rest.RestRespBody
+     *
+     *
+     * @see GlobalRestHandlers#GLOBAL_REST_FIELD_SUCCESS
+     *
+     */
+    private Set<String> ignoredFields = Collects.newHashSet();
 
     public List<String> getBasePackages() {
         return basePackages;
@@ -275,10 +285,25 @@ public class GlobalRestResponseBodyHandlerConfiguration {
      * 是否为在要排除的方法
      *
      * @param method
-     * @return
      */
     public boolean isExcludedMethod(String method) {
         return this.excludedMethods.contains(method);
     }
 
+    public Set<String> getIgnoredFields() {
+        return ignoredFields;
+    }
+
+    public void setIgnoredFields(Set<String> ignoredFields) {
+        if(ignoredFields!=null) {
+            this.ignoredFields = ignoredFields;
+        }
+    }
+
+    public boolean isIgnoredField(String fieldName){
+        if(Strings.isBlank(fieldName)){
+            return true;
+        }
+        return ignoredFields.contains(fieldName);
+    }
 }

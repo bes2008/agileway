@@ -5,6 +5,8 @@ import com.jn.agileway.web.security.WAFs;
 import com.jn.agileway.web.rest.GlobalRestResponseBodyHandlerConfiguration;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.Objs;
+import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
@@ -31,6 +33,24 @@ public class GlobalRestResponseFilter extends OncePerRequestFilter {
         GlobalFilterRestResponseHandler handler = new GlobalFilterRestResponseHandler();
         GlobalRestResponseBodyHandlerConfiguration handlerConfiguration = new GlobalRestResponseBodyHandlerConfiguration();
         handlerConfiguration.addAssignableType(GlobalRestResponseFilter.class);
+        String ignoredFieldsString = filterConfig.getInitParameter("ignoredFields");
+        boolean notIgnoreFields = false;
+        if (Strings.isNotBlank(ignoredFieldsString)) {
+            String[] ignoredFields = Strings.split(ignoredFieldsString, ",");
+            if (!Objs.isEmpty(ignoredFields)) {
+                handlerConfiguration.setIgnoredFields(Collects.newHashSet(ignoredFields));
+            } else {
+                notIgnoreFields = true;
+            }
+        } else {
+            if (ignoredFieldsString != null) {
+                notIgnoreFields = true;
+            }
+        }
+        // 存在该 配置项，但值为 空
+        if (notIgnoreFields) {
+            handlerConfiguration.setIgnoredFields(Collects.<String>immutableSet());
+        }
         handler.setConfiguration(handlerConfiguration);
         setRestResponseBodyHandler(handler);
     }

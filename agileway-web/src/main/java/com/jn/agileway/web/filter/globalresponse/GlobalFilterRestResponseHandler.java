@@ -76,13 +76,19 @@ public class GlobalFilterRestResponseHandler implements GlobalRestResponseBodyHa
                 Boolean responseBodyWritten = (Boolean) request.getAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN);
                 if ((responseBodyWritten == null || !responseBodyWritten) && !response.isCommitted()) {
                     RestRespBody respBody = new RestRespBody(false, statusCode, "", this.defaultRestErrorMessageHandler.getDefaultErrorCode(), this.defaultRestErrorMessageHandler.getDefaultErrorMessage());
-                    respBody.setUrl(request.getRequestURL().toString());
+                    if (!configuration.isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_URL)) {
+                        respBody.setUrl(request.getRequestURL().toString());
+                    }
                     restErrorMessageHandler.handler(request.getLocale(), respBody);
                     defaultRestErrorMessageHandler.handler(request.getLocale(), respBody);
                     String json = jsonFactory.get().toJson(respBody);
                     try {
-                        respBody.withRequestHeaders(Servlets.headersToMultiValueMap(request));
-                        respBody.setMethod(Servlets.getMethod(request));
+                        if (!configuration.isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_REQUEST_HEADERS)) {
+                            respBody.withRequestHeaders(Servlets.headersToMultiValueMap(request));
+                        }
+                        if (!configuration.isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_METHOD)) {
+                            respBody.setMethod(Servlets.getMethod(request));
+                        }
                         String xssFilteredData = WAFs.clearIfContainsJavaScript(json);
                         if (Objs.isEmpty(xssFilteredData)) {
                             respBody.setData(null);

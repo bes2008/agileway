@@ -1,6 +1,9 @@
 package com.jn.agileway.web.rest;
 
+import com.jn.langx.util.collection.Collects;
+
 import java.util.List;
+import java.util.Set;
 
 /**
  * 可以从3个维度进行配置： package, class, annotation
@@ -18,6 +21,13 @@ public class GlobalRestResponseBodyHandlerProperties {
     private List<String> excludedAnnotations;
 
     private List<String> excludedMethods;
+
+    /**
+     * 响应 体要忽略的字段，字段 只对标 @see com.jn.langx.http.rest.RestRespBody
+     */
+    private Set<String> ignoredFields = Collects.newHashSet(
+            GlobalRestHandlers.GLOBAL_IGNORED_REST_FIELDS
+    );
 
     public List<String> getBasePackages() {
         return basePackages;
@@ -81,5 +91,13 @@ public class GlobalRestResponseBodyHandlerProperties {
 
     public void setExcludedMethods(List<String> excludedMethods) {
         this.excludedMethods = excludedMethods;
+    }
+
+    public Set<String> getIgnoredFields() {
+        return ignoredFields;
+    }
+
+    public void setIgnoredFields(Set<String> ignoredFields) {
+        this.ignoredFields = ignoredFields;
     }
 }
