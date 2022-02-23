@@ -15,6 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.SearchStrategy;
+import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
+import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -56,6 +60,7 @@ public class GlobalRestHandlersConfiguration {
 
     @Bean
     @Autowired
+    @ConditionalOnMissingBean({GlobalRestResponseBodyHandlerConfiguration.class})
     public GlobalRestResponseBodyHandlerConfiguration globalRestResponseBodyHandlerConfiguration( GlobalRestResponseBodyHandlerProperties properties){
         GlobalRestResponseBodyHandlerConfiguration configuration = new GlobalRestResponseBodyHandlerConfigurationBuilder()
                 .setProperties(properties)
@@ -69,7 +74,8 @@ public class GlobalRestHandlersConfiguration {
     public GlobalSpringRestResponseBodyHandler globalSpringRestResponseBodyHandler(
             GlobalRestResponseBodyHandlerConfiguration configuration,
             JSONFactory jsonFactory,
-            @Qualifier("globalRestErrorMessageHandler") RestErrorMessageHandler restErrorMessageHandler) {
+            @Qualifier("globalRestErrorMessageHandler")
+                    RestErrorMessageHandler restErrorMessageHandler) {
 
         GlobalSpringRestResponseBodyHandler unifiedResponseBodyHandler = new GlobalSpringRestResponseBodyHandler();
         unifiedResponseBodyHandler.setJsonFactory(jsonFactory);
@@ -104,13 +110,20 @@ public class GlobalRestHandlersConfiguration {
         return new GlobalRestExceptionHandlerProperties();
     }
 
+    @Bean
+    @ConditionalOnMissingBean(value = ErrorAttributes.class)
+    @ConditionalOnProperty(prefix = "agileway.rest.global-exception-handler", name="writeUnifiedResponse", havingValue = "true", matchIfMissing = true)
+    public AgilewayDefaultErrorAttributes errorAttributes(GlobalRestResponseBodyHandlerConfiguration configuration) {
+        return new AgilewayDefaultErrorAttributes(configuration);
+    }
+
+
     /**
      * Spring Controller 级别的 Rest Exception Handler
      *
      * @param jsonFactory
      * @param registry
      * @param globalRestExceptionHandlerProperties
-     * @return
      */
     @Bean
     @Autowired
