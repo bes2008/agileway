@@ -8,10 +8,13 @@ import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.function.Predicate;
+import com.jn.langx.util.logging.Loggers;
+import org.slf4j.Logger;
 
 import java.util.Locale;
 
 public class I18nRestErrorMessageHandler implements RestErrorMessageHandler, I18nMessageStorageAware {
+    private static final Logger logger = Loggers.getLogger(I18nRestErrorMessageHandler.class);
     private I18nMessageStorage storage;
 
     private I18nRestErrorMessageHandlerProperties config = new I18nRestErrorMessageHandlerProperties();
@@ -43,7 +46,12 @@ public class I18nRestErrorMessageHandler implements RestErrorMessageHandler, I18
                 errorCode = "HTTP-" + restRespBody.getStatusCode();
             }
         }
-        String message = storage.getMessage(locale, I18nRestErrorMessageHandler.class.getClassLoader(), errorCode);
+        String message = null;
+        try {
+            message = storage.getMessage(locale, I18nRestErrorMessageHandler.class.getClassLoader(), errorCode);
+        } catch (Throwable ex) {
+            logger.error(ex.getMessage(), ex);
+        }
         if (Emptys.isNotEmpty(message)) {
             restRespBody.setErrorCode(errorCode);
             restRespBody.setErrorMessage(message);

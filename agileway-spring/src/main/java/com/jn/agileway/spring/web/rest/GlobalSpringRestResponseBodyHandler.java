@@ -4,6 +4,7 @@ import com.jn.agileway.web.rest.*;
 import com.jn.agileway.web.servlet.Servlets;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.langx.http.rest.RestRespBody;
+import com.jn.langx.util.collection.ConcurrentHashSet;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
@@ -15,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * 该类存在的原因：
@@ -41,6 +44,21 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
         this.configuration = configuration;
     }
 
+
+    private static final String ERROR_CONTROLLER_NAMES = "org.springframework.boot.autoconfigure.web.ErrorController";
+    private ConcurrentHashSet<Method> ERROR_CONTROLLER_METHODS = new ConcurrentHashSet<Method>();
+
+    private boolean isSpringBootErrorControllerHandlerMethod(Method actionMethod) {
+        if (ERROR_CONTROLLER_METHODS.contains(actionMethod)) {
+            return true;
+        }
+        if (Reflects.isSubClassOrEquals(ERROR_CONTROLLER_NAMES, actionMethod.getDeclaringClass())) {
+            ERROR_CONTROLLER_METHODS.add(actionMethod);
+            return true;
+        }
+        return false;
+    }
+
     /**
      * @param request
      * @param response
@@ -57,7 +75,7 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
         if (actionReturnValue instanceof Resource) {
             return null;
         }
-        RestRespBody body = convertToRestRespBody(request, response, actionReturnValue);
+        RestRespBody body = convertToRestRespBody(request, response, actionMethod, actionReturnValue);
         if (body != null && body.getStatusCode() >= 400) {
             restErrorMessageHandler.handler(request.getLocale(), body);
         }
@@ -86,9 +104,32 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
         return supported;
     }
 
+    private RestRespBody convertSpringBootErrorBodyToRestRespBody(HttpServletRequest request, HttpServletResponse response, Map<String, Object> tmp) {
+        Integer statusCode = (Integer) tmp.get("status");
+        RestRespBody respBody = new RestRespBody();
+        respBody.setSuccess(false);
+        respBody.setStatusCode(statusCode == null ? 404 : statusCode);
+        if (tmp.containsKey("error")) {
+            respBody.setErrorCode("HTTP-" + respBody.getStatusCode());
+        }
+        if (tmp.containsKey("message")) {
+            respBody.setErrorMessage((String) tmp.get("message"));
+        }
+        if (tmp.containsKey("timestamp")) {
+            respBody.setTimestamp(((Date) tmp.get("timestamp")).getTime());
+        }
+        return respBody;
+    }
 
-    private RestRespBody convertToRestRespBody(HttpServletRequest request, HttpServletResponse response, Object body) {
-        int statusCode = extractStatusCode(body, response);
+    private RestRespBody convertToRestRespBody(HttpServletRequest request, HttpServletResponse response, Method actionMethod, Object body) {
+        int statusCode = -1;
+        RestRespBody respBody = null;
+        if ((body instanceof Map) && isSpringBootErrorControllerHandlerMethod(actionMethod)) {
+            respBody = convertSpringBootErrorBodyToRestRespBody(request, response, (Map<String, Object>) body);
+            return respBody;
+        }
+
+        statusCode = extractStatusCode(body, response);
 
         if (body instanceof ResponseEntity) {
             body = ((ResponseEntity) body).getBody();
@@ -98,7 +139,7 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
             return (RestRespBody) body;
         }
 
-        RestRespBody respBody = null;
+
         if (statusCode >= 400) {
             respBody = RestRespBody.error(statusCode, "", "");
             if (body != null) {

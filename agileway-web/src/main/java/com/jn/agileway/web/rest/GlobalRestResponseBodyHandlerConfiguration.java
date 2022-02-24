@@ -52,7 +52,7 @@ public class GlobalRestResponseBodyHandlerConfiguration {
      * 响应 体要忽略的字段，字段 只对标 @see com.jn.langx.http.rest.RestRespBody
      *
      *
-     * @see GlobalRestHandlers#GLOBAL_REST_FIELD_SUCCESS
+     * @see GlobalRestHandlers#GLOBAL_IGNORED_REST_FIELDS
      *
      */
     private Set<String> ignoredFields = Collects.newHashSet();

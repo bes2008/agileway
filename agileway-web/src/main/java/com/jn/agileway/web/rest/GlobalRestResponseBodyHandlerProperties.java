@@ -1,7 +1,10 @@
 package com.jn.agileway.web.rest;
 
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -37,12 +40,31 @@ public class GlobalRestResponseBodyHandlerProperties {
         this.basePackages = basePackages;
     }
 
+
+    public void addBasePackage(String packageName) {
+        if (Strings.isNotBlank(packageName)) {
+            if (this.basePackages == null) {
+                this.basePackages = new ArrayList<String>();
+            }
+            this.basePackages.add(packageName);
+        }
+    }
+
     public List<String> getExcludedBasePackages() {
         return excludedBasePackages;
     }
 
     public void setExcludedBasePackages(List<String> excludedBasePackages) {
         this.excludedBasePackages = excludedBasePackages;
+    }
+
+    public void addExcludedBasePackage(String packageName) {
+        if (Strings.isNotBlank(packageName)) {
+            if (this.excludedBasePackages == null) {
+                this.excludedBasePackages = new ArrayList<String>();
+            }
+            this.excludedBasePackages.add(packageName);
+        }
     }
 
     public List<String> getAssignableTypes() {
@@ -53,12 +75,30 @@ public class GlobalRestResponseBodyHandlerProperties {
         this.assignableTypes = assignableTypes;
     }
 
+    public void addAssignableType(String assignableType) {
+        if (Strings.isNotBlank(assignableType)) {
+            if (this.assignableTypes == null) {
+                this.assignableTypes = new ArrayList<String>();
+            }
+            this.assignableTypes.add(assignableType);
+        }
+    }
+
     public List<String> getExcludedAssignableTypes() {
         return excludedAssignableTypes;
     }
 
     public void setExcludedAssignableTypes(List<String> excludedAssignableTypes) {
         this.excludedAssignableTypes = excludedAssignableTypes;
+    }
+
+    public void addExcludedAssignableType(String type) {
+        if (Strings.isNotBlank(type)) {
+            if (this.excludedAssignableTypes == null) {
+                this.excludedAssignableTypes = new ArrayList<String>();
+            }
+            this.excludedAssignableTypes.add(type);
+        }
     }
 
     public List<String> getAnnotations() {
@@ -69,12 +109,30 @@ public class GlobalRestResponseBodyHandlerProperties {
         this.annotations = annotations;
     }
 
+    public void addAnnotation(String annotation) {
+        if (Strings.isNotBlank(annotation)) {
+            if (this.annotations == null) {
+                this.annotations = new ArrayList<String>();
+            }
+            this.annotations.add(annotation);
+        }
+    }
+
     public List<String> getExcludedAnnotations() {
         return excludedAnnotations;
     }
 
     public void setExcludedAnnotations(List<String> excludedAnnotations) {
         this.excludedAnnotations = excludedAnnotations;
+    }
+
+    public void addExcludedAnnotation(String annotation) {
+        if (Strings.isNotBlank(annotation)) {
+            if (this.excludedAnnotations == null) {
+                this.excludedAnnotations = new ArrayList<String>();
+            }
+            this.excludedAnnotations.add(annotation);
+        }
     }
 
     public List<String> getExcludedBasePackageClasses() {
@@ -85,6 +143,15 @@ public class GlobalRestResponseBodyHandlerProperties {
         this.excludedBasePackageClasses = excludedBasePackageClasses;
     }
 
+    public void addExcludedBasePackageClass(String klass) {
+        if (Strings.isNotBlank(klass)) {
+            if (this.excludedBasePackageClasses == null) {
+                this.excludedBasePackageClasses = new ArrayList<String>();
+            }
+            this.excludedBasePackageClasses.add(klass);
+        }
+    }
+
     public List<String> getExcludedMethods() {
         return excludedMethods;
     }
@@ -93,11 +160,29 @@ public class GlobalRestResponseBodyHandlerProperties {
         this.excludedMethods = excludedMethods;
     }
 
+    public void addExcludedMethod(String method) {
+        if (Strings.isNotBlank(method)) {
+            if (this.excludedMethods == null) {
+                this.excludedMethods = new ArrayList<String>();
+            }
+            this.excludedMethods.add(method);
+        }
+    }
+
     public Set<String> getIgnoredFields() {
         return ignoredFields;
     }
 
     public void setIgnoredFields(Set<String> ignoredFields) {
         this.ignoredFields = ignoredFields;
+    }
+
+    public void addIgnoredFields(String ignoredField) {
+        if (Strings.isNotBlank(ignoredField)) {
+            if (this.ignoredFields == null) {
+                this.ignoredFields = new HashSet<String>();
+            }
+            this.ignoredFields.add(ignoredField);
+        }
     }
 }
