@@ -17,9 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 public class HttpMediaTypeNotAcceptableExceptionHandler implements RestActionExceptionHandler<String> {
     @Override
     public RestRespBody<String> handle(HttpServletRequest request, HttpServletResponse response, Object handler, Exception exception) {
-        if (!(exception instanceof HttpMediaTypeNotAcceptableException)) {
-
-        }
         return RestRespBody.error(HttpServletResponse.SC_NOT_ACCEPTABLE, "HTTP-406", "media type 不可接受");
     }
 }

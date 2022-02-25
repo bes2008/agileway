@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 @RestActionExceptions({
         @RestActionException(AsyncRequestTimeoutException.class),
 })
-public class AsyncRequestTimeoutExceptionHandler implements RestActionExceptionHandler<String> {
+public class Http503ExceptionHandler implements RestActionExceptionHandler<String> {
     @Override
     public RestRespBody<String> handle(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         return RestRespBody.error503("HTTP-503", ex.getMessage());

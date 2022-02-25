@@ -20,9 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 public class HttpRequestMethodNotSupportedExceptionHandler implements RestActionExceptionHandler<String> {
     @Override
     public RestRespBody<String> handle(HttpServletRequest request, HttpServletResponse response, Object handler, Exception exception) {
-        if (!(exception instanceof HttpRequestMethodNotSupportedException)) {
-
-        }
         HttpRequestMethodNotSupportedException ex = (HttpRequestMethodNotSupportedException) exception;
         RestRespBody<String> respBody = RestRespBody.error(405, "HTTP-405", null);
         if (Emptys.isNotEmpty(ex.getSupportedMethods())) {
