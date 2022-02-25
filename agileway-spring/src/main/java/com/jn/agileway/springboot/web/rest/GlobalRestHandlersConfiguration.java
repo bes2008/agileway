@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -91,9 +92,19 @@ public class GlobalRestHandlersConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean
+    public RestActionExceptionHandlerOrderFinder exceptionHandlerOrderFinder(){
+        return new SpringOrderedRestExceptionHandlerOrderFinder();
+    }
+
+    @Bean
     @ConditionalOnMissingBean({GlobalRestExceptionHandlerRegistry.class})
-    public GlobalRestExceptionHandlerRegistry globalRestExceptionHandlerRegistry() {
+    @Autowired
+    public GlobalRestExceptionHandlerRegistry globalRestExceptionHandlerRegistry(
+            RestActionExceptionHandlerOrderFinder exceptionHandlerOrderFinder
+    ) {
         GlobalRestExceptionHandlerRegistry registry = new GlobalRestExceptionHandlerRegistry();
+        registry.setExceptionHandlerOrderFinder(exceptionHandlerOrderFinder);
         registry.init();
         return registry;
     }

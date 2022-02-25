@@ -57,6 +57,7 @@ public class GlobalRestResponseBodyHandlerConfiguration {
      */
     private Set<String> ignoredFields = Collects.newHashSet();
 
+
     public List<String> getBasePackages() {
         return basePackages;
     }

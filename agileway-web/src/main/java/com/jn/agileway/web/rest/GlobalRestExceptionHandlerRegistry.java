@@ -8,14 +8,15 @@ import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Maps;
+import com.jn.langx.util.collection.NonDistinctTreeSet;
+import com.jn.langx.util.comparator.OrderedComparator;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
 
-import java.util.Map;
-import java.util.ServiceLoader;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -29,7 +30,23 @@ public class GlobalRestExceptionHandlerRegistry implements Registry<String, Rest
      */
     private ConcurrentHashMap<Class, RestActionExceptionHandlerRegistration> cache = new ConcurrentHashMap<Class, RestActionExceptionHandlerRegistration>();
 
+    private RestActionExceptionHandlerOrderFinder exceptionHandlerOrderFinder = new DefaultRestActionExceptionHandlerOrderFinder();
+
     private Map<String, RestActionExceptionHandlerRegistration> registrationMap = Collects.emptyHashMap(true);
+    /**
+     * 按照优先级 高到低 的顺序排序
+     */
+    private Set<RestActionExceptionHandlerRegistration> sortedRegistrations = new NonDistinctTreeSet<RestActionExceptionHandlerRegistration>(new OrderedComparator<RestActionExceptionHandlerRegistration>());
+
+    private void addRestActionExceptionHandlerRegistration(String key, RestActionExceptionHandlerRegistration registration) {
+        Preconditions.checkNotNull(registration);
+        Maps.putIfAbsent(this.registrationMap, key, registration);
+        sortedRegistrations.add(registration);
+    }
+
+    public void setExceptionHandlerOrderFinder(RestActionExceptionHandlerOrderFinder exceptionHandlerOrderFinder) {
+        this.exceptionHandlerOrderFinder = exceptionHandlerOrderFinder;
+    }
 
     @Override
     public void init() throws InitializationException {
@@ -59,7 +76,7 @@ public class GlobalRestExceptionHandlerRegistry implements Registry<String, Rest
         Preconditions.checkNotNull(name, "the exception handler names is null");
         Preconditions.checkNotNull(exceptionHandler, "exception handler is null for registration {}", name);
         Preconditions.checkTrue(!(exceptionHandler instanceof GlobalRestExceptionHandler), "can't register a global exception handler to registration");
-        Maps.putIfAbsent(this.registrationMap, name, registration);
+        addRestActionExceptionHandlerRegistration(name, registration);
         logger.info("Register exception handler {} successfully", name);
     }
 
@@ -114,6 +131,10 @@ public class GlobalRestExceptionHandlerRegistry implements Registry<String, Rest
                 }
                 registration.setName(name);
                 registration.setExceptionHandler(exceptionHandler);
+
+                int order = exceptionHandlerOrderFinder.get(exceptionHandler);
+                registration.setOrder(order);
+                
                 register(registration);
             } else {
                 logger.warn("Can't register {} , please check @com.jn.agileway.web.rest.RestActionExceptions at the class", Reflects.getFQNClassName(resolverClass));
@@ -134,7 +155,7 @@ public class GlobalRestExceptionHandlerRegistry implements Registry<String, Rest
 
         // 从注册找
         if (restHandlerExceptionResolverRegistration == null) {
-            restHandlerExceptionResolverRegistration = Collects.findFirst(registrationMap.values(), new Predicate<RestActionExceptionHandlerRegistration>() {
+            restHandlerExceptionResolverRegistration = Collects.findFirst(sortedRegistrations, new Predicate<RestActionExceptionHandlerRegistration>() {
                 @Override
                 public boolean test(RestActionExceptionHandlerRegistration registration) {
                     return registration.findMatchedRegistration(ex, causeScanEnabled) != null;

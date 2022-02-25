@@ -48,7 +48,7 @@ public class I18nRestErrorMessageHandler implements RestErrorMessageHandler, I18
         }
         String message = null;
         try {
-            message = storage.getMessage(locale, I18nRestErrorMessageHandler.class.getClassLoader(), errorCode);
+            message = storage.getMessage(locale, I18nRestErrorMessageHandler.class.getClassLoader(), errorCode, restRespBody.getErrorMessage());
         } catch (Throwable ex) {
             logger.error(ex.getMessage(), ex);
         }

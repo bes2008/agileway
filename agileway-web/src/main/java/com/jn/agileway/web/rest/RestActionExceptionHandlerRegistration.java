@@ -1,5 +1,6 @@
 package com.jn.agileway.web.rest;
 
+import com.jn.langx.Ordered;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Predicate;
@@ -7,9 +8,11 @@ import com.jn.langx.util.reflect.Reflects;
 
 import java.util.List;
 
-public class RestActionExceptionHandlerRegistration {
+public class RestActionExceptionHandlerRegistration implements Ordered {
     private final List<RestActionExceptionHandlerDefinition> exceptionClassConfigs = Collects.newArrayList();
     private String name;
+    private int order;
+
     @NonNull
     private RestActionExceptionHandler exceptionHandler;
 
@@ -23,6 +26,15 @@ public class RestActionExceptionHandlerRegistration {
 
     public void setExceptionHandler(RestActionExceptionHandler exceptionHandler) {
         this.exceptionHandler = exceptionHandler;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
     }
 
     public RestActionExceptionHandler getExceptionHandler() {

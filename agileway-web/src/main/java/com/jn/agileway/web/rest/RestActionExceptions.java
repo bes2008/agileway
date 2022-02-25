@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 public @interface RestActionExceptions {
     String name() default "";
     RestActionException[] value() default {};
+    int order() default 0;
 }
