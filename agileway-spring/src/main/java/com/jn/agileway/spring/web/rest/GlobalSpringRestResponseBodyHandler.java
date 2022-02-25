@@ -1,5 +1,6 @@
 package com.jn.agileway.spring.web.rest;
 
+import com.jn.agileway.springboot.web.rest.SpringBootErrorControllers;
 import com.jn.agileway.web.rest.*;
 import com.jn.agileway.web.servlet.Servlets;
 import com.jn.easyjson.core.JSONFactory;
@@ -45,19 +46,7 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
     }
 
 
-    private static final String ERROR_CONTROLLER_NAMES = "org.springframework.boot.autoconfigure.web.ErrorController";
-    private ConcurrentHashSet<Method> ERROR_CONTROLLER_METHODS = new ConcurrentHashSet<Method>();
 
-    private boolean isSpringBootErrorControllerHandlerMethod(Method actionMethod) {
-        if (ERROR_CONTROLLER_METHODS.contains(actionMethod)) {
-            return true;
-        }
-        if (Reflects.isSubClassOrEquals(ERROR_CONTROLLER_NAMES, actionMethod.getDeclaringClass())) {
-            ERROR_CONTROLLER_METHODS.add(actionMethod);
-            return true;
-        }
-        return false;
-    }
 
     /**
      * @param request
@@ -124,7 +113,7 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
     private RestRespBody convertToRestRespBody(HttpServletRequest request, HttpServletResponse response, Method actionMethod, Object body) {
         int statusCode = -1;
         RestRespBody respBody = null;
-        if ((body instanceof Map) && isSpringBootErrorControllerHandlerMethod(actionMethod)) {
+        if ((body instanceof Map) && SpringBootErrorControllers.isSpringBootErrorControllerHandlerMethod(actionMethod)) {
             respBody = convertSpringBootErrorBodyToRestRespBody(request, response, (Map<String, Object>) body);
             return respBody;
         }

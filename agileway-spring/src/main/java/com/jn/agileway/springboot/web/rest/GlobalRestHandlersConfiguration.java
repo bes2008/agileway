@@ -8,15 +8,14 @@ import com.jn.agileway.web.filter.globalresponse.GlobalFilterRestResponseHandler
 import com.jn.agileway.web.filter.globalresponse.GlobalRestResponseFilter;
 import com.jn.agileway.web.rest.*;
 import com.jn.easyjson.core.JSONFactory;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
-import com.jn.langx.util.reflect.Reflects;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -63,8 +62,11 @@ public class GlobalRestHandlersConfiguration {
             GlobalRestResponseBodyHandlerProperties properties,
             GlobalRestExceptionHandlerProperties globalRestExceptionHandlerProperties
     ) {
-        if (globalRestExceptionHandlerProperties().isWriteUnifiedResponse()) {
-            properties.addAssignableType(Reflects.getFQNClassName(ErrorController.class));
+        if (globalRestExceptionHandlerProperties.isWriteUnifiedResponse()) {
+            String errorControllerClass = SpringBootErrorControllers.getErrorController();
+            if(Strings.isNotBlank(errorControllerClass)) {
+                properties.addAssignableType(errorControllerClass);
+            }
         }
         GlobalRestResponseBodyHandlerConfiguration configuration = new GlobalRestResponseBodyHandlerConfigurationBuilder()
                 .setProperties(properties)
