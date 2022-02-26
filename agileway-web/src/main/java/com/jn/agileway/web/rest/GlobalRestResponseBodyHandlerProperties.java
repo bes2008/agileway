@@ -2,6 +2,7 @@ package com.jn.agileway.web.rest;
 
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.collection.Pipeline;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -28,9 +29,9 @@ public class GlobalRestResponseBodyHandlerProperties {
     /**
      * 响应 体要忽略的字段，字段 只对标 @see com.jn.langx.http.rest.RestRespBody
      */
-    private Set<String> ignoredFields = Collects.newHashSet(
+    private List<String> ignoredFields = Collects.newArrayList(Collects.newHashSet(
             GlobalRestHandlers.GLOBAL_IGNORED_REST_FIELDS
-    );
+    ));
 
     public List<String> getBasePackages() {
         return basePackages;
@@ -169,20 +170,21 @@ public class GlobalRestResponseBodyHandlerProperties {
         }
     }
 
-    public Set<String> getIgnoredFields() {
+    public List<String> getIgnoredFields() {
         return ignoredFields;
     }
 
-    public void setIgnoredFields(Set<String> ignoredFields) {
-        this.ignoredFields = ignoredFields;
+    public void setIgnoredFields(List<String> ignoredFields) {
+        this.ignoredFields = Pipeline.of(ignoredFields).distinct().clearNulls().asList();
     }
 
     public void addIgnoredFields(String ignoredField) {
         if (Strings.isNotBlank(ignoredField)) {
             if (this.ignoredFields == null) {
-                this.ignoredFields = new HashSet<String>();
+                this.ignoredFields = new ArrayList<>();
             }
             this.ignoredFields.add(ignoredField);
+            setIgnoredFields(ignoredFields);
         }
     }
 }

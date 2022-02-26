@@ -3,11 +3,13 @@ package com.jn.agileway.web.rest;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.reflect.Reflects;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -51,9 +53,7 @@ public class GlobalRestResponseBodyHandlerConfiguration {
     /**
      * 响应 体要忽略的字段，字段 只对标 @see com.jn.langx.http.rest.RestRespBody
      *
-     *
      * @see GlobalRestHandlers#GLOBAL_IGNORED_REST_FIELDS
-     *
      */
     private Set<String> ignoredFields = Collects.newHashSet();
 
@@ -295,14 +295,14 @@ public class GlobalRestResponseBodyHandlerConfiguration {
         return ignoredFields;
     }
 
-    public void setIgnoredFields(Set<String> ignoredFields) {
-        if(ignoredFields!=null) {
-            this.ignoredFields = ignoredFields;
+    public void setIgnoredFields(Collection<String> ignoredFields) {
+        if (ignoredFields != null) {
+            this.ignoredFields = Pipeline.of(ignoredFields).distinct().asSet(true);
         }
     }
 
-    public boolean isIgnoredField(String fieldName){
-        if(Strings.isBlank(fieldName)){
+    public boolean isIgnoredField(String fieldName) {
+        if (Strings.isBlank(fieldName)) {
             return true;
         }
         return ignoredFields.contains(fieldName);
