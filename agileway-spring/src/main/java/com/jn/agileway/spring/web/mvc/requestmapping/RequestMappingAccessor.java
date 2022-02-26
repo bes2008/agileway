@@ -10,13 +10,13 @@ public interface RequestMappingAccessor<E extends Annotation> {
 
     void setMapping(E mapping);
 
-    String getName();
+    String name();
 
-    List<String> getValues();
+    List<String> values();
 
-    List<String> getPaths();
+    List<String> paths();
 
-    List<RequestMethod> getMethods();
+    List<RequestMethod> methods();
 
     List<String> params();
 

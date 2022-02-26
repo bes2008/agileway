@@ -61,7 +61,7 @@ public class RequestMappings {
             return null;
         }
         RequestMappingAccessor<?> accessor = Preconditions.checkNotNull(RequestMappingAccessorFactory.createAccessor(annotation));
-        List<RequestMethod> methods = Collects.clearNulls(accessor.getMethods());
+        List<RequestMethod> methods = Collects.clearNulls(accessor.methods());
         if (methods.isEmpty()) {
             return null;
         }

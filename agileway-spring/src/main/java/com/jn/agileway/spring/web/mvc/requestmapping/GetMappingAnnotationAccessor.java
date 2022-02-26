@@ -20,22 +20,22 @@ public class GetMappingAnnotationAccessor implements RequestMappingAccessor<GetM
     }
 
     @Override
-    public String getName() {
+    public String name() {
         return mapping.name();
     }
 
     @Override
-    public List<String> getValues() {
+    public List<String> values() {
         return Collects.newArrayList(mapping.value());
     }
 
     @Override
-    public List<String> getPaths() {
+    public List<String> paths() {
         return Collects.newArrayList(mapping.path());
     }
 
     @Override
-    public List<RequestMethod> getMethods() {
+    public List<RequestMethod> methods() {
         return Collects.newArrayList(RequestMethod.GET);
     }
 
