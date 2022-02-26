@@ -10,8 +10,8 @@ import java.util.Map;
 
 public class GlobalRestResponseBodyMapper implements Mapper<RestRespBody, Map<String, Object>> {
     private GlobalRestResponseBodyHandlerConfiguration configuration;
-    private Function<Map<String, Object>, Map<String, Object>> delegate = Functions.noopFunction();
-    private Predicate2<String, Object> fieldCleaner = new Predicate2<String, Object>() {
+    private Function<Map<String, Object>, Map<String, Object>> fieldsMapper = Functions.noopFunction();
+    private Predicate2<String, Object> fieldsCleaner = new Predicate2<String, Object>() {
         @Override
         public boolean test(String key, Object value) {
             if (GlobalRestResponseBodyMapper.this.configuration.isIgnoredField(key)) {
@@ -21,27 +21,31 @@ public class GlobalRestResponseBodyMapper implements Mapper<RestRespBody, Map<St
         }
     };
 
+    public GlobalRestResponseBodyMapper() {
+    }
+
     public GlobalRestResponseBodyMapper(GlobalRestResponseBodyHandlerConfiguration configuration) {
         setConfiguration(configuration);
     }
 
-    public void setDelegate(Function<Map<String, Object>, Map<String, Object>> delegate) {
-        this.delegate = delegate;
-    }
 
     public void setConfiguration(GlobalRestResponseBodyHandlerConfiguration configuration) {
         this.configuration = configuration;
     }
 
-    public void setFieldCleaner(Predicate2<String, Object> fieldCleaner) {
-        this.fieldCleaner = fieldCleaner;
+    public void setFieldsMapper(Function<Map<String, Object>, Map<String, Object>> fieldsMapper) {
+        this.fieldsMapper = fieldsMapper;
+    }
+
+    public void setFieldsCleaner(Predicate2<String, Object> fieldsCleaner) {
+        this.fieldsCleaner = fieldsCleaner;
     }
 
     @Override
     public Map<String, Object> apply(RestRespBody body) {
-        Map<String, Object> m = body.toMap(fieldCleaner);
-        if (delegate != null) {
-            m = delegate.apply(m);
+        Map<String, Object> m = body.toMap(fieldsCleaner);
+        if (fieldsMapper != null) {
+            m = fieldsMapper.apply(m);
         }
         return m;
     }

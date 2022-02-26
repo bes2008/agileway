@@ -9,12 +9,10 @@ import com.jn.agileway.web.rest.RestErrorMessageHandler;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
-import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.struct.Pair;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 
@@ -34,16 +32,17 @@ import java.util.Map;
  *     4. 由于 @RestControllerAdvice 或者 @ControllerAdvice 定义类的创建不受我们的控制，我们想要自定义必须掌握控制权
  * </pre>
  */
-public class GlobalSpringRestResponseBodyHandler extends AbstractGlobalRestResponseBodyHandler<Method> implements InitializingBean {
+public class GlobalSpringRestResponseBodyHandler extends AbstractGlobalRestResponseBodyHandler<Method> {
     private static final Logger logger = Loggers.getLogger(GlobalSpringRestResponseBodyHandler.class);
-    private RequestMappingAccessorRegistry registry;
+    private RequestMappingAccessorRegistry requestMappingAccessorRegistry;
 
-    public void setRegistry(RequestMappingAccessorRegistry registry) {
-        this.registry = registry;
+    public void setRequestMappingAccessorRegistry(RequestMappingAccessorRegistry requestMappingAccessorRegistry) {
+        this.requestMappingAccessorRegistry = requestMappingAccessorRegistry;
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void init() {
+        super.init();
         logger.info("===[AGILE_WAY-SPRING_GLOBAL_REST_RESPONSE_BODY_HANDLER]=== Initial the global rest response body handler for spring mvc: {}", Reflects.getFQNClassName(GlobalSpringRestResponseBodyHandler.class));
     }
 
@@ -71,8 +70,8 @@ public class GlobalSpringRestResponseBodyHandler extends AbstractGlobalRestRespo
 
     public boolean isSupportedAction(Method actionMethod) {
         boolean supported = configuration.isAcceptable(actionMethod);
-        if (supported && registry != null) {
-            Pair<Method, RequestMappingAccessor> pair = registry.get(actionMethod);
+        if (supported && requestMappingAccessorRegistry != null) {
+            Pair<Method, RequestMappingAccessor> pair = requestMappingAccessorRegistry.get(actionMethod);
             RequestMappingAccessor requestMappingAccessor = pair.getValue();
             if (requestMappingAccessor == null) {
                 // 没有 @RequestMapping

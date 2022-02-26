@@ -17,14 +17,14 @@ public abstract class AbstractGlobalRestResponseBodyHandler<ACTION> extends Abst
     protected GlobalRestResponseBodyHandlerConfiguration configuration;
     protected JSONFactory jsonFactory;
     protected RestErrorMessageHandler restErrorMessageHandler;
-    protected GlobalRestResponseBodyMapper resultMapper;
+    protected GlobalRestResponseBodyMapper responseBodyMapper;
 
     public void setRestErrorMessageHandler(RestErrorMessageHandler restErrorMessageHandler) {
         this.restErrorMessageHandler = restErrorMessageHandler;
     }
 
-    public void setResultMapper(GlobalRestResponseBodyMapper resultMapper) {
-        this.resultMapper = resultMapper;
+    public void setResponseBodyMapper(GlobalRestResponseBodyMapper responseBodyMapper) {
+        this.responseBodyMapper = responseBodyMapper;
     }
 
     @Override
@@ -57,8 +57,8 @@ public abstract class AbstractGlobalRestResponseBodyHandler<ACTION> extends Abst
         if (configuration == null) {
             configuration = new GlobalRestResponseBodyHandlerConfiguration();
         }
-        if (resultMapper == null) {
-            resultMapper = new GlobalRestResponseBodyMapper(configuration);
+        if (responseBodyMapper == null) {
+            responseBodyMapper = new GlobalRestResponseBodyMapper(configuration);
         }
     }
 
@@ -89,7 +89,7 @@ public abstract class AbstractGlobalRestResponseBodyHandler<ACTION> extends Abst
             respBody.withRequestHeaders(Servlets.headersToMultiValueMap(request));
         }
 
-        Map<String, Object> map = resultMapper.apply(respBody);
+        Map<String, Object> map = responseBodyMapper.apply(respBody);
         return map;
     }
 }
