@@ -48,13 +48,13 @@ public abstract class AbstractGlobalRestResponseHandler<ACTION, ACTION_RESULT> e
             respBody.setData(null);
         }
 
-        if (!context.getConfiguration().isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_URL)) {
+        if (!context.getConfiguration().isIgnoredField(RestRespBody.GLOBAL_REST_FIELD_URL)) {
             respBody.setUrl(request.getRequestURL().toString());
         }
-        if (!context.getConfiguration().isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_METHOD)) {
+        if (!context.getConfiguration().isIgnoredField(RestRespBody.GLOBAL_REST_FIELD_METHOD)) {
             respBody.setMethod(Servlets.getMethod(request));
         }
-        if (!context.getConfiguration().isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_REQUEST_HEADERS)) {
+        if (!context.getConfiguration().isIgnoredField(RestRespBody.GLOBAL_REST_FIELD_REQUEST_HEADERS)) {
             respBody.withRequestHeaders(Servlets.headersToMultiValueMap(request));
         }
 
