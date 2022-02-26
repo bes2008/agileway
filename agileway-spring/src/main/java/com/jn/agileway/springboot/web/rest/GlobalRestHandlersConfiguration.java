@@ -36,20 +36,11 @@ public class GlobalRestHandlersConfiguration {
 
     @Bean
     public GlobalFilterRestResponseHandler filterRestResponseHandler(
-            GlobalRestExceptionHandlerProperties globalRestExceptionHandlerProperties,
-            JSONFactory jsonFactory,
-            GlobalRestResponseBodyHandlerConfiguration configuration,
-            RestErrorMessageHandler restErrorMessageHandler,
-            GlobalRestResponseBodyMapper resultMapper
+            GlobalRestResponseBodyContext context
     ) {
         GlobalFilterRestResponseHandler filterRestResponseHandler = new GlobalFilterRestResponseHandler();
 
-        filterRestResponseHandler.setJsonFactory(jsonFactory);
-        filterRestResponseHandler.setConfiguration(configuration);
-        filterRestResponseHandler.setRestErrorMessageHandler(restErrorMessageHandler);
-        filterRestResponseHandler.setResponseBodyMapper(resultMapper);
-
-        filterRestResponseHandler.setGlobalRestExceptionHandlerProperties(globalRestExceptionHandlerProperties);
+        filterRestResponseHandler.setContext(context);
 
         filterRestResponseHandler.init();
         return filterRestResponseHandler;
@@ -124,21 +115,42 @@ public class GlobalRestHandlersConfiguration {
 
     @Bean
     @Autowired
-    @ConditionalOnMissingBean({GlobalSpringRestResponseBodyHandler.class})
-    public GlobalSpringRestResponseBodyHandler globalSpringRestResponseBodyHandler(
-            GlobalRestResponseBodyHandlerConfiguration configuration,
+    public GlobalRestResponseBodyContext globalRestResponseBodyContext(
             JSONFactory jsonFactory,
+
+            GlobalRestResponseBodyHandlerProperties handlerProperties,
+            GlobalRestResponseBodyHandlerConfiguration configuration,
+
             @Qualifier("globalRestErrorMessageHandler")
                     RestErrorMessageHandler restErrorMessageHandler,
-            RequestMappingAccessorRegistry requestMappingAccessorRegistry,
-            GlobalRestResponseBodyMapper globalRestResponseBodyMapper) {
+            GlobalRestExceptionHandlerProperties exceptionHandlerProperties,
+            GlobalRestResponseBodyMapper globalRestResponseBodyMapper
+    ){
+        GlobalRestResponseBodyContext context = new GlobalRestResponseBodyContext();
+
+        context.setJsonFactory(jsonFactory);
+
+        context.setConfiguration(configuration);
+        context.setHandlerProperties(handlerProperties);
+
+        context.setExceptionHandlerProperties(exceptionHandlerProperties);
+        context.setRestErrorMessageHandler(restErrorMessageHandler);
+
+        context.setResponseBodyMapper(globalRestResponseBodyMapper);
+        context.init();
+        return context;
+    }
+
+    @Bean
+    @Autowired
+    @ConditionalOnMissingBean({GlobalSpringRestResponseBodyHandler.class})
+    public GlobalSpringRestResponseBodyHandler globalSpringRestResponseBodyHandler(
+            GlobalRestResponseBodyContext context,
+            RequestMappingAccessorRegistry requestMappingAccessorRegistry) {
 
         GlobalSpringRestResponseBodyHandler unifiedResponseBodyHandler = new GlobalSpringRestResponseBodyHandler();
 
-        unifiedResponseBodyHandler.setJsonFactory(jsonFactory);
-        unifiedResponseBodyHandler.setConfiguration(configuration);
-        unifiedResponseBodyHandler.setRestErrorMessageHandler(restErrorMessageHandler);
-        unifiedResponseBodyHandler.setResponseBodyMapper(globalRestResponseBodyMapper);
+        unifiedResponseBodyHandler.setContext(context);
         unifiedResponseBodyHandler.setRequestMappingAccessorRegistry(requestMappingAccessorRegistry);
 
         unifiedResponseBodyHandler.init();

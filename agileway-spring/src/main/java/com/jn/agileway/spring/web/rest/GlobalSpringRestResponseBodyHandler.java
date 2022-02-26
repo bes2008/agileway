@@ -5,7 +5,6 @@ import com.jn.agileway.spring.web.mvc.requestmapping.RequestMappingAccessorRegis
 import com.jn.agileway.springboot.web.rest.SpringBootErrorControllers;
 import com.jn.agileway.web.rest.AbstractGlobalRestResponseBodyHandler;
 import com.jn.agileway.web.rest.GlobalRestHandlers;
-import com.jn.agileway.web.rest.RestErrorMessageHandler;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
@@ -69,7 +68,7 @@ public class GlobalSpringRestResponseBodyHandler extends AbstractGlobalRestRespo
     }
 
     public boolean isSupportedAction(Method actionMethod) {
-        boolean supported = configuration.isAcceptable(actionMethod);
+        boolean supported = getContext().getConfiguration().isAcceptable(actionMethod);
         if (supported && requestMappingAccessorRegistry != null) {
             Pair<Method, RequestMappingAccessor> pair = requestMappingAccessorRegistry.get(actionMethod);
             RequestMappingAccessor requestMappingAccessor = pair.getValue();
@@ -152,9 +151,4 @@ public class GlobalSpringRestResponseBodyHandler extends AbstractGlobalRestRespo
         return 200;
     }
 
-    public void setRestErrorMessageHandler(RestErrorMessageHandler restErrorMessageHandler) {
-        if (restErrorMessageHandler != null) {
-            this.restErrorMessageHandler = restErrorMessageHandler;
-        }
-    }
 }

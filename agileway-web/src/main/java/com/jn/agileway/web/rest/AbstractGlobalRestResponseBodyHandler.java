@@ -2,9 +2,6 @@ package com.jn.agileway.web.rest;
 
 import com.jn.agileway.web.security.WAFs;
 import com.jn.agileway.web.servlet.Servlets;
-import com.jn.easyjson.core.JSONFactory;
-import com.jn.easyjson.core.factory.JsonFactorys;
-import com.jn.easyjson.core.factory.JsonScope;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.util.Objs;
@@ -14,52 +11,17 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 public abstract class AbstractGlobalRestResponseBodyHandler<ACTION> extends AbstractInitializable implements GlobalRestResponseBodyHandler<ACTION> {
-    protected GlobalRestResponseBodyHandlerConfiguration configuration;
-    protected JSONFactory jsonFactory;
-    protected RestErrorMessageHandler restErrorMessageHandler;
-    protected GlobalRestResponseBodyMapper responseBodyMapper;
 
-    public void setRestErrorMessageHandler(RestErrorMessageHandler restErrorMessageHandler) {
-        this.restErrorMessageHandler = restErrorMessageHandler;
-    }
+    protected GlobalRestResponseBodyContext context;
 
-    public void setResponseBodyMapper(GlobalRestResponseBodyMapper responseBodyMapper) {
-        this.responseBodyMapper = responseBodyMapper;
+    @Override
+    public void setContext(GlobalRestResponseBodyContext context) {
+        this.context = context;
     }
 
     @Override
-    public void setConfiguration(GlobalRestResponseBodyHandlerConfiguration configuration) {
-        this.configuration = configuration;
-    }
-
-    public GlobalRestResponseBodyHandlerConfiguration getConfiguration() {
-        return this.configuration;
-    }
-
-    @Override
-    public void setJsonFactory(JSONFactory jsonFactory) {
-        this.jsonFactory = jsonFactory;
-    }
-
-    @Override
-    public JSONFactory getJsonFactory() {
-        return jsonFactory;
-    }
-
-    @Override
-    protected void doInit() {
-        if (jsonFactory == null) {
-            jsonFactory = JsonFactorys.getJSONFactory(JsonScope.SINGLETON);
-        }
-        if (restErrorMessageHandler == null) {
-            restErrorMessageHandler = NoopRestErrorMessageHandler.INSTANCE;
-        }
-        if (configuration == null) {
-            configuration = new GlobalRestResponseBodyHandlerConfiguration();
-        }
-        if (responseBodyMapper == null) {
-            responseBodyMapper = new GlobalRestResponseBodyMapper(configuration);
-        }
+    public GlobalRestResponseBodyContext getContext() {
+        return context;
     }
 
     @Override
@@ -71,25 +33,25 @@ public abstract class AbstractGlobalRestResponseBodyHandler<ACTION> extends Abst
             return null;
         }
         if (respBody.getStatusCode() >= 400) {
-            restErrorMessageHandler.handler(request.getLocale(), respBody);
+            context.getRestErrorMessageHandler().handler(request.getLocale(), respBody);
         }
 
-        String xssFilteredData = WAFs.clearIfContainsJavaScript(jsonFactory.get().toJson(respBody.getData()));
+        String xssFilteredData = WAFs.clearIfContainsJavaScript(context.getJsonFactory().get().toJson(respBody.getData()));
         if (Objs.isEmpty(xssFilteredData)) {
             respBody.setData(null);
         }
 
-        if (!configuration.isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_URL)) {
+        if (!context.getConfiguration().isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_URL)) {
             respBody.setUrl(request.getRequestURL().toString());
         }
-        if (!configuration.isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_METHOD)) {
+        if (!context.getConfiguration().isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_METHOD)) {
             respBody.setMethod(Servlets.getMethod(request));
         }
-        if (!configuration.isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_REQUEST_HEADERS)) {
+        if (!context.getConfiguration().isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_REQUEST_HEADERS)) {
             respBody.withRequestHeaders(Servlets.headersToMultiValueMap(request));
         }
 
-        Map<String, Object> map = responseBodyMapper.apply(respBody);
+        Map<String, Object> map = context.getResponseBodyMapper().apply(respBody);
         return map;
     }
 }

@@ -66,7 +66,7 @@ public class GlobalSpringRestResponseBodyAdvice implements ResponseBodyAdvice, I
         Map<String, Object> finalBody = responseBodyHandler.toMap(httpServletRequest, httpServletResponse, returnType.getMethod(), respBody);
 
         if (selectedConverterType == StringHttpMessageConverter.class) {
-            String json = responseBodyHandler.getJsonFactory().get().toJson(finalBody);
+            String json = responseBodyHandler.getContext().getJsonFactory().get().toJson(finalBody);
             return json;
         }
 

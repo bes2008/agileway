@@ -54,7 +54,7 @@ public class GlobalRestResponseFilter extends OncePerRequestFilter {
         if (notIgnoreFields) {
             handlerConfiguration.setIgnoredFields(Collects.<String>immutableSet());
         }
-        handler.setConfiguration(handlerConfiguration);
+        handler.getContext().setConfiguration(handlerConfiguration);
         setRestResponseBodyHandler(handler);
     }
 
@@ -94,7 +94,7 @@ public class GlobalRestResponseFilter extends OncePerRequestFilter {
                         request.setAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN, true);
 
                         response.resetBuffer();
-                        String json = restResponseBodyHandler.getJsonFactory().get().toJson(finalBody);
+                        String json = restResponseBodyHandler.getContext().getJsonFactory().get().toJson(finalBody);
                         Servlets.writeToResponse(resp, GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8, json);
                     }
                 }
