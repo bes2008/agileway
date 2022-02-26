@@ -108,8 +108,12 @@ public class GlobalRestHandlersConfiguration {
                     Function<Map<String, Object>, Map<String, Object>> fieldsMapper
     ) {
         GlobalRestResponseBodyMapper responseBodyMapper = new GlobalRestResponseBodyMapper(configuration);
-        responseBodyMapper.setFieldsMapper(fieldsMapper);
-        responseBodyMapper.setFieldsCleaner(fieldsCleaner);
+        if (fieldsMapper != null) {
+            responseBodyMapper.setFieldsMapper(fieldsMapper);
+        }
+        if (fieldsCleaner != null) {
+            responseBodyMapper.setFieldsCleaner(fieldsCleaner);
+        }
         return responseBodyMapper;
     }
 
@@ -125,7 +129,7 @@ public class GlobalRestHandlersConfiguration {
                     RestErrorMessageHandler restErrorMessageHandler,
             GlobalRestExceptionHandlerProperties exceptionHandlerProperties,
             GlobalRestResponseBodyMapper globalRestResponseBodyMapper
-    ){
+    ) {
         GlobalRestResponseBodyContext context = new GlobalRestResponseBodyContext();
 
         context.setJsonFactory(jsonFactory);
@@ -197,7 +201,6 @@ public class GlobalRestHandlersConfiguration {
 
     /**
      * Spring Controller 级别的 Rest Exception Handler
-     *
      */
     @Bean
     @Autowired

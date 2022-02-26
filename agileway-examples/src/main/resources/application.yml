@@ -45,7 +45,7 @@ agileway:
   rest:
     global-response-body:
       base-packages: com.jn.agileway.redis.examples.controller
-      ignoredFields: [success, statusCode, requestHeaders, responseHeaders]
+      ignoredFields: [success, statusCode, requestHeaders, responseHeaders, url, method, timestamp]
 logging:
   level:
     com:
