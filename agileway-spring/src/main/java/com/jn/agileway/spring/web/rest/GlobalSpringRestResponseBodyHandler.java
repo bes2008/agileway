@@ -51,7 +51,6 @@ public class GlobalSpringRestResponseBodyHandler extends AbstractGlobalRestRespo
      * @param response
      * @param actionMethod
      * @param actionReturnValue
-     * @return
      */
     @Override
     public RestRespBody handle(HttpServletRequest request, HttpServletResponse response, Method actionMethod, Object actionReturnValue) {
