@@ -1,14 +1,17 @@
 package com.jn.agileway.web.filter.globalresponse;
 
 import com.jn.agileway.web.filter.OncePerRequestFilter;
+import com.jn.agileway.web.rest.GlobalRestHandlers;
 import com.jn.agileway.web.security.WAFs;
 import com.jn.agileway.web.rest.GlobalRestResponseBodyHandlerConfiguration;
+import com.jn.agileway.web.servlet.Servlets;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
+import com.jn.langx.util.reflect.type.Types;
 import org.slf4j.Logger;
 
 import javax.servlet.*;
@@ -16,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * 配置 该 filter的url pattern时，只能配置在那些 restful api上，不然会出现意想不到的彩蛋
@@ -76,13 +81,27 @@ public class GlobalRestResponseFilter extends OncePerRequestFilter {
                     restRespBody = exceptionHandler.handle(req, resp, doFilterMethod, ex);
                 }
             } finally {
-                if (restResponseBodyHandler != null) {
-                    restResponseBodyHandler.handleResponseBody(req, resp, doFilterMethod, restRespBody);
+                //rest response body 是否已写过
+                Boolean responseBodyWritten = (Boolean) request.getAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN);
+                if ((responseBodyWritten == null || !responseBodyWritten) && !response.isCommitted()) {
+                    if (restResponseBodyHandler != null) {
+                        restRespBody = restResponseBodyHandler.handleResponseBody(req, resp, doFilterMethod, restRespBody);
+                    }
+
+                    if (restRespBody != null && restRespBody.getData() != null) {
+                        Object data = restRespBody.getData();
+                        Class dataClass = data.getClass();
+                        if (!Types.isPrimitive(data.getClass()) && Date.class != dataClass && dataClass != Calendar.class) {
+                            restRespBody.setData(WAFs.clearIfContainsJavaScript((String) restRespBody.getData()));
+                        }
+                    }
+
+
+                    response.resetBuffer();
+                    String json =
+                            Servlets.writeToResponse(response, GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8, json);
                 }
 
-                if (restRespBody != null && Objs.isNotEmpty(restRespBody.getData()) && (restRespBody.getData() instanceof String)) {
-                    restRespBody.setData(WAFs.clearIfContainsJavaScript((String) restRespBody.getData()));
-                }
             }
         } else {
             chain.doFilter(request, response);

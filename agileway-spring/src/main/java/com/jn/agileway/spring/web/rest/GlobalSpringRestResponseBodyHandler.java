@@ -29,23 +29,13 @@ import java.util.Map;
  *     4. 由于 @RestControllerAdvice 或者 @ControllerAdvice 定义类的创建不受我们的控制，我们想要自定义必须掌握控制权
  * </pre>
  */
-public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBodyHandler<Method>, InitializingBean {
+public class GlobalSpringRestResponseBodyHandler extends AbstractGlobalRestResponseBodyHandler<Method> implements InitializingBean {
     private static final Logger logger = Loggers.getLogger(GlobalSpringRestResponseBodyHandler.class);
-    private GlobalRestResponseBodyHandlerConfiguration configuration = new GlobalRestResponseBodyHandlerConfiguration();
-    private JSONFactory jsonFactory;
-    private RestErrorMessageHandler restErrorMessageHandler = NoopRestErrorMessageHandler.INSTANCE;
 
     @Override
     public void afterPropertiesSet() throws Exception {
         logger.info("===[AGILE_WAY-SPRING_GLOBAL_REST_RESPONSE_BODY_HANDLER]=== Initial the global rest response body handler for spring mvc: {}", Reflects.getFQNClassName(GlobalSpringRestResponseBodyHandler.class));
     }
-
-    @Override
-    public void setConfiguration(GlobalRestResponseBodyHandlerConfiguration configuration) {
-        this.configuration = configuration;
-    }
-
-
 
 
     /**
