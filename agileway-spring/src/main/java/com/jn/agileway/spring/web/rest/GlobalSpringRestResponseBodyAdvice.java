@@ -1,9 +1,8 @@
 package com.jn.agileway.spring.web.rest;
 
-import com.jn.agileway.web.security.WAFs;
+import com.jn.agileway.web.rest.GlobalRestHandlers;
 import com.jn.langx.http.rest.RestRespBody;
-import com.jn.langx.util.Objs;
-import com.jn.langx.util.function.Supplier0;
+import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
@@ -21,6 +20,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalSpringRestResponseBodyAdvice implements ResponseBodyAdvice, InitializingBean {
@@ -56,27 +56,21 @@ public class GlobalSpringRestResponseBodyAdvice implements ResponseBodyAdvice, I
         }
 
         final RestRespBody respBody = responseBodyHandler.handleResponseBody(httpServletRequest, httpServletResponse, returnType.getMethod(), body);
+        if (respBody == null) {
+            return null;
+        }
+        httpServletResponse.setStatus(respBody.getStatusCode());
+        httpServletResponse.setContentType(GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8);
+        httpServletResponse.setCharacterEncoding(Charsets.UTF_8.name());
+        httpServletRequest.setAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN, true);
+        Map<String, Object> finalBody = responseBodyHandler.toMap(httpServletRequest, httpServletResponse, returnType.getMethod(), respBody);
+
         if (selectedConverterType == StringHttpMessageConverter.class) {
-            String json = responseBodyHandler.getJsonFactory().get().toJson(respBody);
-            String xssFilteredData = WAFs.clearIfContainsJavaScript(json);
-            if (Objs.isEmpty(xssFilteredData)) {
-                respBody.setData(null);
-                json = responseBodyHandler.getJsonFactory().get().toJson(respBody);
-            }
+            String json = responseBodyHandler.getJsonFactory().get().toJson(finalBody);
             return json;
         }
 
-        String xssFilteredData = WAFs.clearIfContainsJavaScript(new Supplier0<String>() {
-            @Override
-            public String get() {
-                return responseBodyHandler.getJsonFactory().get().toJson(respBody);
-            }
-        });
-        if (Objs.isEmpty(xssFilteredData)) {
-            respBody.setData(null);
-        }
-
-        return respBody;
+        return finalBody;
     }
 
 

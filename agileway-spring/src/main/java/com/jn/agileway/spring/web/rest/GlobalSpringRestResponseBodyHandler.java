@@ -1,14 +1,18 @@
 package com.jn.agileway.spring.web.rest;
 
+import com.jn.agileway.spring.web.mvc.requestmapping.RequestMappingAccessor;
+import com.jn.agileway.spring.web.mvc.requestmapping.RequestMappingAccessorRegistry;
 import com.jn.agileway.springboot.web.rest.SpringBootErrorControllers;
-import com.jn.agileway.web.rest.*;
-import com.jn.agileway.web.servlet.Servlets;
-import com.jn.easyjson.core.JSONFactory;
+import com.jn.agileway.web.rest.AbstractGlobalRestResponseBodyHandler;
+import com.jn.agileway.web.rest.GlobalRestHandlers;
+import com.jn.agileway.web.rest.RestErrorMessageHandler;
 import com.jn.langx.http.rest.RestRespBody;
-import com.jn.langx.util.collection.ConcurrentHashSet;
+import com.jn.langx.util.Objs;
+import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
+import com.jn.langx.util.struct.Pair;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
@@ -18,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,6 +36,11 @@ import java.util.Map;
  */
 public class GlobalSpringRestResponseBodyHandler extends AbstractGlobalRestResponseBodyHandler<Method> implements InitializingBean {
     private static final Logger logger = Loggers.getLogger(GlobalSpringRestResponseBodyHandler.class);
+    private RequestMappingAccessorRegistry registry;
+
+    public void setRegistry(RequestMappingAccessorRegistry registry) {
+        this.registry = registry;
+    }
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -47,36 +57,35 @@ public class GlobalSpringRestResponseBodyHandler extends AbstractGlobalRestRespo
      */
     @Override
     public RestRespBody handleResponseBody(HttpServletRequest request, HttpServletResponse response, Method actionMethod, Object actionReturnValue) {
+        if (actionReturnValue instanceof Resource || actionReturnValue instanceof com.jn.langx.io.resource.Resource) {
+            return null;
+        }
+
         if (!isSupportedAction(actionMethod)) {
             request.setAttribute(GlobalRestHandlers.GLOBAL_REST_NON_REST_REQUEST, true);
             return null;
         }
-        if (actionReturnValue instanceof Resource) {
-            return null;
-        }
         RestRespBody body = convertToRestRespBody(request, response, actionMethod, actionReturnValue);
-        if (body != null && body.getStatusCode() >= 400) {
-            restErrorMessageHandler.handler(request.getLocale(), body);
-        }
-        if (!configuration.isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_URL)) {
-            body.setUrl(request.getRequestURL().toString());
-        }
-        response.setStatus(body.getStatusCode());
-        response.setContentType(GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8);
-        response.setCharacterEncoding(Charsets.UTF_8.name());
-        request.setAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN, true);
-        if (!configuration.isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_METHOD)) {
-            body.setMethod(Servlets.getMethod(request));
-        }
-        if (!configuration.isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_REQUEST_HEADERS)) {
-            body.withRequestHeaders(Servlets.headersToMultiValueMap(request));
-        }
-
         return body;
     }
 
     public boolean isSupportedAction(Method actionMethod) {
         boolean supported = configuration.isAcceptable(actionMethod);
+        if (supported && registry != null) {
+            Pair<Method, RequestMappingAccessor> pair = registry.get(actionMethod);
+            RequestMappingAccessor requestMappingAccessor = pair.getValue();
+            if (requestMappingAccessor == null) {
+                // 没有 @RequestMapping
+                supported = false;
+            } else {
+                List<String> produces = requestMappingAccessor.produces();
+                if (Objs.isNotEmpty(produces)) {
+                    if (Collects.containsNone(produces, Collects.newArrayList("*/*", "application/*", "application/json"))) {
+                        supported = false;
+                    }
+                }
+            }
+        }
         if (!supported) {
             logger.debug("{} is not supported for unified response body handler", actionMethod.toString());
         }
@@ -142,15 +151,6 @@ public class GlobalSpringRestResponseBodyHandler extends AbstractGlobalRestRespo
             return 500;
         }
         return 200;
-    }
-
-    @Override
-    public void setJsonFactory(JSONFactory jsonFactory) {
-        this.jsonFactory = jsonFactory;
-    }
-
-    public JSONFactory getJsonFactory() {
-        return jsonFactory;
     }
 
     public void setRestErrorMessageHandler(RestErrorMessageHandler restErrorMessageHandler) {
