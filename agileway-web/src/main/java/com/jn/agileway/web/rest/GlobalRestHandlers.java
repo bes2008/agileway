@@ -33,8 +33,6 @@ public class GlobalRestHandlers {
      * @see GlobalRestResponseBodyHandlerConfiguration#isIgnoredField(String)
      */
     public static final Set<String> GLOBAL_IGNORED_REST_FIELDS = Collects.immutableSet(Collects.asSet(
-            RestRespBody.GLOBAL_REST_FIELD_STATUS_CODE,
-            RestRespBody.GLOBAL_REST_FIELD_TIMESTAMP,
             RestRespBody.GLOBAL_REST_FIELD_URL,
             RestRespBody.GLOBAL_REST_FIELD_METHOD,
             RestRespBody.GLOBAL_REST_FIELD_REQUEST_HEADERS,
