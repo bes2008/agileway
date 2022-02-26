@@ -1,6 +1,11 @@
 package com.jn.agileway.web.rest;
 
 public class GlobalRestExceptionHandlerProperties {
+    /**
+     * 是否根据 异常链扫描
+     * <p>
+     * 这个配置存在的意义: 有人喜欢把真正的异常用RuntimeException包装
+     */
     private boolean causeScanEnabled = true;
     private int defaultErrorStatusCode = 500;
     private String defaultErrorCode = "UNKNOWN";

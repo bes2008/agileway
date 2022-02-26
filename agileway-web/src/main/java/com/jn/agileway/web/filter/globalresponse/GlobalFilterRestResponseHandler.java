@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
 public class GlobalFilterRestResponseHandler extends AbstractGlobalRestResponseBodyHandler<Method> {
 
     @Override
-    public RestRespBody handleResponseBody(HttpServletRequest request, HttpServletResponse response, Method method, Object actionReturnValue) {
+    public RestRespBody handle(HttpServletRequest request, HttpServletResponse response, Method method, Object actionReturnValue) {
         // 是否是非rest请求，或者禁用了全局Rest处理的请求，都视为是 非Rest请求
         Boolean nonRestRequest = (Boolean) request.getAttribute(GlobalRestHandlers.GLOBAL_REST_NON_REST_REQUEST);
         if (nonRestRequest != null && nonRestRequest) {

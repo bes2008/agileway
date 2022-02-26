@@ -2,12 +2,8 @@ package com.jn.agileway.web.filter.globalresponse;
 
 import com.jn.agileway.web.filter.OncePerRequestFilter;
 import com.jn.agileway.web.rest.GlobalRestHandlers;
-import com.jn.agileway.web.rest.GlobalRestResponseBodyHandlerConfiguration;
 import com.jn.agileway.web.servlet.Servlets;
 import com.jn.langx.http.rest.RestRespBody;
-import com.jn.langx.util.Objs;
-import com.jn.langx.util.Strings;
-import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
@@ -33,29 +29,6 @@ public class GlobalRestResponseFilter extends OncePerRequestFilter {
     public void init(FilterConfig filterConfig) throws ServletException {
         super.init(filterConfig);
         logger.info("Initial the global rest response filter");
-        GlobalFilterRestResponseHandler handler = new GlobalFilterRestResponseHandler();
-        GlobalRestResponseBodyHandlerConfiguration handlerConfiguration = new GlobalRestResponseBodyHandlerConfiguration();
-        handlerConfiguration.addAssignableType(GlobalRestResponseFilter.class);
-        String ignoredFieldsString = filterConfig.getInitParameter("ignoredFields");
-        boolean notIgnoreFields = false;
-        if (Strings.isNotBlank(ignoredFieldsString)) {
-            String[] ignoredFields = Strings.split(ignoredFieldsString, ",");
-            if (!Objs.isEmpty(ignoredFields)) {
-                handlerConfiguration.setIgnoredFields(Collects.newHashSet(ignoredFields));
-            } else {
-                notIgnoreFields = true;
-            }
-        } else {
-            if (ignoredFieldsString != null) {
-                notIgnoreFields = true;
-            }
-        }
-        // 存在该 配置项，但值为 空
-        if (notIgnoreFields) {
-            handlerConfiguration.setIgnoredFields(Collects.<String>immutableSet());
-        }
-        handler.getContext().setConfiguration(handlerConfiguration);
-        setRestResponseBodyHandler(handler);
     }
 
     public void setExceptionHandler(GlobalFilterRestExceptionHandler exceptionHandler) {
@@ -83,7 +56,7 @@ public class GlobalRestResponseFilter extends OncePerRequestFilter {
                 Boolean responseBodyWritten = (Boolean) request.getAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN);
                 if ((responseBodyWritten == null || !responseBodyWritten) && !response.isCommitted()) {
                     if (restResponseBodyHandler != null) {
-                        restRespBody = restResponseBodyHandler.handleResponseBody(req, resp, doFilterMethod, restRespBody);
+                        restRespBody = restResponseBodyHandler.handle(req, resp, doFilterMethod, restRespBody);
                     }
                     if (restRespBody != null) {
                         Map<String, Object> finalBody = restResponseBodyHandler.toMap(req, resp, doFilterMethod, restRespBody);

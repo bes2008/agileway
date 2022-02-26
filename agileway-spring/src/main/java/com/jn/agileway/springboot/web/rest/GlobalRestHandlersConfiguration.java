@@ -198,33 +198,19 @@ public class GlobalRestHandlersConfiguration {
     /**
      * Spring Controller 级别的 Rest Exception Handler
      *
-     * @param jsonFactory
-     * @param registry
-     * @param globalRestExceptionHandlerProperties
      */
     @Bean
     @Autowired
     @ConditionalOnMissingBean({GlobalSpringRestExceptionHandler.class})
     public GlobalSpringRestExceptionHandler globalSpringRestExceptionHandler(
-            JSONFactory jsonFactory,
             GlobalRestExceptionHandlerRegistry registry,
-            GlobalRestExceptionHandlerProperties globalRestExceptionHandlerProperties,
-            @Qualifier("globalRestErrorMessageHandler")
-                    RestErrorMessageHandler restErrorMessageHandler,
-            GlobalRestResponseBodyHandlerConfiguration globalRestResponseBodyHandlerConfiguration
+            GlobalRestResponseBodyContext context
     ) {
         GlobalSpringRestExceptionHandler globalRestExceptionHandler = new GlobalSpringRestExceptionHandler();
 
-        globalRestExceptionHandler.setDefaultErrorCode(globalRestExceptionHandlerProperties.getDefaultErrorCode());
-        globalRestExceptionHandler.setDefaultErrorMessage(globalRestExceptionHandlerProperties.getDefaultErrorMessage());
-        globalRestExceptionHandler.setDefaultErrorStatusCode(globalRestExceptionHandlerProperties.getDefaultErrorStatusCode());
-        globalRestExceptionHandler.setCauseScanEnabled(globalRestExceptionHandlerProperties.isCauseScanEnabled());
-        globalRestExceptionHandler.setWriteUnifiedResponse(globalRestExceptionHandlerProperties.isWriteUnifiedResponse());
-        globalRestExceptionHandler.setErrorMessageHandler(restErrorMessageHandler);
+        globalRestExceptionHandler.setContext(context);
 
-        globalRestExceptionHandler.setJsonFactory(jsonFactory);
         globalRestExceptionHandler.setExceptionHandlerRegistry(registry);
-        globalRestExceptionHandler.setConfiguration(globalRestResponseBodyHandlerConfiguration);
         globalRestExceptionHandler.startup();
         return globalRestExceptionHandler;
     }
@@ -240,34 +226,18 @@ public class GlobalRestHandlersConfiguration {
 
     /**
      * javax.servlet.Filter 级别的 Rest Exception Handler
-     *
-     * @param jsonFactory
-     * @param registry
-     * @param globalRestExceptionHandlerProperties
      */
     @Bean
     @Autowired
     @ConditionalOnMissingBean({GlobalFilterRestExceptionHandler.class})
     public GlobalFilterRestExceptionHandler globalFilterRestExceptionHandler(
-            JSONFactory jsonFactory,
-            GlobalRestExceptionHandlerRegistry registry,
-            GlobalRestExceptionHandlerProperties globalRestExceptionHandlerProperties,
-            @Qualifier("globalRestErrorMessageHandler")
-                    RestErrorMessageHandler restErrorMessageHandler,
-            GlobalRestResponseBodyHandlerConfiguration globalRestResponseBodyHandlerConfiguration) {
+            GlobalRestResponseBodyContext context,
+            GlobalRestExceptionHandlerRegistry registry) {
         GlobalFilterRestExceptionHandler globalRestExceptionHandler = new GlobalFilterRestExceptionHandler();
 
-        globalRestExceptionHandler.setDefaultErrorCode(globalRestExceptionHandlerProperties.getDefaultErrorCode());
-        globalRestExceptionHandler.setDefaultErrorMessage(globalRestExceptionHandlerProperties.getDefaultErrorMessage());
-        globalRestExceptionHandler.setDefaultErrorStatusCode(globalRestExceptionHandlerProperties.getDefaultErrorStatusCode());
-        globalRestExceptionHandler.setCauseScanEnabled(globalRestExceptionHandlerProperties.isCauseScanEnabled());
-        globalRestExceptionHandler.setWriteUnifiedResponse(globalRestExceptionHandlerProperties.isWriteUnifiedResponse());
-
-        globalRestExceptionHandler.setJsonFactory(jsonFactory);
+        globalRestExceptionHandler.setContext(context);
         globalRestExceptionHandler.setExceptionHandlerRegistry(registry);
-        globalRestExceptionHandler.setErrorMessageHandler(restErrorMessageHandler);
 
-        globalRestExceptionHandler.setConfiguration(globalRestResponseBodyHandlerConfiguration);
         globalRestExceptionHandler.startup();
         return globalRestExceptionHandler;
     }

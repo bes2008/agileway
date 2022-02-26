@@ -1,27 +1,16 @@
 package com.jn.agileway.web.rest;
 
-import com.jn.agileway.web.security.WAFs;
-import com.jn.agileway.web.servlet.Servlets;
-import com.jn.easyjson.core.JSONFactory;
-import com.jn.easyjson.core.factory.JsonFactorys;
-import com.jn.easyjson.core.factory.JsonScope;
 import com.jn.langx.http.rest.RestRespBody;
-import com.jn.langx.lifecycle.AbstractInitializable;
-import com.jn.langx.lifecycle.Initializable;
-import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.lifecycle.Lifecycle;
-import com.jn.langx.util.Objs;
-import com.jn.langx.util.Strings;
-import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.logging.Loggers;
-import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 import static com.jn.agileway.web.rest.GlobalRestHandlers.GLOBAL_REST_EXCEPTION_HANDLER;
 import static com.jn.agileway.web.rest.GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN;
@@ -29,33 +18,11 @@ import static com.jn.agileway.web.rest.GlobalRestHandlers.GLOBAL_REST_RESPONSE_H
 /**
  * 通常在 Controller层调用
  */
-public abstract class GlobalRestExceptionHandler extends AbstractInitializable implements RestActionExceptionHandler, Lifecycle {
+public abstract class GlobalRestExceptionHandler extends AbstractGlobalRestResponseHandler<Object, Exception> implements Lifecycle {
     private static Logger logger = Loggers.getLogger(GlobalRestExceptionHandler.class);
-    private JSONFactory jsonFactory = JsonFactorys.getJSONFactory(JsonScope.SINGLETON);
-    private GlobalRestResponseBodyHandlerConfiguration configuration;
-    /**
-     * 是否根据 异常链扫描
-     * <p>
-     * 这个配置存在的意义: 有人喜欢把真正的异常用RuntimeException包装
-     */
-    private boolean causeScanEnabled = false;
-
-    private DefaultRestErrorMessageHandler defaultErrorMessageHandler = new DefaultRestErrorMessageHandler();
 
     private volatile boolean running = false;
-    private boolean writeUnifiedResponse = true;
     private GlobalRestExceptionHandlerRegistry exceptionHandlerRegistry;
-    private RestErrorMessageHandler errorMessageHandler = NoopRestErrorMessageHandler.INSTANCE;
-
-    public void setConfiguration(GlobalRestResponseBodyHandlerConfiguration configuration) {
-        this.configuration = configuration;
-    }
-
-    public void setJsonFactory(JSONFactory jsonFactory) {
-        if (jsonFactory != null) {
-            this.jsonFactory = jsonFactory;
-        }
-    }
 
     public void setExceptionHandlerRegistry(GlobalRestExceptionHandlerRegistry exceptionHandlerRegistry) {
         this.exceptionHandlerRegistry = exceptionHandlerRegistry;
@@ -76,6 +43,7 @@ public abstract class GlobalRestExceptionHandler extends AbstractInitializable i
         if (isSupportedRestAction(request, response, action, ex)) {
 
             // 找那些注册好了的异常处理
+            boolean causeScanEnabled = context.getExceptionHandlerProperties().isCauseScanEnabled();
             RestActionExceptionHandlerRegistration restHandlerExceptionResolverRegistration = exceptionHandlerRegistry.findExceptionResolver(ex, causeScanEnabled);
 
             if (restHandlerExceptionResolverRegistration != null) {
@@ -88,39 +56,19 @@ public abstract class GlobalRestExceptionHandler extends AbstractInitializable i
 
             if (respBody == null) {
                 logger.error(ex.getMessage(), ex);
-                respBody = RestRespBody.error(defaultErrorMessageHandler.getDefaultErrorStatusCode(), defaultErrorMessageHandler.getDefaultErrorCode(), defaultErrorMessageHandler.getDefaultErrorMessage());
+                respBody = RestRespBody.error(context.getDefaultRestErrorMessageHandler().getDefaultErrorStatusCode(), context.getDefaultRestErrorMessageHandler().getDefaultErrorCode(), context.getDefaultRestErrorMessageHandler().getDefaultErrorMessage());
             }
             request.setAttribute(GLOBAL_REST_EXCEPTION_HANDLER, this);
-            if (!configuration.isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_URL)) {
-                respBody.setUrl(request.getRequestURL().toString());
-            }
-            if (!configuration.isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_METHOD)) {
-                respBody.setMethod(HttpMethod.valueOf(request.getMethod()));
-            }
-            if (!configuration.isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_REQUEST_HEADERS)) {
-                MultiValueMap<String, String> headers = Servlets.headersToMultiValueMap(request);
-                respBody.withRequestHeaders(headers);
-            }
 
-            try {
-                errorMessageHandler.handler(request.getLocale(), respBody);
-            } catch (Throwable ex1) {
-                logger.error(ex1.getMessage(), ex1);
-            } finally {
-                defaultErrorMessageHandler.handler(request.getLocale(), respBody);
-            }
+            Map<String, Object> finalBody = toMap(request, response, action, respBody);
 
-            if (writeUnifiedResponse) {
+            if (context.getExceptionHandlerProperties().isWriteUnifiedResponse()) {
                 try {
                     if (!response.isCommitted()) {
                         response.resetBuffer();
                         response.setStatus(respBody.getStatusCode());
-                        String jsonstring = jsonFactory.get().toJson(respBody);
-                        String xssFilteredData = WAFs.clearIfContainsJavaScript(jsonstring);
-                        if (Objs.isEmpty(xssFilteredData)) {
-                            respBody.setData(null);
-                            jsonstring = jsonFactory.get().toJson(respBody);
-                        }
+                        String jsonstring = context.getJsonFactory().get().toJson(finalBody);
+
                         response.setContentType(GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8);
                         response.setCharacterEncoding(Charsets.UTF_8.name());
                         response.getWriter().write(jsonstring);
@@ -133,7 +81,6 @@ public abstract class GlobalRestExceptionHandler extends AbstractInitializable i
         }
         return respBody;
     }
-
 
     protected abstract boolean isSupportedRestAction(HttpServletRequest request, HttpServletResponse response, Object action, Exception ex);
 
@@ -158,37 +105,6 @@ public abstract class GlobalRestExceptionHandler extends AbstractInitializable i
     @Override
     public void shutdown() {
         running = false;
-    }
-
-    public void setErrorMessageHandler(RestErrorMessageHandler errorMessageHandler) {
-        if (errorMessageHandler != null) {
-            this.errorMessageHandler = errorMessageHandler;
-        }
-    }
-
-    public void setCauseScanEnabled(boolean causeScanEnabled) {
-        this.causeScanEnabled = causeScanEnabled;
-    }
-
-    public void setDefaultErrorStatusCode(int defaultErrorStatusCode) {
-        this.defaultErrorMessageHandler.setDefaultErrorStatusCode(defaultErrorStatusCode);
-    }
-
-    public void setDefaultErrorCode(String defaultErrorCode) {
-        if (Strings.isNotBlank(defaultErrorCode)) {
-            this.defaultErrorMessageHandler.setDefaultErrorCode(defaultErrorCode);
-        }
-    }
-
-    public void setDefaultErrorMessage(String defaultErrorMessage) {
-        if (Strings.isNotBlank(defaultErrorMessage)) {
-            this.defaultErrorMessageHandler.setDefaultErrorMessage(defaultErrorMessage);
-        }
-    }
-
-
-    public void setWriteUnifiedResponse(boolean writeUnifiedResponse) {
-        this.writeUnifiedResponse = writeUnifiedResponse;
     }
 
 }

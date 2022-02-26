@@ -55,7 +55,7 @@ public class GlobalSpringRestResponseBodyAdvice implements ResponseBodyAdvice, I
             return body;
         }
 
-        final RestRespBody respBody = responseBodyHandler.handleResponseBody(httpServletRequest, httpServletResponse, returnType.getMethod(), body);
+        final RestRespBody respBody = responseBodyHandler.handle(httpServletRequest, httpServletResponse, returnType.getMethod(), body);
         if (respBody == null) {
             return null;
         }

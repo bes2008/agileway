@@ -54,7 +54,7 @@ public class GlobalSpringRestResponseBodyHandler extends AbstractGlobalRestRespo
      * @return
      */
     @Override
-    public RestRespBody handleResponseBody(HttpServletRequest request, HttpServletResponse response, Method actionMethod, Object actionReturnValue) {
+    public RestRespBody handle(HttpServletRequest request, HttpServletResponse response, Method actionMethod, Object actionReturnValue) {
         if (actionReturnValue instanceof Resource || actionReturnValue instanceof com.jn.langx.io.resource.Resource) {
             return null;
         }
