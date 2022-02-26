@@ -4,16 +4,17 @@ import com.jn.agileway.redis.core.RedisTemplate;
 import com.jn.langx.Builder;
 import com.jn.langx.annotation.NotThreadSafe;
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.distributed.locks.AbstractDLock;
 import com.jn.langx.util.collection.Collects;
-import com.jn.langx.util.concurrent.lock.DistributedLock;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
 
 /**
  * https://redis.io/topics/distlock
  */
 @NotThreadSafe
-public class ExclusiveLock extends DistributedLock {
+public class ExclusiveLock extends AbstractDLock {
 
     private RedisTemplate redisTemplate;
     /**
@@ -32,6 +33,14 @@ public class ExclusiveLock extends DistributedLock {
         lock(-1, TimeUnit.MILLISECONDS, true);
     }
 
+    /**
+     * @deprecated 该方法故意设置为 deprecated, 原因是 该方法 该方法继承自 {@link Lock#lock()},
+     * 在没有拿到锁的时候，会死等，直到拿到锁为止。
+     * 在分布式场景下要慎用，甚至不要去使用。除非场景必须这样做才去选用。
+     * <p>
+     * <p>
+     * 推荐用 {@link #lock(long, TimeUnit, boolean)}
+     */
     @Override
     public void lock() {
         try {
@@ -42,6 +51,14 @@ public class ExclusiveLock extends DistributedLock {
     }
 
 
+    /**
+     * 没拿到锁之前死等，拿到锁之后，在指定的 ttl 时间后，锁自动过期。
+     *
+     * @param ttl           指定的锁定时间，即拿到锁后过期时间
+     * @param ttlUnit
+     * @param interruptibly
+     * @throws InterruptedException
+     */
     public void lock(long ttl, TimeUnit ttlUnit, boolean interruptibly) throws InterruptedException {
         String v = value;
         if (v == null) {
@@ -67,16 +84,15 @@ public class ExclusiveLock extends DistributedLock {
         }
     }
 
-    @Override
-    public boolean tryLock() {
-        return tryLock(-1, TimeUnit.MILLISECONDS);
-    }
-
-    @Override
-    public boolean tryLock(long time, TimeUnit unit) {
-        return tryLock(time, unit, -1, null);
-    }
-
+    /**
+     * 拿到锁之前，最多尝试 lockTime 时间，拿到锁之后，锁在 ttl 后过期
+     *
+     * @param lockTime
+     * @param lockUnit
+     * @param ttl
+     * @param ttlUnit
+     * @return
+     */
     public boolean tryLock(long lockTime, @Nullable TimeUnit lockUnit, long ttl, @Nullable TimeUnit ttlUnit) {
         String v = value;
         if (v == null) {
@@ -117,14 +133,14 @@ public class ExclusiveLock extends DistributedLock {
         if (ttl > 0) {
             // 有 过期时间的 Lock
             Object value = redisTemplate.opsForValue().get(resource);
-            if (value != null) {
-                locked = false;
-            } else {
+            if (value == null) {
                 if (ttlTime == null) {
                     ttlTime = TimeUnit.MICROSECONDS;
                 }
-                redisTemplate.opsForValue().set(resource, expectedValue, ttl, ttlTime);
-                locked = true;
+                if (ttlTime != TimeUnit.MILLISECONDS) {
+                    ttl = ttlTime.toMillis(ttl);
+                }
+                locked = (Boolean) redisTemplate.executeScript("SetIfAbsentWithExpireTime", Collects.newArrayList(this.resource), ttl, value);
             }
         } else {
             locked = redisTemplate.opsForValue().setIfAbsent(resource, expectedValue);

@@ -85,7 +85,7 @@ public class RedisLuaScriptParser implements InputStreamConfigurationParser<Redi
     }
 
     private boolean isBooleanType(final String string) {
-        return Pipeline.of("java.lang.Boolean", "boolean").anyMatch(new Predicate<String>() {
+        return Pipeline.of("java.lang.Boolean", "boolean", "bool").anyMatch(new Predicate<String>() {
             @Override
             public boolean test(String type) {
                 return Strings.equalsIgnoreCase(string, type);
