@@ -46,7 +46,7 @@ public class Servlets {
 
 
     public static final String getUTF8ContentType(@NonNull String mediaType) {
-        return getContentType(mediaType, "UTF-8" );
+        return getContentType(mediaType, "UTF-8");
     }
 
     public static final String getContentType(@NonNull String mediaType, @Nullable String encoding) {
@@ -90,7 +90,7 @@ public class Servlets {
     public static Long getContentLength(HttpServletResponse response, boolean useZeroIfNull) {
         String contentLengthStr = response.getHeader(HttpHeaders.CONTENT_LENGTH);
         if (useZeroIfNull) {
-            contentLengthStr = Strings.useValueIfBlank(contentLengthStr, "0" );
+            contentLengthStr = Strings.useValueIfBlank(contentLengthStr, "0");
         }
         if (Emptys.isEmpty(contentLengthStr)) {
             return null;
@@ -118,7 +118,7 @@ public class Servlets {
         return new HttpHeaders(headersToMultiValueMap(request));
     }
 
-    public static HttpMethod getMethod(HttpServletRequest request){
+    public static HttpMethod getMethod(HttpServletRequest request) {
         return HttpMethod.valueOf(request.getMethod());
     }
 
@@ -156,7 +156,7 @@ public class Servlets {
         });
         String ip = Strings.isEmpty(header) ? request.getRemoteAddr() : request.getHeader(header);
         if (Strings.isNotEmpty(ip)) {
-            int index = ip.indexOf("," );
+            int index = ip.indexOf(",");
             if (index != -1) {
                 return ip.substring(0, index);
             }
@@ -233,7 +233,7 @@ public class Servlets {
             }
             response.setCharacterEncoding(Charsets.UTF_8.name());
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-            response.setHeader(HttpHeaders.ACCEPT_RANGES, "bytes" );
+            response.setHeader(HttpHeaders.ACCEPT_RANGES, "bytes");
             response.setHeader(HttpHeaders.CONTENT_RANGE, StringTemplates.formatWithPlaceholder("bytes {}-{}/{}", offset, end, file.length()));
             String disposition = StringTemplates.formatWithPlaceholder("attachment;filename={}", new String(fileName.getBytes(Charsets.UTF_8), Charsets.ISO_8859_1));
             response.setHeader(HttpHeaders.CONTENT_DISPOSITION, disposition);
@@ -305,7 +305,7 @@ public class Servlets {
             response.setCharacterEncoding(Charsets.UTF_8.name());
             contentType = Strings.useValueIfBlank(contentType, MediaType.APPLICATION_OCTET_STREAM_VALUE);
             response.setContentType(contentType);
-            response.setHeader(HttpHeaders.ACCEPT_RANGES, "bytes" );
+            response.setHeader(HttpHeaders.ACCEPT_RANGES, "bytes");
             response.setHeader(HttpHeaders.CONTENT_RANGE, StringTemplates.formatWithPlaceholder("bytes {}-{}/{}", offset, end, bytes.length));
             String disposition = StringTemplates.formatWithPlaceholder("attachment;filename={}", new String(fileName.getBytes(Charsets.UTF_8), Charsets.ISO_8859_1));
             response.setHeader(HttpHeaders.CONTENT_DISPOSITION, disposition);
@@ -367,24 +367,196 @@ public class Servlets {
                                              String queryString) {
         scheme = scheme.toLowerCase();
         StringBuilder url = new StringBuilder();
-        url.append(scheme).append("://" ).append(serverName);
+        url.append(scheme).append("://").append(serverName);
         // Only add port if not default
         if ("http".equals(scheme)) {
             if (serverPort != 80) {
-                url.append(":" ).append(serverPort);
+                url.append(":").append(serverPort);
             }
         } else if ("https".equals(scheme)) {
             if (serverPort != 443) {
-                url.append(":" ).append(serverPort);
+                url.append(":").append(serverPort);
             }
         }
         // Use the requestURI as it is encoded (RFC 3986) and hence suitable for
         // redirects.
         url.append(requestURI);
         if (queryString != null) {
-            url.append("?" ).append(queryString);
+            url.append("?").append(queryString);
         }
         return url.toString();
     }
 
+    public static String getParameter(HttpServletRequest request, String name) {
+        return getParameter(request, name, null);
+    }
+
+    public static String getParameter(HttpServletRequest request, String name, String defaultValue) {
+        return Objs.useValueIfNull(request.getParameter(name), defaultValue);
+    }
+
+    public static List<String> getParameters(HttpServletRequest request, String name) {
+        return getParameters(request, name, null);
+    }
+
+    public static List<String> getParameters(HttpServletRequest request, String name, List<String> defaultValue) {
+        final String[] values = request.getParameterValues(name);
+        if (values != null) {
+            return Collects.asList(values);
+        }
+        return defaultValue;
+    }
+
+    public static Integer getIntParameter(HttpServletRequest request, String name, Integer defaultValue) {
+        String value = getParameter(request, name);
+        Integer ret = null;
+        if (!Strings.isBlank(value)) {
+            ret = Integer.parseInt(value);
+        } else {
+            ret = defaultValue;
+        }
+        return ret;
+    }
+
+
+    public static List<Integer> getIntParameters(HttpServletRequest request, final String name, List<Integer> defaultValue) {
+        final List<String> valueOpt = getParameters(request, name);
+        List<Integer> ret = null;
+        if (valueOpt != null) {
+            ret = Pipeline.of(valueOpt).map(new Function<String, Integer>() {
+                @Override
+                public Integer apply(String input) {
+                    return Integer.parseInt(input);
+                }
+            }).asList();
+        } else {
+            ret = defaultValue;
+        }
+        return ret;
+    }
+
+    public static Long getLongParameter(HttpServletRequest request, final String name, Long defaultValue) {
+        final String valueOpt = getParameter(request, name);
+        Long ret = null;
+        if (!Strings.isBlank(valueOpt)) {
+            ret = Long.parseLong(valueOpt);
+        } else {
+            ret = defaultValue;
+        }
+        return ret;
+    }
+
+    public static List<Long> getLongParameters(HttpServletRequest request, final String name, List<Long> defaultValue) {
+        final List<String> valueOpt = getParameters(request, name);
+        List<Long> ret = null;
+        if (valueOpt != null) {
+            ret = Pipeline.of(valueOpt).map(new Function<String, Long>() {
+                @Override
+                public Long apply(String input) {
+                    return Long.parseLong(input);
+                }
+            }).asList();
+        } else {
+            ret = defaultValue;
+        }
+        return ret;
+    }
+
+    public static Float getFloatParameter(HttpServletRequest request, final String name, Float defaultValue) {
+        final String valueOpt = getParameter(request, name);
+        Float ret = null;
+        if (!Strings.isBlank(valueOpt)) {
+            ret = Float.parseFloat(valueOpt);
+        } else {
+            ret = defaultValue;
+        }
+        return ret;
+    }
+
+    public static List<Float> getFloatParameters(HttpServletRequest request, final String name, List<Float> defaultValue) {
+        final List<String> valueOpt = getParameters(request, name);
+        List<Float> ret = null;
+        if (valueOpt != null) {
+            ret = Pipeline.of(valueOpt).map(new Function<String, Float>() {
+                @Override
+                public Float apply(String input) {
+                    return Float.parseFloat(input);
+                }
+            }).asList();
+        } else {
+            ret = defaultValue;
+        }
+        return ret;
+    }
+
+    public static Double getDoubleParameter(HttpServletRequest request, final String name, Double defaultValue) {
+        final String valueOpt = getParameter(request, name);
+        Double ret = null;
+        if (!Strings.isBlank(valueOpt)) {
+            ret = Double.parseDouble(valueOpt);
+        } else {
+            ret = defaultValue;
+        }
+        return ret;
+    }
+
+    public static List<Double> getDoubleParameters(HttpServletRequest request, final String name, List<Double> defaultValue) {
+        final List<String> valueOpt = getParameters(request, name);
+        List<Double> ret = null;
+        if (valueOpt != null) {
+            ret = Pipeline.of(valueOpt).map(new Function<String, Double>() {
+                @Override
+                public Double apply(String input) {
+                    return Double.parseDouble(input);
+                }
+            }).asList();
+        } else {
+            ret = defaultValue;
+        }
+        return ret;
+    }
+
+    private static final List<String> TRUE_VALUES;
+
+    static {
+        TRUE_VALUES = Collects.newArrayList("true", "1", "on", "yes");
+    }
+
+
+    public static Boolean isTrue(final String value) {
+        return Pipeline.of(TRUE_VALUES).anyMatch(new Predicate<String>() {
+            @Override
+            public boolean test(String x) {
+                return x.equalsIgnoreCase(value);
+            }
+        });
+    }
+
+    public static Boolean getBooleanParameter(HttpServletRequest request, final String name) {
+        return getBooleanParameter(request, name, null);
+    }
+
+    public static Boolean getBooleanParameter(HttpServletRequest request, final String name, final Boolean defaultValue) {
+        final String valueOpt = getParameter(request, name);
+        if (!Strings.isBlank(valueOpt)) {
+            return isTrue(name);
+        }
+        return defaultValue;
+    }
+
+    public static List<Boolean> getBooleanParameters(HttpServletRequest request, final String name, List<Boolean> defaultValue) {
+        final List<String> valueOpt = getParameters(request, name);
+        List<Boolean> ret = null;
+        if (valueOpt != null) {
+            ret = Pipeline.of(valueOpt).map(new Function<String, Boolean>() {
+                @Override
+                public Boolean apply(String input) {
+                    return isTrue(input);
+                }
+            }).asList();
+        }else {
+            ret = defaultValue;
+        }
+        return ret;
+    }
 }

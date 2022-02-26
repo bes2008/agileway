@@ -2,25 +2,18 @@ package com.jn.agileway.feign.supports.rpc;
 
 import com.jn.agileway.feign.ErrorHandler;
 import com.jn.agileway.feign.Feigns;
-import com.jn.langx.util.logging.Loggers;
-import feign.FeignException;
-import feign.InvocationHandlerFactory;
-import feign.MethodMetadata;
-import feign.Target;
-import org.slf4j.Logger;
+import com.jn.langx.util.Preconditions;
+import feign.*;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Map;
 
-import static feign.Util.checkNotNull;
-
 /**
  * @since 2.6.0
  */
 public class RpcInvocationHandlerFactory implements InvocationHandlerFactory {
-    private static final Logger logger = Loggers.getLogger(RpcInvocationHandlerFactory.class);
 
     private ErrorHandler errorHandler;
 
@@ -38,8 +31,8 @@ public class RpcInvocationHandlerFactory implements InvocationHandlerFactory {
         private final Map<Method, MethodHandler> dispatch;
 
         RpcInvocationHandler(Target target, Map<Method, MethodHandler> dispatch) {
-            this.target = checkNotNull(target, "target");
-            this.dispatch = checkNotNull(dispatch, "dispatch for %s", target);
+            this.target = Preconditions.checkNotNullArgument(target, "target");
+            this.dispatch = Preconditions.checkNotNull(dispatch, "dispatch for {}", target);
         }
 
         @Override
@@ -62,28 +55,17 @@ public class RpcInvocationHandlerFactory implements InvocationHandlerFactory {
                 result = methodHandler.invoke(args);
                 return result;
             } catch (FeignRpcException ex) {
-                if (ex.hasResponse()) {
-                    return errorHandler.apply(ex, methodHandler);
-                } else {
-                    logger.error(ex.getMessage(), ex);
-                }
-            } catch (FeignException ex) {
-                // 此时 Response 可能已被关闭，也可能是 null
-                FeignRR feignRR = ClientWrapper.feignRRHolder.get();
-                if (feignRR.getResponse() == null) {
-                    logger.error(ex.getMessage(), ex);
-                } else {
-                    MethodMetadata metadata = Feigns.getMethodMetadata(methodHandler);
-                    String methodKey = metadata.configKey();
-                    FeignRpcException exception = new FeignRpcException(methodKey, feignRR.getResponse(), ex);
-                    return errorHandler.apply(exception, methodHandler);
-                }
+                return errorHandler.apply(ex, methodHandler);
             } catch (Throwable ex) {
-                logger.error(ex.getMessage(), ex);
+                // 此时 Response 可能已被关闭或者 根本就没有连接成功，也可能是 null
+                FeignRR feignRR = ClientWrapper.feignRRHolder.get();
+                MethodMetadata metadata = Feigns.getMethodMetadata(methodHandler);
+                String methodKey = metadata.configKey();
+                FeignRpcException exception = new FeignRpcException(methodKey, feignRR.getResponse(), ex);
+                return errorHandler.apply(exception, methodHandler);
             } finally {
                 ClientWrapper.feignRRHolder.reset();
             }
-            return null;
         }
 
         @Override

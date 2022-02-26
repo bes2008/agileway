@@ -1,9 +1,11 @@
 package com.jn.agileway.spring.web.rest;
 
+import com.jn.agileway.springboot.web.rest.SpringBootErrorControllers;
 import com.jn.agileway.web.rest.*;
 import com.jn.agileway.web.servlet.Servlets;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.langx.http.rest.RestRespBody;
+import com.jn.langx.util.collection.ConcurrentHashSet;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
@@ -15,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * 该类存在的原因：
@@ -25,21 +29,14 @@ import java.lang.reflect.Method;
  *     4. 由于 @RestControllerAdvice 或者 @ControllerAdvice 定义类的创建不受我们的控制，我们想要自定义必须掌握控制权
  * </pre>
  */
-public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBodyHandler<Method>, InitializingBean {
+public class GlobalSpringRestResponseBodyHandler extends AbstractGlobalRestResponseBodyHandler<Method> implements InitializingBean {
     private static final Logger logger = Loggers.getLogger(GlobalSpringRestResponseBodyHandler.class);
-    private GlobalRestResponseBodyHandlerConfiguration configuration = new GlobalRestResponseBodyHandlerConfiguration();
-    private JSONFactory jsonFactory;
-    private RestErrorMessageHandler restErrorMessageHandler = NoopRestErrorMessageHandler.INSTANCE;
 
     @Override
     public void afterPropertiesSet() throws Exception {
         logger.info("===[AGILE_WAY-SPRING_GLOBAL_REST_RESPONSE_BODY_HANDLER]=== Initial the global rest response body handler for spring mvc: {}", Reflects.getFQNClassName(GlobalSpringRestResponseBodyHandler.class));
     }
 
-    @Override
-    public void setConfiguration(GlobalRestResponseBodyHandlerConfiguration configuration) {
-        this.configuration = configuration;
-    }
 
     /**
      * @param request
@@ -57,17 +54,24 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
         if (actionReturnValue instanceof Resource) {
             return null;
         }
-        RestRespBody body = convertToRestRespBody(request, response, actionReturnValue);
+        RestRespBody body = convertToRestRespBody(request, response, actionMethod, actionReturnValue);
         if (body != null && body.getStatusCode() >= 400) {
             restErrorMessageHandler.handler(request.getLocale(), body);
         }
-        body.setUrl(request.getRequestURL().toString());
+        if (!configuration.isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_URL)) {
+            body.setUrl(request.getRequestURL().toString());
+        }
         response.setStatus(body.getStatusCode());
         response.setContentType(GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8);
         response.setCharacterEncoding(Charsets.UTF_8.name());
         request.setAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN, true);
-        body.setMethod(Servlets.getMethod(request));
-        body.withRequestHeaders(Servlets.headersToMultiValueMap(request));
+        if (!configuration.isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_METHOD)) {
+            body.setMethod(Servlets.getMethod(request));
+        }
+        if (!configuration.isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_REQUEST_HEADERS)) {
+            body.withRequestHeaders(Servlets.headersToMultiValueMap(request));
+        }
+
         return body;
     }
 
@@ -79,9 +83,32 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
         return supported;
     }
 
+    private RestRespBody convertSpringBootErrorBodyToRestRespBody(HttpServletRequest request, HttpServletResponse response, Map<String, Object> tmp) {
+        Integer statusCode = (Integer) tmp.get("status");
+        RestRespBody respBody = new RestRespBody();
+        respBody.setSuccess(false);
+        respBody.setStatusCode(statusCode == null ? 404 : statusCode);
+        if (tmp.containsKey("error")) {
+            respBody.setErrorCode("HTTP-" + respBody.getStatusCode());
+        }
+        if (tmp.containsKey("message")) {
+            respBody.setErrorMessage((String) tmp.get("message"));
+        }
+        if (tmp.containsKey("timestamp")) {
+            respBody.setTimestamp(((Date) tmp.get("timestamp")).getTime());
+        }
+        return respBody;
+    }
 
-    private RestRespBody convertToRestRespBody(HttpServletRequest request, HttpServletResponse response, Object body) {
-        int statusCode = extractStatusCode(body, response);
+    private RestRespBody convertToRestRespBody(HttpServletRequest request, HttpServletResponse response, Method actionMethod, Object body) {
+        int statusCode = -1;
+        RestRespBody respBody = null;
+        if ((body instanceof Map) && SpringBootErrorControllers.isSpringBootErrorControllerHandlerMethod(actionMethod)) {
+            respBody = convertSpringBootErrorBodyToRestRespBody(request, response, (Map<String, Object>) body);
+            return respBody;
+        }
+
+        statusCode = extractStatusCode(body, response);
 
         if (body instanceof ResponseEntity) {
             body = ((ResponseEntity) body).getBody();
@@ -91,7 +118,7 @@ public class GlobalSpringRestResponseBodyHandler implements GlobalRestResponseBo
             return (RestRespBody) body;
         }
 
-        RestRespBody respBody = null;
+
         if (statusCode >= 400) {
             respBody = RestRespBody.error(statusCode, "", "");
             if (body != null) {

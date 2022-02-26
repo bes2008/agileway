@@ -4,8 +4,6 @@ import com.jn.agileway.web.security.WAFs;
 import com.jn.agileway.web.rest.*;
 import com.jn.agileway.web.servlet.Servlets;
 import com.jn.easyjson.core.JSONFactory;
-import com.jn.easyjson.core.factory.JsonFactorys;
-import com.jn.easyjson.core.factory.JsonScope;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Throwables;
@@ -16,13 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
 
-public class GlobalFilterRestResponseHandler implements GlobalRestResponseBodyHandler<Method> {
-
-    private GlobalRestResponseBodyHandlerConfiguration configuration = new GlobalRestResponseBodyHandlerConfiguration();
-    private JSONFactory jsonFactory = JsonFactorys.getJSONFactory(JsonScope.SINGLETON);
+public class GlobalFilterRestResponseHandler extends AbstractGlobalRestResponseBodyHandler<Method> {
     private GlobalRestExceptionHandlerProperties globalRestExceptionHandlerProperties = new GlobalRestExceptionHandlerProperties();
     private final DefaultRestErrorMessageHandler defaultRestErrorMessageHandler = new DefaultRestErrorMessageHandler();
-    private RestErrorMessageHandler restErrorMessageHandler = NoopRestErrorMessageHandler.INSTANCE;
+
 
     @Override
     public void setConfiguration(GlobalRestResponseBodyHandlerConfiguration configuration) {
@@ -76,18 +71,28 @@ public class GlobalFilterRestResponseHandler implements GlobalRestResponseBodyHa
                 Boolean responseBodyWritten = (Boolean) request.getAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN);
                 if ((responseBodyWritten == null || !responseBodyWritten) && !response.isCommitted()) {
                     RestRespBody respBody = new RestRespBody(false, statusCode, "", this.defaultRestErrorMessageHandler.getDefaultErrorCode(), this.defaultRestErrorMessageHandler.getDefaultErrorMessage());
-                    respBody.setUrl(request.getRequestURL().toString());
+                    if (!configuration.isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_URL)) {
+                        respBody.setUrl(request.getRequestURL().toString());
+                    }
                     restErrorMessageHandler.handler(request.getLocale(), respBody);
                     defaultRestErrorMessageHandler.handler(request.getLocale(), respBody);
-                    String json = jsonFactory.get().toJson(respBody);
+
                     try {
-                        respBody.withRequestHeaders(Servlets.headersToMultiValueMap(request));
-                        respBody.setMethod(Servlets.getMethod(request));
-                        String xssFilteredData = WAFs.clearIfContainsJavaScript(json);
+                        if (!configuration.isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_REQUEST_HEADERS)) {
+                            respBody.withRequestHeaders(Servlets.headersToMultiValueMap(request));
+                        }
+                        if (!configuration.isIgnoredField(GlobalRestHandlers.GLOBAL_REST_FIELD_METHOD)) {
+                            respBody.setMethod(Servlets.getMethod(request));
+                        }
+
+
+                        String datajson = jsonFactory.get().toJson(respBody.getData());
+                        String xssFilteredData = WAFs.clearIfContainsJavaScript(datajson);
                         if (Objs.isEmpty(xssFilteredData)) {
                             respBody.setData(null);
-                            json = jsonFactory.get().toJson(respBody);
                         }
+                    //    Map<String,Object> result = respBody.toMap();
+                    //    String json = jsonFactory.get().toJson(json);
                         response.resetBuffer();
                         Servlets.writeToResponse(response, GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8, json);
                     } catch (IOException ex) {

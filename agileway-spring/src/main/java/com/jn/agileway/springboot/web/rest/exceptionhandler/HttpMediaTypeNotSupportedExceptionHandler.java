@@ -20,9 +20,6 @@ import java.util.List;
 public class HttpMediaTypeNotSupportedExceptionHandler implements RestActionExceptionHandler<String> {
     @Override
     public RestRespBody<String> handle(HttpServletRequest request, HttpServletResponse response, Object handler, Exception exception) {
-        if (!(exception instanceof HttpMediaTypeNotSupportedException)) {
-
-        }
         HttpMediaTypeNotSupportedException ex = (HttpMediaTypeNotSupportedException) exception;
         RestRespBody<String> respBody = RestRespBody.error(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, "HTTP-415", null);
 
