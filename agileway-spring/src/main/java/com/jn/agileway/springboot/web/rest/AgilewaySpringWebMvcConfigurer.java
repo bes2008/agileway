@@ -1,6 +1,7 @@
 package com.jn.agileway.springboot.web.rest;
 
 import com.jn.agileway.spring.converter.CommonEnumByNameConverterFactory;
+import com.jn.agileway.spring.web.rest.EasyjsonHttpMessageConverter;
 import com.jn.agileway.spring.web.rest.GlobalSpringRestExceptionHandler;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -95,7 +96,7 @@ public class AgilewaySpringWebMvcConfigurer implements WebMvcConfigurer {
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-
+        converters.add(new EasyjsonHttpMessageConverter());
     }
 
     @Override

@@ -8,11 +8,13 @@ import com.jn.langx.util.collection.ConcurrentHashSet;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.function.Predicate2;
 import com.jn.langx.util.logging.Loggers;
+import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
 
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SpringBootErrorControllers {
@@ -83,4 +85,15 @@ public class SpringBootErrorControllers {
         return false;
     }
 
+    private static List<String> springWebMvcSupportedProduces = Collects.asList(
+            MediaType.APPLICATION_OCTET_STREAM_VALUE,
+            MediaType.TEXT_PLAIN_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.TEXT_XML_VALUE,
+            MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            "application/*+xml",
+            MediaType.MULTIPART_FORM_DATA_VALUE,
+            MediaType.APPLICATION_JSON_VALUE,
+            "application/*+json",
+            "*/*");
 }
