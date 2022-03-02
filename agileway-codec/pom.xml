@@ -44,6 +44,7 @@
                 <groupId>io.activej</groupId>
                 <artifactId>activej-serializer</artifactId>
                 <version>${activej.serializer.version}</version>
+                <optional>true</optional>
             </dependency>
 
 
