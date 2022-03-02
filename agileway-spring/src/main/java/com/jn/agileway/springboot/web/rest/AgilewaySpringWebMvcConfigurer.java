@@ -97,7 +97,7 @@ public class AgilewaySpringWebMvcConfigurer implements WebMvcConfigurer {
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        if(httpMessageConverter!=null) {
+        if (httpMessageConverter != null) {
             converters.add(httpMessageConverter);
         }
     }
