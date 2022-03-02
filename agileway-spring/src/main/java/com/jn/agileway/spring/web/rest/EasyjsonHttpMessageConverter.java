@@ -31,6 +31,10 @@ public class EasyjsonHttpMessageConverter extends AbstractGenericHttpMessageConv
         return jsonFactory;
     }
 
+    public void setJsonFactory(JSONFactory jsonFactory) {
+        this.jsonFactory = jsonFactory;
+    }
+
     public EasyjsonHttpMessageConverter() {
         super(MediaType.APPLICATION_JSON, new MediaType("application", "*+json"));
         setDefaultCharset(Charsets.UTF_8);

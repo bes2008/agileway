@@ -1,6 +1,7 @@
 package com.jn.agileway.springboot.web.rest;
 
 import com.jn.agileway.spring.web.mvc.requestmapping.RequestMappingAccessorRegistry;
+import com.jn.agileway.spring.web.rest.EasyjsonHttpMessageConverter;
 import com.jn.agileway.spring.web.rest.GlobalSpringRestExceptionHandler;
 import com.jn.agileway.spring.web.rest.GlobalSpringRestResponseBodyAdvice;
 import com.jn.agileway.spring.web.rest.GlobalSpringRestResponseBodyHandler;
@@ -18,7 +19,9 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -219,11 +222,25 @@ public class GlobalRestHandlersConfiguration {
     }
 
     @Bean
-    @Autowired
+    public EasyjsonHttpMessageConverter easyjsonHttpMessageConverter(JSONFactory jsonFactory){
+        EasyjsonHttpMessageConverter converter= new EasyjsonHttpMessageConverter();
+        converter.setJsonFactory(jsonFactory);
+        return converter;
+    }
+
+    @Bean
     @ConditionalOnMissingBean({AgilewaySpringWebMvcConfigurer.class})
-    public AgilewaySpringWebMvcConfigurer agilewaySpringWebMvcConfigurer(GlobalSpringRestExceptionHandler globalSpringRestExceptionHandler) {
+    public AgilewaySpringWebMvcConfigurer agilewaySpringWebMvcConfigurer(
+            @Autowired
+                    GlobalSpringRestExceptionHandler globalSpringRestExceptionHandler,
+            @Autowired(required = false)
+                    EasyjsonHttpMessageConverter httpMessageConverter
+    ) {
         AgilewaySpringWebMvcConfigurer webMvcConfigurer = new AgilewaySpringWebMvcConfigurer();
         webMvcConfigurer.setGlobalHandlerExceptionResolver(globalSpringRestExceptionHandler);
+        if (httpMessageConverter != null) {
+            webMvcConfigurer.setHttpMessageConverter(httpMessageConverter);
+        }
         return webMvcConfigurer;
     }
 

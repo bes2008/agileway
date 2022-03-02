@@ -17,6 +17,7 @@ import java.util.List;
 public class AgilewaySpringWebMvcConfigurer implements WebMvcConfigurer {
 
     private GlobalSpringRestExceptionHandler globalHandlerExceptionResolver;
+    private EasyjsonHttpMessageConverter httpMessageConverter;
 
     @Override
     public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {
@@ -96,7 +97,9 @@ public class AgilewaySpringWebMvcConfigurer implements WebMvcConfigurer {
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(new EasyjsonHttpMessageConverter());
+        if(httpMessageConverter!=null) {
+            converters.add(httpMessageConverter);
+        }
     }
 
     @Override
@@ -113,4 +116,10 @@ public class AgilewaySpringWebMvcConfigurer implements WebMvcConfigurer {
     public MessageCodesResolver getMessageCodesResolver() {
         return null;
     }
+
+
+    public void setHttpMessageConverter(EasyjsonHttpMessageConverter httpMessageConverter) {
+        this.httpMessageConverter = httpMessageConverter;
+    }
+
 }
