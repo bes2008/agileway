@@ -1,6 +1,5 @@
 package com.jn.agileway.web.prediate.impl;
 
-import com.jn.agileway.web.prediate.HttpRequestPredicate;
 import com.jn.agileway.web.prediate.HttpRequestPredicateFactory;
 import com.jn.agileway.web.prediate.HttpRequestPredicates;
 import com.jn.langx.annotation.Name;
