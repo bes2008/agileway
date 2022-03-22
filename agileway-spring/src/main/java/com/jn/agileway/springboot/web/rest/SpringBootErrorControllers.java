@@ -4,7 +4,7 @@ import com.jn.agileway.springboot.SpringBootVersions;
 import com.jn.langx.util.ClassLoaders;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
-import com.jn.langx.util.collection.ConcurrentHashSet;
+import com.jn.langx.util.concurrent.ConcurrentHashSet;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.function.Predicate2;
 import com.jn.langx.util.logging.Loggers;
