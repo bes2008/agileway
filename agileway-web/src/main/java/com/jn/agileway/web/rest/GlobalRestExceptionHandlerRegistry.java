@@ -84,6 +84,19 @@ public class GlobalRestExceptionHandlerRegistry implements Registry<String, Rest
         register(registration.getName(), registration);
     }
 
+    @Override
+    public void unregister(String key) {
+        RestActionExceptionHandlerRegistration registration = this.registrationMap.remove(key);
+        if(registration != null){
+            sortedRegistrations.remove(registration);
+        }
+    }
+
+    @Override
+    public boolean contains(String key) {
+        return this.registrationMap.containsKey(key);
+    }
+
     public void register(final RestActionExceptionHandler exceptionHandler) {
         if (exceptionHandler == null) {
             return;

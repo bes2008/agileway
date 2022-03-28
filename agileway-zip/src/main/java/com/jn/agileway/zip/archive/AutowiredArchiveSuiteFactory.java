@@ -50,6 +50,16 @@ public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Regist
     }
 
     @Override
+    public void unregister(String key) {
+        archiveFactoryMap.remove(key);
+    }
+
+    @Override
+    public boolean contains(String key) {
+        return archiveFactoryMap.containsKey(key);
+    }
+
+    @Override
     public SingleArchiveSuiteFactory get(String format) {
         SingleArchiveSuiteFactory factory = null;
         String archive = ZipFormats.getArchiveFormat(format);

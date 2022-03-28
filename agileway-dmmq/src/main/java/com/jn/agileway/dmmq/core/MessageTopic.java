@@ -1,6 +1,7 @@
 package com.jn.agileway.dmmq.core;
 
 import com.jn.agileway.dmmq.core.allocator.DefaultTopicAllocator;
+import com.jn.langx.Named;
 import com.jn.langx.lifecycle.Destroyable;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
@@ -17,7 +18,7 @@ import org.slf4j.Logger;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-public class MessageTopic<M> implements Destroyable, Initializable, Lifecycle {
+public class MessageTopic<M> implements Destroyable, Initializable, Lifecycle, Named {
     private static final Logger logger = Loggers.getLogger(MessageTopic.class);
     private String name = DefaultTopicAllocator.TOPIC_DEFAULT;
     private Disruptor<MessageHolder<M>> disruptor;

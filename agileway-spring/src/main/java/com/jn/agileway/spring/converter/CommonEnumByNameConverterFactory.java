@@ -19,12 +19,22 @@ public class CommonEnumByNameConverterFactory<T extends CommonEnum> implements R
 
     @Override
     public void register(Class enumClass, Converter<String, T> stringTConverter) {
-        cache.putIfAbsent(enumClass, stringTConverter);
+        cache.put(enumClass, stringTConverter);
     }
 
     @Override
     public Converter<String, T> get(Class enumClass) {
         return cache.get(enumClass);
+    }
+
+    @Override
+    public void unregister(Class key) {
+        cache.remove(key);
+    }
+
+    @Override
+    public boolean contains(Class key) {
+        return cache.containsKey(key);
     }
 
     @Override

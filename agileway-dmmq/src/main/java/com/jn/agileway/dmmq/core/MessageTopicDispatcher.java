@@ -5,7 +5,7 @@ import com.jn.agileway.dmmq.core.event.TopicEventType;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.event.EventPublisher;
 import com.jn.langx.lifecycle.Lifecycle;
-import com.jn.langx.registry.Registry;
+import com.jn.langx.registry.GenericRegistry;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
@@ -13,12 +13,9 @@ import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
-import java.util.List;
-import java.util.Map;
 
-public class MessageTopicDispatcher implements Lifecycle, Registry<String,MessageTopic> {
+public class MessageTopicDispatcher extends GenericRegistry<MessageTopic> implements Lifecycle {
     private static final Logger logger = Loggers.getLogger(MessageTopicDispatcher.class);
-    private final Map<String, MessageTopic> topicMap = Collects.emptyHashMap();
     private EventPublisher<TopicEvent> topicEventPublisher;
     private volatile boolean running = false;
 
@@ -33,10 +30,6 @@ public class MessageTopicDispatcher implements Lifecycle, Registry<String,Messag
         this.topicEventPublisher = topicEventPublisher;
     }
 
-    public List<String> getTopicNames() {
-        return Collects.newArrayList(topicMap.keySet());
-    }
-
     /**
      *
      * @param messageTopic
@@ -45,7 +38,7 @@ public class MessageTopicDispatcher implements Lifecycle, Registry<String,Messag
     @Deprecated
     public void registerTopic(@NonNull MessageTopic messageTopic) {
         Preconditions.checkNotNull(messageTopic);
-        topicMap.put(messageTopic.getName(), messageTopic);
+        super.register(messageTopic.getName(), messageTopic);
         topicEventPublisher.publish(new TopicEvent(messageTopic, TopicEventType.ADD));
     }
 
@@ -60,14 +53,11 @@ public class MessageTopicDispatcher implements Lifecycle, Registry<String,Messag
         register(messageTopic);
     }
 
-    @Override
-    public MessageTopic get(String name) {
-        return topicMap.get(name);
-    }
 
+    @Deprecated
     public void unregisterTopic(String name) {
         Preconditions.checkNotNull(name);
-        MessageTopic topic = topicMap.remove(name);
+        MessageTopic topic = registry.remove(name);
         if (topic != null) {
             topicEventPublisher.publish(new TopicEvent(topic, TopicEventType.REMOVE));
         }
@@ -78,7 +68,7 @@ public class MessageTopicDispatcher implements Lifecycle, Registry<String,Messag
             logger.warn("Publish message to topic {} fail, the message topic dispatcher is not running", topicName);
         }
         if ("*".equals(topicName)) {
-            Collects.forEach(topicMap, new Consumer2<String, MessageTopic>() {
+            Collects.forEach(registry, new Consumer2<String, MessageTopic>() {
                 @Override
                 public void accept(String key, MessageTopic topic) {
                     topic.publish(message);
@@ -86,7 +76,7 @@ public class MessageTopicDispatcher implements Lifecycle, Registry<String,Messag
             });
         }
 
-        MessageTopic topic = topicMap.get(topicName);
+        MessageTopic topic = registry.get(topicName);
         if (Objs.isNull(topic)) {
             logger.warn("Can't find the specified topic : {}", topicName);
         } else {
@@ -96,14 +86,14 @@ public class MessageTopicDispatcher implements Lifecycle, Registry<String,Messag
 
     public <M> void subscribe(String topicName, final Consumer<M> consumer, final String... dependencies) {
         if ("*".equals(topicName)) {
-            Collects.forEach(topicMap, new Consumer2<String, MessageTopic>() {
+            Collects.forEach(registry, new Consumer2<String, MessageTopic>() {
                 @Override
                 public void accept(String key, MessageTopic topic) {
                     topic.subscribe(consumer, dependencies);
                 }
             });
         } else {
-            MessageTopic topic = topicMap.get(topicName);
+            MessageTopic topic = registry.get(topicName);
             if (Objs.isNull(topic)) {
                 logger.warn("Can't find a topic : {}", topicName);
             } else {
@@ -116,7 +106,7 @@ public class MessageTopicDispatcher implements Lifecycle, Registry<String,Messag
     @Override
     public void startup() {
         if (!running) {
-            Collects.forEach(topicMap, new Consumer2<String, MessageTopic>() {
+            Collects.forEach(registry, new Consumer2<String, MessageTopic>() {
                 @Override
                 public void accept(String key, MessageTopic value) {
                     value.startup();
@@ -129,7 +119,7 @@ public class MessageTopicDispatcher implements Lifecycle, Registry<String,Messag
     @Override
     public void shutdown() {
         running = false;
-        Collects.forEach(topicMap, new Consumer2<String, MessageTopic>() {
+        Collects.forEach(registry, new Consumer2<String, MessageTopic>() {
             @Override
             public void accept(String key, MessageTopic value) {
                 try {

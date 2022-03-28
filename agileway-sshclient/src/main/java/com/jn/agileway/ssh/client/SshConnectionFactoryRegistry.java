@@ -1,29 +1,20 @@
 package com.jn.agileway.ssh.client;
 
-import com.jn.langx.annotation.OnClasses;
-import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.lifecycle.InitializationException;
-import com.jn.langx.registry.Registry;
-import com.jn.langx.util.ClassLoaders;
-import com.jn.langx.util.Objs;
+import com.jn.langx.registry.GenericRegistry;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
-import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.logging.Loggers;
-import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.annotation.OnClassesConditions;
-import com.jn.langx.util.spi.AllPresentServiceProvider;
 import org.slf4j.Logger;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
-import java.util.concurrent.ConcurrentHashMap;
 
-public class SshConnectionFactoryRegistry extends AbstractInitializable implements Registry<String, SshConnectionFactory> {
-    private ConcurrentHashMap<String, SshConnectionFactory> registry = new ConcurrentHashMap<String, SshConnectionFactory>();
+public class SshConnectionFactoryRegistry extends GenericRegistry<SshConnectionFactory> {
     private static final Logger logger = Loggers.getLogger(SshConnectionFactoryRegistry.class);
     private static final Map<String, SshConnectionFactory> preinstall = new LinkedHashMap<String, SshConnectionFactory>();
 
@@ -51,11 +42,6 @@ public class SshConnectionFactoryRegistry extends AbstractInitializable implemen
         init();
     }
 
-    @Override
-    public void register(SshConnectionFactory sshConnectionFactory) {
-        register(sshConnectionFactory.getName(), sshConnectionFactory);
-    }
-
     private static boolean checkSshConnectionFactory(final SshConnectionFactory factory) {
         return OnClassesConditions.allPresent(factory.getClass(), true);
     }
@@ -68,19 +54,13 @@ public class SshConnectionFactoryRegistry extends AbstractInitializable implemen
     }
 
     @Override
-    public SshConnectionFactory get(String name) {
-        return registry.get(name);
-    }
-
-
-    @Override
     protected void doInit() throws InitializationException {
         registry.putAll(preinstall);
     }
 
     public SshConnectionFactory getDefault() {
         Preconditions.checkNotEmpty(registry);
-        String first = Pipeline.of(Collects.<String>asIterable(registry.keys())).findFirst();
+        String first = Pipeline.of(Collects.<String>asIterable(names())).findFirst();
         return get(first);
     }
 }
