@@ -72,7 +72,6 @@ public class Sftps {
 
     /**
      * 判断是否存在 某个普通的文件
-     *
      */
     public static boolean existFile(SftpSession session, String filepath) throws SftpException {
         return exists(session, filepath, FileType.REGULAR);
@@ -80,7 +79,6 @@ public class Sftps {
 
     /**
      * 判断是否存在某个目录
-     *
      */
     public static boolean existDirectory(SftpSession session, String directoryPath) throws SftpException {
         return exists(session, directoryPath, FileType.DIRECTORY);
@@ -264,7 +262,6 @@ public class Sftps {
     }
 
 
-
     public static void chmod(final SftpSession session, String path, int permissions) throws IOException {
         FileAttrs attrs = session.stat(path);
         FileType fileType = attrs.getFileMode().getType();
@@ -324,28 +321,26 @@ public class Sftps {
     }
 
     /**
-     *
-     * @param local the local file or directory
-     * @param remote    the remote file or directory, format: {user}:{password}@{host}:[port]:{remotePath}
+     * @param local   the local file or directory
+     * @param remote  the remote file or directory, format: {user}:{password}@{host}:[port]:{remotePath}
      * @param reverse reverse copy: from remote to local
      */
-    public static void scp(String local, String remote, boolean reverse) throws Throwable{
+    public static void scp(String local, String remote, boolean reverse) throws Throwable {
         String[] segments = Strings.split(remote, "@");
         Preconditions.checkArgument(segments.length == 2, "illegal remote: {}", remote);
-        String[] userAndPassword = Strings.split(segments[0],":");
-        Preconditions.checkArgument(userAndPassword.length==2," user, password are required");
+        String[] userAndPassword = Strings.split(segments[0], ":");
+        Preconditions.checkArgument(userAndPassword.length == 2, " user, password are required");
         String user = userAndPassword[0];
         String pswd = userAndPassword[1];
-        String[] remoteMachinePath = Strings.split(segments[1],":");
-        Preconditions.checkArgument(remoteMachinePath.length>=2, "host, port, remotePath are required");
+        String[] remoteMachinePath = Strings.split(segments[1], ":");
+        Preconditions.checkArgument(remoteMachinePath.length >= 2, "host, port, remotePath are required");
         String remoteHost = remoteMachinePath[0];
         int remotePort = -1;
         String remotePath = null;
-        if(remoteMachinePath.length>2){
+        if (remoteMachinePath.length > 2) {
             remotePort = Integer.parseInt(remoteMachinePath[1]);
             remotePath = remoteMachinePath[2];
-        }
-        else{
+        } else {
             remotePath = remoteMachinePath[1];
         }
         scp(local, remotePath, remoteHost, remotePort, user, pswd, reverse);
