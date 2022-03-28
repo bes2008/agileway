@@ -9,6 +9,7 @@ import com.jn.agileway.ssh.client.sftp.attrs.FileMode;
 import com.jn.agileway.ssh.client.sftp.attrs.FileType;
 import com.jn.agileway.ssh.client.sftp.exception.NoSuchFileSftpException;
 import com.jn.agileway.ssh.client.sftp.exception.SftpException;
+import com.jn.agileway.ssh.client.transport.hostkey.StrictHostKeyChecking;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
@@ -40,8 +41,6 @@ public class Sftps {
     }
 
     /**
-     * @param session
-     * @param filepath
      * @return null 代表该路径不存在
      */
     public static FileType getFileType(SftpSession session, String filepath) throws SftpException {
@@ -62,11 +61,6 @@ public class Sftps {
 
     /**
      * 任何一种远程文件，都可用这种方式来判断
-     *
-     * @param session
-     * @param filepath
-     * @return
-     * @throws IOException
      */
     public static boolean exists(SftpSession session, String filepath, FileType fileType) throws SftpException {
         FileType type = getFileType(session, filepath);
@@ -79,10 +73,6 @@ public class Sftps {
     /**
      * 判断是否存在 某个普通的文件
      *
-     * @param session
-     * @param filepath
-     * @return
-     * @throws IOException
      */
     public static boolean existFile(SftpSession session, String filepath) throws SftpException {
         return exists(session, filepath, FileType.REGULAR);
@@ -91,10 +81,6 @@ public class Sftps {
     /**
      * 判断是否存在某个目录
      *
-     * @param session
-     * @param directoryPath
-     * @return
-     * @throws IOException
      */
     public static boolean existDirectory(SftpSession session, String directoryPath) throws SftpException {
         return exists(session, directoryPath, FileType.DIRECTORY);
@@ -111,11 +97,6 @@ public class Sftps {
 
     /**
      * 递归移除
-     *
-     * @param session
-     * @param directory
-     * @param retainDirectory
-     * @throws IOException
      */
     public static void removeDir(final SftpSession session, String directory, boolean retainDirectory) throws SftpException {
         List<SftpResourceInfo> children = session.listFiles(directory);
@@ -136,6 +117,9 @@ public class Sftps {
         }
     }
 
+    /**
+     * copy local file to remote
+     */
     public static void copy(@NonNull SftpSession session, @NonNull File file, @NotEmpty String remotePath) throws SftpException {
         Preconditions.checkArgument(file.exists(), "the file {} is not exist", file.getPath());
         if (file.isFile()) {
@@ -162,12 +146,6 @@ public class Sftps {
 
     /**
      * copy local file to remote dir
-     *
-     * @param session
-     * @param file
-     * @param remoteDir
-     * @return
-     * @throws IOException
      */
     public static int copyFile(@NonNull SftpSession session, @NonNull File file, @NotEmpty String remoteDir, @Nullable String newName) throws SftpException {
         boolean remoteDirExist = Sftps.existDirectory(session, remoteDir);
@@ -201,12 +179,6 @@ public class Sftps {
 
     /**
      * copy local directory to remote dir
-     *
-     * @param session
-     * @param localDirectory
-     * @param remoteDir
-     * @return
-     * @throws IOException
      */
     public static void copyDir(final SftpSession session, File localDirectory, final String remoteDir) throws SftpException {
         boolean remoteDirExist = Sftps.existDirectory(session, remoteDir);
@@ -241,10 +213,6 @@ public class Sftps {
 
     /**
      * copy remote directory to local
-     *
-     * @param session
-     * @param localDirectory
-     * @param remoteFile
      */
     public static int reverseCopyFile(final SftpSession session, final File localDirectory, final String remoteFile) throws IOException {
         if (!existFile(session, remoteFile)) {
@@ -294,6 +262,8 @@ public class Sftps {
             }
         });
     }
+
+
 
     public static void chmod(final SftpSession session, String path, int permissions) throws IOException {
         FileAttrs attrs = session.stat(path);
@@ -353,6 +323,34 @@ public class Sftps {
         return getPosixPermission(sftpFile).isExecutable();
     }
 
+    /**
+     *
+     * @param local the local file or directory
+     * @param remote    the remote file or directory, format: {user}:{password}@{host}:[port]:{remotePath}
+     * @param reverse reverse copy: from remote to local
+     */
+    public static void scp(String local, String remote, boolean reverse) throws Throwable{
+        String[] segments = Strings.split(remote, "@");
+        Preconditions.checkArgument(segments.length == 2, "illegal remote: {}", remote);
+        String[] userAndPassword = Strings.split(segments[0],":");
+        Preconditions.checkArgument(userAndPassword.length==2," user, password are required");
+        String user = userAndPassword[0];
+        String pswd = userAndPassword[1];
+        String[] remoteMachinePath = Strings.split(segments[1],":");
+        Preconditions.checkArgument(remoteMachinePath.length>=2, "host, port, remotePath are required");
+        String remoteHost = remoteMachinePath[0];
+        int remotePort = -1;
+        String remotePath = null;
+        if(remoteMachinePath.length>2){
+            remotePort = Integer.parseInt(remoteMachinePath[1]);
+            remotePath = remoteMachinePath[2];
+        }
+        else{
+            remotePath = remoteMachinePath[1];
+        }
+        scp(local, remotePath, remoteHost, remotePort, user, pswd, reverse);
+    }
+
     public static void scp(@NotEmpty String localPath, @NotEmpty String remotePath, @NotEmpty String remoteHost, int remotePort, @NotEmpty String remoteUser, String remotePswd, boolean reverse) throws IOException, SftpException {
         Preconditions.checkNotEmpty(localPath, "the local path is required");
         Preconditions.checkNotEmpty(remotePath, "the remote path is required");
@@ -366,6 +364,7 @@ public class Sftps {
         connectionConfig.setPort(remotePort);
         connectionConfig.setUser(remoteUser);
         connectionConfig.setPassword(remotePswd);
+        connectionConfig.setStrictHostKeyChecking(StrictHostKeyChecking.NO);
 
         SshConnection connection = null;
         SftpSession session = null;
