@@ -18,6 +18,14 @@ public class CorsProperties {
     private Support support;
     private Request request;
 
+    public CorsProperties(){
+        setAllowed(new Allowed());
+        setExposed(new Exposed());
+        setPreflight(new Preflight());
+        setSupport(new Support());
+        setRequest(new Request());
+    }
+
     public boolean anyOriginAllowed(){
         return allowed.isAnyOriginAllowed();
     }
