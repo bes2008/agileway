@@ -24,6 +24,9 @@ agileway:
         predicates:
           - paths=/**
           - methods=GET,POST
+      cors:
+        enabled: true
+
     set-header:
       rules:
         - predicates:

@@ -13,7 +13,7 @@ import java.util.List;
  * configuration prefix: cors
  */
 public class CorsProperties {
-
+    private boolean enabled;
     private Allowed allowed;
     private Exposed exposed;
     private Preflight preflight;
@@ -26,6 +26,15 @@ public class CorsProperties {
         setPreflight(new Preflight());
         setSupport(new Support());
         setRequest(new Request());
+        setEnabled(false);
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public boolean anyOriginAllowed(){

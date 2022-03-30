@@ -73,10 +73,12 @@ public class CorsFilter implements Filter {
 
     private CorsProperties conf;
 
+    public void setConf(CorsProperties conf) {
+        this.conf = conf;
+    }
 
     @Override
-    public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
-            throws IOException, ServletException {
+    public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
         if (!(servletRequest instanceof HttpServletRequest) || !(servletResponse instanceof HttpServletResponse)) {
             throw new ServletException("CORS doesn't support non-HTTP request or response");
         }

@@ -3,6 +3,8 @@ package com.jn.agileway.springboot.web.filter;
 import com.jn.agileway.web.filter.HttpRequestHandlerFilter;
 import com.jn.agileway.web.filter.accesslog.AccessLogFilter;
 import com.jn.agileway.web.filter.accesslog.WebAccessLogProperties;
+import com.jn.agileway.web.filter.waf.cors.CorsFilter;
+import com.jn.agileway.web.filter.waf.cors.CorsProperties;
 import com.jn.agileway.web.request.header.SetResponseHeaderHandler;
 import com.jn.agileway.web.request.header.SetResponseHeaderProperties;
 import com.jn.agileway.web.filter.rr.RRFilter;
@@ -17,6 +19,7 @@ import com.jn.agileway.web.security.xss.XssWafFactory;
 import com.jn.langx.util.collection.Collects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -138,4 +141,26 @@ public class AgilewayBasicFiltersConfiguration {
         registration.setOrder(-97);
         return registration;
     }
+
+    @ConfigurationProperties(prefix = "agileway.web.waf.cors")
+    @Bean
+    public CorsProperties corsProperties() {
+        return new CorsProperties();
+    }
+
+    @ConditionalOnProperty(prefix = "agileway.web.waf.cors", name = "enabeld", havingValue = "true")
+    @Order(-96)
+    @Bean
+    public FilterRegistrationBean corsRegistrationBean(CorsProperties corsProperties) {
+        corsProperties.setEnabled(true);
+        CorsFilter corsFilter = new CorsFilter();
+        corsFilter.setConf(corsProperties);
+
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setName("CORS Filter");
+        registration.setFilter(corsFilter);
+        registration.setOrder(-96);
+        return registration;
+    }
+
 }
