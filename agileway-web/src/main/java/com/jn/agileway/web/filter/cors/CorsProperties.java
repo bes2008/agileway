@@ -160,6 +160,10 @@ public class CorsProperties {
     public static class Exposed {
         private List<String> headers;
 
+        public Exposed(){
+            setHeaders("");
+        }
+
         /**
          * A comma separated list of request headers that can be used when making an actual request. These headers will also be returned as part of Access-Control-Allow-Headers header in a pre-flight response. Eg: Origin,Accept. Defaults: Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers
          */
