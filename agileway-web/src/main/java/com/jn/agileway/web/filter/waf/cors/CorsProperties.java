@@ -85,7 +85,10 @@ public class CorsProperties {
 
     public static class Allowed {
 
-
+        /**
+         * By default, no origins are allowed to make requests.
+         */
+        public static final String DEFAULT_ALLOWED_ORIGINS = "";
         private List<String> origins;
 
         /**
@@ -96,7 +99,10 @@ public class CorsProperties {
         }
 
         private List<String> methods;
-
+        /**
+         * By default, following methods are supported: GET, POST, HEAD and OPTIONS.
+         */
+        public static final String DEFAULT_ALLOWED_HTTP_METHODS = "GET,POST,HEAD,OPTIONS";
         /*
          * A comma separated list of HTTP methods that can be used to access the resource, using cross-origin requests. These are the methods which will also be included as part of Access-Control-Allow-Methods header in pre-flight response. Eg: GET, POST. Defaults: GET, POST, HEAD, OPTIONS
          */
@@ -105,7 +111,12 @@ public class CorsProperties {
         }
 
         private List<String> headers;
-
+        /**
+         * By default, following headers are supported:
+         * Origin,Accept,X-Requested-With, Content-Type,
+         * Access-Control-Request-Method, and Access-Control-Request-Headers.
+         */
+        public static final String DEFAULT_ALLOWED_HTTP_HEADERS = "Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers";
         /**
          * A comma separated list of request headers that can be used when making an actual request. These headers will also be returned as part of Access-Control-Allow-Headers header in a pre-flight response. Eg: Origin,Accept. Defaults: Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers
          */
@@ -114,9 +125,9 @@ public class CorsProperties {
         }
 
         public Allowed() {
-            setOrigins("");
-            setHeaders("Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-            setMethods("GET, POST, HEAD, OPTIONS");
+            setOrigins(DEFAULT_ALLOWED_ORIGINS);
+            setHeaders(DEFAULT_ALLOWED_HTTP_HEADERS);
+            setMethods(DEFAULT_ALLOWED_HTTP_METHODS);
         }
 
         public boolean isOriginAllowed(final String origin){
