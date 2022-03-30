@@ -1,15 +1,15 @@
-package com.jn.agileway.web.filter.cors;
+package com.jn.agileway.web.filter.waf.cors;
 
 
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
+import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -122,20 +122,13 @@ public class CorsFilter implements Filter {
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
         parseAndStore(
-                getInitParameter(filterConfig,
-                        PARAM_CORS_ALLOWED_ORIGINS, DEFAULT_ALLOWED_ORIGINS),
-                getInitParameter(filterConfig,
-                        PARAM_CORS_ALLOWED_METHODS, DEFAULT_ALLOWED_HTTP_METHODS),
-                getInitParameter(filterConfig,
-                        PARAM_CORS_ALLOWED_HEADERS, DEFAULT_ALLOWED_HTTP_HEADERS),
-                getInitParameter(filterConfig,
-                        PARAM_CORS_EXPOSED_HEADERS, DEFAULT_EXPOSED_HEADERS),
-                getInitParameter(filterConfig,
-                        PARAM_CORS_SUPPORT_CREDENTIALS, DEFAULT_SUPPORTS_CREDENTIALS),
-                getInitParameter(filterConfig,
-                        PARAM_CORS_PREFLIGHT_MAXAGE, DEFAULT_PREFLIGHT_MAXAGE),
-                getInitParameter(filterConfig,
-                        PARAM_CORS_REQUEST_DECORATE, DEFAULT_DECORATE_REQUEST)
+                getInitParameter(filterConfig, PARAM_CORS_ALLOWED_ORIGINS, DEFAULT_ALLOWED_ORIGINS),
+                getInitParameter(filterConfig, PARAM_CORS_ALLOWED_METHODS, DEFAULT_ALLOWED_HTTP_METHODS),
+                getInitParameter(filterConfig, PARAM_CORS_ALLOWED_HEADERS, DEFAULT_ALLOWED_HTTP_HEADERS),
+                getInitParameter(filterConfig, PARAM_CORS_EXPOSED_HEADERS, DEFAULT_EXPOSED_HEADERS),
+                getInitParameter(filterConfig, PARAM_CORS_SUPPORT_CREDENTIALS, DEFAULT_SUPPORTS_CREDENTIALS),
+                getInitParameter(filterConfig, PARAM_CORS_PREFLIGHT_MAXAGE, DEFAULT_PREFLIGHT_MAXAGE),
+                getInitParameter(filterConfig, PARAM_CORS_REQUEST_DECORATE, DEFAULT_DECORATE_REQUEST)
         );
     }
 
@@ -925,7 +918,7 @@ public class CorsFilter implements Filter {
      * >http://www.w3.org/TR/cors/#terminology</a>
      */
     public static final Collection<String> SIMPLE_HTTP_REQUEST_CONTENT_TYPE_VALUES =
-            new HashSet<>(Arrays.asList("application/x-www-form-urlencoded",
+            new HashSet<>(Collects.asList("application/x-www-form-urlencoded",
                     "multipart/form-data", "text/plain"));
 
     // ------------------------------------------------ Configuration Defaults
@@ -973,44 +966,37 @@ public class CorsFilter implements Filter {
     /**
      * Key to retrieve allowed origins from {@link javax.servlet.FilterConfig}.
      */
-    public static final String PARAM_CORS_ALLOWED_ORIGINS =
-            "cors.allowed.origins";
+    public static final String PARAM_CORS_ALLOWED_ORIGINS = "cors.allowed.origins";
 
     /**
      * Key to retrieve support credentials from
      * {@link javax.servlet.FilterConfig}.
      */
-    public static final String PARAM_CORS_SUPPORT_CREDENTIALS =
-            "cors.support.credentials";
+    public static final String PARAM_CORS_SUPPORT_CREDENTIALS = "cors.support.credentials";
 
     /**
      * Key to retrieve exposed headers from {@link javax.servlet.FilterConfig}.
      */
-    public static final String PARAM_CORS_EXPOSED_HEADERS =
-            "cors.exposed.headers";
+    public static final String PARAM_CORS_EXPOSED_HEADERS = "cors.exposed.headers";
 
     /**
      * Key to retrieve allowed headers from {@link javax.servlet.FilterConfig}.
      */
-    public static final String PARAM_CORS_ALLOWED_HEADERS =
-            "cors.allowed.headers";
+    public static final String PARAM_CORS_ALLOWED_HEADERS = "cors.allowed.headers";
 
     /**
      * Key to retrieve allowed methods from {@link javax.servlet.FilterConfig}.
      */
-    public static final String PARAM_CORS_ALLOWED_METHODS =
-            "cors.allowed.methods";
+    public static final String PARAM_CORS_ALLOWED_METHODS = "cors.allowed.methods";
 
     /**
      * Key to retrieve preflight max age from
      * {@link javax.servlet.FilterConfig}.
      */
-    public static final String PARAM_CORS_PREFLIGHT_MAXAGE =
-            "cors.preflight.maxage";
+    public static final String PARAM_CORS_PREFLIGHT_MAXAGE = "cors.preflight.maxage";
 
     /**
      * Key to determine if request should be decorated.
      */
-    public static final String PARAM_CORS_REQUEST_DECORATE =
-            "cors.request.decorate";
+    public static final String PARAM_CORS_REQUEST_DECORATE = "cors.request.decorate";
 }

@@ -1,4 +1,4 @@
-package com.jn.agileway.web.filter.cors;
+package com.jn.agileway.web.filter.waf.cors;
 
 
 import com.jn.agileway.web.request.parse.Vary;
@@ -12,7 +12,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 
-public class ResponseUtil {
+class ResponseUtil {
 
     private static final String VARY_HEADER = "vary";
     private static final String VARY_ALL = "*";

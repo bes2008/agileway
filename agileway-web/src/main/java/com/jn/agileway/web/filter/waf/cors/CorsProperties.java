@@ -1,4 +1,4 @@
-package com.jn.agileway.web.filter.cors;
+package com.jn.agileway.web.filter.waf.cors;
 
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
@@ -9,6 +9,8 @@ import java.util.List;
 
 /**
  * https://tomcat.apache.org/tomcat-9.0-doc/config/filter.html#CORS_Filter
+ *
+ * configuration prefix: cors
  */
 public class CorsProperties {
 
