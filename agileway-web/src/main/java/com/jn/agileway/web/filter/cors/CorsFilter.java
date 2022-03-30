@@ -2,6 +2,7 @@ package com.jn.agileway.web.filter.cors;
 
 
 import com.jn.langx.text.StringTemplates;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
@@ -59,62 +60,18 @@ import javax.servlet.http.HttpServletResponse;
  * </ul>
  *
  * @see <a href="http://www.w3.org/TR/cors/">CORS specification</a>
- *
- *
+ * <p>
+ * <p>
  * migrate from tomcat-8.5.43
+ * <p>
+ * https://blog.csdn.net/mengmengdastyle/article/details/80939609
+ * https://tomcat.apache.org/tomcat-9.0-doc/config/filter.html#CORS_Filter
  */
 public class CorsFilter implements Filter {
 
     private final Logger log = Loggers.getLogger(this.getClass()); // must not be static
 
-
-    /**
-     * A {@link Collection} of origins consisting of zero or more origins that
-     * are allowed access to the resource.
-     */
-    private final Collection<String> allowedOrigins = new HashSet<>();
-
-    /**
-     * Determines if any origin is allowed to make request.
-     */
-    private boolean anyOriginAllowed;
-
-    /**
-     * A {@link Collection} of methods consisting of zero or more methods that
-     * are supported by the resource.
-     */
-    private final Collection<String> allowedHttpMethods = new HashSet<>();
-
-    /**
-     * A {@link Collection} of headers consisting of zero or more header field
-     * names that are supported by the resource.
-     */
-    private final Collection<String> allowedHttpHeaders = new HashSet<>();
-
-    /**
-     * A {@link Collection} of exposed headers consisting of zero or more header
-     * field names of headers other than the simple response headers that the
-     * resource might use and can be exposed.
-     */
-    private final Collection<String> exposedHeaders = new HashSet<>();
-
-    /**
-     * A supports credentials flag that indicates whether the resource supports
-     * user credentials in the request. It is true when the resource does and
-     * false otherwise.
-     */
-    private boolean supportsCredentials;
-
-    /**
-     * Indicates (in seconds) how long the results of a pre-flight request can
-     * be cached in a pre-flight result cache.
-     */
-    private long preflightMaxAge;
-
-    /**
-     * Determines if the request should be decorated or not.
-     */
-    private boolean decorateRequest;
+    private CorsProperties conf;
 
 
     @Override
@@ -134,7 +91,7 @@ public class CorsFilter implements Filter {
         CorsFilter.CORSRequestType requestType = checkRequestType(request);
 
         // Adds CORS specific attributes to request.
-        if (decorateRequest) {
+        if (this.conf.getRequest().isDecorate()) {
             CorsFilter.decorateCORSProperties(request, requestType);
         }
         switch (requestType) {
@@ -166,19 +123,19 @@ public class CorsFilter implements Filter {
     public void init(final FilterConfig filterConfig) throws ServletException {
         parseAndStore(
                 getInitParameter(filterConfig,
-                        PARAM_CORS_ALLOWED_ORIGINS,     DEFAULT_ALLOWED_ORIGINS),
+                        PARAM_CORS_ALLOWED_ORIGINS, DEFAULT_ALLOWED_ORIGINS),
                 getInitParameter(filterConfig,
-                        PARAM_CORS_ALLOWED_METHODS,     DEFAULT_ALLOWED_HTTP_METHODS),
+                        PARAM_CORS_ALLOWED_METHODS, DEFAULT_ALLOWED_HTTP_METHODS),
                 getInitParameter(filterConfig,
-                        PARAM_CORS_ALLOWED_HEADERS,     DEFAULT_ALLOWED_HTTP_HEADERS),
+                        PARAM_CORS_ALLOWED_HEADERS, DEFAULT_ALLOWED_HTTP_HEADERS),
                 getInitParameter(filterConfig,
-                        PARAM_CORS_EXPOSED_HEADERS,     DEFAULT_EXPOSED_HEADERS),
+                        PARAM_CORS_EXPOSED_HEADERS, DEFAULT_EXPOSED_HEADERS),
                 getInitParameter(filterConfig,
                         PARAM_CORS_SUPPORT_CREDENTIALS, DEFAULT_SUPPORTS_CREDENTIALS),
                 getInitParameter(filterConfig,
-                        PARAM_CORS_PREFLIGHT_MAXAGE,    DEFAULT_PREFLIGHT_MAXAGE),
+                        PARAM_CORS_PREFLIGHT_MAXAGE, DEFAULT_PREFLIGHT_MAXAGE),
                 getInitParameter(filterConfig,
-                        PARAM_CORS_REQUEST_DECORATE,    DEFAULT_DECORATE_REQUEST)
+                        PARAM_CORS_REQUEST_DECORATE, DEFAULT_DECORATE_REQUEST)
         );
     }
 
@@ -187,15 +144,12 @@ public class CorsFilter implements Filter {
      * This method returns the parameter's value if it exists, or defaultValue
      * if not.
      *
-     * @param filterConfig  The configuration for the filter
-     *
-     * @param name          The parameter's name
-     *
-     * @param defaultValue  The default value to return if the parameter does
-     *                      not exist
-     *
+     * @param filterConfig The configuration for the filter
+     * @param name         The parameter's name
+     * @param defaultValue The default value to return if the parameter does
+     *                     not exist
      * @return The parameter's value or the default value if the parameter does
-     *         not exist
+     * not exist
      */
     private String getInitParameter(FilterConfig filterConfig, String name, String defaultValue) {
 
@@ -215,13 +169,13 @@ public class CorsFilter implements Filter {
     /**
      * Handles a CORS request of type {@link CORSRequestType}.SIMPLE.
      *
-     * @param request The {@link HttpServletRequest} object.
-     * @param response The {@link HttpServletResponse} object.
+     * @param request     The {@link HttpServletRequest} object.
+     * @param response    The {@link HttpServletResponse} object.
      * @param filterChain The {@link FilterChain} object.
-     * @throws IOException an IO error occurred
+     * @throws IOException      an IO error occurred
      * @throws ServletException Servlet error propagation
      * @see <a href="http://www.w3.org/TR/cors/#resource-requests">Simple
-     *      Cross-Origin Request, Actual Request, and Redirects</a>
+     * Cross-Origin Request, Actual Request, and Redirects</a>
      */
     protected void handleSimpleCORS(final HttpServletRequest request,
                                     final HttpServletResponse response, final FilterChain filterChain)
@@ -231,7 +185,7 @@ public class CorsFilter implements Filter {
         if (!(requestType == CorsFilter.CORSRequestType.SIMPLE ||
                 requestType == CorsFilter.CORSRequestType.ACTUAL)) {
             String error = "Expects a HttpServletRequest object of type [{0}] or [{1}]";
-            error = StringTemplates.formatWithIndex(error, CORSRequestType.SIMPLE,CORSRequestType.ACTUAL);
+            error = StringTemplates.formatWithIndex(error, CORSRequestType.SIMPLE, CORSRequestType.ACTUAL);
             throw new IllegalArgumentException(error);
         }
 
@@ -239,12 +193,12 @@ public class CorsFilter implements Filter {
         final String method = request.getMethod();
 
         // Section 6.1.2
-        if (!isOriginAllowed(origin)) {
+        if (!conf.getAllowed().isOriginAllowed(origin)) {
             handleInvalidCORS(request, response, filterChain);
             return;
         }
 
-        if (!allowedHttpMethods.contains(method)) {
+        if (!this.conf.getAllowed().getMethods().contains(method)) {
             handleInvalidCORS(request, response, filterChain);
             return;
         }
@@ -259,10 +213,10 @@ public class CorsFilter implements Filter {
     /**
      * Handles CORS pre-flight request.
      *
-     * @param request The {@link HttpServletRequest} object.
-     * @param response The {@link HttpServletResponse} object.
+     * @param request     The {@link HttpServletRequest} object.
+     * @param response    The {@link HttpServletResponse} object.
      * @param filterChain The {@link FilterChain} object.
-     * @throws IOException an IO error occurred
+     * @throws IOException      an IO error occurred
      * @throws ServletException Servlet error propagation
      */
     protected void handlePreflightCORS(final HttpServletRequest request,
@@ -279,7 +233,7 @@ public class CorsFilter implements Filter {
         final String origin = request.getHeader(CorsFilter.REQUEST_HEADER_ORIGIN);
 
         // Section 6.2.2
-        if (!isOriginAllowed(origin)) {
+        if (!conf.getAllowed().isOriginAllowed(origin)) {
             handleInvalidCORS(request, response, filterChain);
             return;
         }
@@ -307,7 +261,7 @@ public class CorsFilter implements Filter {
         }
 
         // Section 6.2.5
-        if (!allowedHttpMethods.contains(accessControlRequestMethod)) {
+        if (!this.conf.getAllowed().getMethods().contains(accessControlRequestMethod)) {
             handleInvalidCORS(request, response, filterChain);
             return;
         }
@@ -315,7 +269,7 @@ public class CorsFilter implements Filter {
         // Section 6.2.6
         if (!accessControlRequestHeaders.isEmpty()) {
             for (String header : accessControlRequestHeaders) {
-                if (!allowedHttpHeaders.contains(header)) {
+                if (!this.conf.getAllowed().getHeaders().contains(header)) {
                     handleInvalidCORS(request, response, filterChain);
                     return;
                 }
@@ -333,10 +287,10 @@ public class CorsFilter implements Filter {
      * it is not a cross-origin request. This implementation, just forwards the
      * request down the filter chain.
      *
-     * @param request The {@link HttpServletRequest} object.
-     * @param response The {@link HttpServletResponse} object.
+     * @param request     The {@link HttpServletRequest} object.
+     * @param response    The {@link HttpServletResponse} object.
      * @param filterChain The {@link FilterChain} object.
-     * @throws IOException an IO error occurred
+     * @throws IOException      an IO error occurred
      * @throws ServletException Servlet error propagation
      */
     private void handleNonCORS(final HttpServletRequest request,
@@ -353,8 +307,8 @@ public class CorsFilter implements Filter {
     /**
      * Handles a CORS request that violates specification.
      *
-     * @param request The {@link HttpServletRequest} object.
-     * @param response The {@link HttpServletResponse} object.
+     * @param request     The {@link HttpServletRequest} object.
+     * @param response    The {@link HttpServletResponse} object.
      * @param filterChain The {@link FilterChain} object.
      */
     private void handleInvalidCORS(final HttpServletRequest request,
@@ -393,7 +347,7 @@ public class CorsFilter implements Filter {
         final String method = request.getMethod();
         final String origin = request.getHeader(CorsFilter.REQUEST_HEADER_ORIGIN);
 
-        if (!anyOriginAllowed) {
+        if (!conf.anyOriginAllowed()) {
             // If only specific origins are allowed, the response will vary by
             // origin
             ResponseUtil.addVaryFieldName(response, CorsFilter.REQUEST_HEADER_ORIGIN);
@@ -405,7 +359,7 @@ public class CorsFilter implements Filter {
         // response to be cached for CORS and non-CORS requests.
 
         // Add a single Access-Control-Allow-Origin header.
-        if (anyOriginAllowed) {
+        if (conf.anyOriginAllowed()) {
             // If any origin is allowed, return header with '*'.
             response.addHeader(CorsFilter.RESPONSE_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, "*");
         } else {
@@ -417,14 +371,15 @@ public class CorsFilter implements Filter {
         // If the resource supports credentials, add a single
         // Access-Control-Allow-Credentials header with the case-sensitive
         // string "true" as value.
-        if (supportsCredentials) {
+        if (this.conf.getSupport().isCredentials()) {
             response.addHeader(CorsFilter.RESPONSE_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
         }
 
         // If the list of exposed headers is not empty add one or more
         // Access-Control-Expose-Headers headers, with as values the header
         // field names given in the list of exposed headers.
-        if ((exposedHeaders != null) && (exposedHeaders.size() > 0)) {
+        List<String> exposedHeaders = this.conf.getExposed().getHeaders();
+        if (Objs.isNotEmpty(exposedHeaders)) {
             String exposedHeadersString = join(exposedHeaders, ",");
             response.addHeader(CorsFilter.RESPONSE_HEADER_ACCESS_CONTROL_EXPOSE_HEADERS,
                     exposedHeadersString);
@@ -444,22 +399,19 @@ public class CorsFilter implements Filter {
             // as a) they do no harm in the non-CORS case and b) it allows the same
             // response to be cached for CORS and non-CORS requests.
 
-            if (preflightMaxAge > 0) {
+            if (this.conf.getPreflight().getMaxage() > 0) {
                 response.addHeader(
                         CorsFilter.RESPONSE_HEADER_ACCESS_CONTROL_MAX_AGE,
-                        String.valueOf(preflightMaxAge));
+                        String.valueOf(this.conf.getPreflight().getMaxage()));
             }
 
-            if  ((allowedHttpMethods != null) && (!allowedHttpMethods.isEmpty())) {
-                response.addHeader(
-                        CorsFilter.RESPONSE_HEADER_ACCESS_CONTROL_ALLOW_METHODS,
-                        join(allowedHttpMethods, ","));
+            if (!this.conf.getAllowed().getMethods().isEmpty()) {
+                response.addHeader(CorsFilter.RESPONSE_HEADER_ACCESS_CONTROL_ALLOW_METHODS, join(this.conf.getAllowed().getMethods(), ","));
             }
 
-            if ((allowedHttpHeaders != null) && (!allowedHttpHeaders.isEmpty())) {
-                response.addHeader(
-                        CorsFilter.RESPONSE_HEADER_ACCESS_CONTROL_ALLOW_HEADERS,
-                        join(allowedHttpHeaders, ","));
+            List<String> allowedHttpHeaders = this.conf.getAllowed().getHeaders();
+            if (!allowedHttpHeaders.isEmpty()) {
+                response.addHeader(CorsFilter.RESPONSE_HEADER_ACCESS_CONTROL_ALLOW_HEADERS, join(allowedHttpHeaders, ","));
             }
         }
     }
@@ -485,7 +437,7 @@ public class CorsFilter implements Filter {
      * 'Access-Control-Request-Headers' header, for pre-flight request.</li>
      * </ul>
      *
-     * @param request The {@link HttpServletRequest} object.
+     * @param request         The {@link HttpServletRequest} object.
      * @param corsRequestType The {@link CORSRequestType} object.
      */
     protected static void decorateCORSProperties(
@@ -552,10 +504,10 @@ public class CorsFilter implements Filter {
      * Joins elements of {@link Set} into a string, where each element is
      * separated by the provided separator.
      *
-     * @param elements The {@link Set} containing elements to join together.
+     * @param elements      The {@link Set} containing elements to join together.
      * @param joinSeparator The character to be used for separating elements.
      * @return The joined {@link String}; <code>null</code> if elements
-     *         {@link Set} is null.
+     * {@link Set} is null.
      */
     protected static String join(final Collection<String> elements,
                                  final String joinSeparator) {
@@ -692,43 +644,19 @@ public class CorsFilter implements Filter {
         return result;
     }
 
-    /**
-     * Checks if the Origin is allowed to make a CORS request.
-     *
-     * @param origin
-     *            The Origin.
-     * @return <code>true</code> if origin is allowed; <code>false</code>
-     *         otherwise.
-     */
-    private boolean isOriginAllowed(final String origin) {
-        if (anyOriginAllowed) {
-            return true;
-        }
-
-        // If 'Origin' header is a case-sensitive match of any of allowed
-        // origins, then return true, else return false.
-        return allowedOrigins.contains(origin);
-    }
-
 
     /**
      * Parses each param-value and populates configuration variables. If a param
      * is provided, it overrides the default.
      *
-     * @param allowedOrigins
-     *            A {@link String} of comma separated origins.
-     * @param allowedHttpMethods
-     *            A {@link String} of comma separated HTTP methods.
-     * @param allowedHttpHeaders
-     *            A {@link String} of comma separated HTTP headers.
-     * @param exposedHeaders
-     *            A {@link String} of comma separated headers that needs to be
-     *            exposed.
-     * @param supportsCredentials
-     *            "true" if support credentials needs to be enabled.
-     * @param preflightMaxAge
-     *            The amount of seconds the user agent is allowed to cache the
-     *            result of the pre-flight request.
+     * @param allowedOrigins      A {@link String} of comma separated origins.
+     * @param allowedHttpMethods  A {@link String} of comma separated HTTP methods.
+     * @param allowedHttpHeaders  A {@link String} of comma separated HTTP headers.
+     * @param exposedHeaders      A {@link String} of comma separated headers that needs to be
+     *                            exposed.
+     * @param supportsCredentials "true" if support credentials needs to be enabled.
+     * @param preflightMaxAge     The amount of seconds the user agent is allowed to cache the
+     *                            result of the pre-flight request.
      * @throws ServletException
      */
     private void parseAndStore(final String allowedOrigins,
@@ -737,58 +665,52 @@ public class CorsFilter implements Filter {
                                final String preflightMaxAge, final String decorateRequest)
             throws ServletException {
 
-        if (allowedOrigins.trim().equals("*")) {
-            this.anyOriginAllowed = true;
-        } else {
-            this.anyOriginAllowed = false;
-            Set<String> setAllowedOrigins = parseStringToSet(allowedOrigins);
-            this.allowedOrigins.clear();
-            this.allowedOrigins.addAll(setAllowedOrigins);
-        }
+        CorsProperties corsProperties = new CorsProperties();
 
-        Set<String> setAllowedHttpMethods = parseStringToSet(allowedHttpMethods);
-        this.allowedHttpMethods.clear();
-        this.allowedHttpMethods.addAll(setAllowedHttpMethods);
+        CorsProperties.Allowed allowed = new CorsProperties.Allowed();
+        allowed.setOrigins(allowedOrigins);
+        allowed.setMethods(allowedHttpMethods);
+        allowed.setHeaders(allowedHttpHeaders);
+        corsProperties.setAllowed(allowed);
 
-        Set<String> setAllowedHttpHeaders = parseStringToSet(allowedHttpHeaders);
-        Set<String> lowerCaseHeaders = new HashSet<>();
-        for (String header : setAllowedHttpHeaders) {
-            String lowerCase = header.toLowerCase(Locale.ENGLISH);
-            lowerCaseHeaders.add(lowerCase);
-        }
-        this.allowedHttpHeaders.clear();
-        this.allowedHttpHeaders.addAll(lowerCaseHeaders);
-
-        Set<String> setExposedHeaders = parseStringToSet(exposedHeaders);
-        this.exposedHeaders.clear();
-        this.exposedHeaders.addAll(setExposedHeaders);
+        CorsProperties.Exposed exposed = new CorsProperties.Exposed();
+        exposed.setHeaders(exposedHeaders);
+        corsProperties.setExposed(exposed);
 
         // For any value other then 'true' this will be false.
-        this.supportsCredentials = Boolean.parseBoolean(supportsCredentials);
+        CorsProperties.Support support = new CorsProperties.Support();
+        support.setCredentials(Boolean.parseBoolean(supportsCredentials));
+        corsProperties.setSupport(support);
 
-        if (this.supportsCredentials && this.anyOriginAllowed) {
-            throw new ServletException("It is not allowed to configure supportsCredentials=[true] when allowedOrigins=[*]");
-        }
 
+        CorsProperties.Preflight preflight = new CorsProperties.Preflight();
+        long preflightMaxAgeLong = 0L;
         try {
             if (!preflightMaxAge.isEmpty()) {
-                this.preflightMaxAge = Long.parseLong(preflightMaxAge);
-            } else {
-                this.preflightMaxAge = 0L;
+                preflightMaxAgeLong = Long.parseLong(preflightMaxAge);
             }
         } catch (NumberFormatException e) {
             throw new ServletException("Unable to parse preflightMaxAge", e);
         }
+        preflight.setMaxage(preflightMaxAgeLong);
+        corsProperties.setPreflight(preflight);
 
+        CorsProperties.Request request = new CorsProperties.Request();
         // For any value other then 'true' this will be false.
-        this.decorateRequest = Boolean.parseBoolean(decorateRequest);
+        boolean decorateRequestBoolean = Boolean.parseBoolean(decorateRequest);
+        request.setDecorate(decorateRequestBoolean);
+        corsProperties.setRequest(request);
+
+        this.conf = corsProperties;
+        if (this.conf.getSupport().isCredentials() && this.conf.anyOriginAllowed()) {
+            throw new ServletException("It is not allowed to configure supportsCredentials=[true] when allowedOrigins=[*]");
+        }
     }
 
     /**
      * Takes a comma separated list and returns a Set<String>.
      *
-     * @param data
-     *            A comma separated list of strings.
+     * @param data A comma separated list of strings.
      * @return Set<String>
      */
     private Set<String> parseStringToSet(final String data) {
@@ -797,7 +719,7 @@ public class CorsFilter implements Filter {
         if (data != null && data.length() > 0) {
             splits = data.split(",");
         } else {
-            splits = new String[] {};
+            splits = new String[]{};
         }
 
         Set<String> set = new HashSet<>();
@@ -850,78 +772,6 @@ public class CorsFilter implements Filter {
         // If scheme for URI is null, return false. Return true otherwise.
         return originURI.getScheme() != null;
 
-    }
-
-
-    /**
-     * Determines if any origin is allowed to make CORS request.
-     *
-     * @return <code>true</code> if it's enabled; false otherwise.
-     */
-    public boolean isAnyOriginAllowed() {
-        return anyOriginAllowed;
-    }
-
-
-    /**
-     * Obtain the headers to expose.
-     *
-     * @return the headers that should be exposed by browser.
-     */
-    public Collection<String> getExposedHeaders() {
-        return exposedHeaders;
-    }
-
-
-    /**
-     * Determines is supports credentials is enabled.
-     *
-     * @return <code>true</code> if the use of credentials is supported
-     *         otherwise <code>false</code>
-     */
-    public boolean isSupportsCredentials() {
-        return supportsCredentials;
-    }
-
-
-    /**
-     * Returns the preflight response cache time in seconds.
-     *
-     * @return Time to cache in seconds.
-     */
-    public long getPreflightMaxAge() {
-        return preflightMaxAge;
-    }
-
-
-    /**
-     * Returns the {@link Set} of allowed origins that are allowed to make
-     * requests.
-     *
-     * @return {@link Set}
-     */
-    public Collection<String> getAllowedOrigins() {
-        return allowedOrigins;
-    }
-
-
-    /**
-     * Returns a {@link Set} of HTTP methods that are allowed to make requests.
-     *
-     * @return {@link Set}
-     */
-    public Collection<String> getAllowedHttpMethods() {
-        return allowedHttpMethods;
-    }
-
-
-    /**
-     * Returns a {@link Set} of headers support by resource.
-     *
-     * @return {@link Set}
-     */
-    public Collection<String> getAllowedHttpHeaders() {
-        return allowedHttpHeaders;
     }
 
 
@@ -1036,6 +886,7 @@ public class CorsFilter implements Filter {
             HTTP_REQUEST_ATTRIBUTE_PREFIX + "request.headers";
 
     // -------------------------------------------------------------- Constants
+
     /**
      * Enumerates varies types of CORS requests. Also, provides utility methods
      * to determine the request type.
@@ -1070,8 +921,8 @@ public class CorsFilter implements Filter {
      * will be treated as 'simple'. Note media-type values are compared ignoring
      * parameters and in a case-insensitive manner.
      *
-     * @see  <a href="http://www.w3.org/TR/cors/#terminology"
-     *       >http://www.w3.org/TR/cors/#terminology</a>
+     * @see <a href="http://www.w3.org/TR/cors/#terminology"
+     * >http://www.w3.org/TR/cors/#terminology</a>
      */
     public static final Collection<String> SIMPLE_HTTP_REQUEST_CONTENT_TYPE_VALUES =
             new HashSet<>(Arrays.asList("application/x-www-form-urlencoded",
