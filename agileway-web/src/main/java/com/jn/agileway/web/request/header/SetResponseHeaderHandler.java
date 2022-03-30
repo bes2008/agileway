@@ -2,8 +2,6 @@ package com.jn.agileway.web.request.header;
 
 import com.jn.agileway.web.request.handler.HttpRequestHandler;
 import com.jn.agileway.web.request.handler.HttpRequestHandlerChain;
-import com.jn.agileway.web.request.header.HttpResponseHeaderRule;
-import com.jn.agileway.web.request.header.HttpResponseHeaderSetterFactory;
 import com.jn.agileway.web.servlet.RR;
 import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.lifecycle.InitializationException;
