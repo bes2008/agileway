@@ -252,4 +252,46 @@ public class RedisCache<V> extends BaseCache<String, V> {
             this.keyWrapper = keyWrapper;
         }
     }
+
+    /********************************************************************************
+     *  hash 相关操作
+     ********************************************************************************/
+
+    /**
+     * hash delete
+     */
+    public void hashDelete(String key, Object... fields) {
+        String wrappedKey = keyWrapper.wrap(key);
+        redisTemplate.opsForHash().delete(wrappedKey, fields);
+    }
+
+    public <HK, HV> void hashMultiGet(String key, List<HK> fields) {
+        String wrappedKey = keyWrapper.wrap(key);
+        fields = Pipeline.<HK>of(fields)
+                .clearNulls().asList();
+        Map<HK, HV> map = new HashMap<HK, HV>();
+        Collection f = fields;
+        List<HV> hashValues = redisTemplate.opsForHash().multiGet(wrappedKey, f);
+        for (int i = 0; i < fields.size(); i++) {
+            HK hk = fields.get(i);
+            HV hv = hashValues.get(i);
+            map.put(hk, hv);
+        }
+    }
+
+    public void hashPut(String key, Object field, Object fieldValue) {
+        String wrappedKey = keyWrapper.wrap(key);
+        redisTemplate.opsForHash().put(wrappedKey, field, fieldValue);
+    }
+
+    public void hashIncrement(String key, Object field, double delta) {
+        String wrappedKey = keyWrapper.wrap(key);
+        redisTemplate.opsForHash().increment(wrappedKey, field, delta);
+    }
+
+    public void hashIncrement(String key, Object field, long delta) {
+        String wrappedKey = keyWrapper.wrap(key);
+        redisTemplate.opsForHash().increment(wrappedKey, field, delta);
+    }
+
 }
