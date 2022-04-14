@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
 public class PublicKeyCodecRegistry extends GenericRegistry<PublicKeyCodec> {
-    private static final PublicKeyCodecRegistry INSTANCE = new PublicKeyCodecRegistry();
+    private static PublicKeyCodecRegistry INSTANCE;
 
     private PublicKeyCodecRegistry() {
         super(new ConcurrentHashMap<String, PublicKeyCodec>());
@@ -37,6 +37,13 @@ public class PublicKeyCodecRegistry extends GenericRegistry<PublicKeyCodec> {
     }
 
     public static PublicKeyCodecRegistry getInstance() {
+        if (INSTANCE == null) {
+            synchronized (PublicKeyCodecRegistry.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new PublicKeyCodecRegistry();
+                }
+            }
+        }
         return INSTANCE;
     }
 }

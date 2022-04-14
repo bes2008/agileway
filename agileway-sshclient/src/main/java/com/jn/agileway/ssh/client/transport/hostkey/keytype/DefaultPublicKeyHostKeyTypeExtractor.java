@@ -15,7 +15,7 @@ import java.util.Map;
 
 @Singleton
 public class DefaultPublicKeyHostKeyTypeExtractor extends AbstractInitializable implements PublicKeyHostKeyTypeExtractor {
-    private static final DefaultPublicKeyHostKeyTypeExtractor INSTANCE = new DefaultPublicKeyHostKeyTypeExtractor();
+    private static DefaultPublicKeyHostKeyTypeExtractor INSTANCE;
     private Map<String, PublicKeyHostKeyTypeExtractor> extractorMap = new HashMap<String, PublicKeyHostKeyTypeExtractor>();
 
     private DefaultPublicKeyHostKeyTypeExtractor() {
@@ -26,11 +26,18 @@ public class DefaultPublicKeyHostKeyTypeExtractor extends AbstractInitializable 
      * @since 2.7.11
      */
     @Override
-    protected void doInit(){
+    protected void doInit() {
         PublicKeyCodecRegistry.getInstance();
     }
 
     public static DefaultPublicKeyHostKeyTypeExtractor getInstance() {
+        if (INSTANCE == null) {
+            synchronized (DefaultPublicKeyHostKeyTypeExtractor.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new DefaultPublicKeyHostKeyTypeExtractor();
+                }
+            }
+        }
         return INSTANCE;
     }
 

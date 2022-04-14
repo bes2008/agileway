@@ -29,6 +29,7 @@
         </dependency>
 
         <!-- 针对用户输入进行XSS防御: 用于对用户输入内容，进行清理 ，可以自定义清理规则-->
+        <!--License: BSD-->
         <!--
         <dependency>
             <groupId>org.owasp.antisamy</groupId>
@@ -39,6 +40,7 @@
         </dependency>
         -->
         <!-- 针对用户输入进行XSS防御:  这也是一款专门用于清理 html 标签的库 -->
+        <!--License: Apache-->
         <!--
         <dependency>
             <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
@@ -57,12 +59,16 @@
          3） 增强了encoder功能，提供了对 css, html, javascript, vbscript, sql, xml, xpath, url 等进行 encode 功能。 这样可以防止XSS攻击、SQL注入攻击。
          4） 基于 3）提供了 JSP  taglib ，用于对 html 响应内容进行 encode，已防止 黑客来基于输出内容进行 XSS 攻击
          -->
+        <!--License:  CC-BY-SA, BSD-->
         <!--
         <dependency>
             <groupId>org.owasp.esapi</groupId>
             <artifactId>esapi</artifactId>
             <version>2.2.3.0</version>
         </dependency>
+        -->
+        <!--License:  BSD-->
+        <!--
         <dependency>
             <groupId>org.owasp.encoder</groupId>
             <artifactId>encoder</artifactId>
