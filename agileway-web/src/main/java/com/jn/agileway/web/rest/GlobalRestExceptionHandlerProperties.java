@@ -12,6 +12,8 @@ public class GlobalRestExceptionHandlerProperties {
     private String defaultErrorMessage = "UNKNOWN";
     private boolean exceptionExtendsScanEnabled = true;
     private boolean writeUnifiedResponse = true;
+    private boolean logStack = true;
+    private boolean writeStackToResponse = false;
 
     public boolean isCauseScanEnabled() {
         return causeScanEnabled;
@@ -59,5 +61,21 @@ public class GlobalRestExceptionHandlerProperties {
 
     public void setWriteUnifiedResponse(boolean writeUnifiedResponse) {
         this.writeUnifiedResponse = writeUnifiedResponse;
+    }
+
+    public boolean isLogStack() {
+        return logStack;
+    }
+
+    public void setLogStack(boolean logStack) {
+        this.logStack = logStack;
+    }
+
+    public boolean isWriteStackToResponse() {
+        return writeStackToResponse;
+    }
+
+    public void setWriteStackToResponse(boolean writeStackToResponse) {
+        this.writeStackToResponse = writeStackToResponse;
     }
 }
