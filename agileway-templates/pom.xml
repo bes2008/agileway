@@ -11,6 +11,9 @@
 
     <artifactId>agileway-templates</artifactId>
     <packaging>pom</packaging>
+
+    <name>${groupId}:${artifactId}:${version}</name>
+
     <modules>
         <module>agileway-templates-freemarker</module>
     </modules>

@@ -11,6 +11,8 @@
 
     <artifactId>agileway-templates-freemarker</artifactId>
 
+    <name>${groupId}:${artifactId}:${version}</name>
+
     <properties>
         <freemarker.version>2.3.31</freemarker.version>
     </properties>
