@@ -17,7 +17,6 @@ public class PublicKeyCodecRegistry extends GenericRegistry<PublicKeyCodec> {
 
     private PublicKeyCodecRegistry() {
         super(new ConcurrentHashMap<String, PublicKeyCodec>());
-        init();
     }
 
     @Override
@@ -44,6 +43,7 @@ public class PublicKeyCodecRegistry extends GenericRegistry<PublicKeyCodec> {
                 }
             }
         }
+        INSTANCE.init();
         return INSTANCE;
     }
 }
