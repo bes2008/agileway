@@ -11,6 +11,13 @@
 
     <artifactId>agileway-examples</artifactId>
     <name>${groupId}:${artifactId}:${version}</name>
+
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>agileway-examples-spring-rest</module>
+    </modules>
+
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
