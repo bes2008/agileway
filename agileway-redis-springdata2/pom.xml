@@ -87,6 +87,7 @@
                 <artifactId>easyjson-jackson</artifactId>
                 <version>${easyjson.version}</version>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
 
