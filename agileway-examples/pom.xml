@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>com.github.fangjinuo.agileway.examples</groupId>
     <artifactId>agileway-examples</artifactId>
     <name>${groupId}:${artifactId}:${version}</name>
 
@@ -16,6 +17,7 @@
 
     <modules>
         <module>agileway-examples-spring-rest</module>
+        <module>agileway-examples-jersey</module>
     </modules>
 
     <dependencies>
