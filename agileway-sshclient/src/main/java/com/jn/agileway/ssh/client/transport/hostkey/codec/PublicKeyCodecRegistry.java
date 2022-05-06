@@ -40,10 +40,10 @@ public class PublicKeyCodecRegistry extends GenericRegistry<PublicKeyCodec> {
             synchronized (PublicKeyCodecRegistry.class) {
                 if (INSTANCE == null) {
                     INSTANCE = new PublicKeyCodecRegistry();
+                    INSTANCE.init();
                 }
             }
         }
-        INSTANCE.init();
         return INSTANCE;
     }
 }
