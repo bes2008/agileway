@@ -11,5 +11,5 @@
 
     <artifactId>agileway-jersey</artifactId>
 
-
+    <name>${groupId}:${artifactId}:${version}</name>
 </project>
