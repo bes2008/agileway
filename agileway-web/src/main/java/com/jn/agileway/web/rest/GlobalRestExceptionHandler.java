@@ -55,8 +55,11 @@ public abstract class GlobalRestExceptionHandler extends AbstractGlobalRestRespo
             }
 
             if (respBody == null) {
-                logger.error(ex.getMessage(), ex);
                 respBody = RestRespBody.error(context.getDefaultRestErrorMessageHandler().getDefaultErrorStatusCode(), context.getDefaultRestErrorMessageHandler().getDefaultErrorCode(), context.getDefaultRestErrorMessageHandler().getDefaultErrorMessage());
+            }
+
+            if (getContext().getExceptionHandlerProperties().isLogStack()) {
+                logger.error(ex.getMessage(), ex);
             }
             request.setAttribute(GLOBAL_REST_EXCEPTION_HANDLER, this);
 
