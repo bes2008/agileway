@@ -27,6 +27,7 @@
         <module>agileway-dmmq</module>
         <module>agileway-templates</module>
         <module>agileway-retry</module>
+        <module>agileway-jersey</module>
     </modules>
 
     <description>
