@@ -1,4 +1,4 @@
-package com.jn.agileway.web.rest;
+package com.jn.agileway.http.rest;
 
 public class I18nRestErrorMessageHandlerProperties {
 

@@ -1,5 +1,7 @@
-package com.jn.agileway.web.rest;
+package com.jn.agileway.http.rest;
 
+import com.jn.agileway.http.rr.HttpRequest;
+import com.jn.agileway.http.rr.HttpResponse;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.lifecycle.Lifecycle;
 import com.jn.langx.util.io.Charsets;
@@ -7,13 +9,11 @@ import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
-import static com.jn.agileway.web.rest.GlobalRestHandlers.GLOBAL_REST_EXCEPTION_HANDLER;
-import static com.jn.agileway.web.rest.GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN;
+import static com.jn.agileway.http.rest.GlobalRestHandlers.GLOBAL_REST_EXCEPTION_HANDLER;
+import static com.jn.agileway.http.rest.GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN;
 
 /**
  * 通常在 Controller层调用
@@ -28,7 +28,7 @@ public abstract class GlobalRestExceptionHandler extends AbstractGlobalRestRespo
         this.exceptionHandlerRegistry = exceptionHandlerRegistry;
     }
 
-    public RestRespBody handle(HttpServletRequest request, HttpServletResponse response, Object action, Exception ex) {
+    public RestRespBody handle(HttpRequest request, HttpResponse response, Object action, Exception ex) {
         init();
         Object exceptionHandler = request.getAttribute(GLOBAL_REST_EXCEPTION_HANDLER);
         if (exceptionHandler != null) {
@@ -85,7 +85,7 @@ public abstract class GlobalRestExceptionHandler extends AbstractGlobalRestRespo
         return respBody;
     }
 
-    protected abstract boolean isSupportedRestAction(HttpServletRequest request, HttpServletResponse response, Object action, Exception ex);
+    protected abstract boolean isSupportedRestAction(HttpRequest request, HttpResponse response, Object action, Exception ex);
 
 
     @Override

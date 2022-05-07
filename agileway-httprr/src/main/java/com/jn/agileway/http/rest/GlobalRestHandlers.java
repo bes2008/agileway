@@ -1,4 +1,4 @@
-package com.jn.agileway.web.rest;
+package com.jn.agileway.http.rest;
 
 import com.jn.agileway.web.servlet.Servlets;
 import com.jn.langx.http.rest.RestRespBody;

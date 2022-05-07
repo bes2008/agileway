@@ -1,4 +1,4 @@
-package com.jn.agileway.web.rest;
+package com.jn.agileway.http.rest;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

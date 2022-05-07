@@ -11,4 +11,11 @@
 
     <artifactId>agileway-httprr</artifactId>
     <name>${groupId}:${artifactId}:${version}</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.github.fangjinuo.easyjson</groupId>
+            <artifactId>easyjson-core</artifactId>
+        </dependency>
+    </dependencies>
 </project>

@@ -27,10 +27,6 @@
             <groupId>com.github.fangjinuo.agileway</groupId>
             <artifactId>agileway-httprr</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.github.fangjinuo.easyjson</groupId>
-            <artifactId>easyjson-core</artifactId>
-        </dependency>
 
         <!-- 针对用户输入进行XSS防御: 用于对用户输入内容，进行清理 ，可以自定义清理规则-->
         <!--License: BSD-->

@@ -1,4 +1,4 @@
-package com.jn.agileway.web.rest;
+package com.jn.agileway.http.rest;
 
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;

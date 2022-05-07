@@ -1,6 +1,8 @@
-package com.jn.agileway.web.rest;
+package com.jn.agileway.http.rest;
 
 
+import com.jn.agileway.http.rr.HttpRequest;
+import com.jn.agileway.http.rr.HttpResponse;
 import com.jn.agileway.web.security.WAFs;
 import com.jn.agileway.web.servlet.Servlets;
 import com.jn.langx.http.rest.RestRespBody;
@@ -26,10 +28,10 @@ public abstract class AbstractGlobalRestResponseHandler<ACTION, ACTION_RESULT> e
     }
 
     @Override
-    public abstract RestRespBody handle(HttpServletRequest request, HttpServletResponse response, ACTION action, ACTION_RESULT actionReturnValue);
+    public abstract RestRespBody handle(HttpRequest request, HttpResponse response, ACTION action, ACTION_RESULT actionReturnValue);
 
     @Override
-    public Map<String, Object> toMap(HttpServletRequest request, HttpServletResponse response, ACTION action, RestRespBody respBody) {
+    public Map<String, Object> toMap(HttpRequest request, HttpResponse response, ACTION action, RestRespBody respBody) {
         if (respBody == null) {
             return null;
         }
