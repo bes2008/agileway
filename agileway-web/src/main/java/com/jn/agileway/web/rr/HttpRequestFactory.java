@@ -1,4 +1,4 @@
-package com.jn.agileway.web.request;
+package com.jn.agileway.web.rr;
 
 import com.jn.langx.Factory;
 

@@ -1,8 +1,8 @@
 package com.jn.agileway.web.servlet;
 
-import com.jn.agileway.web.request.HttpRRFactorySupplier;
-import com.jn.agileway.web.request.HttpRequestFactory;
-import com.jn.agileway.web.request.HttpResponseFactory;
+import com.jn.agileway.web.rr.HttpRRFactorySupplier;
+import com.jn.agileway.web.rr.HttpRequestFactory;
+import com.jn.agileway.web.rr.HttpResponseFactory;
 
 
 public class ServletHttpRRFactorySupplier implements HttpRRFactorySupplier {
