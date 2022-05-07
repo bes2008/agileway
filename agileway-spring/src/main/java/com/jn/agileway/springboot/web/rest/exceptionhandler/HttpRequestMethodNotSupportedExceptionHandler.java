@@ -1,9 +1,9 @@
 package com.jn.agileway.springboot.web.rest.exceptionhandler;
 
 
-import com.jn.agileway.web.rest.RestActionException;
-import com.jn.agileway.web.rest.RestActionExceptionHandler;
-import com.jn.agileway.web.rest.RestActionExceptions;
+import com.jn.agileway.http.rest.RestActionException;
+import com.jn.agileway.http.rest.RestActionExceptions;
+import com.jn.agileway.web.rest.AbstractServletRestActionExceptionHandler;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Strings;
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 @RestActionExceptions({
         @RestActionException(HttpRequestMethodNotSupportedException.class)
 })
-public class HttpRequestMethodNotSupportedExceptionHandler implements RestActionExceptionHandler<String> {
+public class HttpRequestMethodNotSupportedExceptionHandler extends AbstractServletRestActionExceptionHandler<String> {
     @Override
     public RestRespBody<String> handle(HttpServletRequest request, HttpServletResponse response, Object handler, Exception exception) {
         HttpRequestMethodNotSupportedException ex = (HttpRequestMethodNotSupportedException) exception;

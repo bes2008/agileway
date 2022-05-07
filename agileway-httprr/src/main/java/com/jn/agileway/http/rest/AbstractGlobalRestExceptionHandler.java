@@ -1,21 +1,12 @@
-package com.jn.agileway.web.rest;
+package com.jn.agileway.http.rest;
 
-import com.jn.agileway.http.rest.GlobalRestExceptionHandlerRegistry;
-import com.jn.agileway.http.rest.GlobalRestHandlers;
-import com.jn.agileway.http.rest.RestActionExceptionHandlerDefinition;
-import com.jn.agileway.http.rest.RestActionExceptionHandlerRegistration;
 import com.jn.agileway.http.rr.HttpRequest;
 import com.jn.agileway.http.rr.HttpResponse;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.lifecycle.Lifecycle;
-import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Map;
 
 import static com.jn.agileway.http.rest.GlobalRestHandlers.GLOBAL_REST_EXCEPTION_HANDLER;
 import static com.jn.agileway.http.rest.GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN;
@@ -23,8 +14,8 @@ import static com.jn.agileway.http.rest.GlobalRestHandlers.GLOBAL_REST_RESPONSE_
 /**
  * 通常在 Controller层调用
  */
-public abstract class GlobalRestExceptionHandler extends AbstractGlobalRestResponseHandler<Object, Exception> implements Lifecycle {
-    private static Logger logger = Loggers.getLogger(GlobalRestExceptionHandler.class);
+public abstract class AbstractGlobalRestExceptionHandler extends AbstractGlobalRestResponseHandler<Object, Exception> implements Lifecycle {
+    private static Logger logger = Loggers.getLogger(AbstractGlobalRestExceptionHandler.class);
 
     private volatile boolean running = false;
     private GlobalRestExceptionHandlerRegistry exceptionHandlerRegistry;
@@ -67,25 +58,8 @@ public abstract class GlobalRestExceptionHandler extends AbstractGlobalRestRespo
                 logger.error(ex.getMessage(), ex);
             }
             request.setAttribute(GLOBAL_REST_EXCEPTION_HANDLER, this);
-
-            Map<String, Object> finalBody = toMap(request, response, action, respBody);
-
-            HttpServletResponse servletResponse = (HttpServletResponse)response;
             if (context.getExceptionHandlerProperties().isWriteUnifiedResponse()) {
-                try {
-                    if (!servletResponse.isCommitted()) {
-                        servletResponse.resetBuffer();
-                        servletResponse.setStatus(respBody.getStatusCode());
-                        String jsonstring = context.getJsonFactory().get().toJson(finalBody);
-
-                        servletResponse.setContentType(GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8);
-                        servletResponse.setCharacterEncoding(Charsets.UTF_8.name());
-                        servletResponse.getWriter().write(jsonstring);
-                        request.setAttribute(GLOBAL_REST_RESPONSE_HAD_WRITTEN, true);
-                    }
-                } catch (IOException ioe) {
-                    logger.warn(ioe.getMessage(), ioe);
-                }
+                writeResponse(request, response, action, respBody);
             }
         }
         return respBody;

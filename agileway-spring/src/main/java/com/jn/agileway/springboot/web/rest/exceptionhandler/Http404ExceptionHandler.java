@@ -1,8 +1,8 @@
 package com.jn.agileway.springboot.web.rest.exceptionhandler;
 
-import com.jn.agileway.web.rest.RestActionException;
-import com.jn.agileway.web.rest.RestActionExceptionHandler;
-import com.jn.agileway.web.rest.RestActionExceptions;
+import com.jn.agileway.http.rest.RestActionException;
+import com.jn.agileway.http.rest.RestActionExceptions;
+import com.jn.agileway.web.rest.AbstractServletRestActionExceptionHandler;
 import com.jn.langx.http.rest.RestRespBody;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 @RestActionExceptions({
         @RestActionException(NoHandlerFoundException.class)
 })
-public class Http404ExceptionHandler implements RestActionExceptionHandler<String> {
+public class Http404ExceptionHandler extends AbstractServletRestActionExceptionHandler<String> {
     @Override
     public RestRespBody<String> handle(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         return RestRespBody.error404("HTTP-404", ex.getMessage());

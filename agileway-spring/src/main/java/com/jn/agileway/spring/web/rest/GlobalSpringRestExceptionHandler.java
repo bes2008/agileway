@@ -1,8 +1,8 @@
 package com.jn.agileway.spring.web.rest;
 
-import com.jn.agileway.web.rest.GlobalRestExceptionHandler;
 import com.jn.agileway.http.rr.HttpRequest;
 import com.jn.agileway.http.rr.HttpResponse;
+import com.jn.agileway.web.rest.AbstractGlobalServletRestExceptionHandler;
 import com.jn.agileway.web.servlet.ServletHttpRequestFactory;
 import com.jn.agileway.web.servlet.ServletHttpResponseFactory;
 import com.jn.langx.util.reflect.Reflects;
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 该类只用于在Spring环境下的Rest方式
  */
-public class GlobalSpringRestExceptionHandler extends GlobalRestExceptionHandler implements HandlerExceptionResolver {
+public class GlobalSpringRestExceptionHandler extends AbstractGlobalServletRestExceptionHandler implements HandlerExceptionResolver {
     @Override
     protected boolean isSupportedRestAction(HttpRequest request, HttpResponse response, Object methodHandler, Exception ex) {
         if (!(methodHandler instanceof HandlerMethod)) {

@@ -75,7 +75,7 @@ public class GlobalRestExceptionHandlerRegistry implements Registry<String, Rest
         name = Strings.useValueIfBlank(name, registration.getName());
         Preconditions.checkNotNull(name, "the exception handler names is null");
         Preconditions.checkNotNull(exceptionHandler, "exception handler is null for registration {}", name);
-        Preconditions.checkTrue(!(exceptionHandler instanceof GlobalRestExceptionHandler), "can't register a global exception handler to registration");
+        Preconditions.checkTrue(!(exceptionHandler instanceof AbstractGlobalRestExceptionHandler), "can't register a global exception handler to registration");
         addRestActionExceptionHandlerRegistration(name, registration);
         logger.info("Register exception handler {} successfully", name);
     }
@@ -101,7 +101,7 @@ public class GlobalRestExceptionHandlerRegistry implements Registry<String, Rest
         if (exceptionHandler == null) {
             return;
         }
-        if (exceptionHandler instanceof GlobalRestExceptionHandler) {
+        if (exceptionHandler instanceof AbstractGlobalRestExceptionHandler) {
             return;
         }
         Class resolverClass = exceptionHandler.getClass();

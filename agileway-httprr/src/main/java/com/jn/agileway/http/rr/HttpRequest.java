@@ -12,7 +12,7 @@ public interface HttpRequest<D> {
     Enumeration<String> getHeaderNames();
     Enumeration<String> getHeaders(String name);
     Object getAttribute(String name);
-    Object setAttribute(String name, Object value);
+    void setAttribute(String name, Object value);
     Locale getLocale();
     StringBuffer getRequestURL();
 

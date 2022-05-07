@@ -2,11 +2,15 @@ package com.jn.agileway.http.rr;
 
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.util.Emptys;
+import com.jn.langx.util.Objs;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.collection.multivalue.LinkedMultiValueMap;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 
 public class HttpRRs {
@@ -45,4 +49,26 @@ public class HttpRRs {
     public static HttpMethod getMethod(HttpRequest request) {
         return HttpMethod.valueOf(request.getMethod());
     }
+
+    /**
+     * Content-Length
+     *
+     * @param response
+     * @return
+     */
+    public static long getContentLength(HttpResponse response) {
+        return Objs.useValueIfNull(getContentLength(response, true), 0L);
+    }
+
+    public static Long getContentLength(HttpResponse response, boolean useZeroIfNull) {
+        String contentLengthStr = response.getHeader(HttpHeaders.CONTENT_LENGTH);
+        if (useZeroIfNull) {
+            contentLengthStr = Strings.useValueIfBlank(contentLengthStr, "0");
+        }
+        if (Emptys.isEmpty(contentLengthStr)) {
+            return null;
+        }
+        return Long.parseLong(contentLengthStr);
+    }
+
 }

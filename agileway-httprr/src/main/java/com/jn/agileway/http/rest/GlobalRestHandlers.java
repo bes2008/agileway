@@ -16,7 +16,7 @@ public class GlobalRestHandlers {
     /**
      * 用于记录 exception 是否处理过
      */
-    public static final String GLOBAL_REST_EXCEPTION_HANDLER = Reflects.getFQNClassName(GlobalRestExceptionHandler.class);
+    public static final String GLOBAL_REST_EXCEPTION_HANDLER = Reflects.getFQNClassName(AbstractGlobalRestExceptionHandler.class);
 
     /**
      * 指定某个请求不是 REST 请求，或者没有启用全局处理的请求

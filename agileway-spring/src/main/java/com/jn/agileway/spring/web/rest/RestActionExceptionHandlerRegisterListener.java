@@ -1,6 +1,6 @@
 package com.jn.agileway.spring.web.rest;
 
-import com.jn.agileway.web.rest.GlobalRestExceptionHandler;
+import com.jn.agileway.http.rest.AbstractGlobalRestExceptionHandler;
 import com.jn.agileway.web.rest.GlobalRestExceptionHandlerRegistry;
 import com.jn.agileway.web.rest.RestActionExceptionHandler;
 import com.jn.langx.util.collection.Collects;
@@ -27,7 +27,7 @@ public class RestActionExceptionHandlerRegisterListener implements ApplicationLi
         Pipeline.of(Collects.filter(handlerMap, new Predicate2<String, RestActionExceptionHandler>() {
             @Override
             public boolean test(String key, RestActionExceptionHandler exceptionHandler) {
-                return !(exceptionHandler instanceof GlobalRestExceptionHandler);
+                return !(exceptionHandler instanceof AbstractGlobalRestExceptionHandler);
             }
         }).values()).forEach(new Consumer<RestActionExceptionHandler>() {
             @Override

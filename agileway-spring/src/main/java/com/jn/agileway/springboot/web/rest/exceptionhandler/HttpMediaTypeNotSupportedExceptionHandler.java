@@ -1,8 +1,8 @@
 package com.jn.agileway.springboot.web.rest.exceptionhandler;
 
-import com.jn.agileway.web.rest.RestActionException;
-import com.jn.agileway.web.rest.RestActionExceptionHandler;
-import com.jn.agileway.web.rest.RestActionExceptions;
+import com.jn.agileway.http.rest.RestActionException;
+import com.jn.agileway.http.rest.RestActionExceptions;
+import com.jn.agileway.web.rest.AbstractServletRestActionExceptionHandler;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.Emptys;
 import org.springframework.http.MediaType;
@@ -17,7 +17,7 @@ import java.util.List;
 @RestActionExceptions({
         @RestActionException(HttpMediaTypeNotSupportedException.class)
 })
-public class HttpMediaTypeNotSupportedExceptionHandler implements RestActionExceptionHandler<String> {
+public class HttpMediaTypeNotSupportedExceptionHandler extends AbstractServletRestActionExceptionHandler<String> {
     @Override
     public RestRespBody<String> handle(HttpServletRequest request, HttpServletResponse response, Object handler, Exception exception) {
         HttpMediaTypeNotSupportedException ex = (HttpMediaTypeNotSupportedException) exception;

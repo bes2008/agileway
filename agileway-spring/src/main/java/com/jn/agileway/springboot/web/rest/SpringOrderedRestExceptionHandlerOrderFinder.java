@@ -1,8 +1,8 @@
 package com.jn.agileway.springboot.web.rest;
 
-import com.jn.agileway.web.rest.DefaultRestActionExceptionHandlerOrderFinder;
-import com.jn.agileway.web.rest.RestActionExceptionHandler;
-import com.jn.agileway.web.rest.RestActionExceptions;
+import com.jn.agileway.http.rest.DefaultRestActionExceptionHandlerOrderFinder;
+import com.jn.agileway.http.rest.RestActionExceptionHandler;
+import com.jn.agileway.http.rest.RestActionExceptions;
 import com.jn.langx.Ordered;
 import com.jn.langx.annotation.Order;
 import com.jn.langx.util.reflect.Reflects;

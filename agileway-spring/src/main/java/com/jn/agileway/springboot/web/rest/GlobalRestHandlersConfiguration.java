@@ -1,5 +1,6 @@
 package com.jn.agileway.springboot.web.rest;
 
+import com.jn.agileway.http.rest.*;
 import com.jn.agileway.spring.web.mvc.requestmapping.RequestMappingAccessorRegistry;
 import com.jn.agileway.spring.web.rest.EasyjsonHttpMessageConverter;
 import com.jn.agileway.spring.web.rest.GlobalSpringRestExceptionHandler;

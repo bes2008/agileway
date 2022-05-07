@@ -1,7 +1,11 @@
 package com.jn.agileway.web.filter.globalresponse;
 
+import com.jn.agileway.http.rest.GlobalRestHandlers;
+import com.jn.agileway.http.rr.HttpRequest;
+import com.jn.agileway.http.rr.HttpResponse;
 import com.jn.agileway.web.filter.OncePerRequestFilter;
-import com.jn.agileway.web.rest.GlobalRestHandlers;
+import com.jn.agileway.web.servlet.ServletHttpRequestFactory;
+import com.jn.agileway.web.servlet.ServletHttpResponseFactory;
 import com.jn.agileway.web.servlet.Servlets;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.io.Charsets;
@@ -45,21 +49,24 @@ public class GlobalRestResponseFilter extends OncePerRequestFilter {
             HttpServletRequest req = (HttpServletRequest) request;
             HttpServletResponse resp = (HttpServletResponse) response;
             RestRespBody restRespBody = null;
+
+            HttpRequest httpRequest = ServletHttpRequestFactory.INSTANCE.get(req);
+            HttpResponse httpResponse = ServletHttpResponseFactory.INSTANCE.get(resp);
             try {
                 chain.doFilter(request, response);
             } catch (Exception ex) {
                 if (exceptionHandler != null) {
-                    restRespBody = exceptionHandler.handle(req, resp, doFilterMethod, ex);
+                    restRespBody = exceptionHandler.handle(httpRequest, httpResponse, doFilterMethod, ex);
                 }
             } finally {
                 //rest response body 是否已写过
                 Boolean responseBodyWritten = (Boolean) request.getAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN);
                 if ((responseBodyWritten == null || !responseBodyWritten) && !response.isCommitted()) {
                     if (restResponseBodyHandler != null) {
-                        restRespBody = restResponseBodyHandler.handle(req, resp, doFilterMethod, restRespBody);
+                        restRespBody = restResponseBodyHandler.handle(httpRequest, httpResponse, doFilterMethod, restRespBody);
                     }
                     if (restRespBody != null) {
-                        Map<String, Object> finalBody = restResponseBodyHandler.toMap(req, resp, doFilterMethod, restRespBody);
+                        Map<String, Object> finalBody = restResponseBodyHandler.toMap(httpRequest, httpResponse, doFilterMethod, restRespBody);
 
                         resp.setStatus(restRespBody.getStatusCode());
                         response.setContentType(GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8);

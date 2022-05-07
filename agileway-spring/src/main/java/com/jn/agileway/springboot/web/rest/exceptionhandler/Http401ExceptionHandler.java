@@ -1,7 +1,7 @@
 package com.jn.agileway.springboot.web.rest.exceptionhandler;
 
-import com.jn.agileway.web.rest.RestActionException;
-import com.jn.agileway.web.rest.RestActionExceptions;
+import com.jn.agileway.http.rest.RestActionException;
+import com.jn.agileway.http.rest.RestActionExceptions;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Component;

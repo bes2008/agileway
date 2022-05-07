@@ -6,7 +6,7 @@ import com.jn.agileway.spring.web.mvc.requestmapping.RequestMappingAccessor;
 import com.jn.agileway.spring.web.mvc.requestmapping.RequestMappingAccessorRegistry;
 import com.jn.agileway.springboot.web.rest.SpringBootErrorControllers;
 import com.jn.agileway.http.rest.GlobalRestHandlers;
-import com.jn.agileway.web.rest.AbstractGlobalRestResponseBodyHandler;
+import com.jn.agileway.web.rest.AbstractGlobalServletRestResponseBodyHandler;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -33,7 +32,7 @@ import java.util.Map;
  *     4. 由于 @RestControllerAdvice 或者 @ControllerAdvice 定义类的创建不受我们的控制，我们想要自定义必须掌握控制权
  * </pre>
  */
-public class GlobalSpringRestResponseBodyHandler extends AbstractGlobalRestResponseBodyHandler<Method> {
+public class GlobalSpringRestResponseBodyHandler extends AbstractGlobalServletRestResponseBodyHandler<Method> {
     private static final Logger logger = Loggers.getLogger(GlobalSpringRestResponseBodyHandler.class);
     private RequestMappingAccessorRegistry requestMappingAccessorRegistry;
 

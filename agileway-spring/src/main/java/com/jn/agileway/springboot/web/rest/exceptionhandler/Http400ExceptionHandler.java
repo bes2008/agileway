@@ -1,8 +1,9 @@
 package com.jn.agileway.springboot.web.rest.exceptionhandler;
 
-import com.jn.agileway.web.rest.RestActionException;
-import com.jn.agileway.web.rest.RestActionExceptionHandler;
-import com.jn.agileway.web.rest.RestActionExceptions;
+import com.jn.agileway.http.rest.RestActionException;
+import com.jn.agileway.http.rest.RestActionExceptionHandler;
+import com.jn.agileway.http.rest.RestActionExceptions;
+import com.jn.agileway.web.rest.AbstractServletRestActionExceptionHandler;
 import com.jn.langx.http.rest.RestRespBody;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -26,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
         @RestActionException(BindException.class),
         @RestActionException(MultipartException.class)
 })
-public class Http400ExceptionHandler implements RestActionExceptionHandler<String> {
+public class Http400ExceptionHandler extends AbstractServletRestActionExceptionHandler<String> {
     @Override
     public RestRespBody<String> handle(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         return RestRespBody.error400("HTTP-400", ex.getMessage());
