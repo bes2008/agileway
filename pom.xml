@@ -11,7 +11,7 @@
     <name>${groupId}:${artifactId}:${version}</name>
     <modules>
         <module>agileway-codec</module>
-        <module>agileway-httprr</module>
+        <module>agileway-httpcontainer-extentions</module>
         <module>agileway-web</module>
         <module>agileway-vfs</module>
         <module>agileway-redis</module>
@@ -119,7 +119,7 @@
             </dependency>
             <dependency>
                 <groupId>com.github.fangjinuo.agileway</groupId>
-                <artifactId>agileway-httprr</artifactId>
+                <artifactId>agileway-httpcontainer-extentions</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

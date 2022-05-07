@@ -25,7 +25,7 @@
         </dependency>
         <dependency>
             <groupId>com.github.fangjinuo.agileway</groupId>
-            <artifactId>agileway-httprr</artifactId>
+            <artifactId>agileway-httpcontainer-extentions</artifactId>
         </dependency>
 
         <dependency>
