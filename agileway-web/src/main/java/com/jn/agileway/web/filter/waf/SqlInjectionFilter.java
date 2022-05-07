@@ -1,11 +1,11 @@
 package com.jn.agileway.web.filter.waf;
 
 import com.jn.agileway.web.filter.OncePerRequestFilter;
-import com.jn.agileway.web.rr.RRHolder;
+import com.jn.agileway.web.servlet.RRHolder;
 import com.jn.agileway.web.security.WAF;
 import com.jn.agileway.web.security.WAFHttpServletRequestWrapper;
 import com.jn.agileway.web.security.WAFStrategy;
-import com.jn.agileway.web.rr.RR;
+import com.jn.agileway.http.rr.RR;
 import com.jn.langx.util.Objs;
 
 import javax.servlet.FilterChain;

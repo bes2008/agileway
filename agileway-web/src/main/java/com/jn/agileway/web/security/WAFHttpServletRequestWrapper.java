@@ -1,7 +1,8 @@
 package com.jn.agileway.web.security;
 
-import com.jn.agileway.web.rr.RR;
+import com.jn.agileway.http.rr.RR;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.util.List;
 
@@ -9,7 +10,7 @@ public class WAFHttpServletRequestWrapper extends HttpServletRequestWrapper {
     private List<WAFHandler> wafHandlers;
 
     public WAFHttpServletRequestWrapper(RR holder, List<WAFHandler> xssHandlers) {
-        super(holder.getRequest());
+        super((HttpServletRequest) holder.getRequest().getDelegate());
         this.wafHandlers = xssHandlers;
     }
 

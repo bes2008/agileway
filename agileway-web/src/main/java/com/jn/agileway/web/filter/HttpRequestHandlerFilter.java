@@ -1,7 +1,7 @@
 package com.jn.agileway.web.filter;
 
+import com.jn.agileway.http.rr.RR;
 import com.jn.agileway.web.request.handler.HttpRequestHandler;
-import com.jn.agileway.web.rr.RR;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -20,8 +20,8 @@ public class HttpRequestHandlerFilter extends OncePerRequestFilter {
     protected void doFilterInternal(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         final RR rr = getRR(request, response);
         if (rr != null) {
-            request = rr.getRequest();
-            response = rr.getResponse();
+            request = (ServletRequest) rr.getRequest().getDelegate();
+            response = (ServletResponse) rr.getResponse();
             handler.handle(rr);
         }
         chain.doFilter(request, response);

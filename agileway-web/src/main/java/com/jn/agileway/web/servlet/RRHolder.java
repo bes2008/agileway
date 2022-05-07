@@ -13,30 +13,40 @@ import javax.servlet.http.HttpServletResponse;
 public class RRHolder {
     private static final RRHolder instance = new RRHolder();
 
-    private RRHolder(){
+    private RRHolder() {
 
     }
+
     public static RRHolder getInstance() {
         return RRHolder.instance;
     }
 
     public static HttpServletResponse getResponse() {
-        return RRLocal.getInstance().getResponse();
+        HttpResponse response = RRLocal.getResponse();
+        if (response != null) {
+            return (HttpServletResponse) response.getDelegate();
+        }
+        return null;
     }
 
     public static HttpServletRequest getRequest() {
-        return rr.get().getRequest();
+        HttpRequest request = RRLocal.getRequest();
+        if (request != null) {
+            return (HttpServletRequest) request.getDelegate();
+        }
+        return null;
     }
 
-    public static void set(final HttpRequest request, final HttpServletResponse response) {
-        rr.set(new RR(request, response));
+    public static void set(final HttpServletRequest request, final HttpServletResponse response) {
+        HttpRequest req = null;
+        HttpResponse resp = null;
     }
 
-    public static RR get(){
-        return rr.get();
+    public static RR get() {
+        return RRLocal.get();
     }
 
     public static void remove() {
-        rr.remove();
+        RRLocal.remove();
     }
 }

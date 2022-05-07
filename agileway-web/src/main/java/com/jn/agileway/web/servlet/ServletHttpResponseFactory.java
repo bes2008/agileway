@@ -1,7 +1,7 @@
 package com.jn.agileway.web.servlet;
 
-import com.jn.agileway.web.rr.HttpResponse;
-import com.jn.agileway.web.rr.HttpResponseFactory;
+import com.jn.agileway.http.rr.HttpResponse;
+import com.jn.agileway.http.rr.HttpResponseFactory;
 
 import javax.servlet.http.HttpServletResponse;
 

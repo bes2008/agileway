@@ -1,6 +1,6 @@
 package com.jn.agileway.web.prediate;
 
-import com.jn.agileway.web.rr.RR;
+import com.jn.agileway.http.rr.RR;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Listable;
