@@ -1,6 +1,7 @@
 package com.jn.agileway.web.servlet;
 
 
+import com.jn.agileway.http.rr.HttpRRs;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.text.StringTemplates;
@@ -36,7 +37,7 @@ import java.nio.channels.FileChannel;
 import java.util.List;
 import java.util.Map;
 
-public class Servlets {
+public class Servlets extends HttpRRs {
     private static final Logger logger = Loggers.getLogger(Servlets.class);
 
     public static final String X_FRAME_OPTIONS_HEADER = "X-Frame-Options";
@@ -45,13 +46,6 @@ public class Servlets {
     public static final String ACCESS_DENIED_403 = "AGILEWAY_ECURITY_403_EXCEPTION";
 
 
-    public static final String getUTF8ContentType(@NonNull String mediaType) {
-        return getContentType(mediaType, "UTF-8");
-    }
-
-    public static final String getContentType(@NonNull String mediaType, @Nullable String encoding) {
-        return mediaType + ";charset=" + encoding;
-    }
 
 
     /***********************************************************************

@@ -1,6 +1,10 @@
 package com.jn.agileway.spring.web.rest;
 
-import com.jn.agileway.web.rest.GlobalRestExceptionHandler;
+import com.jn.agileway.http.rest.GlobalRestExceptionHandler;
+import com.jn.agileway.http.rr.HttpRequest;
+import com.jn.agileway.http.rr.HttpResponse;
+import com.jn.agileway.web.servlet.ServletHttpRequestFactory;
+import com.jn.agileway.web.servlet.ServletHttpResponseFactory;
 import com.jn.langx.util.reflect.Reflects;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.HandlerMethod;
@@ -15,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class GlobalSpringRestExceptionHandler extends GlobalRestExceptionHandler implements HandlerExceptionResolver {
     @Override
-    protected boolean isSupportedRestAction(HttpServletRequest request, HttpServletResponse response, Object methodHandler, Exception ex) {
+    protected boolean isSupportedRestAction(HttpRequest request, HttpResponse response, Object methodHandler, Exception ex) {
         if (!(methodHandler instanceof HandlerMethod)) {
             return false;
         }
@@ -25,7 +29,7 @@ public class GlobalSpringRestExceptionHandler extends GlobalRestExceptionHandler
 
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object methodHandler, Exception ex) {
-        handle(request, response, methodHandler, ex);
+        handle(ServletHttpRequestFactory.INSTANCE.get(request) , ServletHttpResponseFactory.INSTANCE.get(response), methodHandler, ex);
         // 返回 empty ModelAndView 放置把异常写出
         return new ModelAndView();
     }

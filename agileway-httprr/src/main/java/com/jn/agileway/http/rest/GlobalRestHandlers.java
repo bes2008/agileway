@@ -1,6 +1,6 @@
 package com.jn.agileway.http.rest;
 
-import com.jn.agileway.web.servlet.Servlets;
+import com.jn.agileway.http.rr.HttpRRs;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.net.mime.MediaType;
@@ -26,7 +26,7 @@ public class GlobalRestHandlers {
     /**
      * 响应类型： JSON
      */
-    public static final String RESPONSE_CONTENT_TYPE_JSON_UTF8 = Servlets.getUTF8ContentType(MediaType.APPLICATION_JSON_VALUE);
+    public static final String RESPONSE_CONTENT_TYPE_JSON_UTF8 = HttpRRs.getUTF8ContentType(MediaType.APPLICATION_JSON_VALUE);
 
     /**
      * @see com.jn.langx.http.rest.RestRespBody

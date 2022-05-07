@@ -3,15 +3,13 @@ package com.jn.agileway.http.rest;
 
 import com.jn.agileway.http.rr.HttpRequest;
 import com.jn.agileway.http.rr.HttpResponse;
+import com.jn.agileway.http.rr.HttpRRs;
 import com.jn.agileway.web.security.WAFs;
-import com.jn.agileway.web.servlet.Servlets;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.logging.Loggers;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 public abstract class AbstractGlobalRestResponseHandler<ACTION, ACTION_RESULT> extends AbstractInitializable implements GlobalRestResponseBodyHandler<ACTION, ACTION_RESULT> {
@@ -45,6 +43,7 @@ public abstract class AbstractGlobalRestResponseHandler<ACTION, ACTION_RESULT> e
             }
         }
 
+
         String xssFilteredData = WAFs.clearIfContainsJavaScript(context.getJsonFactory().get().toJson(respBody.getData()));
         if (Objs.isEmpty(xssFilteredData)) {
             respBody.setData(null);
@@ -54,15 +53,17 @@ public abstract class AbstractGlobalRestResponseHandler<ACTION, ACTION_RESULT> e
             respBody.setUrl(request.getRequestURL().toString());
         }
         if (!context.getConfiguration().isIgnoredField(RestRespBody.GLOBAL_REST_FIELD_METHOD)) {
-            respBody.setMethod(Servlets.getMethod(request));
+            respBody.setMethod(HttpRRs.getMethod(request));
         }
         if (!context.getConfiguration().isIgnoredField(RestRespBody.GLOBAL_REST_FIELD_REQUEST_HEADERS)) {
-            respBody.withRequestHeaders(Servlets.headersToMultiValueMap(request));
+            respBody.withRequestHeaders(HttpRRs.headersToMultiValueMap(request));
         }
 
         Map<String, Object> map = context.getResponseBodyMapper().apply(respBody);
         return map;
     }
 
+
+    protected void writeResponse(HttpResponse response,  Map<String, Object> respBody){}
 
 }
