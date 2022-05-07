@@ -12,4 +12,19 @@
     <artifactId>agileway-jersey</artifactId>
 
     <name>${groupId}:${artifactId}:${version}</name>
+
+    <properties>
+        <ws-rs.version>2.1.6</ws-rs.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <version>${ws-rs.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.fangjinuo.agileway</groupId>
+            <artifactId>agileway-httpcontainer-common</artifactId>
+        </dependency>
+    </dependencies>
 </project>
