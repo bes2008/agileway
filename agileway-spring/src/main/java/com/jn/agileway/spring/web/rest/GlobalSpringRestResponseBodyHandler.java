@@ -1,10 +1,12 @@
 package com.jn.agileway.spring.web.rest;
 
+import com.jn.agileway.http.rr.HttpRequest;
+import com.jn.agileway.http.rr.HttpResponse;
 import com.jn.agileway.spring.web.mvc.requestmapping.RequestMappingAccessor;
 import com.jn.agileway.spring.web.mvc.requestmapping.RequestMappingAccessorRegistry;
 import com.jn.agileway.springboot.web.rest.SpringBootErrorControllers;
+import com.jn.agileway.http.rest.GlobalRestHandlers;
 import com.jn.agileway.web.rest.AbstractGlobalRestResponseBodyHandler;
-import com.jn.agileway.web.rest.GlobalRestHandlers;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
@@ -53,7 +55,7 @@ public class GlobalSpringRestResponseBodyHandler extends AbstractGlobalRestRespo
      * @param actionReturnValue
      */
     @Override
-    public RestRespBody handle(HttpServletRequest request, HttpServletResponse response, Method actionMethod, Object actionReturnValue) {
+    public RestRespBody handle(HttpRequest request, HttpResponse response, Method actionMethod, Object actionReturnValue) {
         if (actionReturnValue instanceof Resource || actionReturnValue instanceof com.jn.langx.io.resource.Resource) {
             return null;
         }
@@ -89,7 +91,7 @@ public class GlobalSpringRestResponseBodyHandler extends AbstractGlobalRestRespo
         return supported;
     }
 
-    private RestRespBody convertSpringBootErrorBodyToRestRespBody(HttpServletRequest request, HttpServletResponse response, Map<String, Object> tmp) {
+    private RestRespBody convertSpringBootErrorBodyToRestRespBody(HttpRequest request, HttpResponse response, Map<String, Object> tmp) {
         Integer statusCode = (Integer) tmp.get("status");
         RestRespBody respBody = new RestRespBody();
         respBody.setSuccess(false);
@@ -106,7 +108,7 @@ public class GlobalSpringRestResponseBodyHandler extends AbstractGlobalRestRespo
         return respBody;
     }
 
-    private RestRespBody convertToRestRespBody(HttpServletRequest request, HttpServletResponse response, Method actionMethod, Object body) {
+    private RestRespBody convertToRestRespBody(HttpRequest request, HttpResponse response, Method actionMethod, Object body) {
         int statusCode = -1;
         RestRespBody respBody = null;
         if ((body instanceof Map) && SpringBootErrorControllers.isSpringBootErrorControllerHandlerMethod(actionMethod)) {
@@ -114,7 +116,7 @@ public class GlobalSpringRestResponseBodyHandler extends AbstractGlobalRestRespo
             return respBody;
         }
 
-        statusCode = extractStatusCode(body, response);
+        statusCode = extractStatusCode(body, (HttpServletResponse) response.getDelegate());
 
         if (body instanceof ResponseEntity) {
             body = ((ResponseEntity) body).getBody();
