@@ -1,29 +1,27 @@
 package com.jn.agileway.http.rr;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 public class RR {
-    private HttpServletRequest request;
-    private HttpServletResponse response;
+    private HttpRequest request;
+    private HttpResponse response;
 
-    public RR(final HttpServletRequest request, final HttpServletResponse response) {
+    public RR(final HttpRequest request, final HttpResponse response) {
         this.request = request;
         this.response = response;
     }
 
-    public HttpServletRequest getRequest() {
+    public HttpRequest getRequest() {
         return this.request;
     }
 
-    public HttpServletResponse getResponse() {
+    public HttpResponse getResponse() {
         return this.response;
     }
 
-    public void setRequest(HttpServletRequest request){
+    public void setRequest(HttpRequest request){
         this.request = request;
     }
-    public void setResponse(HttpServletResponse response){
+    public void setResponse(HttpResponse response){
         this.response = response;
     }
 }

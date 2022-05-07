@@ -1,7 +1,5 @@
 package com.jn.agileway.http.rr;
 
-import javax.servlet.http.*;
-
 public class RRHolder {
     private static final RRHolder instance;
     private static final ThreadLocal<RR> rr;
@@ -15,15 +13,15 @@ public class RRHolder {
         return RRHolder.instance;
     }
 
-    public static HttpServletResponse getResponse() {
+    public static HttpResponse getResponse() {
         return rr.get().getResponse();
     }
 
-    public static HttpServletRequest getRequest() {
+    public static HttpRequest getRequest() {
         return rr.get().getRequest();
     }
 
-    public static void set(final HttpServletRequest request, final HttpServletResponse response) {
+    public static void set(final HttpRequest request, final HttpResponse response) {
         rr.set(new RR(request, response));
     }
 
