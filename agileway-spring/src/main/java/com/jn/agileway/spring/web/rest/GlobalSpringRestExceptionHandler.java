@@ -1,6 +1,6 @@
 package com.jn.agileway.spring.web.rest;
 
-import com.jn.agileway.http.rest.GlobalRestExceptionHandler;
+import com.jn.agileway.web.rest.GlobalRestExceptionHandler;
 import com.jn.agileway.http.rr.HttpRequest;
 import com.jn.agileway.http.rr.HttpResponse;
 import com.jn.agileway.web.servlet.ServletHttpRequestFactory;

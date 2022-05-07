@@ -9,6 +9,7 @@ public interface HttpRequest<D> {
     String getMethod();
     String getRequestURI();
     String getHeader(String name);
+    Enumeration<String> getHeaderNames();
     Enumeration<String> getHeaders(String name);
     Object getAttribute(String name);
     Object setAttribute(String name, Object value);

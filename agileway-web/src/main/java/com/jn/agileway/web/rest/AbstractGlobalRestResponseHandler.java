@@ -1,6 +1,8 @@
-package com.jn.agileway.http.rest;
+package com.jn.agileway.web.rest;
 
 
+import com.jn.agileway.http.rest.GlobalRestResponseBodyContext;
+import com.jn.agileway.http.rest.GlobalRestResponseBodyHandler;
 import com.jn.agileway.http.rr.HttpRequest;
 import com.jn.agileway.http.rr.HttpResponse;
 import com.jn.agileway.http.rr.HttpRRs;
