@@ -13,6 +13,7 @@ import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
@@ -69,16 +70,17 @@ public abstract class GlobalRestExceptionHandler extends AbstractGlobalRestRespo
 
             Map<String, Object> finalBody = toMap(request, response, action, respBody);
 
+            HttpServletResponse servletResponse = (HttpServletResponse)response;
             if (context.getExceptionHandlerProperties().isWriteUnifiedResponse()) {
                 try {
-                    if (!response.isCommitted()) {
-                        response.resetBuffer();
-                        response.setStatus(respBody.getStatusCode());
+                    if (!servletResponse.isCommitted()) {
+                        servletResponse.resetBuffer();
+                        servletResponse.setStatus(respBody.getStatusCode());
                         String jsonstring = context.getJsonFactory().get().toJson(finalBody);
 
-                        response.setContentType(GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8);
-                        response.setCharacterEncoding(Charsets.UTF_8.name());
-                        response.getWriter().write(jsonstring);
+                        servletResponse.setContentType(GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8);
+                        servletResponse.setCharacterEncoding(Charsets.UTF_8.name());
+                        servletResponse.getWriter().write(jsonstring);
                         request.setAttribute(GLOBAL_REST_RESPONSE_HAD_WRITTEN, true);
                     }
                 } catch (IOException ioe) {
