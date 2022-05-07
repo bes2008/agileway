@@ -1,6 +1,10 @@
 package com.jn.agileway.spring.web.rest;
 
-import com.jn.agileway.web.rest.GlobalRestHandlers;
+import com.jn.agileway.http.rest.GlobalRestHandlers;
+import com.jn.agileway.http.rr.HttpRequest;
+import com.jn.agileway.http.rr.HttpResponse;
+import com.jn.agileway.web.servlet.ServletHttpRequestFactory;
+import com.jn.agileway.web.servlet.ServletHttpResponseFactory;
 import com.jn.langx.http.rest.RestRespBody;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.logging.Loggers;
@@ -55,7 +59,10 @@ public class GlobalSpringRestResponseBodyAdvice implements ResponseBodyAdvice, I
             return body;
         }
 
-        final RestRespBody respBody = responseBodyHandler.handle(httpServletRequest, httpServletResponse, returnType.getMethod(), body);
+        HttpRequest req = ServletHttpRequestFactory.INSTANCE.get(httpServletRequest);
+        HttpResponse resp = ServletHttpResponseFactory.INSTANCE.get(httpServletResponse);
+
+        final RestRespBody respBody = responseBodyHandler.handle(req, resp, returnType.getMethod(), body);
         if (respBody == null) {
             return null;
         }
@@ -63,7 +70,7 @@ public class GlobalSpringRestResponseBodyAdvice implements ResponseBodyAdvice, I
         httpServletResponse.setContentType(GlobalRestHandlers.RESPONSE_CONTENT_TYPE_JSON_UTF8);
         httpServletResponse.setCharacterEncoding(Charsets.UTF_8.name());
         httpServletRequest.setAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN, true);
-        Map<String, Object> finalBody = responseBodyHandler.toMap(httpServletRequest, httpServletResponse, returnType.getMethod(), respBody);
+        Map<String, Object> finalBody = responseBodyHandler.toMap(req, resp, returnType.getMethod(), respBody);
 
         if (selectedConverterType == StringHttpMessageConverter.class) {
             String json = responseBodyHandler.getContext().getJsonFactory().get().toJson(finalBody);

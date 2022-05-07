@@ -1,8 +1,8 @@
 package com.jn.agileway.spring.web.rest;
 
 import com.jn.agileway.http.rest.AbstractGlobalRestExceptionHandler;
-import com.jn.agileway.web.rest.GlobalRestExceptionHandlerRegistry;
-import com.jn.agileway.web.rest.RestActionExceptionHandler;
+import com.jn.agileway.http.rest.GlobalRestExceptionHandlerRegistry;
+import com.jn.agileway.http.rest.RestActionExceptionHandler;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
