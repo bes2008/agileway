@@ -21,7 +21,7 @@ public class HttpRequestHandlerFilter extends OncePerRequestFilter {
         final RR rr = getRR(request, response);
         if (rr != null) {
             request = (ServletRequest) rr.getRequest().getDelegate();
-            response = (ServletResponse) rr.getResponse();
+            response = (ServletResponse) rr.getResponse().getDelegate();
             handler.handle(rr);
         }
         chain.doFilter(request, response);
