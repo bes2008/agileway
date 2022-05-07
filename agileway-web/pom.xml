@@ -24,6 +24,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.github.fangjinuo.agileway</groupId>
+            <artifactId>agileway-httprr</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.github.fangjinuo.easyjson</groupId>
             <artifactId>easyjson-core</artifactId>
         </dependency>

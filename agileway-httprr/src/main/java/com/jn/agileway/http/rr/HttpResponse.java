@@ -1,4 +1,4 @@
-package com.jn.agileway.web.rr;
+package com.jn.agileway.http.rr;
 
 public interface HttpResponse {
 }
