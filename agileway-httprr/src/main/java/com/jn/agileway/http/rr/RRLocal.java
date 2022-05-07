@@ -1,16 +1,19 @@
 package com.jn.agileway.http.rr;
 
-public class RRHolder {
-    private static final RRHolder instance;
+import com.jn.langx.annotation.Singleton;
+
+@Singleton
+public class RRLocal {
+    private static final RRLocal instance;
     private static final ThreadLocal<RR> rr;
 
     static {
         rr = new ThreadLocal<RR>();
-        instance = new RRHolder();
+        instance = new RRLocal();
     }
 
-    public static RRHolder getInstance() {
-        return RRHolder.instance;
+    public static RRLocal getInstance() {
+        return RRLocal.instance;
     }
 
     public static HttpResponse getResponse() {
