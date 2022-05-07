@@ -1,7 +1,7 @@
 package com.jn.agileway.web.request.header;
 
 import com.jn.agileway.web.request.handler.AbstractHttpRequestHandler;
-import com.jn.agileway.web.servlet.RR;
+import com.jn.agileway.web.rr.RR;
 
 public class HttpResponseHeaderSetter extends AbstractHttpRequestHandler {
     private HttpResponseHeaderRule rule;
