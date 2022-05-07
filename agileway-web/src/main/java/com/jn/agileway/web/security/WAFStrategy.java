@@ -1,7 +1,7 @@
 package com.jn.agileway.web.security;
 
 import com.jn.agileway.web.prediate.HttpRequestPredicateGroup;
-import com.jn.agileway.web.servlet.RR;
+import com.jn.agileway.web.rr.RR;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.Objs;

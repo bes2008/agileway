@@ -1,7 +1,7 @@
 package com.jn.agileway.redis.examples.controller.rest;
 
 import com.jn.agileway.redis.examples.controller.redis_examples.Person;
-import com.jn.agileway.web.servlet.RRHolder;
+import com.jn.agileway.web.rr.RRHolder;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.collection.Collects;
 import org.springframework.http.HttpStatus;

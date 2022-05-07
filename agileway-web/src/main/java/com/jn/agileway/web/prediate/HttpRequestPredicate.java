@@ -1,6 +1,6 @@
 package com.jn.agileway.web.prediate;
 
-import com.jn.agileway.web.servlet.RR;
+import com.jn.agileway.web.rr.RR;
 import com.jn.langx.util.function.Predicate;
 
 /**

@@ -3,7 +3,7 @@ package com.jn.agileway.web.filter.accesslog;
 import com.jn.agileway.web.filter.OncePerRequestFilter;
 import com.jn.agileway.web.prediate.HttpRequestPredicateGroup;
 import com.jn.agileway.web.prediate.HttpRequestPredicateGroupFactory;
-import com.jn.agileway.web.servlet.RR;
+import com.jn.agileway.web.rr.RR;
 import com.jn.agileway.web.servlet.Servlets;
 import com.jn.easyjson.core.JSONBuilderProvider;
 import com.jn.langx.util.Emptys;

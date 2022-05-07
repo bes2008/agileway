@@ -3,7 +3,7 @@ package com.jn.agileway.web.filter.waf;
 import com.jn.agileway.web.filter.OncePerRequestFilter;
 import com.jn.agileway.web.security.xss.JavaScriptXssHandler;
 import com.jn.agileway.web.security.xss.XssFirewall;
-import com.jn.agileway.web.servlet.RR;
+import com.jn.agileway.web.rr.RR;
 import com.jn.agileway.web.security.*;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;

@@ -1,6 +1,6 @@
 package com.jn.agileway.web.security;
 
-import com.jn.agileway.web.servlet.RR;
+import com.jn.agileway.web.rr.RR;
 
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.util.List;
