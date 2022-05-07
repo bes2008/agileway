@@ -1,4 +1,4 @@
-package com.jn.agileway.ws.rs;
+package com.jn.agileway.ws.rs.rr;
 
 import com.jn.agileway.http.rr.HttpResponse;
 
