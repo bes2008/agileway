@@ -5,6 +5,7 @@ import com.jn.agileway.web.security.xss.JavaScriptXssHandler;
 import com.jn.agileway.web.security.xss.XssFirewall;
 import com.jn.agileway.http.rr.RR;
 import com.jn.agileway.web.security.*;
+import com.jn.agileway.web.servlet.ServletHttpRequestFactory;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Predicate;
@@ -40,7 +41,6 @@ public class XssFilter extends OncePerRequestFilter {
             response2.setHttpOnlyCookies(xssFirewall.getConfig().getHttpOnlyCookies());
             response = response2;
             RR rr = getRR(request, response);
-            rr.setResponse(response2);
 
             WAFStrategy strategy = xssFirewall.findStrategy(rr);
             if (Objs.isNotEmpty(strategy)) {
@@ -54,7 +54,7 @@ public class XssFilter extends OncePerRequestFilter {
                     WAFs.JAVA_SCRIPT_XSS_HANDLER.set(javaScriptXssHandler);
                 }
                 request = new WAFHttpServletRequestWrapper(rr, strategy.getHandlers());
-                rr.setRequest((HttpServletRequest) request);
+                rr.setRequest(ServletHttpRequestFactory.INSTANCE.get((HttpServletRequest) request));
                 // ref: https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/X-XSS-Protection
                 ((HttpServletResponse) response).setHeader("X-XSS-Protection", "1;mode=block");
                 // ref: https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP

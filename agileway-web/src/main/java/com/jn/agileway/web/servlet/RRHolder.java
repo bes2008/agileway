@@ -38,8 +38,9 @@ public class RRHolder {
     }
 
     public static void set(final HttpServletRequest request, final HttpServletResponse response) {
-        HttpRequest req = null;
-        HttpResponse resp = null;
+        HttpRequest req = ServletHttpRequestFactory.INSTANCE.get(request);
+        HttpResponse resp = ServletHttpResponseFactory.INSTANCE.get(response);
+        RRLocal.set(req,resp);
     }
 
     public static RR get() {

@@ -7,6 +7,10 @@ import javax.servlet.http.HttpServletResponse;
 
 public class ServletHttpResponse implements HttpResponse<HttpServletResponse> {
     private HttpServletResponse delegate;
+
+    public ServletHttpResponse(HttpServletResponse response){
+        this.delegate = response;
+    }
     @Override
     public HttpServletResponse getDelegate() {
         return delegate;
