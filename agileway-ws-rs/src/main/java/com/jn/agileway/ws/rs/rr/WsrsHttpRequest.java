@@ -1,29 +1,27 @@
 package com.jn.agileway.ws.rs.rr;
 
 import com.jn.agileway.http.rr.HttpRequest;
-import com.jn.langx.util.collection.AttributableSet;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.iter.IterableEnumeration;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Locale;
 
-public class WsrsHttpRequest implements HttpRequest<ContainerRequestContext> {
-    private ContainerRequestContext delegate;
-    private AttributableSet attributableSet;
+public abstract class WsrsHttpRequest implements HttpRequest<ContainerRequestContext> {
+    protected ContainerRequestContext delegate;
 
-    public WsrsHttpRequest(ContainerRequestContext context){
+    public WsrsHttpRequest(ContainerRequestContext context) {
         this.delegate = context;
     }
+
     @Override
     public ContainerRequestContext getDelegate() {
         return this.delegate;
     }
 
-    @Override
-    public String getRemoteHost() {
-        return null;
-    }
+
 
     @Override
     public String getMethod() {
@@ -52,21 +50,30 @@ public class WsrsHttpRequest implements HttpRequest<ContainerRequestContext> {
 
     @Override
     public Object getAttribute(String name) {
-        return this.attributableSet.getAttribute(name);
+        return this.delegate.getProperty(name);
     }
 
     @Override
     public void setAttribute(String name, Object value) {
-        this.attributableSet.setAttribute(name, value);
+        this.delegate.setProperty(name, value);
+    }
+
+    @Override
+    public Enumeration<String> getAttributeNames() {
+        return new IterableEnumeration<String>(this.delegate.getPropertyNames());
     }
 
     @Override
     public Locale getLocale() {
-        return null;
+        List<Locale> locales = this.delegate.getAcceptableLanguages();
+        if (Objs.isNotEmpty(locales)) {
+            return locales.get(0);
+        }
+        return Locale.getDefault();
     }
 
     @Override
     public String getRequestURL() {
-        return null;
+        return this.delegate.getUriInfo().getRequestUri().getPath();
     }
 }

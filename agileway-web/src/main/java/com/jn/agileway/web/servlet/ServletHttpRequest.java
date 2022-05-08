@@ -4,6 +4,7 @@ package com.jn.agileway.web.servlet;
 import com.jn.agileway.http.rr.HttpRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Locale;
 
@@ -29,10 +30,6 @@ public class ServletHttpRequest implements HttpRequest<HttpServletRequest> {
         return delegate.getMethod();
     }
 
-    @Override
-    public String getRequestURI() {
-        return delegate.getRequestURI();
-    }
 
     @Override
     public String getHeader(String name) {
@@ -60,8 +57,17 @@ public class ServletHttpRequest implements HttpRequest<HttpServletRequest> {
     }
 
     @Override
+    public Enumeration<String> getAttributeNames() {
+        return this.delegate.getAttributeNames();
+    }
+
+    @Override
     public Locale getLocale() {
         return delegate.getLocale();
+    }
+    @Override
+    public String getRequestURI() {
+        return delegate.getRequestURI();
     }
 
     @Override
