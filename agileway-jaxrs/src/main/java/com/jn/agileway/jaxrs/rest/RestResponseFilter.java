@@ -1,4 +1,4 @@
-package com.jn.agileway.ws.rs.rest;
+package com.jn.agileway.jaxrs.rest;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;

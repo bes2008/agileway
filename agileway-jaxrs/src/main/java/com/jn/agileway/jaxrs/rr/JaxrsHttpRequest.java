@@ -1,4 +1,4 @@
-package com.jn.agileway.ws.rs.rr;
+package com.jn.agileway.jaxrs.rr;
 
 import com.jn.agileway.http.rr.HttpRequest;
 import com.jn.langx.util.Objs;
@@ -9,10 +9,10 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 
-public abstract class WsrsHttpRequest implements HttpRequest<ContainerRequestContext> {
+public abstract class JaxrsHttpRequest implements HttpRequest<ContainerRequestContext> {
     protected ContainerRequestContext delegate;
 
-    public WsrsHttpRequest(ContainerRequestContext context) {
+    public JaxrsHttpRequest(ContainerRequestContext context) {
         this.delegate = context;
     }
 

@@ -1,11 +1,11 @@
-package com.jn.agileway.ws.rs.rr;
+package com.jn.agileway.jaxrs.rr;
 
 import com.jn.agileway.http.rr.HttpResponse;
 
 import javax.ws.rs.container.ContainerResponseContext;
 import java.util.Collection;
 
-public class WsrsHttpResponse implements HttpResponse<ContainerResponseContext> {
+public class JaxrsHttpResponse implements HttpResponse<ContainerResponseContext> {
     private ContainerResponseContext delegate;
 
     public ContainerResponseContext getDelegate(){
