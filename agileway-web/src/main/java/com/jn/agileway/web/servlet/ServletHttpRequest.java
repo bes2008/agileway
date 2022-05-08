@@ -2,10 +2,10 @@ package com.jn.agileway.web.servlet;
 
 
 import com.jn.agileway.http.rr.HttpRequest;
+import com.jn.langx.util.collection.Pipeline;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Locale;
 
 public class ServletHttpRequest implements HttpRequest<HttpServletRequest> {
@@ -42,13 +42,13 @@ public class ServletHttpRequest implements HttpRequest<HttpServletRequest> {
     }
 
     @Override
-    public Enumeration<String> getHeaders(String name) {
-        return delegate.getHeaders(name);
+    public Collection<String> getHeaders(String name) {
+        return Pipeline.<String>of(this.delegate.getHeaders(name)).asList();
     }
 
     @Override
-    public Enumeration<String> getHeaderNames() {
-        return delegate.getHeaderNames();
+    public Collection<String> getHeaderNames() {
+        return Pipeline.<String>of(delegate.getHeaderNames()).asList();
     }
 
     @Override
@@ -62,8 +62,8 @@ public class ServletHttpRequest implements HttpRequest<HttpServletRequest> {
     }
 
     @Override
-    public Enumeration<String> getAttributeNames() {
-        return this.delegate.getAttributeNames();
+    public Collection<String> getAttributeNames() {
+        return Pipeline.<String>of(this.delegate.getAttributeNames()).asList();
     }
 
     @Override

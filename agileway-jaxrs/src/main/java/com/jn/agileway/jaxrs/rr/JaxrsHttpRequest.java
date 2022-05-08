@@ -2,10 +2,9 @@ package com.jn.agileway.jaxrs.rr;
 
 import com.jn.agileway.http.rr.HttpRequest;
 import com.jn.langx.util.Objs;
-import com.jn.langx.util.collection.iter.IterableEnumeration;
 
 import javax.ws.rs.container.ContainerRequestContext;
-import java.util.Enumeration;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -39,13 +38,13 @@ public class JaxrsHttpRequest implements HttpRequest<ContainerRequestContext> {
     }
 
     @Override
-    public Enumeration<String> getHeaderNames() {
-        return new IterableEnumeration<String>(this.delegate.getHeaders().keySet());
+    public Collection<String> getHeaderNames() {
+        return this.delegate.getHeaders().keySet();
     }
 
     @Override
-    public Enumeration<String> getHeaders(String name) {
-        return new IterableEnumeration<String>(this.delegate.getHeaders().get(name));
+    public Collection<String> getHeaders(String name) {
+        return this.delegate.getHeaders().get(name);
     }
 
     @Override
@@ -59,8 +58,8 @@ public class JaxrsHttpRequest implements HttpRequest<ContainerRequestContext> {
     }
 
     @Override
-    public Enumeration<String> getAttributeNames() {
-        return new IterableEnumeration<String>(this.delegate.getPropertyNames());
+    public Collection<String> getAttributeNames() {
+        return this.delegate.getPropertyNames();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.jn.agileway.http.rr;
 
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Locale;
 
@@ -14,11 +15,11 @@ public interface HttpRequest<D> {
 
     String getHeader(String name);
 
-    Enumeration<String> getHeaderNames();
+    Collection<String> getHeaderNames();
 
-    Enumeration<String> getHeaders(String name);
+    Collection<String> getHeaders(String name);
 
-    Enumeration<String> getAttributeNames();
+    Collection<String> getAttributeNames();
 
     Object getAttribute(String name);
 

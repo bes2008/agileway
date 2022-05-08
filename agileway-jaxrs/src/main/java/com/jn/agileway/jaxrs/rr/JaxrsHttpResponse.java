@@ -34,6 +34,6 @@ public class JaxrsHttpResponse implements HttpResponse<ContainerResponseContext>
 
     @Override
     public int getStatusCode() {
-        return 0;
+        return this.delegate.getStatus();
     }
 }
