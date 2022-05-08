@@ -14,7 +14,7 @@ public interface HttpRequest<D> {
     Object getAttribute(String name);
     void setAttribute(String name, Object value);
     Locale getLocale();
-    StringBuffer getRequestURL();
+    String getRequestURL();
 
 
 }

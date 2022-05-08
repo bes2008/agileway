@@ -65,7 +65,7 @@ public class ServletHttpRequest implements HttpRequest<HttpServletRequest> {
     }
 
     @Override
-    public StringBuffer getRequestURL() {
-        return delegate.getRequestURL();
+    public String getRequestURL() {
+        return delegate.getRequestURL().toString();
     }
 }
