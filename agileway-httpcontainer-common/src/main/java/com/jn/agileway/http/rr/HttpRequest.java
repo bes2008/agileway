@@ -1,11 +1,12 @@
 package com.jn.agileway.http.rr;
 
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Locale;
 
 public interface HttpRequest<D> {
     D getDelegate();
+
+    String getRemoteAddr();
 
     String getRemoteHost();
 
@@ -24,7 +25,6 @@ public interface HttpRequest<D> {
     void setAttribute(String name, Object value);
 
     /**
-     *
      * Returns the preferred <code>Locale</code> that the client will
      * accept content in, based on the Accept-Language header.
      * If the client request doesn't provide an Accept-Language header,

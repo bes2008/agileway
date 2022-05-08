@@ -9,7 +9,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 
-public abstract class JaxrsHttpRequest implements HttpRequest<ContainerRequestContext> {
+public class JaxrsHttpRequest implements HttpRequest<ContainerRequestContext> {
     protected ContainerRequestContext delegate;
 
     public JaxrsHttpRequest(ContainerRequestContext context) {
@@ -75,5 +75,14 @@ public abstract class JaxrsHttpRequest implements HttpRequest<ContainerRequestCo
     @Override
     public String getRequestURL() {
         return this.delegate.getUriInfo().getRequestUri().getPath();
+    }
+
+    public String getRemoteAddr(){
+        return null;
+    }
+
+    @Override
+    public String getRemoteHost() {
+        return null;
     }
 }

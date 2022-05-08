@@ -26,6 +26,11 @@ public class ServletHttpRequest implements HttpRequest<HttpServletRequest> {
     }
 
     @Override
+    public String getRemoteAddr() {
+        return this.delegate.getRemoteAddr();
+    }
+
+    @Override
     public String getMethod() {
         return delegate.getMethod();
     }

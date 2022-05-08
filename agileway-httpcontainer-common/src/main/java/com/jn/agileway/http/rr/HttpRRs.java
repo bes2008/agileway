@@ -10,10 +10,46 @@ import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.collection.multivalue.LinkedMultiValueMap;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 
+import java.util.List;
+
 public class HttpRRs {
+    protected HttpRRs(){}
+
+
+    private static List<String> clientIpHeadersInProxy = Collects.newArrayList(
+            "X-Real-IP", // nginx
+            "Proxy-Client-IP", // apache http server
+            "WL-Proxy-Client-IP", // WebLogic 服务代理
+            "X-Forwarded-For", // squid
+            "HTTP_CLIENT_IP",
+            "HTTP_X_FORWARDED_FOR"
+    );
+
+    public static String getClientIP(final HttpRequest request) {
+        String header = Collects.findFirst(clientIpHeadersInProxy, new Predicate<String>() {
+            @Override
+            public boolean test(String headerName) {
+                String ips = request.getHeader(headerName);
+                if (Emptys.isNotEmpty(ips) && !Strings.equalsIgnoreCase("unknown", ips)) {
+                    return true;
+                }
+                return false;
+            }
+        });
+        String ip = Strings.isEmpty(header) ? request.getRemoteAddr() : request.getHeader(header);
+        if (Strings.isNotEmpty(ip)) {
+            int index = ip.indexOf(',');
+            if (index != -1) {
+                return ip.substring(0, index);
+            }
+        }
+        return ip;
+    }
+
     public static final String getUTF8ContentType(@NonNull String mediaType) {
         return getContentType(mediaType, "UTF-8");
     }
