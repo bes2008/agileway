@@ -29,7 +29,7 @@
         <module>agileway-templates</module>
         <module>agileway-retry</module>
         <module>agileway-jersey</module>
-        <module>agileway-ws-rs</module>
+        <module>agileway-jaxrs</module>
     </modules>
 
     <description>
