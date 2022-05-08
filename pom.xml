@@ -110,6 +110,11 @@
         <dependencies>
             <dependency>
                 <groupId>com.github.fangjinuo.agileway</groupId>
+                <artifactId>agileway-jaxrs</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fangjinuo.agileway</groupId>
                 <artifactId>agileway-aop</artifactId>
                 <version>${project.version}</version>
             </dependency>

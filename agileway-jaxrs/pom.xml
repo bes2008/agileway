@@ -14,13 +14,13 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <ws-rs.version>2.1.6</ws-rs.version>
+        <jaxrs.version>2.1.6</jaxrs.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta.ws.rs-api</artifactId>
-            <version>${ws-rs.version}</version>
+            <version>${jaxrs.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.fangjinuo.agileway</groupId>

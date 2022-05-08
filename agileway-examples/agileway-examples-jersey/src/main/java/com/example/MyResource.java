@@ -1,7 +1,6 @@
 package com.example;
 
 import com.jn.langx.annotation.Name;
-import com.jn.langx.annotation.NotEmpty;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

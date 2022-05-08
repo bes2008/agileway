@@ -8,6 +8,6 @@ import java.io.IOException;
 public class RestResponseFilter implements ContainerResponseFilter {
     @Override
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
-
+        System.out.println("filter");
     }
 }

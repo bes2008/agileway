@@ -8,6 +8,6 @@ import java.io.IOException;
 public class RestResponseInterceptor implements WriterInterceptor {
     @Override
     public void aroundWriteTo(WriterInterceptorContext context) throws IOException, WebApplicationException {
-
+        System.out.println("interceptor");
     }
 }
