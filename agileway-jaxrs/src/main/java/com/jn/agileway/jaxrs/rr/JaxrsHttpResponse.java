@@ -8,28 +8,32 @@ import java.util.Collection;
 public class JaxrsHttpResponse implements HttpResponse<ContainerResponseContext> {
     private ContainerResponseContext delegate;
 
-    public ContainerResponseContext getDelegate(){
+    public JaxrsHttpResponse(ContainerResponseContext context) {
+        this.delegate = context;
+    }
+
+    public ContainerResponseContext getDelegate() {
         return this.delegate;
     }
 
     @Override
     public void addHeader(String name, String value) {
-
+        // unsupported
     }
 
     @Override
     public String getHeader(String name) {
-        return null;
+        return this.delegate.getHeaderString(name);
     }
 
     @Override
     public Collection<String> getHeaderNames() {
-        return null;
+        return this.delegate.getHeaders().keySet();
     }
 
     @Override
     public Collection<String> getHeaders(String name) {
-        return null;
+        return this.delegate.getStringHeaders().get(name);
     }
 
     @Override
