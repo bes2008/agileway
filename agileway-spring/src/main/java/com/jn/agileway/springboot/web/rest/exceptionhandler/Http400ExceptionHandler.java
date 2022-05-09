@@ -1,7 +1,6 @@
 package com.jn.agileway.springboot.web.rest.exceptionhandler;
 
 import com.jn.agileway.http.rest.RestActionException;
-import com.jn.agileway.http.rest.RestActionExceptionHandler;
 import com.jn.agileway.http.rest.RestActionExceptions;
 import com.jn.agileway.web.rest.AbstractServletRestActionExceptionHandler;
 import com.jn.langx.http.rest.RestRespBody;

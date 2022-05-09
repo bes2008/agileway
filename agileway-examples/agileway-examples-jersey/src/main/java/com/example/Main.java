@@ -1,13 +1,13 @@
 package com.example;
 
-import com.jn.agileway.http.rest.GlobalRestResponseBodyContext;
-import com.jn.agileway.http.rest.GlobalRestResponseBodyHandlerConfiguration;
-import com.jn.agileway.http.rest.GlobalRestResponseBodyHandlerConfigurationBuilder;
-import com.jn.agileway.http.rest.GlobalRestResponseBodyHandlerProperties;
+import com.jn.agileway.http.rest.*;
+import com.jn.agileway.http.rest.exceptionhandler.ThrowableHandler;
 import com.jn.agileway.http.rr.requestmapping.RequestMappingAccessorRegistry;
-import com.jn.agileway.jaxrs.rest.JaxrsGloablRestResponseInterceptor;
+import com.jn.agileway.jaxrs.rest.JaxrsGlobalRestExceptionHandler;
+import com.jn.agileway.jaxrs.rest.JaxrsGlobalRestResponseInterceptor;
 import com.jn.agileway.jaxrs.rest.JaxrsGlobalRestResponseBodyHandler;
 import com.jn.agileway.jaxrs.rr.requestmapping.JaxrsRequestMappingAccessorParser;
+import com.jn.agileway.jersey.exception.mapper.JerseyGlobalRestExceptionMapper;
 import com.jn.agileway.jersey.validator.JerseyGlobalRestResultValidator;
 import com.jn.langx.util.collection.Collects;
 import org.glassfish.grizzly.http.server.HttpServer;
@@ -42,22 +42,39 @@ public class Main {
 
         GlobalRestResponseBodyHandlerProperties responseBodyHandlerProperties = new GlobalRestResponseBodyHandlerProperties();
         responseBodyHandlerProperties.setBasePackages(restResourcePackages);
+
+        GlobalRestExceptionHandlerProperties exceptionHandlerProperties = new GlobalRestExceptionHandlerProperties();
+        exceptionHandlerProperties.setLogStack(true);
+
         GlobalRestResponseBodyContext context = new GlobalRestResponseBodyContext();
         GlobalRestResponseBodyHandlerConfiguration configuration = new GlobalRestResponseBodyHandlerConfigurationBuilder().setProperties(responseBodyHandlerProperties).build();
         context.setConfiguration(configuration);
+        context.setExceptionHandlerProperties(exceptionHandlerProperties);
         context.init();
 
         JaxrsGlobalRestResponseBodyHandler handler = new JaxrsGlobalRestResponseBodyHandler();
         handler.setRequestMappingAccessorRegistry(mappingAccessorRegistry);
         handler.setContext(context);
 
-        JaxrsGloablRestResponseInterceptor interceptor = new JaxrsGloablRestResponseInterceptor();
+        JaxrsGlobalRestResponseInterceptor interceptor = new JaxrsGlobalRestResponseInterceptor();
         interceptor.setResponseBodyHandler(handler);
         rc.register(interceptor);
 
         JerseyGlobalRestResultValidator validator = new JerseyGlobalRestResultValidator();
         validator.setResponseBodyHandler(handler);
         rc.register(validator);
+
+        GlobalRestExceptionHandlerRegistry exceptionHandlerRegistry = new GlobalRestExceptionHandlerRegistry();
+        exceptionHandlerRegistry.init();
+        exceptionHandlerRegistry.register(new ThrowableHandler());
+
+        JaxrsGlobalRestExceptionHandler globalRestExceptionHandler = new JaxrsGlobalRestExceptionHandler();
+        globalRestExceptionHandler.setContext(context);
+        globalRestExceptionHandler.setExceptionHandlerRegistry(exceptionHandlerRegistry);
+
+        JerseyGlobalRestExceptionMapper jerseyGlobalRestExceptionMapper = new JerseyGlobalRestExceptionMapper();
+        rc.register(jerseyGlobalRestExceptionMapper);
+
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);

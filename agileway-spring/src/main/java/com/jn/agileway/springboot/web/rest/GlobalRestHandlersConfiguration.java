@@ -1,6 +1,7 @@
 package com.jn.agileway.springboot.web.rest;
 
 import com.jn.agileway.http.rest.*;
+import com.jn.agileway.http.rest.exceptionhandler.ThrowableHandler;
 import com.jn.agileway.http.rr.requestmapping.JavaMethodRequestMappingAccessorParser;
 import com.jn.agileway.http.rr.requestmapping.RequestMappingAccessorRegistry;
 import com.jn.agileway.spring.web.mvc.requestmapping.SpringRequestMappingAccessorParser;
@@ -94,6 +95,12 @@ public class GlobalRestHandlersConfiguration {
                 .setProperties(properties)
                 .build();
         return configuration;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ThrowableHandler throwableHandler(){
+        return new ThrowableHandler();
     }
 
     @Bean

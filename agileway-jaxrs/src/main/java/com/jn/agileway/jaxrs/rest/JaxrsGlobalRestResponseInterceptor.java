@@ -19,14 +19,12 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
 import java.io.IOException;
-import java.util.Map;
 
 @Priority(Priorities.USER + 1000)
-public class JaxrsGloablRestResponseInterceptor implements WriterInterceptor, ContainerRequestFilter, ContainerResponseFilter {
+public class JaxrsGlobalRestResponseInterceptor implements WriterInterceptor, ContainerRequestFilter, ContainerResponseFilter {
 
     private GlobalRestResponseBodyHandler responseBodyHandler;
 

@@ -19,13 +19,20 @@ public class MyResource {
      */
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public String getIt() {
+    public String getText() {
         return "Got text!";
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getIt2(){
+    public String getJson(){
         return "Got json! , 你好呀";
+    }
+
+    @Path("/exception")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getException(){
+        throw new RuntimeException("EEEEEEEEEEEEEE");
     }
 }
