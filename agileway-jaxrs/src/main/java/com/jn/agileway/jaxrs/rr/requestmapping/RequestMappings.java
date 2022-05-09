@@ -16,8 +16,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public class RequestMappings {
-    public static boolean hasAnyRequestMappingAnnotation(Method method){
-        return findFirstRequestMappingAnnotation(method)!= null;
+    public static boolean hasAnyRequestMappingAnnotation(Method method) {
+        return findFirstRequestMappingAnnotation(method) != null;
     }
 
     public static Annotation findFirstRequestMappingAnnotation(AnnotatedElement method) {
@@ -50,30 +50,28 @@ public class RequestMappings {
         });
     }
 
-    public static RequestMappingAccessor<?> createAccessor(@NonNull Method method,@NonNull Annotation annotation,Produces produces, Consumes consumes, Path pathAnno  ) {
+    public static RequestMappingAccessor<?> createAccessor(@NonNull Method method, @NonNull Annotation annotation, Produces produces, Consumes consumes, Path pathAnno) {
         Preconditions.checkNotNull(annotation);
         RequestMappingAccessor accessor = null;
-        /*
         if (annotation instanceof HttpMethod) {
             accessor = new HttpMethodAnnotationAccessor();
-            accessor.setMapping((RequestMapping) annotation);
-        } else if (annotation instanceof DeleteMapping) {
-            accessor = new DeleteMappingAnnotationAccessor();
-            accessor.setMapping((DeleteMapping) annotation);
-        } else if (annotation instanceof GetMapping) {
-            accessor = new GetMappingAnnotationAccessor();
-            accessor.setMapping((GetMapping) annotation);
-        } else if (annotation instanceof PatchMapping) {
-            accessor = new PatchMappingAnnotationAccessor();
-            accessor.setMapping((PatchMapping) annotation);
-        } else if (annotation instanceof PostMapping) {
-            accessor = new PostMappingAnnotationAccessor();
-            accessor.setMapping((PostMapping) annotation);
-        } else if (annotation instanceof PutMapping) {
-            accessor = new PutMappingAnnotationAccessor();
-            accessor.setMapping((PutMapping) annotation);
+            accessor.setMapping((HttpMethod) annotation);
+        } else if (annotation instanceof DELETE) {
+            accessor = new DeleteAnnotationAccessor();
+            accessor.setMapping((DELETE) annotation);
+        } else if (annotation instanceof GET) {
+            accessor = new GetAnnotationAccessor();
+            accessor.setMapping((GET) annotation);
+        } else if (annotation instanceof PATCH) {
+            accessor = new PatchAnnotationAccessor();
+            accessor.setMapping((PATCH) annotation);
+        } else if (annotation instanceof POST) {
+            accessor = new PostAnnotationAccessor();
+            accessor.setMapping((POST) annotation);
+        } else if (annotation instanceof PUT) {
+            accessor = new PutAnnotationAccessor();
+            accessor.setMapping((PUT) annotation);
         }
-         */
         if (accessor == null) {
             throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("{} is not a Spring RequestMapping annotation", annotation.getClass().getSimpleName()));
         }

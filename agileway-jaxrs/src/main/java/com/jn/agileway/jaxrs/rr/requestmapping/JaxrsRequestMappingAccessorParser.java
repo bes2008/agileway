@@ -19,8 +19,7 @@ public class JaxrsRequestMappingAccessorParser implements JavaMethodRequestMappi
             Consumes consumes = Reflects.getAnnotation(method, Consumes.class);
             Produces produces = Reflects.getAnnotation(method, Produces.class);
             Path pathAnno = Reflects.getAnnotation(method, Path.class);
-            //  accessor = RequestMappings.createAccessor(method, methodAnno, produces, consumes, pathAnno);
-            accessor = null;
+            accessor = RequestMappings.createAccessor(method, methodAnno, produces, consumes, pathAnno);
         }
         return accessor;
     }
