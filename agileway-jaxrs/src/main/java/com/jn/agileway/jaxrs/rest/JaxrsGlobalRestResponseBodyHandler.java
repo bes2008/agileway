@@ -42,6 +42,9 @@ public class JaxrsGlobalRestResponseBodyHandler extends AbstractGlobalRestRespon
     }
 
     public boolean isSupportedAction(Method actionMethod) {
+        if (actionMethod == null) {
+            return false;
+        }
         boolean supported = getContext().getConfiguration().isAcceptable(actionMethod);
         if (supported && requestMappingAccessorRegistry != null) {
             Pair<Method, RequestMappingAccessor> pair = requestMappingAccessorRegistry.get(actionMethod);

@@ -22,7 +22,6 @@ public class GlobalRestResponseBodyContext extends AbstractInitializable {
         if (jsonFactory == null) {
             jsonFactory = JsonFactorys.getJSONFactory(JsonScope.SINGLETON);
         }
-
         if (configuration == null) {
             configuration = new GlobalRestResponseBodyHandlerConfiguration();
         }
@@ -34,14 +33,6 @@ public class GlobalRestResponseBodyContext extends AbstractInitializable {
             restErrorMessageHandler = NoopRestErrorMessageHandler.INSTANCE;
         }
 
-    }
-
-    public GlobalRestResponseBodyHandlerProperties getHandlerProperties() {
-        return handlerProperties;
-    }
-
-    public void setHandlerProperties(GlobalRestResponseBodyHandlerProperties handlerProperties) {
-        this.handlerProperties = handlerProperties;
     }
 
     public GlobalRestResponseBodyHandlerConfiguration getConfiguration() {

@@ -138,10 +138,7 @@ public class GlobalRestHandlersConfiguration {
     @Autowired
     public GlobalRestResponseBodyContext globalRestResponseBodyContext(
             JSONFactory jsonFactory,
-
-            GlobalRestResponseBodyHandlerProperties handlerProperties,
             GlobalRestResponseBodyHandlerConfiguration configuration,
-
             @Qualifier("globalRestErrorMessageHandler")
                     RestErrorMessageHandler restErrorMessageHandler,
             GlobalRestExceptionHandlerProperties exceptionHandlerProperties,
@@ -152,7 +149,6 @@ public class GlobalRestHandlersConfiguration {
         context.setJsonFactory(jsonFactory);
 
         context.setConfiguration(configuration);
-        context.setHandlerProperties(handlerProperties);
 
         context.setExceptionHandlerProperties(exceptionHandlerProperties);
         context.setRestErrorMessageHandler(restErrorMessageHandler);

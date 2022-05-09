@@ -77,7 +77,6 @@
             <artifactId>jersey-media-json-binding</artifactId>
         </dependency>
         -->
-
         <dependency>
             <groupId>com.github.fangjinuo.agileway</groupId>
             <artifactId>agileway-jaxrs</artifactId>
@@ -85,6 +84,14 @@
         <dependency>
             <groupId>com.github.fangjinuo.agileway</groupId>
             <artifactId>agileway-jersey</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.fangjinuo.easyjson</groupId>
+            <artifactId>easyjson-jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

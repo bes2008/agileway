@@ -21,7 +21,7 @@ public class JerseyGlobalRestResultValidator extends JerseyValidatorProxy {
         RR rr = RRLocal.get();
         if (rr != null && responseBodyHandler!=null) {
             HttpRequest request = rr.getRequest();
-            responseBodyHandler.judgeIsSupportedAction(request, resourceMethod.getHandlingMethod(), request);
+            responseBodyHandler.judgeIsSupportedAction(request, resourceMethod.getHandlingMethod(), result);
         }
         super.validateResult(resourceClass, resourceMethod, result);
     }

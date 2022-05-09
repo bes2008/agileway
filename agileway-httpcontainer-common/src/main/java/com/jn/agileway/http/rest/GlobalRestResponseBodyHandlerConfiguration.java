@@ -229,7 +229,7 @@ public class GlobalRestResponseBodyHandlerConfiguration {
 
     private boolean isPackageMatched(final Class clazz) {
 
-        final String packageName = clazz.getName();
+        final String packageName = clazz.getPackage().getName();
         // 不在指定的包下
         if (Collects.noneMatch(basePackages, new Predicate<String>() {
             @Override

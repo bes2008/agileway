@@ -201,25 +201,21 @@
             <dependency>
                 <groupId>com.github.fangjinuo.langx</groupId>
                 <artifactId>langx-java</artifactId>
-                <scope>provided</scope>
                 <version>${langx.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.fangjinuo.langx</groupId>
                 <artifactId>langx-java8</artifactId>
-                <scope>provided</scope>
                 <version>${langx.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.fangjinuo.easyjson</groupId>
                 <artifactId>easyjson-core</artifactId>
-                <scope>provided</scope>
                 <version>${easyjson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.fangjinuo.easyjson</groupId>
                 <artifactId>easyjson-jackson</artifactId>
-                <scope>provided</scope>
                 <version>${easyjson.version}</version>
             </dependency>
             <dependency>
@@ -262,35 +258,26 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-log4j12</artifactId>
                 <version>${slf4j.version}</version>
-                <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <scope>provided</scope>
                 <version>${slf4j.version}</version>
-                <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>jul-to-slf4j</artifactId>
-                <scope>provided</scope>
                 <version>${slf4j.version}</version>
-                <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>jcl-over-slf4j</artifactId>
-                <scope>provided</scope>
                 <version>${slf4j.version}</version>
-                <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>log4j-over-slf4j</artifactId>
-                <scope>provided</scope>
                 <version>${slf4j.version}</version>
-                <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>
@@ -343,9 +330,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <scope>provided</scope>
-            <version>${slf4j.version}</version>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -356,7 +340,6 @@
         <dependency>
             <groupId>com.github.fangjinuo.langx</groupId>
             <artifactId>langx-java</artifactId>
-            <scope>provided</scope>
         </dependency>
 
     </dependencies>

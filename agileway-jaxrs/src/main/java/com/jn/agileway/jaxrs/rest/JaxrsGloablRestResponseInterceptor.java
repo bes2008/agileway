@@ -26,6 +26,10 @@ public class JaxrsGloablRestResponseInterceptor implements WriterInterceptor, Co
 
     private GlobalRestResponseBodyHandler responseBodyHandler;
 
+    public void setResponseBodyHandler(GlobalRestResponseBodyHandler responseBodyHandler) {
+        this.responseBodyHandler = responseBodyHandler;
+    }
+
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         // 请求时过滤
