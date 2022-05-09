@@ -7,11 +7,13 @@ import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.reflect.Reflects;
+import com.jn.langx.util.struct.Holder;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /***
@@ -62,6 +64,8 @@ public class GlobalRestResponseBodyHandlerConfiguration {
         return basePackages;
     }
 
+
+    private ConcurrentHashMap<Method, Holder<Boolean>> judged = new ConcurrentHashMap<Method, Holder<Boolean>>();
 
     public void setBasePackages(List<String> basePackages) {
         if (basePackages != null) {
@@ -151,11 +155,21 @@ public class GlobalRestResponseBodyHandlerConfiguration {
         this.excludedAnnotations.add(annotation);
     }
 
-    public boolean isAcceptable(final Class clazz) {
+    private boolean isAcceptable(final Class clazz) {
         return isAssignableTypeMatched(clazz) || isPackageMatched(clazz) || isAnnotationMatched(clazz);
     }
 
     public boolean isAcceptable(final Method method) {
+        Holder<Boolean> acceptHolder = judged.get(method);
+        if (acceptHolder == null) {
+            boolean accept = judgeMethodAcceptable(method);
+            acceptHolder = new Holder<Boolean>(accept);
+            judged.put(method, acceptHolder);
+        }
+        return acceptHolder.get();
+    }
+
+    private boolean judgeMethodAcceptable(final Method method) {
         // 有@RestAction注解时，根据该注解来判断
         String className = Reflects.getFQNClassName(method.getDeclaringClass());
         String methodFQN = className + "." + method.getName();
