@@ -17,6 +17,7 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
 import java.io.IOException;
@@ -66,8 +67,11 @@ public class JaxrsGloablRestResponseInterceptor implements WriterInterceptor, Co
         } else {
             Boolean isNotSupportedRestRequest = (Boolean) request.getAttribute(GlobalRestHandlers.GLOBAL_REST_NON_REST_REQUEST);
             if (isNotSupportedRestRequest != null && !isNotSupportedRestRequest) {
-                RestRespBody respBody = responseBodyHandler.handle(request, response, context, context.getEntity());
+                Object actionMethod = request.getAttribute(GlobalRestHandlers.GLOBAL_REST_ACTION_METHOD);
+                RestRespBody respBody = responseBodyHandler.handle(request, response, actionMethod, context.getEntity());
                 context.setEntity(respBody);
+                context.setType(respBody.getClass());
+                context.setMediaType(MediaType.APPLICATION_JSON_TYPE);
             }
             context.proceed();
         }

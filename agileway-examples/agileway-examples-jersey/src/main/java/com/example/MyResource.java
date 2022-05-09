@@ -1,8 +1,5 @@
 package com.example;
 
-
-import com.jn.langx.annotation.Name;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -20,10 +17,15 @@ public class MyResource {
      *
      * @return String that will be returned as a text/plain response.
      */
-    @Name("h")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String getIt() {
-        return "Got it!";
+        return "Got text!";
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getIt2(){
+        return "Got json!";
     }
 }
