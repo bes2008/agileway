@@ -26,6 +26,6 @@ public class MyResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getIt2(){
-        return "Got json!";
+        return "Got json! , 你好呀";
     }
 }

@@ -8,6 +8,7 @@ import com.jn.agileway.http.rr.RR;
 import com.jn.agileway.http.rr.RRLocal;
 import com.jn.agileway.jaxrs.rr.JaxrsHttpRequest;
 import com.jn.agileway.jaxrs.rr.JaxrsHttpResponse;
+import com.jn.easyjson.core.JSON;
 import com.jn.langx.http.rest.RestRespBody;
 
 import javax.annotation.Priority;
@@ -18,9 +19,11 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
 import java.io.IOException;
+import java.util.Map;
 
 @Priority(Priorities.USER + 1000)
 public class JaxrsGloablRestResponseInterceptor implements WriterInterceptor, ContainerRequestFilter, ContainerResponseFilter {
@@ -57,7 +60,6 @@ public class JaxrsGloablRestResponseInterceptor implements WriterInterceptor, Co
 
     @Override
     public void aroundWriteTo(WriterInterceptorContext context) throws IOException, WebApplicationException {
-        System.out.println("interceptor");
         RR rr = RRLocal.get();
         JaxrsHttpRequest request = (JaxrsHttpRequest) rr.getRequest();
         JaxrsHttpResponse response = (JaxrsHttpResponse) rr.getResponse();
@@ -69,8 +71,15 @@ public class JaxrsGloablRestResponseInterceptor implements WriterInterceptor, Co
             if (isNotSupportedRestRequest != null && !isNotSupportedRestRequest) {
                 Object actionMethod = request.getAttribute(GlobalRestHandlers.GLOBAL_REST_ACTION_METHOD);
                 RestRespBody respBody = responseBodyHandler.handle(request, response, actionMethod, context.getEntity());
-                context.setEntity(respBody);
-                context.setType(respBody.getClass());
+
+                request.setAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN, true);
+
+                Object finalBody = responseBodyHandler.toMap(request, response, actionMethod, respBody);
+                if (context.getType() == String.class) {
+                    JSON jsons = responseBodyHandler.getContext().getJsonFactory().get();
+                    finalBody = jsons.toJson(finalBody);
+                }
+                context.setEntity(finalBody);
                 context.setMediaType(MediaType.APPLICATION_JSON_TYPE);
             }
             context.proceed();

@@ -36,15 +36,13 @@ public class Main {
         List<String> restResourcePackages = Collects.newArrayList("com.example");
         final ResourceConfig rc = new ResourceConfig().packages(Collects.toArray(restResourcePackages, String[].class));
 
-
         RequestMappingAccessorRegistry mappingAccessorRegistry = new RequestMappingAccessorRegistry();
         mappingAccessorRegistry.addParser(new JaxrsRequestMappingAccessorParser());
         mappingAccessorRegistry.init();
 
-
-        GlobalRestResponseBodyHandlerProperties responseBodyHandlerProperties=new GlobalRestResponseBodyHandlerProperties();
+        GlobalRestResponseBodyHandlerProperties responseBodyHandlerProperties = new GlobalRestResponseBodyHandlerProperties();
         responseBodyHandlerProperties.setBasePackages(restResourcePackages);
-        GlobalRestResponseBodyContext context= new GlobalRestResponseBodyContext();
+        GlobalRestResponseBodyContext context = new GlobalRestResponseBodyContext();
         GlobalRestResponseBodyHandlerConfiguration configuration = new GlobalRestResponseBodyHandlerConfigurationBuilder().setProperties(responseBodyHandlerProperties).build();
         context.setConfiguration(configuration);
         context.init();

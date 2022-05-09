@@ -72,7 +72,8 @@ public class JaxrsGlobalRestResponseBodyHandler extends AbstractGlobalRestRespon
 
     @Override
     public RestRespBody handle(HttpRequest request, HttpResponse response, Object actionMethod, Object actionReturnValue) {
-        return convertToRestRespBody(request, response, actionMethod, actionReturnValue);
+        RestRespBody respBody = convertToRestRespBody(request, response, actionMethod, actionReturnValue);
+        return respBody;
     }
 
     private RestRespBody convertToRestRespBody(HttpRequest request, HttpResponse response, Object actionMethod, Object body) {
