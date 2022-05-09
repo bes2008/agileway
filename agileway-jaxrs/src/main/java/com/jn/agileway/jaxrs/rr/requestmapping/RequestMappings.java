@@ -1,4 +1,4 @@
-package com.jn.agileway.spring.web.mvc.requestmapping;
+package com.jn.agileway.jaxrs.rr.requestmapping;
 
 import com.jn.agileway.http.rr.requestmapping.RequestMappingAccessor;
 import com.jn.langx.annotation.NonNull;
@@ -6,38 +6,38 @@ import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
-import com.jn.langx.util.enums.Enums;
 import com.jn.langx.util.function.Predicate;
-import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.reflect.Reflects;
-import org.springframework.web.bind.annotation.*;
 
+import javax.ws.rs.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.List;
 
 public class RequestMappings {
-    public static boolean hasAnyRequestMappingAnnotation(AnnotatedElement annotatedElement) {
-        return findFirstRequestMappingAnnotation(annotatedElement) != null;
+    public static boolean hasAnyRequestMappingAnnotation(Method method){
+        return findFirstRequestMappingAnnotation(method)!= null;
     }
 
-    public static boolean hasRequestMappingAnnotation(AnnotatedElement annotatedElement) {
-        return getRequestMapping(annotatedElement) != null;
+    public static Annotation findFirstRequestMappingAnnotation(AnnotatedElement method) {
+        return Pipeline.of(Reflects.getAnnotations(method)).findFirst(new Predicate<Annotation>() {
+            @Override
+            public boolean test(Annotation annotation) {
+                return isRequestMappingAnnotation(annotation);
+            }
+        });
     }
-
-    public static RequestMapping getRequestMapping(AnnotatedElement annotatedElement) {
-        return Reflects.getAnnotation(annotatedElement, RequestMapping.class);
-    }
-
 
     private static final List<Class<? extends Annotation>> requestMappingAnnotations = Collects.newArrayList(
-            RequestMapping.class,
-            GetMapping.class,
-            DeleteMapping.class,
-            PatchMapping.class,
-            PostMapping.class,
-            PutMapping.class
+            HttpMethod.class,
+            GET.class,
+            DELETE.class,
+            PATCH.class,
+            POST.class,
+            PUT.class,
+            HEAD.class,
+            OPTIONS.class
     );
 
     public static boolean isRequestMappingAnnotation(@NonNull final Annotation annotation) {
@@ -50,42 +50,12 @@ public class RequestMappings {
         });
     }
 
-    public static Annotation findFirstRequestMappingAnnotation(AnnotatedElement method) {
-        return Pipeline.of(Reflects.getAnnotations(method)).findFirst(new Predicate<Annotation>() {
-            @Override
-            public boolean test(Annotation annotation) {
-                return isRequestMappingAnnotation(annotation);
-            }
-        });
-    }
-
-    public static RequestMethod getRequestMethod(Method method) {
-        HttpMethod m = getHttpMethod(method);
-        RequestMethod rm = null;
-        if (m != null) {
-            rm = Enums.ofName(RequestMethod.class, m.name());
-        }
-        return rm;
-    }
-
-    public static HttpMethod getHttpMethod(Method method) {
-        Annotation annotation = findFirstRequestMappingAnnotation(method);
-        if (annotation == null) {
-            return null;
-        }
-        RequestMappingAccessor<?> accessor = Preconditions.checkNotNull(createAccessor(annotation));
-        List<HttpMethod> methods = Collects.clearNulls(accessor.methods());
-        if (methods.isEmpty()) {
-            return null;
-        }
-        return methods.get(0);
-    }
-
-    public static RequestMappingAccessor<?> createAccessor(@NonNull Annotation annotation) {
+    public static RequestMappingAccessor<?> createAccessor(@NonNull Method method,@NonNull Annotation annotation,Produces produces, Consumes consumes, Path pathAnno  ) {
         Preconditions.checkNotNull(annotation);
         RequestMappingAccessor accessor = null;
-        if (annotation instanceof RequestMapping) {
-            accessor = new RequestMappingAnnotationAccessor();
+        /*
+        if (annotation instanceof HttpMethod) {
+            accessor = new HttpMethodAnnotationAccessor();
             accessor.setMapping((RequestMapping) annotation);
         } else if (annotation instanceof DeleteMapping) {
             accessor = new DeleteMappingAnnotationAccessor();
@@ -103,6 +73,7 @@ public class RequestMappings {
             accessor = new PutMappingAnnotationAccessor();
             accessor.setMapping((PutMapping) annotation);
         }
+         */
         if (accessor == null) {
             throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("{} is not a Spring RequestMapping annotation", annotation.getClass().getSimpleName()));
         }

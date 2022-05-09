@@ -12,7 +12,7 @@ public class SpringRequestMappingAccessorParser implements JavaMethodRequestMapp
         RequestMappingAccessor accessor = null;
         if (RequestMappings.hasAnyRequestMappingAnnotation(method)) {
             Annotation anno = RequestMappings.findFirstRequestMappingAnnotation(method);
-            accessor = RequestMappingAccessorFactory.createAccessor(anno);
+            accessor = RequestMappings.createAccessor(anno);
         }
         return accessor;
     }
