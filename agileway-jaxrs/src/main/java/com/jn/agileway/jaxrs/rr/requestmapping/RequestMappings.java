@@ -2,6 +2,7 @@ package com.jn.agileway.jaxrs.rr.requestmapping;
 
 import com.jn.agileway.http.rr.requestmapping.RequestMappingAccessor;
 import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
@@ -50,31 +51,27 @@ public class RequestMappings {
         });
     }
 
-    public static RequestMappingAccessor<?> createAccessor(@NonNull Method method, @NonNull Annotation annotation, Produces produces, Consumes consumes, Path pathAnno) {
+    public static RequestMappingAccessor<?> createAccessor(@NonNull Method method, @NonNull Annotation annotation) {
         Preconditions.checkNotNull(annotation);
-        RequestMappingAccessor accessor = null;
-        if (annotation instanceof HttpMethod) {
-            accessor = new HttpMethodAnnotationAccessor();
-            accessor.setMapping((HttpMethod) annotation);
-        } else if (annotation instanceof DELETE) {
-            accessor = new DeleteAnnotationAccessor();
-            accessor.setMapping((DELETE) annotation);
-        } else if (annotation instanceof GET) {
-            accessor = new GetAnnotationAccessor();
-            accessor.setMapping((GET) annotation);
-        } else if (annotation instanceof PATCH) {
-            accessor = new PatchAnnotationAccessor();
-            accessor.setMapping((PATCH) annotation);
-        } else if (annotation instanceof POST) {
-            accessor = new PostAnnotationAccessor();
-            accessor.setMapping((POST) annotation);
-        } else if (annotation instanceof PUT) {
-            accessor = new PutAnnotationAccessor();
-            accessor.setMapping((PUT) annotation);
+        Consumes consumes = Reflects.getAnnotation(method, Consumes.class);
+        Produces produces = Reflects.getAnnotation(method, Produces.class);
+        @Nullable
+        Path methodPathAnno = Reflects.getAnnotation(method, Path.class);
+
+        Class declaringClass = method.getDeclaringClass();
+        // 如果是 sub-resource，则declaringClassPathAnno 是 null
+        @Nullable
+        Path declaringClassPathAnno = Reflects.getAnnotation(declaringClass, Path.class);
+        String path = null;
+        if (declaringClassPathAnno == null) {
+            //  sub-resource 暂不支持
+        } else {
+            path = declaringClassPathAnno.value();
+            if (methodPathAnno != null) {
+                path = path + methodPathAnno.value();
+            }
         }
-        if (accessor == null) {
-            throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("{} is not a Spring RequestMapping annotation", annotation.getClass().getSimpleName()));
-        }
+        RequestMappingAccessor accessor = new JaxrsRequestMappingAccessor(annotation, methodPathAnno, produces, consumes, Collects.newArrayList(path));
         return accessor;
     }
 }

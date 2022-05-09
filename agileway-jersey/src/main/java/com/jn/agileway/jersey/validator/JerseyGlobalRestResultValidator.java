@@ -17,13 +17,13 @@ public class JerseyGlobalRestResultValidator extends JerseyValidatorProxy {
     }
 
     @Override
-    public void validateResult(Object resourceClass, Invocable resourceMethod, Object result) throws ConstraintViolationException {
+    public void validateResult(Object resource, Invocable resourceMethod, Object result) throws ConstraintViolationException {
         RR rr = RRLocal.get();
         if (rr != null && responseBodyHandler!=null) {
             HttpRequest request = rr.getRequest();
             responseBodyHandler.judgeIsSupportedAction(request, resourceMethod.getHandlingMethod(), result);
         }
-        super.validateResult(resourceClass, resourceMethod, result);
+        super.validateResult(resource, resourceMethod, result);
     }
 
 
