@@ -1,7 +1,9 @@
 package com.jn.agileway.springboot.web.rest;
 
 import com.jn.agileway.http.rest.*;
+import com.jn.agileway.http.rr.requestmapping.JavaMethodRequestMappingAccessorParser;
 import com.jn.agileway.http.rr.requestmapping.RequestMappingAccessorRegistry;
+import com.jn.agileway.spring.web.mvc.requestmapping.SpringRequestMappingAccessorParser;
 import com.jn.agileway.spring.web.rest.EasyjsonHttpMessageConverter;
 import com.jn.agileway.spring.web.rest.GlobalSpringRestExceptionHandler;
 import com.jn.agileway.spring.web.rest.GlobalSpringRestResponseBodyAdvice;
@@ -70,6 +72,12 @@ public class GlobalRestHandlersConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean({SpringRequestMappingAccessorParser.class})
+    public SpringRequestMappingAccessorParser springRequestMappingAccessorParser(){
+        return new SpringRequestMappingAccessorParser();
+    }
+
+    @Bean
     @Autowired
     @ConditionalOnMissingBean({GlobalRestResponseBodyHandlerConfiguration.class})
     public GlobalRestResponseBodyHandlerConfiguration globalRestResponseBodyHandlerConfiguration(
@@ -90,8 +98,16 @@ public class GlobalRestHandlersConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public RequestMappingAccessorRegistry requestMappingAccessorRegistry() {
-        RequestMappingAccessorRegistry registry = new RequestMappingAccessorRegistry();
+    public RequestMappingAccessorRegistry requestMappingAccessorRegistry(ObjectProvider<List<JavaMethodRequestMappingAccessorParser>> requestMappingAccessorParserProviders) {
+        final RequestMappingAccessorRegistry registry = new RequestMappingAccessorRegistry();
+
+        Collects.forEach(requestMappingAccessorParserProviders.getIfAvailable(), new Consumer<JavaMethodRequestMappingAccessorParser>() {
+            @Override
+            public void accept(JavaMethodRequestMappingAccessorParser parser) {
+                registry.addParser(parser);
+            }
+        });
+
         registry.init();
         return registry;
     }
