@@ -12,7 +12,7 @@ public class GlobalRestHandlers {
     /**
      * 记录到 request attribute中，用于判断是否已经写过
      */
-    public static final String GLOBAL_REST_RESPONSE_HAD_WRITTEN = "GLOBAL_REST_RESPONSE_HAD_WRITTEN";
+    public static final String GLOBAL_REST_RESPONSE_HAD_WRITTEN = Reflects.getFQNClassName(GlobalRestHandlers.class) + ".GLOBAL_REST_RESPONSE_HAD_WRITTEN";
     /**
      * 用于记录 exception 是否处理过
      */
@@ -21,7 +21,8 @@ public class GlobalRestHandlers {
     /**
      * 指定某个请求不是 REST 请求，或者没有启用全局处理的请求
      */
-    public static final String GLOBAL_REST_NON_REST_REQUEST = "GLOBAL_REST_NON_REST_REQUEST";
+    public static final String GLOBAL_REST_NON_REST_REQUEST = Reflects.getFQNClassName(GlobalRestHandlers.class) + ".GLOBAL_REST_NON_REST_REQUEST";
+    public static final String GLOBAL_REST_ACTION_METHOD = Reflects.getFQNClassName(GlobalRestHandlers.class) + ".actionMethod";
 
     /**
      * 响应类型： JSON

@@ -2,8 +2,8 @@ package com.jn.agileway.spring.web.rest;
 
 import com.jn.agileway.http.rr.HttpRequest;
 import com.jn.agileway.http.rr.HttpResponse;
-import com.jn.agileway.spring.web.mvc.requestmapping.RequestMappingAccessor;
-import com.jn.agileway.spring.web.mvc.requestmapping.RequestMappingAccessorRegistry;
+import com.jn.agileway.http.rr.requestmapping.RequestMappingAccessor;
+import com.jn.agileway.http.rr.requestmapping.RequestMappingAccessorRegistry;
 import com.jn.agileway.springboot.web.rest.SpringBootErrorControllers;
 import com.jn.agileway.http.rest.GlobalRestHandlers;
 import com.jn.agileway.web.rest.AbstractGlobalServletRestResponseBodyHandler;
@@ -62,6 +62,8 @@ public class GlobalSpringRestResponseBodyHandler extends AbstractGlobalServletRe
         if (!isSupportedAction(actionMethod)) {
             request.setAttribute(GlobalRestHandlers.GLOBAL_REST_NON_REST_REQUEST, true);
             return null;
+        }else{
+            request.setAttribute(GlobalRestHandlers.GLOBAL_REST_ACTION_METHOD, actionMethod);
         }
         RestRespBody body = convertToRestRespBody(request, response, actionMethod, actionReturnValue);
         return body;

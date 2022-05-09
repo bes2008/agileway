@@ -1,6 +1,7 @@
 package com.example;
 
 import com.jn.agileway.jaxrs.rest.JaxrsGloablRestResponseInterceptor;
+import com.jn.agileway.jersey.validator.JerseyGlobalRestResultValidator;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -10,7 +11,6 @@ import java.net.URI;
 
 /**
  * Main class.
- *
  */
 public class Main {
     // Base URI the Grizzly HTTP server will listen on
@@ -18,6 +18,7 @@ public class Main {
 
     /**
      * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
+     *
      * @return Grizzly HTTP server.
      */
     public static HttpServer startServer() {
@@ -25,6 +26,7 @@ public class Main {
         // in com.example package
         final ResourceConfig rc = new ResourceConfig().packages("com.example");
         rc.register(JaxrsGloablRestResponseInterceptor.class);
+        rc.register(JerseyGlobalRestResultValidator.class);
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
@@ -32,6 +34,7 @@ public class Main {
 
     /**
      * Main method.
+     *
      * @param args
      * @throws IOException
      */

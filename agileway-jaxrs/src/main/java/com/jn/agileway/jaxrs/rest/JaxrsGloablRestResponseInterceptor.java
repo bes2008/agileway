@@ -1,10 +1,14 @@
 package com.jn.agileway.jaxrs.rest;
 
+import com.jn.agileway.http.rest.GlobalRestHandlers;
 import com.jn.agileway.http.rest.GlobalRestResponseBodyHandler;
+import com.jn.agileway.http.rr.HttpRequest;
+import com.jn.agileway.http.rr.HttpResponse;
 import com.jn.agileway.http.rr.RR;
 import com.jn.agileway.http.rr.RRLocal;
 import com.jn.agileway.jaxrs.rr.JaxrsHttpRequest;
 import com.jn.agileway.jaxrs.rr.JaxrsHttpResponse;
+import com.jn.langx.http.rest.RestRespBody;
 
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
@@ -25,18 +29,24 @@ public class JaxrsGloablRestResponseInterceptor implements WriterInterceptor, Co
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         // 请求时过滤
+        JaxrsHttpRequest jaxrsHttpRequest = new JaxrsHttpRequest(requestContext);
+        RRLocal.set(jaxrsHttpRequest, null);
     }
 
     @Override
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
-        // 响应时过滤
-        RR rr = RRLocal.get();
-        responseContext.getMediaType();
+        HttpRequest req = RRLocal.getRequest();
+        HttpResponse resp = RRLocal.getResponse();
+        boolean fill = req == null || resp == null;
+        if (req == null) {
+            req = new JaxrsHttpRequest(requestContext);
+        }
+        if (resp == null) {
+            resp = new JaxrsHttpResponse(responseContext);
+        }
 
-        JaxrsHttpRequest jaxrsHttpRequest = new JaxrsHttpRequest(requestContext);
-        JaxrsHttpResponse jaxrsHttpResponse = new JaxrsHttpResponse(responseContext);
-        if (rr == null) {
-            RRLocal.set(jaxrsHttpRequest, jaxrsHttpResponse);
+        if (fill) {
+            RRLocal.set(req, resp);
         }
     }
 
@@ -50,7 +60,11 @@ public class JaxrsGloablRestResponseInterceptor implements WriterInterceptor, Co
         if (responseBodyHandler == null) {
             context.proceed();
         } else {
-            responseBodyHandler.handle(request, response, context, context.getEntity());
+            Boolean isNotSupportedRestRequest = (Boolean) request.getAttribute(GlobalRestHandlers.GLOBAL_REST_NON_REST_REQUEST);
+            if (isNotSupportedRestRequest != null && !isNotSupportedRestRequest) {
+                RestRespBody respBody = responseBodyHandler.handle(request, response, context, context.getEntity());
+                context.setEntity(respBody);
+            }
             context.proceed();
         }
     }

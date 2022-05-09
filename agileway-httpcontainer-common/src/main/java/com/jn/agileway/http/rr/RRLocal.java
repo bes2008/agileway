@@ -25,10 +25,16 @@ public class RRLocal {
     }
 
     public static void set(final HttpRequest request, final HttpResponse response) {
-        rr.set(new RR(request, response));
+        RR r = rr.get();
+        if (r == null) {
+            rr.set(new RR(request, response));
+        } else {
+            r.setRequest(request);
+            r.setResponse(response);
+        }
     }
 
-    public static RR get(){
+    public static RR get() {
         return rr.get();
     }
 

@@ -82,7 +82,10 @@
             <groupId>com.github.fangjinuo.agileway</groupId>
             <artifactId>agileway-jaxrs</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.github.fangjinuo.agileway</groupId>
+            <artifactId>agileway-jersey</artifactId>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
