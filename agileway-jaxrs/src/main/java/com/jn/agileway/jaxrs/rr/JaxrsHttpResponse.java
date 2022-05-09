@@ -6,14 +6,14 @@ import javax.ws.rs.container.ContainerResponseContext;
 import java.util.Collection;
 
 public class JaxrsHttpResponse implements HttpResponse<ContainerResponseContext> {
-    private ContainerResponseContext delegate;
+    private ContainerResponseContext containerResponse;
 
     public JaxrsHttpResponse(ContainerResponseContext context) {
-        this.delegate = context;
+        this.containerResponse = context;
     }
 
     public ContainerResponseContext getContainerResponse() {
-        return this.delegate;
+        return this.containerResponse;
     }
 
     @Override
@@ -23,21 +23,21 @@ public class JaxrsHttpResponse implements HttpResponse<ContainerResponseContext>
 
     @Override
     public String getHeader(String name) {
-        return this.delegate.getHeaderString(name);
+        return this.containerResponse.getHeaderString(name);
     }
 
     @Override
     public Collection<String> getHeaderNames() {
-        return this.delegate.getHeaders().keySet();
+        return this.containerResponse.getHeaders().keySet();
     }
 
     @Override
     public Collection<String> getHeaders(String name) {
-        return this.delegate.getStringHeaders().get(name);
+        return this.containerResponse.getStringHeaders().get(name);
     }
 
     @Override
     public int getStatusCode() {
-        return this.delegate.getStatus();
+        return this.containerResponse.getStatus();
     }
 }
