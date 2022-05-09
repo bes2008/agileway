@@ -9,74 +9,74 @@ import java.util.Collection;
 import java.util.Locale;
 
 public class ServletHttpRequest implements HttpRequest<HttpServletRequest> {
-    private HttpServletRequest delegate;
+    private HttpServletRequest containerRequest;
 
     public ServletHttpRequest(HttpServletRequest delegate) {
-        this.delegate = delegate;
+        this.containerRequest = delegate;
     }
 
     @Override
     public HttpServletRequest getContainerRequest() {
-        return delegate;
+        return containerRequest;
     }
 
     @Override
     public String getRemoteHost() {
-        return delegate.getRemoteHost();
+        return containerRequest.getRemoteHost();
     }
 
     @Override
     public String getRemoteAddr() {
-        return this.delegate.getRemoteAddr();
+        return this.containerRequest.getRemoteAddr();
     }
 
     @Override
     public String getMethod() {
-        return delegate.getMethod();
+        return containerRequest.getMethod();
     }
 
 
     @Override
     public String getHeader(String name) {
-        return delegate.getHeader(name);
+        return containerRequest.getHeader(name);
     }
 
     @Override
     public Collection<String> getHeaders(String name) {
-        return Pipeline.<String>of(this.delegate.getHeaders(name)).asList();
+        return Pipeline.<String>of(this.containerRequest.getHeaders(name)).asList();
     }
 
     @Override
     public Collection<String> getHeaderNames() {
-        return Pipeline.<String>of(delegate.getHeaderNames()).asList();
+        return Pipeline.<String>of(containerRequest.getHeaderNames()).asList();
     }
 
     @Override
     public Object getAttribute(String name) {
-        return delegate.getAttribute(name);
+        return containerRequest.getAttribute(name);
     }
 
     @Override
     public void setAttribute(String name, Object value) {
-        delegate.setAttribute(name, value);
+        containerRequest.setAttribute(name, value);
     }
 
     @Override
     public Collection<String> getAttributeNames() {
-        return Pipeline.<String>of(this.delegate.getAttributeNames()).asList();
+        return Pipeline.<String>of(this.containerRequest.getAttributeNames()).asList();
     }
 
     @Override
     public Locale getLocale() {
-        return delegate.getLocale();
+        return containerRequest.getLocale();
     }
     @Override
     public String getRequestURI() {
-        return delegate.getRequestURI();
+        return containerRequest.getRequestURI();
     }
 
     @Override
     public String getRequestURL() {
-        return delegate.getRequestURL().toString();
+        return containerRequest.getRequestURL().toString();
     }
 }

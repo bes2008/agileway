@@ -7,38 +7,38 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
 
 public class ServletHttpResponse implements HttpResponse<HttpServletResponse> {
-    private HttpServletResponse delegate;
+    private HttpServletResponse containerResponse;
 
     public ServletHttpResponse(HttpServletResponse response){
-        this.delegate = response;
+        this.containerResponse = response;
     }
     @Override
     public HttpServletResponse getContainerResponse() {
-        return delegate;
+        return containerResponse;
     }
 
     @Override
     public void addHeader(String name, String value) {
-        delegate.addHeader(name,value);
+        containerResponse.addHeader(name,value);
     }
 
     @Override
     public String getHeader(String name) {
-        return delegate.getHeader(name);
+        return containerResponse.getHeader(name);
     }
 
     @Override
     public Collection<String> getHeaderNames() {
-        return delegate.getHeaderNames();
+        return containerResponse.getHeaderNames();
     }
 
     @Override
     public Collection<String> getHeaders(String name) {
-        return delegate.getHeaders(name);
+        return containerResponse.getHeaders(name);
     }
 
     @Override
     public int getStatusCode() {
-        return delegate.getStatus();
+        return containerResponse.getStatus();
     }
 }
