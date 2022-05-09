@@ -13,7 +13,7 @@ public class ServletHttpResponse implements HttpResponse<HttpServletResponse> {
         this.delegate = response;
     }
     @Override
-    public HttpServletResponse getDelegate() {
+    public HttpServletResponse getContainerResponse() {
         return delegate;
     }
 

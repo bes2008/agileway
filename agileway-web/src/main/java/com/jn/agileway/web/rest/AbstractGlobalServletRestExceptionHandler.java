@@ -22,7 +22,7 @@ public abstract class AbstractGlobalServletRestExceptionHandler extends Abstract
         Map<String, Object> finalBody = toMap(request, response, action, respBody);
 
         try {
-            HttpServletResponse servletResponse = (HttpServletResponse)response.getDelegate();
+            HttpServletResponse servletResponse = (HttpServletResponse)response.getContainerResponse();
             if (!servletResponse.isCommitted()) {
                 servletResponse.resetBuffer();
                 servletResponse.setStatus(respBody.getStatusCode());

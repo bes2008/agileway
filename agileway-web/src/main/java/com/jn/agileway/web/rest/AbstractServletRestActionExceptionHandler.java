@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 public abstract class AbstractServletRestActionExceptionHandler<Entity> implements RestActionExceptionHandler<Entity> {
     @Override
     public RestRespBody<Entity> handle(HttpRequest request, HttpResponse response, Object handler, Exception ex) {
-        return this.handle((HttpServletRequest) request.getDelegate(), (HttpServletResponse) response.getDelegate(), handler, ex);
+        return this.handle((HttpServletRequest) request.getContainerRequest(), (HttpServletResponse) response.getContainerResponse(), handler, ex);
     }
 
     public abstract RestRespBody<Entity> handle(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex);

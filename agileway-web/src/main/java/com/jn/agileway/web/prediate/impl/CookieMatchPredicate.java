@@ -32,7 +32,7 @@ public class CookieMatchPredicate implements HttpRequestPredicate {
 
     @Override
     public boolean test(RR holder) {
-        Cookie cookie = Servlets.getCookie((HttpServletRequest) holder.getRequest().getDelegate(), name);
+        Cookie cookie = Servlets.getCookie((HttpServletRequest) holder.getRequest().getContainerRequest(), name);
         if(cookie!=null){
             return matcher==null || matcher.match(cookie.getValue());
         }

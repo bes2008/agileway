@@ -10,7 +10,7 @@ public class WAFHttpServletRequestWrapper extends HttpServletRequestWrapper {
     private List<WAFHandler> wafHandlers;
 
     public WAFHttpServletRequestWrapper(RR holder, List<WAFHandler> xssHandlers) {
-        super((HttpServletRequest) holder.getRequest().getDelegate());
+        super((HttpServletRequest) holder.getRequest().getContainerRequest());
         this.wafHandlers = xssHandlers;
     }
 

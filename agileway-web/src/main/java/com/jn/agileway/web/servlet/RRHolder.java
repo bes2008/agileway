@@ -24,7 +24,7 @@ public class RRHolder {
     public static HttpServletResponse getResponse() {
         HttpResponse response = RRLocal.getResponse();
         if (response != null) {
-            return (HttpServletResponse) response.getDelegate();
+            return (HttpServletResponse) response.getContainerResponse();
         }
         return null;
     }
@@ -32,7 +32,7 @@ public class RRHolder {
     public static HttpServletRequest getRequest() {
         HttpRequest request = RRLocal.getRequest();
         if (request != null) {
-            return (HttpServletRequest) request.getDelegate();
+            return (HttpServletRequest) request.getContainerRequest();
         }
         return null;
     }

@@ -22,7 +22,7 @@ public class GlobalFilterRestResponseHandler extends AbstractGlobalServletRestRe
         }
 
         int statusCode = response.getStatusCode();
-        HttpServletResponse servletResponse  = (HttpServletResponse)response.getDelegate();
+        HttpServletResponse servletResponse  = (HttpServletResponse)response.getContainerResponse();
         long contentLength = Servlets.getContentLength(servletResponse);
         // 这个==0的判断其实没啥用
         if (contentLength == 0) {

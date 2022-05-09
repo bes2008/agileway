@@ -115,7 +115,7 @@ public class GlobalSpringRestResponseBodyHandler extends AbstractGlobalServletRe
             return respBody;
         }
 
-        statusCode = extractStatusCode(body, (HttpServletResponse) response.getDelegate());
+        statusCode = extractStatusCode(body, (HttpServletResponse) response.getContainerResponse());
 
         if (body instanceof ResponseEntity) {
             body = ((ResponseEntity) body).getBody();

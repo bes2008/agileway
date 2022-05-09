@@ -12,7 +12,7 @@ public class JaxrsHttpResponse implements HttpResponse<ContainerResponseContext>
         this.delegate = context;
     }
 
-    public ContainerResponseContext getDelegate() {
+    public ContainerResponseContext getContainerResponse() {
         return this.delegate;
     }
 

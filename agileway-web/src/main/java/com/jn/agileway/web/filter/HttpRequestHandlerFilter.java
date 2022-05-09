@@ -20,8 +20,8 @@ public class HttpRequestHandlerFilter extends OncePerRequestFilter {
     protected void doFilterInternal(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         final RR rr = getRR(request, response);
         if (rr != null) {
-            request = (ServletRequest) rr.getRequest().getDelegate();
-            response = (ServletResponse) rr.getResponse().getDelegate();
+            request = (ServletRequest) rr.getRequest().getContainerRequest();
+            response = (ServletResponse) rr.getResponse().getContainerResponse();
             handler.handle(rr);
         }
         chain.doFilter(request, response);

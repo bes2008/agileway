@@ -16,7 +16,7 @@ public class ServletHttpRequest implements HttpRequest<HttpServletRequest> {
     }
 
     @Override
-    public HttpServletRequest getDelegate() {
+    public HttpServletRequest getContainerRequest() {
         return delegate;
     }
 

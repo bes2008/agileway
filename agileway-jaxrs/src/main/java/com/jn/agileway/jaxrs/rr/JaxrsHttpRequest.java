@@ -16,7 +16,7 @@ public class JaxrsHttpRequest implements HttpRequest<ContainerRequestContext> {
     }
 
     @Override
-    public ContainerRequestContext getDelegate() {
+    public ContainerRequestContext getContainerRequest() {
         return this.delegate;
     }
 

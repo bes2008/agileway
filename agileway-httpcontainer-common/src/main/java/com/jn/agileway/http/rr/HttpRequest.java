@@ -1,11 +1,10 @@
 package com.jn.agileway.http.rr;
 
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Locale;
 
 public interface HttpRequest<D> {
-    D getDelegate();
+    D getContainerRequest();
 
     String getRemoteAddr();
 
