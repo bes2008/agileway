@@ -73,6 +73,7 @@ public class Main {
         globalRestExceptionHandler.setExceptionHandlerRegistry(exceptionHandlerRegistry);
 
         JerseyGlobalRestExceptionMapper jerseyGlobalRestExceptionMapper = new JerseyGlobalRestExceptionMapper();
+        jerseyGlobalRestExceptionMapper.setExceptionHandler(globalRestExceptionHandler);
         rc.register(jerseyGlobalRestExceptionMapper);
 
         // create and start a new instance of grizzly http server

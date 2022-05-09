@@ -20,6 +20,10 @@ public abstract class AbstractGlobalRestExceptionHandler extends AbstractGlobalR
     private volatile boolean running = false;
     private GlobalRestExceptionHandlerRegistry exceptionHandlerRegistry;
 
+    public GlobalRestExceptionHandlerRegistry getExceptionHandlerRegistry() {
+        return exceptionHandlerRegistry;
+    }
+
     public void setExceptionHandlerRegistry(GlobalRestExceptionHandlerRegistry exceptionHandlerRegistry) {
         this.exceptionHandlerRegistry = exceptionHandlerRegistry;
     }

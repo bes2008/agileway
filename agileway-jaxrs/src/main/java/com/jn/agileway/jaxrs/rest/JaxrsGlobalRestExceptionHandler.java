@@ -7,6 +7,6 @@ import com.jn.agileway.http.rr.HttpResponse;
 public class JaxrsGlobalRestExceptionHandler extends AbstractGlobalRestExceptionHandler {
     @Override
     protected boolean isSupportedRestAction(HttpRequest request, HttpResponse response, Object action, Exception ex) {
-        return false;
+        return true;
     }
 }
