@@ -1,10 +1,13 @@
 package com.jn.agileway.spring.web.mvc.requestmapping;
 
+import com.jn.agileway.http.rr.requestmapping.RequestMappingAccessor;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.enums.Enums;
 import com.jn.langx.util.function.Predicate;
+import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.reflect.Reflects;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,16 +59,24 @@ public class RequestMappings {
     }
 
     public static RequestMethod getRequestMethod(Method method) {
+        HttpMethod m = getHttpMethod(method);
+        RequestMethod rm = null;
+        if (m != null) {
+            rm = Enums.ofName(RequestMethod.class, m.name());
+        }
+        return rm;
+    }
+
+    public static HttpMethod getHttpMethod(Method method) {
         Annotation annotation = findFirstRequestMappingAnnotation(method);
         if (annotation == null) {
             return null;
         }
         RequestMappingAccessor<?> accessor = Preconditions.checkNotNull(RequestMappingAccessorFactory.createAccessor(annotation));
-        List<RequestMethod> methods = Collects.clearNulls(accessor.methods());
+        List<HttpMethod> methods = Collects.clearNulls(accessor.methods());
         if (methods.isEmpty()) {
             return null;
         }
         return methods.get(0);
     }
-
 }

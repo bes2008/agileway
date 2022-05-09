@@ -1,8 +1,9 @@
 package com.jn.agileway.spring.web.mvc.requestmapping;
 
+import com.jn.agileway.http.rr.requestmapping.RequestMappingAccessor;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.net.http.HttpMethod;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 
@@ -35,8 +36,8 @@ public class PostMappingAnnotationAccessor implements RequestMappingAccessor<Pos
     }
 
     @Override
-    public List<RequestMethod> methods() {
-        return Collects.newArrayList(RequestMethod.POST);
+    public List<HttpMethod> methods() {
+        return Collects.newArrayList(HttpMethod.POST);
     }
 
     @Override

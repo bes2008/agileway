@@ -1,6 +1,6 @@
-package com.jn.agileway.spring.web.mvc.requestmapping;
+package com.jn.agileway.http.rr.requestmapping;
 
-import org.springframework.web.bind.annotation.RequestMethod;
+import com.jn.langx.util.net.http.HttpMethod;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -16,7 +16,7 @@ public interface RequestMappingAccessor<E extends Annotation> {
 
     List<String> paths();
 
-    List<RequestMethod> methods();
+    List<HttpMethod> methods();
 
     List<String> params();
 

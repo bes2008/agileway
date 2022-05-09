@@ -1,6 +1,11 @@
 package com.jn.agileway.spring.web.mvc.requestmapping;
 
+import com.jn.agileway.http.rr.requestmapping.RequestMappingAccessor;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.enums.Enums;
+import com.jn.langx.util.function.Function;
+import com.jn.langx.util.net.http.HttpMethod;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -36,8 +41,13 @@ public class RequestMappingAnnotationAccessor implements RequestMappingAccessor<
     }
 
     @Override
-    public List<RequestMethod> methods() {
-        return Collects.newArrayList(mapping.method());
+    public List<HttpMethod> methods() {
+        return Pipeline.of(mapping.method()).map(new Function<RequestMethod, HttpMethod>() {
+            @Override
+            public HttpMethod apply(RequestMethod method) {
+                return Enums.ofName(HttpMethod.class,method.name());
+            }
+        }).asList();
     }
 
     @Override
