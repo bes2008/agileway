@@ -9,6 +9,9 @@ import java.util.Collection;
 import java.util.Locale;
 
 public class ServletHttpRequest implements HttpRequest<HttpServletRequest> {
+    /**
+     * 此时container request 代表了 Servlet 容器的请求
+     */
     private HttpServletRequest containerRequest;
 
     public ServletHttpRequest(HttpServletRequest delegate) {
@@ -70,6 +73,7 @@ public class ServletHttpRequest implements HttpRequest<HttpServletRequest> {
     public Locale getLocale() {
         return containerRequest.getLocale();
     }
+
     @Override
     public String getRequestURI() {
         return containerRequest.getRequestURI();

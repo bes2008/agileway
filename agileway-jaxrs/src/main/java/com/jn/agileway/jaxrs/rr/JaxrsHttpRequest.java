@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Locale;
 
 public class JaxrsHttpRequest implements HttpRequest<ContainerRequestContext> {
+    /**
+     * 此时的 container Request 代表了 jax-rs 容器请求
+     */
     protected ContainerRequestContext containerRequest;
 
     public JaxrsHttpRequest(ContainerRequestContext context) {
@@ -19,7 +22,6 @@ public class JaxrsHttpRequest implements HttpRequest<ContainerRequestContext> {
     public ContainerRequestContext getContainerRequest() {
         return this.containerRequest;
     }
-
 
 
     @Override
@@ -76,7 +78,7 @@ public class JaxrsHttpRequest implements HttpRequest<ContainerRequestContext> {
         return this.containerRequest.getUriInfo().getRequestUri().getPath();
     }
 
-    public String getRemoteAddr(){
+    public String getRemoteAddr() {
         return null;
     }
 
