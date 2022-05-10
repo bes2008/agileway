@@ -60,10 +60,10 @@ import javax.servlet.http.HttpServletResponse;
  * </ul>
  *
  * @see <a href="http://www.w3.org/TR/cors/">CORS specification</a>
- * <p>
+ * <p/>
  * <p>
  * migrate from tomcat-8.5.43
- * <p>
+ * </p>
  * https://blog.csdn.net/mengmengdastyle/article/details/80939609
  * https://tomcat.apache.org/tomcat-9.0-doc/config/filter.html#CORS_Filter
  */

@@ -67,14 +67,8 @@ public class GlobalRestHandlersConfiguration {
     }
 
     @Bean
-    @ConfigurationProperties(prefix = "agileway.rest.global-response-body")
-    public GlobalRestResponseBodyHandlerProperties globalResponseBodyHandlerProperties() {
-        return new GlobalRestResponseBodyHandlerProperties();
-    }
-
-    @Bean
     @ConditionalOnMissingBean({SpringRequestMappingAccessorParser.class})
-    public SpringRequestMappingAccessorParser springRequestMappingAccessorParser(){
+    public SpringRequestMappingAccessorParser springRequestMappingAccessorParser() {
         return new SpringRequestMappingAccessorParser();
     }
 
@@ -82,24 +76,23 @@ public class GlobalRestHandlersConfiguration {
     @Autowired
     @ConditionalOnMissingBean({GlobalRestResponseBodyHandlerConfiguration.class})
     public GlobalRestResponseBodyHandlerConfiguration globalRestResponseBodyHandlerConfiguration(
-            GlobalRestResponseBodyHandlerProperties properties,
-            GlobalRestExceptionHandlerProperties globalRestExceptionHandlerProperties
+            GlobalRestProperties properties
     ) {
-        if (globalRestExceptionHandlerProperties.isWriteUnifiedResponse()) {
+        if (properties.getGlobalExceptionHandler().isWriteUnifiedResponse()) {
             String errorControllerClass = SpringBootErrorControllers.getErrorController();
             if (Strings.isNotBlank(errorControllerClass)) {
-                properties.addAssignableType(errorControllerClass);
+                properties.getGlobalResponseBody().addAssignableType(errorControllerClass);
             }
         }
         GlobalRestResponseBodyHandlerConfiguration configuration = new GlobalRestResponseBodyHandlerConfigurationBuilder()
-                .setProperties(properties)
+                .setProperties(properties.getGlobalResponseBody())
                 .build();
         return configuration;
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public ThrowableHandler throwableHandler(){
+    public ThrowableHandler throwableHandler() {
         return new ThrowableHandler();
     }
 
@@ -148,7 +141,7 @@ public class GlobalRestHandlersConfiguration {
             GlobalRestResponseBodyHandlerConfiguration configuration,
             @Qualifier("globalRestErrorMessageHandler")
                     RestErrorMessageHandler restErrorMessageHandler,
-            GlobalRestExceptionHandlerProperties exceptionHandlerProperties,
+            GlobalRestProperties globalRestProperties,
             GlobalRestResponseBodyMapper globalRestResponseBodyMapper
     ) {
         GlobalRestResponseBodyContext context = new GlobalRestResponseBodyContext();
@@ -157,7 +150,7 @@ public class GlobalRestHandlersConfiguration {
 
         context.setConfiguration(configuration);
 
-        context.setExceptionHandlerProperties(exceptionHandlerProperties);
+        context.setExceptionHandlerProperties(globalRestProperties.getGlobalExceptionHandler());
         context.setRestErrorMessageHandler(restErrorMessageHandler);
 
         context.setResponseBodyMapper(globalRestResponseBodyMapper);
@@ -212,10 +205,10 @@ public class GlobalRestHandlersConfiguration {
     }
 
     @Bean
-    @ConfigurationProperties(prefix = "agileway.rest.global-exception-handler")
-    @ConditionalOnMissingBean({GlobalRestExceptionHandlerProperties.class})
-    public GlobalRestExceptionHandlerProperties globalRestExceptionHandlerProperties() {
-        return new GlobalRestExceptionHandlerProperties();
+    @ConfigurationProperties(prefix = "agileway.rest")
+    @ConditionalOnMissingBean({GlobalRestProperties.class})
+    public GlobalRestProperties globalRestProperties() {
+        return new GlobalRestProperties();
     }
 
 
@@ -239,8 +232,8 @@ public class GlobalRestHandlersConfiguration {
     }
 
     @Bean
-    public EasyjsonHttpMessageConverter easyjsonHttpMessageConverter(JSONFactory jsonFactory){
-        EasyjsonHttpMessageConverter converter= new EasyjsonHttpMessageConverter();
+    public EasyjsonHttpMessageConverter easyjsonHttpMessageConverter(JSONFactory jsonFactory) {
+        EasyjsonHttpMessageConverter converter = new EasyjsonHttpMessageConverter();
         converter.setJsonFactory(jsonFactory);
         return converter;
     }

@@ -14,7 +14,7 @@ import com.jn.langx.http.rest.RestRespBody;
         },
         order = Ordered.LOWEST_PRECEDENCE
 )
-public class ThrowableHandler implements RestActionExceptionHandler<String> {
+public final class ThrowableHandler implements RestActionExceptionHandler<String> {
     @Override
     public RestRespBody<String> handle(HttpRequest request, HttpResponse response, Object handler, Exception ex) {
         return RestRespBody.error500("HTTP-500", ex.getMessage());

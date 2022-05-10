@@ -73,7 +73,6 @@ public interface SshConnectionConfig {
 
     /**
      * 当设置为true 且没有自定义 host key verifier时，会自动根据 known_hosts文件进行验证
-     * @return
      */
     StrictHostKeyChecking getStrictHostKeyChecking();
 
