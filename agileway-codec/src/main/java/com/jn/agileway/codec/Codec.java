@@ -10,7 +10,6 @@ public interface Codec<T> extends ICodec<T> {
     /**
      * 序列化
      * @param t
-     * @return
      * @throws CodecException
      */
     @Override
@@ -19,7 +18,6 @@ public interface Codec<T> extends ICodec<T> {
     /**
      * 反序列化
      * @param bytes
-     * @return
      * @throws CodecException
      */
     @Override
@@ -30,7 +28,6 @@ public interface Codec<T> extends ICodec<T> {
      *
      * @param bytes
      * @param targetType
-     * @return
      * @throws CodecException
      */
     @Nullable
