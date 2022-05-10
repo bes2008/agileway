@@ -73,10 +73,10 @@ public class JaxrsGlobalRestResponseInterceptor implements WriterInterceptor, Co
                 request.setAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN, true);
 
                 Object finalBody = responseBodyHandler.toMap(request, response, actionMethod, respBody);
-                if (context.getType() == String.class) {
-                    JSON jsons = responseBodyHandler.getContext().getJsonFactory().get();
-                    finalBody = jsons.toJson(finalBody);
-                }
+
+                JSON jsons = responseBodyHandler.getContext().getJsonFactory().get();
+                finalBody = jsons.toJson(finalBody);
+                context.setType(String.class);
                 context.setEntity(finalBody);
                 context.setMediaType(MediaType.APPLICATION_JSON_TYPE);
             }

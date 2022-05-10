@@ -37,7 +37,7 @@ public class JerseyGlobalRestExceptionMapper implements ExtendedExceptionMapper<
         }
         RestRespBody respBody = exceptionHandler.handle(request, response, null, e);
         Object entity = exceptionHandler.toMap(request, response, null, respBody);
-        String responseBody= exceptionHandler.getContext().getJsonFactory().get().toJson(entity);
+        String responseBody = exceptionHandler.getContext().getJsonFactory().get().toJson(entity);
         return Response.status(respBody.getStatusCode())
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .encoding(Charsets.UTF_8.name())
