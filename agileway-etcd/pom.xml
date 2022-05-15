@@ -11,5 +11,15 @@
 
     <artifactId>agileway-etcd</artifactId>
 
+    <properties>
+        <jetcd.version>0.7.1</jetcd.version>
+    </properties>
+    <dependencies>
+    <dependency>
+        <groupId>io.etcd</groupId>
+        <artifactId>jetcd-core</artifactId>
+        <version>${jetcd.version}</version>
+    </dependency>
+    </dependencies>
 
 </project>
