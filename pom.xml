@@ -30,7 +30,8 @@
         <module>agileway-retry</module>
         <module>agileway-jersey</module>
         <module>agileway-jaxrs</module>
-        <module>agileway-etcd</module>
+        <module>agileway-eimessage</module>
+
     </modules>
 
     <description>

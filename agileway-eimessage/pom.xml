@@ -9,17 +9,19 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>agileway-etcd</artifactId>
+    <artifactId>agileway-eimessage</artifactId>
 
-    <properties>
-        <jetcd.version>0.7.1</jetcd.version>
-    </properties>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>agileway-eimessage-core</module>
+        <module>agileway-eimessage-etcd</module>
+        <module>agileway-eimessage-kafka</module>
+        <module>agileway-eimessage-restful</module>
+
+    </modules>
     <dependencies>
-    <dependency>
-        <groupId>io.etcd</groupId>
-        <artifactId>jetcd-core</artifactId>
-        <version>${jetcd.version}</version>
-    </dependency>
+
     </dependencies>
 
 </project>
