@@ -20,6 +20,17 @@
         <module>agileway-eimessage-restful</module>
 
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.github.fangjinuo.agileway</groupId>
+                <artifactId>agileway-eimessage-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
 
     </dependencies>

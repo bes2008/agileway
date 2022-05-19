@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>agileway-etcd</artifactId>
+    <artifactId>agileway-eimessage-etcd</artifactId>
 
     <properties>
         <jetcd.version>0.7.1</jetcd.version>
