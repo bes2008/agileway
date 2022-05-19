@@ -14,10 +14,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>agileway-eimessage-core</module>
-        <module>agileway-eimessage-etcd</module>
-        <module>agileway-eimessage-kafka</module>
-        <module>agileway-eimessage-restful</module>
+        <module>agileway-eipmessage-core</module>
+        <module>agileway-eipmessage-etcd</module>
+        <module>agileway-eipmessage-kafka</module>
+        <module>agileway-eipmessage-restful</module>
 
     </modules>
 

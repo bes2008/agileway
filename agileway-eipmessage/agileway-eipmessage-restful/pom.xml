@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>com.github.fangjinuo.agileway</groupId>
-        <artifactId>agileway-eimessage</artifactId>
+        <artifactId>agileway-eipmessage</artifactId>
         <version>3.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>agileway-eimessage-core</artifactId>
+    <artifactId>agileway-eipmessage-restful</artifactId>
 
 
 </project>
