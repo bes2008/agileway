@@ -29,8 +29,16 @@ public interface OutboundChannel extends MessageChannel {
      * @param timeout the timeout in milliseconds
      * @return <code>true</code> if the message is sent successfully,
      * <code>false</false> if the specified timeout period elapses or
-     * the send is interrupted
+     * the send action is interrupted
      */
     boolean send(Message<?> message, long timeout);
 
+    /**
+     *
+     * @return 返回该channel绑定的数据类型
+     * 如果返回值为null，则代表没有绑定到特定的数据类型
+     */
+    Class getDatatype();
+
+    void setDataType(Class datatype);
 }
