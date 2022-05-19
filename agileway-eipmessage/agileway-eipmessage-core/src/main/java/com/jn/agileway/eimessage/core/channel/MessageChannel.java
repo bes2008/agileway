@@ -1,5 +1,7 @@
 package com.jn.agileway.eimessage.core.channel;
 
+import com.jn.langx.Named;
+
 /**
  * Base channel interface defining common behavior for sending messages.
  * 用于代表内存级channel，或者分布式 channel
@@ -8,6 +10,6 @@ package com.jn.agileway.eimessage.core.channel;
  *
  * 用它来接收时，源头可以是一个，也可以是多个
  */
-public interface MessageChannel {
+public interface MessageChannel extends Named {
 
 }
