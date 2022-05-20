@@ -5,5 +5,5 @@ import com.jn.agileway.eimessage.core.Message;
 import java.util.List;
 
 public interface MessageRouter {
-    List<String> findChannels(List<OutboundChannel> channels, Message<?> message);
+    List<OutboundChannel> route(List<OutboundChannel> channels, Message<?> message);
 }

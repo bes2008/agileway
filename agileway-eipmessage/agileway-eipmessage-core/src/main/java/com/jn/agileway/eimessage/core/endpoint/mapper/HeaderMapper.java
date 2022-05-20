@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.jn.agileway.eimessage.core.endpoints.mapper;
+package com.jn.agileway.eimessage.core.endpoint.mapper;
 
 import com.jn.agileway.eimessage.core.MessageHeaders;
 

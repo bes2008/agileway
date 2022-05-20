@@ -1,4 +1,4 @@
-package com.jn.agileway.eimessage.core.endpoints;
+package com.jn.agileway.eimessage.core.endpoint;
 
 import com.jn.langx.lifecycle.Lifecycle;
 
