@@ -20,7 +20,14 @@ public class PipelineInboundChannel implements InboundChannel {
     @Override
     public Message<?> poll() {
         Message<?> m = inboundChannel.poll();
-        doFilter(m);
+        m = doFilter(m);
+        return m;
+    }
+
+    @Override
+    public Message<?> poll(long timeout) {
+        Message<?> m = inboundChannel.poll(timeout);
+        m = doFilter(m);
         return m;
     }
 
@@ -30,14 +37,6 @@ public class PipelineInboundChannel implements InboundChannel {
         }
         return message;
     }
-
-    @Override
-    public Message<?> poll(long timeout) {
-        Message<?> m = inboundChannel.poll(timeout);
-        doFilter(m);
-        return m;
-    }
-
 
     @Override
     public void setName(String s) {
