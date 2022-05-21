@@ -1,4 +1,4 @@
-package com.jn.agileway.eimessage.core.handler.chain;
+package com.jn.agileway.eimessage.core.pubsub;
 
 import com.jn.agileway.eimessage.core.Message;
 import com.jn.agileway.eimessage.core.handler.MessageHandler;

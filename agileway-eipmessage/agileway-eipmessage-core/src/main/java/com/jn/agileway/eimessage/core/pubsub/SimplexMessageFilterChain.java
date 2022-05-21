@@ -1,13 +1,15 @@
-package com.jn.agileway.eimessage.core.handler.chain;
+package com.jn.agileway.eimessage.core.pubsub;
 
 import com.jn.agileway.eimessage.core.Message;
 import com.jn.agileway.eimessage.core.handler.MessageHandler;
 import com.jn.langx.chain.Chain;
 import com.jn.langx.chain.FilterChain;
 
-public class SimplexMessageFilterChain implements MessageHandler {
+/**
+ * Simplex chain ，在pub-sub 模式下使用，producer, consumer 端都可以使用
+ */
+public class SimplexMessageFilterChain {
     private Chain<Message, Object> chain;
-    private boolean shared;
 
     public SimplexMessageFilterChain() {
         this(true);
@@ -21,7 +23,6 @@ public class SimplexMessageFilterChain implements MessageHandler {
         chain.addHandler(new MessageHandlerChainAdapter(handler));
     }
 
-    @Override
     public void handle(Message<?> message) {
         this.chain.handle(message, null);
     }
