@@ -39,9 +39,16 @@ endpoint 常用的处理模型为dispatcher
 
 channel 是为了方便对message的处理，简历的一个处理通道而已
 
-channel 按照流向分为2种： inbound channel, outbound channel, 如果将它俩结合，可以衍生出一种： duplex channel 一个channel 必有 两端: src,dest ,channel的
+```text
+    1. channel 按照流向分为2种： inbound channel, outbound channel, 如果将它俩结合，可以衍生出一种： duplex channel 一个channel 必有 两端: src,dest ,channel的
+    
+    2. 两端均可以有多种形式： 可以是另外一个或多个 channel, buffer (queue, topic)，所以会有point-to-point, pub-sub 
+```
 
-两端均可以有多种形式： 可以是另外一个或多个 channel, buffer (queue, topic)，所以会有point-to-point, pub-sub 
+
+在pub-sub 模式下，多用单工 channel，在 exchange模式下， 多用 duplex channel
+
+
 
 
 ## Channel 处理模型：Pipeline, Chain
@@ -51,9 +58,33 @@ channel 上常用的处理模型为：pipeline, chain, 不论是 pipeline还是 
 ### Pipeline 
 Pipeline 上每一个 message handler 的输出将作为下一个 message handler的输入
 
-### chain
-chain 上每一个 message handler 都将接收到同一个 message
+单工通信时，有单向的 pipeline, 例如:
+```text
+    Java 8的 Stream, langx-java中的 集合包下的 pipeline
+    logstash 等 日志系统中，对日志的加工时，用的就是单向 pipeline
+```
 
+双工通信时，有双工的 pipeline，例如:
+```text
+    Netty 中的 pipeline
+    langx-java 的 com.jn.langx.pipeline 包
+    Tomcat 容器，
+```
+
+
+### Chain
+Chain 上每一个 message handler 都将接收到同一个 message
+
+单工通信时，有向的 chain，例如：
+```text
+    功能链模式
+```
+
+双工通信时，有双工的 chain，例如：
+```text
+    Servlet 规范中的 Filter Chain
+    Spring WebMvc 中的 HandlerMethod Interceptor Chain
+```
 
 ## MessageHandler
 
