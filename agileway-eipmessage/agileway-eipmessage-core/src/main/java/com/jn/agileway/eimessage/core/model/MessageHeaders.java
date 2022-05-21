@@ -1,4 +1,4 @@
-package com.jn.agileway.eimessage.core;
+package com.jn.agileway.eimessage.core.model;
 
 
 import com.jn.langx.IdGenerator;
