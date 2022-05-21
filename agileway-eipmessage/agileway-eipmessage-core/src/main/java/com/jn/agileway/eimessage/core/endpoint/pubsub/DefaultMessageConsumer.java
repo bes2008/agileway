@@ -9,12 +9,21 @@ public class DefaultMessageConsumer extends AbstractMessagePubSubEndpoint implem
 
     @Override
     protected void doStart() {
-
+        inboundChannel.startup();
     }
 
     @Override
     protected void doStop() {
+        inboundChannel.shutdown();
+    }
 
+    public Object poll(long timeout){
+        return null;
+    }
+
+    @Override
+    public Object poll() {
+        return null;
     }
 
     @Override

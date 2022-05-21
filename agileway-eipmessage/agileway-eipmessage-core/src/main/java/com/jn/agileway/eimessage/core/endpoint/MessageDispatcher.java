@@ -7,6 +7,12 @@ import com.jn.agileway.eimessage.core.handler.MessageHandler;
  */
 public interface MessageDispatcher extends MessageHandler {
 
+    /**
+     * 在 consumer中使用时， 该过程代表了 订阅
+     *
+     * @param handler
+     * @return
+     */
     boolean addHandler(MessageHandler handler);
 
     boolean removeHandler(MessageHandler handler);

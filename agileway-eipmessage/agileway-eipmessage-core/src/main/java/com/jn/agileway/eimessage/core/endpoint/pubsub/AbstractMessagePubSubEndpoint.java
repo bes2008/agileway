@@ -9,11 +9,9 @@ import org.slf4j.Logger;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-public abstract class AbstractMessagePubSubEndpoint extends AbstractInitializable implements PubSubEndpoint {
+public abstract class AbstractMessagePubSubEndpoint<T>  extends AbstractInitializable implements PubSubEndpoint<T>  {
     @Nullable
-    private MessageFilterChain filterChain;
-    @Nullable
-    private MessageMapper messageMapper;
+    private MessageMapper<T>  messageMapper;
     @NotEmpty
     private String name;
 
@@ -106,23 +104,14 @@ public abstract class AbstractMessagePubSubEndpoint extends AbstractInitializabl
     public final int getPhase() {
         return this.phase;
     }
-    @Override
-    public MessageFilterChain getFilterChain() {
-        return this.filterChain;
-    }
 
     @Override
-    public void setFilterChain(MessageFilterChain chain) {
-        this.filterChain = chain;
-    }
-
-    @Override
-    public void setMessageMapper(MessageMapper messageMapper) {
+    public void setMessageMapper(MessageMapper<T>  messageMapper) {
         this.messageMapper = messageMapper;
     }
 
     @Override
-    public MessageMapper getMessageMapper() {
+    public MessageMapper<T>  getMessageMapper() {
         return this.messageMapper;
     }
 
