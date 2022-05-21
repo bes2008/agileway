@@ -9,7 +9,7 @@ public interface MessageDispatcher {
 
     boolean removeHandler(MessageHandler handler);
 
-    boolean dispatch(Message<?> message);
+    void dispatch(Message<?> message);
 
 }
 
