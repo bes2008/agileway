@@ -16,7 +16,7 @@
 
 package com.jn.agileway.eimessage.core.endpoint.mapper;
 
-import com.jn.agileway.eimessage.core.model.MessageHeaders;
+import com.jn.agileway.eimessage.core.MessageHeaders;
 
 import java.util.Map;
 

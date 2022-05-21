@@ -1,4 +1,4 @@
-package com.jn.agileway.eimessage.core.model;
+package com.jn.agileway.eimessage.core;
 
 public interface Message<T> {
     T getPayload();

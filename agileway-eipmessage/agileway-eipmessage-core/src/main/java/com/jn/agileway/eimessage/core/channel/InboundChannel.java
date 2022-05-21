@@ -1,6 +1,6 @@
 package com.jn.agileway.eimessage.core.channel;
 
-import com.jn.agileway.eimessage.core.model.Message;
+import com.jn.agileway.eimessage.core.Message;
 
 /**
  * 只用于接收

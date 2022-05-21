@@ -1,6 +1,6 @@
 package com.jn.agileway.eimessage.core.endpoint;
 
-import com.jn.agileway.eimessage.core.model.Message;
+import com.jn.agileway.eimessage.core.Message;
 import com.jn.agileway.eimessage.core.handler.MessageHandler;
 
 public interface MessageDispatcher {
