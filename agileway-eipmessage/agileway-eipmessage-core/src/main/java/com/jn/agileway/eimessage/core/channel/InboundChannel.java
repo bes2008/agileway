@@ -5,7 +5,7 @@ import com.jn.agileway.eimessage.core.Message;
 /**
  * 只用于接收
  */
-public interface InboundChannel extends MessageChannel{
+public interface InboundChannel extends MessageChannel {
 
     /**
      * Receive a message from this channel, blocking indefinitely if necessary.

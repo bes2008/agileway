@@ -1,4 +1,4 @@
-package com.jn.agileway.eimessage.core.pubsub;
+package com.jn.agileway.eimessage.core.endpoint.pubsub;
 
 import com.jn.agileway.eimessage.core.Message;
 import com.jn.agileway.eimessage.core.handler.MessageHandler;
@@ -8,7 +8,7 @@ import com.jn.langx.chain.FilterChain;
 /**
  * Simplex chain ，在pub-sub 模式下使用，producer, consumer 端都可以使用
  */
-public class SimplexMessageFilterChain {
+public class SimplexMessageFilterChain implements MessageFilterChain{
     private Chain<Message, Object> chain;
 
     public SimplexMessageFilterChain() {

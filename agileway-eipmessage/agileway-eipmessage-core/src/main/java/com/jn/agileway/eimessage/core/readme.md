@@ -7,6 +7,8 @@ Endpoint (Producer) -----> messageMapper -----> producer outbound channel ----->
 ```
 常用单工通道, producer 走 outbound channel, consumer 走 inbound channel
 
+consumer 通常有3种方式：拉，推，推拉结合
+
 ## 2、Exchange 模式 （request reply message常用）
 ```text
 Endpoint (Requester) -----> messageMapper -----> sender channel -----> router -----> network , broker channel (queue,

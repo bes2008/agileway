@@ -1,6 +1,7 @@
 package com.jn.agileway.eimessage.core.channel;
 
-import com.jn.langx.Named;
+import com.jn.langx.Nameable;
+import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.Lifecycle;
 
 /**
@@ -11,6 +12,6 @@ import com.jn.langx.lifecycle.Lifecycle;
  * <p>
  * 用它来接收时，源头可以是一个，也可以是多个
  */
-public interface MessageChannel extends Named, Lifecycle {
+public interface MessageChannel extends Nameable, Lifecycle, Initializable {
 
 }
