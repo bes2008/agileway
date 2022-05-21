@@ -1,4 +1,4 @@
-package com.jn.agileway.eimessage.core.endpoint.exchanger;
+package com.jn.agileway.eimessage.core.endpoint.exchange;
 
 import com.jn.agileway.eimessage.core.Message;
 import com.jn.agileway.eimessage.core.endpoint.Endpoint;
