@@ -1,18 +1,20 @@
 # 常见通信模式
 
 ## 1、PubSub 模式 （event message常用）
-
-Endpoint (Producer) -----> messageMapper -----> producer channel -----> router -----> buffer (queue, topic)
------>  consumer channel -----> messageMapper -----> Endpoint (Consumer)
-
+```text
+Endpoint (Producer) -----> messageMapper -----> producer outbound channel -----> router -----> buffer (queue, topic)
+----->  consumer inbound channel -----> messageMapper -----> Endpoint (Consumer)
+```
 常用单工通道, producer 走 outbound channel, consumer 走 inbound channel
 
 ## 2、Exchange 模式 （request reply message常用）
-
+```text
 Endpoint (Requester) -----> messageMapper -----> sender channel -----> router -----> network , broker channel (queue,
 topic) -----> request receiver -----> receiver channel -----> Endpoint (Replier)
+
 Endpoint (Requester) <----- messageMapper <----- receiver channel <----- router <----- network , broker channel (queue,
 topic) <----- reply sender     <----- send channel     <----- Endpoint (Replier)
+```
 
 常用 双工通道, request message 走 outbound channel, reply message 走 inbound channel
 
@@ -27,10 +29,11 @@ topic) <----- reply sender     <----- send channel     <----- Endpoint (Replier)
 ## Endpoint 处理模型: MessageMapper, MessageDispatcher
 
 ### MessageMapper
+```
+如果message 在进入 outbound 之前， message 可以是任何形态、格式 的话，通常要先使用 message mapper将 任意格式的 message 转成 统一格式的message。 
 
-如果message 在进入 outbound 之前， message 可以是任何形态、格式 的话，通常要先使用 message mapper将 任意格式的 message 转成 统一格式的message。 如果message 在离开
-inbound 之前， message 必然是统一格式，通常要先使用 message mapper将 统一格式的message 转换成期望的格式的 message。
-
+如果message 在离开 inbound 之前， message 必然是统一格式，通常要先使用 message mapper将 统一格式的message 转换成期望的格式的 message。
+```
 ### MessageDispatcher
 
 endpoint 常用的处理模型为dispatcher
