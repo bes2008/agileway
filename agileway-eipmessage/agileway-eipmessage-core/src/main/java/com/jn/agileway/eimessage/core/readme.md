@@ -88,4 +88,8 @@ Chain 上每一个 message handler 都将接收到同一个 message
 
 ## MessageHandler
 
+一个handler 可以对 一个message 数据进行一定的处理，例如 转换，富化，路由，拆分，合并等；
+如果一个message 要历经多个 handler的处理，通常用pipeline或者 chain 
+
+
 
