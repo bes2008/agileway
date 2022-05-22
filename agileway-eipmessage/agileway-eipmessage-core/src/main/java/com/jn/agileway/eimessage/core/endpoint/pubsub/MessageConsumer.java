@@ -1,7 +1,7 @@
 package com.jn.agileway.eimessage.core.endpoint.pubsub;
 
 import com.jn.agileway.eimessage.core.channel.InboundChannel;
-import com.jn.agileway.eimessage.core.endpoint.dispatch.MessageDispatcher;
+import com.jn.agileway.eimessage.core.endpoint.dispatcher.MessageDispatcher;
 
 public interface MessageConsumer<T> extends PubSubEndpoint {
     MessageDispatcher getMessageDispatcher();

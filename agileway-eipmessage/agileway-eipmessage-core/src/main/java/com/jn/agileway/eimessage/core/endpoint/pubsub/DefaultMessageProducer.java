@@ -9,9 +9,12 @@ import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import org.slf4j.Logger;
 
+/**
+ * producer -> channel -> dispatcher
+ */
 public class DefaultMessageProducer<T> extends AbstractMessagePubSubEndpoint<T> implements MessageProducer<T> {
-    private OutboundChannel outboundChannel;
     private Logger logger = Loggers.getLogger(getClass());
+    private OutboundChannel outboundChannel;
 
     @Override
     protected void doStart() {
@@ -31,7 +34,7 @@ public class DefaultMessageProducer<T> extends AbstractMessagePubSubEndpoint<T> 
             message = messageMapper.map(obj);
         }
         if (message == null) {
-            logger.warn("unsupported class: " + Reflects.getFQNClassName(obj.getClass()));
+            logger.warn("unsupported class: {}", Reflects.getFQNClassName(obj.getClass()));
         }
         return outboundChannel.send(message);
     }
