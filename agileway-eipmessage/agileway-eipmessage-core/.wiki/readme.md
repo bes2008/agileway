@@ -1,3 +1,7 @@
+# EIP 
+
+[![Enterprise Integration Patterns](./images/eip.png)](https://www.enterpriseintegrationpatterns.com/patterns/messaging/)
+
 # 常见通信模式
 
 ## 1、PubSub 模式 （event message常用）
