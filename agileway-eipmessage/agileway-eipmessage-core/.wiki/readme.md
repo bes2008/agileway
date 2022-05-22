@@ -46,12 +46,13 @@ endpoint 常用的处理模型为dispatcher
 
 ## Channel
 
-channel 是为了方便对message的处理，简历的一个处理通道而已
+channel 是为了方便对message的处理，建立的一个处理通道而已。
+
 
 ```text
     1. channel 按照流向分为2种： inbound channel, outbound channel, 如果将它俩结合，可以衍生出一种： duplex channel 一个channel 必有 两端: src,dest ,channel的
     
-    2. 两端均可以有多种形式： 可以是另外一个或多个 channel, buffer (queue, topic)，所以会有point-to-point, pub-sub 
+    2. 两端均可以有多种形式： 其中一端是 endpoint, 另外一个或多个 channel, buffer (queue, topic)，所以会有point-to-point, pub-sub 
 ```
 
 

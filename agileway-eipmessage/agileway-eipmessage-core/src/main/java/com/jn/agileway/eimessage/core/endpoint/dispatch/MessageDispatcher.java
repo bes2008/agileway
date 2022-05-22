@@ -1,12 +1,13 @@
 package com.jn.agileway.eimessage.core.endpoint.dispatch;
 
+import com.jn.agileway.eimessage.core.endpoint.Endpoint;
 import com.jn.agileway.eimessage.core.message.Message;
 import com.jn.agileway.eimessage.core.message.MessageHandler;
 
 /**
  * 通常在 consumer 上使用
  */
-public interface MessageDispatcher{
+public interface MessageDispatcher extends Endpoint {
 
     /**
      * 在 consumer中使用时， 该过程代表了 订阅
