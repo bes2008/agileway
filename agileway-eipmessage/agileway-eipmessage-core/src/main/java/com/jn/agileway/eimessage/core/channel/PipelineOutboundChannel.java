@@ -1,11 +1,15 @@
 package com.jn.agileway.eimessage.core.channel;
 
 import com.jn.agileway.eimessage.core.message.Message;
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.pipeline.simplex.SimplexPipeline;
 
 public class PipelineOutboundChannel extends AbstractInitializable implements OutboundChannel {
+    @NonNull
     private OutboundChannel outboundChannel;
+    @Nullable
     private SimplexPipeline pipeline;
 
     public PipelineOutboundChannel(OutboundChannel outboundChannel, SimplexPipeline pipeline) {
