@@ -1,45 +1,36 @@
-package com.jn.agileway.eimessage.core.channel;
+package com.jn.agileway.eimessage.core.channel.pipe;
 
+import com.jn.agileway.eimessage.core.channel.OutboundChannel;
 import com.jn.agileway.eimessage.core.message.Message;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.lifecycle.AbstractInitializable;
-import com.jn.langx.pipeline.simplex.SimplexPipeline;
 
 public class PipelineOutboundChannel extends AbstractInitializable implements OutboundChannel {
     @NonNull
     private OutboundChannel outboundChannel;
     @Nullable
-    private SimplexPipeline pipeline;
+    private ChannelMessageInterceptorPipeline pipeline;
 
-    public PipelineOutboundChannel(OutboundChannel outboundChannel, SimplexPipeline pipeline) {
+    public PipelineOutboundChannel(OutboundChannel outboundChannel, ChannelMessageInterceptorPipeline pipeline) {
         this.outboundChannel = outboundChannel;
         this.pipeline = pipeline;
     }
 
     @Override
     public boolean send(Message<?> message) {
-        message = doFilter(message);
-        if (message != null) {
-            return outboundChannel.send(message);
-        }
-        return false;
+        return send(message, -1);
     }
 
     @Override
     public boolean send(Message<?> message, long timeout) {
-        message = doFilter(message);
-        if (message != null) {
-            return outboundChannel.send(message, timeout);
+        message = pipeline.beforeOutbound(outboundChannel, message);
+        if (message == null) {
+            return false;
         }
-        return false;
-    }
-
-    private Message<?> doFilter(Message<?> message) {
-        if (pipeline != null) {
-            return (Message) pipeline.handle(message);
-        }
-        return message;
+        boolean sent = outboundChannel.send(message, timeout);
+        pipeline.afterOutbound(outboundChannel, message, sent);
+        return sent;
     }
 
     @Override

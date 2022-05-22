@@ -28,7 +28,7 @@ topic) <----- reply sender     <----- send channel     <----- Endpoint (Replier)
 
 ## Endpoint
 
-在 pub-sub 通信模式下， endpoint 代表了 producer (s), consumer (s)
+在 pub-sub 通信模式下， endpoint 代表了 producer (s), consumer (s) (消息可以是 consumer 拉取，也可以是推给 consumer), dispatcher (消息推送给 dispatcher)
 
 在 exchange 模式下， endpoint 代表了 requester(s) (client), replier(s) (server)
 

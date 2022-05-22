@@ -12,13 +12,14 @@ public abstract class AbstractMessageTransformer implements MessageTransformer {
             if (result == null) {
                 return null;
             }
-            return (result instanceof Message) ? (Message<?>) result
-                    : MessageBuilder.withPayload(result).copyHeaders(message.getHeaders()).build();
-        }
-        catch (MessageTransformationException e) {
+            if(result instanceof Message){
+                return (Message) result;
+            }
+            Message<?> m = MessageBuilder.withPayload(result).copyHeaders(message.getHeaders()).build();
+            return m;
+        } catch (MessageTransformationException e) {
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new MessageTransformationException(message, "failed to transform message", e);
         }
     }
