@@ -3,10 +3,10 @@ package com.jn.agileway.eimessage.core.channel;
 import com.jn.agileway.eimessage.core.message.Message;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
-import com.jn.langx.lifecycle.InitializationException;
+import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.pipeline.simplex.SimplexPipeline;
 
-public class PipelineInboundChannel implements InboundChannel {
+public class PipelineInboundChannel extends AbstractInitializable implements InboundChannel {
     @NonNull
     private InboundChannel inboundChannel;
     @Nullable
@@ -48,10 +48,6 @@ public class PipelineInboundChannel implements InboundChannel {
         return inboundChannel.getName();
     }
 
-    @Override
-    public void init() throws InitializationException {
-        inboundChannel.init();
-    }
 
     @Override
     public void startup() {

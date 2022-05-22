@@ -1,10 +1,10 @@
 package com.jn.agileway.eimessage.core.channel;
 
 import com.jn.agileway.eimessage.core.message.Message;
-import com.jn.langx.lifecycle.InitializationException;
+import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.pipeline.simplex.SimplexPipeline;
 
-public class PipelineOutboundChannel implements OutboundChannel {
+public class PipelineOutboundChannel extends AbstractInitializable implements OutboundChannel {
     private OutboundChannel outboundChannel;
     private SimplexPipeline pipeline;
 
@@ -40,36 +40,32 @@ public class PipelineOutboundChannel implements OutboundChannel {
 
     @Override
     public Class getDatatype() {
-        return null;
+        return outboundChannel.getDatatype();
     }
 
     @Override
     public void setDataType(Class datatype) {
-
+        outboundChannel.setDataType(datatype);
     }
 
     @Override
     public void setName(String s) {
-
+        outboundChannel.setName(s);
     }
 
     @Override
     public String getName() {
-        return null;
+        return outboundChannel.getName();
     }
 
-    @Override
-    public void init() throws InitializationException {
-
-    }
 
     @Override
     public void startup() {
-
+        outboundChannel.startup();
     }
 
     @Override
     public void shutdown() {
-
+        outboundChannel.shutdown();
     }
 }
