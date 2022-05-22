@@ -11,9 +11,6 @@ public abstract class AbstractOutboundChannel extends AbstractInitializable impl
     private String name;
     private Class payloadClass;
 
-    public AbstractOutboundChannel(ChannelMessageInterceptorPipeline pipeline) {
-        this.pipeline = pipeline;
-    }
 
     @Override
     public boolean send(Message<?> message) {
@@ -43,6 +40,16 @@ public abstract class AbstractOutboundChannel extends AbstractInitializable impl
         this.payloadClass = datatype;
     }
 
+
+    @Override
+    public void startup() {
+        init();
+    }
+
+    @Override
+    public void shutdown() {
+    }
+
     @Override
     public void setName(String s) {
         this.name = name;
@@ -54,12 +61,11 @@ public abstract class AbstractOutboundChannel extends AbstractInitializable impl
     }
 
 
-    @Override
-    public void startup() {
-        init();
+    public ChannelMessageInterceptorPipeline getPipeline() {
+        return pipeline;
     }
 
-    @Override
-    public void shutdown() {
+    public void setPipeline(ChannelMessageInterceptorPipeline pipeline) {
+        this.pipeline = pipeline;
     }
 }

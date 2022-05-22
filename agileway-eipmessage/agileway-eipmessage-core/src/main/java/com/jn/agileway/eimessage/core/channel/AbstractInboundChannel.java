@@ -11,9 +11,6 @@ public abstract class AbstractInboundChannel extends AbstractInitializable imple
     @Nullable
     private ChannelMessageInterceptorPipeline pipeline;
 
-    public AbstractInboundChannel(ChannelMessageInterceptorPipeline pipeline) {
-        this.pipeline = pipeline;
-    }
 
     @Override
     public Message<?> poll() {
@@ -35,6 +32,18 @@ public abstract class AbstractInboundChannel extends AbstractInitializable imple
 
     protected abstract Message<?> pollInternal(long timeout);
 
+
+    @Override
+    public void startup() {
+        init();
+    }
+
+    @Override
+    public void shutdown() {
+
+    }
+
+
     @Override
     public void setName(String s) {
         this.name = s;
@@ -46,13 +55,11 @@ public abstract class AbstractInboundChannel extends AbstractInitializable imple
     }
 
 
-    @Override
-    public void startup() {
-        init();
+    public ChannelMessageInterceptorPipeline getPipeline() {
+        return pipeline;
     }
 
-    @Override
-    public void shutdown() {
-
+    public void setPipeline(ChannelMessageInterceptorPipeline pipeline) {
+        this.pipeline = pipeline;
     }
 }

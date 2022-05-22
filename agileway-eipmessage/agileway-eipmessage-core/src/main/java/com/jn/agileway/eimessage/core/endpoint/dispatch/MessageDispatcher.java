@@ -1,4 +1,4 @@
-package com.jn.agileway.eimessage.core.endpoint;
+package com.jn.agileway.eimessage.core.endpoint.dispatch;
 
 import com.jn.agileway.eimessage.core.message.Message;
 import com.jn.agileway.eimessage.core.message.MessageHandler;
@@ -18,6 +18,6 @@ public interface MessageDispatcher{
 
     boolean removeHandler(MessageHandler handler);
 
-    void dispatch(Message<?> message);
+    boolean dispatch(Message<?> message);
 }
 
