@@ -1,6 +1,4 @@
-package com.jn.agileway.eimessage.core;
-
-import com.jn.agileway.eimessage.core.Message;
+package com.jn.agileway.eimessage.core.message;
 
 /**
  * Base interface for any component that handles Messages.

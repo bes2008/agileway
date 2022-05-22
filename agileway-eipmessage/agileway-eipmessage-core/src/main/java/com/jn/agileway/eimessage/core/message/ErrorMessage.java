@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package com.jn.agileway.eimessage.core.endpoint.mapper;
-
-import com.jn.agileway.eimessage.core.message.MessageHeaders;
+package com.jn.agileway.eimessage.core.message;
 
 import java.util.Map;
 
 /**
- * Generic strategy interface for mapping {@link MessageHeaders} to and from other
- * types of objects. This would typically be used by adapters where the "other type"
- * has a concept of headers or properties (HTTP, JMS, AMQP, etc).
- * 
- * @author Mark Fisher
- *
- * @param <T> type of the instance to and from which headers will be mapped.
+ * A message implementation that accepts a {@link Throwable} payload.
+ * Once created this object is immutable.
  */
-public interface HeaderMapper<T> {
+public class ErrorMessage extends GenericMessage<Throwable> {
 
-	void fromHeaders(MessageHeaders headers, T target);
+	private static final long serialVersionUID = 6413675958959141186L;
 
-	Map<String, ?> toHeaders(T source);
+	public ErrorMessage(Throwable payload) {
+		super(payload);
+	}
+	
+	public ErrorMessage(Throwable payload, Map<String, Object> headers) {
+		super(payload, headers);
+	}
 
 }

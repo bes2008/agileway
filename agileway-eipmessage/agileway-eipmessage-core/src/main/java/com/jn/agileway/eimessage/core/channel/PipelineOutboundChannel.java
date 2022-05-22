@@ -1,6 +1,6 @@
 package com.jn.agileway.eimessage.core.channel;
 
-import com.jn.agileway.eimessage.core.Message;
+import com.jn.agileway.eimessage.core.message.Message;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.pipeline.simplex.SimplexPipeline;
 

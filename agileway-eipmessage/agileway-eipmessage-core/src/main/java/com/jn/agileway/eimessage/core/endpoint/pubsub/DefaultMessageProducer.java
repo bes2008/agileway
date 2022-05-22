@@ -1,7 +1,7 @@
 package com.jn.agileway.eimessage.core.endpoint.pubsub;
 
 
-import com.jn.agileway.eimessage.core.Message;
+import com.jn.agileway.eimessage.core.message.Message;
 import com.jn.agileway.eimessage.core.channel.OutboundChannel;
 import com.jn.agileway.eimessage.core.endpoint.mapper.MessageMapper;
 import com.jn.langx.util.Preconditions;
