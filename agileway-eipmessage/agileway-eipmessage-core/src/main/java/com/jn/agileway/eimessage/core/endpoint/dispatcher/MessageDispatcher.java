@@ -1,8 +1,7 @@
-package com.jn.agileway.eimessage.core.endpoint;
+package com.jn.agileway.eimessage.core.endpoint.dispatcher;
 
 import com.jn.agileway.eimessage.core.endpoint.Endpoint;
 import com.jn.agileway.eimessage.core.message.Message;
-import com.jn.agileway.eimessage.core.message.MessageHandler;
 
 /**
  * 通常在 consumer 上使用
