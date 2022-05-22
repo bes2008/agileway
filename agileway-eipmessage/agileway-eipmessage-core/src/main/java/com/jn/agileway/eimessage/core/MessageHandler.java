@@ -1,4 +1,4 @@
-package com.jn.agileway.eimessage.core.handler;
+package com.jn.agileway.eimessage.core;
 
 import com.jn.agileway.eimessage.core.Message;
 
