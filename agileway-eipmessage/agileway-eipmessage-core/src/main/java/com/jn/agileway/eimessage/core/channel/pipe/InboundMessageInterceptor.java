@@ -1,7 +1,6 @@
 package com.jn.agileway.eimessage.core.channel.pipe;
 
 
-import com.jn.agileway.eimessage.core.channel.InboundChannel;
 import com.jn.agileway.eimessage.core.channel.OutboundChannel;
 import com.jn.agileway.eimessage.core.message.Message;
 
