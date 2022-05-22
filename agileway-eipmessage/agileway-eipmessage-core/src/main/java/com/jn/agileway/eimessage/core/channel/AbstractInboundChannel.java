@@ -4,10 +4,12 @@ import com.jn.agileway.eimessage.core.channel.pipe.ChannelMessageInterceptorPipe
 import com.jn.agileway.eimessage.core.message.Message;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.lifecycle.AbstractInitializable;
+import com.jn.langx.util.logging.Loggers;
+import org.slf4j.Logger;
 
 public abstract class AbstractInboundChannel extends AbstractInitializable implements InboundChannel {
     private String name;
-
+    protected Logger logger = Loggers.getLogger(getClass());
     @Nullable
     private ChannelMessageInterceptorPipeline pipeline;
 

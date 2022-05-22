@@ -13,6 +13,7 @@ public class DefaultInboundChannel extends AbstractInboundChannel {
         try {
             return queue.poll(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException ex) {
+            logger.error(ex.getMessage(), ex);
             return null;
         }
     }
