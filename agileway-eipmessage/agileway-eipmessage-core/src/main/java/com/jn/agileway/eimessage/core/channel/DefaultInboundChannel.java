@@ -1,28 +1,22 @@
 package com.jn.agileway.eimessage.core.channel;
 
+import com.jn.agileway.eimessage.core.endpoint.InboundMessageSource;
 import com.jn.agileway.eimessage.core.message.Message;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 public class DefaultInboundChannel extends AbstractInboundChannel {
-    private BlockingQueue<Message<?>> queue;
+    private InboundMessageSource inboundMessageSource;
 
     @Override
     protected Message<?> pollInternal(long timeout) {
-        try {
-            return queue.poll(timeout, TimeUnit.SECONDS);
-        } catch (InterruptedException ex) {
-            logger.error(ex.getMessage(), ex);
-            return null;
-        }
+        return inboundMessageSource.poll(timeout);
     }
 
-    public BlockingQueue getQueue() {
-        return queue;
+    public InboundMessageSource getInboundMessageSource() {
+        return inboundMessageSource;
     }
 
-    public void setQueue(BlockingQueue queue) {
-        this.queue = queue;
+    public void setInboundMessageSource(InboundMessageSource inboundMessageSource) {
+        this.inboundMessageSource = inboundMessageSource;
     }
 }

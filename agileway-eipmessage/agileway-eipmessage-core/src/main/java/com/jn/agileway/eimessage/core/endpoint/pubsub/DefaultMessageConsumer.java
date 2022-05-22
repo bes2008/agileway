@@ -1,11 +1,9 @@
 package com.jn.agileway.eimessage.core.endpoint.pubsub;
 
 import com.jn.agileway.eimessage.core.channel.InboundChannel;
-import com.jn.agileway.eimessage.core.endpoint.dispatcher.MessageDispatcher;
 
 public class DefaultMessageConsumer extends AbstractMessagePubSubEndpoint implements MessageConsumer {
     private InboundChannel inboundChannel;
-    private MessageDispatcher messageDispatcher;
 
     @Override
     protected void doStart() {
@@ -24,16 +22,6 @@ public class DefaultMessageConsumer extends AbstractMessagePubSubEndpoint implem
     @Override
     public Object poll() {
         return null;
-    }
-
-    @Override
-    public MessageDispatcher getMessageDispatcher() {
-        return this.messageDispatcher;
-    }
-
-    @Override
-    public void setMessageDispatcher(MessageDispatcher dispatcher) {
-        this.messageDispatcher = dispatcher;
     }
 
     @Override
