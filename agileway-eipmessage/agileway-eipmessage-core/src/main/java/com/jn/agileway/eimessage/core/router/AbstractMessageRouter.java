@@ -2,27 +2,29 @@ package com.jn.agileway.eimessage.core.router;
 
 import com.jn.agileway.eimessage.core.channel.ChannelResolver;
 import com.jn.agileway.eimessage.core.channel.OutboundChannel;
-import com.jn.agileway.eimessage.core.endpoint.dispatcher.AbstractMessageHandler;
 import com.jn.agileway.eimessage.core.message.Message;
 import com.jn.agileway.eimessage.core.message.MessageBuilder;
 import com.jn.agileway.eimessage.core.message.MessagingException;
+import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
-import com.jn.langx.util.converter.ConverterService;
+import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.logging.Loggers;
+import org.slf4j.Logger;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class AbstractMessageRouter extends AbstractMessageHandler implements MessageRouter {
+@SuppressWarnings({"unused"})
+public abstract class AbstractMessageRouter extends AbstractInitializable implements MessageRouter {
+    protected Logger logger = Loggers.getLogger(getClass());
     private volatile OutboundChannel defaultOutputChannel;
-
 
     private volatile boolean ignoreSendFailures;
 
     private volatile boolean applySequence;
 
-    private ConverterService converterService;
     private volatile String prefix;
 
     private volatile String suffix;
@@ -32,12 +34,6 @@ public abstract class AbstractMessageRouter extends AbstractMessageHandler imple
     private volatile boolean ignoreChannelNameResolutionFailures;
 
     protected volatile Map<String, String> channelIdentifierMap = new ConcurrentHashMap<String, String>();
-
-
-    public void setConverterService(ConverterService converterService) {
-        this.converterService = converterService;
-    }
-
 
     /**
      * Specify a prefix to be added to each channel name prior to resolution.
@@ -56,8 +52,6 @@ public abstract class AbstractMessageRouter extends AbstractMessageHandler imple
     /**
      * Allows you to set the map which will map channel identifiers to channel names.
      * Channel names will be resolve via {@link ChannelResolver}
-     *
-     * @param channelIdentifierMap
      */
     public void setChannelIdentifierMap(Map<String, String> channelIdentifierMap) {
         this.channelIdentifierMap.clear();
@@ -68,11 +62,6 @@ public abstract class AbstractMessageRouter extends AbstractMessageHandler imple
         this.channelIdentifierMap.put(channelIdentifier, channelName);
     }
 
-    /**
-     * Removes channel mapping for a give channel identifier
-     *
-     * @param channelIdentifier
-     */
     public void removeChannelMapping(String channelIdentifier) {
         this.channelIdentifierMap.remove(channelIdentifier);
     }
@@ -118,12 +107,15 @@ public abstract class AbstractMessageRouter extends AbstractMessageHandler imple
      */
     protected abstract List<Object> getChannelIdentifiers(Message<?> message);
 
-
     @Override
-    protected void handleMessageInternal(Message<?> message) {
+    public final void handle(Message<?> message) {
+        route(message);
+    }
+
+    protected void route(Message<?> message) {
         boolean sent = false;
         Collection<OutboundChannel> results = this.determineTargetChannels(message);
-        if (results != null) {
+        if (Objs.isNotEmpty(results)) {
             int sequenceSize = results.size();
             int sequenceNumber = 1;
             for (OutboundChannel channel : results) {
@@ -151,7 +143,7 @@ public abstract class AbstractMessageRouter extends AbstractMessageHandler imple
     }
 
     private Collection<OutboundChannel> determineTargetChannels(Message<?> message) {
-        Collection<OutboundChannel> channels = new ArrayList<OutboundChannel>();
+        Collection<OutboundChannel> channels = Collects.emptyArrayList();
         Collection<Object> channelsReturned = this.getChannelIdentifiers(message);
         addToCollection(channels, channelsReturned, message);
         return channels;
@@ -202,23 +194,23 @@ public abstract class AbstractMessageRouter extends AbstractMessageHandler imple
             return;
         }
         for (Object channelIndicator : channelIndicators) {
-            if (channelIndicator == null) {
-                continue;
-            } else if (channelIndicator instanceof OutboundChannel) {
-                channels.add((OutboundChannel) channelIndicator);
-            } else if (channelIndicator instanceof OutboundChannel[]) {
-                channels.addAll(Arrays.asList((OutboundChannel[]) channelIndicator));
-            } else if (channelIndicator instanceof String) {
-                addChannelFromString(channels, (String) channelIndicator, message);
-            } else if (channelIndicator instanceof String[]) {
-                for (String indicatorName : (String[]) channelIndicator) {
-                    addChannelFromString(channels, indicatorName, message);
+            if (channelIndicator != null) {
+                if (channelIndicator instanceof OutboundChannel) {
+                    channels.add((OutboundChannel) channelIndicator);
+                } else if (channelIndicator instanceof OutboundChannel[]) {
+                    channels.addAll(Arrays.asList((OutboundChannel[]) channelIndicator));
+                } else if (channelIndicator instanceof String) {
+                    addChannelFromString(channels, (String) channelIndicator, message);
+                } else if (channelIndicator instanceof String[]) {
+                    for (String indicatorName : (String[]) channelIndicator) {
+                        addChannelFromString(channels, indicatorName, message);
+                    }
+                } else if (channelIndicator instanceof Collection) {
+                    addToCollection(channels, (Collection<?>) channelIndicator, message);
+                } else {
+                    throw new MessagingException(
+                            "unsupported return type for router [" + channelIndicator.getClass() + "]");
                 }
-            } else if (channelIndicator instanceof Collection) {
-                addToCollection(channels, (Collection<?>) channelIndicator, message);
-            } else {
-                throw new MessagingException(
-                        "unsupported return type for router [" + channelIndicator.getClass() + "]");
             }
         }
     }
