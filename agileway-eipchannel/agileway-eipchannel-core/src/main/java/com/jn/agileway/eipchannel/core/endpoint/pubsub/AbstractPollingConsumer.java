@@ -10,7 +10,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ScheduledFuture;
 
 /**
- * 自动化不断拉取的 consumer
+ * 自动化不断拉取的 consumer，拉取之后可以交给 handler来处理
  */
 public class AbstractPollingConsumer extends DefaultMessageConsumer {
     /**
