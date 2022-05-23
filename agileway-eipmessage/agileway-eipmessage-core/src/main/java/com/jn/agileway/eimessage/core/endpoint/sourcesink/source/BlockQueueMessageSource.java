@@ -1,4 +1,4 @@
-package com.jn.agileway.eimessage.core.endpoint.pollingsource;
+package com.jn.agileway.eimessage.core.endpoint.sourcesink.source;
 
 
 import com.jn.agileway.eimessage.core.message.Message;

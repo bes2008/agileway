@@ -1,5 +1,6 @@
 package com.jn.agileway.eimessage.core.channel;
 
+import com.jn.agileway.eimessage.core.endpoint.sourcesink.sink.OutboundChannelSinker;
 import com.jn.agileway.eimessage.core.message.Message;
 
 public class DefaultOutboundChannel extends AbstractOutboundChannel {
