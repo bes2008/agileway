@@ -12,6 +12,7 @@
     <artifactId>agileway-eipchannel-kafka</artifactId>
     <name>${groupId}:${artifactId}:${version}</name>
     <dependencies>
+
     </dependencies>
 
 </project>
