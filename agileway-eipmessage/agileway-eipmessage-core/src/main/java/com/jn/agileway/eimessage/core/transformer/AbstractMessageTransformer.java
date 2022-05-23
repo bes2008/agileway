@@ -12,7 +12,7 @@ public abstract class AbstractMessageTransformer implements MessageTransformer {
             if (result == null) {
                 return null;
             }
-            if(result instanceof Message){
+            if (result instanceof Message) {
                 return (Message) result;
             }
             Message<?> m = MessageBuilder.withPayload(result).copyHeaders(message.getHeaders()).build();

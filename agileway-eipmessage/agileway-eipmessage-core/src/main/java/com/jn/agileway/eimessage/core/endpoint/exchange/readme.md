@@ -1,3 +1,1 @@
-exchange 通常用于：
-    command系统： redis
-    RPC系统: ejb
+exchange 通常用于： command系统： redis RPC系统: ejb

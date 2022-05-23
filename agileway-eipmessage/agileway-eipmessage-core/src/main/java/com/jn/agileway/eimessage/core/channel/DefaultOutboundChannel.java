@@ -3,7 +3,7 @@ package com.jn.agileway.eimessage.core.channel;
 import com.jn.agileway.eimessage.core.endpoint.dispatcher.MessageDispatcher;
 import com.jn.agileway.eimessage.core.message.Message;
 
-public class DefaultOutboundChannel extends AbstractOutboundChannel{
+public class DefaultOutboundChannel extends AbstractOutboundChannel {
     private MessageDispatcher dispatcher;
 
     public MessageDispatcher getDispatcher() {

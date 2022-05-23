@@ -34,7 +34,6 @@ public interface OutboundChannel extends MessageChannel {
     boolean send(Message<?> message, long timeout);
 
     /**
-     *
      * @return 返回该channel绑定的数据类型
      * 如果返回值为null，则代表没有绑定到特定的数据类型
      */

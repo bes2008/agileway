@@ -14,7 +14,7 @@ public class TransformerInboundMessageInterceptor extends InboundMessageIntercep
 
     @Override
     public Message<?> afterInbound(InboundChannel channel, Message<?> message) {
-        if(message!=null){
+        if (message != null) {
             return transformer.transform(message);
         }
         return null;

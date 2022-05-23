@@ -61,8 +61,7 @@ public final class MessageBuilder<T> {
             this.modified = true;
             if (headerValue == null) {
                 this.headers.remove(headerName);
-            }
-            else {
+            } else {
                 this.headers.put(headerName, headerValue);
             }
         }
@@ -129,8 +128,7 @@ public final class MessageBuilder<T> {
     public MessageBuilder<T> setExpirationDate(Date expirationDate) {
         if (expirationDate != null) {
             return this.setHeader(MessageHeaders.EXPIRATION_DATE, expirationDate.getTime());
-        }
-        else {
+        } else {
             return this.setHeader(MessageHeaders.EXPIRATION_DATE, null);
         }
     }
@@ -146,8 +144,7 @@ public final class MessageBuilder<T> {
         if (incomingCorrelationId != null) {
             if (incomingSequenceDetails == null) {
                 incomingSequenceDetails = new ArrayList<List<Object>>();
-            }
-            else {
+            } else {
                 incomingSequenceDetails = new ArrayList<List<Object>>(incomingSequenceDetails);
             }
             incomingSequenceDetails.add(Arrays.asList(incomingCorrelationId, headers
@@ -230,20 +227,16 @@ public final class MessageBuilder<T> {
         if (headerName != null && headerValue != null) {
             if (MessageHeaders.ID.equals(headerName)) {
                 Preconditions.checkTrue(headerValue instanceof UUID, "The '" + headerName + "' header value must be a UUID.");
-            }
-            else if (MessageHeaders.TIMESTAMP.equals(headerName)) {
+            } else if (MessageHeaders.TIMESTAMP.equals(headerName)) {
                 Preconditions.checkTrue(headerValue instanceof Long, "The '" + headerName + "' header value must be a Long.");
-            }
-            else if (MessageHeaders.EXPIRATION_DATE.equals(headerName)) {
+            } else if (MessageHeaders.EXPIRATION_DATE.equals(headerName)) {
                 Preconditions.checkTrue(headerValue instanceof Date || headerValue instanceof Long, "The '" + headerName
                         + "' header value must be a Date or Long.");
-            }
-            else if (MessageHeaders.ERROR_CHANNEL.equals(headerName)
+            } else if (MessageHeaders.ERROR_CHANNEL.equals(headerName)
                     || MessageHeaders.REPLY_CHANNEL.endsWith(headerName)) {
                 Preconditions.checkTrue(headerValue instanceof MessageChannel || headerValue instanceof String, "The '"
                         + headerName + "' header value must be a MessageChannel or String.");
-            }
-            else if (MessageHeaders.SEQUENCE_NUMBER.equals(headerName)
+            } else if (MessageHeaders.SEQUENCE_NUMBER.equals(headerName)
                     || MessageHeaders.SEQUENCE_SIZE.equals(headerName)) {
                 Preconditions.checkTrue(Integer.class.isAssignableFrom(headerValue.getClass()), "The '" + headerName
                         + "' header value must be an Integer.");

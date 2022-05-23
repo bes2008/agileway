@@ -5,7 +5,7 @@ import com.jn.agileway.eimessage.core.endpoint.mapper.MessageMapper;
 
 public interface PubSubEndpoint<T> extends Endpoint {
 
-    void setMessageMapper(MessageMapper<T>  messageMapper);
+    void setMessageMapper(MessageMapper<T> messageMapper);
 
-    MessageMapper<T>  getMessageMapper();
+    MessageMapper<T> getMessageMapper();
 }

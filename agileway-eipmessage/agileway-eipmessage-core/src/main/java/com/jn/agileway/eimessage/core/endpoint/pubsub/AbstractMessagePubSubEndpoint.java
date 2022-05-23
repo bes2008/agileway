@@ -9,9 +9,9 @@ import org.slf4j.Logger;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-public abstract class AbstractMessagePubSubEndpoint<T>  extends AbstractInitializable implements PubSubEndpoint<T>  {
+public abstract class AbstractMessagePubSubEndpoint<T> extends AbstractInitializable implements PubSubEndpoint<T> {
     @Nullable
-    private MessageMapper<T>  messageMapper;
+    private MessageMapper<T> messageMapper;
     @NotEmpty
     private String name;
 
@@ -23,7 +23,6 @@ public abstract class AbstractMessagePubSubEndpoint<T>  extends AbstractInitiali
 
     private final ReentrantLock lifecycleLock = new ReentrantLock();
     private Logger logger = Loggers.getLogger(getClass());
-
 
 
     public final boolean isRunning() {
@@ -86,6 +85,7 @@ public abstract class AbstractMessagePubSubEndpoint<T>  extends AbstractInitiali
      * This method will be invoked while holding the {@link #lifecycleLock}.
      */
     protected abstract void doStop();
+
     public void setAutoStartup(boolean autoStartup) {
         this.autoStartup = autoStartup;
     }
@@ -106,12 +106,12 @@ public abstract class AbstractMessagePubSubEndpoint<T>  extends AbstractInitiali
     }
 
     @Override
-    public void setMessageMapper(MessageMapper<T>  messageMapper) {
+    public void setMessageMapper(MessageMapper<T> messageMapper) {
         this.messageMapper = messageMapper;
     }
 
     @Override
-    public MessageMapper<T>  getMessageMapper() {
+    public MessageMapper<T> getMessageMapper() {
         return this.messageMapper;
     }
 

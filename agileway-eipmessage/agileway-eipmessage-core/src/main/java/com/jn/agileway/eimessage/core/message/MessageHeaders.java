@@ -25,7 +25,6 @@ import java.util.*;
  * headers.put("key2", "value2");
  * new GenericMessage("foo", headers);
  * </pre>
- *
  */
 public final class MessageHeaders implements Map<String, Object>, Serializable {
 
@@ -179,24 +178,28 @@ public final class MessageHeaders implements Map<String, Object>, Serializable {
     /*
      * Unsupported operations
      */
+
     /**
      * Since MessageHeaders are immutable the call to this method will result in {@link UnsupportedOperationException}
      */
     public Object put(String key, Object value) {
         throw new UnsupportedOperationException("MessageHeaders is immutable.");
     }
+
     /**
      * Since MessageHeaders are immutable the call to this method will result in {@link UnsupportedOperationException}
      */
     public void putAll(Map<? extends String, ? extends Object> t) {
         throw new UnsupportedOperationException("MessageHeaders is immutable.");
     }
+
     /**
      * Since MessageHeaders are immutable the call to this method will result in {@link UnsupportedOperationException}
      */
     public Object remove(Object key) {
         throw new UnsupportedOperationException("MessageHeaders is immutable.");
     }
+
     /**
      * Since MessageHeaders are immutable the call to this method will result in {@link UnsupportedOperationException}
      */

@@ -15,7 +15,7 @@ public class DefaultMessageConsumer extends AbstractMessagePubSubEndpoint implem
         inboundChannel.shutdown();
     }
 
-    public Object poll(long timeout){
+    public Object poll(long timeout) {
         return null;
     }
 

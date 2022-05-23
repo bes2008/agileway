@@ -9,7 +9,7 @@ public class TransformerOutboundMessageInterceptor extends OutboundMessageInterc
 
     @Override
     public Message<?> beforeOutbound(OutboundChannel channel, Message<?> message) {
-        if(message!=null){
+        if (message != null) {
             return transformer.transform(message);
         }
         return null;

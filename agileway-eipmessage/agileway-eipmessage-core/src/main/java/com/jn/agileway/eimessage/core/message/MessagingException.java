@@ -2,7 +2,6 @@ package com.jn.agileway.eimessage.core.message;
 
 /**
  * The base exception for any failures related to messaging.
- *
  */
 public class MessagingException extends RuntimeException {
 

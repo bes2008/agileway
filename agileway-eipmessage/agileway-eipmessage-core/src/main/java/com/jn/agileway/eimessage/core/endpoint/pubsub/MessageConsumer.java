@@ -10,12 +10,14 @@ public interface MessageConsumer<T> extends PubSubEndpoint {
 
     /**
      * 阻塞式拉取
+     *
      * @return return a object
      */
     T poll();
 
     /**
      * 指定时间内阻塞
+     *
      * @return return a object
      */
     T poll(long timeout);

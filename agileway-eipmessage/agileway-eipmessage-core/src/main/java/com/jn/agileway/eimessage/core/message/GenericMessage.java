@@ -26,76 +26,74 @@ import java.util.Map;
 /**
  * Base Message class defining common properties such as id, payload, and headers.
  * Once created this object is immutable.
- * 
  */
 public class GenericMessage<T> implements Message<T>, Serializable {
 
-	private static final long serialVersionUID = 3649200745084232821L;
+    private static final long serialVersionUID = 3649200745084232821L;
 
-	private final T payload;
+    private final T payload;
 
-	private final MessageHeaders headers;
-
-
-	/**
-	 * Create a new message with the given payload.
-	 * 
-	 * @param payload the message payload
-	 */
-	public GenericMessage(T payload) {
-		this(payload, null);
-	}
-
-	/**
-	 * Create a new message with the given payload. The provided map
-	 * will be used to populate the message headers
-	 * 
-	 * @param payload the message payload
-	 * @param headers message headers
-	 * @see MessageHeaders
-	 */
-	public GenericMessage(T payload, Map<String, Object> headers) {
-		Preconditions.checkNotNull(payload, "payload must not be null");
-		if (headers == null) {
-			headers = new HashMap<String, Object>();
-		}
-		else {
-			headers = new HashMap<String, Object>(headers);
-		}
-		this.headers = new MessageHeaders(headers);
-		this.payload = payload;
-	}
+    private final MessageHeaders headers;
 
 
-	public MessageHeaders getHeaders() {
-		return this.headers;
-	}
+    /**
+     * Create a new message with the given payload.
+     *
+     * @param payload the message payload
+     */
+    public GenericMessage(T payload) {
+        this(payload, null);
+    }
 
-	public T getPayload() {
-		return this.payload;
-	}
+    /**
+     * Create a new message with the given payload. The provided map
+     * will be used to populate the message headers
+     *
+     * @param payload the message payload
+     * @param headers message headers
+     * @see MessageHeaders
+     */
+    public GenericMessage(T payload, Map<String, Object> headers) {
+        Preconditions.checkNotNull(payload, "payload must not be null");
+        if (headers == null) {
+            headers = new HashMap<String, Object>();
+        } else {
+            headers = new HashMap<String, Object>(headers);
+        }
+        this.headers = new MessageHeaders(headers);
+        this.payload = payload;
+    }
 
-	public String toString() {
-		return "[Payload=" + this.payload + "][Headers=" + this.headers + "]";
-	}
 
-	public int hashCode() {
-		return this.headers.hashCode() * 23 + Objs.hashCode(this.payload);
-	}
+    public MessageHeaders getHeaders() {
+        return this.headers;
+    }
 
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj != null && obj instanceof GenericMessage<?>) {
-			GenericMessage<?> other = (GenericMessage<?>) obj;
-			if (!this.headers.getId().equals(other.headers.getId())) {
-				return false;
-			}
-			return this.headers.equals(other.headers)
-					&& this.payload.equals(other.payload);
-		}
-		return false;
-	}
+    public T getPayload() {
+        return this.payload;
+    }
+
+    public String toString() {
+        return "[Payload=" + this.payload + "][Headers=" + this.headers + "]";
+    }
+
+    public int hashCode() {
+        return this.headers.hashCode() * 23 + Objs.hashCode(this.payload);
+    }
+
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj != null && obj instanceof GenericMessage<?>) {
+            GenericMessage<?> other = (GenericMessage<?>) obj;
+            if (!this.headers.getId().equals(other.headers.getId())) {
+                return false;
+            }
+            return this.headers.equals(other.headers)
+                    && this.payload.equals(other.payload);
+        }
+        return false;
+    }
 
 }
