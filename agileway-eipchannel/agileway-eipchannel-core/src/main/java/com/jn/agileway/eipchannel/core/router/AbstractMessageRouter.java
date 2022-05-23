@@ -215,4 +215,8 @@ public abstract class AbstractMessageRouter extends AbstractInitializable implem
             }
         }
     }
+
+    public OutboundChannel getDefaultOutputChannel() {
+        return defaultOutputChannel;
+    }
 }

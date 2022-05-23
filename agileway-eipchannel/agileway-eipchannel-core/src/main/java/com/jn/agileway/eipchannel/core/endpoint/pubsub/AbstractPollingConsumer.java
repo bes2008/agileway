@@ -1,6 +1,8 @@
 package com.jn.agileway.eipchannel.core.endpoint.pubsub;
 
 import com.jn.agileway.eipchannel.core.message.MessagingException;
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.exception.ErrorHandler;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.concurrent.Global;
@@ -12,26 +14,22 @@ import java.util.concurrent.ScheduledFuture;
 /**
  * 自动化不断拉取的 consumer，拉取之后可以交给 handler来处理
  */
-public class AbstractPollingConsumer extends DefaultMessageConsumer {
+public abstract class AbstractPollingConsumer extends DefaultMessageConsumer {
     /**
      * 由该 taskExecutor 去执行拉取 并执行 拉取之后的动作
      */
+    @NonNull
     private volatile Executor pollAndConsumeExecutor;
+    @Nullable
     private Trigger trigger;
+    @Nullable
     private ErrorHandler errorHandler;
 
-    public void setErrorHandler(ErrorHandler errorHandler) {
-        this.errorHandler = errorHandler;
-    }
-
-    public void setTrigger(Trigger trigger) {
-        this.trigger = trigger;
-    }
 
     /**
      * 每次拉取的超时时间，单位 mills
      */
-    private long timeout;
+    private long timeout = -1;
 
     public Executor getPollAndConsumeExecutor() {
         return pollAndConsumeExecutor;
@@ -49,16 +47,10 @@ public class AbstractPollingConsumer extends DefaultMessageConsumer {
 
     private volatile Runnable poller;
 
-    public AbstractPollingConsumer() {
-    }
-
     public void setPollAndConsumeExecutor(Executor pollAndConsumeExecutor) {
         this.pollAndConsumeExecutor = pollAndConsumeExecutor;
     }
 
-    public void setTimeout(long timeout) {
-        this.timeout = timeout;
-    }
 
     @Override
     public Object poll(long timeout) {
@@ -117,6 +109,19 @@ public class AbstractPollingConsumer extends DefaultMessageConsumer {
         public void run() {
             pollAndConsumeExecutor.execute(pollingTask);
         }
+    }
+
+
+    public void setTimeout(long timeout) {
+        this.timeout = timeout;
+    }
+
+    public void setErrorHandler(ErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
+    }
+
+    public void setTrigger(Trigger trigger) {
+        this.trigger = trigger;
     }
 
 }
