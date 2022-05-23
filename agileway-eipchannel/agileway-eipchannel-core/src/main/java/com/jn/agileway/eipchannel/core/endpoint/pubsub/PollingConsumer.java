@@ -2,7 +2,6 @@ package com.jn.agileway.eipchannel.core.endpoint.pubsub;
 
 import com.jn.agileway.eipchannel.core.message.MessagingException;
 import com.jn.langx.util.Preconditions;
-import com.jn.langx.util.Throwables;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.ScheduledFuture;
@@ -14,7 +13,7 @@ public class PollingConsumer extends DefaultMessageConsumer {
     /**
      * 由该 taskExecutor 去执行拉取的 事情
      */
-    private volatile Executor taskExecutor;
+    private volatile Executor pollTaskExecutor;
 
     /**
      * 每次拉取的超时时间，单位 mills
@@ -25,12 +24,11 @@ public class PollingConsumer extends DefaultMessageConsumer {
 
     private volatile Runnable poller;
 
-
     public PollingConsumer() {
     }
 
-    public void setTaskExecutor(Executor taskExecutor) {
-        this.taskExecutor = taskExecutor;
+    public void setPollTaskExecutor(Executor pollTaskExecutor) {
+        this.pollTaskExecutor = pollTaskExecutor;
     }
 
     public void setTimeout(long timeout) {
@@ -40,7 +38,7 @@ public class PollingConsumer extends DefaultMessageConsumer {
     @Override
     protected void doInit() {
         super.doInit();
-        Preconditions.checkNotNull(taskExecutor);
+        Preconditions.checkNotNull(pollTaskExecutor);
         try {
             this.poller = this.createPoller();
         } catch (Exception e) {
@@ -48,7 +46,7 @@ public class PollingConsumer extends DefaultMessageConsumer {
         }
     }
 
-    private Runnable createPoller() throws Exception {
+    private Runnable createPoller() {
         Runnable pollingTask = new Runnable() {
             public void run() {
                 poll(timeout);
@@ -81,21 +79,12 @@ public class PollingConsumer extends DefaultMessageConsumer {
 
         private final Runnable pollingTask;
 
-
         public Poller(Runnable pollingTask) {
             this.pollingTask = pollingTask;
         }
 
         public void run() {
-            taskExecutor.execute(new Runnable() {
-                public void run() {
-                    try {
-                        pollingTask.run();
-                    } catch (Exception e) {
-                        throw Throwables.wrapAsRuntimeException(e);
-                    }
-                }
-            });
+            pollTaskExecutor.execute(pollingTask);
         }
     }
 
