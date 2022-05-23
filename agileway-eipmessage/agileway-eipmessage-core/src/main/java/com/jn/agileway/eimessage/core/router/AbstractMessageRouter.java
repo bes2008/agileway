@@ -1,5 +1,6 @@
 package com.jn.agileway.eimessage.core.router;
 
+import com.jn.agileway.eimessage.core.channel.ChannelMode;
 import com.jn.agileway.eimessage.core.channel.ChannelResolver;
 import com.jn.agileway.eimessage.core.channel.OutboundChannel;
 import com.jn.agileway.eimessage.core.message.Message;
@@ -155,7 +156,7 @@ public abstract class AbstractMessageRouter extends AbstractInitializable implem
         }
         Preconditions.checkState(this.channelResolver != null,
                 "unable to resolve channel names, no ChannelResolver available");
-        OutboundChannel channel = this.channelResolver.resolveOutboundChannel(channelName);
+        OutboundChannel channel = this.channelResolver.resolve(channelName, ChannelMode.OUTBOUND);
         if (channel == null && !this.ignoreChannelNameResolutionFailures) {
             throw new MessagingException(message,
                     "failed to resolve channel name '" + channelName + "'");
