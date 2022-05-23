@@ -1,21 +1,21 @@
 package com.jn.agileway.eimessage.core.channel;
 
-import com.jn.agileway.eimessage.core.endpoint.dispatcher.MessageDispatcher;
 import com.jn.agileway.eimessage.core.message.Message;
 
 public class DefaultOutboundChannel extends AbstractOutboundChannel {
-    private MessageDispatcher dispatcher;
-
-    public MessageDispatcher getDispatcher() {
-        return dispatcher;
-    }
-
-    public void setDispatcher(MessageDispatcher dispatcher) {
-        this.dispatcher = dispatcher;
-    }
+    private OutboundChannelSinker sinker;
 
     @Override
-    protected boolean sendInternal(Message<?> message, long timeout) {
-        return this.dispatcher.dispatch(message);
+    protected boolean sendInternal(Message<?> message) {
+        return this.sinker.sink(message);
     }
+
+    public OutboundChannelSinker getSinker() {
+        return sinker;
+    }
+
+    public void setSinker(OutboundChannelSinker sinker) {
+        this.sinker = sinker;
+    }
+
 }

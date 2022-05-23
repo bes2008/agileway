@@ -16,21 +16,16 @@ public abstract class AbstractOutboundChannel extends AbstractInitializable impl
 
     @Override
     public boolean send(Message<?> message) {
-        return send(message, -1);
-    }
-
-    @Override
-    public boolean send(Message<?> message, long timeout) {
         message = pipeline.beforeOutbound(this, message);
         if (message == null) {
             return false;
         }
-        boolean sent = this.sendInternal(message, timeout);
+        boolean sent = this.sendInternal(message);
         pipeline.afterOutbound(this, message, sent);
         return sent;
     }
 
-    protected abstract boolean sendInternal(Message<?> message, long timeout);
+    protected abstract boolean sendInternal(Message<?> message);
 
     @Override
     public Class getDatatype() {
