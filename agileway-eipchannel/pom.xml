@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.github.fangjinuo.agileway</groupId>
+        <artifactId>agileway</artifactId>
+        <version>3.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>agileway-eipchannel</artifactId>
+    <groupId>com.github.fangjinuo.agileway.eipchannel</groupId>
+    <name>${groupId}:${artifactId}:${version}</name>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>agileway-eipchannel-core</module>
+        <module>agileway-eipchannel-etcd</module>
+        <module>agileway-eipchannel-kafka</module>
+        <module>agileway-eipchannel-restful</module>
+
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.github.fangjinuo.agileway</groupId>
+                <artifactId>agileway-eipchannel-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+
+    </dependencies>
+
+</project>
