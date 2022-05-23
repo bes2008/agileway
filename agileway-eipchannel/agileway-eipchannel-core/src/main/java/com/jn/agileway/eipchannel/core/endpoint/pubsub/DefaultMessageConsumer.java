@@ -16,12 +16,12 @@ public class DefaultMessageConsumer extends AbstractMessagePubSubEndpoint implem
     }
 
     public Object poll(long timeout) {
-        return null;
+        return this.inboundChannel.poll(timeout);
     }
 
     @Override
     public Object poll() {
-        return null;
+        return poll(-1);
     }
 
     @Override
