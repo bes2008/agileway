@@ -8,9 +8,9 @@ import org.slf4j.Logger;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public class BlockQueueMessageSource implements InboundMessageSource {
+public class BlockingQueueInboundChannelMessageSource implements InboundChannelMessageSource {
     private BlockingQueue<Message<?>> queue;
-    private static final Logger logger = Loggers.getLogger(BlockQueueMessageSource.class);
+    private static final Logger logger = Loggers.getLogger(BlockingQueueInboundChannelMessageSource.class);
 
     @Override
     public Message<?> poll(long timeoutInMills) {
