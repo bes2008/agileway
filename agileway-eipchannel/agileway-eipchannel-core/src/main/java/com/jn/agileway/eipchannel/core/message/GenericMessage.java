@@ -27,9 +27,9 @@ import java.util.Map;
  * Base Message class defining common properties such as id, payload, and headers.
  * Once created this object is immutable.
  */
-public class GenericMessage<T> implements Message<T>, Serializable {
+public class GenericMessage<T> implements Message<T> {
 
-    private static final long serialVersionUID = 3649200745084232821L;
+    private static final long serialVersionUID = 1L;
 
     private final T payload;
 
@@ -85,13 +85,15 @@ public class GenericMessage<T> implements Message<T>, Serializable {
         if (this == obj) {
             return true;
         }
-        if (obj != null && obj instanceof GenericMessage<?>) {
-            GenericMessage<?> other = (GenericMessage<?>) obj;
-            if (!this.headers.getId().equals(other.headers.getId())) {
-                return false;
+        if (obj != null) {
+            if (obj instanceof GenericMessage<?>) {
+                GenericMessage<?> other = (GenericMessage<?>) obj;
+                if (!this.headers.getId().equals(other.headers.getId())) {
+                    return false;
+                }
+                return this.headers.equals(other.headers)
+                        && this.payload.equals(other.payload);
             }
-            return this.headers.equals(other.headers)
-                    && this.payload.equals(other.payload);
         }
         return false;
     }
