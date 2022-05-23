@@ -4,6 +4,7 @@ import com.jn.agileway.eipchannel.core.message.MessagingException;
 import com.jn.langx.util.Preconditions;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
 /**
@@ -11,15 +12,22 @@ import java.util.concurrent.ScheduledFuture;
  */
 public class PollingConsumer extends DefaultMessageConsumer {
     /**
-     * 由该 taskExecutor 去执行拉取的 事情
+     * 由该 taskExecutor 去执行拉取 并执行 拉取之后的动作
      */
-    private volatile Executor pollTaskExecutor;
+    private volatile Executor pollAndConsumeExecutor;
 
     /**
      * 每次拉取的超时时间，单位 mills
      */
     private long timeout;
+    /**
+     * 用于调度 poll task 的执行。 开始执行时，交给 pollTaskExecutor
+     */
+    private ScheduledExecutorService pollTaskScheduler;
 
+    /**
+     * just for shutdown
+     */
     private volatile ScheduledFuture<?> runningTask;
 
     private volatile Runnable poller;
@@ -27,8 +35,8 @@ public class PollingConsumer extends DefaultMessageConsumer {
     public PollingConsumer() {
     }
 
-    public void setPollTaskExecutor(Executor pollTaskExecutor) {
-        this.pollTaskExecutor = pollTaskExecutor;
+    public void setPollAndConsumeExecutor(Executor pollAndConsumeExecutor) {
+        this.pollAndConsumeExecutor = pollAndConsumeExecutor;
     }
 
     public void setTimeout(long timeout) {
@@ -38,7 +46,7 @@ public class PollingConsumer extends DefaultMessageConsumer {
     @Override
     protected void doInit() {
         super.doInit();
-        Preconditions.checkNotNull(pollTaskExecutor);
+        Preconditions.checkNotNull(pollAndConsumeExecutor);
         try {
             this.poller = this.createPoller();
         } catch (Exception e) {
@@ -84,7 +92,7 @@ public class PollingConsumer extends DefaultMessageConsumer {
         }
 
         public void run() {
-            pollTaskExecutor.execute(pollingTask);
+            pollAndConsumeExecutor.execute(pollingTask);
         }
     }
 
