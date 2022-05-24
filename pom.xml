@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.fangjinuo.agileway</groupId>
     <artifactId>agileway</artifactId>
-    <version>3.1.0</version>
+    <version>3.0.0</version>
     <packaging>pom</packaging>
 
     <name>${groupId}:${artifactId}:${version}</name>
@@ -107,15 +107,9 @@
         <jackson.version>2.13.1</jackson.version>
         <spring.version>4.3.25.RELEASE</spring.version>
         <spring.boot.version>1.5.22.RELEASE</spring.boot.version>
-        <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
     </properties>
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>${exec-maven-plugin.version}</version>
-            </dependency>
             <dependency>
                 <groupId>com.github.fangjinuo.agileway</groupId>
                 <artifactId>agileway-jaxrs</artifactId>
