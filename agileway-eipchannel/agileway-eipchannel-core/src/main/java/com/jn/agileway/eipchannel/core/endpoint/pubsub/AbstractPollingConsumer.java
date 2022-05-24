@@ -5,7 +5,7 @@ import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.exception.ErrorHandler;
 import com.jn.langx.util.Preconditions;
-import com.jn.langx.util.concurrent.Global;
+import com.jn.langx.util.concurrent.executor.ScheduledExecutors;
 import com.jn.langx.util.timing.scheduling.Trigger;
 
 import java.util.concurrent.Executor;
@@ -19,7 +19,7 @@ public abstract class AbstractPollingConsumer extends DefaultMessageConsumer {
      * 由该 taskExecutor 去执行拉取 并执行 拉取之后的动作
      */
     @NonNull
-    private volatile Executor pollAndConsumeExecutor;
+    private volatile Executor channelExecutor;
     @Nullable
     private Trigger trigger;
     @Nullable
@@ -31,8 +31,8 @@ public abstract class AbstractPollingConsumer extends DefaultMessageConsumer {
      */
     private long timeout = -1;
 
-    public Executor getPollAndConsumeExecutor() {
-        return pollAndConsumeExecutor;
+    public Executor getChannelExecutor() {
+        return channelExecutor;
     }
 
     public long getTimeout() {
@@ -47,8 +47,8 @@ public abstract class AbstractPollingConsumer extends DefaultMessageConsumer {
 
     private volatile Runnable poller;
 
-    public void setPollAndConsumeExecutor(Executor pollAndConsumeExecutor) {
-        this.pollAndConsumeExecutor = pollAndConsumeExecutor;
+    public void setChannelExecutor(Executor channelExecutor) {
+        this.channelExecutor = channelExecutor;
     }
 
 
@@ -60,7 +60,7 @@ public abstract class AbstractPollingConsumer extends DefaultMessageConsumer {
     @Override
     protected void doInit() {
         super.doInit();
-        Preconditions.checkNotNull(pollAndConsumeExecutor);
+        Preconditions.checkNotNull(channelExecutor);
         try {
             this.poller = this.createPoller();
         } catch (Exception e) {
@@ -83,7 +83,7 @@ public abstract class AbstractPollingConsumer extends DefaultMessageConsumer {
     protected void doStart() {
         // 延时出发调用
         super.doStart();
-        this.runningTask = Global.scheduleTask(poller, trigger, errorHandler);
+        this.runningTask = ScheduledExecutors.scheduleTask(poller, trigger, errorHandler);
     }
 
     @Override
@@ -107,7 +107,7 @@ public abstract class AbstractPollingConsumer extends DefaultMessageConsumer {
         }
 
         public void run() {
-            pollAndConsumeExecutor.execute(pollingTask);
+            channelExecutor.execute(pollingTask);
         }
     }
 
