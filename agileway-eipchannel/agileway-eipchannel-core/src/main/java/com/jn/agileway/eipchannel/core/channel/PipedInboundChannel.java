@@ -7,6 +7,7 @@ import com.jn.agileway.eipchannel.core.message.Message;
 public class PipedInboundChannel extends DefaultInboundChannel {
     private ChannelMessageInterceptorPipeline pipeline;
 
+
     @Override
     protected Message<?> pollInternal(long timeout) {
         boolean doPoll = pipeline.beforeInbound(this);

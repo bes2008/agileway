@@ -2,18 +2,24 @@ package com.jn.agileway.eipchannel.core.channel;
 
 import com.jn.agileway.eipchannel.core.endpoint.sourcesink.sink.OutboundChannelSinker;
 import com.jn.agileway.eipchannel.core.message.Message;
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.NotEmpty;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
 public class DefaultOutboundChannel extends AbstractInitializable implements OutboundChannel {
     protected Logger logger = Loggers.getLogger(getClass());
+    @NotEmpty
     private String name;
+    @Nullable
     private Class payloadClass;
+    @NonNull
     private OutboundChannelSinker sinker;
 
     @Override
-    public boolean send(Message<?> message) {
+    public final boolean send(Message<?> message) {
         return sendInternal(message);
     }
 
