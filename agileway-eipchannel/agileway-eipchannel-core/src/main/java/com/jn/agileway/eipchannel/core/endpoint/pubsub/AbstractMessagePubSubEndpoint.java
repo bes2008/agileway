@@ -15,10 +15,6 @@ public abstract class AbstractMessagePubSubEndpoint<T> extends AbstractInitializ
     @NotEmpty
     private String name;
 
-    private volatile boolean autoStartup = true;
-
-    private volatile int phase = 0;
-
     private volatile boolean running;
 
     private final ReentrantLock lifecycleLock = new ReentrantLock();
@@ -87,24 +83,6 @@ public abstract class AbstractMessagePubSubEndpoint<T> extends AbstractInitializ
      */
     protected abstract void doStop();
 
-    public void setAutoStartup(boolean autoStartup) {
-        this.autoStartup = autoStartup;
-    }
-
-    public void setPhase(int phase) {
-        this.phase = phase;
-    }
-
-
-    // SmartLifecycle implementation
-
-    public final boolean isAutoStartup() {
-        return this.autoStartup;
-    }
-
-    public final int getPhase() {
-        return this.phase;
-    }
 
     @Override
     public void setMessageMapper(MessageMapper<T> messageMapper) {
