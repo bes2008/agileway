@@ -1,31 +1,26 @@
 package com.jn.agileway.eipchannel.core.channel;
 
-import com.jn.agileway.eipchannel.core.channel.pipe.ChannelMessageInterceptorPipeline;
+import com.jn.agileway.eipchannel.core.endpoint.sourcesink.sink.OutboundChannelSinker;
 import com.jn.agileway.eipchannel.core.message.Message;
-import com.jn.langx.annotation.Nullable;
 import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
 public abstract class AbstractOutboundChannel extends AbstractInitializable implements OutboundChannel {
-    @Nullable
-    private ChannelMessageInterceptorPipeline pipeline;
+    protected Logger logger = Loggers.getLogger(getClass());
     private String name;
     private Class payloadClass;
-    protected Logger logger = Loggers.getLogger(getClass());
+    private OutboundChannelSinker sinker;
 
     @Override
     public boolean send(Message<?> message) {
-        message = pipeline.beforeOutbound(this, message);
-        if (message == null) {
-            return false;
-        }
-        boolean sent = this.sendInternal(message);
-        pipeline.afterOutbound(this, message, sent);
-        return sent;
+        return sendInternal(message);
     }
 
-    protected abstract boolean sendInternal(Message<?> message);
+    protected boolean sendInternal(Message<?> message) {
+        return this.sinker.sink(message);
+    }
+
 
     @Override
     public Class getDatatype() {
@@ -58,11 +53,13 @@ public abstract class AbstractOutboundChannel extends AbstractInitializable impl
     }
 
 
-    public ChannelMessageInterceptorPipeline getPipeline() {
-        return pipeline;
+    public OutboundChannelSinker getSinker() {
+        return sinker;
     }
 
-    public void setPipeline(ChannelMessageInterceptorPipeline pipeline) {
-        this.pipeline = pipeline;
+    public void setSinker(OutboundChannelSinker sinker) {
+        this.sinker = sinker;
     }
+
+
 }

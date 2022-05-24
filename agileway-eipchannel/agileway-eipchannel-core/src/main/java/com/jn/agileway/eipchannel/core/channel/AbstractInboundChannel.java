@@ -1,8 +1,7 @@
 package com.jn.agileway.eipchannel.core.channel;
 
-import com.jn.agileway.eipchannel.core.channel.pipe.ChannelMessageInterceptorPipeline;
+import com.jn.agileway.eipchannel.core.endpoint.sourcesink.source.InboundChannelMessageSource;
 import com.jn.agileway.eipchannel.core.message.Message;
-import com.jn.langx.annotation.Nullable;
 import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
@@ -10,8 +9,8 @@ import org.slf4j.Logger;
 public abstract class AbstractInboundChannel extends AbstractInitializable implements InboundChannel {
     private String name;
     protected Logger logger = Loggers.getLogger(getClass());
-    @Nullable
-    private ChannelMessageInterceptorPipeline pipeline;
+    private InboundChannelMessageSource inboundMessageSource;
+
 
 
     @Override
@@ -21,19 +20,12 @@ public abstract class AbstractInboundChannel extends AbstractInitializable imple
 
     @Override
     public Message<?> poll(long timeout) {
-        boolean doPoll = pipeline.beforeInbound(this);
-        if (!doPoll) {
-            return null;
-        }
-        Message<?> m = this.pollInternal(timeout);
-        if (m != null) {
-            m = pipeline.afterInbound(this, m);
-        }
-        return m;
+        return this.pollInternal(timeout);
     }
 
-    protected abstract Message<?> pollInternal(long timeout);
-
+    protected Message<?> pollInternal(long timeout) {
+        return inboundMessageSource.poll(timeout);
+    }
 
     @Override
     public void startup() {
@@ -45,7 +37,13 @@ public abstract class AbstractInboundChannel extends AbstractInitializable imple
 
     }
 
+    public InboundChannelMessageSource getInboundMessageSource() {
+        return inboundMessageSource;
+    }
 
+    public void setInboundMessageSource(InboundChannelMessageSource inboundMessageSource) {
+        this.inboundMessageSource = inboundMessageSource;
+    }
     @Override
     public void setName(String s) {
         this.name = s;
@@ -57,11 +55,4 @@ public abstract class AbstractInboundChannel extends AbstractInitializable imple
     }
 
 
-    public ChannelMessageInterceptorPipeline getPipeline() {
-        return pipeline;
-    }
-
-    public void setPipeline(ChannelMessageInterceptorPipeline pipeline) {
-        this.pipeline = pipeline;
-    }
 }

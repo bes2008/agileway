@@ -1,7 +1,7 @@
 package com.jn.agileway.eipchannel.eventchannel;
 
-import com.jn.agileway.eipchannel.core.channel.DefaultInboundChannel;
-import com.jn.agileway.eipchannel.core.channel.DefaultOutboundChannel;
+import com.jn.agileway.eipchannel.core.channel.PipedInboundChannel;
+import com.jn.agileway.eipchannel.core.channel.PipedOutboundChannel;
 import com.jn.agileway.eipchannel.core.channel.pipe.ChannelMessageInterceptorPipeline;
 import com.jn.agileway.eipchannel.core.endpoint.pubsub.PollingConsumer;
 import com.jn.agileway.eipchannel.core.endpoint.sourcesink.source.InboundChannelMessageSource;
@@ -48,7 +48,7 @@ public class PollingEventConsumer extends PollingConsumer {
         sinker.setDomainEventMapper(domainEventMapper);
 
         // outbound
-        DefaultOutboundChannel outboundChannel = new DefaultOutboundChannel();
+        PipedOutboundChannel outboundChannel = new PipedOutboundChannel();
         if (outboundPipeline != null) {
             outboundChannel.setPipeline(outboundPipeline);
         }
@@ -60,7 +60,7 @@ public class PollingEventConsumer extends PollingConsumer {
 
         setMessageHandler(router);
 
-        DefaultInboundChannel inboundChannel = new DefaultInboundChannel();
+        PipedInboundChannel inboundChannel = new PipedInboundChannel();
         inboundChannel.setInboundMessageSource(inboundChannelMessageSource);
         if (inboundPipeline != null) {
             inboundChannel.setPipeline(inboundPipeline);
