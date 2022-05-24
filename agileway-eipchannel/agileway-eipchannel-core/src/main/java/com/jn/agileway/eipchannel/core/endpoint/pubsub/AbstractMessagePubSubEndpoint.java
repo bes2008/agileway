@@ -38,6 +38,7 @@ public abstract class AbstractMessagePubSubEndpoint<T> extends AbstractInitializ
         this.lifecycleLock.lock();
         try {
             if (!this.running) {
+                this.init();
                 this.doStart();
                 this.running = true;
                 if (logger.isInfoEnabled()) {

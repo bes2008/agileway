@@ -14,6 +14,8 @@ import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.event.EventPublisher;
 import com.jn.langx.util.Preconditions;
+import com.jn.langx.util.timing.scheduling.ImmediateTrigger;
+import com.jn.langx.util.timing.scheduling.Trigger;
 
 import java.util.concurrent.Executor;
 
@@ -22,6 +24,7 @@ public class PollingEventConsumer extends PollingConsumer {
     public PollingEventConsumer(
             @NotEmpty
                     String name,
+            @Nullable Trigger trigger,
             @NonNull
                     Executor messageChannelExecutor,
             @NonNull
@@ -65,9 +68,13 @@ public class PollingEventConsumer extends PollingConsumer {
         if (inboundPipeline != null) {
             inboundChannel.setPipeline(inboundPipeline);
         }
-        outboundChannel.setName(name + "-inbound-channel");
-
+        inboundChannel.setName(name + "-inbound-channel");
         setInboundChannel(inboundChannel);
+
         setChannelExecutor(messageChannelExecutor);
+        if (trigger == null) {
+            trigger = new ImmediateTrigger();
+        }
+        setTrigger(trigger);
     }
 }

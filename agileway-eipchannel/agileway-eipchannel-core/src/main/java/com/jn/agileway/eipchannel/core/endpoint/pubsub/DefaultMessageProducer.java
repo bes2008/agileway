@@ -13,7 +13,7 @@ import org.slf4j.Logger;
  * producer -> channel -> dispatcher
  */
 public class DefaultMessageProducer<T> extends AbstractMessagePubSubEndpoint<T> implements MessageProducer<T> {
-    private Logger logger = Loggers.getLogger(getClass());
+    protected Logger logger = Loggers.getLogger(getClass());
     private OutboundChannel outboundChannel;
 
     @Override

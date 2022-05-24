@@ -6,6 +6,7 @@ import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.lifecycle.AbstractInitializable;
+import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
@@ -42,6 +43,7 @@ public class DefaultOutboundChannel extends AbstractInitializable implements Out
     @Override
     public void startup() {
         init();
+        Preconditions.checkNotEmpty(getName(),"the outbound channel's name is required");
     }
 
     @Override
@@ -50,7 +52,7 @@ public class DefaultOutboundChannel extends AbstractInitializable implements Out
 
     @Override
     public void setName(String s) {
-        this.name = name;
+        this.name = s;
     }
 
     @Override

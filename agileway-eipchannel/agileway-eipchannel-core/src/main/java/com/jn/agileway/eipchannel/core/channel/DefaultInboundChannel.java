@@ -5,6 +5,7 @@ import com.jn.agileway.eipchannel.core.message.Message;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.lifecycle.AbstractInitializable;
+import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
@@ -32,6 +33,7 @@ public class DefaultInboundChannel extends AbstractInitializable implements Inbo
     @Override
     public void startup() {
         init();
+        Preconditions.checkNotEmpty(getName(),"the inbound channel's name is required");
     }
 
     @Override
