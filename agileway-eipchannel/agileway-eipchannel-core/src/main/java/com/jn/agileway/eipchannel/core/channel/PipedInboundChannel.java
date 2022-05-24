@@ -2,10 +2,9 @@ package com.jn.agileway.eipchannel.core.channel;
 
 import com.jn.agileway.eipchannel.core.channel.pipe.ChannelMessageInterceptorPipeline;
 import com.jn.agileway.eipchannel.core.message.Message;
-import com.jn.langx.annotation.Nullable;
 
 
-public class PipedInboundChannel extends AbstractInboundChannel {
+public class PipedInboundChannel extends DefaultInboundChannel {
     private ChannelMessageInterceptorPipeline pipeline;
 
     @Override

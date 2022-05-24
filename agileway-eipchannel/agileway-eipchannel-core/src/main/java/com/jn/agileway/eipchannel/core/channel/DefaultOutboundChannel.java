@@ -6,7 +6,7 @@ import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
-public abstract class AbstractOutboundChannel extends AbstractInitializable implements OutboundChannel {
+public class DefaultOutboundChannel extends AbstractInitializable implements OutboundChannel {
     protected Logger logger = Loggers.getLogger(getClass());
     private String name;
     private Class payloadClass;

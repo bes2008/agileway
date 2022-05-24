@@ -6,12 +6,10 @@ import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
-public abstract class AbstractInboundChannel extends AbstractInitializable implements InboundChannel {
+public class DefaultInboundChannel extends AbstractInitializable implements InboundChannel {
     private String name;
     protected Logger logger = Loggers.getLogger(getClass());
     private InboundChannelMessageSource inboundMessageSource;
-
-
 
     @Override
     public Message<?> poll() {

@@ -4,7 +4,7 @@ import com.jn.agileway.eipchannel.core.channel.pipe.ChannelMessageInterceptorPip
 import com.jn.agileway.eipchannel.core.message.Message;
 import com.jn.langx.annotation.Nullable;
 
-public class PipedOutboundChannel extends AbstractOutboundChannel {
+public class PipedOutboundChannel extends DefaultOutboundChannel {
 
     @Override
     protected boolean sendInternal(Message<?> message) {
