@@ -21,10 +21,6 @@ public class PipedInboundChannel extends DefaultInboundChannel {
         return m;
     }
 
-    public ChannelMessageInterceptorPipeline getPipeline() {
-        return pipeline;
-    }
-
     public void setPipeline(ChannelMessageInterceptorPipeline pipeline) {
         this.pipeline = pipeline;
     }

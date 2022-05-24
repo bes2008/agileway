@@ -19,9 +19,6 @@ public class PipedOutboundChannel extends DefaultOutboundChannel {
 
     @Nullable
     private ChannelMessageInterceptorPipeline pipeline;
-    public ChannelMessageInterceptorPipeline getPipeline() {
-        return pipeline;
-    }
 
     public void setPipeline(ChannelMessageInterceptorPipeline pipeline) {
         this.pipeline = pipeline;
