@@ -3,7 +3,7 @@ package com.jn.agileway.eipchannel.core.endpoint.pubsub;
 import com.jn.agileway.eipchannel.core.message.MessagingException;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.exception.ErrorHandler;
-import com.jn.langx.util.concurrent.executor.ScheduledExecutors;
+import com.jn.langx.util.timing.scheduling.ScheduledExecutors;
 import com.jn.langx.util.timing.scheduling.Trigger;
 import com.jn.langx.util.timing.timer.Timeout;
 import com.jn.langx.util.timing.timer.Timer;
