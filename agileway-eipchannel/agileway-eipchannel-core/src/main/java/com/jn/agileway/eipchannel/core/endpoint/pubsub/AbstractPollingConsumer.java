@@ -1,25 +1,18 @@
 package com.jn.agileway.eipchannel.core.endpoint.pubsub;
 
 import com.jn.agileway.eipchannel.core.message.MessagingException;
-import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.exception.ErrorHandler;
-import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.concurrent.executor.ScheduledExecutors;
 import com.jn.langx.util.timing.scheduling.Trigger;
-
-import java.util.concurrent.Executor;
-import java.util.concurrent.ScheduledFuture;
+import com.jn.langx.util.timing.timer.Timeout;
+import com.jn.langx.util.timing.timer.Timer;
+import com.jn.langx.util.timing.timer.WheelTimers;
 
 /**
  * 自动化不断拉取的 consumer，拉取之后可以交给 handler来处理
  */
 public abstract class AbstractPollingConsumer extends DefaultMessageConsumer {
-    /**
-     * 由该 taskExecutor 去执行拉取 并执行 拉取之后的动作
-     */
-    @NonNull
-    private volatile Executor channelExecutor;
     @Nullable
     private Trigger trigger;
     @Nullable
@@ -31,9 +24,6 @@ public abstract class AbstractPollingConsumer extends DefaultMessageConsumer {
      */
     private long timeout = -1;
 
-    public Executor getChannelExecutor() {
-        return channelExecutor;
-    }
 
     public long getTimeout() {
         return timeout;
@@ -43,12 +33,12 @@ public abstract class AbstractPollingConsumer extends DefaultMessageConsumer {
     /**
      * just for shutdown
      */
-    private volatile ScheduledFuture<?> runningTask;
-
+    private volatile Timeout runningTask;
+    private Timer timer;
     private volatile Runnable poller;
 
-    public void setChannelExecutor(Executor channelExecutor) {
-        this.channelExecutor = channelExecutor;
+    public void setTimer(Timer timer) {
+        this.timer = timer;
     }
 
 
@@ -60,9 +50,12 @@ public abstract class AbstractPollingConsumer extends DefaultMessageConsumer {
     @Override
     protected void doInit() {
         super.doInit();
-        Preconditions.checkNotNull(channelExecutor);
         try {
             this.poller = this.createPoller();
+
+            if (timer == null) {
+                this.timer = WheelTimers.newHashedWheelTimer();
+            }
         } catch (Exception e) {
             throw new MessagingException("Failed to create Poller", e);
         }
@@ -75,7 +68,7 @@ public abstract class AbstractPollingConsumer extends DefaultMessageConsumer {
             }
         };
 
-        return new Poller(pollingTask);
+        return pollingTask;
     }
 
 
@@ -83,34 +76,16 @@ public abstract class AbstractPollingConsumer extends DefaultMessageConsumer {
     protected void doStart() {
         // 延时出发调用
         super.doStart();
-        this.runningTask = ScheduledExecutors.scheduleTask(poller, trigger, errorHandler);
+        this.runningTask = ScheduledExecutors.timeoutTask(timer, poller, trigger, errorHandler);
     }
 
     @Override
     protected void doStop() {
         if (this.runningTask != null) {
-            this.runningTask.cancel(true);
+            this.runningTask.cancel();
         }
         this.runningTask = null;
     }
-
-
-    /**
-     * 执行一次 poll
-     */
-    private class Poller implements Runnable {
-
-        private final Runnable pollingTask;
-
-        public Poller(Runnable pollingTask) {
-            this.pollingTask = pollingTask;
-        }
-
-        public void run() {
-            channelExecutor.execute(pollingTask);
-        }
-    }
-
 
     public void setTimeout(long timeout) {
         this.timeout = timeout;

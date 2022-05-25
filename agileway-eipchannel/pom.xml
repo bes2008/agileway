@@ -16,10 +16,6 @@
 
     <modules>
         <module>agileway-eipchannel-core</module>
-        <module>agileway-eipchannel-etcd</module>
-        <module>agileway-eipchannel-kafka</module>
-        <module>agileway-eipchannel-restful</module>
-
     </modules>
 
     <dependencyManagement>

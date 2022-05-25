@@ -14,19 +14,27 @@ import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.event.EventPublisher;
 import com.jn.langx.util.Preconditions;
+import com.jn.langx.util.concurrent.executor.ScheduledExecutors;
 import com.jn.langx.util.timing.scheduling.ImmediateTrigger;
 import com.jn.langx.util.timing.scheduling.Trigger;
+import com.jn.langx.util.timing.timer.Timer;
+import com.jn.langx.util.timing.timer.scheduled.ScheduledExecutorTimer;
 
 import java.util.concurrent.Executor;
 
+/**
+ * @since 3.1.0
+ */
 public class PollingEventConsumer extends PollingConsumer {
 
+    /**
+     * @since 3.1.0
+     */
     public PollingEventConsumer(
             @NotEmpty
                     String name,
             @Nullable Trigger trigger,
-            @NonNull
-                    Executor messageChannelExecutor,
+            @NonNull Executor channelExecutor,
             @NonNull
                     EventPublisher eventPublisher,
             @NonNull
@@ -38,7 +46,58 @@ public class PollingEventConsumer extends PollingConsumer {
             @Nullable
                     ChannelMessageInterceptorPipeline outboundPipeline
     ) {
-        Preconditions.checkNotNull(messageChannelExecutor, "executor is required");
+        this(name,
+                new ScheduledExecutorTimer(ScheduledExecutors.getScheduledExecutor(), channelExecutor),
+                trigger,
+                eventPublisher,
+                domainEventMapper,
+                inboundChannelMessageSource,
+                inboundPipeline,
+                outboundPipeline);
+    }
+
+
+    /**
+     * @since 3.1.1
+     */
+    public PollingEventConsumer(
+            @NotEmpty
+                    String name,
+            @Nullable Trigger trigger,
+            @NonNull
+                    EventPublisher eventPublisher,
+            @NonNull
+                    DomainEventMapper domainEventMapper,
+            @NonNull
+                    InboundChannelMessageSource inboundChannelMessageSource,
+            @Nullable
+                    ChannelMessageInterceptorPipeline inboundPipeline,
+            @Nullable
+                    ChannelMessageInterceptorPipeline outboundPipeline
+    ) {
+        this(name, (Timer) null, trigger, eventPublisher, domainEventMapper, inboundChannelMessageSource, inboundPipeline, outboundPipeline);
+    }
+
+
+    /**
+     * @since 3.1.1
+     */
+    public PollingEventConsumer(
+            @NotEmpty
+                    String name,
+            @NonNull Timer timer,
+            @Nullable Trigger trigger,
+            @NonNull
+                    EventPublisher eventPublisher,
+            @NonNull
+                    DomainEventMapper domainEventMapper,
+            @NonNull
+                    InboundChannelMessageSource inboundChannelMessageSource,
+            @Nullable
+                    ChannelMessageInterceptorPipeline inboundPipeline,
+            @Nullable
+                    ChannelMessageInterceptorPipeline outboundPipeline
+    ) {
         Preconditions.checkNotNull(inboundChannelMessageSource, "inboundChannelMessageSource is required");
         Preconditions.checkNotNull(eventPublisher, "the local event publisher is required");
         Preconditions.checkNotNull(domainEventMapper, "domain event mapper is required");
@@ -71,10 +130,10 @@ public class PollingEventConsumer extends PollingConsumer {
         inboundChannel.setName(name + "-inbound-channel");
         setInboundChannel(inboundChannel);
 
-        setChannelExecutor(messageChannelExecutor);
         if (trigger == null) {
             trigger = new ImmediateTrigger();
         }
         setTrigger(trigger);
+        setTimer(timer);
     }
 }

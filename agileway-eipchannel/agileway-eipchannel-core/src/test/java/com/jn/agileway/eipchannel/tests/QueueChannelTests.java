@@ -18,6 +18,9 @@ import com.jn.langx.util.concurrent.executor.ScheduledExecutors;
 import com.jn.langx.util.enums.Enums;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.timing.scheduling.PeriodicTrigger;
+import com.jn.langx.util.timing.scheduling.Trigger;
+import com.jn.langx.util.timing.timer.Timer;
+import com.jn.langx.util.timing.timer.WheelTimers;
 import org.junit.Test;
 import org.slf4j.Logger;
 
@@ -90,7 +93,7 @@ public class QueueChannelTests {
         Executor messageChannelExecutor = new ThreadPoolExecutor(2, 2, 60, TimeUnit.SECONDS, eventProcessTaskQueue);
         // consumer
         PollingEventConsumer consumer = new PollingEventConsumer("event-consumer",
-                null,
+                (Trigger) null,
                 messageChannelExecutor,
                 publisher,
                 eventMapper,
