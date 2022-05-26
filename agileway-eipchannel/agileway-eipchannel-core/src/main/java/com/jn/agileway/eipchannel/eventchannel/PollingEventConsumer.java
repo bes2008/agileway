@@ -13,6 +13,7 @@ import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.event.EventPublisher;
+import com.jn.langx.lifecycle.AbstractLifecycle;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.timing.scheduling.ImmediateTrigger;
 import com.jn.langx.util.timing.scheduling.ScheduledExecutors;
@@ -25,7 +26,8 @@ import java.util.concurrent.Executor;
 /**
  * @since 3.1.0
  */
-public class PollingEventConsumer extends PollingConsumer {
+public class PollingEventConsumer extends AbstractLifecycle {
+    private PollingConsumer consumer;
 
     /**
      * @since 3.1.0
@@ -103,7 +105,8 @@ public class PollingEventConsumer extends PollingConsumer {
         Preconditions.checkNotNull(domainEventMapper, "domain event mapper is required");
         Preconditions.checkNotEmpty(name, "name is required");
 
-        setName(name);
+        PollingConsumer delegate = new PollingConsumer();
+        delegate.setName(name);
         // event sink
         EventOutboundLocalSinker sinker = new EventOutboundLocalSinker();
         sinker.setEventPublisher(eventPublisher);
@@ -120,7 +123,7 @@ public class PollingEventConsumer extends PollingConsumer {
         // router
         MessageRouter router = new DirectOutboundRouter(outboundChannel);
 
-        setMessageHandler(router);
+        delegate.setMessageHandler(router);
 
         PipedInboundChannel inboundChannel = new PipedInboundChannel();
         inboundChannel.setInboundMessageSource(inboundChannelMessageSource);
@@ -128,12 +131,24 @@ public class PollingEventConsumer extends PollingConsumer {
             inboundChannel.setPipeline(inboundPipeline);
         }
         inboundChannel.setName(name + "-inbound-channel");
-        setInboundChannel(inboundChannel);
+        delegate.setInboundChannel(inboundChannel);
 
         if (trigger == null) {
             trigger = new ImmediateTrigger();
         }
-        setTrigger(trigger);
-        setTimer(timer);
+        delegate.setTrigger(trigger);
+        delegate.setTimer(timer);
+
+        this.consumer = delegate;
+    }
+
+    @Override
+    protected void doStart() {
+        this.consumer.startup();
+    }
+
+    @Override
+    protected void doStop() {
+        this.consumer.shutdown();
     }
 }
