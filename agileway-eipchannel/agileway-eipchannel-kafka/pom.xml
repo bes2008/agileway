@@ -20,6 +20,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.github.fangjinuo.agileway.eipchannel</groupId>
+            <artifactId>agileway-eipchannel-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
             <version>${kafka.version}</version>
