@@ -10,7 +10,7 @@ import java.util.List;
 public class TopicSubscribeEvent extends DomainEvent<String> {
     private TopicSubscribeEventType type;
     private List<String> topics;
-
+    private TopicSubscribeSourceType sourceType;
     public TopicSubscribeEvent(){
         super();
     }

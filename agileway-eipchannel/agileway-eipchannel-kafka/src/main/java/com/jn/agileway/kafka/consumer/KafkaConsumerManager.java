@@ -9,6 +9,12 @@ import org.slf4j.Logger;
 
 import java.util.List;
 
+/**
+ * 支持为一个consumer 分配多个topic，允许一个topic 被多个 consumer group 消费。
+ *
+ * <p>
+ * 此外，支持为一个 topic 分组，一个topic 只能属于一个topic 组。 一个 topic group 下的 topics 只能被一个consumer 消费， 一个 consumer 可以消费多个 topic group
+ */
 public class KafkaConsumerManager extends GenericRegistry<KafkaConsumerRef> implements TopicSubscribeEventListener {
     private final static Logger logger = Loggers.getLogger(KafkaConsumerManager.class);
     private ConsumerIdSupplier consumerIdSupplier = new ConsumerIdSupplier() {
@@ -48,7 +54,7 @@ public class KafkaConsumerManager extends GenericRegistry<KafkaConsumerRef> impl
         }
 
         KafkaConsumerRef consumerRef = get(consumerId);
-        TopicSubscribeContext subscribeContext = consumerRef.getSubscribeContext();
+        TopicConsumerContext subscribeContext = consumerRef.getSubscribeContext();
         switch (eventType) {
             case ADD:
                 subscribeContext.addTopics(topics);

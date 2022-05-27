@@ -18,20 +18,20 @@ import java.util.regex.Pattern;
 
 public class KafkaConsumerRef<K, V> extends NameValuePair<Consumer<K, V>> implements Consumer<K, V> {
     private Consumer<K, V> consumer;
-    private TopicSubscribeContext subscribeContext;
+    private TopicConsumerContext subscribeContext;
     private long lastSubscribeTime = -1L;
 
     public boolean subscriptionModified() {
         return this.subscribeContext.getExpectedTopicsLastModified() > this.lastSubscribeTime;
     }
 
-    public TopicSubscribeContext getSubscribeContext() {
+    public TopicConsumerContext getSubscribeContext() {
         return subscribeContext;
     }
 
     public KafkaConsumerRef(@NonNull Consumer<K, V> consumer) {
         this.consumer = consumer;
-        this.subscribeContext = new TopicSubscribeContext();
+        this.subscribeContext = new TopicConsumerContext();
         afterSubscribe(false);
     }
 
