@@ -6,8 +6,9 @@ import com.jn.agileway.eipchannel.eventchannel.mapper.DomainEventMapper;
 import com.jn.langx.event.DomainEvent;
 import com.jn.langx.event.EventPublisher;
 import com.jn.langx.event.EventPublisherAware;
+import com.jn.langx.lifecycle.AbstractLifecycle;
 
-public class EventOutboundLocalSinker implements OutboundChannelSinker, EventPublisherAware {
+public class EventOutboundLocalSinker extends AbstractLifecycle implements OutboundChannelSinker, EventPublisherAware {
     private EventPublisher localPublisher;
     private DomainEventMapper domainEventMapper;
     @Override

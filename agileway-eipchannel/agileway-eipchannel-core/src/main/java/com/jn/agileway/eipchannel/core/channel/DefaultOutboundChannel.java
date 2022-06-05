@@ -3,17 +3,12 @@ package com.jn.agileway.eipchannel.core.channel;
 import com.jn.agileway.eipchannel.core.endpoint.sourcesink.sink.OutboundChannelSinker;
 import com.jn.agileway.eipchannel.core.message.Message;
 import com.jn.langx.annotation.NonNull;
-import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
-import com.jn.langx.lifecycle.AbstractInitializable;
+import com.jn.langx.lifecycle.AbstractLifecycle;
+import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.Preconditions;
-import com.jn.langx.util.logging.Loggers;
-import org.slf4j.Logger;
 
-public class DefaultOutboundChannel extends AbstractInitializable implements OutboundChannel {
-    protected Logger logger = Loggers.getLogger(getClass());
-    @NotEmpty
-    private String name;
+public class DefaultOutboundChannel extends AbstractLifecycle implements OutboundChannel {
     @Nullable
     private Class payloadClass;
     @NonNull
@@ -39,27 +34,21 @@ public class DefaultOutboundChannel extends AbstractInitializable implements Out
         this.payloadClass = datatype;
     }
 
-
     @Override
-    public void startup() {
-        init();
+    protected void doInit() throws InitializationException {
         Preconditions.checkNotEmpty(getName(),"the outbound channel's name is required");
+        Preconditions.checkNotNull(sinker);
     }
 
     @Override
-    public void shutdown() {
+    protected void doStart() {
+        sinker.startup();
     }
 
     @Override
-    public void setName(String s) {
-        this.name = s;
+    protected void doStop() {
+        sinker.shutdown();
     }
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
-
 
     public OutboundChannelSinker getSinker() {
         return sinker;

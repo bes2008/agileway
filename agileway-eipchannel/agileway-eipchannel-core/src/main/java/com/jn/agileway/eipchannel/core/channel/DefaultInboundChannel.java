@@ -5,11 +5,12 @@ import com.jn.agileway.eipchannel.core.message.Message;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.lifecycle.AbstractInitializable;
+import com.jn.langx.lifecycle.AbstractLifecycle;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
-public class DefaultInboundChannel extends AbstractInitializable implements InboundChannel {
+public class DefaultInboundChannel extends AbstractLifecycle implements InboundChannel {
     protected Logger logger = Loggers.getLogger(getClass());
     @NotEmpty
     private String name;
@@ -31,14 +32,19 @@ public class DefaultInboundChannel extends AbstractInitializable implements Inbo
     }
 
     @Override
-    public void startup() {
-        init();
+    public void doInit() {
         Preconditions.checkNotEmpty(getName(),"the inbound channel's name is required");
+        Preconditions.checkNotNull(inboundMessageSource);
     }
 
     @Override
-    public void shutdown() {
+    protected void doStart() {
+        inboundMessageSource.startup();
+    }
 
+    @Override
+    protected void doStop() {
+       inboundMessageSource.shutdown();
     }
 
     public InboundChannelMessageSource getInboundMessageSource() {
