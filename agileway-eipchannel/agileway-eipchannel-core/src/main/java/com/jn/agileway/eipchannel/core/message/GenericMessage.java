@@ -16,10 +16,9 @@
 
 package com.jn.agileway.eipchannel.core.message;
 
+import com.jn.langx.annotation.NonNull;
 import com.jn.langx.util.Objs;
-import com.jn.langx.util.Preconditions;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,10 +30,16 @@ public class GenericMessage<T> implements Message<T> {
 
     private static final long serialVersionUID = 1L;
 
-    private final T payload;
+    @NonNull
+    private T payload;
 
-    private final MessageHeaders headers;
+    @NonNull
+    private MessageHeaders headers;
 
+
+    public GenericMessage() {
+
+    }
 
     /**
      * Create a new message with the given payload.
@@ -54,13 +59,8 @@ public class GenericMessage<T> implements Message<T> {
      * @see MessageHeaders
      */
     public GenericMessage(T payload, Map<String, Object> headers) {
-        Preconditions.checkNotNull(payload, "payload must not be null");
-        if (headers == null) {
-            headers = new HashMap<String, Object>();
-        } else {
-            headers = new HashMap<String, Object>(headers);
-        }
-        this.headers = new MessageHeaders(headers);
+        setHeaders(headers);
+        setPayload(payload);
         this.payload = payload;
     }
 
@@ -71,6 +71,24 @@ public class GenericMessage<T> implements Message<T> {
 
     public T getPayload() {
         return this.payload;
+    }
+
+
+    public void setPayload(T payload) {
+        this.payload = payload;
+    }
+
+    public void setHeaders(MessageHeaders headers) {
+        this.headers = headers;
+    }
+
+    public void setHeaders(Map<String, Object> headers) {
+        if (headers == null) {
+            headers = new HashMap<String, Object>();
+        } else {
+            headers = new HashMap<String, Object>(headers);
+        }
+        setHeaders(new MessageHeaders(headers));
     }
 
     public String toString() {
@@ -91,8 +109,7 @@ public class GenericMessage<T> implements Message<T> {
                 if (!this.headers.getId().equals(other.headers.getId())) {
                     return false;
                 }
-                return this.headers.equals(other.headers)
-                        && this.payload.equals(other.payload);
+                return this.headers.equals(other.headers) && this.payload.equals(other.payload);
             }
         }
         return false;
