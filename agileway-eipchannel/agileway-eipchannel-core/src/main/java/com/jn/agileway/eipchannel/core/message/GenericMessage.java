@@ -78,10 +78,6 @@ public class GenericMessage<T> implements Message<T> {
         this.payload = payload;
     }
 
-    public void setHeaders(MessageHeaders headers) {
-        this.headers = headers;
-    }
-
     public void setHeaders(Map<String, Object> headers) {
         if (headers == null) {
             headers = new HashMap<String, Object>();
