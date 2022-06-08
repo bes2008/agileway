@@ -6,7 +6,8 @@ import com.jn.agileway.eipchannel.core.channel.OutboundChannel;
 import com.jn.agileway.eipchannel.core.message.Message;
 import com.jn.agileway.eipchannel.core.message.MessageBuilder;
 import com.jn.agileway.eipchannel.core.message.MessagingException;
-import com.jn.langx.lifecycle.AbstractInitializable;
+import com.jn.langx.lifecycle.AbstractLifecycle;
+import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
@@ -17,8 +18,7 @@ import org.slf4j.Logger;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-@SuppressWarnings({"unused"})
-public abstract class AbstractMessageRouter extends AbstractInitializable implements MessageRouter {
+public abstract class AbstractMessageRouter extends AbstractLifecycle implements MessageRouter {
     protected Logger logger = Loggers.getLogger(getClass());
     private volatile OutboundChannel defaultOutputChannel;
 
@@ -150,6 +150,10 @@ public abstract class AbstractMessageRouter extends AbstractInitializable implem
         return channels;
     }
 
+    public void setChannelResolver(ChannelResolver channelResolver) {
+        this.channelResolver = channelResolver;
+    }
+
     private OutboundChannel resolveChannelForName(String channelName, Message<?> message) {
         if (this.channelResolver == null) {
             this.init();
@@ -218,5 +222,20 @@ public abstract class AbstractMessageRouter extends AbstractInitializable implem
 
     public OutboundChannel getDefaultOutputChannel() {
         return defaultOutputChannel;
+    }
+
+    @Override
+    protected void doStart() {
+        defaultOutputChannel.startup();
+    }
+
+    @Override
+    protected void doStop() {
+        super.doStop();
+    }
+
+    @Override
+    protected void doInit() throws InitializationException {
+        super.doInit();
     }
 }
