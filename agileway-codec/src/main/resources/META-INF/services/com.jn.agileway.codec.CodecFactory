@@ -1,0 +1,14 @@
+com.jn.agileway.codec.serialization.activejser.ActivejCodecFactory
+com.jn.agileway.codec.serialization.bson.BsonCodecFactory
+com.jn.agileway.codec.serialization.cbor.CborJacksonCodecFactory
+com.jn.agileway.codec.serialization.fse.FseCodecFactory
+com.jn.agileway.codec.serialization.fst.FstCodecFactory
+com.jn.agileway.codec.serialization.hessian.HessianCodecFactory
+com.jn.agileway.codec.serialization.jdk.JdkCodecFactory
+com.jn.agileway.codec.serialization.json.EasyjsonCodecFactory
+com.jn.agileway.codec.serialization.json.JacksonCodecFactory
+com.jn.agileway.codec.serialization.kryo.KryoCodecFactory
+com.jn.agileway.codec.serialization.msgpack.MsgPackCodecFactory
+com.jn.agileway.codec.serialization.protostuff.ProtostuffCodecFactory
+com.jn.agileway.codec.serialization.xml.javabeans.JavaBeansXmlCodecFactory
+com.jn.agileway.codec.serialization.xson.XsonCodecFactory

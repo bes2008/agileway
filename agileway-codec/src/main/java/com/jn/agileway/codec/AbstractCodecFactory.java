@@ -11,4 +11,9 @@ public abstract class AbstractCodecFactory implements CodecFactory {
     }
 
     abstract protected AbstractCodec newCodec();
+
+    @Override
+    public String getName() {
+        return applyTo().getName();
+    }
 }
