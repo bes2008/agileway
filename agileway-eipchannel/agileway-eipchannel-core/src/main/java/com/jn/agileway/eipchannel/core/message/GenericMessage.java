@@ -84,7 +84,7 @@ public class GenericMessage<T> implements Message<T> {
         } else {
             headers = new HashMap<String, Object>(headers);
         }
-        setHeaders(new MessageHeaders(headers));
+        this.headers = new MessageHeaders(headers);
     }
 
     public String toString() {
