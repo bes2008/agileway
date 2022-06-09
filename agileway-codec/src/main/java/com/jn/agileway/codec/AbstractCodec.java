@@ -28,10 +28,7 @@ public abstract class AbstractCodec<T> implements Codec<T> {
     /**
      * 序列化
      *
-     * @param t
      * @param withSchema 是否写 schema， 对于本就支持 写 schema 的 序列化框架，该属性无效
-     * @return
-     * @throws CodecException
      */
     protected abstract byte[] doEncode(T t, boolean withSchema) throws CodecException;
 
@@ -58,11 +55,8 @@ public abstract class AbstractCodec<T> implements Codec<T> {
     }
 
     /**
-     * @param bytes
      * @param withSchema bytes 中是否有 schema 信息，该属性对于本就会写 schema的序列化工具是无效的
      * @param targetType 期望 的序列化类型
-     * @return
-     * @throws CodecException
      */
     protected abstract T doDecode(byte[] bytes, boolean withSchema, Class<T> targetType) throws CodecException;
 
