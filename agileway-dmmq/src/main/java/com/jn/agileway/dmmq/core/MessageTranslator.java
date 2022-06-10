@@ -1,6 +1,7 @@
 package com.jn.agileway.dmmq.core;
 
-import com.lmax.disruptor.EventTranslator;
+import com.jn.langx.annotation.NonNull;
+import com.lmax.disruptor.EventTranslatorTwoArg;
 
 /**
  * 多个topic不能共用同一个translator
@@ -9,13 +10,9 @@ import com.lmax.disruptor.EventTranslator;
  *
  * @param <M>
  */
-public interface MessageTranslator<M> extends EventTranslator<MessageHolder<M>>, TopicNameAware {
-    void setMessage(M message);
-
-    M getMessage();
+public interface MessageTranslator<M> extends EventTranslatorTwoArg<MessageHolder<M>, String, M> {
 
     @Override
-    void translateTo(MessageHolder<M> event, long sequence);
+    void translateTo(MessageHolder<M> event, long sequence, @NonNull String topic,@NonNull M message);
 
-    boolean isIdle();
 }

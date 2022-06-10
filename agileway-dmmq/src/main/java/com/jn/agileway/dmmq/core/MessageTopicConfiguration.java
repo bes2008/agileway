@@ -1,9 +1,6 @@
 package com.jn.agileway.dmmq.core;
 
 import com.jn.agileway.dmmq.core.allocator.DefaultTopicAllocator;
-import com.jn.agileway.dmmq.core.translator.DefaultMessageTranslatorFactory;
-import com.jn.agileway.dmmq.core.translator.MessageTranslatorFactory;
-import com.jn.agileway.dmmq.core.translator.SharedMessageTranslatorFactory;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.lmax.disruptor.WaitStrategy;
@@ -25,7 +22,7 @@ public class MessageTopicConfiguration {
     private WaitStrategy waitStrategy;
 
     @NonNull
-    private MessageTranslatorFactory messageTranslatorFactory = new DefaultMessageTranslatorFactory();
+    private MessageTranslator messageTranslator = new DefaultMessageTranslator();
 
     public int getRingBufferSize() {
         return ringBufferSize;
@@ -65,15 +62,10 @@ public class MessageTopicConfiguration {
     }
 
     public MessageTranslator getMessageTranslator() {
-        return messageTranslatorFactory.get();
+        return messageTranslator;
     }
 
     public void setMessageTranslator(MessageTranslator messageTranslator) {
-        this.messageTranslatorFactory = new SharedMessageTranslatorFactory(messageTranslator);
-    }
-
-    public void setMessageTranslatorFactory(MessageTranslatorFactory messageTranslatorFactory) {
-        this.messageTranslatorFactory = messageTranslatorFactory;
     }
 
     public String getName() {
