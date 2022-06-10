@@ -1,9 +1,11 @@
 package com.jn.agileway.dmmq.core;
 
 import com.jn.agileway.dmmq.core.allocator.DefaultTopicAllocator;
+import com.jn.agileway.dmmq.core.translator.DefaultMessageTranslatorFactory;
+import com.jn.agileway.dmmq.core.translator.MessageTranslatorFactory;
+import com.jn.agileway.dmmq.core.translator.SharedMessageTranslatorFactory;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
-import com.jn.langx.util.reflect.Reflects;
 import com.lmax.disruptor.WaitStrategy;
 import com.lmax.disruptor.dsl.ProducerType;
 
@@ -22,9 +24,8 @@ public class MessageTopicConfiguration {
     @Nullable
     private WaitStrategy waitStrategy;
 
-    private String messageTranslatorClass= Reflects.getFQNClassName(DefaultMessageTranslator.class);
     @NonNull
-    private MessageTranslator messageTranslator = new DefaultMessageTranslator();
+    private MessageTranslatorFactory messageTranslatorFactory = new DefaultMessageTranslatorFactory();
 
     public int getRingBufferSize() {
         return ringBufferSize;
@@ -58,20 +59,21 @@ public class MessageTopicConfiguration {
         this.waitStrategy = waitStrategy;
     }
 
-    public String getMessageTranslatorClass() {
-        return messageTranslatorClass;
-    }
 
+    @Deprecated
     public void setMessageTranslatorClass(String messageTranslatorClass) {
-        this.messageTranslatorClass = messageTranslatorClass;
     }
 
     public MessageTranslator getMessageTranslator() {
-        return messageTranslator;
+        return messageTranslatorFactory.get();
     }
 
     public void setMessageTranslator(MessageTranslator messageTranslator) {
-        this.messageTranslator = messageTranslator;
+        this.messageTranslatorFactory = new SharedMessageTranslatorFactory(messageTranslator);
+    }
+
+    public void setMessageTranslatorFactory(MessageTranslatorFactory messageTranslatorFactory) {
+        this.messageTranslatorFactory = messageTranslatorFactory;
     }
 
     public String getName() {

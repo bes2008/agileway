@@ -1,7 +1,10 @@
-package com.jn.agileway.dmmq.core;
+package com.jn.agileway.dmmq.core.translator;
+
+import com.jn.agileway.dmmq.core.MessageHolder;
+import com.jn.agileway.dmmq.core.MessageTranslator;
 
 public class DefaultMessageTranslator<M> implements MessageTranslator<M> {
-    private M message;
+    private volatile M message;
     private String topicName;
 
     @Override
@@ -28,5 +31,11 @@ public class DefaultMessageTranslator<M> implements MessageTranslator<M> {
     public void translateTo(MessageHolder<M> event, long sequence) {
         event.setTopicName(getTopicName());
         event.set(message);
+        this.message = null;
+    }
+
+    @Override
+    public boolean isIdle() {
+        return this.message == null;
     }
 }

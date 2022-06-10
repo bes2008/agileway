@@ -18,8 +18,8 @@ package com.jn.agileway.eipchannel.core.message;
 
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.util.Objs;
+import com.jn.langx.util.collection.Collects;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -61,7 +61,6 @@ public class GenericMessage<T> implements Message<T> {
     public GenericMessage(T payload, Map<String, Object> headers) {
         setHeaders(headers);
         setPayload(payload);
-        this.payload = payload;
     }
 
 
@@ -79,12 +78,7 @@ public class GenericMessage<T> implements Message<T> {
     }
 
     public void setHeaders(Map<String, Object> headers) {
-        if (headers == null) {
-            headers = new HashMap<String, Object>();
-        } else {
-            headers = new HashMap<String, Object>(headers);
-        }
-        this.headers = new MessageHeaders(headers);
+        this.headers = new MessageHeaders(Collects.newHashMap(headers));
     }
 
     public String toString() {
