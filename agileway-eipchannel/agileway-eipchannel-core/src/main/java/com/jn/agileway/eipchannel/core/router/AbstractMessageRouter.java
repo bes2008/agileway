@@ -136,13 +136,20 @@ public abstract class AbstractMessageRouter extends AbstractLifecycle implements
                 }
             }
         }
-        if (!sent) {
-            if (this.defaultOutputChannel != null) {
+
+        if (this.defaultOutputChannel != null) {
+            /**
+             * 如果之前没有发送时，必然发送到默认channel
+             * 如果之前发送了，根据 自定义的方式来决定是否发到 默认的
+             */
+            boolean sentToDefault = !sent || determineSentToDefaultOutputChannel(this.defaultOutputChannel, results);
+            if(sentToDefault){
                 this.defaultOutputChannel.send(message);
             }
+
         }
     }
-
+    protected abstract boolean determineSentToDefaultOutputChannel(OutboundChannel defaultOutboundChannel, Collection<OutboundChannel> branchesOutboundChannels);
     private Collection<OutboundChannel> determineTargetChannels(Message<?> message) {
         Collection<OutboundChannel> channels = Collects.emptyArrayList();
         Collection<Object> channelsReturned = this.getChannelIdentifiers(message);
