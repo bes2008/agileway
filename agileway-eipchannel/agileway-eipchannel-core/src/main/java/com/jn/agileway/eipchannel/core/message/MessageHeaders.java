@@ -1,6 +1,7 @@
 package com.jn.agileway.eipchannel.core.message;
 
 
+import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
@@ -26,9 +27,9 @@ import java.util.*;
  * new GenericMessage("foo", headers);
  * </pre>
  */
-public final class MessageHeaders implements Map<String, Object>, Serializable {
+public final class MessageHeaders extends LinkedHashMap<String, Object> implements Serializable {
 
-    private static final long serialVersionUID = 6901029029524535147L;
+    private static final long serialVersionUID = 1L;
 
     private static final Logger logger = Loggers.getLogger(MessageHeaders.class);
 
@@ -59,13 +60,11 @@ public final class MessageHeaders implements Map<String, Object>, Serializable {
     public static final String SEQUENCE_DETAILS = "sequenceDetails";
 
 
-    private final Map<String, Object> headers;
-
 
     public MessageHeaders(Map<String, Object> headers) {
-        this.headers = (headers != null) ? new HashMap<String, Object>(headers) : new HashMap<String, Object>();
-        this.headers.put(ID, UUID.randomUUID());
-        this.headers.put(TIMESTAMP, new Long(System.currentTimeMillis()));
+        super(Collects.newHashMap(headers));
+        this.put(ID, UUID.randomUUID());
+        this.put(TIMESTAMP,System.currentTimeMillis());
     }
 
 
@@ -109,7 +108,7 @@ public final class MessageHeaders implements Map<String, Object>, Serializable {
 
     @SuppressWarnings("unchecked")
     public <T> T get(Object key, Class<T> type) {
-        Object value = this.headers.get(key);
+        Object value = this.get(key);
         if (value == null) {
             return null;
         }
@@ -120,100 +119,13 @@ public final class MessageHeaders implements Map<String, Object>, Serializable {
         return (T) value;
     }
 
-    public int hashCode() {
-        return this.headers.hashCode();
-    }
-
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj != null && obj instanceof MessageHeaders) {
-            MessageHeaders other = (MessageHeaders) obj;
-            return this.headers.equals(other.headers);
-        }
-        return false;
-    }
-
-    public String toString() {
-        return this.headers.toString();
-    }
-
-    /*
-     * Map implementation
-     */
-
-    public boolean containsKey(Object key) {
-        return this.headers.containsKey(key);
-    }
-
-    public boolean containsValue(Object value) {
-        return this.headers.containsValue(value);
-    }
-
-    public Set<Map.Entry<String, Object>> entrySet() {
-        return Collections.unmodifiableSet(this.headers.entrySet());
-    }
-
-    public Object get(Object key) {
-        return this.headers.get(key);
-    }
-
-    public boolean isEmpty() {
-        return this.headers.isEmpty();
-    }
-
-    public Set<String> keySet() {
-        return Collections.unmodifiableSet(this.headers.keySet());
-    }
-
-    public int size() {
-        return this.headers.size();
-    }
-
-    public Collection<Object> values() {
-        return Collections.unmodifiableCollection(this.headers.values());
-    }
-
-    /*
-     * Unsupported operations
-     */
-
-    /**
-     * Since MessageHeaders are immutable the call to this method will result in {@link UnsupportedOperationException}
-     */
-    public Object put(String key, Object value) {
-        throw new UnsupportedOperationException("MessageHeaders is immutable.");
-    }
-
-    /**
-     * Since MessageHeaders are immutable the call to this method will result in {@link UnsupportedOperationException}
-     */
-    public void putAll(Map<? extends String, ? extends Object> t) {
-        throw new UnsupportedOperationException("MessageHeaders is immutable.");
-    }
-
-    /**
-     * Since MessageHeaders are immutable the call to this method will result in {@link UnsupportedOperationException}
-     */
-    public Object remove(Object key) {
-        throw new UnsupportedOperationException("MessageHeaders is immutable.");
-    }
-
-    /**
-     * Since MessageHeaders are immutable the call to this method will result in {@link UnsupportedOperationException}
-     */
-    public void clear() {
-        throw new UnsupportedOperationException("MessageHeaders is immutable.");
-    }
-
     /*
      * Serialization methods
      */
 
     private void writeObject(ObjectOutputStream out) throws IOException {
         List<String> keysToRemove = new ArrayList<String>();
-        for (Map.Entry<String, Object> entry : this.headers.entrySet()) {
+        for (Map.Entry<String, Object> entry : this.entrySet()) {
             if (!(entry.getValue() instanceof Serializable)) {
                 keysToRemove.add(entry.getKey());
             }
@@ -222,7 +134,7 @@ public final class MessageHeaders implements Map<String, Object>, Serializable {
             if (logger.isInfoEnabled()) {
                 logger.info("removing non-serializable header: " + key);
             }
-            this.headers.remove(key);
+            this.remove(key);
         }
         out.defaultWriteObject();
     }

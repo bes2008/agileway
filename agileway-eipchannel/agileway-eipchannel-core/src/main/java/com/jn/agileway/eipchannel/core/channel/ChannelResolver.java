@@ -4,5 +4,5 @@ public interface ChannelResolver {
     /**
      * Return the MessageChannel for the given name.
      */
-    <C extends MessageChannel> C resolve(String channelName, ChannelMode channelMode);
+    <C extends MessageChannel> C resolve(String channelName, ChannelDirect channelMode);
 }

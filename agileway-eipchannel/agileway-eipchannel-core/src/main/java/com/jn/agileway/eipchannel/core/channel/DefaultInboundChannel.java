@@ -7,15 +7,28 @@ import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.lifecycle.AbstractLifecycle;
 import com.jn.langx.util.Preconditions;
+import com.jn.langx.util.concurrent.async.DefaultFuture;
+import com.jn.langx.util.concurrent.async.GenericFuture;
+import com.jn.langx.util.concurrent.executor.ImmediateExecutor;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+
 public class DefaultInboundChannel extends AbstractLifecycle implements InboundChannel {
-    protected Logger logger = Loggers.getLogger(getClass());
-    @NotEmpty
-    private String name;
+    private boolean asyncMode = false;
+
+    private ExecutorService asyncExecutor;
+
     @NonNull
     private InboundChannelMessageSource inboundMessageSource;
+
+    public void setAsyncExecutor(ExecutorService asyncExecutor) {
+        this.asyncExecutor = asyncExecutor;
+    }
 
     @Override
     public final Message<?> poll() {
@@ -27,14 +40,36 @@ public class DefaultInboundChannel extends AbstractLifecycle implements InboundC
         return this.pollInternal(timeout);
     }
 
-    protected Message<?> pollInternal(long timeout) {
-        return inboundMessageSource.poll(timeout);
+    /**
+     * 方法是同步的，poll动作是根据asyncMode 来控制是否异步执行。
+     * @param timeout
+     * @return
+     */
+    protected Message<?> pollInternal(final long timeout) {
+        if (!isAsyncMode()) {
+            return inboundMessageSource.poll(timeout);
+        } else {
+            GenericFuture<Message<?>> future = DefaultFuture.submit(this.asyncExecutor, new Callable<Message<?>>() {
+                @Override
+                public Message<?> call() {
+                    return inboundMessageSource.poll(timeout);
+                }
+            }, false);
+            future.awaitUninterruptibly(timeout);
+            if (future.isSuccess()) {
+                future.getNow();
+            }
+            return null;
+        }
     }
 
     @Override
     public void doInit() {
-        Preconditions.checkNotEmpty(getName(),"the inbound channel's name is required");
+        Preconditions.checkNotEmpty(getName(), "the inbound channel's name is required");
         Preconditions.checkNotNull(inboundMessageSource);
+        if (asyncMode) {
+            Preconditions.checkNotNull(this.asyncExecutor);
+        }
     }
 
     @Override
@@ -44,7 +79,7 @@ public class DefaultInboundChannel extends AbstractLifecycle implements InboundC
 
     @Override
     protected void doStop() {
-       inboundMessageSource.shutdown();
+        inboundMessageSource.shutdown();
     }
 
     public InboundChannelMessageSource getInboundMessageSource() {
@@ -56,14 +91,13 @@ public class DefaultInboundChannel extends AbstractLifecycle implements InboundC
     }
 
     @Override
-    public void setName(String s) {
-        this.name = s;
+    public boolean isAsyncMode() {
+        return asyncMode;
     }
 
-    @Override
-    public String getName() {
-        return this.name;
+    public void setAsyncMode(boolean asyncMode) {
+        if (!isRunning()) {
+            this.asyncMode = asyncMode;
+        }
     }
-
-
 }

@@ -13,5 +13,6 @@ import com.jn.langx.lifecycle.Lifecycle;
  * 用它来接收时，源头可以是一个，也可以是多个
  */
 public interface MessageChannel extends Nameable, Lifecycle, Initializable {
-
+    boolean isAsyncMode();
+    void setAsyncMode(boolean asyncMode);
 }

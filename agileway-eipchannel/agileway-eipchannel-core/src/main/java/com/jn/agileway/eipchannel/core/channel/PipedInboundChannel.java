@@ -11,7 +11,7 @@ public class PipedInboundChannel extends DefaultInboundChannel {
 
     @Override
     protected Message<?> pollInternal(long timeout) {
-        if(pipeline!=null) {
+        if (pipeline != null) {
             boolean doPoll = pipeline.beforeInbound(this);
             if (!doPoll) {
                 return null;
@@ -21,7 +21,7 @@ public class PipedInboundChannel extends DefaultInboundChannel {
                 m = pipeline.afterInbound(this, m);
             }
             return m;
-        }else{
+        } else {
             return super.pollInternal(timeout);
         }
     }

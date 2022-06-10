@@ -1,6 +1,6 @@
 package com.jn.agileway.eipchannel.core.channel;
 
-public enum ChannelMode {
+public enum ChannelDirect {
     INBOUND,
     OUTBOUND,
     DUPLEX

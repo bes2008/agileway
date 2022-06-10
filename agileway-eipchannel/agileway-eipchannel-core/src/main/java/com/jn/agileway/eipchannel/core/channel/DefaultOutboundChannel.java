@@ -7,22 +7,47 @@ import com.jn.langx.annotation.Nullable;
 import com.jn.langx.lifecycle.AbstractLifecycle;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.Preconditions;
+import com.jn.langx.util.concurrent.async.DefaultFuture;
+import com.jn.langx.util.concurrent.async.GenericFuture;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
 
 public class DefaultOutboundChannel extends AbstractLifecycle implements OutboundChannel {
+    private boolean asyncMode;
     @Nullable
     private Class payloadClass;
     @NonNull
     private OutboundChannelSinker sinker;
+
+    private ExecutorService asyncExecutor;
 
     @Override
     public final boolean send(Message<?> message) {
         return sendInternal(message);
     }
 
-    protected boolean sendInternal(Message<?> message) {
-        return this.sinker.sink(message);
+    protected boolean sendInternal(final Message<?> message) {
+        if (!isAsyncMode()) {
+            return this.sinker.sink(message);
+        } else {
+            GenericFuture<Boolean> future = DefaultFuture.submit(this.asyncExecutor, new Callable<Boolean>() {
+                @Override
+                public Boolean call() {
+                    return sinker.sink(message);
+                }
+            }, false);
+            future.awaitUninterruptibly();
+            if (future.isSuccess()) {
+                future.getNow();
+            }
+            return false;
+        }
     }
 
+    public void setAsyncExecutor(ExecutorService asyncExecutor) {
+        this.asyncExecutor = asyncExecutor;
+    }
 
     @Override
     public Class getDatatype() {
@@ -36,8 +61,12 @@ public class DefaultOutboundChannel extends AbstractLifecycle implements Outboun
 
     @Override
     protected void doInit() throws InitializationException {
-        Preconditions.checkNotEmpty(getName(),"the outbound channel's name is required");
+        Preconditions.checkNotEmpty(getName(), "the outbound channel's name is required");
         Preconditions.checkNotNull(sinker);
+        if (asyncMode) {
+            Preconditions.checkNotNull(this.asyncExecutor);
+        }
+
     }
 
     @Override
@@ -58,5 +87,15 @@ public class DefaultOutboundChannel extends AbstractLifecycle implements Outboun
         this.sinker = sinker;
     }
 
+    @Override
+    public boolean isAsyncMode() {
+        return false;
+    }
 
+    @Override
+    public void setAsyncMode(boolean asyncMode) {
+        if (!isRunning()) {
+            this.asyncMode = asyncMode;
+        }
+    }
 }
