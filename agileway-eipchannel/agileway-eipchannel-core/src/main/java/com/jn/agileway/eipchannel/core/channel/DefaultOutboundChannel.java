@@ -23,18 +23,14 @@ public class DefaultOutboundChannel extends AbstractLifecycle implements Outboun
     private ExecutorService asyncExecutor;
 
     @Override
-    public final boolean send(Message<?> message) {
-        return sendInternal(message);
-    }
-
-    protected boolean sendInternal(final Message<?> message) {
+    public final boolean send(final Message<?> message) {
         if (!isAsyncMode()) {
-            return this.sinker.sink(message);
+            return sendInternal(message);
         } else {
             GenericFuture<Boolean> future = DefaultFuture.submit(this.asyncExecutor, new Callable<Boolean>() {
                 @Override
                 public Boolean call() {
-                    return sinker.sink(message);
+                    return sendInternal(message);
                 }
             }, false);
             future.awaitUninterruptibly();
@@ -43,6 +39,10 @@ public class DefaultOutboundChannel extends AbstractLifecycle implements Outboun
             }
             return false;
         }
+    }
+
+    protected boolean sendInternal(final Message<?> message) {
+        return this.sinker.sink(message);
     }
 
     public void setAsyncExecutor(ExecutorService asyncExecutor) {
