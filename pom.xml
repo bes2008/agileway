@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.fangjinuo.agileway</groupId>
     <artifactId>agileway</artifactId>
-    <version>3.1.5</version>
+    <version>3.1.6</version>
     <packaging>pom</packaging>
 
     <name>${groupId}:${artifactId}:${version}</name>
