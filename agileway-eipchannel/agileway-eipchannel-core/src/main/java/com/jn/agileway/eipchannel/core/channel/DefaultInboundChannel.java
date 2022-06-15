@@ -50,8 +50,6 @@ public class DefaultInboundChannel extends AbstractLifecycle implements InboundC
     /**
      * 方法是同步的，poll动作是根据asyncMode 来控制是否异步执行。
      *
-     * @param timeout
-     * @return
      */
     protected Message<?> pollInternal(final long timeout) {
         return inboundMessageSource.poll(timeout);
