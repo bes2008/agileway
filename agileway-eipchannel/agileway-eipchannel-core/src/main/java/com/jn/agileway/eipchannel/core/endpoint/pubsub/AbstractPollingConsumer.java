@@ -85,6 +85,7 @@ public abstract class AbstractPollingConsumer extends DefaultMessageConsumer {
             this.runningTask.cancel();
         }
         this.runningTask = null;
+        super.doStop();
     }
 
     public void setTimeout(long timeout) {
