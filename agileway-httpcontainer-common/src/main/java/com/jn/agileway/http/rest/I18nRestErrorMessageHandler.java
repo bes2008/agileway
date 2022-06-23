@@ -46,11 +46,14 @@ public class I18nRestErrorMessageHandler implements RestErrorMessageHandler, I18
                 errorCode = "HTTP-" + restRespBody.getStatusCode();
             }
         }
-        String message = null;
-        try {
-            message = storage.getMessage(locale, I18nRestErrorMessageHandler.class.getClassLoader(), errorCode, restRespBody.getErrorMessage());
-        } catch (Throwable ex) {
-            logger.error(ex.getMessage(), ex);
+
+        String message = restRespBody.getErrorMessage();
+        if(Strings.isBlank(message)) {
+            try {
+                message = storage.getMessage(locale, I18nRestErrorMessageHandler.class.getClassLoader(), errorCode, restRespBody.getErrorMessage());
+            } catch (Throwable ex) {
+                logger.error(ex.getMessage(), ex);
+            }
         }
         if (Emptys.isNotEmpty(message)) {
             restRespBody.setErrorCode(errorCode);
