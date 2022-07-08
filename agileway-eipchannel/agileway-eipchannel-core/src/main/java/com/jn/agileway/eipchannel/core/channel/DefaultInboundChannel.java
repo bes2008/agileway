@@ -5,23 +5,13 @@ import com.jn.agileway.eipchannel.core.message.Message;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.lifecycle.AbstractLifecycle;
 import com.jn.langx.util.Preconditions;
-import com.jn.langx.util.concurrent.async.DefaultFuture;
-import com.jn.langx.util.concurrent.async.GenericFuture;
-
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 
 public class DefaultInboundChannel extends AbstractLifecycle implements InboundChannel {
-    private boolean asyncMode = false;
 
-    private ExecutorService asyncExecutor;
 
     @NonNull
     private InboundChannelMessageSource inboundMessageSource;
 
-    public void setAsyncExecutor(ExecutorService asyncExecutor) {
-        this.asyncExecutor = asyncExecutor;
-    }
 
     @Override
     public final Message<?> poll() {
@@ -30,21 +20,7 @@ public class DefaultInboundChannel extends AbstractLifecycle implements InboundC
 
     @Override
     public final Message<?> poll(final long timeout) {
-        if (!isAsyncMode()) {
             return pollInternal(timeout);
-        } else {
-            GenericFuture<Message<?>> future = DefaultFuture.submit(this.asyncExecutor, new Callable<Message<?>>() {
-                @Override
-                public Message<?> call() {
-                    return pollInternal(timeout);
-                }
-            }, false);
-            future.awaitUninterruptibly(timeout);
-            if (future.isSuccess()) {
-                return future.getNow();
-            }
-            return null;
-        }
     }
 
     /**
@@ -59,9 +35,6 @@ public class DefaultInboundChannel extends AbstractLifecycle implements InboundC
     public void doInit() {
         Preconditions.checkNotEmpty(getName(), "the inbound channel's name is required");
         Preconditions.checkNotNull(inboundMessageSource);
-        if (asyncMode) {
-            Preconditions.checkNotNull(this.asyncExecutor);
-        }
     }
 
     @Override
@@ -82,14 +55,4 @@ public class DefaultInboundChannel extends AbstractLifecycle implements InboundC
         this.inboundMessageSource = inboundMessageSource;
     }
 
-    @Override
-    public boolean isAsyncMode() {
-        return asyncMode;
-    }
-
-    public void setAsyncMode(boolean asyncMode) {
-        if (!isRunning()) {
-            this.asyncMode = asyncMode;
-        }
-    }
 }
