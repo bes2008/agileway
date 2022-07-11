@@ -7,12 +7,16 @@ import com.jn.langx.annotation.Nullable;
 import com.jn.langx.codec.CodecException;
 import com.jn.langx.util.ClassLoaders;
 import com.jn.langx.util.Emptys;
+import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.concurrent.threadlocal.ThreadLocalFactory;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import org.apache.avro.Schema;
-import org.apache.avro.io.*;
+import org.apache.avro.io.BinaryDecoder;
+import org.apache.avro.io.BinaryEncoder;
+import org.apache.avro.io.DecoderFactory;
+import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.reflect.ReflectData;
 import org.apache.avro.reflect.ReflectDatumReader;
 import org.apache.avro.reflect.ReflectDatumWriter;
@@ -22,6 +26,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Avros {
 
@@ -37,12 +42,27 @@ public class Avros {
     public static final ThreadLocalFactory<?, BinaryDecoder> decoderFactoryLocal = new ThreadLocalFactory<Object, BinaryDecoder>(new Factory<Object, BinaryDecoder>() {
         @Override
         public BinaryDecoder get(Object o) {
-            return DecoderFactory.get().binaryDecoder(new ByteArrayInputStream(new byte[0]),null);
+            return DecoderFactory.get().binaryDecoder(new ByteArrayInputStream(new byte[0]), null);
         }
     });
 
-    public static Schema getSchema(Class t) {
-        return ReflectData.AllowNull.get().getSchema(t);
+    private static ConcurrentHashMap<Class, Schema> schemaMap = new ConcurrentHashMap<Class, Schema>();
+
+    public static Schema getSchema(Class targetClass) {
+        Preconditions.checkNotNull(targetClass, "the target class is null");
+        Schema schema = schemaMap.get(targetClass);
+        if (schema == null) {
+            synchronized (Avros.class) {
+                schema = schemaMap.get(targetClass);
+                if (schema == null) {
+                    schema = ReflectData.AllowNull.get().getSchema(targetClass);
+                    if (schema != null) {
+                        schemaMap.putIfAbsent(targetClass, schema);
+                    }
+                }
+            }
+        }
+        return schema;
     }
 
     public static <T> byte[] serializeWithSchema(T o) throws IOException {
@@ -87,7 +107,7 @@ public class Avros {
     }
 
     public static <T> void serialize(@Nullable T o, OutputStream outputStream) throws IOException {
-        ReflectDatumWriter writer = new ReflectDatumWriter(o.getClass(),ReflectData.AllowNull.get());
+        ReflectDatumWriter writer = new ReflectDatumWriter(o.getClass(), ReflectData.AllowNull.get());
         BinaryEncoder encoder = EncoderFactory.get().binaryEncoder(outputStream, encoderFactoryLocal.get());
         writer.write(o, encoder);
         encoder.flush();
@@ -99,7 +119,7 @@ public class Avros {
             return null;
         }
 
-        Schema schema =getSchema(targetType);
+        Schema schema = getSchema(targetType);
         ReflectDatumReader<T> reader = new ReflectDatumReader<T>(schema);
         T t = reader.read(null, DecoderFactory.get().binaryDecoder(bytes, decoderFactoryLocal.get()));
         return t;
