@@ -107,7 +107,7 @@ public class Avros {
     }
 
     public static <T> void serialize(@Nullable T o, OutputStream outputStream) throws IOException {
-        ReflectDatumWriter writer = new ReflectDatumWriter(o.getClass(), ReflectData.AllowNull.get());
+        ReflectDatumWriter writer = new ReflectDatumWriter(getSchema(o.getClass()), ReflectData.AllowNull.get());
         BinaryEncoder encoder = EncoderFactory.get().binaryEncoder(outputStream, encoderFactoryLocal.get());
         writer.write(o, encoder);
         encoder.flush();
