@@ -33,13 +33,12 @@
     <dependencyManagement>
         <dependencies>
 
-            <!--
             <dependency>
                 <groupId>org.apache.avro</groupId>
                 <artifactId>avro</artifactId>
                 <version>${avro.version}</version>
+                <optional>true</optional>
             </dependency>
-            -->
             <dependency>
                 <groupId>io.activej</groupId>
                 <artifactId>activej-serializer</artifactId>
@@ -132,6 +131,10 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm</artifactId>
