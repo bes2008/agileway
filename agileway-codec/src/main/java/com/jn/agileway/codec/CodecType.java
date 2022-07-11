@@ -5,19 +5,20 @@ import com.jn.langx.util.enums.base.EnumDelegate;
 
 public enum CodecType implements CommonEnum {
     ACTIVEJ(0, "activej"),
-    BSON(5, "bson"),
-    CBOR(10, "cbor"),
-    FSE(15, "fse"),
-    FST(20, "fst"),
-    HESSIAN(25, "hessian"),
-    JACKSON(30, "jackson"),
-    JDK(35, "jdk"),
-    JSON(40, "json"), // easyjson
-    KRYO(45, "kryo"),
-    MSGPACK(50, "msgpack"),
-    PROTOSTUFF(55, "protostuff"),
-    JAVABEANS_XML(60, "javabeans_xml"),
-    XSON(65, "xson");
+    AVRO(10,"avro"),
+    BSON(20, "bson"),
+    CBOR(30, "cbor"),
+    FSE(40, "fse"),
+    FST(50, "fst"),
+    HESSIAN(60, "hessian"),
+    JACKSON(70, "jackson"),
+    JDK(80, "jdk"),
+    JSON(90, "json"), // easyjson
+    KRYO(100, "kryo"),
+    MSGPACK(110, "msgpack"),
+    PROTOSTUFF(120, "protostuff"),
+    JAVABEANS_XML(130, "javabeans_xml"),
+    XSON(140, "xson");
     private EnumDelegate delegate;
 
     CodecType(int code, String name) {

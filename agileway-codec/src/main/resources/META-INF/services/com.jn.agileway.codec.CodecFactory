@@ -1,4 +1,5 @@
 com.jn.agileway.codec.serialization.activejser.ActivejCodecFactory
+com.jn.agileway.codec.serialization.avro.AvroCodecFactory
 com.jn.agileway.codec.serialization.bson.BsonCodecFactory
 com.jn.agileway.codec.serialization.cbor.CborJacksonCodecFactory
 com.jn.agileway.codec.serialization.fse.FseCodecFactory

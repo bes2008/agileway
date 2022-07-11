@@ -18,6 +18,7 @@ import org.apache.avro.reflect.ReflectDatumReader;
 import org.apache.avro.reflect.ReflectDatumWriter;
 import org.slf4j.Logger;
 
+import java.beans.Encoder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -42,7 +43,7 @@ public class Avros {
     });
 
     public static Schema getSchema(Class t) {
-        return new ReflectData(t.getClassLoader()).getSchema(t);
+        return ReflectData.AllowNull.get().getSchema(t);
     }
 
     public static <T> byte[] serializeWithSchema(T o) throws IOException {
@@ -87,8 +88,10 @@ public class Avros {
     }
 
     public static <T> void serialize(@Nullable T o, OutputStream outputStream) throws IOException {
-        ReflectDatumWriter writer = new ReflectDatumWriter(o.getClass());
-        writer.write(o, EncoderFactory.get().binaryEncoder(outputStream, encoderFactoryLocal.get()));
+        ReflectDatumWriter writer = new ReflectDatumWriter(o.getClass(),ReflectData.AllowNull.get());
+        BinaryEncoder encoder = EncoderFactory.get().binaryEncoder(outputStream, encoderFactoryLocal.get());
+        writer.write(o, encoder);
+        encoder.flush();
     }
 
 
@@ -97,7 +100,8 @@ public class Avros {
             return null;
         }
 
-        ReflectDatumReader<T> reader = new ReflectDatumReader<T>(targetType);
+        Schema schema =getSchema(targetType);
+        ReflectDatumReader<T> reader = new ReflectDatumReader<T>(schema);
         T t = reader.read(null, DecoderFactory.get().binaryDecoder(bytes, decoderFactoryLocal.get()));
         return t;
     }

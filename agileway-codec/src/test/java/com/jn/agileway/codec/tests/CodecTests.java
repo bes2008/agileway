@@ -2,6 +2,7 @@ package com.jn.agileway.codec.tests;
 
 import com.jn.agileway.codec.Codec;
 import com.jn.agileway.codec.serialization.activejser.ActivejSerCodec;
+import com.jn.agileway.codec.serialization.avro.AvroCodec;
 import com.jn.agileway.codec.serialization.bson.BsonCodec;
 import com.jn.agileway.codec.serialization.cbor.CborJacksonCodec;
 import com.jn.agileway.codec.serialization.fse.FseCodec;
@@ -56,6 +57,13 @@ public class CodecTests {
         // testInternal(pojo, codec);
     }
 
+
+    @Test
+    public void testAvro() throws CodecException {
+        Codec<Pojo> codec = new AvroCodec<>();
+        testInternal(pojo_non_cycle, codec);
+        testInternal(pojo, codec);
+    }
 
     @Test
     public void testFse() throws CodecException {

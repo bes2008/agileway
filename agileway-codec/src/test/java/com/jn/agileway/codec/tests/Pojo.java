@@ -16,7 +16,7 @@ public class Pojo implements Serializable {
     private static final long serialVersionUID = -1L;
     private transient static final Logger logger = Loggers.getLogger(Pojo.class);
 
-    private Serializable id;
+    private String id;
     private Date startTimestamp;
     private Date stopTimestamp;
     private Date lastAccessTime;
@@ -24,7 +24,7 @@ public class Pojo implements Serializable {
     private boolean expired;
     private String host;
     @BsonIgnore
-    private Map<Object, Object> attributes;
+    private Map<String, Object> attributes;
 
     public Pojo() {
         this.timeout = MINUTES_TO_MILLIS * 30;
@@ -37,11 +37,11 @@ public class Pojo implements Serializable {
         this.host = host;
     }
 
-    public Serializable getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(Serializable id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -116,11 +116,11 @@ public class Pojo implements Serializable {
         this.host = host;
     }
 
-    public Map<Object, Object> getAttributes() {
+    public Map<String, Object> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(Map<Object, Object> attributes) {
+    public void setAttributes(Map<String, Object> attributes) {
         this.attributes = attributes;
     }
 
@@ -195,18 +195,18 @@ public class Pojo implements Serializable {
     }
 
 
-    private Map<Object, Object> getAttributesLazy() {
-        Map<Object, Object> attributes = getAttributes();
+    private Map<String, Object> getAttributesLazy() {
+        Map<String, Object> attributes = getAttributes();
         if (attributes == null) {
-            attributes = new HashMap<Object, Object>();
+            attributes = new HashMap<String, Object>();
             setAttributes(attributes);
         }
         return attributes;
     }
 
     @BsonIgnore
-    public Collection<Object> getAttributeKeys() {
-        Map<Object, Object> attributes = getAttributes();
+    public Collection<String> getAttributeKeys() {
+        Map<String, Object> attributes = getAttributes();
         if (attributes == null) {
             return Collects.emptyHashSet();
         }
@@ -214,14 +214,14 @@ public class Pojo implements Serializable {
     }
 
     public Object getAttribute(Object key) {
-        Map<Object, Object> attributes = getAttributes();
+        Map<String, Object> attributes = getAttributes();
         if (attributes == null) {
             return null;
         }
         return attributes.get(key);
     }
 
-    public void setAttribute(Object key, Object value) {
+    public void setAttribute(String key, Object value) {
         if (value == null) {
             removeAttribute(key);
         } else {
@@ -230,7 +230,7 @@ public class Pojo implements Serializable {
     }
 
     public Object removeAttribute(Object key) {
-        Map<Object, Object> attributes = getAttributes();
+        Map<String, Object> attributes = getAttributes();
         if (attributes == null) {
             return null;
         } else {
