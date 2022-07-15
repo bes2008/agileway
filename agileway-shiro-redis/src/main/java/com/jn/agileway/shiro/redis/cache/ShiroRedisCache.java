@@ -28,7 +28,7 @@ public class ShiroRedisCache<K, V> implements Cache<K, V> {
         if (Strings.isNotBlank(redisKey)) {
             return redisCache.get(redisKey);
         } else {
-            throw new CacheException(StringTemplates.format("invalid key: {}", key));
+            throw new CacheException(StringTemplates.formatWithPlaceholder("invalid key: {}", key));
         }
     }
 
@@ -38,7 +38,7 @@ public class ShiroRedisCache<K, V> implements Cache<K, V> {
         if (Strings.isNotBlank(redisKey)) {
             return redisCache.get(redisKey);
         } else {
-            throw new CacheException(StringTemplates.format("invalid key: {}", key));
+            throw new CacheException(StringTemplates.formatWithPlaceholder("invalid key: {}", key));
         }
     }
 
@@ -48,7 +48,7 @@ public class ShiroRedisCache<K, V> implements Cache<K, V> {
         if (Strings.isNotBlank(redisKey)) {
             return redisCache.remove(redisKey);
         } else {
-            throw new CacheException(StringTemplates.format("invalid key: {}", key));
+            throw new CacheException(StringTemplates.formatWithPlaceholder("invalid key: {}", key));
         }
     }
 
