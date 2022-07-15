@@ -8,8 +8,6 @@ import com.jn.langx.util.function.Functions;
 import java.util.List;
 
 /**
- * https://tomcat.apache.org/tomcat-9.0-doc/config/filter.html#CORS_Filter
- *
  * configuration prefix: cors
  */
 public class CorsProperties {
