@@ -12,12 +12,12 @@ import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 
-class ResponseUtil {
+class CorsResponses {
 
     private static final String VARY_HEADER = "vary";
     private static final String VARY_ALL = "*";
 
-    private ResponseUtil() {
+    private CorsResponses() {
         // Utility class. Hide default constructor.
     }
 

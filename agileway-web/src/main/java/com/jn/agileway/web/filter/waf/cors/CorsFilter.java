@@ -343,7 +343,7 @@ public class CorsFilter implements Filter {
         if (!conf.anyOriginAllowed()) {
             // If only specific origins are allowed, the response will vary by
             // origin
-            ResponseUtil.addVaryFieldName(response, CorsFilter.REQUEST_HEADER_ORIGIN);
+            CorsResponses.addVaryFieldName(response, CorsFilter.REQUEST_HEADER_ORIGIN);
         }
 
         // CORS requests (SIMPLE, ACTUAL, PRE_FLIGHT) set the following headers
@@ -382,9 +382,9 @@ public class CorsFilter implements Filter {
             // For an OPTIONS request, the response will vary based on the
             // value or absence of the following headers. Hence they need be be
             // included in the Vary header.
-            ResponseUtil.addVaryFieldName(
+            CorsResponses.addVaryFieldName(
                     response, CorsFilter.REQUEST_HEADER_ACCESS_CONTROL_REQUEST_METHOD);
-            ResponseUtil.addVaryFieldName(
+            CorsResponses.addVaryFieldName(
                     response, CorsFilter.REQUEST_HEADER_ACCESS_CONTROL_REQUEST_HEADERS);
 
             // CORS PRE_FLIGHT (OPTIONS) requests set the following headers although
