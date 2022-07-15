@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.github.fangjinuo.agileway.eipchannel</groupId>
         <artifactId>agileway-eipchannel</artifactId>
-        <version>3.1.9</version>
+        <version>3.1.10</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
