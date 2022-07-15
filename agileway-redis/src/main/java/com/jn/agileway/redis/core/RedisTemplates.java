@@ -1,19 +1,10 @@
 package com.jn.agileway.redis.core;
 
 import com.jn.agileway.codec.Codec;
-import com.jn.agileway.codec.serialization.bson.BsonCodec;
-import com.jn.agileway.codec.serialization.cbor.CborJacksonCodec;
-import com.jn.agileway.codec.serialization.fse.FseCodec;
-import com.jn.agileway.codec.serialization.fst.FstCodec;
-import com.jn.agileway.codec.serialization.hessian.HessianCodec;
-import com.jn.agileway.codec.serialization.jdk.JdkCodec;
+import com.jn.agileway.codec.CodecFactory;
+import com.jn.agileway.codec.CodecFactoryRegistry;
+import com.jn.agileway.codec.CodecType;
 import com.jn.agileway.codec.serialization.json.EasyjsonCodec;
-import com.jn.agileway.codec.serialization.json.JacksonCodec;
-import com.jn.agileway.codec.serialization.kryo.KryoCodec;
-import com.jn.agileway.codec.serialization.msgpack.MsgPackCodec;
-import com.jn.agileway.codec.serialization.protostuff.ProtostuffCodec;
-import com.jn.agileway.codec.serialization.xson.XsonCodec;
-import com.jn.agileway.redis.core.conf.BuiltinCodecType;
 import com.jn.agileway.redis.core.conf.RedisTemplateProperties;
 import com.jn.agileway.redis.core.key.RedisKeyWrapper;
 import com.jn.agileway.redis.core.script.RedisLuaScriptRepository;
@@ -33,7 +24,11 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisTemplates {
 
     public static final StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-
+    private static final CodecFactoryRegistry codecFactoryRegistry;
+    static {
+        codecFactoryRegistry = new CodecFactoryRegistry();
+        codecFactoryRegistry.init();
+    }
     public static RedisTemplate<String, ?> createBeanJsonRedisTemplate(
             @NonNull RedisConnectionFactory connectionFactory,
             @Nullable String keyPrefix,
@@ -45,8 +40,8 @@ public class RedisTemplates {
             boolean initIt
     ) {
         Preconditions.checkNotNull(beanClass, "the target class is null");
-        EasyjsonCodec easyjsonRedisSerializer = new EasyjsonCodec();
-        easyjsonRedisSerializer.setJsonFactory(JsonFactorys.getJSONFactory(JsonScope.SINGLETON));
+        Codec easyjsonRedisSerializer = newCodec(CodecType.JSON);
+        ((EasyjsonCodec)easyjsonRedisSerializer).setJsonFactory(JsonFactorys.getJSONFactory(JsonScope.SINGLETON));
         easyjsonRedisSerializer.setTargetType(beanClass);
         return createRedisTemplate(connectionFactory, keyPrefix, new DelegatableRedisSerializer(easyjsonRedisSerializer), beanClass.getClassLoader(), null, hashKeySerializer, hashValueSerializer, redisLuaScriptRepository, enableTx, initIt);
     }
@@ -188,48 +183,10 @@ public class RedisTemplates {
         );
     }
 
-    public static Codec newCodec(BuiltinCodecType codecType) {
-        codecType = codecType == null ? BuiltinCodecType.EASYJSON : codecType;
-        Codec codec = null;
-        switch (codecType) {
-            case JSCKSON:
-                codec = new JacksonCodec();
-                break;
-            case JDK:
-                codec = new JdkCodec();
-                break;
-            case KRYO:
-                codec = new KryoCodec();
-                break;
-            case HESSIAN:
-                codec = new HessianCodec();
-                break;
-            case PROTOSTUFF:
-                codec = new ProtostuffCodec();
-                break;
-            case FSE:
-                codec = new FseCodec();
-                break;
-            case FST:
-                codec = new FstCodec();
-                break;
-            case CBOR:
-                codec = new CborJacksonCodec();
-                break;
-            case MSGPACK:
-                codec = new MsgPackCodec();
-                break;
-            case XSON:
-                codec = new XsonCodec();
-                break;
-            case BSON:
-                codec = new BsonCodec();
-                break;
-            case EASYJSON:
-            default:
-                codec = new EasyjsonCodec();
-                break;
-        }
+    public static Codec newCodec(CodecType codecType) {
+        codecType = codecType == null ? CodecType.JSON : codecType;
+        CodecFactory codecFactory = codecFactoryRegistry.get(codecType.getName());
+        Codec codec = codecFactory.get(null);
         return codec;
 
     }

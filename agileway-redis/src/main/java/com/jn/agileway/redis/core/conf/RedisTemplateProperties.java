@@ -1,12 +1,13 @@
 package com.jn.agileway.redis.core.conf;
 
+import com.jn.agileway.codec.CodecType;
 import com.jn.agileway.redis.core.key.RedisKeyProperties;
 import com.jn.easyjson.core.factory.JsonFactorys;
 import com.jn.easyjson.core.factory.JsonScope;
 
 public class RedisTemplateProperties {
     private RedisKeyProperties key;
-    private BuiltinCodecType valueCodecType;
+    private CodecType valueCodecType;
     private boolean transactionEnabled;
     private boolean enabled;
 
@@ -18,11 +19,11 @@ public class RedisTemplateProperties {
         this.key = key;
     }
 
-    public BuiltinCodecType getValueCodecType() {
+    public CodecType getValueCodecType() {
         return valueCodecType;
     }
 
-    public void setValueCodecType(BuiltinCodecType valueCodecType) {
+    public void setValueCodecType(CodecType valueCodecType) {
         this.valueCodecType = valueCodecType;
     }
 
