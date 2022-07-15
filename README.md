@@ -8,6 +8,9 @@ Java、Web开发工具套件，尽量避免996
 
 ## module & features
 + [agileway-codec: 提供通用的encode, decode实现](./.wiki/agileway-codec.MD)
+    + 支持基于 Activej 序列化规范的实现
+    + 支持基于 Avro 序列化规范的实现
+    + 支持基于 bson 序列化规范的实现
     + 支持基于 Cbor 序列化规范的实现
     + 支持基于 FSE 序列化框架实现
     + 支持基于 FST 序列化框架实现
