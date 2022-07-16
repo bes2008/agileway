@@ -35,7 +35,8 @@ Java、Web开发工具套件，尽量避免996
         + WAF (Web Application Firewall)
            + XSS
            + CSRF
-           + SQL Inject
+           + SQL Injection
+           + CORS
     + rest: 
         + 提供统一的异常处理
         + 提供rest 请求结果统一化结构处理机制
