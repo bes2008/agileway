@@ -10,18 +10,17 @@ public class GroupedTopic implements Nameable {
 
     /**
      * 全局唯一名
-     *
      */
     private String name;
 
     /**
-     * 所属组
+     * 所属逻辑组
      */
     private String group;
     /**
-     * 位于 哪个集群
+     * 集群的地址
      */
-    private String located;
+    private String clusterAddress;
 
     @Override
     public String getName() {
@@ -41,12 +40,12 @@ public class GroupedTopic implements Nameable {
         this.group = group;
     }
 
-    public String getLocated() {
-        return located;
+    public String getClusterAddress() {
+        return clusterAddress;
     }
 
-    public void setLocated(String located) {
-        this.located = located;
+    public void setClusterAddress(String clusterAddress) {
+        this.clusterAddress = clusterAddress;
     }
 
     public String getTopic() {

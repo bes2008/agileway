@@ -5,13 +5,17 @@ import com.jn.langx.event.DomainEvent;
 import java.util.List;
 
 /**
- * source 为 consumer 相关的 标示符。例如 consumer name 获取其他的能够唯一标识 一个 consumer 的数据
+ * source 为 topic group name
  */
 public class TopicSubscribeEvent extends DomainEvent<String> {
     private TopicSubscribeEventType type;
+
+    /**
+     * 每一个元素的格式： {clusterAddress}/{topic}
+     */
     private List<String> topics;
-    private TopicSubscribeSourceType sourceType;
-    public TopicSubscribeEvent(){
+
+    public TopicSubscribeEvent() {
         super();
     }
 
