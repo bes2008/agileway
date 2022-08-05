@@ -1,4 +1,4 @@
-package com.jn.agileway.kafka.consumer;
+package com.jn.agileway.eipchannel.topic.consumer;
 
 public enum TopicSubscribeEventType {
     /**

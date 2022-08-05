@@ -1,4 +1,4 @@
-package com.jn.agileway.kafka.topic;
+package com.jn.agileway.eipchannel.topic;
 
 import com.jn.langx.Nameable;
 
