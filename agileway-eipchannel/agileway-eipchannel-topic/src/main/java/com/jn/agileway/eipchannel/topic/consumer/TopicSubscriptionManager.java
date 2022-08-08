@@ -43,21 +43,24 @@ public class TopicSubscriptionManager<GroupedTopicsConsumer> implements TopicSub
      */
     private MultiValueMap<String, GroupedTopicsSubscriptionMaintainer> consumerMaintainerRegistry = new CommonMultiValueMap<String, GroupedTopicsSubscriptionMaintainer>();
 
+    public void subscribe(String consumerGroup, String cluster, String topicGroup, List<String> topics) {
 
-    public void subscribeTopics(String cluster, String group, List<String> topics) {
-        subscribeTopics(cluster, group, topics, true);
     }
 
-    public void subscribeTopics(String cluster, String group, List<String> topics, boolean appendMode) {
+    public void subscribeTopics(String cluster, String topicGroup, List<String> topics) {
+        subscribeTopics(cluster, topicGroup, topics, true);
+    }
+
+    public void subscribeTopics(String cluster, String topicGroup, List<String> topics, boolean appendMode) {
         if (appendMode) {
-            maintain(TopicSubscribeEventType.ADD, cluster, group, topics);
+            maintain(TopicSubscribeEventType.ADD, cluster, topicGroup, topics);
         } else {
-            maintain(TopicSubscribeEventType.REPLACE, cluster, group, topics);
+            maintain(TopicSubscribeEventType.REPLACE, cluster, topicGroup, topics);
         }
     }
 
-    public void unsubscribeTopics(String cluster, String group, List<String> topics) {
-        maintain(TopicSubscribeEventType.DELETE, cluster, group, topics);
+    public void unsubscribeTopics(String cluster, String topicGroup, List<String> topics) {
+        maintain(TopicSubscribeEventType.DELETE, cluster, topicGroup, topics);
     }
 
     private void maintain(final TopicSubscribeEventType eventType, String cluster, final String topicGroup, final List<String> topics) {
