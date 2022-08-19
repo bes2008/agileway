@@ -11,7 +11,7 @@ public abstract class AbstractRegexpXssHandler extends AbstractXssHandler {
     protected abstract List<Pattern> getIncludedPatterns();
 
     protected List<Pattern> getExcludedPatterns() {
-        return Collects.unmodifiableArrayList();
+        return Collects.immutableArrayList();
     }
 
     @Override

@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class HtmlTagXssHandler extends AbstractRegexpXssHandler {
 
-    static final Set<String> DEFAULT_TAGS = Collects.unmodifiableSet(
+    static final Set<String> DEFAULT_TAGS = Collects.immutableSet(
             "style", "script","div","span","input",
             "a","abbr","acronym","address","applet","area","article","aside","audio",
             "b","base","basefont","bdi","bdo","bgsound","big","blink","blockquote","br","body","button",
