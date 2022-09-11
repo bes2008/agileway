@@ -5,7 +5,7 @@ import com.jn.agileway.web.prediate.HttpRequestPredicateGroup;
 import com.jn.agileway.web.prediate.HttpRequestPredicateGroupFactory;
 import com.jn.agileway.http.rr.RR;
 import com.jn.agileway.web.servlet.Servlets;
-import com.jn.easyjson.core.JSONBuilderProvider;
+import com.jn.easyjson.core.util.JSONs;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.enums.Enums;
@@ -29,7 +29,7 @@ public class AccessLogFilter extends OncePerRequestFilter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         super.init(filterConfig);
-        logger.info("Initial web filter {} with init parameters: {}, custom config: {}", filterConfig.getFilterName(), Servlets.extractFilterInitParameters(filterConfig), JSONBuilderProvider.simplest().toJson(this.config));
+        logger.info("Initial web filter {} with init parameters: {}, custom config: {}", filterConfig.getFilterName(), Servlets.extractFilterInitParameters(filterConfig), JSONs.toJson(this.config));
         if (logger.isDebugEnabled()) {
             String level = filterConfig.getInitParameter("logLevel");
             if (Emptys.isNotEmpty(level)) {
