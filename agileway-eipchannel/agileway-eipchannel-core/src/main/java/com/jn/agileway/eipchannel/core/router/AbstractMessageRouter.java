@@ -115,17 +115,19 @@ public abstract class AbstractMessageRouter extends AbstractLifecycle implements
 
     protected void route(Message<?> message) {
         boolean sent = false;
-        Collection<OutboundChannel> results = this.determineTargetChannels(message);
-        if (Objs.isNotEmpty(results)) {
-            int sequenceSize = results.size();
+        Collection<OutboundChannel> expectedOutboundChannels = this.determineTargetChannels(message);
+        List<OutboundChannel> successSentChannels = Collects.newArrayList();
+        if (Objs.isNotEmpty(expectedOutboundChannels)) {
+            int sequenceSize = expectedOutboundChannels.size();
             int sequenceNumber = 1;
-            for (OutboundChannel channel : results) {
+            for (OutboundChannel channel : expectedOutboundChannels) {
                 final Message<?> messageToSend = (!this.applySequence) ? message : MessageBuilder.fromMessage(message)
                         .pushSequenceDetails(message.getHeaders().getId(), sequenceNumber++, sequenceSize).build();
                 if (channel != null) {
                     try {
                         channel.send(messageToSend);
                         sent = true;
+                        successSentChannels.add(channel);
                     } catch (MessagingException e) {
                         if (!this.ignoreSendFailures) {
                             throw e;
@@ -142,14 +144,18 @@ public abstract class AbstractMessageRouter extends AbstractLifecycle implements
              * 如果之前没有发送时，必然发送到默认channel
              * 如果之前发送了，根据 自定义的方式来决定是否发到 默认的
              */
-            boolean sentToDefault = !sent || determineSentToDefaultOutputChannel(this.defaultOutputChannel, results);
+            boolean sentToDefault = !sent || determineSentToDefaultOutputChannel(this.defaultOutputChannel, expectedOutboundChannels, successSentChannels);
             if(sentToDefault){
                 this.defaultOutputChannel.send(message);
             }
 
         }
     }
-    protected abstract boolean determineSentToDefaultOutputChannel(OutboundChannel defaultOutboundChannel, Collection<OutboundChannel> branchesOutboundChannels);
+
+    protected boolean determineSentToDefaultOutputChannel(OutboundChannel defaultOutboundChannel, Collection<OutboundChannel> expectedOutboundChannels, Collection<OutboundChannel> successSentChannels){
+        return !Collects.contains(successSentChannels, defaultOutboundChannel);
+    }
+
     private Collection<OutboundChannel> determineTargetChannels(Message<?> message) {
         Collection<OutboundChannel> channels = Collects.emptyArrayList();
         Collection<Object> channelsReturned = this.getChannelIdentifiers(message);
