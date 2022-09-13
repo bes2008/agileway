@@ -15,7 +15,10 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractMessageRouter extends AbstractLifecycle implements MessageRouter {
@@ -145,15 +148,20 @@ public abstract class AbstractMessageRouter extends AbstractLifecycle implements
              * 如果之前发送了，根据 自定义的方式来决定是否发到 默认的
              */
             boolean sentToDefault = !sent || determineSentToDefaultOutputChannel(this.defaultOutputChannel, expectedOutboundChannels, successSentChannels);
-            if(sentToDefault){
+            if (sentToDefault) {
+                if (Collects.contains(successSentChannels, this.defaultOutputChannel)) {
+                    sentToDefault = false;
+                }
+            }
+            if (sentToDefault) {
                 this.defaultOutputChannel.send(message);
             }
 
         }
     }
 
-    protected boolean determineSentToDefaultOutputChannel(OutboundChannel defaultOutboundChannel, Collection<OutboundChannel> expectedOutboundChannels, Collection<OutboundChannel> successSentChannels){
-        return !Collects.contains(successSentChannels, defaultOutboundChannel);
+    protected boolean determineSentToDefaultOutputChannel(OutboundChannel defaultOutboundChannel, Collection<OutboundChannel> expectedOutboundChannels, Collection<OutboundChannel> successSentChannels) {
+        return true;
     }
 
     private Collection<OutboundChannel> determineTargetChannels(Message<?> message) {
