@@ -38,7 +38,7 @@
     <description>
         Java frameworks extensions: servlet, httpclient, spring, ... etc
     </description>
-    <url>https://github.com/fangjinuo/agileway</url>
+    <url>https://github.com/bes2008/agileway</url>
     <developers>
         <developer>
             <id>bes2008</id>
@@ -474,7 +474,7 @@
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>sonatype_oss</serverId>
-                            <nexusUrl>https://oss.sonatype.org</nexusUrl>
+                            <nexusUrl>https://s01.oss.sonatype.org</nexusUrl>
                             <autoReleaseAfterClose>true</autoReleaseAfterClose>
                             <sslAllowAll>true</sslAllowAll>
                             <stagingProgressPauseDurationSeconds>20</stagingProgressPauseDurationSeconds>
