@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>agileway</artifactId>
-        <groupId>com.github.fangjinuo.agileway</groupId>
-        <version>3.1.12</version>
+        <groupId>io.github.bes2008.solution.agileway</groupId>
+        <version>4.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

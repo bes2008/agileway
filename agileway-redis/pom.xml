@@ -3,9 +3,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.github.fangjinuo.agileway</groupId>
+        <groupId>io.github.bes2008.solution.agileway</groupId>
         <artifactId>agileway</artifactId>
-        <version>3.1.12</version>
+        <version>4.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -54,19 +54,19 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>com.github.fangjinuo.easyjson</groupId>
+                <groupId>io.github.bes2008.solution.easyjson</groupId>
                 <artifactId>easyjson-core</artifactId>
                 <version>${easyjson.version}</version>
                 <exclusions>
                     <exclusion>
-                        <groupId>com.github.fangjinuo.langx</groupId>
+                        <groupId>io.github.bes2008.solution.langx</groupId>
                         <artifactId>langx-java</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
 
             <dependency>
-                <groupId>com.github.fangjinuo.langx</groupId>
+                <groupId>io.github.bes2008.solution.langx</groupId>
                 <artifactId>langx-java</artifactId>
                 <version>${langx.version}</version>
             </dependency>
@@ -83,7 +83,7 @@
             </dependency>
 
             <dependency>
-                <groupId>com.github.fangjinuo.easyjson</groupId>
+                <groupId>io.github.bes2008.solution.easyjson</groupId>
                 <artifactId>easyjson-jackson</artifactId>
                 <version>${easyjson.version}</version>
             </dependency>
@@ -92,11 +92,11 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.fangjinuo.agileway</groupId>
+            <groupId>io.github.bes2008.solution.agileway</groupId>
             <artifactId>agileway-codec</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.fangjinuo.easyjson</groupId>
+            <groupId>io.github.bes2008.solution.easyjson</groupId>
             <artifactId>easyjson-core</artifactId>
         </dependency>
         <dependency>
@@ -109,7 +109,7 @@
             <artifactId>httpclient</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.fangjinuo.easyjson</groupId>
+            <groupId>io.github.bes2008.solution.easyjson</groupId>
             <artifactId>easyjson-jackson</artifactId>
         </dependency>
         <dependency>
