@@ -17,7 +17,7 @@
     <properties>
         <openfeign.version>9.7.0</openfeign.version>
         <openfeign.form.version>3.4.1</openfeign.form.version>
-        <ribbon.version>2.1.5</ribbon.version>
+        <ribbon.version>2.7.18</ribbon.version>
     </properties>
 
     <dependencies>
