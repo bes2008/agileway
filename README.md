@@ -1,5 +1,5 @@
 [![License](https://img.shields.io/badge/license-Apach2.0-green.svg)](https://github.com/fangjinuo/agileway/blob/master/LICENSE)
-[![maven](https://img.shields.io/badge/maven-v3.1.9-green.svg)](https://search.maven.org/search?q=g:io.github.bes2008.solution.agileway%20AND%20v:3.1.9)
+[![maven](https://img.shields.io/badge/maven-v4.0.0-green.svg)](https://search.maven.org/search?q=g:io.github.bes2008.solution.agileway%20AND%20v:4.0.0)
 
 
 
