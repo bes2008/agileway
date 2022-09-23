@@ -105,7 +105,7 @@
         <logback.version>1.2.9</logback.version>
         <jackson.version>2.13.1</jackson.version>
         <spring.version>4.3.25.RELEASE</spring.version>
-        <spring.boot.version>1.5.22.RELEASE</spring.boot.version>
+        <spring.boot.version>2.6.12</spring.boot.version>
         <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
     </properties>
     <dependencyManagement>
