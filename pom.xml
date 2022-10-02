@@ -103,7 +103,7 @@
         <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
         <junit.version>4.13.1</junit.version>
         <logback.version>1.2.9</logback.version>
-        <jackson.version>2.13.1</jackson.version>
+        <jackson.version>2.13.4</jackson.version>
         <spring.version>4.3.25.RELEASE</spring.version>
         <spring.boot.version>1.5.22.RELEASE</spring.boot.version>
         <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
