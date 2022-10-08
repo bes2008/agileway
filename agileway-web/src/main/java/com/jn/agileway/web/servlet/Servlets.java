@@ -44,8 +44,6 @@ public class Servlets extends HttpRRs {
     public static final String ACCESS_DENIED_403 = "AGILEWAY_ECURITY_403_EXCEPTION";
 
 
-
-
     /***********************************************************************
      *      Filters
      ***********************************************************************/
@@ -103,18 +101,19 @@ public class Servlets extends HttpRRs {
         return headersToMultiValueMap(ServletHttpRequestFactory.INSTANCE.get(request));
     }
 
-    public static String getClientIP(HttpServletRequest request){
+    public static String getClientIP(HttpServletRequest request) {
         return getClientIP(ServletHttpRequestFactory.INSTANCE.get(request));
     }
 
     /**
      * 下载文件
      *
-     * @param request request
-     * @param response response
-     * @param file file
+     * @param request       request
+     * @param response      response
+     * @param file          file
      * @param maxPacketSize the max packet size
-     * @param fileName the file name
+     * @param fileName      the file name
+     *
      */
     public static void downloadFile(
             HttpServletRequest request,
@@ -122,7 +121,31 @@ public class Servlets extends HttpRRs {
             File file,
             int maxPacketSize,
             String fileName) throws IOException {
+        downloadFile(request, response, file, maxPacketSize, fileName, null, null);
+    }
 
+    /**
+     * 下支持端点续传、限流的文件下载
+     *
+     * @param request       request
+     * @param response      response
+     * @param file          file
+     * @param maxPacketSize the max packet size
+     * @param fileName      the file name
+     *
+     * @since 4.0.1
+     */
+    public static void downloadFile(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            File file,
+            int maxPacketSize,
+            String fileName,
+            String contentType,
+            String encoding) throws IOException {
+
+        contentType = Strings.useValueIfBlank(contentType, MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        encoding = Strings.useValueIfBlank(encoding, Charsets.UTF_8.name());
         fileName = Strings.useValueIfBlank(fileName, file.getName());
         Preconditions.checkNotEmpty(fileName);
         if (maxPacketSize == 0) {
@@ -168,8 +191,8 @@ public class Servlets extends HttpRRs {
             if (byteBuffer.hasRemaining()) {
                 byteBuffer.get(bytes, 0, byteBuffer.remaining());
             }
-            response.setCharacterEncoding(Charsets.UTF_8.name());
-            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            response.setCharacterEncoding(encoding);
+            response.setContentType(contentType);
             response.setHeader(HttpHeaders.ACCEPT_RANGES, "bytes");
             response.setHeader(HttpHeaders.CONTENT_RANGE, StringTemplates.formatWithPlaceholder("bytes {}-{}/{}", offset, end, file.length()));
             String disposition = StringTemplates.formatWithPlaceholder("attachment;filename={}", new String(fileName.getBytes(Charsets.UTF_8), Charsets.ISO_8859_1));
@@ -491,7 +514,7 @@ public class Servlets extends HttpRRs {
                     return isTrue(input);
                 }
             }).asList();
-        }else {
+        } else {
             ret = defaultValue;
         }
         return ret;
