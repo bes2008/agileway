@@ -4,6 +4,8 @@ package com.jn.agileway.web.servlet;
 import com.jn.agileway.http.rr.HttpRRs;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.io.stream.bandwidthlimit.BandwidthLimitedOutputStream;
+import com.jn.langx.io.stream.bandwidthlimit.BandwidthLimiter;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.*;
 import com.jn.langx.util.collection.Collects;
@@ -111,17 +113,16 @@ public class Servlets extends HttpRRs {
      * @param request       request
      * @param response      response
      * @param file          file
-     * @param maxPacketSize the max packet size
      * @param fileName      the file name
      *
+     * @since 5.0.2
      */
     public static void downloadFile(
             HttpServletRequest request,
             HttpServletResponse response,
             File file,
-            int maxPacketSize,
             String fileName) throws IOException {
-        downloadFile(request, response, file, maxPacketSize, fileName, null, null);
+        downloadFile(request, response, file, -1, fileName, null, null);
     }
 
     /**
@@ -132,7 +133,6 @@ public class Servlets extends HttpRRs {
      * @param file          file
      * @param maxPacketSize the max packet size
      * @param fileName      the file name
-     *
      * @since 4.0.1
      */
     public static void downloadFile(
@@ -143,6 +143,29 @@ public class Servlets extends HttpRRs {
             String fileName,
             String contentType,
             String encoding) throws IOException {
+        downloadFile(request, response, file, maxPacketSize, fileName, contentType, encoding, -1);
+    }
+
+    /**
+     * 下支持端点续传、限流的文件下载
+     *
+     * @param request       request
+     * @param response      response
+     * @param file          file
+     * @param maxPacketSize the max packet size
+     * @param fileName      the file name
+     * @since 4.0.1
+     */
+    public static void downloadFile(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            File file,
+            int maxPacketSize, // 用于断点续传
+            String fileName,
+            String contentType,
+            String encoding,
+            int maxRatePerSecond // 用于限速， 单位为 kb/s
+    ) throws IOException {
 
         contentType = Strings.useValueIfBlank(contentType, MediaType.APPLICATION_OCTET_STREAM_VALUE);
         encoding = Strings.useValueIfBlank(encoding, Charsets.UTF_8.name());
@@ -198,7 +221,13 @@ public class Servlets extends HttpRRs {
             String disposition = StringTemplates.formatWithPlaceholder("attachment;filename={}", new String(fileName.getBytes(Charsets.UTF_8), Charsets.ISO_8859_1));
             response.setHeader(HttpHeaders.CONTENT_DISPOSITION, disposition);
             response.setHeader(HttpHeaders.CONTENT_LENGTH, "" + size);
-            response.getOutputStream().write(bytes);
+            if (maxRatePerSecond <= 0) {
+                response.getOutputStream().write(bytes);
+            } else {
+                BandwidthLimiter bandwidthLimiter = new BandwidthLimiter(maxRatePerSecond);
+                BandwidthLimitedOutputStream bandwidthLimitedOutputStream = new BandwidthLimitedOutputStream(response.getOutputStream(), bandwidthLimiter);
+                bandwidthLimitedOutputStream.write(bytes);
+            }
             response.setStatus(200);
         } catch (Throwable ex) {
             logger.error("Error occur when download file: {}", fileName);
