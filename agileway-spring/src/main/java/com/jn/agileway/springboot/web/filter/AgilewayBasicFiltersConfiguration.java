@@ -1,11 +1,10 @@
 package com.jn.agileway.springboot.web.filter;
 
-import com.jn.agileway.spring.utils.SpringContextHolder;
 import com.jn.agileway.web.filter.HttpRequestHandlerFilter;
 import com.jn.agileway.web.filter.accesslog.AccessLogFilter;
 import com.jn.agileway.web.filter.accesslog.WebAccessLogProperties;
 import com.jn.agileway.web.filter.rr.RRFilter;
-import com.jn.agileway.web.filter.waf.AllowedMethodsFilter;
+import com.jn.agileway.web.filter.waf.allowedmethods.AllowedMethodsFilter;
 import com.jn.agileway.web.filter.waf.SqlInjectionFilter;
 import com.jn.agileway.web.filter.waf.XssFilter;
 import com.jn.agileway.web.filter.waf.cors.CorsFilter;
@@ -18,17 +17,15 @@ import com.jn.agileway.web.security.sqlinjection.SqlInjectionWafFactory;
 import com.jn.agileway.web.security.xss.XssFirewall;
 import com.jn.agileway.web.security.xss.XssProperties;
 import com.jn.agileway.web.security.xss.XssWafFactory;
-import com.jn.langx.util.Objs;
-import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
-import com.jn.langx.util.collection.Pipeline;
-import com.jn.langx.util.function.Function;
 import com.jn.langx.util.net.http.HttpMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -38,7 +35,13 @@ import java.util.List;
 import java.util.Map;
 
 @Configuration
-public class AgilewayBasicFiltersConfiguration {
+public class AgilewayBasicFiltersConfiguration implements ApplicationContextAware {
+    private ApplicationContext applicationContext;
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
 
     @Value("${agileway.web.encoding:UTF-8}")
     private String encoding = "UTF-8";
@@ -82,32 +85,45 @@ public class AgilewayBasicFiltersConfiguration {
         return registration;
     }
 
+    // @Order(-100) GlobalFilter
 
-    @Order(-101)
+    @Order(-99)
     @ConfigurationProperties(prefix = "agileway.web.waf.allowed.methods")
     @Bean
     public FilterRegistrationBean allowedMethodsFilterRegistrationBean() {
-        Environment env = SpringContextHolder.getApplicationContext().getEnvironment();
+        Environment env = applicationContext.getEnvironment();
         String methodString = env.getProperty("agileway.web.waf.allowed.methods");
-        String[] methods = Strings.split(methodString, ",");
-        List<HttpMethod> allowedMethods = Pipeline.of(methods)
-                .map(new Function<String, HttpMethod>() {
-                    @Override
-                    public HttpMethod apply(String method) {
-                        return HttpMethod.resolve(Strings.upperCase(method));
-                    }
-                }).clearNulls().asList();
-        if (Objs.isEmpty(allowedMethods)) {
-            allowedMethods = Collects.newArrayList(HttpMethod.GET, HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.POST, HttpMethod.PATCH);
-        }
+        List<HttpMethod> allowedMethods = AllowedMethodsFilter.parseAllowedMethods(methodString);
         AllowedMethodsFilter allowedMethodsFilter = new AllowedMethodsFilter();
         allowedMethodsFilter.setAllowedMethods(allowedMethods);
 
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setName("AllowedMethods Filter");
         registration.setFilter(allowedMethodsFilter);
-        registration.setOrder(-101);
+        registration.setOrder(-99);
 
+        return registration;
+    }
+
+
+    @ConfigurationProperties(prefix = "agileway.web.waf.cors")
+    @Bean
+    public CorsProperties corsProperties() {
+        return new CorsProperties();
+    }
+
+    @ConditionalOnProperty(prefix = "agileway.web.waf.cors", name = "enabeld", havingValue = "true")
+    @Order(-98)
+    @Bean
+    public FilterRegistrationBean corsRegistrationBean(CorsProperties corsProperties) {
+        corsProperties.setEnabled(true);
+        CorsFilter corsFilter = new CorsFilter();
+        corsFilter.setConf(corsProperties);
+
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setName("CORS Filter");
+        registration.setFilter(corsFilter);
+        registration.setOrder(-98);
         return registration;
     }
 
@@ -119,7 +135,7 @@ public class AgilewayBasicFiltersConfiguration {
     }
 
 
-    @Order(-100)
+    @Order(-97)
     @Bean
     public FilterRegistrationBean xssFilterRegistrationBean(XssProperties xssProperties) {
         XssFirewall firewall = new XssWafFactory().get(xssProperties);
@@ -131,7 +147,30 @@ public class AgilewayBasicFiltersConfiguration {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setName("XSS Filter");
         registration.setFilter(filter);
-        registration.setOrder(-100);
+        registration.setOrder(-97);
+        return registration;
+    }
+
+
+
+    @ConfigurationProperties(prefix = "agileway.web.waf.sql-injection")
+    @Bean
+    public SqlInjectionProperties sqlInjectProperties() {
+        return new SqlInjectionProperties();
+    }
+
+
+    @Order(-96)
+    @Bean
+    public FilterRegistrationBean sqlInjectionRegistrationBean(SqlInjectionProperties sqlInjectProperties) {
+        SqlFirewall firewall = new SqlInjectionWafFactory().get(sqlInjectProperties);
+        SqlInjectionFilter filter = new SqlInjectionFilter();
+        filter.setFirewall(firewall);
+
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setName("SQLInjection Filter");
+        registration.setFilter(filter);
+        registration.setOrder(-96);
         return registration;
     }
 
@@ -141,7 +180,7 @@ public class AgilewayBasicFiltersConfiguration {
         return new SetResponseHeaderProperties();
     }
 
-    @Order(-98)
+    @Order(-95)
     @Bean
     public FilterRegistrationBean setResponseHeadersRegistrationBean(SetResponseHeaderProperties properties) {
 
@@ -155,50 +194,9 @@ public class AgilewayBasicFiltersConfiguration {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setName("Set-Response-Header Filter");
         registration.setFilter(filter);
-        registration.setOrder(-98);
+        registration.setOrder(-95);
         return registration;
     }
 
-    @ConfigurationProperties(prefix = "agileway.web.waf.sql-injection")
-    @Bean
-    public SqlInjectionProperties sqlInjectProperties() {
-        return new SqlInjectionProperties();
-    }
-
-
-    @Order(-97)
-    @Bean
-    public FilterRegistrationBean sqlInjectionRegistrationBean(SqlInjectionProperties sqlInjectProperties) {
-        SqlFirewall firewall = new SqlInjectionWafFactory().get(sqlInjectProperties);
-        SqlInjectionFilter filter = new SqlInjectionFilter();
-        filter.setFirewall(firewall);
-
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setName("SQLInjection Filter");
-        registration.setFilter(filter);
-        registration.setOrder(-97);
-        return registration;
-    }
-
-    @ConfigurationProperties(prefix = "agileway.web.waf.cors")
-    @Bean
-    public CorsProperties corsProperties() {
-        return new CorsProperties();
-    }
-
-    @ConditionalOnProperty(prefix = "agileway.web.waf.cors", name = "enabeld", havingValue = "true")
-    @Order(-96)
-    @Bean
-    public FilterRegistrationBean corsRegistrationBean(CorsProperties corsProperties) {
-        corsProperties.setEnabled(true);
-        CorsFilter corsFilter = new CorsFilter();
-        corsFilter.setConf(corsProperties);
-
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setName("CORS Filter");
-        registration.setFilter(corsFilter);
-        registration.setOrder(-96);
-        return registration;
-    }
 
 }

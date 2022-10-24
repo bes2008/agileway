@@ -5,4 +5,4 @@
 3. GlobalResponseFilter 对相应内容做统一处理，封装成RestRespBody
 
 建议配置顺序：
-RRFilter > AccessLogFilter > AllowedMethodsFilter > XssFilter > CsrfFilter > SetHeader >  GlobalResponseFilter > your custom filter
+RRFilter (-103) > AccessLogFilter (-102) > GlobalResponseFilter (-100)  > AllowedMethodsFilter (-99) > CORS (-98)  > XssFilter (-97) >  SQLInjection (-96) >  SetHeaders (-95)> > your custom filter

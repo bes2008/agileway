@@ -15,6 +15,8 @@ agileway:
     access-log:
       level: BODY
     waf:
+      allowed:
+        methods: POST
       xss:
         enabled: true
         predicates:
@@ -26,7 +28,6 @@ agileway:
           - methods=GET,POST
       cors:
         enabled: true
-
     set-header:
       rules:
         - predicates:
