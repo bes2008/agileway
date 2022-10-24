@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * <code>AccessDeniedException</code>.
  *
- * @author Ben Alex
  */
 public interface AccessDeniedHandler {
 

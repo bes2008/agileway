@@ -1,22 +1,29 @@
 package com.jn.agileway.springboot.web.filter;
 
+import com.jn.agileway.spring.utils.SpringContextHolder;
 import com.jn.agileway.web.filter.HttpRequestHandlerFilter;
 import com.jn.agileway.web.filter.accesslog.AccessLogFilter;
 import com.jn.agileway.web.filter.accesslog.WebAccessLogProperties;
+import com.jn.agileway.web.filter.rr.RRFilter;
+import com.jn.agileway.web.filter.waf.AllowedMethodsFilter;
+import com.jn.agileway.web.filter.waf.SqlInjectionFilter;
+import com.jn.agileway.web.filter.waf.XssFilter;
 import com.jn.agileway.web.filter.waf.cors.CorsFilter;
 import com.jn.agileway.web.filter.waf.cors.CorsProperties;
 import com.jn.agileway.web.request.header.SetResponseHeaderHandler;
 import com.jn.agileway.web.request.header.SetResponseHeaderProperties;
-import com.jn.agileway.web.filter.rr.RRFilter;
 import com.jn.agileway.web.security.sqlinjection.SqlFirewall;
-import com.jn.agileway.web.filter.waf.SqlInjectionFilter;
 import com.jn.agileway.web.security.sqlinjection.SqlInjectionProperties;
 import com.jn.agileway.web.security.sqlinjection.SqlInjectionWafFactory;
-import com.jn.agileway.web.filter.waf.XssFilter;
 import com.jn.agileway.web.security.xss.XssFirewall;
 import com.jn.agileway.web.security.xss.XssProperties;
 import com.jn.agileway.web.security.xss.XssWafFactory;
+import com.jn.langx.util.Objs;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.function.Function;
+import com.jn.langx.util.net.http.HttpMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -25,7 +32,9 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.env.Environment;
 
+import java.util.List;
 import java.util.Map;
 
 @Configuration
@@ -37,7 +46,7 @@ public class AgilewayBasicFiltersConfiguration {
     @Value("${agileway.web.streamWrapper:false}")
     private boolean streamWrapper = false;
 
-    @Order(-102)
+    @Order(-103)
     @Bean
     public FilterRegistrationBean baseFilterRegistrationBean() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
@@ -48,7 +57,7 @@ public class AgilewayBasicFiltersConfiguration {
         initialParameters.put("encoding", encoding);
         registration.setInitParameters(initialParameters);
         registration.setUrlPatterns(Collects.newArrayList("/*"));
-        registration.setOrder(-102);
+        registration.setOrder(-103);
         registration.setName("StreamWrapper Filter");
         return registration;
     }
@@ -60,7 +69,7 @@ public class AgilewayBasicFiltersConfiguration {
         return new WebAccessLogProperties();
     }
 
-    @Order(-101)
+    @Order(-102)
     @Bean
     @Autowired
     public FilterRegistrationBean accessLogFilterRegistrationBean(WebAccessLogProperties accessLogProperties) {
@@ -69,7 +78,36 @@ public class AgilewayBasicFiltersConfiguration {
         filter.setConfig(accessLogProperties);
         registration.setFilter(filter);
         registration.setName("AccessLog Filter");
+        registration.setOrder(-102);
+        return registration;
+    }
+
+
+    @Order(-101)
+    @ConfigurationProperties(prefix = "agileway.web.waf.allowed.methods")
+    @Bean
+    public FilterRegistrationBean allowedMethodsFilterRegistrationBean() {
+        Environment env = SpringContextHolder.getApplicationContext().getEnvironment();
+        String methodString = env.getProperty("agileway.web.waf.allowed.methods");
+        String[] methods = Strings.split(methodString, ",");
+        List<HttpMethod> allowedMethods = Pipeline.of(methods)
+                .map(new Function<String, HttpMethod>() {
+                    @Override
+                    public HttpMethod apply(String method) {
+                        return HttpMethod.resolve(Strings.upperCase(method));
+                    }
+                }).clearNulls().asList();
+        if (Objs.isEmpty(allowedMethods)) {
+            allowedMethods = Collects.newArrayList(HttpMethod.GET, HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.POST, HttpMethod.PATCH);
+        }
+        AllowedMethodsFilter allowedMethodsFilter = new AllowedMethodsFilter();
+        allowedMethodsFilter.setAllowedMethods(allowedMethods);
+
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setName("AllowedMethods Filter");
+        registration.setFilter(allowedMethodsFilter);
         registration.setOrder(-101);
+
         return registration;
     }
 
