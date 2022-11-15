@@ -1,7 +1,7 @@
 package com.jn.agileway.vfs.provider.sftp;
 
 
-import org.apache.commons.vfs2.FileSystemException;
+import com.jn.langx.util.Strings;
 import org.apache.commons.vfs2.provider.FileNameParser;
 import org.apache.commons.vfs2.provider.URLFileNameParser;
 
@@ -31,11 +31,26 @@ public class SftpFileNameParser extends URLFileNameParser {
 
     @Override
     protected String extractHostName(StringBuilder name) {
-        return super.extractHostName(name);
+        String nameStr = name.toString();
+        int pathSeparatorIndex = Strings.indexOf(nameStr, "/");
+        String hostAndPort = pathSeparatorIndex < 0 ? nameStr : nameStr.substring(0, pathSeparatorIndex);
+        int portColonIndex = Strings.lastIndexOf(hostAndPort, ":", hostAndPort.length() - 1);
+        // 没有端口
+        String host = null;
+        if (portColonIndex < 0) {
+            host = hostAndPort;
+        } else {
+            String portString = Strings.substring(hostAndPort, portColonIndex + 1);
+            boolean isPort = Strings.isNumeric(portString);
+            if (isPort) {
+                host = Strings.substring(hostAndPort, 0, portColonIndex);
+            } else {
+                host = hostAndPort;
+            }
+        }
+
+        name.delete(0, host.length());
+        return host;
     }
 
-    @Override
-    protected int extractPort(StringBuilder name, String uri) throws FileSystemException {
-        return super.extractPort(name, uri);
-    }
 }
