@@ -4,14 +4,11 @@ import com.jn.agileway.vfs.VfsException;
 import com.jn.agileway.vfs.filter.FileObjectFilter;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Preconditions;
-import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.Selectors;
-import org.apache.commons.vfs2.provider.local.LocalFile;
 
-import java.io.File;
 import java.util.List;
 
 public class FileObjects {

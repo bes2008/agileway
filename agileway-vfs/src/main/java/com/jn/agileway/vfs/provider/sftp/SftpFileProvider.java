@@ -8,6 +8,7 @@ import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.langx.util.Strings;
 import org.apache.commons.vfs2.*;
 import org.apache.commons.vfs2.provider.AbstractOriginatingFileProvider;
+import org.apache.commons.vfs2.provider.FileNameParser;
 import org.apache.commons.vfs2.provider.GenericFileName;
 
 import java.io.File;
@@ -89,5 +90,10 @@ public class SftpFileProvider extends AbstractOriginatingFileProvider {
     @Override
     public Collection<Capability> getCapabilities() {
         return capabilities;
+    }
+
+    @Override
+    public void setFileNameParser(FileNameParser parser) {
+        super.setFileNameParser(parser);
     }
 }

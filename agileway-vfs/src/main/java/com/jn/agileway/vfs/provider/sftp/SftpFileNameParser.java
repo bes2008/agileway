@@ -1,6 +1,7 @@
 package com.jn.agileway.vfs.provider.sftp;
 
 
+import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.provider.FileNameParser;
 import org.apache.commons.vfs2.provider.URLFileNameParser;
 
@@ -26,5 +27,15 @@ public class SftpFileNameParser extends URLFileNameParser {
      */
     public static FileNameParser getInstance() {
         return INSTANCE;
+    }
+
+    @Override
+    protected String extractHostName(StringBuilder name) {
+        return super.extractHostName(name);
+    }
+
+    @Override
+    protected int extractPort(StringBuilder name, String uri) throws FileSystemException {
+        return super.extractPort(name, uri);
     }
 }
