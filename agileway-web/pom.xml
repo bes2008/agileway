@@ -11,7 +11,7 @@
 
     <artifactId>agileway-web</artifactId>
 
-    <name>${groupId}:${artifactId}:${version}</name>
+    <name>${project.groupId}:${project.artifactId}:${project.version}</name>
 
     <description>Provide many web tools for servlet : global exception handler, global restful response, global filters,
         access logs, downloads, etc...

@@ -12,7 +12,7 @@
     <artifactId>agileway-templates</artifactId>
     <packaging>pom</packaging>
 
-    <name>${groupId}:${artifactId}:${version}</name>
+    <name>${project.groupId}:${project.artifactId}:${project.version}</name>
 
     <modules>
         <module>agileway-templates-freemarker</module>

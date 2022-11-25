@@ -11,7 +11,7 @@
 
     <artifactId>agileway-dmmq</artifactId>
 
-    <name>${groupId}:${artifactId}:${version}</name>
+    <name>${project.groupId}:${project.artifactId}:${project.version}</name>
 
     <description>a memory message queue based on disruptor</description>
     <properties>

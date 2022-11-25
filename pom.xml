@@ -8,7 +8,7 @@
     <version>4.0.1</version>
     <packaging>pom</packaging>
 
-    <name>${groupId}:${artifactId}:${version}</name>
+    <name>${project.groupId}:${project.artifactId}:${project.version}</name>
     <modules>
         <module>agileway-codec</module>
         <module>agileway-httpcontainer-common</module>
@@ -63,7 +63,7 @@
     </scm>
     <licenses>
         <license>
-            <name>MIT</name>
+            <name>Apache 2</name>
             <url>https://github.com/bes2008/agileway/blob/master/LICENSE</url>
             <distribution>manual</distribution>
         </license>

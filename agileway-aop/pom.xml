@@ -11,7 +11,7 @@
     <description>Adapter aopalliance AOP to langx-java AOP interfaces</description>
     <artifactId>agileway-aop</artifactId>
 
-    <name>${groupId}:${artifactId}:${version}</name>
+    <name>${project.groupId}:${project.artifactId}:${project.version}</name>
     <dependencies>
         <dependency>
             <groupId>aopalliance</groupId>
