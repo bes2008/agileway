@@ -34,7 +34,7 @@ public class SftpFileNameParser extends URLFileNameParser {
         String nameStr = name.toString();
         int pathSeparatorIndex = Strings.indexOf(nameStr, "/");
         String hostAndPort = pathSeparatorIndex < 0 ? nameStr : nameStr.substring(0, pathSeparatorIndex);
-        int portColonIndex = Strings.lastIndexOf(hostAndPort, ":", hostAndPort.length() - 1);
+        int portColonIndex = Strings.lastIndexOf(hostAndPort, ":", hostAndPort.length());
         String host = null;
         if (portColonIndex < 0) {
             host = hostAndPort;
