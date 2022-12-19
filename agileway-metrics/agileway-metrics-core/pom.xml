@@ -11,4 +11,13 @@
 
     <artifactId>agileway-metrics-core</artifactId>
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
+
+    <dependencies>
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-core</artifactId>
+                <version>1.10.2</version>
+            </dependency>
+
+    </dependencies>
 </project>
