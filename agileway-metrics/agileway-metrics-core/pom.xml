@@ -4,16 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>io.github.bes2008.solution.agileway</groupId>
-        <artifactId>agileway</artifactId>
+        <artifactId>agileway-metrics</artifactId>
         <version>4.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>agileway-metrics</artifactId>
+    <artifactId>agileway-metrics-core</artifactId>
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
-    <packaging>pom</packaging>
-    <modules>
-        <module>agileway-metrics-core</module>
-    </modules>
-
 </project>
