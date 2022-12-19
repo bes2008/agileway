@@ -33,7 +33,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * report MetricManager 里所有的metrics
  *
  * @see ScheduledReporter
- *
  */
 public abstract class MetricManagerReporter implements Closeable {
 
@@ -54,8 +53,10 @@ public abstract class MetricManagerReporter implements Closeable {
     private TimeMetricLevelFilter timeMetricLevelFilter;
     private CompositeMetricFilter compositeMetricFilter;
     private ScheduledFuture futureTask;
-
-
+    /**
+     * 控制Report的启动和停止
+     */
+    private volatile boolean runFlag = true;
     private Runnable task = new Runnable() {
         @Override
         public void run() {
@@ -74,52 +75,23 @@ public abstract class MetricManagerReporter implements Closeable {
             }
         }
     };
-    /**
-     * 控制Report的启动和停止
-     */
-    private volatile boolean runFlag = true;
-
-    /**
-     * A simple named thread factory.
-     */
-    private static class NamedThreadFactory implements ThreadFactory {
-        private final ThreadGroup group;
-        private final AtomicInteger threadNumber = new AtomicInteger(1);
-        private final String namePrefix;
-
-        private NamedThreadFactory(String name) {
-            final SecurityManager s = System.getSecurityManager();
-            this.group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
-            this.namePrefix = "metrics-" + name + "-thread-";
-        }
-
-        @Override
-        public Thread newThread(Runnable r) {
-            final Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
-            t.setDaemon(true);
-            if (t.getPriority() != Thread.NORM_PRIORITY) {
-                t.setPriority(Thread.NORM_PRIORITY);
-            }
-            return t;
-        }
-    }
 
     /**
      * Creates a new {@link MetricManagerReporter} instance.
      *
      * @param metricManager the {@link IMetricManager} containing the metrics this
-     *                 reporter will report
-     * @param name     the reporter's name
-     * @param filter   the filter for which metrics to report
-     * @param rateUnit a unit of time
-     * @param durationUnit a unit of time
+     *                      reporter will report
+     * @param name          the reporter's name
+     * @param filter        the filter for which metrics to report
+     * @param rateUnit      a unit of time
+     * @param durationUnit  a unit of time
      */
     protected MetricManagerReporter(IMetricManager metricManager,
-                                String name,
-                                MetricFilter filter,
-                                MetricsCollectPeriodConfig metricsReportPeriodConfig,
-                                TimeUnit rateUnit,
-                                TimeUnit durationUnit) {
+                                    String name,
+                                    MetricFilter filter,
+                                    MetricsCollectPeriodConfig metricsReportPeriodConfig,
+                                    TimeUnit rateUnit,
+                                    TimeUnit durationUnit) {
         this(metricManager, filter, new TimeMetricLevelFilter(metricsReportPeriodConfig), rateUnit, durationUnit,
                 Executors.newSingleThreadScheduledExecutor(
                         new NamedThreadFactory(name + '-' + FACTORY_ID.incrementAndGet())));
@@ -129,11 +101,11 @@ public abstract class MetricManagerReporter implements Closeable {
      * Creates a new {@link MetricManagerReporter} instance.
      *
      * @param metricManager the {@link IMetricManager} containing the metrics this
-     *                 reporter will report
-     * @param name     the reporter's name
-     * @param filter   the filter for which metrics to report
-     * @param rateUnit a unit of time
-     * @param durationUnit a unit of time
+     *                      reporter will report
+     * @param name          the reporter's name
+     * @param filter        the filter for which metrics to report
+     * @param rateUnit      a unit of time
+     * @param durationUnit  a unit of time
      */
     protected MetricManagerReporter(IMetricManager metricManager,
                                     String name,
@@ -150,16 +122,16 @@ public abstract class MetricManagerReporter implements Closeable {
      * Creates a new {@link MetricManagerReporter} instance.
      *
      * @param metricManager the {@link IMetricManager} containing the metrics this
-     *                 reporter will report
-     * @param filter   the filter for which metrics to report
-     * @param executor the executor to use while scheduling reporting of metrics.
+     *                      reporter will report
+     * @param filter        the filter for which metrics to report
+     * @param executor      the executor to use while scheduling reporting of metrics.
      */
     protected MetricManagerReporter(IMetricManager metricManager,
-                                MetricFilter filter,
-                                TimeMetricLevelFilter timeMetricLevelFilter,
-                                TimeUnit rateUnit,
-                                TimeUnit durationUnit,
-                                ScheduledExecutorService executor) {
+                                    MetricFilter filter,
+                                    TimeMetricLevelFilter timeMetricLevelFilter,
+                                    TimeUnit rateUnit,
+                                    TimeUnit durationUnit,
+                                    ScheduledExecutorService executor) {
         this.metricManager = metricManager;
         this.executor = executor;
         this.rateFactor = rateUnit.toSeconds(1);
@@ -191,14 +163,14 @@ public abstract class MetricManagerReporter implements Closeable {
      * @param unit   the unit for {@code period}
      */
     public void start(long period, TimeUnit unit) {
-        this.schedulePeriod =period;
-        this.scheduleUnit =unit;
+        this.schedulePeriod = period;
+        this.scheduleUnit = unit;
         futureTask = executor.scheduleWithFixedDelay(task, schedulePeriod, schedulePeriod, scheduleUnit);
     }
 
     /**
      * Stops the reporter and shuts down its thread of execution.
-     *
+     * <p>
      * Uses the shutdown pattern from:
      * http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ExecutorService.html
      */
@@ -206,10 +178,10 @@ public abstract class MetricManagerReporter implements Closeable {
         executor.shutdown(); // Disable new tasks from being submitted
         try {
             // Wait a while for existing tasks to terminate
-            if (!executor.awaitTermination(schedulePeriod*2, scheduleUnit)) {
+            if (!executor.awaitTermination(schedulePeriod * 2, scheduleUnit)) {
                 executor.shutdownNow(); // Cancel currently executing tasks
                 // Wait a while for tasks to respond to being cancelled
-                if (!executor.awaitTermination(schedulePeriod*2, scheduleUnit)) {
+                if (!executor.awaitTermination(schedulePeriod * 2, scheduleUnit)) {
                     LOG.warn(getClass().getSimpleName() + ": ScheduledExecutorService did not terminate");
                 }
             }
@@ -296,5 +268,30 @@ public abstract class MetricManagerReporter implements Closeable {
     private String calculateRateUnit(TimeUnit unit) {
         final String s = unit.toString().toLowerCase(Locale.US);
         return s.substring(0, s.length() - 1);
+    }
+
+    /**
+     * A simple named thread factory.
+     */
+    private static class NamedThreadFactory implements ThreadFactory {
+        private final ThreadGroup group;
+        private final AtomicInteger threadNumber = new AtomicInteger(1);
+        private final String namePrefix;
+
+        private NamedThreadFactory(String name) {
+            final SecurityManager s = System.getSecurityManager();
+            this.group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
+            this.namePrefix = "metrics-" + name + "-thread-";
+        }
+
+        @Override
+        public Thread newThread(Runnable r) {
+            final Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
+            t.setDaemon(true);
+            if (t.getPriority() != Thread.NORM_PRIORITY) {
+                t.setPriority(Thread.NORM_PRIORITY);
+            }
+            return t;
+        }
     }
 }

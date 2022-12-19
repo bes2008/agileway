@@ -26,7 +26,6 @@ import java.util.Map;
 /**
  * 配置不同的Level的Metrics的report时间间隔。
  * 有一个全局的period配置，当某个Level没有具体配置了period，则会取全局的配置。
- *
  */
 public class MetricsCollectPeriodConfig {
 

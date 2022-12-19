@@ -26,10 +26,8 @@ import java.lang.reflect.Method;
  */
 public class MetricManager {
 
-    private static final String BINDER_CLASS = "com.jn.agileway.metrics.core.MetricManagerBinder";
-
     public static final IMetricManager NOP_METRIC_MANAGER = new NOPMetricManager();
-
+    private static final String BINDER_CLASS = "com.jn.agileway.metrics.core.MetricManagerBinder";
     private static volatile IMetricManager iMetricManager;
 
     /**
@@ -39,7 +37,7 @@ public class MetricManager {
      * Meter(计量器)主要用于统计调用qps, 包括最近1min, 5min, 15min的移动平均qps
      *
      * @param group the group of MetricRegistry
-     * @param name the name of the metric
+     * @param name  the name of the metric
      * @return an instance of meter
      */
     public static Meter getMeter(String group, MetricName name) {
@@ -54,7 +52,7 @@ public class MetricManager {
      * Counter(计数器), 主要用于用于计数，支持+1, -1, +n, -n等操作
      *
      * @param group the group of MetricRegistry
-     * @param name the name of the metric
+     * @param name  the name of the metric
      * @return an instance of counter
      */
     public static Counter getCounter(String group, MetricName name) {
@@ -70,7 +68,7 @@ public class MetricManager {
      * 能够迅速了解统计指标的最大值，最小值，平均值，方差，70%,85%,95%分位数等信息
      *
      * @param group the group of MetricRegistry
-     * @param name the name of the metric
+     * @param name  the name of the metric
      * @return an instance of histogram
      */
     public static Histogram getHistogram(String group, MetricName name) {
@@ -86,7 +84,7 @@ public class MetricManager {
      * 能够迅速了解统计指标的最大值，最小值，平均值，方差，70%，85%，95%分位数等信息
      *
      * @param group the group of MetricRegistry
-     * @param name the name of the metric
+     * @param name  the name of the metric
      * @param type  the type of the {@link ReservoirType}
      * @return an instance of histogram
      */
@@ -103,7 +101,7 @@ public class MetricManager {
      * 能够方便的统计某指标的qps, 和rt的最大值，最小值，平均值，方差，70%,85%,95%分位数等信息
      *
      * @param group the group of MetricRegistry
-     * @param name the name of the metric
+     * @param name  the name of the metric
      * @return an instance of timer
      */
     public static Timer getTimer(String group, MetricName name) {
@@ -119,8 +117,8 @@ public class MetricManager {
      * 能够方便的统计某指标的qps, 和rt的最大值，最小值，平均值，方差，70%, 85%, 95%分位数等信息
      *
      * @param group the group of MetricRegistry
-     * @param name the name of the metric
-     * @param type the type of reservoir
+     * @param name  the name of the metric
+     * @param type  the type of reservoir
      * @return an instance of timer
      */
     public static Timer getTimer(String group, MetricName name, ReservoirType type) {
@@ -135,7 +133,7 @@ public class MetricManager {
      * Compass(罗盘), 主要用于统计给定指标的qps, rt分布，调用成功次数，以及错误码分布等信息
      *
      * @param group the group of MetricRegistry
-     * @param name the name of the metric
+     * @param name  the name of the metric
      * @return an instance of compass
      */
     public static Compass getCompass(String group, MetricName name) {
@@ -150,7 +148,7 @@ public class MetricManager {
      * Compass(罗盘), 主要用于统计给定指标的qps, rt分布，调用成功次数，以及错误码分布等信息
      *
      * @param group the group of MetricRegistry
-     * @param name the name of the metric
+     * @param name  the name of the metric
      * @return an instance of compass
      */
     public static Compass getCompass(String group, MetricName name, ReservoirType type) {
@@ -165,7 +163,7 @@ public class MetricManager {
      * {@link FastCompass}, 主要用于在高吞吐率场景下，统计给定指标的qps, 平均rt，成功率，以及错误码等指标
      *
      * @param group the group of MetricRegistry
-     * @param name the name of the metric
+     * @param name  the name of the metric
      * @return an instance of {@link FastCompass}
      */
     public static FastCompass getFastCompass(String group, MetricName name) {
@@ -180,7 +178,7 @@ public class MetricManager {
      * {@link ClusterHistogram}, 主要用于集群分位数统计
      *
      * @param group the group of MetricRegistry
-     * @param name the name of the metric
+     * @param name  the name of the metric
      * @return an instance of {@link ClusterHistogram}
      */
     public static ClusterHistogram getClusterHistogram(String group, MetricName name, long[] buckets) {
@@ -195,7 +193,7 @@ public class MetricManager {
      * {@link ClusterHistogram}, 主要用于集群分位数统计
      *
      * @param group the group of MetricRegistry
-     * @param name the name of the metric
+     * @param name  the name of the metric
      * @return an instance of {@link ClusterHistogram}
      */
     public static ClusterHistogram getClusterHistogram(String group, MetricName name) {
@@ -206,7 +204,8 @@ public class MetricManager {
 
     /**
      * Register a customized metric to specified group.
-     * @param group the group name of MetricRegistry
+     *
+     * @param group  the group name of MetricRegistry
      * @param metric the metric to register
      */
     public static void register(String group, MetricName name, Metric metric) {
@@ -216,6 +215,7 @@ public class MetricManager {
 
     /**
      * get dynamically bound {@link IMetricManager} instance
+     *
      * @return the {@link IMetricManager} instance bound
      */
     @SuppressWarnings("unchecked")

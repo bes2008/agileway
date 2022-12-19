@@ -23,6 +23,18 @@ import java.lang.management.ThreadMXBean;
  * An abstraction for how time passes. It is passed to {@link Timer} to track timing.
  */
 public abstract class Clock {
+    private static final Clock DEFAULT = new UserTimeClock();
+
+    /**
+     * The default clock to use.
+     *
+     * @return the default {@link Clock} instance
+     * @see Clock.UserTimeClock
+     */
+    public static Clock defaultClock() {
+        return DEFAULT;
+    }
+
     /**
      * Returns the current time tick.
      *
@@ -37,19 +49,6 @@ public abstract class Clock {
      */
     public long getTime() {
         return System.currentTimeMillis();
-    }
-
-    private static final Clock DEFAULT = new UserTimeClock();
-
-    /**
-     * The default clock to use.
-     *
-     * @return the default {@link Clock} instance
-     *
-     * @see Clock.UserTimeClock
-     */
-    public static Clock defaultClock() {
-        return DEFAULT;
     }
 
     /**

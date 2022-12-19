@@ -115,12 +115,13 @@ public class BucketCounterImpl implements BucketCounter {
 
     /**
      * Return the bucket count, keyed by timestamp
+     *
      * @return the bucket count, keyed by timestamp
      */
     public Map<Long, Long> getBucketCounts(long startTime) {
         Map<Long, Long> counts = new LinkedHashMap<Long, Long>();
         long curTs = calculateCurrentTimestamp(clock.getTime());
-        for (Bucket bucket: buckets.getBucketList()) {
+        for (Bucket bucket : buckets.getBucketList()) {
             if (1000L * bucket.timestamp >= startTime && bucket.timestamp <= curTs) {
                 counts.put(1000L * bucket.timestamp, bucket.count.sum());
             }

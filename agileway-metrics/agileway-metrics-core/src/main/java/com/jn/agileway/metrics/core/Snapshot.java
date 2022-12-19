@@ -23,7 +23,7 @@ public interface Snapshot {
     /**
      * Returns the value at the given quantile.
      *
-     * @param quantile    a given quantile, in {@code [0..1]}
+     * @param quantile a given quantile, in {@code [0..1]}
      * @return the value in the distribution at {@code quantile}
      */
     double getValue(double quantile);

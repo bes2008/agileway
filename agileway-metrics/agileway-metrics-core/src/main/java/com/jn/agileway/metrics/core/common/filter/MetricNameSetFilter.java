@@ -16,24 +16,11 @@
  */
 package com.jn.agileway.metrics.core.common.filter;
 
-import com.jn.agileway.metrics.core.ClusterHistogram;
-import com.jn.agileway.metrics.core.Compass;
-import com.jn.agileway.metrics.core.Counter;
-import com.jn.agileway.metrics.core.FastCompass;
-import com.jn.agileway.metrics.core.Gauge;
-import com.jn.agileway.metrics.core.Histogram;
-import com.jn.agileway.metrics.core.Meter;
-import com.jn.agileway.metrics.core.Metric;
-import com.jn.agileway.metrics.core.MetricFilter;
-import com.jn.agileway.metrics.core.MetricName;
 import com.jn.agileway.metrics.core.Timer;
+import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.common.MetricObject;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 public class MetricNameSetFilter implements MetricFilter {
 
@@ -132,7 +119,7 @@ public class MetricNameSetFilter implements MetricFilter {
 
     @Override
     public boolean matches(MetricName name, Metric metric) {
-        for (String nameToMatch: metricNames) {
+        for (String nameToMatch : metricNames) {
             boolean success;
             if (metric instanceof Counter) {
                 success = matchInternal(nameToMatch, name, counterSuffixSet, false);
@@ -145,7 +132,7 @@ public class MetricNameSetFilter implements MetricFilter {
             } else if (metric instanceof Compass) {
                 success = matchInternal(nameToMatch, name, compassSuffixSet, true);
                 if (!success) {
-                    success = matchCompassAddon(nameToMatch, name, (Compass)metric);
+                    success = matchCompassAddon(nameToMatch, name, (Compass) metric);
                 }
             } else if (metric instanceof Gauge) {
                 success = matchInternal(nameToMatch, name, gaugeSuffixSet, false);
@@ -189,7 +176,7 @@ public class MetricNameSetFilter implements MetricFilter {
             return false;
         }
 
-        for (String suffix: suffixSet) {
+        for (String suffix : suffixSet) {
             String nameWithSuffix = name.getKey() + suffix;
             if (nameWithSuffix.equals(nameToMatch)) {
                 return true;
@@ -207,7 +194,7 @@ public class MetricNameSetFilter implements MetricFilter {
         if (nameToMatch == null) {
             return false;
         }
-        for (String addon: compass.getAddonCounts().keySet()) {
+        for (String addon : compass.getAddonCounts().keySet()) {
             String nameWithAddon = name.getKey() + "." + addon + ".count";
             if (nameToMatch.equals(nameWithAddon)) {
                 return true;

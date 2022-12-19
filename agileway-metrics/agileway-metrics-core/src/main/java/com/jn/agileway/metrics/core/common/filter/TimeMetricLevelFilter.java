@@ -25,15 +25,13 @@ import com.jn.agileway.metrics.core.common.config.MetricsCollectPeriodConfig;
 /**
  * 不同Level的Metric有配置不同的report时间间隔。这个Filter用于在report时，
  * 计算某一个Level的Metric是否允许report。
- *
+ * <p>
  * The array based implementation is roughly 35% faster than the HashMap base implementation.
  * Please refer to TimeMetricLevelFilterTest for more details.
- *
+ * <p>
  * e.g.
  * TimeMetricLevelFilter#matches costs: 227 ms for 20,000,000 calls. (HashMap based)
  * TimeMetricLevelFilter#matches costs: 145 ms for 20,000,000 calls. (Array based)
- *
- *
  */
 public class TimeMetricLevelFilter implements MetricFilter {
 
@@ -44,22 +42,6 @@ public class TimeMetricLevelFilter implements MetricFilter {
     protected MetricsLevelInfo[] levelInfos = new MetricsLevelInfo[MetricLevel.getMaxValue() + 1];
 
     protected MetricsCollectPeriodConfig config;
-
-    class MetricsLevelInfo {
-        public MetricsLevelInfo(boolean allow, long lastReportTimeStamp) {
-            this.allow = allow;
-            this.lastReportTimeStamp = lastReportTimeStamp;
-        }
-
-        /**
-         * 是否允许report
-         */
-        Boolean allow;
-        /**
-         * 上一次report的时间点
-         */
-        Long lastReportTimeStamp;
-    }
 
     public TimeMetricLevelFilter() {
 
@@ -96,8 +78,8 @@ public class TimeMetricLevelFilter implements MetricFilter {
         for (MetricLevel level : levels) {
             int period = config.period(level);
             // 如果配置的时间间隔是负数，则直接忽略
-            if(period < 0) {
-            	continue;
+            if (period < 0) {
+                continue;
             }
 
             MetricsLevelInfo metricsLevelInfo = levelInfos[level.ordinal()];
@@ -105,7 +87,7 @@ public class TimeMetricLevelFilter implements MetricFilter {
             /**
              * 计算出离上次report的时间间隔，判断是否可以再次report了
              */
-            if ((currentTimeMillis - metricsLevelInfo.lastReportTimeStamp)/1000 >= period) {
+            if ((currentTimeMillis - metricsLevelInfo.lastReportTimeStamp) / 1000 >= period) {
                 metricsLevelInfo.allow = true;
                 metricsLevelInfo.lastReportTimeStamp = currentTimeMillis;
             }
@@ -133,6 +115,21 @@ public class TimeMetricLevelFilter implements MetricFilter {
             return true;
         }
         return levelInfos[name.getMetricLevel().ordinal()].allow;
+    }
+
+    class MetricsLevelInfo {
+        /**
+         * 是否允许report
+         */
+        Boolean allow;
+        /**
+         * 上一次report的时间点
+         */
+        Long lastReportTimeStamp;
+        public MetricsLevelInfo(boolean allow, long lastReportTimeStamp) {
+            this.allow = allow;
+            this.lastReportTimeStamp = lastReportTimeStamp;
+        }
     }
 
 }

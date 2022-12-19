@@ -40,35 +40,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public abstract class ScheduledReporter implements Closeable {
 
     private static final Logger LOG = LoggerFactory.getLogger(ScheduledReporter.class);
-
-    /**
-     * A simple named thread factory.
-     */
-    @SuppressWarnings("NullableProblems")
-    private static class NamedThreadFactory implements ThreadFactory {
-        private final ThreadGroup group;
-        private final AtomicInteger threadNumber = new AtomicInteger(1);
-        private final String namePrefix;
-
-        private NamedThreadFactory(String name) {
-            final SecurityManager s = System.getSecurityManager();
-            this.group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
-            this.namePrefix = "metrics-" + name + "-thread-";
-        }
-
-        @Override
-        public Thread newThread(Runnable r) {
-            final Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
-            t.setDaemon(true);
-            if (t.getPriority() != Thread.NORM_PRIORITY) {
-                t.setPriority(Thread.NORM_PRIORITY);
-            }
-            return t;
-        }
-    }
-
     private static final AtomicInteger FACTORY_ID = new AtomicInteger();
-
     private final MetricRegistry registry;
     private final ScheduledExecutorService executor;
     private final MetricFilter filter;
@@ -76,15 +48,14 @@ public abstract class ScheduledReporter implements Closeable {
     private final String durationUnit;
     private final double rateFactor;
     private final String rateUnit;
-
     /**
      * Creates a new {@link ScheduledReporter} instance.
      *
-     * @param registry the {@link MetricRegistry} containing the metrics this
-     *                 reporter will report
-     * @param name     the reporter's name
-     * @param filter   the filter for which metrics to report
-     * @param rateUnit a unit of time
+     * @param registry     the {@link MetricRegistry} containing the metrics this
+     *                     reporter will report
+     * @param name         the reporter's name
+     * @param filter       the filter for which metrics to report
+     * @param rateUnit     a unit of time
      * @param durationUnit a unit of time
      */
     protected ScheduledReporter(MetricRegistry registry,
@@ -139,7 +110,7 @@ public abstract class ScheduledReporter implements Closeable {
 
     /**
      * Stops the reporter and shuts down its thread of execution.
-     *
+     * <p>
      * Uses the shutdown pattern from http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ExecutorService.html
      */
     public void stop() {
@@ -216,5 +187,31 @@ public abstract class ScheduledReporter implements Closeable {
     private String calculateRateUnit(TimeUnit unit) {
         final String s = unit.toString().toLowerCase(Locale.US);
         return s.substring(0, s.length() - 1);
+    }
+
+    /**
+     * A simple named thread factory.
+     */
+    @SuppressWarnings("NullableProblems")
+    private static class NamedThreadFactory implements ThreadFactory {
+        private final ThreadGroup group;
+        private final AtomicInteger threadNumber = new AtomicInteger(1);
+        private final String namePrefix;
+
+        private NamedThreadFactory(String name) {
+            final SecurityManager s = System.getSecurityManager();
+            this.group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
+            this.namePrefix = "metrics-" + name + "-thread-";
+        }
+
+        @Override
+        public Thread newThread(Runnable r) {
+            final Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
+            t.setDaemon(true);
+            if (t.getPriority() != Thread.NORM_PRIORITY) {
+                t.setPriority(Thread.NORM_PRIORITY);
+            }
+            return t;
+        }
     }
 }

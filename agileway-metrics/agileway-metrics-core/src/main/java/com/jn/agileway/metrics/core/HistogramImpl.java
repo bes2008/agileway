@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * A metric which calculates the distribution of a value.
  *
  * @see <a href="http://www.johndcook.com/standard_deviation.html">Accurately computing running
- *      variance</a>
+ * variance</a>
  */
 public class HistogramImpl implements Histogram {
 
@@ -49,10 +49,10 @@ public class HistogramImpl implements Histogram {
     /**
      * Creates a new {@link Histogram} with the given reservoir.
      *
-     * @param type the reservoir type to create a histogram from
-     * @param interval the interval to create bucket counter
+     * @param type           the reservoir type to create a histogram from
+     * @param interval       the interval to create bucket counter
      * @param numberOfBucket the number of bucket to create bucket counter
-     * @param clock the clock the create bucket counter
+     * @param clock          the clock the create bucket counter
      */
     public HistogramImpl(ReservoirType type, int interval, int numberOfBucket, Clock clock) {
         this.count = new BucketCounterImpl(interval, numberOfBucket, clock);

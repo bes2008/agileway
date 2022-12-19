@@ -16,13 +16,7 @@
  */
 package com.jn.agileway.metrics.core.common;
 
-import com.jn.agileway.metrics.core.BucketCounter;
-import com.jn.agileway.metrics.core.ClusterHistogram;
-import com.jn.agileway.metrics.core.Collector;
-import com.jn.agileway.metrics.core.Compass;
-import com.jn.agileway.metrics.core.FastCompass;
-import com.jn.agileway.metrics.core.MetricFilter;
-import com.jn.agileway.metrics.core.MetricName;
+import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.common.config.MetricsCollectPeriodConfig;
 
 import java.util.ArrayList;
@@ -49,13 +43,12 @@ public abstract class MetricsCollector implements Collector {
     protected MetricsCollectPeriodConfig metricsCollectPeriodConfig;
     protected double rateFactor;
     protected double durationFactor;
-    private boolean collectNAValue;
-    private double notAvailable;
-
     /**
      * Use this filer to filter out any metric object that is not needed.
      */
     protected MetricFilter filter;
+    private boolean collectNAValue;
+    private double notAvailable;
 
     MetricsCollector(Map<String, String> globalTags, double rateFactor,
                      double durationFactor, MetricFilter filter) {
@@ -65,6 +58,7 @@ public abstract class MetricsCollector implements Collector {
     /**
      * No public access to this constructor,
      * use {@link MetricsCollectorFactory} to create the {@link NormalMetricsCollector} instance
+     *
      * @param globalTags
      * @param rateFactor
      * @param durationFactor
@@ -160,7 +154,7 @@ public abstract class MetricsCollector implements Collector {
         long hitCount = -1;
 
         Map<String, Map<Long, Long>> countPerCategory = fastCompass.getMethodCountPerCategory(start);
-        for (Map.Entry<String, Map<Long, Long>> entry: countPerCategory.entrySet()) {
+        for (Map.Entry<String, Map<Long, Long>> entry : countPerCategory.entrySet()) {
             if (entry.getValue().containsKey(start)) {
                 this.addMetric(name, entry.getKey() + "_bucket_count", entry.getValue().get(start), start,
                         MetricObject.MetricType.DELTA, bucketInterval);
@@ -177,7 +171,7 @@ public abstract class MetricsCollector implements Collector {
                         MetricObject.MetricType.DELTA, bucketInterval);
             }
         }
-        for (Map.Entry<String, Map<Long, Long>> entry: fastCompass.getMethodRtPerCategory(start).entrySet()) {
+        for (Map.Entry<String, Map<Long, Long>> entry : fastCompass.getMethodRtPerCategory(start).entrySet()) {
             if (entry.getValue().containsKey(start)) {
                 totalRt += entry.getValue().get(start);
             }
@@ -202,11 +196,11 @@ public abstract class MetricsCollector implements Collector {
     @Override
     public void collect(MetricName name, ClusterHistogram clusterHistogram, long timestamp) {
         long start = getNormalizedStartTime(timestamp, metricsCollectPeriodConfig.period(name.getMetricLevel()));
-        Map<Long, Map<Long, Long>> values= clusterHistogram.getBucketValues(start);
+        Map<Long, Map<Long, Long>> values = clusterHistogram.getBucketValues(start);
         long[] buckets = clusterHistogram.getBuckets();
         if (values.containsKey(start)) {
             Map<Long, Long> bucketAndValues = values.get(start);
-            for (long bucket: buckets) {
+            for (long bucket : buckets) {
                 this.addMetric(name.tagged("bucket", bucket == Long.MAX_VALUE ? "+Inf" : Long.toString(bucket)),
                         "cluster_percentile", bucketAndValues.containsKey(bucket) ? bucketAndValues.get(bucket) : 0L,
                         start, MetricObject.MetricType.PERCENTILE);
@@ -250,7 +244,7 @@ public abstract class MetricsCollector implements Collector {
     protected void addCompassErrorCode(MetricName name, Compass compass, long timestamp) {
         int countInterval = compass.getInstantCountInterval();
         long start = getNormalizedStartTime(timestamp, countInterval);
-        for (Map.Entry<String, BucketCounter> entry: compass.getErrorCodeCounts().entrySet()) {
+        for (Map.Entry<String, BucketCounter> entry : compass.getErrorCodeCounts().entrySet()) {
             this.addMetric(name, MetricName.build("error.count").tagged("error", entry.getKey()),
                     entry.getValue().getCount(), timestamp, MetricObject.MetricType.COUNTER,
                     metricsCollectPeriodConfig.period(name.getMetricLevel()));
@@ -269,7 +263,7 @@ public abstract class MetricsCollector implements Collector {
     protected void addAddonMetric(MetricName name, Compass compass, long timestamp) {
         int countInterval = compass.getInstantCountInterval();
         long start = getNormalizedStartTime(timestamp, countInterval);
-        for (Map.Entry<String, BucketCounter> entry: compass.getAddonCounts().entrySet()) {
+        for (Map.Entry<String, BucketCounter> entry : compass.getAddonCounts().entrySet()) {
             MetricName addonName = MetricName.build(entry.getKey(), "count");
             this.addMetric(name, addonName, entry.getValue().getCount(), timestamp,
                     MetricObject.MetricType.COUNTER, metricsCollectPeriodConfig.period(name.getMetricLevel()));

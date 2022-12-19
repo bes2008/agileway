@@ -29,43 +29,28 @@ import java.util.Comparator;
  */
 public class WeightedSnapshot extends AbstractSnapshot {
 
-    /**
-     * A single sample item with value and its weights for {@link WeightedSnapshot}.
-     */
-    public static class WeightedSample {
-        public long value;
-        public double weight;
-
-        public WeightedSample(long value, double weight) {
-            this.value = value;
-            this.weight = weight;
-        }
-    }
-
     private static final Charset UTF_8 = Charset.forName("UTF-8");
-
     private final long[] values;
     private final double[] normWeights;
     private final double[] quantiles;
-
     /**
      * Create a new {@link Snapshot} with the given values.
      *
-     * @param values    an unordered set of values in the reservoir
+     * @param values an unordered set of values in the reservoir
      */
     public WeightedSnapshot(Collection<WeightedSample> values) {
-        final WeightedSample[] copy = values.toArray( new WeightedSample[]{} );
+        final WeightedSample[] copy = values.toArray(new WeightedSample[]{});
 
         Arrays.sort(copy, new Comparator<WeightedSample>() {
-            @Override
-            public int compare(WeightedSample o1, WeightedSample o2) {
-                if (o1.value > o2.value)
-                    return 1;
-                if (o1.value < o2.value)
-                    return -1;
-                return 0;
-            }
-        }
+                    @Override
+                    public int compare(WeightedSample o1, WeightedSample o2) {
+                        if (o1.value > o2.value)
+                            return 1;
+                        if (o1.value < o2.value)
+                            return -1;
+                        return 0;
+                    }
+                }
         );
 
         this.values = new long[copy.length];
@@ -90,12 +75,12 @@ public class WeightedSnapshot extends AbstractSnapshot {
     /**
      * Returns the value at the given quantile.
      *
-     * @param quantile    a given quantile, in {@code [0..1]}
+     * @param quantile a given quantile, in {@code [0..1]}
      * @return the value in the distribution at {@code quantile}
      */
     @Override
     public double getValue(double quantile) {
-        if (quantile < 0.0 || quantile > 1.0 || Double.isNaN( quantile )) {
+        if (quantile < 0.0 || quantile > 1.0 || Double.isNaN(quantile)) {
             throw new IllegalArgumentException(quantile + " is not in [0..1]");
         }
 
@@ -200,7 +185,7 @@ public class WeightedSnapshot extends AbstractSnapshot {
 
         for (int i = 0; i < values.length; i++) {
             final double diff = values[i] - mean;
-            variance += normWeights[i] * diff*diff;
+            variance += normWeights[i] * diff * diff;
         }
 
         return Math.sqrt(variance);
@@ -220,6 +205,19 @@ public class WeightedSnapshot extends AbstractSnapshot {
             }
         } finally {
             out.close();
+        }
+    }
+
+    /**
+     * A single sample item with value and its weights for {@link WeightedSnapshot}.
+     */
+    public static class WeightedSample {
+        public long value;
+        public double weight;
+
+        public WeightedSample(long value, double weight) {
+            this.value = value;
+            this.weight = weight;
         }
     }
 }

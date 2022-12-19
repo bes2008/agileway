@@ -25,43 +25,9 @@ import java.util.concurrent.TimeUnit;
  * throughput statistics via {@link Meter}.
  */
 public class TimerImpl implements Timer {
-    /**
-     * A timing context.
-     *
-     * @see Timer#time()
-     */
-    public static class ContextImpl implements Context {
-        private final Timer timer;
-        private final Clock clock;
-        private final long startTime;
-
-        private ContextImpl(Timer timer, Clock clock) {
-            this.timer = timer;
-            this.clock = clock;
-            this.startTime = clock.getTick();
-        }
-
-        /**
-         * Updates the timer with the difference between current and start time. Call to this method will
-         * not reset the start time. Multiple calls result in multiple updates.
-         * @return the elapsed time in nanoseconds
-         */
-        public long stop() {
-            final long elapsed = clock.getTick() - startTime;
-            timer.update(elapsed, TimeUnit.NANOSECONDS);
-            return elapsed;
-        }
-
-        /** Equivalent to calling {@link #stop()}. */
-        public void close() {
-            stop();
-        }
-    }
-
     private final Meter meter;
     private final Histogram histogram;
     private final Clock clock;
-
     /**
      * Creates a new {@link Timer} using an {@link ExponentiallyDecayingReservoir} and the default
      * {@link Clock}.
@@ -91,8 +57,8 @@ public class TimerImpl implements Timer {
      * Creates a new {@link Timer} that uses the given {@link Reservoir} and {@link Clock}.
      *
      * @param reservoir the {@link Reservoir} implementation the timer should use
-     * @param clock  the {@link Clock} implementation the timer should use
-     * @param interval the interval in seconds for bucket counter
+     * @param clock     the {@link Clock} implementation the timer should use
+     * @param interval  the interval in seconds for bucket counter
      */
     public TimerImpl(ReservoirType reservoir, Clock clock, int interval) {
         this.meter = new MeterImpl(clock, interval);
@@ -192,6 +158,42 @@ public class TimerImpl implements Timer {
         if (duration >= 0) {
             histogram.update(duration);
             meter.mark();
+        }
+    }
+
+    /**
+     * A timing context.
+     *
+     * @see Timer#time()
+     */
+    public static class ContextImpl implements Context {
+        private final Timer timer;
+        private final Clock clock;
+        private final long startTime;
+
+        private ContextImpl(Timer timer, Clock clock) {
+            this.timer = timer;
+            this.clock = clock;
+            this.startTime = clock.getTick();
+        }
+
+        /**
+         * Updates the timer with the difference between current and start time. Call to this method will
+         * not reset the start time. Multiple calls result in multiple updates.
+         *
+         * @return the elapsed time in nanoseconds
+         */
+        public long stop() {
+            final long elapsed = clock.getTick() - startTime;
+            timer.update(elapsed, TimeUnit.NANOSECONDS);
+            return elapsed;
+        }
+
+        /**
+         * Equivalent to calling {@link #stop()}.
+         */
+        public void close() {
+            stop();
         }
     }
 }

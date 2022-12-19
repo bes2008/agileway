@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 在一个不超过60s统计周期内，方法调用的总次数和总次数其实完全用不到63个bit
  * 所以可以将这两个统计项放到一个long里面来表示
  * 这里高位的25个bit表示统计周期内调用总次数，后38位表示总rt
- *
+ * <p>
  * Since the total number of method invocation and total time of method execution
  * within a collecting interval never exceed the range a LONG can represent,
  * we can use one LongAdder to record both the total count and total number
@@ -60,19 +60,14 @@ public class FastCompassImpl implements FastCompass {
             Integer.getInteger("com.jn.agileway.metrics.core.maxSubCategoryCount", 20);
 
     private static final int DEFAULT_BUCKET_COUNT = 10;
-
-    private int bucketInterval;
-
-    private int numberOfBuckets;
-
-    private Clock clock;
-
-    private int maxCategoryCount;
-
     /**
      * The number of addon count per addon per collect interval
      */
     private final ConcurrentHashMap<String, BucketCounter> subCategories;
+    private int bucketInterval;
+    private int numberOfBuckets;
+    private Clock clock;
+    private int maxCategoryCount;
 
     public FastCompassImpl(int bucketInterval) {
         this(bucketInterval, DEFAULT_BUCKET_COUNT, Clock.defaultClock(), MAX_SUBCATEGORY_SIZE);
@@ -115,9 +110,9 @@ public class FastCompassImpl implements FastCompass {
     @Override
     public Map<String, Map<Long, Long>> getMethodCountPerCategory(long startTime) {
         Map<String, Map<Long, Long>> countPerCategory = new HashMap<String, Map<Long, Long>>();
-        for (Map.Entry<String, BucketCounter> entry: subCategories.entrySet()) {
+        for (Map.Entry<String, BucketCounter> entry : subCategories.entrySet()) {
             Map<Long, Long> bucketCount = new HashMap<Long, Long>();
-            for (Map.Entry<Long, Long> bucket: entry.getValue().getBucketCounts(startTime).entrySet()) {
+            for (Map.Entry<Long, Long> bucket : entry.getValue().getBucketCounts(startTime).entrySet()) {
                 bucketCount.put(bucket.getKey(), bucket.getValue() >> COUNT_OFFSET);
             }
             countPerCategory.put(entry.getKey(), bucketCount);
@@ -128,9 +123,9 @@ public class FastCompassImpl implements FastCompass {
     @Override
     public Map<String, Map<Long, Long>> getMethodRtPerCategory(long startTime) {
         Map<String, Map<Long, Long>> rtPerCategory = new HashMap<String, Map<Long, Long>>();
-        for (Map.Entry<String, BucketCounter> entry: subCategories.entrySet()) {
+        for (Map.Entry<String, BucketCounter> entry : subCategories.entrySet()) {
             Map<Long, Long> bucketCount = new HashMap<Long, Long>();
-            for (Map.Entry<Long, Long> bucket: entry.getValue().getBucketCounts(startTime).entrySet()) {
+            for (Map.Entry<Long, Long> bucket : entry.getValue().getBucketCounts(startTime).entrySet()) {
                 bucketCount.put(bucket.getKey(), bucket.getValue() & RT_BITWISE_AND_BASE);
             }
             rtPerCategory.put(entry.getKey(), bucketCount);
@@ -153,9 +148,9 @@ public class FastCompassImpl implements FastCompass {
 
         Map<String, Map<Long, Long>> countAndRtPerCategory = new HashMap<String, Map<Long, Long>>();
 
-        for (Map.Entry<String, BucketCounter> entry: subCategories.entrySet()) {
+        for (Map.Entry<String, BucketCounter> entry : subCategories.entrySet()) {
             Map<Long, Long> bucketCount = new HashMap<Long, Long>();
-            for (Map.Entry<Long, Long> bucket: entry.getValue().getBucketCounts(startTime).entrySet()) {
+            for (Map.Entry<Long, Long> bucket : entry.getValue().getBucketCounts(startTime).entrySet()) {
                 bucketCount.put(bucket.getKey(), bucket.getValue());
             }
             countAndRtPerCategory.put(entry.getKey(), bucketCount);
@@ -167,7 +162,7 @@ public class FastCompassImpl implements FastCompass {
     @Override
     public long lastUpdateTime() {
         long latest = 0;
-        for (Map.Entry<String, BucketCounter> entry: subCategories.entrySet()) {
+        for (Map.Entry<String, BucketCounter> entry : subCategories.entrySet()) {
             if (latest < entry.getValue().lastUpdateTime()) {
                 latest = entry.getValue().lastUpdateTime();
             }

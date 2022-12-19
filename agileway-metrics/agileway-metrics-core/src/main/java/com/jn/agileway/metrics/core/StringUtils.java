@@ -35,6 +35,7 @@ public class StringUtils {
     /**
      * check if there is any illegal character in given metric name
      * Focus on metric key and tag value
+     *
      * @param name the metric name to check
      */
     public static void checkMetricName(MetricName name) {
@@ -44,7 +45,7 @@ public class StringUtils {
             throw new IllegalArgumentException("Illegal metric key: " + name.getKey());
         }
 
-        for (String tagV: name.getTags().values()) {
+        for (String tagV : name.getTags().values()) {
             checkTagValue(tagV);
         }
     }
@@ -52,6 +53,7 @@ public class StringUtils {
 
     /**
      * check if there is any illegal character in tag value
+     *
      * @param tagValue the tag value to check
      */
     public static void checkTagValue(String tagValue) {
@@ -64,6 +66,7 @@ public class StringUtils {
 
     /**
      * When output to metrics.log, all the illegal chars will be replaced by "_"
+     *
      * @param input the input string
      * @return a string with all the illegal chars replaced by "_"
      */

@@ -50,18 +50,18 @@ class BucketDeque {
 
     /**
      * Example1:
-     *      10:00   10:01  10:02   09:57   09:58   09:59
-     *      70      80     90      40      50      60
-     *              |       \
-     *            startPos  latestIndex
+     * 10:00   10:01  10:02   09:57   09:58   09:59
+     * 70      80     90      40      50      60
+     * |       \
+     * startPos  latestIndex
      * Example2:
-     *      10:00   09:55  09:56   09:57   09:58   09:59
-     *      70      20     30      40      50      60
-     *      |                                      |
-     *      latestIndex                            startPos
+     * 10:00   09:55  09:56   09:57   09:58   09:59
+     * 70      20     30      40      50      60
+     * |                                      |
+     * latestIndex                            startPos
      */
     List<Bucket> getBucketList() {
-        int length = queue.length-1;
+        int length = queue.length - 1;
         List<Bucket> bucketList = new ArrayList<Bucket>();
         int startPos = current;
         long startTs = queue[current].timestamp;

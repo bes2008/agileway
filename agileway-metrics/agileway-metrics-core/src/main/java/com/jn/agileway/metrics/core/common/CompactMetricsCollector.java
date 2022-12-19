@@ -16,16 +16,7 @@
  */
 package com.jn.agileway.metrics.core.common;
 
-import com.jn.agileway.metrics.core.BucketCounter;
-import com.jn.agileway.metrics.core.Compass;
-import com.jn.agileway.metrics.core.Counter;
-import com.jn.agileway.metrics.core.Gauge;
-import com.jn.agileway.metrics.core.Histogram;
-import com.jn.agileway.metrics.core.Meter;
-import com.jn.agileway.metrics.core.MetricFilter;
-import com.jn.agileway.metrics.core.MetricName;
-import com.jn.agileway.metrics.core.Snapshot;
-import com.jn.agileway.metrics.core.Timer;
+import com.jn.agileway.metrics.core.*;
 
 import java.util.Map;
 

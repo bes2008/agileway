@@ -24,7 +24,8 @@ public interface ClusterHistogramBuilder<T> extends MetricBuilder {
 
     /**
      * Create a <T extends Metrics> instance with given name and buckets
-     * @param name the name of the metric
+     *
+     * @param name    the name of the metric
      * @param buckets an array of long values
      * @return a metric implementation
      */

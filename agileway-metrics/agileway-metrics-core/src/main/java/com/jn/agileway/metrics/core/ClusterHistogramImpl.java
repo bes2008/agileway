@@ -34,7 +34,7 @@ public class ClusterHistogramImpl extends ClusterHistogram {
 
     public ClusterHistogramImpl(long[] buckets, int interval, Clock clock) {
         super(buckets);
-        values = new BucketCounter[buckets.length+1];
+        values = new BucketCounter[buckets.length + 1];
         for (int i = 0; i < values.length; i++) {
             values[i] = new BucketCounterImpl(interval, DEFAULT_NUM_OF_BUCKETS, clock, false);
         }
@@ -47,7 +47,7 @@ public class ClusterHistogramImpl extends ClusterHistogram {
         int i = 0;
         while (low <= high) {
             i = low + (high - low) / 2;
-            if (value < buckets[i] && (i == 0 || value >= buckets[i-1])) {
+            if (value < buckets[i] && (i == 0 || value >= buckets[i - 1])) {
                 values[i].update();
                 break;
             }

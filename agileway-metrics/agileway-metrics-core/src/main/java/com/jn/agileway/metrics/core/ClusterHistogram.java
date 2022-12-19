@@ -22,6 +22,7 @@ import java.util.Map;
 /**
  * A metric to calculate cluster histogram,
  * since the the percentile can not be aggregated.
+ *
  * @author wangtao 2019-01-15 15:00
  */
 public abstract class ClusterHistogram implements Metric {
@@ -40,7 +41,7 @@ public abstract class ClusterHistogram implements Metric {
             throw new IllegalStateException("The number of buckets should be no larger than " + MAX_BUCKET_COUNT);
         } else {
             this.buckets = buckets;
-            this.buckets = new long[buckets.length+1];
+            this.buckets = new long[buckets.length + 1];
             for (int i = 0; i < buckets.length; i++) {
                 this.buckets[i] = buckets[i];
             }
@@ -62,6 +63,7 @@ public abstract class ClusterHistogram implements Metric {
 
     /**
      * get the bucket values since (including) the startTime, keyed by timestamp.
+     *
      * @param startTime 查询起始时间, 单位是毫秒
      * @return a map, keyed by timestamp, the value is a Map of the bucket and its value
      * For example: 1234556789 -> { [0, 1) -> 1, [1, 10) -> 5, [10, 100) -> 3  }

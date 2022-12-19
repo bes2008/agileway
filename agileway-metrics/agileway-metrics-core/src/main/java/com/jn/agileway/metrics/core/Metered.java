@@ -32,12 +32,14 @@ public interface Metered extends Metric, Counting {
 
     /**
      * Get the accurate number per collecting interval
+     *
      * @return an long array, each contains the number of events, keyed by timestamp in milliseconds
      */
     Map<Long, Long> getInstantCount();
 
     /**
      * Get the accurate number per collecting interval since (including) the start time
+     *
      * @param startTime the start time of the query
      * @return an long array, each contains the number of events, keyed by timestamp in milliseconds
      */
@@ -45,6 +47,7 @@ public interface Metered extends Metric, Counting {
 
     /**
      * Get the collecting interval
+     *
      * @return the collecting interval
      */
     int getInstantCountInterval();
@@ -57,7 +60,7 @@ public interface Metered extends Metric, Counting {
      * {@code top} Unix command.
      *
      * @return the fifteen-minute exponentially-weighted moving average rate at which events have
-     *         occurred since the meter was created
+     * occurred since the meter was created
      */
     double getFifteenMinuteRate();
 
@@ -69,7 +72,7 @@ public interface Metered extends Metric, Counting {
      * top} Unix command.
      *
      * @return the five-minute exponentially-weighted moving average rate at which events have
-     *         occurred since the meter was created
+     * occurred since the meter was created
      */
     double getFiveMinuteRate();
 
@@ -88,7 +91,7 @@ public interface Metered extends Metric, Counting {
      * top} Unix command.
      *
      * @return the one-minute exponentially-weighted moving average rate at which events have
-     *         occurred since the meter was created
+     * occurred since the meter was created
      */
     double getOneMinuteRate();
 }

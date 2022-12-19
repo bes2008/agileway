@@ -16,18 +16,13 @@
  */
 package com.jn.agileway.metrics.core;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * A metric name with the ability to include semantic tags.
- *
+ * <p>
  * This replaces the previous style where metric names where strictly
  * dot-separated strings.
- *
  */
 public class MetricName implements Comparable<MetricName> {
     public static final String SEPARATOR = ".";
@@ -65,121 +60,12 @@ public class MetricName implements Comparable<MetricName> {
         this.level = level == null ? MetricLevel.NORMAL : level;
     }
 
-    private Map<String, String> checkTags(Map<String, String> tags) {
-        if (tags == null || tags.isEmpty()) {
-            return EMPTY_TAGS;
-        }
-
-        return Collections.unmodifiableMap(tags);
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public Map<String, String> getTags() {
-        return tags;
-    }
-
-    /**
-     * Return the level of this metric
-     * The level indicates the importance of the metric
-     *
-     * @return when level tag do not exist or illegal tag, will return null.
-     */
-    public MetricLevel getMetricLevel() {
-        return level;
-    }
-
-
-    /**
-     * Metric level can be changed during runtime
-     * @param level the level to set
-     */
-    public MetricName level(MetricLevel level) {
-        this.level = level;
-        return this;
-    }
-
-
-    /**
-     * @see {@link #resolve(String, boolean)}
-     */
-    public MetricName resolve(String p) {
-        return resolve(p, true);
-    }
-
-    /**
-     * Build the MetricName that is this with another path appended to it.
-     *
-     * The new MetricName inherits the tags of this one.
-     *
-     * @param p The extra path element to add to the new metric.
-     * @param inheritTags if true, tags will be inherited
-     * @return A new metric name relative to the original by the path specified
-     *         in p.
-     */
-    public MetricName resolve(String p, boolean inheritTags) {
-        final String next;
-
-        if (p != null && !p.isEmpty()) {
-            if (key != null && !key.isEmpty()) {
-                next = key + SEPARATOR + p;
-            } else {
-                next = p;
-            }
-        } else {
-            next = this.key;
-        }
-
-        return inheritTags ? new MetricName(next, tags, level) : new MetricName(next, level);
-    }
-
-    /**
-     * Add tags to a metric name and return the newly created MetricName.
-     *
-     * @param add Tags to add.
-     * @return A newly created metric name with the specified tags associated with it.
-     */
-    public MetricName tagged(Map<String, String> add) {
-        final Map<String, String> tags = new HashMap<String, String>(add);
-        tags.putAll(this.tags);
-        return new MetricName(key, tags, level);
-    }
-
-    /**
-     * Same as {@link #tagged(Map)}, but takes a variadic list
-     * of arguments.
-     *
-     * @see #tagged(Map)
-     * @param pairs An even list of strings acting as key-value pairs.
-     * @return A newly created metric name with the specified tags associated
-     *         with it.
-     */
-    public MetricName tagged(String... pairs) {
-        if (pairs == null) {
-            return this;
-        }
-
-        if (pairs.length % 2 != 0) {
-            throw new IllegalArgumentException("Argument count must be even");
-        }
-
-        final Map<String, String> add = new HashMap<String, String>();
-
-        for (int i = 0; i < pairs.length; i += 2) {
-            add.put(pairs[i], pairs[i+1]);
-        }
-
-        return tagged(add);
-    }
-
     /**
      * Join the specified set of metric names.
      *
      * @param parts Multiple metric names to join using the separator.
      * @return A newly created metric name which has the name of the specified
-     *         parts and includes all tags of all child metric names.
+     * parts and includes all tags of all child metric names.
      **/
     public static MetricName join(MetricName... parts) {
         final StringBuilder nameBuilder = new StringBuilder();
@@ -246,6 +132,114 @@ public class MetricName implements Comparable<MetricName> {
         return builder.toString();
     }
 
+    private Map<String, String> checkTags(Map<String, String> tags) {
+        if (tags == null || tags.isEmpty()) {
+            return EMPTY_TAGS;
+        }
+
+        return Collections.unmodifiableMap(tags);
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public Map<String, String> getTags() {
+        return tags;
+    }
+
+    /**
+     * Return the level of this metric
+     * The level indicates the importance of the metric
+     *
+     * @return when level tag do not exist or illegal tag, will return null.
+     */
+    public MetricLevel getMetricLevel() {
+        return level;
+    }
+
+    /**
+     * Metric level can be changed during runtime
+     *
+     * @param level the level to set
+     */
+    public MetricName level(MetricLevel level) {
+        this.level = level;
+        return this;
+    }
+
+    /**
+     * @see {@link #resolve(String, boolean)}
+     */
+    public MetricName resolve(String p) {
+        return resolve(p, true);
+    }
+
+    /**
+     * Build the MetricName that is this with another path appended to it.
+     * <p>
+     * The new MetricName inherits the tags of this one.
+     *
+     * @param p           The extra path element to add to the new metric.
+     * @param inheritTags if true, tags will be inherited
+     * @return A new metric name relative to the original by the path specified
+     * in p.
+     */
+    public MetricName resolve(String p, boolean inheritTags) {
+        final String next;
+
+        if (p != null && !p.isEmpty()) {
+            if (key != null && !key.isEmpty()) {
+                next = key + SEPARATOR + p;
+            } else {
+                next = p;
+            }
+        } else {
+            next = this.key;
+        }
+
+        return inheritTags ? new MetricName(next, tags, level) : new MetricName(next, level);
+    }
+
+    /**
+     * Add tags to a metric name and return the newly created MetricName.
+     *
+     * @param add Tags to add.
+     * @return A newly created metric name with the specified tags associated with it.
+     */
+    public MetricName tagged(Map<String, String> add) {
+        final Map<String, String> tags = new HashMap<String, String>(add);
+        tags.putAll(this.tags);
+        return new MetricName(key, tags, level);
+    }
+
+    /**
+     * Same as {@link #tagged(Map)}, but takes a variadic list
+     * of arguments.
+     *
+     * @param pairs An even list of strings acting as key-value pairs.
+     * @return A newly created metric name with the specified tags associated
+     * with it.
+     * @see #tagged(Map)
+     */
+    public MetricName tagged(String... pairs) {
+        if (pairs == null) {
+            return this;
+        }
+
+        if (pairs.length % 2 != 0) {
+            throw new IllegalArgumentException("Argument count must be even");
+        }
+
+        final Map<String, String> add = new HashMap<String, String>();
+
+        for (int i = 0; i < pairs.length; i += 2) {
+            add.put(pairs[i], pairs[i + 1]);
+        }
+
+        return tagged(add);
+    }
+
     @Override
     public String toString() {
         if (tags.isEmpty()) {
@@ -258,7 +252,7 @@ public class MetricName implements Comparable<MetricName> {
     @Override
     public int hashCode() {
 
-        if (!hashCodeCached){
+        if (!hashCodeCached) {
 
             final int prime = 31;
             int result = 1;

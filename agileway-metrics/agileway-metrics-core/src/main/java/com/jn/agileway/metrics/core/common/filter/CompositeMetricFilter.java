@@ -30,6 +30,7 @@ public class CompositeMetricFilter implements MetricFilter {
 
     /**
      * 如果包含 {@link MetricFilter#ALL} 则直接丢弃，减少一次无谓的判断
+     *
      * @param filters
      */
     public CompositeMetricFilter(MetricFilter... filters) {

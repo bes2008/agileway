@@ -33,6 +33,21 @@ import java.util.concurrent.TimeUnit;
  * A reporter which listens for new metrics and exposes them as namespaced MBeans.
  */
 public class JmxReporter implements Closeable {
+    private static final Logger LOGGER = LoggerFactory.getLogger(JmxReporter.class);
+    private final MetricRegistry registry;
+    private final JmxListener listener;
+
+    private JmxReporter(MBeanServer mBeanServer,
+                        String domain,
+                        MetricRegistry registry,
+                        MetricFilter filter,
+                        MetricTimeUnits timeUnits,
+                        ObjectNameFactory objectNameFactory) {
+        this.registry = registry;
+        this.listener = new JmxListener(mBeanServer, domain, filter, timeUnits, objectNameFactory);
+    }
+    // CHECKSTYLE:ON
+
     /**
      * Returns a new {@link Builder} for {@link JmxReporter}.
      *
@@ -41,6 +56,131 @@ public class JmxReporter implements Closeable {
      */
     public static Builder forRegistry(MetricRegistry registry) {
         return new Builder(registry);
+    }
+
+    /**
+     * Starts the reporter.
+     */
+    public void start() {
+        registry.addListener(listener);
+    }
+    // CHECKSTYLE:ON
+
+    /**
+     * Stops the reporter.
+     */
+    public void stop() {
+        registry.removeListener(listener);
+        listener.unregisterAll();
+    }
+
+    /**
+     * Stops the reporter.
+     */
+    @Override
+    public void close() {
+        stop();
+    }
+    // CHECKSTYLE:ON
+
+    /**
+     * Visible for testing
+     */
+    ObjectNameFactory getObjectNameFactory() {
+        return listener.objectNameFactory;
+    }
+
+    // CHECKSTYLE:OFF
+    @SuppressWarnings("UnusedDeclaration")
+    public interface MetricMBean {
+        ObjectName objectName();
+    }
+    // CHECKSTYLE:ON
+
+    // CHECKSTYLE:OFF
+    @SuppressWarnings("UnusedDeclaration")
+    public interface JmxGaugeMBean extends MetricMBean {
+        Object getValue();
+    }
+
+    // CHECKSTYLE:OFF
+    @SuppressWarnings("UnusedDeclaration")
+    public interface JmxCounterMBean extends MetricMBean {
+        long getCount();
+    }
+    //CHECKSTYLE:ON
+
+    // CHECKSTYLE:OFF
+    @SuppressWarnings("UnusedDeclaration")
+    public interface JmxHistogramMBean extends MetricMBean {
+        long getCount();
+
+        long getMin();
+
+        long getMax();
+
+        double getMean();
+
+        double getStdDev();
+
+        double get50thPercentile();
+
+        double get75thPercentile();
+
+        double get95thPercentile();
+
+        double get98thPercentile();
+
+        double get99thPercentile();
+
+        double get999thPercentile();
+
+        long[] values();
+    }
+
+    //CHECKSTYLE:OFF
+    @SuppressWarnings("UnusedDeclaration")
+    public interface JmxMeterMBean extends MetricMBean {
+        long getCount();
+
+        double getMeanRate();
+
+        double getOneMinuteRate();
+
+        double getFiveMinuteRate();
+
+        double getFifteenMinuteRate();
+
+        String getRateUnit();
+    }
+    // CHECKSTYLE:ON
+
+    // CHECKSTYLE:OFF
+    @SuppressWarnings("UnusedDeclaration")
+    public interface JmxTimerMBean extends JmxMeterMBean {
+        double getMin();
+
+        double getMax();
+
+        double getMean();
+
+        double getStdDev();
+
+        double get50thPercentile();
+
+        double get75thPercentile();
+
+        double get95thPercentile();
+
+        double get98thPercentile();
+
+        double get99thPercentile();
+
+        double get999thPercentile();
+
+        long[] values();
+
+        String getDurationUnit();
     }
 
     /**
@@ -71,7 +211,7 @@ public class JmxReporter implements Closeable {
         /**
          * Register MBeans with the given {@link MBeanServer}.
          *
-         * @param mBeanServer     an {@link MBeanServer}
+         * @param mBeanServer an {@link MBeanServer}
          * @return {@code this}
          */
         public Builder registerWith(MBeanServer mBeanServer) {
@@ -91,7 +231,7 @@ public class JmxReporter implements Closeable {
         }
 
         public Builder createsObjectNamesWith(ObjectNameFactory onFactory) {
-            if(onFactory == null) {
+            if (onFactory == null) {
                 throw new IllegalArgumentException("null objectNameFactory");
             }
             this.objectNameFactory = onFactory;
@@ -155,22 +295,12 @@ public class JmxReporter implements Closeable {
          */
         public JmxReporter build() {
             final MetricTimeUnits timeUnits = new MetricTimeUnits(rateUnit, durationUnit, specificRateUnits, specificDurationUnits);
-            if (mBeanServer==null) {
+            if (mBeanServer == null) {
                 mBeanServer = ManagementFactory.getPlatformMBeanServer();
             }
             return new JmxReporter(mBeanServer, domain, registry, filter, timeUnits, objectNameFactory);
         }
     }
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(JmxReporter.class);
-
-    // CHECKSTYLE:OFF
-    @SuppressWarnings("UnusedDeclaration")
-    public interface MetricMBean {
-        ObjectName objectName();
-    }
-    // CHECKSTYLE:ON
-
 
     private abstract static class AbstractBean implements MetricMBean {
         private final ObjectName objectName;
@@ -184,13 +314,6 @@ public class JmxReporter implements Closeable {
             return objectName;
         }
     }
-
-    // CHECKSTYLE:OFF
-    @SuppressWarnings("UnusedDeclaration")
-    public interface JmxGaugeMBean extends MetricMBean {
-        Object getValue();
-    }
-    // CHECKSTYLE:ON
 
     private static class JmxGauge extends AbstractBean implements JmxGaugeMBean {
         private final Gauge<?> metric;
@@ -206,13 +329,6 @@ public class JmxReporter implements Closeable {
         }
     }
 
-    // CHECKSTYLE:OFF
-    @SuppressWarnings("UnusedDeclaration")
-    public interface JmxCounterMBean extends MetricMBean {
-        long getCount();
-    }
-    // CHECKSTYLE:ON
-
     private static class JmxCounter extends AbstractBean implements JmxCounterMBean {
         private final Counter metric;
 
@@ -226,35 +342,6 @@ public class JmxReporter implements Closeable {
             return metric.getCount();
         }
     }
-
-    // CHECKSTYLE:OFF
-    @SuppressWarnings("UnusedDeclaration")
-    public interface JmxHistogramMBean extends MetricMBean {
-        long getCount();
-
-        long getMin();
-
-        long getMax();
-
-        double getMean();
-
-        double getStdDev();
-
-        double get50thPercentile();
-
-        double get75thPercentile();
-
-        double get95thPercentile();
-
-        double get98thPercentile();
-
-        double get99thPercentile();
-
-        double get999thPercentile();
-
-        long[] values();
-    }
-    // CHECKSTYLE:ON
 
     private static class JmxHistogram implements JmxHistogramMBean {
         private final ObjectName objectName;
@@ -331,23 +418,6 @@ public class JmxReporter implements Closeable {
         }
     }
 
-    //CHECKSTYLE:OFF
-    @SuppressWarnings("UnusedDeclaration")
-    public interface JmxMeterMBean extends MetricMBean {
-        long getCount();
-
-        double getMeanRate();
-
-        double getOneMinuteRate();
-
-        double getFiveMinuteRate();
-
-        double getFifteenMinuteRate();
-
-        String getRateUnit();
-    }
-    //CHECKSTYLE:ON
-
     private static class JmxMeter extends AbstractBean implements JmxMeterMBean {
         private final Metered metric;
         private final double rateFactor;
@@ -395,34 +465,6 @@ public class JmxReporter implements Closeable {
             return s.substring(0, s.length() - 1);
         }
     }
-
-    // CHECKSTYLE:OFF
-    @SuppressWarnings("UnusedDeclaration")
-    public interface JmxTimerMBean extends JmxMeterMBean {
-        double getMin();
-
-        double getMax();
-
-        double getMean();
-
-        double getStdDev();
-
-        double get50thPercentile();
-
-        double get75thPercentile();
-
-        double get95thPercentile();
-
-        double get98thPercentile();
-
-        double get99thPercentile();
-
-        double get999thPercentile();
-
-        long[] values();
-        String getDurationUnit();
-    }
-    // CHECKSTYLE:ON
 
     static class JmxTimer extends JmxMeter implements JmxTimerMBean {
         private final Timer metric;
@@ -729,49 +771,6 @@ public class JmxReporter implements Closeable {
         public TimeUnit rateFor(String name) {
             return rateOverrides.containsKey(name) ? rateOverrides.get(name) : defaultRate;
         }
-    }
-
-    private final MetricRegistry registry;
-    private final JmxListener listener;
-
-    private JmxReporter(MBeanServer mBeanServer,
-                        String domain,
-                        MetricRegistry registry,
-                        MetricFilter filter,
-                        MetricTimeUnits timeUnits,
-                        ObjectNameFactory objectNameFactory) {
-        this.registry = registry;
-        this.listener = new JmxListener(mBeanServer, domain, filter, timeUnits, objectNameFactory);
-    }
-
-    /**
-     * Starts the reporter.
-     */
-    public void start() {
-        registry.addListener(listener);
-    }
-
-    /**
-     * Stops the reporter.
-     */
-    public void stop() {
-        registry.removeListener(listener);
-        listener.unregisterAll();
-    }
-
-    /**
-     * Stops the reporter.
-     */
-    @Override
-    public void close() {
-        stop();
-    }
-
-    /**
-     * Visible for testing
-     */
-    ObjectNameFactory getObjectNameFactory() {
-        return listener.objectNameFactory;
     }
 
 }

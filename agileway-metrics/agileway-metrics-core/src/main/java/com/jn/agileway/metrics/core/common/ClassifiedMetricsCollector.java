@@ -16,19 +16,7 @@
  */
 package com.jn.agileway.metrics.core.common;
 
-import com.jn.agileway.metrics.core.BucketCounter;
-import com.jn.agileway.metrics.core.ClusterHistogram;
-import com.jn.agileway.metrics.core.Compass;
-import com.jn.agileway.metrics.core.Counter;
-import com.jn.agileway.metrics.core.FastCompass;
-import com.jn.agileway.metrics.core.Gauge;
-import com.jn.agileway.metrics.core.Histogram;
-import com.jn.agileway.metrics.core.Meter;
-import com.jn.agileway.metrics.core.MetricFilter;
-import com.jn.agileway.metrics.core.MetricLevel;
-import com.jn.agileway.metrics.core.MetricName;
-import com.jn.agileway.metrics.core.Snapshot;
-import com.jn.agileway.metrics.core.Timer;
+import com.jn.agileway.metrics.core.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,24 +26,16 @@ import java.util.Map.Entry;
 
 public class ClassifiedMetricsCollector extends MetricsCollector {
 
-    /** fastcompass实现中的数字分隔偏移量，后半段数字所占位数 */
+    /**
+     * fastcompass实现中的数字分隔偏移量，后半段数字所占位数
+     */
     private static final int FASTCOMPASS_COUNT_OFFSET = 38;
     private static final long FASTCOMPASS_MASK = (1L << FASTCOMPASS_COUNT_OFFSET) - 1;
-
-    private Map<MetricLevel, Map<Long, List<MetricObject>>> metrics;
-
-    /** 上一次收集的时间戳 */
-    private Map<MetricLevel, Long> lastTimestamp = new HashMap<MetricLevel, Long>();
-
     private static final int CRITICAL_MAX_SAMPLE_NUM = 10;
     private static final int GENERAL_MAX_SAMPLE_NUM = 2;
-
-    private int totalSize = 0;
-    private int MAX_SIZE = MAX_COLLECT_NUM * 5;
-
-    private boolean advancedMetricsReport = false;
-
-    /** 度量器名称 */
+    /**
+     * 度量器名称
+     */
     private static String COUNTER_NAME = "Counter";
     private static String GAUGE_NAME = "Gauge";
     private static String METER_NAME = "Meter";
@@ -64,9 +44,17 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
     private static String COMPASS_NAME = "Compass";
     private static String FASTCOMPASS_NAME = "FastCompass";
     private static String CLUSTER_HISTOGRAM_NAME = "ClusterHistogram";
+    private Map<MetricLevel, Map<Long, List<MetricObject>>> metrics;
+    /**
+     * 上一次收集的时间戳
+     */
+    private Map<MetricLevel, Long> lastTimestamp = new HashMap<MetricLevel, Long>();
+    private int totalSize = 0;
+    private int MAX_SIZE = MAX_COLLECT_NUM * 5;
+    private boolean advancedMetricsReport = false;
 
     ClassifiedMetricsCollector(Map<String, String> globalTags, double rateFactor, double durationFactor,
-            MetricFilter filter) {
+                               MetricFilter filter) {
         super(globalTags, rateFactor, durationFactor, filter);
         metrics = new HashMap<MetricLevel, Map<Long, List<MetricObject>>>();
     }
@@ -496,7 +484,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
             if (!bucketValues.containsKey(curTime)) {
                 continue;
             }
-            Map<Long, Long> bucketAndValues= bucketValues.get(curTime);
+            Map<Long, Long> bucketAndValues = bucketValues.get(curTime);
             long[] buckets = clusterHistogram.getBuckets();
             for (long bucket : buckets) {
                 this.addMetric(name.tagged("bucket", bucket == Long.MAX_VALUE ? "+Inf" : Long.toString(bucket)),
@@ -547,7 +535,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
     }
 
     private MetricsCollector addMetric(MetricName fullName, Object value, long timestamp, MetricObject.MetricType type,
-            String meterName) {
+                                       String meterName) {
         MetricObject obj = MetricObject.named(fullName.getKey()).withType(type).withTimestamp(timestamp)
                 .withValue(value).withTags(merge(globalTags, fullName.getTags())).withLevel(fullName.getMetricLevel())
                 .withMeterName(meterName).build();

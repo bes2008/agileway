@@ -75,6 +75,7 @@ public class CounterImpl implements Counter {
      * Recording the last updated time for each update is very expensive according to JMH benchmark,
      * about 6x slower.
      * Because this implementation is only used internally, so this function just returns 0.
+     *
      * @return always return 0.
      */
     @Override

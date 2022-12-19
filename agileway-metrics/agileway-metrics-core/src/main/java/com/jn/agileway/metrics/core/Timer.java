@@ -27,22 +27,6 @@ import java.util.concurrent.TimeUnit;
  */
 public interface Timer extends Metered, Sampling {
     /**
-     * A timing context.
-     *
-     * @see Timer#time()
-     */
-    interface Context extends Closeable {
-
-        /**
-         * Updates the timer with the difference between current and start time. Call to this method will
-         * not reset the start time. Multiple calls result in multiple updates.
-         * @return the elapsed time in nanoseconds
-         */
-        long stop();
-    }
-
-
-    /**
      * Adds a recorded duration.
      *
      * @param duration the length of the duration
@@ -68,6 +52,22 @@ public interface Timer extends Metered, Sampling {
      * @see Context
      */
     Context time();
+
+    /**
+     * A timing context.
+     *
+     * @see Timer#time()
+     */
+    interface Context extends Closeable {
+
+        /**
+         * Updates the timer with the difference between current and start time. Call to this method will
+         * not reset the start time. Multiple calls result in multiple updates.
+         *
+         * @return the elapsed time in nanoseconds
+         */
+        long stop();
+    }
 
 
 }

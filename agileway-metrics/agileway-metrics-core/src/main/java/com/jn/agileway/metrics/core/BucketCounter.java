@@ -37,6 +37,7 @@ public interface BucketCounter extends Counter {
 
     /**
      * Return the bucket count, keyed by timestamp
+     *
      * @return the bucket count, keyed by timestamp
      */
     Map<Long, Long> getBucketCounts();
@@ -44,6 +45,7 @@ public interface BucketCounter extends Counter {
     /**
      * Return the bucket count, keyed by timestamp, since (including) the startTime.
      * 返回从startTime开始的分桶统计功能
+     *
      * @param startTime 查询起始时间, 单位是毫秒
      * @return the bucket count, keyed by timestamp
      */
@@ -51,6 +53,7 @@ public interface BucketCounter extends Counter {
 
     /**
      * Get the interval of the bucket
+     *
      * @return the interval of the bucket
      */
     int getBucketInterval();

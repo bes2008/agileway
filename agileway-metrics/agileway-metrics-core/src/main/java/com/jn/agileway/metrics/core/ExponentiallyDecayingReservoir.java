@@ -17,6 +17,7 @@
 package com.jn.agileway.metrics.core;
 
 import com.jn.agileway.metrics.core.WeightedSnapshot.WeightedSample;
+import com.jn.langx.util.random.ThreadLocalRandom;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ import static java.lang.Math.min;
  *
  * @see <a href="http://dimacs.rutgers.edu/~graham/pubs/papers/fwddecay.pdf">
  * Cormode et al. Forward Decay: A Practical Time Decay Model for Streaming Systems. ICDE '09:
- *      Proceedings of the 2009 IEEE International Conference on Data Engineering (2009)</a>
+ * Proceedings of the 2009 IEEE International Conference on Data Engineering (2009)</a>
  */
 public class ExponentiallyDecayingReservoir implements Reservoir {
 
@@ -49,9 +50,9 @@ public class ExponentiallyDecayingReservoir implements Reservoir {
     private final double alpha;
     private final int size;
     private final AtomicLong count;
-    private volatile long startTime;
     private final AtomicLong nextScaleTime;
     private final Clock clock;
+    private volatile long startTime;
 
     /**
      * Creates a new {@link ExponentiallyDecayingReservoir} of 1028 elements, which offers a 99.9%

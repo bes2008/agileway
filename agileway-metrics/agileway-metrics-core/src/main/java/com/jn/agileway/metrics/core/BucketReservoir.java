@@ -28,10 +28,11 @@ public class BucketReservoir implements Reservoir {
 
     /**
      * Create a {@link BucketReservoir} instance with given count and value counter
-     * @param interval the bucket interval
-     * @param clock the clock implementation
+     *
+     * @param interval       the bucket interval
+     * @param clock          the clock implementation
      * @param numberOfBucket the number of buckets
-     * @param count the total count, which will be update outside
+     * @param count          the total count, which will be update outside
      */
     public BucketReservoir(int interval, int numberOfBucket, Clock clock, BucketCounter count) {
         this.clock = clock;
@@ -42,7 +43,7 @@ public class BucketReservoir implements Reservoir {
 
     @Override
     public int size() {
-        return (int)countPerBucket.getCount();
+        return (int) countPerBucket.getCount();
     }
 
     @Override
@@ -52,6 +53,7 @@ public class BucketReservoir implements Reservoir {
 
     /**
      * 获取最新的bucket的快照
+     *
      * @return a {@link BucketSnapshot} instance
      */
     @Override

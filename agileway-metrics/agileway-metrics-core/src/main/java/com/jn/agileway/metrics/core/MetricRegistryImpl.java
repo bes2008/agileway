@@ -18,14 +18,7 @@ package com.jn.agileway.metrics.core;
 
 import com.jn.agileway.metrics.core.common.config.MetricsCollectPeriodConfig;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -44,6 +37,150 @@ public class MetricRegistryImpl extends MetricRegistry {
     private final ConcurrentMap<MetricName, Metric> metrics;
     private final List<MetricRegistryListener> listeners;
     private final int maxMetricCount;
+    /**
+     * A quick and easy way of capturing the notion of default metrics.
+     */
+    private MetricBuilder<Counter> COUNTER_BUILDER = new MetricBuilder<Counter>() {
+        @Override
+        public Counter newMetric(MetricName name) {
+            // 当已注册的metric数量太多时，返回一个空实现
+            if (metrics.size() >= maxMetricCount) {
+                return null;
+            }
+            return new BucketCounterImpl(config.period(name.getMetricLevel()));
+        }
+
+        @Override
+        public boolean isInstance(Metric metric) {
+            return Counter.class.isInstance(metric);
+        }
+    };
+    private ReservoirTypeBuilder<Histogram> HISTOGRAM_BUILDER = new ReservoirTypeBuilder<Histogram>() {
+        @Override
+        public Histogram newMetric(MetricName name, ReservoirType type) {
+            // 当已注册的metric数量太多时，返回一个空实现
+            if (metrics.size() >= maxMetricCount) {
+                return null;
+            }
+            return new HistogramImpl(config.period(name.getMetricLevel()), type);
+        }
+
+        @Override
+        public Histogram newMetric(MetricName name) {
+            // 当已注册的metric数量太多时，返回一个空实现
+            if (metrics.size() >= maxMetricCount) {
+                return null;
+            }
+            return new HistogramImpl(config.period(name.getMetricLevel()));
+        }
+
+        @Override
+        public boolean isInstance(Metric metric) {
+            return Histogram.class.isInstance(metric);
+        }
+    };
+    private MetricBuilder<Meter> METER_BUILDER = new MetricBuilder<Meter>() {
+        @Override
+        public Meter newMetric(MetricName name) {
+            // 当已注册的metric数量太多时，返回一个空实现
+            if (metrics.size() >= maxMetricCount) {
+                return null;
+            }
+            return new MeterImpl(config.period(name.getMetricLevel()));
+        }
+
+        @Override
+        public boolean isInstance(Metric metric) {
+            return Meter.class.isInstance(metric);
+        }
+    };
+    private ReservoirTypeBuilder<Timer> TIMER_BUILDER = new ReservoirTypeBuilder<Timer>() {
+        @Override
+        public Timer newMetric(MetricName name) {
+            // 当已注册的metric数量太多时，返回一个空实现
+            if (metrics.size() >= maxMetricCount) {
+                return null;
+            }
+            return new TimerImpl(config.period(name.getMetricLevel()));
+        }
+
+        @Override
+        public Timer newMetric(MetricName name, ReservoirType type) {
+            // 当已注册的metric数量太多时，返回一个空实现
+            if (metrics.size() >= maxMetricCount) {
+                return null;
+            }
+            return new TimerImpl(config.period(name.getMetricLevel()), type);
+        }
+
+        @Override
+        public boolean isInstance(Metric metric) {
+            return Timer.class.isInstance(metric);
+        }
+    };
+    private ReservoirTypeBuilder<Compass> COMPASS_BUILDER = new ReservoirTypeBuilder<Compass>() {
+        @Override
+        public Compass newMetric(MetricName name) {
+            // 当已注册的metric数量太多时，返回一个空实现
+            if (metrics.size() >= maxMetricCount) {
+                return null;
+            }
+            return new CompassImpl(config.period(name.getMetricLevel()));
+        }
+
+        @Override
+        public Compass newMetric(MetricName name, ReservoirType type) {
+            // 当已注册的metric数量太多时，返回一个空实现
+            if (metrics.size() >= maxMetricCount) {
+                return null;
+            }
+            return new CompassImpl(config.period(name.getMetricLevel()), type);
+        }
+
+        @Override
+        public boolean isInstance(Metric metric) {
+            return Compass.class.isInstance(metric);
+        }
+    };
+    private MetricBuilder<FastCompass> FAST_COMPASS_BUILDER = new MetricBuilder<FastCompass>() {
+        @Override
+        public FastCompass newMetric(MetricName name) {
+            // 当已注册的metric数量太多时，返回一个空实现
+            if (metrics.size() >= maxMetricCount) {
+                return null;
+            }
+            return new FastCompassImpl(config.period(name.getMetricLevel()));
+        }
+
+        @Override
+        public boolean isInstance(Metric metric) {
+            return FastCompass.class.isInstance(metric);
+        }
+    };
+    private ClusterHistogramBuilder<ClusterHistogram> CLUSTER_HISTOGRAM_BUILDER = new ClusterHistogramBuilder<ClusterHistogram>() {
+        @Override
+        public ClusterHistogram newMetric(MetricName name, long[] buckets) {
+            // 当已注册的metric数量太多时，返回一个空实现
+            if (metrics.size() >= maxMetricCount) {
+                return null;
+            }
+            return new ClusterHistogramImpl(buckets, config.period(name.getMetricLevel()), Clock.defaultClock());
+        }
+
+        @Override
+        public ClusterHistogram newMetric(MetricName name) {
+            // 当已注册的metric数量太多时，返回一个空实现
+            if (metrics.size() >= maxMetricCount) {
+                return null;
+            }
+            return new ClusterHistogramImpl(config.period(name.getMetricLevel()), Clock.defaultClock());
+        }
+
+        @Override
+        public boolean isInstance(Metric metric) {
+            return metric instanceof ClusterHistogram;
+        }
+    };
 
     /**
      * Creates a new {@link MetricRegistry}.
@@ -67,10 +204,10 @@ public class MetricRegistryImpl extends MetricRegistry {
 
     /**
      * 〈unRegister all metrics.〉
-     *
-     *  eg:
-     *      When collecting remote machine JVM metrics through the JMX port, May be due to network jitter or
-     *      remote process restart, Need to cancel the previously collected metrics and re-register.
+     * <p>
+     * eg:
+     * When collecting remote machine JVM metrics through the JMX port, May be due to network jitter or
+     * remote process restart, Need to cancel the previously collected metrics and re-register.
      *
      * @date 2019.06.06 14:35:45
      */
@@ -104,7 +241,7 @@ public class MetricRegistryImpl extends MetricRegistry {
     /**
      * Given a metric set, registers them.
      *
-     * @param metrics    a set of metrics
+     * @param metrics a set of metrics
      * @throws IllegalArgumentException if any of the names are already registered
      */
     public void registerAll(MetricSet metrics) throws IllegalArgumentException {
@@ -153,6 +290,7 @@ public class MetricRegistryImpl extends MetricRegistry {
 
     /**
      * Create a histogram with given name, and reservoir type
+     *
      * @param name the name of the metric
      * @param type the type of reservoir
      * @return a histogram instance
@@ -208,6 +346,7 @@ public class MetricRegistryImpl extends MetricRegistry {
 
     /**
      * Create a timer with given name, and reservoir type
+     *
      * @param name the name of the metric
      * @param type the type of reservoir
      * @return a timer instance
@@ -235,6 +374,7 @@ public class MetricRegistryImpl extends MetricRegistry {
 
     /**
      * Create a compass with given name, and reservoir type
+     *
      * @param name the name of the metric
      * @param type the type of reservoir
      * @return a compass instance
@@ -348,7 +488,7 @@ public class MetricRegistryImpl extends MetricRegistry {
     /**
      * Returns a map of all the gauges in the registry and their names which match the given filter.
      *
-     * @param filter    the metric filter to match
+     * @param filter the metric filter to match
      * @return all the gauges in the registry
      */
     public SortedMap<MetricName, Gauge> getGauges(MetricFilter filter) {
@@ -368,7 +508,7 @@ public class MetricRegistryImpl extends MetricRegistry {
      * Returns a map of all the counters in the registry and their names which match the given
      * filter.
      *
-     * @param filter    the metric filter to match
+     * @param filter the metric filter to match
      * @return all the counters in the registry
      */
     public SortedMap<MetricName, Counter> getCounters(MetricFilter filter) {
@@ -388,7 +528,7 @@ public class MetricRegistryImpl extends MetricRegistry {
      * Returns a map of all the histograms in the registry and their names which match the given
      * filter.
      *
-     * @param filter    the metric filter to match
+     * @param filter the metric filter to match
      * @return all the histograms in the registry
      */
     public SortedMap<MetricName, Histogram> getHistograms(MetricFilter filter) {
@@ -407,7 +547,7 @@ public class MetricRegistryImpl extends MetricRegistry {
     /**
      * Returns a map of all the meters in the registry and their names which match the given filter.
      *
-     * @param filter    the metric filter to match
+     * @param filter the metric filter to match
      * @return all the meters in the registry
      */
     public SortedMap<MetricName, Meter> getMeters(MetricFilter filter) {
@@ -426,7 +566,7 @@ public class MetricRegistryImpl extends MetricRegistry {
     /**
      * Returns a map of all the timers in the registry and their names which match the given filter.
      *
-     * @param filter    the metric filter to match
+     * @param filter the metric filter to match
      * @return all the timers in the registry
      */
     public SortedMap<MetricName, Timer> getTimers(MetricFilter filter) {
@@ -453,7 +593,6 @@ public class MetricRegistryImpl extends MetricRegistry {
         return getMetrics(FastCompass.class, filter);
     }
 
-
     @Override
     public SortedMap<MetricName, ClusterHistogram> getClusterHistograms(MetricFilter filter) {
         return getMetrics(ClusterHistogram.class, filter);
@@ -463,7 +602,7 @@ public class MetricRegistryImpl extends MetricRegistry {
     public SortedMap<MetricName, ClusterHistogram> getClusterHistograms() {
         return getMetrics(ClusterHistogram.class, MetricFilter.ALL);
     }
-    
+
     @Override
     public SortedMap<MetricName, Metric> getMetrics(MetricFilter filter) {
         final TreeMap<MetricName, Metric> filteredMetrics = new TreeMap<MetricName, Metric>();
@@ -480,6 +619,7 @@ public class MetricRegistryImpl extends MetricRegistry {
 
     /**
      * This is an expensive method that will traverse all the metrics, it should be used under a low frequency.
+     *
      * @return the last updated time for the entire MetricRegistry
      */
     @Override
@@ -494,7 +634,7 @@ public class MetricRegistryImpl extends MetricRegistry {
         metrics.putAll(getCompasses(MetricFilter.ALL));
         metrics.putAll(getFastCompasses(MetricFilter.ALL));
         metrics.putAll(getClusterHistograms(MetricFilter.ALL));
-        for (Map.Entry<MetricName, Metric> entry: metrics.entrySet()) {
+        for (Map.Entry<MetricName, Metric> entry : metrics.entrySet()) {
             if (latest < entry.getValue().lastUpdateTime()) {
                 latest = entry.getValue().lastUpdateTime();
             }
@@ -576,7 +716,7 @@ public class MetricRegistryImpl extends MetricRegistry {
                     entry.getValue())) {
                 timers.put(entry.getKey(), (T) entry.getValue());
             } else if (entry.getValue() instanceof DynamicMetricSet) {
-                for (Map.Entry<MetricName, Metric> dynamicEntry:
+                for (Map.Entry<MetricName, Metric> dynamicEntry :
                         ((DynamicMetricSet) entry.getValue()).getDynamicMetrics().entrySet()) {
                     if (klass.isInstance(dynamicEntry.getValue()) &&
                             filter.matches(dynamicEntry.getKey(), dynamicEntry.getValue())) {
@@ -658,156 +798,5 @@ public class MetricRegistryImpl extends MetricRegistry {
     public Map<MetricName, Metric> getMetrics() {
         return Collections.unmodifiableMap(metrics);
     }
-
-    /**
-     * A quick and easy way of capturing the notion of default metrics.
-     */
-    private MetricBuilder<Counter> COUNTER_BUILDER = new MetricBuilder<Counter>() {
-        @Override
-        public Counter newMetric(MetricName name) {
-            // 当已注册的metric数量太多时，返回一个空实现
-            if (metrics.size() >= maxMetricCount) {
-                return null;
-            }
-            return new BucketCounterImpl(config.period(name.getMetricLevel()));
-        }
-
-        @Override
-        public boolean isInstance(Metric metric) {
-            return Counter.class.isInstance(metric);
-        }
-    };
-
-    private ReservoirTypeBuilder<Histogram> HISTOGRAM_BUILDER = new ReservoirTypeBuilder<Histogram>() {
-        @Override
-        public Histogram newMetric(MetricName name, ReservoirType type) {
-            // 当已注册的metric数量太多时，返回一个空实现
-            if (metrics.size() >= maxMetricCount) {
-                return null;
-            }
-            return new HistogramImpl(config.period(name.getMetricLevel()), type);
-        }
-
-        @Override
-        public Histogram newMetric(MetricName name) {
-            // 当已注册的metric数量太多时，返回一个空实现
-            if (metrics.size() >= maxMetricCount) {
-                return null;
-            }
-            return new HistogramImpl(config.period(name.getMetricLevel()));
-        }
-
-        @Override
-        public boolean isInstance(Metric metric) {
-            return Histogram.class.isInstance(metric);
-        }
-    };
-
-    private MetricBuilder<Meter> METER_BUILDER = new MetricBuilder<Meter>() {
-        @Override
-        public Meter newMetric(MetricName name) {
-            // 当已注册的metric数量太多时，返回一个空实现
-            if (metrics.size() >= maxMetricCount) {
-                return null;
-            }
-            return new MeterImpl(config.period(name.getMetricLevel()));
-        }
-
-        @Override
-        public boolean isInstance(Metric metric) {
-            return Meter.class.isInstance(metric);
-        }
-    };
-
-    private ReservoirTypeBuilder<Timer> TIMER_BUILDER = new ReservoirTypeBuilder<Timer>() {
-        @Override
-        public Timer newMetric(MetricName name) {
-            // 当已注册的metric数量太多时，返回一个空实现
-            if (metrics.size() >= maxMetricCount) {
-                return null;
-            }
-            return new TimerImpl(config.period(name.getMetricLevel()));
-        }
-
-        @Override
-        public Timer newMetric(MetricName name, ReservoirType type) {
-            // 当已注册的metric数量太多时，返回一个空实现
-            if (metrics.size() >= maxMetricCount) {
-                return null;
-            }
-            return new TimerImpl(config.period(name.getMetricLevel()), type);
-        }
-
-        @Override
-        public boolean isInstance(Metric metric) {
-            return Timer.class.isInstance(metric);
-        }
-    };
-
-    private ReservoirTypeBuilder<Compass> COMPASS_BUILDER = new ReservoirTypeBuilder<Compass>() {
-        @Override
-        public Compass newMetric(MetricName name) {
-            // 当已注册的metric数量太多时，返回一个空实现
-            if (metrics.size() >= maxMetricCount) {
-                return null;
-            }
-            return new CompassImpl(config.period(name.getMetricLevel()));
-        }
-
-        @Override
-        public Compass newMetric(MetricName name, ReservoirType type) {
-            // 当已注册的metric数量太多时，返回一个空实现
-            if (metrics.size() >= maxMetricCount) {
-                return null;
-            }
-            return new CompassImpl(config.period(name.getMetricLevel()), type);
-        }
-
-        @Override
-        public boolean isInstance(Metric metric) {
-            return Compass.class.isInstance(metric);
-        }
-    };
-
-    private MetricBuilder<FastCompass> FAST_COMPASS_BUILDER = new MetricBuilder<FastCompass>() {
-        @Override
-        public FastCompass newMetric(MetricName name) {
-            // 当已注册的metric数量太多时，返回一个空实现
-            if (metrics.size() >= maxMetricCount) {
-                return null;
-            }
-            return new FastCompassImpl(config.period(name.getMetricLevel()));
-        }
-
-        @Override
-        public boolean isInstance(Metric metric) {
-            return FastCompass.class.isInstance(metric);
-        }
-    };
-
-    private ClusterHistogramBuilder<ClusterHistogram> CLUSTER_HISTOGRAM_BUILDER = new ClusterHistogramBuilder<ClusterHistogram>() {
-        @Override
-        public ClusterHistogram newMetric(MetricName name, long[] buckets) {
-            // 当已注册的metric数量太多时，返回一个空实现
-            if (metrics.size() >= maxMetricCount) {
-                return null;
-            }
-            return new ClusterHistogramImpl(buckets, config.period(name.getMetricLevel()), Clock.defaultClock());
-        }
-
-        @Override
-        public ClusterHistogram newMetric(MetricName name) {
-            // 当已注册的metric数量太多时，返回一个空实现
-            if (metrics.size() >= maxMetricCount) {
-                return null;
-            }
-            return new ClusterHistogramImpl(config.period(name.getMetricLevel()), Clock.defaultClock());
-        }
-
-        @Override
-        public boolean isInstance(Metric metric) {
-            return metric instanceof ClusterHistogram;
-        }
-    };
 
 }

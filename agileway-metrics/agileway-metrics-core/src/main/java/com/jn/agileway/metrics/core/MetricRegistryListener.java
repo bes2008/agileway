@@ -23,71 +23,6 @@ import java.util.EventListener;
  */
 public interface MetricRegistryListener extends EventListener {
     /**
-     * A no-op implementation of {@link MetricRegistryListener}.
-     */
-    abstract class Base implements MetricRegistryListener {
-        @Override
-        public void onGaugeAdded(MetricName name, Gauge<?> gauge) {
-        }
-
-        @Override
-        public void onGaugeRemoved(MetricName name) {
-        }
-
-        @Override
-        public void onCounterAdded(MetricName name, Counter counter) {
-        }
-
-        @Override
-        public void onCounterRemoved(MetricName name) {
-        }
-
-        @Override
-        public void onHistogramAdded(MetricName name, Histogram histogram) {
-        }
-
-        @Override
-        public void onHistogramRemoved(MetricName name) {
-        }
-
-        @Override
-        public void onMeterAdded(MetricName name, Meter meter) {
-        }
-
-        @Override
-        public void onMeterRemoved(MetricName name) {
-        }
-
-        @Override
-        public void onTimerAdded(MetricName name, Timer timer) {
-        }
-
-        @Override
-        public void onTimerRemoved(MetricName name) {
-        }
-
-        @Override
-        public void onCompassAdded(MetricName name, Compass compass) {
-
-        }
-
-        @Override
-        public void onCompassRemoved(MetricName name) {
-
-        }
-
-        @Override
-        public void onFastCompassAdded(MetricName name, FastCompass compass) {
-
-        }
-
-        @Override
-        public void onFastCompassRemoved(MetricName name) {
-
-        }
-    }
-
-    /**
      * Called when a {@link Gauge} is added to the registry.
      *
      * @param name  the gauge's name
@@ -165,7 +100,7 @@ public interface MetricRegistryListener extends EventListener {
     /**
      * Called when a {@link Compass} is added to the registry.
      *
-     * @param name  the compass's name
+     * @param name    the compass's name
      * @param compass the compass object added
      */
     void onCompassAdded(MetricName name, Compass compass);
@@ -179,7 +114,8 @@ public interface MetricRegistryListener extends EventListener {
 
     /**
      * Called when a {@link FastCompass} is added to the registry.
-     * @param name the FastCompass's name
+     *
+     * @param name    the FastCompass's name
      * @param compass the FastCompass object added
      */
     void onFastCompassAdded(MetricName name, FastCompass compass);
@@ -190,4 +126,69 @@ public interface MetricRegistryListener extends EventListener {
      * @param name the FastCompass's name
      */
     void onFastCompassRemoved(MetricName name);
+
+    /**
+     * A no-op implementation of {@link MetricRegistryListener}.
+     */
+    abstract class Base implements MetricRegistryListener {
+        @Override
+        public void onGaugeAdded(MetricName name, Gauge<?> gauge) {
+        }
+
+        @Override
+        public void onGaugeRemoved(MetricName name) {
+        }
+
+        @Override
+        public void onCounterAdded(MetricName name, Counter counter) {
+        }
+
+        @Override
+        public void onCounterRemoved(MetricName name) {
+        }
+
+        @Override
+        public void onHistogramAdded(MetricName name, Histogram histogram) {
+        }
+
+        @Override
+        public void onHistogramRemoved(MetricName name) {
+        }
+
+        @Override
+        public void onMeterAdded(MetricName name, Meter meter) {
+        }
+
+        @Override
+        public void onMeterRemoved(MetricName name) {
+        }
+
+        @Override
+        public void onTimerAdded(MetricName name, Timer timer) {
+        }
+
+        @Override
+        public void onTimerRemoved(MetricName name) {
+        }
+
+        @Override
+        public void onCompassAdded(MetricName name, Compass compass) {
+
+        }
+
+        @Override
+        public void onCompassRemoved(MetricName name) {
+
+        }
+
+        @Override
+        public void onFastCompassAdded(MetricName name, FastCompass compass) {
+
+        }
+
+        @Override
+        public void onFastCompassRemoved(MetricName name) {
+
+        }
+    }
 }

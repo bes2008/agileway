@@ -27,6 +27,7 @@ public abstract class MetricRegistry implements MetricSet {
 
 
     // ******************** start static method ************************
+
     /**
      * @see #name(String, String...)
      */
@@ -36,14 +37,14 @@ public abstract class MetricRegistry implements MetricSet {
 
     /**
      * Shorthand method for backwards compatibility in creating metric names.
-     *
+     * <p>
      * Uses {@link MetricName#build(String...)} for its
      * heavy lifting.
      *
-     * @see MetricName#build(String...)
-     * @param name The first element of the name
+     * @param name  The first element of the name
      * @param names The remaining elements of the name
      * @return A metric name matching the specified components.
+     * @see MetricName#build(String...)
      */
     public static MetricName name(String name, String... names) {
         final int length;
@@ -58,7 +59,7 @@ public abstract class MetricRegistry implements MetricSet {
         parts[0] = name;
 
         for (int i = 0; i < length; i++) {
-            parts[i+1] = names[i];
+            parts[i + 1] = names[i];
         }
 
         return MetricName.build(parts);
@@ -92,7 +93,7 @@ public abstract class MetricRegistry implements MetricSet {
     /**
      * Given a metric set, registers them.
      *
-     * @param metrics    a set of metrics
+     * @param metrics a set of metrics
      * @throws IllegalArgumentException if any of the names are already registered
      */
     public abstract void registerAll(MetricSet metrics) throws IllegalArgumentException;
@@ -125,6 +126,7 @@ public abstract class MetricRegistry implements MetricSet {
 
     /**
      * Create a histogram with given name, and reservoir type
+     *
      * @param name the name of the metric
      * @param type the type of reservoir
      * @return a histogram instance
@@ -167,6 +169,7 @@ public abstract class MetricRegistry implements MetricSet {
 
     /**
      * Create a timer with given name, and reservoir type
+     *
      * @param name the name of the metric
      * @param type the type of reservoir
      * @return a timer instance
@@ -192,6 +195,7 @@ public abstract class MetricRegistry implements MetricSet {
 
     /**
      * Create a compass with given name, and reservoir type
+     *
      * @param name the name of the metric
      * @param type the type of reservoir
      * @return a compass instance
@@ -200,6 +204,7 @@ public abstract class MetricRegistry implements MetricSet {
 
     /**
      * Create a FastCompass with given name
+     *
      * @param name the name of the metric
      * @return a FastCompass instance
      */
@@ -217,7 +222,7 @@ public abstract class MetricRegistry implements MetricSet {
     /**
      * Creates a new {@link ClusterHistogram} and registers it under the given name.
      *
-     * @param name the name of the metric
+     * @param name    the name of the metric
      * @param buckets the array of long values for buckets
      * @return a new {@link ClusterHistogram}
      */
@@ -273,7 +278,7 @@ public abstract class MetricRegistry implements MetricSet {
     /**
      * Returns a map of all the gauges in the registry and their names which match the given filter.
      *
-     * @param filter    the metric filter to match
+     * @param filter the metric filter to match
      * @return all the gauges in the registry
      */
     public abstract SortedMap<MetricName, Gauge> getGauges(MetricFilter filter);
@@ -289,7 +294,7 @@ public abstract class MetricRegistry implements MetricSet {
      * Returns a map of all the counters in the registry and their names which match the given
      * filter.
      *
-     * @param filter    the metric filter to match
+     * @param filter the metric filter to match
      * @return all the counters in the registry
      */
     public abstract SortedMap<MetricName, Counter> getCounters(MetricFilter filter);
@@ -305,7 +310,7 @@ public abstract class MetricRegistry implements MetricSet {
      * Returns a map of all the histograms in the registry and their names which match the given
      * filter.
      *
-     * @param filter    the metric filter to match
+     * @param filter the metric filter to match
      * @return all the histograms in the registry
      */
     public abstract SortedMap<MetricName, Histogram> getHistograms(MetricFilter filter);
@@ -320,7 +325,7 @@ public abstract class MetricRegistry implements MetricSet {
     /**
      * Returns a map of all the meters in the registry and their names which match the given filter.
      *
-     * @param filter    the metric filter to match
+     * @param filter the metric filter to match
      * @return all the meters in the registry
      */
     public abstract SortedMap<MetricName, Meter> getMeters(MetricFilter filter);
@@ -335,7 +340,7 @@ public abstract class MetricRegistry implements MetricSet {
     /**
      * Returns a map of all the timers in the registry and their names which match the given filter.
      *
-     * @param filter    the metric filter to match
+     * @param filter the metric filter to match
      * @return all the timers in the registry
      */
     public abstract SortedMap<MetricName, Timer> getTimers(MetricFilter filter);
@@ -351,7 +356,7 @@ public abstract class MetricRegistry implements MetricSet {
     /**
      * Returns a map of all the compasses in the registry and their names which match the given filter.
      *
-     * @param filter    the metric filter to match
+     * @param filter the metric filter to match
      * @return all the compasses in the registry
      */
     public abstract SortedMap<MetricName, Compass> getCompasses(MetricFilter filter);
@@ -366,28 +371,28 @@ public abstract class MetricRegistry implements MetricSet {
     /**
      * Returns a map of all the compasses in the registry and their names which match the given filter.
      *
-     * @param filter    the metric filter to match
+     * @param filter the metric filter to match
      * @return all the compasses in the registry
      */
     public abstract SortedMap<MetricName, FastCompass> getFastCompasses(MetricFilter filter);
 
     /**
      * Returns a map of all the {@link ClusterHistogram} in the registry and their names which match the given filter.
-     *
      */
     public abstract SortedMap<MetricName, ClusterHistogram> getClusterHistograms();
+
     /**
      * Returns a map of all the {@link ClusterHistogram} in the registry and their names which match the given filter.
      *
-     * @param filter    the metric filter to match
+     * @param filter the metric filter to match
      * @return all the {@link ClusterHistogram} in the registry
      */
     public abstract SortedMap<MetricName, ClusterHistogram> getClusterHistograms(MetricFilter filter);
 
 
-
     /**
      * Returns a map of all the metrics in the registry and their names which match the given filter
+     *
      * @param filter the metric filter to match
      * @return all the metrics in the registry
      */

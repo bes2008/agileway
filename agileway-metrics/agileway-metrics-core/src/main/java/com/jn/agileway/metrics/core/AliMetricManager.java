@@ -16,16 +16,8 @@
  */
 package com.jn.agileway.metrics.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AliMetricManager implements IMetricManager {
@@ -304,7 +296,7 @@ public class AliMetricManager implements IMetricManager {
 
     @Override
     public Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getCategoryMetrics(String group,
-            MetricFilter filter) {
+                                                                                              MetricFilter filter) {
         if (!this.enabled) {
             return Collections.emptyMap();
         }
@@ -391,8 +383,8 @@ public class AliMetricManager implements IMetricManager {
     }
 
     private void checkAndAdd(Map.Entry<MetricName, Metric> entry, MetricFilter filter, Map<MetricName, Gauge> gauges,
-            Map<MetricName, Counter> counters, Map<MetricName, Histogram> histograms, Map<MetricName, Meter> meters,
-            Map<MetricName, Timer> timers, Map<MetricName, Compass> compasses, Map<MetricName, FastCompass> fastCompasses, Map<MetricName, ClusterHistogram> clusterHistogrames) {
+                             Map<MetricName, Counter> counters, Map<MetricName, Histogram> histograms, Map<MetricName, Meter> meters,
+                             Map<MetricName, Timer> timers, Map<MetricName, Compass> compasses, Map<MetricName, FastCompass> fastCompasses, Map<MetricName, ClusterHistogram> clusterHistogrames) {
 
         MetricName metricName = entry.getKey();
         Metric metric = entry.getValue();

@@ -26,9 +26,9 @@ import static java.lang.Math.exp;
  * An exponentially-weighted moving average.
  *
  * @see <a href="http://www.teamquest.com/pdfs/whitepaper/ldavg1.pdf">UNIX Load Average Part 1: How
- *      It Works</a>
+ * It Works</a>
  * @see <a href="http://www.teamquest.com/pdfs/whitepaper/ldavg2.pdf">UNIX Load Average Part 2: Not
- *      Your Average Average</a>
+ * Your Average Average</a>
  * @see <a href="http://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average">EMA</a>
  */
 public class EWMA {
@@ -40,12 +40,22 @@ public class EWMA {
     private static final double M1_ALPHA = 1 - exp(-INTERVAL / SECONDS_PER_MINUTE / ONE_MINUTE);
     private static final double M5_ALPHA = 1 - exp(-INTERVAL / SECONDS_PER_MINUTE / FIVE_MINUTES);
     private static final double M15_ALPHA = 1 - exp(-INTERVAL / SECONDS_PER_MINUTE / FIFTEEN_MINUTES);
-
+    private final LongAdder uncounted = new LongAdder();
+    private final double alpha, interval;
     private volatile boolean initialized = false;
     private volatile double rate = 0.0;
 
-    private final LongAdder uncounted = new LongAdder();
-    private final double alpha, interval;
+    /**
+     * Create a new EWMA with a specific smoothing constant.
+     *
+     * @param alpha        the smoothing constant
+     * @param interval     the expected tick interval
+     * @param intervalUnit the time unit of the tick interval
+     */
+    public EWMA(double alpha, long interval, TimeUnit intervalUnit) {
+        this.interval = intervalUnit.toNanos(interval);
+        this.alpha = alpha;
+    }
 
     /**
      * Creates a new EWMA which is equivalent to the UNIX one minute load average and which expects
@@ -75,18 +85,6 @@ public class EWMA {
      */
     public static EWMA fifteenMinuteEWMA() {
         return new EWMA(M15_ALPHA, INTERVAL, TimeUnit.SECONDS);
-    }
-
-    /**
-     * Create a new EWMA with a specific smoothing constant.
-     *
-     * @param alpha        the smoothing constant
-     * @param interval     the expected tick interval
-     * @param intervalUnit the time unit of the tick interval
-     */
-    public EWMA(double alpha, long interval, TimeUnit intervalUnit) {
-        this.interval = intervalUnit.toNanos(interval);
-        this.alpha = alpha;
     }
 
     /**

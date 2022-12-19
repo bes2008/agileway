@@ -18,148 +18,43 @@ package com.jn.agileway.metrics.core;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 /**
  * IMetricManager的空实现
- *
  */
 public class NOPMetricManager implements IMetricManager {
 
+    static final Counter NOP_COUNTER = new Counter() {
+        @Override
+        public void inc() {
+        }
+
+        @Override
+        public void inc(long n) {
+        }
+
+        @Override
+        public void dec() {
+        }
+
+        @Override
+        public void dec(long n) {
+        }
+
+        @Override
+        public long getCount() {
+            return 0;
+        }
+
+        @Override
+        public long lastUpdateTime() {
+            return 0;
+        }
+    };
     private static final SortedMap emptyMap = new TreeMap();
-    private static final SortedSet emptySet = new TreeSet();
-
-    @Override
-    public Meter getMeter(String group, MetricName name) {
-        return NOP_METER;
-    }
-
-    @Override
-    public Counter getCounter(String group, MetricName name) {
-        return NOP_COUNTER;
-    }
-
-    @Override
-    public Histogram getHistogram(String group, MetricName name) {
-        return NOP_HISTOGRAM;
-    }
-
-    @Override
-    public Histogram getHistogram(String group, MetricName name, ReservoirType type) {
-        return NOP_HISTOGRAM;
-    }
-
-    @Override
-    public Timer getTimer(String group, MetricName name) {
-        return NOP_TIMER;
-    }
-
-    @Override
-    public Timer getTimer(String group, MetricName name, ReservoirType type) {
-        return NOP_TIMER;
-    }
-
-    @Override
-    public Compass getCompass(String group, MetricName name, ReservoirType type) {
-        return NOP_COMPASS;
-    }
-
-    @Override
-    public Compass getCompass(String group, MetricName name) {
-        return NOP_COMPASS;
-    }
-
-    @Override
-    public FastCompass getFastCompass(String group, MetricName name) {
-        return NOP_FAST_COMPASS;
-    }
-
-    @Override
-    public ClusterHistogram getClusterHistogram(String group, MetricName name, long[] buckets) {
-        return NOP_CLUSTER_HISTOGRAM;
-    }
-
-    @Override
-    public List<String> listMetricGroups() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    @Override
-    public void setEnabled(boolean enabled) {
-    }
-
-    @Override
-    public Map<String, Set<MetricName>> listMetricNamesByGroup() {
-        return Collections.emptyMap();
-    }
-
-    @Override
-    public MetricRegistry getMetricRegistryByGroup(String group) {
-        return NOP_REGISTRY;
-    }
-
-	@Override
-    @SuppressWarnings("unchecked")
-	public SortedMap<MetricName, Gauge> getGauges(String group, MetricFilter filter) {
-        return emptyMap;
-	}
-
-	@Override
-    @SuppressWarnings("unchecked")
-	public SortedMap<MetricName, Counter> getCounters(String group, MetricFilter filter) {
-		return emptyMap;
-	}
-
-	@Override
-    @SuppressWarnings("unchecked")
-	public SortedMap<MetricName, Histogram> getHistograms(String group, MetricFilter filter) {
-		return emptyMap;
-	}
-
-	@Override
-    @SuppressWarnings("unchecked")
-	public SortedMap<MetricName, Meter> getMeters(String group, MetricFilter filter) {
-		return emptyMap;
-	}
-
-	@Override
-    @SuppressWarnings("unchecked")
-	public SortedMap<MetricName, Timer> getTimers(String group, MetricFilter filter) {
-		return emptyMap;
-	}
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Compass> getCompasses(String group, MetricFilter filter) {
-        return emptyMap;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, FastCompass> getFastCompasses(String group, MetricFilter filter) {
-        return emptyMap;
-    }
-
-    @Override
-    public void register(String group, MetricName name, Metric metric) {
-
-    }
-
     static final Meter NOP_METER = new Meter() {
         @Override
         public void mark() {
@@ -214,7 +109,6 @@ public class NOPMetricManager implements IMetricManager {
             return 0;
         }
     };
-
     static final BucketCounter NOP_BUCKET_COUNTER = new BucketCounter() {
 
         @Override
@@ -272,27 +166,45 @@ public class NOPMetricManager implements IMetricManager {
             return 0;
         }
     };
-
-    static final Counter NOP_COUNTER = new Counter() {
+    static final FastCompass NOP_FAST_COMPASS = new FastCompass() {
         @Override
-        public void inc() {
+        public void record(long duration, String subCategory) {
+
         }
 
         @Override
-        public void inc(long n) {
+        public Map<String, Map<Long, Long>> getMethodCountPerCategory() {
+            return emptyMap;
         }
 
         @Override
-        public void dec() {
+        public Map<String, Map<Long, Long>> getMethodRtPerCategory() {
+            return emptyMap;
         }
 
         @Override
-        public void dec(long n) {
+        public Map<String, Map<Long, Long>> getMethodCountPerCategory(long startTime) {
+            return emptyMap;
         }
 
         @Override
-        public long getCount() {
+        public Map<String, Map<Long, Long>> getMethodRtPerCategory(long startTime) {
+            return emptyMap;
+        }
+
+        @Override
+        public int getBucketInterval() {
             return 0;
+        }
+
+        @Override
+        public Map<String, Map<Long, Long>> getCountAndRtPerCategory() {
+            return emptyMap;
+        }
+
+        @Override
+        public Map<String, Map<Long, Long>> getCountAndRtPerCategory(long startTime) {
+            return emptyMap;
         }
 
         @Override
@@ -300,24 +212,15 @@ public class NOPMetricManager implements IMetricManager {
             return 0;
         }
     };
-
-    static final Histogram NOP_HISTOGRAM = new Histogram() {
-        @Override
-        public void update(int value) {
-        }
-
+    static final ClusterHistogram NOP_CLUSTER_HISTOGRAM = new ClusterHistogram() {
         @Override
         public void update(long value) {
+
         }
 
         @Override
-        public long getCount() {
-            return 0;
-        }
-
-        @Override
-        public Snapshot getSnapshot() {
-            return NOP_SNAPSHOT;
+        public Map<Long, Map<Long, Long>> getBucketValues(long startTime) {
+            return emptyMap;
         }
 
         @Override
@@ -325,7 +228,7 @@ public class NOPMetricManager implements IMetricManager {
             return 0;
         }
     };
-
+    private static final SortedSet emptySet = new TreeSet();
     private static final Timer.Context NOP_CONTEXT = new Timer.Context() {
 
         @Override
@@ -337,7 +240,6 @@ public class NOPMetricManager implements IMetricManager {
             return 0;
         }
     };
-
     private static final Compass.Context NOP_COMPASS_CONTEXT = new Compass.Context() {
         @Override
         public long stop() {
@@ -364,7 +266,6 @@ public class NOPMetricManager implements IMetricManager {
 
         }
     };
-
     private static final Snapshot NOP_SNAPSHOT = new Snapshot() {
         @Override
         public double getValue(double quantile) {
@@ -435,7 +336,30 @@ public class NOPMetricManager implements IMetricManager {
         public void dump(OutputStream output) {
         }
     };
+    static final Histogram NOP_HISTOGRAM = new Histogram() {
+        @Override
+        public void update(int value) {
+        }
 
+        @Override
+        public void update(long value) {
+        }
+
+        @Override
+        public long getCount() {
+            return 0;
+        }
+
+        @Override
+        public Snapshot getSnapshot() {
+            return NOP_SNAPSHOT;
+        }
+
+        @Override
+        public long lastUpdateTime() {
+            return 0;
+        }
+    };
     static final Timer NOP_TIMER = new Timer() {
         @Override
         public void update(long duration, TimeUnit unit) {
@@ -501,7 +425,6 @@ public class NOPMetricManager implements IMetricManager {
             return 0;
         }
     };
-
     static final Compass NOP_COMPASS = new Compass() {
 
         @Override
@@ -599,71 +522,6 @@ public class NOPMetricManager implements IMetricManager {
             return 0;
         }
     };
-
-    static final FastCompass NOP_FAST_COMPASS = new FastCompass() {
-        @Override
-        public void record(long duration, String subCategory) {
-
-        }
-
-        @Override
-        public Map<String, Map<Long, Long>> getMethodCountPerCategory() {
-            return emptyMap;
-        }
-
-        @Override
-        public Map<String, Map<Long, Long>> getMethodRtPerCategory() {
-            return emptyMap;
-        }
-
-        @Override
-        public Map<String, Map<Long, Long>> getMethodCountPerCategory(long startTime) {
-            return emptyMap;
-        }
-
-        @Override
-        public Map<String, Map<Long, Long>> getMethodRtPerCategory(long startTime) {
-            return emptyMap;
-        }
-
-        @Override
-        public int getBucketInterval() {
-            return 0;
-        }
-
-        @Override
-        public Map<String, Map<Long, Long>> getCountAndRtPerCategory() {
-            return emptyMap;
-        }
-
-        @Override
-        public Map<String, Map<Long, Long>> getCountAndRtPerCategory(long startTime) {
-            return emptyMap;
-        }
-
-        @Override
-        public long lastUpdateTime() {
-            return 0;
-        }
-    };
-
-    static final ClusterHistogram NOP_CLUSTER_HISTOGRAM = new ClusterHistogram() {
-        @Override
-        public void update(long value) {
-
-        }
-
-        @Override
-        public Map<Long, Map<Long, Long>> getBucketValues(long startTime) {
-            return emptyMap;
-        }
-
-        @Override
-        public long lastUpdateTime() {
-            return 0;
-        }
-    };
-
     private static final MetricRegistry NOP_REGISTRY = new MetricRegistry() {
         @Override
         public <T extends Metric> T register(String name, T metric) throws IllegalArgumentException {
@@ -893,6 +751,127 @@ public class NOPMetricManager implements IMetricManager {
     };
 
     @Override
+    public Meter getMeter(String group, MetricName name) {
+        return NOP_METER;
+    }
+
+    @Override
+    public Counter getCounter(String group, MetricName name) {
+        return NOP_COUNTER;
+    }
+
+    @Override
+    public Histogram getHistogram(String group, MetricName name) {
+        return NOP_HISTOGRAM;
+    }
+
+    @Override
+    public Histogram getHistogram(String group, MetricName name, ReservoirType type) {
+        return NOP_HISTOGRAM;
+    }
+
+    @Override
+    public Timer getTimer(String group, MetricName name) {
+        return NOP_TIMER;
+    }
+
+    @Override
+    public Timer getTimer(String group, MetricName name, ReservoirType type) {
+        return NOP_TIMER;
+    }
+
+    @Override
+    public Compass getCompass(String group, MetricName name, ReservoirType type) {
+        return NOP_COMPASS;
+    }
+
+    @Override
+    public Compass getCompass(String group, MetricName name) {
+        return NOP_COMPASS;
+    }
+
+    @Override
+    public FastCompass getFastCompass(String group, MetricName name) {
+        return NOP_FAST_COMPASS;
+    }
+
+    @Override
+    public ClusterHistogram getClusterHistogram(String group, MetricName name, long[] buckets) {
+        return NOP_CLUSTER_HISTOGRAM;
+    }
+
+    @Override
+    public List<String> listMetricGroups() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+    }
+
+    @Override
+    public Map<String, Set<MetricName>> listMetricNamesByGroup() {
+        return Collections.emptyMap();
+    }
+
+    @Override
+    public MetricRegistry getMetricRegistryByGroup(String group) {
+        return NOP_REGISTRY;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public SortedMap<MetricName, Gauge> getGauges(String group, MetricFilter filter) {
+        return emptyMap;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public SortedMap<MetricName, Counter> getCounters(String group, MetricFilter filter) {
+        return emptyMap;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public SortedMap<MetricName, Histogram> getHistograms(String group, MetricFilter filter) {
+        return emptyMap;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public SortedMap<MetricName, Meter> getMeters(String group, MetricFilter filter) {
+        return emptyMap;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public SortedMap<MetricName, Timer> getTimers(String group, MetricFilter filter) {
+        return emptyMap;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public SortedMap<MetricName, Compass> getCompasses(String group, MetricFilter filter) {
+        return emptyMap;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public SortedMap<MetricName, FastCompass> getFastCompasses(String group, MetricFilter filter) {
+        return emptyMap;
+    }
+
+    @Override
+    public void register(String group, MetricName name, Metric metric) {
+
+    }
+
+    @Override
     public Map<MetricName, Metric> getMetrics(String group) {
         return emptyMap;
     }
@@ -904,7 +883,7 @@ public class NOPMetricManager implements IMetricManager {
 
     @Override
     public Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getCategoryMetrics(String group,
-            MetricFilter filter) {
+                                                                                              MetricFilter filter) {
         Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> result = new HashMap<Class<? extends Metric>, Map<MetricName, ? extends Metric>>();
 
         Map<MetricName, Gauge> gauges = Collections.emptyMap();

@@ -16,6 +16,8 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.langx.util.random.ThreadLocalRandom;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -54,6 +56,22 @@ public class UniformReservoir implements Reservoir {
         count.set(0);
     }
 
+    /**
+     * Get a pseudo-random long uniformly between 0 and n-1. Stolen from
+     * {@link java.util.Random#nextInt()}.
+     *
+     * @param n the bound
+     * @return a value select randomly from the range {@code [0..n)}.
+     */
+    private static long nextLong(long n) {
+        long bits, val;
+        do {
+            bits = ThreadLocalRandom.current().nextLong() & (~(1L << BITS_PER_LONG));
+            val = bits % n;
+        } while (bits - val + (n - 1) < 0L);
+        return val;
+    }
+
     @Override
     public int size() {
         final long c = count.get();
@@ -74,22 +92,6 @@ public class UniformReservoir implements Reservoir {
                 values.set((int) r, value);
             }
         }
-    }
-
-    /**
-     * Get a pseudo-random long uniformly between 0 and n-1. Stolen from
-     * {@link java.util.Random#nextInt()}.
-     *
-     * @param n the bound
-     * @return a value select randomly from the range {@code [0..n)}.
-     */
-    private static long nextLong(long n) {
-        long bits, val;
-        do {
-            bits = ThreadLocalRandom.current().nextLong() & (~(1L << BITS_PER_LONG));
-            val = bits % n;
-        } while (bits - val + (n - 1) < 0L);
-        return val;
     }
 
     @Override

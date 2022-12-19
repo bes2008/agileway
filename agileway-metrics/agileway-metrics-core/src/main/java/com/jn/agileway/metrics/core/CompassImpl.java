@@ -106,63 +106,6 @@ public class CompassImpl implements Compass {
     private Reservoir reservoir;
 
 
-    public class ContextImpl implements Context {
-        private final Compass compass;
-        private final Clock clock;
-        private final long startTime;
-
-        private ContextImpl(Compass compass, Clock clock) {
-            this.compass = compass;
-            this.clock = clock;
-            this.startTime = clock.getTick();
-        }
-
-        /**
-         * Updates the timer with the difference between current and start time. Call to this method will
-         * not reset the start time. Multiple calls result in multiple updates.
-         * @return the elapsed time in nanoseconds
-         */
-        public long stop() {
-            final long elapsed = clock.getTick() - startTime;
-            compass.update(elapsed, TimeUnit.NANOSECONDS);
-            return elapsed;
-        }
-
-        /** Equivalent to calling {@link #stop()}. */
-        public void close() {
-            stop();
-        }
-
-        @Override
-        public void success() {
-            successCount.update();
-        }
-
-        @Override
-        public void error(String errorCode) {
-            if (!errorCodes.containsKey(errorCode)) {
-                if (errorCodes.keySet().size() >= maxErrorCodeCount) {
-                    // ignore if maxErrorCodeCount is exceeded, no exception will be thrown
-                    return;
-                }
-                errorCodes.putIfAbsent(errorCode, new BucketCounterImpl(bucketInterval, numberOfBucket, clock));
-            }
-            errorCodes.get(errorCode).update();
-        }
-
-        @Override
-        public void markAddon(String suffix) {
-            if (!addons.containsKey(suffix)) {
-                if (addons.keySet().size() >= maxAddonCount) {
-                    // ignore if maxAddonCount is exceeded, no exception will be thrown
-                    return;
-                }
-                addons.putIfAbsent(suffix, new BucketCounterImpl(bucketInterval, numberOfBucket, clock));
-            }
-            addons.get(suffix).update();
-        }
-    }
-
     /**
      * Creates a new {@link CompassImpl} using an {@link ExponentiallyDecayingReservoir} and the default
      * {@link Clock}.
@@ -184,11 +127,11 @@ public class CompassImpl implements Compass {
     /**
      * Creates a new {@link CompassImpl} that uses the given {@link Reservoir} and {@link Clock}.
      *
-     * @param type the {@link Reservoir} implementation the timer should use
-     * @param clock  the {@link Clock} implementation the timer should use
+     * @param type              the {@link Reservoir} implementation the timer should use
+     * @param clock             the {@link Clock} implementation the timer should use
      * @param maxErrorCodeCount the max number of error code allowed
-     * @param bucketInterval the bucket interval
-     * @param maxAddonCount the max number of add on allowed
+     * @param bucketInterval    the bucket interval
+     * @param maxAddonCount     the max number of add on allowed
      */
     public CompassImpl(ReservoirType type, Clock clock, int numberOfBucket, int bucketInterval,
                        int maxErrorCodeCount, int maxAddonCount) {
@@ -236,11 +179,12 @@ public class CompassImpl implements Compass {
 
     /**
      * Adds a recorded duration
-     * @param duration the length of the duration
-     * @param unit the scale unit of {@code duration}
+     *
+     * @param duration  the length of the duration
+     * @param unit      the scale unit of {@code duration}
      * @param isSuccess whether it is success
      * @param errorCode the error code with this record, if not, null be passed
-     * @param addon the addon with this record, if not, null be passed
+     * @param addon     the addon with this record, if not, null be passed
      */
     public void update(long duration, TimeUnit unit, boolean isSuccess, String errorCode, String addon) {
         update(unit.toNanos(duration));
@@ -334,7 +278,7 @@ public class CompassImpl implements Compass {
 
     public Map<String, BucketCounter> getErrorCodeCounts() {
         Map<String, BucketCounter> errorCodeMap = new HashMap<String, BucketCounter>();
-        for (Map.Entry<String, BucketCounter> entry: errorCodes.entrySet()) {
+        for (Map.Entry<String, BucketCounter> entry : errorCodes.entrySet()) {
             errorCodeMap.put(entry.getKey(), entry.getValue());
         }
         return errorCodeMap;
@@ -363,7 +307,7 @@ public class CompassImpl implements Compass {
     @Override
     public Map<String, BucketCounter> getAddonCounts() {
         Map<String, BucketCounter> addonsMap = new HashMap<String, BucketCounter>();
-        for (Map.Entry<String, BucketCounter> entry: addons.entrySet()) {
+        for (Map.Entry<String, BucketCounter> entry : addons.entrySet()) {
             addonsMap.put(entry.getKey(), entry.getValue());
         }
         return addonsMap;
@@ -376,6 +320,7 @@ public class CompassImpl implements Compass {
 
     /**
      * This is only for unit test
+     *
      * @param reservoir
      */
     public void setReservoir(Reservoir reservoir) {
@@ -418,6 +363,66 @@ public class CompassImpl implements Compass {
                     m15Rate.tick(count);
                 }
             }
+        }
+    }
+
+    public class ContextImpl implements Context {
+        private final Compass compass;
+        private final Clock clock;
+        private final long startTime;
+
+        private ContextImpl(Compass compass, Clock clock) {
+            this.compass = compass;
+            this.clock = clock;
+            this.startTime = clock.getTick();
+        }
+
+        /**
+         * Updates the timer with the difference between current and start time. Call to this method will
+         * not reset the start time. Multiple calls result in multiple updates.
+         *
+         * @return the elapsed time in nanoseconds
+         */
+        public long stop() {
+            final long elapsed = clock.getTick() - startTime;
+            compass.update(elapsed, TimeUnit.NANOSECONDS);
+            return elapsed;
+        }
+
+        /**
+         * Equivalent to calling {@link #stop()}.
+         */
+        public void close() {
+            stop();
+        }
+
+        @Override
+        public void success() {
+            successCount.update();
+        }
+
+        @Override
+        public void error(String errorCode) {
+            if (!errorCodes.containsKey(errorCode)) {
+                if (errorCodes.keySet().size() >= maxErrorCodeCount) {
+                    // ignore if maxErrorCodeCount is exceeded, no exception will be thrown
+                    return;
+                }
+                errorCodes.putIfAbsent(errorCode, new BucketCounterImpl(bucketInterval, numberOfBucket, clock));
+            }
+            errorCodes.get(errorCode).update();
+        }
+
+        @Override
+        public void markAddon(String suffix) {
+            if (!addons.containsKey(suffix)) {
+                if (addons.keySet().size() >= maxAddonCount) {
+                    // ignore if maxAddonCount is exceeded, no exception will be thrown
+                    return;
+                }
+                addons.putIfAbsent(suffix, new BucketCounterImpl(bucketInterval, numberOfBucket, clock));
+            }
+            addons.get(suffix).update();
         }
     }
 }

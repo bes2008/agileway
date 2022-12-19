@@ -44,7 +44,7 @@ public class BucketSnapshot implements Snapshot {
 
     @Override
     public int size() {
-        return (int)count;
+        return (int) count;
     }
 
     @Override

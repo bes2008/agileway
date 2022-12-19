@@ -22,21 +22,17 @@ import java.util.concurrent.atomic.AtomicLong;
 public abstract class CachedMetricSet implements MetricSet {
 
     protected static long DEFAULT_DATA_TTL = 5000;
-
+    // The lock used to collect metric
+    private final Object collectLock = new Object();
     // The time (in milli-seconds) to live of cached data
     protected long dataTTL;
-
     // The last collect time
     protected AtomicLong lastCollectTime;
-
     // The clock used to calculate time
     protected Clock clock;
 
-    // The lock used to collect metric
-    private final Object collectLock = new Object();
-
     public CachedMetricSet() {
-       this(DEFAULT_DATA_TTL, TimeUnit.MILLISECONDS, Clock.defaultClock());
+        this(DEFAULT_DATA_TTL, TimeUnit.MILLISECONDS, Clock.defaultClock());
     }
 
     public CachedMetricSet(long dataTTL, TimeUnit unit) {
