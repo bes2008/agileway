@@ -16,6 +16,8 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.langx.util.concurrent.longaddr.LongAdder;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;

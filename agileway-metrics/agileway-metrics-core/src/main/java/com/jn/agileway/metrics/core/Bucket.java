@@ -16,6 +16,8 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.langx.util.concurrent.longaddr.LongAdder;
+
 /**
  * The abstraction of a bucket for collecting statistics
  */

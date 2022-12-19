@@ -16,6 +16,8 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.langx.util.concurrent.longaddr.LongAdder;
+
 /**
  * An incrementing and decrementing counter metric.
  */
