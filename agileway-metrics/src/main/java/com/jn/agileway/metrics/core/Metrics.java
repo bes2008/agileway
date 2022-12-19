@@ -1,9 +1,7 @@
 package com.jn.agileway.metrics.core;
 
-import com.codahale.metrics.MetricRegistry;
-
 public class Metrics {
-    private static final MetricRegistry INSTANCE = new MetricRegistry();
+    private static final MetricRegistry INSTANCE = new MetricRegistryImpl();
 
     private Metrics() {
     }

@@ -16,21 +16,24 @@
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
 
-
     <dependencies>
+        <!--
         <dependency>
             <groupId>io.dropwizard.metrics</groupId>
             <artifactId>metrics-core</artifactId>
             <version>4.2.9</version>
         </dependency>
-
         <dependency>
             <groupId>com.github.andrewoma.dexx</groupId>
             <artifactId>collection</artifactId>
             <version>0.7</version>
         </dependency>
-
-
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-core</artifactId>
+            <version>1.10.2</version>
+        </dependency>
+        -->
     </dependencies>
 
 </project>
