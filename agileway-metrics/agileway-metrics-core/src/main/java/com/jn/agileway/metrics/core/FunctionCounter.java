@@ -21,31 +21,18 @@ import com.jn.agileway.metrics.core.Tags;
 import com.jn.agileway.metrics.core.*;
 
 import java.util.Collections;
+import java.util.function.ToDoubleFunction;
 
 /**
- * Counters monitor monotonically increasing values. Counters may never be reset to a
- * lesser value. If you need to track a value that goes up and down, use a {@link Gauge}.
+ * A counter that tracks a monotonically increasing function.
  *
  * @author Jon Schneider
  */
-public interface Counter extends Meter {
+public interface FunctionCounter extends Meter {
 
-    static Builder builder(String name) {
-        return new Builder(name);
+    static <T> Builder<T> builder(String name, @Nullable T obj, ToDoubleFunction<T> f) {
+        return new Builder<>(name, obj, f);
     }
-
-    /**
-     * Update the counter by one.
-     */
-    default void increment() {
-        increment(1.0);
-    }
-
-    /**
-     * Update the counter by {@code amount}.
-     * @param amount Amount to add to the counter.
-     */
-    void increment(double amount);
 
     /**
      * @return The cumulative count since this counter was created.
@@ -58,13 +45,20 @@ public interface Counter extends Meter {
     }
 
     /**
-     * Fluent builder for counters.
+     * Fluent builder for function counters.
+     *
+     * @param <T> The type of the state object from which the counter value is extracted.
      */
-    class Builder {
+    class Builder<T> {
 
         private final String name;
 
+        private final ToDoubleFunction<T> f;
+
         private com.jn.agileway.metrics.core.Tags tags = com.jn.agileway.metrics.core.Tags.empty();
+
+        @Nullable
+        private final T obj;
 
         @Nullable
         private String description;
@@ -72,24 +66,26 @@ public interface Counter extends Meter {
         @Nullable
         private String baseUnit;
 
-        private Builder(String name) {
+        private Builder(String name, @Nullable T obj, ToDoubleFunction<T> f) {
             this.name = name;
+            this.obj = obj;
+            this.f = f;
         }
 
         /**
          * @param tags Must be an even number of arguments representing key/value pairs of
          * tags.
-         * @return The counter builder with added tags.
+         * @return The function counter builder with added tags.
          */
-        public Builder tags(String... tags) {
+        public Builder<T> tags(String... tags) {
             return tags(Tags.of(tags));
         }
 
         /**
-         * @param tags Tags to add to the eventual counter.
-         * @return The counter builder with added tags.
+         * @param tags Tags to add to the eventual function counter.
+         * @return The function counter builder with added tags.
          */
-        public Builder tags(Iterable<Tag> tags) {
+        public Builder<T> tags(Iterable<Tag> tags) {
             this.tags = this.tags.and(tags);
             return this;
         }
@@ -97,18 +93,18 @@ public interface Counter extends Meter {
         /**
          * @param key The tag key.
          * @param value The tag value.
-         * @return The counter builder with a single added tag.
+         * @return The function counter builder with a single added tag.
          */
-        public Builder tag(String key, String value) {
+        public Builder<T> tag(String key, String value) {
             this.tags = tags.and(key, value);
             return this;
         }
 
         /**
-         * @param description Description text of the eventual counter.
-         * @return The counter builder with added description.
+         * @param description Description text of the eventual function counter.
+         * @return The function counter builder with added description.
          */
-        public Builder description(@Nullable String description) {
+        public Builder<T> description(@Nullable String description) {
             this.description = description;
             return this;
         }
@@ -117,21 +113,22 @@ public interface Counter extends Meter {
          * @param unit Base unit of the eventual counter.
          * @return The counter builder with added base unit.
          */
-        public Builder baseUnit(@Nullable String unit) {
+        public Builder<T> baseUnit(@Nullable String unit) {
             this.baseUnit = unit;
             return this;
         }
 
         /**
-         * Add the counter to a single registry, or return an existing counter in that
-         * registry. The returned counter will be unique for each registry, but each
-         * registry is guaranteed to only create one counter for the same combination of
-         * name and tags.
-         * @param registry A registry to add the counter to, if it doesn't already exist.
-         * @return A new or existing counter.
+         * Add the function counter to a single registry, or return an existing function
+         * counter in that registry. The returned function counter will be unique for each
+         * registry, but each registry is guaranteed to only create one function counter
+         * for the same combination of name and tags.
+         * @param registry A registry to add the function counter to, if it doesn't
+         * already exist.
+         * @return A new or existing function counter.
          */
-        public Counter register(MeterRegistry registry) {
-            return registry.counter(new Id(name, tags, baseUnit, description, Type.COUNTER));
+        public FunctionCounter register(MeterRegistry registry) {
+            return registry.more().counter(new Id(name, tags, baseUnit, description, Type.COUNTER), obj, f);
         }
 
     }
