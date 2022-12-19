@@ -15,7 +15,8 @@
  */
 package com.jn.agileway.metrics.core;
 
-import io.micrometer.common.lang.Nullable;
+
+import com.jn.langx.annotation.Nullable;
 
 /**
  * Base class for {@link Meter} implementations.
@@ -36,7 +37,6 @@ public abstract class AbstractMeter implements Meter {
         return id;
     }
 
-    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     @Override
     public boolean equals(@Nullable Object o) {
         return MeterEquivalence.equals(this, o);
