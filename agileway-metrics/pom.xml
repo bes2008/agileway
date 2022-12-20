@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>io.github.bes2008.solution.agileway.metrics</groupId>
     <artifactId>agileway-metrics</artifactId>
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
     <packaging>pom</packaging>
