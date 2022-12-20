@@ -16,9 +16,10 @@
 package com.jn.agileway.metrics.core;
 
 import com.jn.agileway.metrics.core.impl.*;
-import com.jn.agileway.metrics.core.impl.pause.ClockDriftPauseDetector;
-import com.jn.agileway.metrics.core.impl.pause.NoPauseDetector;
-import com.jn.langx.annotation.Nullable;
+import io.micrometer.common.lang.Nullable;
+import io.micrometer.core.instrument.distribution.pause.ClockDriftPauseDetector;
+import io.micrometer.core.instrument.distribution.pause.NoPauseDetector;
+import io.micrometer.core.instrument.distribution.pause.PauseDetector;
 import org.LatencyUtils.IntervalEstimator;
 import org.LatencyUtils.SimplePauseDetector;
 import org.LatencyUtils.TimeCappedMovingAverageIntervalEstimator;

@@ -15,7 +15,8 @@
  */
 package com.jn.agileway.metrics.core;
 
-import com.jn.langx.annotation.Nullable;
+import io.micrometer.common.lang.Nullable;
+import com.jn.agileway.metrics.core.Gauge;
 
 import java.util.function.ToDoubleFunction;
 
@@ -33,6 +34,7 @@ class StrongReferenceGaugeFunction<T> implements ToDoubleFunction<T> {
      * If obj is {@code null} initially then this gauge will not be reported.
      */
     @Nullable
+    @SuppressWarnings("FieldCanBeLocal")
     private final T obj;
 
     private final ToDoubleFunction<T> f;

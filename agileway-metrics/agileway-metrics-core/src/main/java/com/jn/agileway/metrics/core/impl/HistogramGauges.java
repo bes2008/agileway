@@ -16,6 +16,7 @@
 package com.jn.agileway.metrics.core.impl;
 
 import com.jn.agileway.metrics.core.utils.DoubleFormat;
+import io.micrometer.core.annotation.Incubating;
 import com.jn.agileway.metrics.core.*;
 
 import java.util.concurrent.CountDownLatch;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
 
+@Incubating(since = "1.0.3")
 public class HistogramGauges {
 
     // How many gauges have been polled so far on this publish cycle

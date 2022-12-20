@@ -16,8 +16,8 @@
 package com.jn.agileway.metrics.core.impl;
 
 import com.jn.agileway.metrics.core.utils.InvalidConfigurationException;
+import io.micrometer.common.lang.Nullable;
 import com.jn.agileway.metrics.core.Clock;
-import com.jn.langx.annotation.Nullable;
 
 import java.io.PrintStream;
 import java.lang.reflect.Array;
