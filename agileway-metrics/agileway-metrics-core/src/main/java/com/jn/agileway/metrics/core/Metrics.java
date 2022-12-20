@@ -15,7 +15,13 @@
  */
 package com.jn.agileway.metrics.core;
 
-
+import io.micrometer.common.lang.Nullable;
+import com.jn.agileway.metrics.core.Counter;
+import com.jn.agileway.metrics.core.DistributionSummary;
+import com.jn.agileway.metrics.core.FunctionCounter;
+import com.jn.agileway.metrics.core.FunctionTimer;
+import com.jn.agileway.metrics.core.Tag;
+import com.jn.agileway.metrics.core.*;
 import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
 
 import java.util.Collection;
@@ -64,7 +70,7 @@ public class Metrics {
      * @param tags Sequence of dimensions for breaking down the name.
      * @return A new or existing counter.
      */
-    public static Counter counter(String name, Iterable<Tag> tags) {
+    public static com.jn.agileway.metrics.core.Counter counter(String name, Iterable<com.jn.agileway.metrics.core.Tag> tags) {
         return globalRegistry.counter(name, tags);
     }
 
@@ -85,7 +91,7 @@ public class Metrics {
      * @param tags Sequence of dimensions for breaking down the name.
      * @return A new or existing distribution summary.
      */
-    public static DistributionSummary summary(String name, Iterable<Tag> tags) {
+    public static com.jn.agileway.metrics.core.DistributionSummary summary(String name, Iterable<com.jn.agileway.metrics.core.Tag> tags) {
         return globalRegistry.summary(name, tags);
     }
 
@@ -106,7 +112,7 @@ public class Metrics {
      * @param tags Sequence of dimensions for breaking down the name.
      * @return A new or existing timer.
      */
-    public static Timer timer(String name, Iterable<Tag> tags) {
+    public static Timer timer(String name, Iterable<com.jn.agileway.metrics.core.Tag> tags) {
         return globalRegistry.timer(name, tags);
     }
 
@@ -149,7 +155,7 @@ public class Metrics {
      * assignment statement.
      */
     @Nullable
-    public static <T> T gauge(String name, Iterable<Tag> tags, T obj, ToDoubleFunction<T> valueFunction) {
+    public static <T> T gauge(String name, Iterable<com.jn.agileway.metrics.core.Tag> tags, T obj, ToDoubleFunction<T> valueFunction) {
         return globalRegistry.gauge(name, tags, obj, valueFunction);
     }
 
@@ -164,7 +170,7 @@ public class Metrics {
      * assignment statement.
      */
     @Nullable
-    public static <T extends Number> T gauge(String name, Iterable<Tag> tags, T number) {
+    public static <T extends Number> T gauge(String name, Iterable<com.jn.agileway.metrics.core.Tag> tags, T number) {
         return globalRegistry.gauge(name, tags, number);
     }
 
@@ -211,7 +217,7 @@ public class Metrics {
      * assignment statement.
      */
     @Nullable
-    public static <T extends Collection<?>> T gaugeCollectionSize(String name, Iterable<Tag> tags, T collection) {
+    public static <T extends Collection<?>> T gaugeCollectionSize(String name, Iterable<com.jn.agileway.metrics.core.Tag> tags, T collection) {
         return globalRegistry.gaugeCollectionSize(name, tags, collection);
     }
 
@@ -229,7 +235,7 @@ public class Metrics {
      * assignment statement.
      */
     @Nullable
-    public static <T extends Map<?, ?>> T gaugeMapSize(String name, Iterable<Tag> tags, T map) {
+    public static <T extends Map<?, ?>> T gaugeMapSize(String name, Iterable<com.jn.agileway.metrics.core.Tag> tags, T map) {
         return globalRegistry.gaugeMapSize(name, tags, map);
     }
 
@@ -255,7 +261,7 @@ public class Metrics {
          * @param tags Sequence of dimensions for breaking down the name.
          * @return A new or existing long task timer.
          */
-        public LongTaskTimer longTaskTimer(String name, Iterable<Tag> tags) {
+        public LongTaskTimer longTaskTimer(String name, Iterable<com.jn.agileway.metrics.core.Tag> tags) {
             return globalRegistry.more().longTaskTimer(name, tags);
         }
 
@@ -271,7 +277,7 @@ public class Metrics {
          * extracted.
          * @return A new or existing function counter.
          */
-        public <T> FunctionCounter counter(String name, Iterable<Tag> tags, T obj, ToDoubleFunction<T> countFunction) {
+        public <T> com.jn.agileway.metrics.core.FunctionCounter counter(String name, Iterable<com.jn.agileway.metrics.core.Tag> tags, T obj, ToDoubleFunction<T> countFunction) {
             return globalRegistry.more().counter(name, tags, obj, countFunction);
         }
 
@@ -284,7 +290,7 @@ public class Metrics {
          * extracted.
          * @return A new or existing function counter.
          */
-        public <T extends Number> FunctionCounter counter(String name, Iterable<Tag> tags, T number) {
+        public <T extends Number> FunctionCounter counter(String name, Iterable<com.jn.agileway.metrics.core.Tag> tags, T number) {
             return globalRegistry.more().counter(name, tags, number);
         }
 
@@ -302,7 +308,7 @@ public class Metrics {
          * extracted.
          * @return A new or existing time gauge.
          */
-        public <T> TimeGauge timeGauge(String name, Iterable<Tag> tags, T obj, TimeUnit timeFunctionUnit,
+        public <T> TimeGauge timeGauge(String name, Iterable<com.jn.agileway.metrics.core.Tag> tags, T obj, TimeUnit timeFunctionUnit,
                                        ToDoubleFunction<T> timeFunction) {
             return globalRegistry.more().timeGauge(name, tags, obj, timeFunctionUnit, timeFunction);
         }

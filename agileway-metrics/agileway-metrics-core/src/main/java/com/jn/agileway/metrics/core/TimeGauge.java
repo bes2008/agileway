@@ -15,13 +15,13 @@
  */
 package com.jn.agileway.metrics.core;
 
-import com.jn.agileway.metrics.core.utils.TimeUtils;
 import io.micrometer.common.lang.Nullable;
 import io.micrometer.core.annotation.Incubating;
 import com.jn.agileway.metrics.core.Gauge;
 import com.jn.agileway.metrics.core.MeterRegistry;
 import com.jn.agileway.metrics.core.Tag;
 import com.jn.agileway.metrics.core.Tags;
+import com.jn.agileway.metrics.core.util.TimeUtils;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
