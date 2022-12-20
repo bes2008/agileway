@@ -15,11 +15,12 @@
  */
 package com.jn.agileway.metrics.core.composite;
 
-import io.micrometer.core.instrument.LongTaskTimer;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
-import io.micrometer.core.instrument.distribution.HistogramSnapshot;
-import io.micrometer.core.instrument.noop.NoopLongTaskTimer;
+
+import com.jn.agileway.metrics.core.LongTaskTimer;
+import com.jn.agileway.metrics.core.MeterRegistry;
+import com.jn.agileway.metrics.core.impl.DistributionStatisticConfig;
+import com.jn.agileway.metrics.core.impl.HistogramSnapshot;
+import com.jn.agileway.metrics.core.noop.NoopLongTaskTimer;
 
 import java.time.Duration;
 import java.util.ArrayList;

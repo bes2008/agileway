@@ -13,26 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jn.agileway.metrics.core.composite;
+package com.jn.agileway.metrics.core.noop;
 
+import com.jn.agileway.metrics.core.DistributionSummary;
+import com.jn.agileway.metrics.core.impl.HistogramSnapshot;
 
-import com.jn.agileway.metrics.core.*;
+public class NoopDistributionSummary extends NoopMeter implements DistributionSummary {
 
-class CompositeCustomMeter extends DefaultMeter implements CompositeMeter {
-
-    CompositeCustomMeter(Meter.Id id, Meter.Type type, Iterable<Measurement> measurements) {
-        super(id, type, measurements);
+    public NoopDistributionSummary(Id id) {
+        super(id);
     }
 
     @Override
-    public void add(MeterRegistry registry) {
-        Metrics.builder(getId().getName(), getType(), measure()).tags(getId().getTagsAsIterable())
-                .description(getId().getDescription()).baseUnit(getId().getBaseUnit()).register(registry);
+    public void record(double amount) {
     }
 
     @Override
-    public void remove(MeterRegistry registry) {
-        // do nothing
+    public long count() {
+        return 0;
+    }
+
+    @Override
+    public double totalAmount() {
+        return 0;
+    }
+
+    @Override
+    public double max() {
+        return 0;
+    }
+
+    @Override
+    public HistogramSnapshot takeSnapshot() {
+        return HistogramSnapshot.empty(0, 0, 0);
     }
 
 }

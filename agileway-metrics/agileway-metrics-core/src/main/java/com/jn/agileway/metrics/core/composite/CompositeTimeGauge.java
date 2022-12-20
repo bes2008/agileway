@@ -15,10 +15,11 @@
  */
 package com.jn.agileway.metrics.core.composite;
 
-import io.micrometer.common.lang.Nullable;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.TimeGauge;
-import io.micrometer.core.instrument.noop.NoopTimeGauge;
+
+import com.jn.agileway.metrics.core.MeterRegistry;
+import com.jn.agileway.metrics.core.TimeGauge;
+import com.jn.agileway.metrics.core.noop.NoopTimeGauge;
+import com.jn.langx.annotation.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.TimeUnit;

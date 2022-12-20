@@ -15,16 +15,7 @@
  */
 package com.jn.agileway.metrics.core;
 
-import io.micrometer.common.lang.Nullable;
-import io.micrometer.core.annotation.Incubating;
-import com.jn.agileway.metrics.core.Counter;
-import com.jn.agileway.metrics.core.DistributionSummary;
-import com.jn.agileway.metrics.core.FunctionCounter;
-import com.jn.agileway.metrics.core.FunctionTimer;
-import com.jn.agileway.metrics.core.Gauge;
-import com.jn.agileway.metrics.core.Tag;
-import com.jn.agileway.metrics.core.Tags;
-import com.jn.agileway.metrics.core.*;
+import com.jn.langx.annotation.Nullable;
 import io.micrometer.core.instrument.config.NamingConvention;
 
 import java.util.ArrayList;
@@ -63,7 +54,7 @@ public interface Meter {
     /**
      * Custom meters may emit metrics like one of these types without implementing the
      * corresponding interface. For example, a heisen-counter like structure will emit the
-     * same metric as a {@link com.jn.agileway.metrics.core.Counter} but does not have the same increment-driven API.
+     * same metric as a {@link Counter} but does not have the same increment-driven API.
      */
     enum Type {
 
@@ -81,46 +72,46 @@ public interface Meter {
      * of meters. A breaking API change during the introduction of a new {@link Meter}
      * indicates that there is a new meter type for you to consider and the compiler will
      * effectively require you to consider it.
-     * @param visitGauge function to apply for {@link com.jn.agileway.metrics.core.Gauge}
-     * @param visitCounter function to apply for {@link com.jn.agileway.metrics.core.Counter}
+     * @param visitGauge function to apply for {@link Gauge}
+     * @param visitCounter function to apply for {@link Counter}
      * @param visitTimer function to apply for {@link Timer}
-     * @param visitSummary function to apply for {@link com.jn.agileway.metrics.core.DistributionSummary}
+     * @param visitSummary function to apply for {@link DistributionSummary}
      * @param visitLongTaskTimer function to apply for {@link LongTaskTimer}
      * @param visitTimeGauge function to apply for {@link TimeGauge}
-     * @param visitFunctionCounter function to apply for {@link com.jn.agileway.metrics.core.FunctionCounter}
-     * @param visitFunctionTimer function to apply for {@link com.jn.agileway.metrics.core.FunctionTimer}
+     * @param visitFunctionCounter function to apply for {@link FunctionCounter}
+     * @param visitFunctionTimer function to apply for {@link FunctionTimer}
      * @param visitMeter function to apply as a fallback
      * @param <T> return type of function to apply
      * @return return value from the applied function
      * @since 1.1.0
      */
-    default <T> T match(Function<com.jn.agileway.metrics.core.Gauge, T> visitGauge, Function<com.jn.agileway.metrics.core.Counter, T> visitCounter, Function<Timer, T> visitTimer,
-                        Function<com.jn.agileway.metrics.core.DistributionSummary, T> visitSummary, Function<LongTaskTimer, T> visitLongTaskTimer,
-                        Function<TimeGauge, T> visitTimeGauge, Function<com.jn.agileway.metrics.core.FunctionCounter, T> visitFunctionCounter,
-                        Function<com.jn.agileway.metrics.core.FunctionTimer, T> visitFunctionTimer, Function<Meter, T> visitMeter) {
+    default <T> T match(Function<Gauge, T> visitGauge, Function<Counter, T> visitCounter, Function<Timer, T> visitTimer,
+                        Function<DistributionSummary, T> visitSummary, Function<LongTaskTimer, T> visitLongTaskTimer,
+                        Function<TimeGauge, T> visitTimeGauge, Function<FunctionCounter, T> visitFunctionCounter,
+                        Function<FunctionTimer, T> visitFunctionTimer, Function<Meter, T> visitMeter) {
         if (this instanceof TimeGauge) {
             return visitTimeGauge.apply((TimeGauge) this);
         }
-        else if (this instanceof com.jn.agileway.metrics.core.Gauge) {
-            return visitGauge.apply((com.jn.agileway.metrics.core.Gauge) this);
+        else if (this instanceof Gauge) {
+            return visitGauge.apply((Gauge) this);
         }
-        else if (this instanceof com.jn.agileway.metrics.core.Counter) {
-            return visitCounter.apply((com.jn.agileway.metrics.core.Counter) this);
+        else if (this instanceof Counter) {
+            return visitCounter.apply((Counter) this);
         }
         else if (this instanceof Timer) {
             return visitTimer.apply((Timer) this);
         }
-        else if (this instanceof com.jn.agileway.metrics.core.DistributionSummary) {
-            return visitSummary.apply((com.jn.agileway.metrics.core.DistributionSummary) this);
+        else if (this instanceof DistributionSummary) {
+            return visitSummary.apply((DistributionSummary) this);
         }
         else if (this instanceof LongTaskTimer) {
             return visitLongTaskTimer.apply((LongTaskTimer) this);
         }
-        else if (this instanceof com.jn.agileway.metrics.core.FunctionCounter) {
-            return visitFunctionCounter.apply((com.jn.agileway.metrics.core.FunctionCounter) this);
+        else if (this instanceof FunctionCounter) {
+            return visitFunctionCounter.apply((FunctionCounter) this);
         }
-        else if (this instanceof com.jn.agileway.metrics.core.FunctionTimer) {
-            return visitFunctionTimer.apply((com.jn.agileway.metrics.core.FunctionTimer) this);
+        else if (this instanceof FunctionTimer) {
+            return visitFunctionTimer.apply((FunctionTimer) this);
         }
         else {
             return visitMeter.apply(this);
@@ -137,43 +128,43 @@ public interface Meter {
      * of meters. A breaking API change during the introduction of a new {@link Meter}
      * indicates that there is a new meter type for you to consider and the compiler will
      * effectively require you to consider it.
-     * @param visitGauge function to apply for {@link com.jn.agileway.metrics.core.Gauge}
-     * @param visitCounter function to apply for {@link com.jn.agileway.metrics.core.Counter}
+     * @param visitGauge function to apply for {@link Gauge}
+     * @param visitCounter function to apply for {@link Counter}
      * @param visitTimer function to apply for {@link Timer}
-     * @param visitSummary function to apply for {@link com.jn.agileway.metrics.core.DistributionSummary}
+     * @param visitSummary function to apply for {@link DistributionSummary}
      * @param visitLongTaskTimer function to apply for {@link LongTaskTimer}
      * @param visitTimeGauge function to apply for {@link TimeGauge}
-     * @param visitFunctionCounter function to apply for {@link com.jn.agileway.metrics.core.FunctionCounter}
-     * @param visitFunctionTimer function to apply for {@link com.jn.agileway.metrics.core.FunctionTimer}
+     * @param visitFunctionCounter function to apply for {@link FunctionCounter}
+     * @param visitFunctionTimer function to apply for {@link FunctionTimer}
      * @param visitMeter function to apply as a fallback
      * @since 1.1.0
      */
-    default void use(Consumer<com.jn.agileway.metrics.core.Gauge> visitGauge, Consumer<com.jn.agileway.metrics.core.Counter> visitCounter, Consumer<Timer> visitTimer,
-                     Consumer<com.jn.agileway.metrics.core.DistributionSummary> visitSummary, Consumer<LongTaskTimer> visitLongTaskTimer,
-                     Consumer<TimeGauge> visitTimeGauge, Consumer<com.jn.agileway.metrics.core.FunctionCounter> visitFunctionCounter,
-                     Consumer<com.jn.agileway.metrics.core.FunctionTimer> visitFunctionTimer, Consumer<Meter> visitMeter) {
+    default void use(Consumer<Gauge> visitGauge, Consumer<Counter> visitCounter, Consumer<Timer> visitTimer,
+                     Consumer<DistributionSummary> visitSummary, Consumer<LongTaskTimer> visitLongTaskTimer,
+                     Consumer<TimeGauge> visitTimeGauge, Consumer<FunctionCounter> visitFunctionCounter,
+                     Consumer<FunctionTimer> visitFunctionTimer, Consumer<Meter> visitMeter) {
         if (this instanceof TimeGauge) {
             visitTimeGauge.accept((TimeGauge) this);
         }
-        else if (this instanceof com.jn.agileway.metrics.core.Gauge) {
+        else if (this instanceof Gauge) {
             visitGauge.accept((Gauge) this);
         }
-        else if (this instanceof com.jn.agileway.metrics.core.Counter) {
+        else if (this instanceof Counter) {
             visitCounter.accept((Counter) this);
         }
         else if (this instanceof Timer) {
             visitTimer.accept((Timer) this);
         }
-        else if (this instanceof com.jn.agileway.metrics.core.DistributionSummary) {
-            visitSummary.accept((com.jn.agileway.metrics.core.DistributionSummary) this);
+        else if (this instanceof DistributionSummary) {
+            visitSummary.accept((DistributionSummary) this);
         }
         else if (this instanceof LongTaskTimer) {
             visitLongTaskTimer.accept((LongTaskTimer) this);
         }
-        else if (this instanceof com.jn.agileway.metrics.core.FunctionCounter) {
+        else if (this instanceof FunctionCounter) {
             visitFunctionCounter.accept((FunctionCounter) this);
         }
-        else if (this instanceof com.jn.agileway.metrics.core.FunctionTimer) {
+        else if (this instanceof FunctionTimer) {
             visitFunctionTimer.accept((FunctionTimer) this);
         }
         else {
@@ -188,7 +179,7 @@ public interface Meter {
 
         private final String name;
 
-        private final com.jn.agileway.metrics.core.Tags tags;
+        private final Tags tags;
 
         private final Type type;
 
@@ -201,8 +192,7 @@ public interface Meter {
         @Nullable
         private final String baseUnit;
 
-        @Incubating(since = "1.1.0")
-        Id(String name, com.jn.agileway.metrics.core.Tags tags, @Nullable String baseUnit, @Nullable String description, Type type,
+        Id(String name, Tags tags, @Nullable String baseUnit, @Nullable String description, Type type,
            @Nullable Id syntheticAssociation) {
             this.name = name;
             this.tags = tags;
@@ -212,7 +202,7 @@ public interface Meter {
             this.syntheticAssociation = syntheticAssociation;
         }
 
-        public Id(String name, com.jn.agileway.metrics.core.Tags tags, @Nullable String baseUnit, @Nullable String description, Type type) {
+        public Id(String name, Tags tags, @Nullable String baseUnit, @Nullable String description, Type type) {
             this(name, tags, baseUnit, description, type, null);
         }
 
@@ -231,7 +221,7 @@ public interface Meter {
          * @param tag The tag to add.
          * @return A new id with the provided tag added. The source id remains unchanged.
          */
-        public Id withTag(com.jn.agileway.metrics.core.Tag tag) {
+        public Id withTag(Tag tag) {
             return withTags(singletonList(tag));
         }
 
@@ -242,8 +232,8 @@ public interface Meter {
          * @return A new id with the provided tags added. The source id remains unchanged.
          * @since 1.1.0
          */
-        public Id withTags(Iterable<com.jn.agileway.metrics.core.Tag> tags) {
-            return new Id(name, com.jn.agileway.metrics.core.Tags.concat(getTags(), tags), baseUnit, description, type);
+        public Id withTags(Iterable<Tag> tags) {
+            return new Id(name, Tags.concat(getTags(), tags), baseUnit, description, type);
         }
 
         /**
@@ -253,8 +243,8 @@ public interface Meter {
          * unchanged.
          * @since 1.1.0
          */
-        public Id replaceTags(Iterable<com.jn.agileway.metrics.core.Tag> tags) {
-            return new Id(name, com.jn.agileway.metrics.core.Tags.of(tags), baseUnit, description, type);
+        public Id replaceTags(Iterable<Tag> tags) {
+            return new Id(name, Tags.of(tags), baseUnit, description, type);
         }
 
         /**
@@ -286,13 +276,13 @@ public interface Meter {
         /**
          * @return A set of dimensions that allows you to break down the name.
          */
-        public List<com.jn.agileway.metrics.core.Tag> getTags() {
-            List<com.jn.agileway.metrics.core.Tag> tags = new ArrayList<>();
+        public List<Tag> getTags() {
+            List<Tag> tags = new ArrayList<>();
             this.tags.forEach(tags::add);
             return Collections.unmodifiableList(tags);
         }
 
-        public Iterable<com.jn.agileway.metrics.core.Tag> getTagsAsIterable() {
+        public Iterable<Tag> getTagsAsIterable() {
             return tags;
         }
 
@@ -303,7 +293,7 @@ public interface Meter {
          */
         @Nullable
         public String getTag(String key) {
-            for (com.jn.agileway.metrics.core.Tag tag : tags) {
+            for (Tag tag : tags) {
                 if (tag.getKey().equals(key))
                     return tag.getValue();
             }
@@ -333,7 +323,7 @@ public interface Meter {
          * @return A list of tags that have been stylized to a particular monitoring
          * system's expectations.
          */
-        public List<com.jn.agileway.metrics.core.Tag> getConventionTags(NamingConvention namingConvention) {
+        public List<Tag> getConventionTags(NamingConvention namingConvention) {
             return StreamSupport.stream(tags.spliterator(), false)
                     .map(t -> new ImmutableTag(namingConvention.tagKey(t.getKey()), namingConvention.tagValue(t.getValue())))
                     .collect(Collectors.toList());
@@ -391,7 +381,6 @@ public interface Meter {
          * @return The meter id of a meter for which this metric is a synthetic
          * derivative.
          */
-        @Incubating(since = "1.1.0")
         @Nullable
         public Id syntheticAssociation() {
             return syntheticAssociation;
@@ -410,7 +399,7 @@ public interface Meter {
 
         private final Iterable<Measurement> measurements;
 
-        private com.jn.agileway.metrics.core.Tags tags = com.jn.agileway.metrics.core.Tags.empty();
+        private Tags tags = Tags.empty();
 
         @Nullable
         private String description;

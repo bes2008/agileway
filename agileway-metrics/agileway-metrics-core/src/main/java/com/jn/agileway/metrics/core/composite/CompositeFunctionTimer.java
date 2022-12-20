@@ -18,7 +18,7 @@ package com.jn.agileway.metrics.core.composite;
 
 import com.jn.agileway.metrics.core.FunctionTimer;
 import com.jn.agileway.metrics.core.MeterRegistry;
-import io.micrometer.core.instrument.noop.NoopFunctionTimer;
+import com.jn.agileway.metrics.core.noop.NoopFunctionTimer;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.TimeUnit;

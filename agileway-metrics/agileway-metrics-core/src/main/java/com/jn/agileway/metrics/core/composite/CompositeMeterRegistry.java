@@ -15,10 +15,9 @@
  */
 package com.jn.agileway.metrics.core.composite;
 
-import io.micrometer.common.lang.Nullable;
-import io.micrometer.core.instrument.*;
-import io.micrometer.core.instrument.config.NamingConvention;
-import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
+import com.jn.agileway.metrics.core.*;
+import com.jn.agileway.metrics.core.impl.DistributionStatisticConfig;
+import com.jn.langx.annotation.Nullable;
 import io.micrometer.core.instrument.distribution.pause.PauseDetector;
 
 import java.util.Collections;
@@ -77,13 +76,13 @@ public class CompositeMeterRegistry extends MeterRegistry {
 
     @Override
     protected Timer newTimer(Meter.Id id, DistributionStatisticConfig distributionStatisticConfig,
-            PauseDetector pauseDetector) {
+                             PauseDetector pauseDetector) {
         return new CompositeTimer(id, clock, distributionStatisticConfig, pauseDetector);
     }
 
     @Override
     protected DistributionSummary newDistributionSummary(Meter.Id id,
-            DistributionStatisticConfig distributionStatisticConfig, double scale) {
+                                                         DistributionStatisticConfig distributionStatisticConfig, double scale) {
         return new CompositeDistributionSummary(id, distributionStatisticConfig, scale);
     }
 
@@ -105,7 +104,7 @@ public class CompositeMeterRegistry extends MeterRegistry {
     @Override
     protected <T> TimeGauge newTimeGauge(Meter.Id id, @Nullable T obj, TimeUnit valueFunctionUnit,
             ToDoubleFunction<T> valueFunction) {
-        return new CompositeTimeGauge<>(id, obj, valueFunctionUnit, valueFunction);
+        return new CompositeTimeGauge<T>(id, obj, valueFunctionUnit, valueFunction);
     }
 
     @Override

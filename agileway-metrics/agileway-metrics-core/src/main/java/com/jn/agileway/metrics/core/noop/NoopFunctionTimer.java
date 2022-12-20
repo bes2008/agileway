@@ -13,26 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jn.agileway.metrics.core.composite;
+package com.jn.agileway.metrics.core.noop;
 
+import com.jn.agileway.metrics.core.FunctionTimer;
 
-import com.jn.agileway.metrics.core.*;
+import java.util.concurrent.TimeUnit;
 
-class CompositeCustomMeter extends DefaultMeter implements CompositeMeter {
+public class NoopFunctionTimer extends NoopMeter implements FunctionTimer {
 
-    CompositeCustomMeter(Meter.Id id, Meter.Type type, Iterable<Measurement> measurements) {
-        super(id, type, measurements);
+    public NoopFunctionTimer(Id id) {
+        super(id);
     }
 
     @Override
-    public void add(MeterRegistry registry) {
-        Metrics.builder(getId().getName(), getType(), measure()).tags(getId().getTagsAsIterable())
-                .description(getId().getDescription()).baseUnit(getId().getBaseUnit()).register(registry);
+    public double count() {
+        return 0;
     }
 
     @Override
-    public void remove(MeterRegistry registry) {
-        // do nothing
+    public double totalTime(TimeUnit unit) {
+        return 0;
+    }
+
+    @Override
+    public TimeUnit baseTimeUnit() {
+        return TimeUnit.NANOSECONDS;
     }
 
 }

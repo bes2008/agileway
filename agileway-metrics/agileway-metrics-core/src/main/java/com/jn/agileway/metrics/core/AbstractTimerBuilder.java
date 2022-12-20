@@ -16,12 +16,7 @@
 package com.jn.agileway.metrics.core;
 
 import com.jn.agileway.metrics.core.impl.DistributionStatisticConfig;
-import io.micrometer.common.lang.Nullable;
-import com.jn.agileway.metrics.core.MeterRegistry;
-import com.jn.agileway.metrics.core.Tag;
-import com.jn.agileway.metrics.core.Tags;
-import com.jn.agileway.metrics.core.Timer;
-import io.micrometer.core.instrument.distribution.pause.PauseDetector;
+import com.jn.langx.annotation.Nullable;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -230,11 +225,8 @@ public abstract class AbstractTimerBuilder<B extends AbstractTimerBuilder<B>> {
     /**
      * Sets the pause detector implementation to use for this timer. Can also be
      * configured on a registry-level with
-     * {@link MeterRegistry.Config#pauseDetector(PauseDetector)}.
      * @param pauseDetector The pause detector implementation to use.
      * @return This builder.
-     * @see com.jn.agileway.metrics.core.distribution.pause.NoPauseDetector
-     * @see com.jn.agileway.metrics.core.distribution.pause.ClockDriftPauseDetector
      */
     public B pauseDetector(@Nullable PauseDetector pauseDetector) {
         this.pauseDetector = pauseDetector;
