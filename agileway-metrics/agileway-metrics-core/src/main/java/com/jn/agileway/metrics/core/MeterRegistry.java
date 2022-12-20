@@ -15,16 +15,27 @@
  */
 package com.jn.agileway.metrics.core;
 
-
-import com.jn.agileway.metrics.core.config.MeterFilter;
-import com.jn.agileway.metrics.core.config.MeterFilterReply;
-import com.jn.agileway.metrics.core.config.NamingConvention;
 import com.jn.agileway.metrics.core.impl.DistributionStatisticConfig;
-import com.jn.agileway.metrics.core.impl.pause.NoPauseDetector;
-import com.jn.agileway.metrics.core.noop.*;
-import com.jn.agileway.metrics.core.Meter.Id;
 import com.jn.agileway.metrics.core.utils.TimeUtils;
-import com.jn.langx.annotation.Nullable;
+import io.micrometer.common.lang.Nullable;
+import io.micrometer.core.annotation.Incubating;
+import com.jn.agileway.metrics.core.Clock;
+import com.jn.agileway.metrics.core.FunctionCounter;
+import com.jn.agileway.metrics.core.FunctionTimer;
+import com.jn.agileway.metrics.core.Gauge;
+import com.jn.agileway.metrics.core.HighCardinalityTagsDetector;
+import com.jn.agileway.metrics.core.Meter.Id;
+import com.jn.agileway.metrics.core.Tag;
+import com.jn.agileway.metrics.core.Tags;
+import com.jn.agileway.metrics.core.Timer;
+import com.jn.agileway.metrics.core.*;
+import io.micrometer.core.instrument.config.MeterFilter;
+import io.micrometer.core.instrument.config.MeterFilterReply;
+import io.micrometer.core.instrument.config.NamingConvention;
+import io.micrometer.core.instrument.distribution.pause.NoPauseDetector;
+import io.micrometer.core.instrument.distribution.pause.PauseDetector;
+import io.micrometer.core.instrument.noop.*;
+import io.micrometer.core.instrument.search.MeterNotFoundException;
 
 import java.time.Duration;
 import java.util.*;
@@ -51,10 +62,15 @@ import static java.util.Objects.requireNonNull;
  * If you register meters having the same ID multiple times, the first registration only
  * will work and the subsequent registrations will be ignored.
  *
+ * @author Jon Schneider
+ * @author Johnny Lim
+ * @author Jonatan Ivanov
+ * @author Tommy Ludwig
+ * @author Marcin Grzejszczak
  */
 public abstract class MeterRegistry {
 
-    protected final Clock clock;
+    protected final com.jn.agileway.metrics.core.Clock clock;
 
     private final Object meterMapLock = new Object();
 
@@ -89,7 +105,7 @@ public abstract class MeterRegistry {
     private PauseDetector pauseDetector = new NoPauseDetector();
 
     @Nullable
-    private HighCardinalityTagsDetector highCardinalityTagsDetector;
+    private com.jn.agileway.metrics.core.HighCardinalityTagsDetector highCardinalityTagsDetector;
 
     /**
      * We'll use snake case as a general-purpose default for registries because it is the
@@ -101,7 +117,7 @@ public abstract class MeterRegistry {
      */
     private NamingConvention namingConvention = NamingConvention.snakeCase;
 
-    protected MeterRegistry(Clock clock) {
+    protected MeterRegistry(com.jn.agileway.metrics.core.Clock clock) {
         requireNonNull(clock);
         this.clock = clock;
     }
@@ -115,7 +131,7 @@ public abstract class MeterRegistry {
      * @param <T> The type of the state object from which the gauge value is extracted.
      * @return A new gauge.
      */
-    protected abstract <T> Gauge newGauge(Id id, @Nullable T obj, ToDoubleFunction<T> valueFunction);
+    protected abstract <T> com.jn.agileway.metrics.core.Gauge newGauge(Id id, @Nullable T obj, ToDoubleFunction<T> valueFunction);
 
     /**
      * Build a new counter to be added to the registry. This is guaranteed to only be
@@ -123,7 +139,7 @@ public abstract class MeterRegistry {
      * @param id The id that uniquely identifies the counter.
      * @return A new counter.
      */
-    protected abstract Counter newCounter(Id id);
+    protected abstract com.jn.agileway.metrics.core.Counter newCounter(Id id);
 
     /**
      * Build a new long task timer to be added to the registry. This is guaranteed to only
@@ -163,7 +179,7 @@ public abstract class MeterRegistry {
      * compensation.
      * @return A new timer.
      */
-    protected abstract Timer newTimer(Id id, DistributionStatisticConfig distributionStatisticConfig,
+    protected abstract com.jn.agileway.metrics.core.Timer newTimer(Id id, DistributionStatisticConfig distributionStatisticConfig,
                                                                     PauseDetector pauseDetector);
 
     /**
@@ -175,7 +191,7 @@ public abstract class MeterRegistry {
      * @param scale Multiply every recorded sample by this factor.
      * @return A new distribution summary.
      */
-    protected abstract DistributionSummary newDistributionSummary(Id id,
+    protected abstract com.jn.agileway.metrics.core.DistributionSummary newDistributionSummary(Id id,
                                                                                                 DistributionStatisticConfig distributionStatisticConfig, double scale);
 
     /**
@@ -202,7 +218,7 @@ public abstract class MeterRegistry {
     protected <T> TimeGauge newTimeGauge(Id id, @Nullable T obj, TimeUnit valueFunctionUnit,
                                          ToDoubleFunction<T> valueFunction) {
         Id withUnit = id.withBaseUnit(getBaseTimeUnitStr());
-        Gauge gauge = newGauge(withUnit, obj,
+        com.jn.agileway.metrics.core.Gauge gauge = newGauge(withUnit, obj,
                 obj2 -> TimeUtils.convert(valueFunction.applyAsDouble(obj2), valueFunctionUnit, getBaseTimeUnit()));
 
         return new TimeGauge() {
@@ -237,8 +253,8 @@ public abstract class MeterRegistry {
      * measurements.
      * @return A new function timer.
      */
-    protected abstract <T> FunctionTimer newFunctionTimer(Meter.Id id, T obj, ToLongFunction<T> countFunction,
-                                                          ToDoubleFunction<T> totalTimeFunction, TimeUnit totalTimeFunctionUnit);
+    protected abstract <T> com.jn.agileway.metrics.core.FunctionTimer newFunctionTimer(Id id, T obj, ToLongFunction<T> countFunction,
+                                                                                        ToDoubleFunction<T> totalTimeFunction, TimeUnit totalTimeFunctionUnit);
 
     /**
      * Build a new function counter to be added to the registry. This is guaranteed to
@@ -250,13 +266,13 @@ public abstract class MeterRegistry {
      * measurement.
      * @return A new function counter.
      */
-    protected abstract <T> FunctionCounter newFunctionCounter(Meter.Id id, T obj, ToDoubleFunction<T> countFunction);
+    protected abstract <T> com.jn.agileway.metrics.core.FunctionCounter newFunctionCounter(Id id, T obj, ToDoubleFunction<T> countFunction);
 
-    protected List<Tag> getConventionTags(Meter.Id id) {
+    protected List<com.jn.agileway.metrics.core.Tag> getConventionTags(Id id) {
         return id.getConventionTags(config().namingConvention());
     }
 
-    protected String getConventionName(Meter.Id id) {
+    protected String getConventionName(Id id) {
         return id.getConventionName(config().namingConvention());
     }
 
@@ -282,50 +298,50 @@ public abstract class MeterRegistry {
     }
 
     /**
-     * Only used by {@link Counter#builder(String)}.
+     * Only used by {@link com.jn.agileway.metrics.core.Counter#builder(String)}.
      * @param id The identifier for this counter.
      * @return A new or existing counter.
      */
-    Counter counter(Id id) {
-        return registerMeterIfNecessary(Counter.class, id, this::newCounter, NoopCounter::new);
+    com.jn.agileway.metrics.core.Counter counter(Id id) {
+        return registerMeterIfNecessary(com.jn.agileway.metrics.core.Counter.class, id, this::newCounter, NoopCounter::new);
     }
 
     /**
-     * Only used by {@link Gauge#builder(String, Object, ToDoubleFunction)}.
+     * Only used by {@link com.jn.agileway.metrics.core.Gauge#builder(String, Object, ToDoubleFunction)}.
      * @param id The identifier for this gauge.
      * @param obj State object used to compute a value.
      * @param valueFunction Function that is applied on the value for the number.
      * @param <T> The type of the state object from which the gauge value is extracted.
      * @return A new or existing gauge.
      */
-    <T> Gauge gauge(Meter.Id id, @Nullable T obj, ToDoubleFunction<T> valueFunction) {
-        return registerMeterIfNecessary(Gauge.class, id, id2 -> newGauge(id2, obj, valueFunction), NoopGauge::new);
+    <T> com.jn.agileway.metrics.core.Gauge gauge(Id id, @Nullable T obj, ToDoubleFunction<T> valueFunction) {
+        return registerMeterIfNecessary(com.jn.agileway.metrics.core.Gauge.class, id, id2 -> newGauge(id2, obj, valueFunction), NoopGauge::new);
     }
 
     /**
-     * Only used by {@link Timers#builder(String)}.
+     * Only used by {@link com.jn.agileway.metrics.core.Timer#builder(String)}.
      * @param id The identifier for this timer.
      * @param distributionStatisticConfig Configuration that governs how distribution
      * statistics are computed.
      * @return A new or existing timer.
      */
-    Timer timer(Id id, DistributionStatisticConfig distributionStatisticConfig,
+    com.jn.agileway.metrics.core.Timer timer(Id id, DistributionStatisticConfig distributionStatisticConfig,
                                               PauseDetector pauseDetectorOverride) {
-        return registerMeterIfNecessary(Timer.class, id, distributionStatisticConfig, (id2, filteredConfig) -> {
-            Meter.Id withUnit = id2.withBaseUnit(getBaseTimeUnitStr());
+        return registerMeterIfNecessary(com.jn.agileway.metrics.core.Timer.class, id, distributionStatisticConfig, (id2, filteredConfig) -> {
+            Id withUnit = id2.withBaseUnit(getBaseTimeUnitStr());
             return newTimer(withUnit, filteredConfig.merge(defaultHistogramConfig()), pauseDetectorOverride);
         }, NoopTimer::new);
     }
 
     /**
-     * Only used by {@link DistributionSummary#builder(String)}.
+     * Only used by {@link com.jn.agileway.metrics.core.DistributionSummary#builder(String)}.
      * @param id The identifier for this distribution summary.
      * @param distributionStatisticConfig Configuration that governs how distribution
      * statistics are computed.
      * @return A new or existing distribution summary.
      */
-    DistributionSummary summary(Meter.Id id, DistributionStatisticConfig distributionStatisticConfig, double scale) {
-        return registerMeterIfNecessary(DistributionSummary.class, id, distributionStatisticConfig, (id2,
+    com.jn.agileway.metrics.core.DistributionSummary summary(Id id, DistributionStatisticConfig distributionStatisticConfig, double scale) {
+        return registerMeterIfNecessary(com.jn.agileway.metrics.core.DistributionSummary.class, id, distributionStatisticConfig, (id2,
                                                                                                                                    filteredConfig) -> newDistributionSummary(id2, filteredConfig.merge(defaultHistogramConfig()), scale),
                 NoopDistributionSummary::new);
     }
@@ -371,8 +387,8 @@ public abstract class MeterRegistry {
      * @param tags Sequence of dimensions for breaking down the name.
      * @return A new or existing counter.
      */
-    public Counter counter(String name, Iterable<Tag> tags) {
-        return Counter.builder(name).tags(tags).register(this);
+    public com.jn.agileway.metrics.core.Counter counter(String name, Iterable<com.jn.agileway.metrics.core.Tag> tags) {
+        return com.jn.agileway.metrics.core.Counter.builder(name).tags(tags).register(this);
     }
 
     /**
@@ -382,8 +398,8 @@ public abstract class MeterRegistry {
      * tags.
      * @return A new or existing counter.
      */
-    public Counter counter(String name, String... tags) {
-        return counter(name, Tags.of(tags));
+    public com.jn.agileway.metrics.core.Counter counter(String name, String... tags) {
+        return counter(name, com.jn.agileway.metrics.core.Tags.of(tags));
     }
 
     /**
@@ -392,8 +408,8 @@ public abstract class MeterRegistry {
      * @param tags Sequence of dimensions for breaking down the name.
      * @return A new or existing distribution summary.
      */
-    public DistributionSummary summary(String name, Iterable<Tag> tags) {
-        return DistributionSummary.builder(name).tags(tags).register(this);
+    public com.jn.agileway.metrics.core.DistributionSummary summary(String name, Iterable<com.jn.agileway.metrics.core.Tag> tags) {
+        return com.jn.agileway.metrics.core.DistributionSummary.builder(name).tags(tags).register(this);
     }
 
     /**
@@ -403,8 +419,8 @@ public abstract class MeterRegistry {
      * tags.
      * @return A new or existing distribution summary.
      */
-    public DistributionSummary summary(String name, String... tags) {
-        return summary(name, Tags.of(tags));
+    public com.jn.agileway.metrics.core.DistributionSummary summary(String name, String... tags) {
+        return summary(name, com.jn.agileway.metrics.core.Tags.of(tags));
     }
 
     /**
@@ -413,8 +429,8 @@ public abstract class MeterRegistry {
      * @param tags Sequence of dimensions for breaking down the name.
      * @return A new or existing timer.
      */
-    public Timer timer(String name, Iterable<Tag> tags) {
-        return Timers.builder(name).tags(tags).register(this);
+    public com.jn.agileway.metrics.core.Timer timer(String name, Iterable<com.jn.agileway.metrics.core.Tag> tags) {
+        return com.jn.agileway.metrics.core.Timer.builder(name).tags(tags).register(this);
     }
 
     /**
@@ -425,7 +441,7 @@ public abstract class MeterRegistry {
      * @return A new or existing timer.
      */
     public Timer timer(String name, String... tags) {
-        return timer(name, Tags.of(tags));
+        return timer(name, com.jn.agileway.metrics.core.Tags.of(tags));
     }
 
     /**
@@ -451,7 +467,7 @@ public abstract class MeterRegistry {
      * of an assignment statement.
      */
     @Nullable
-    public <T> T gauge(String name, Iterable<Tag> tags, @Nullable T stateObject, ToDoubleFunction<T> valueFunction) {
+    public <T> T gauge(String name, Iterable<com.jn.agileway.metrics.core.Tag> tags, @Nullable T stateObject, ToDoubleFunction<T> valueFunction) {
         Gauge.builder(name, stateObject, valueFunction).tags(tags).register(this);
         return stateObject;
     }
@@ -467,7 +483,7 @@ public abstract class MeterRegistry {
      * assignment statement.
      */
     @Nullable
-    public <T extends Number> T gauge(String name, Iterable<Tag> tags, T number) {
+    public <T extends Number> T gauge(String name, Iterable<com.jn.agileway.metrics.core.Tag> tags, T number) {
         return gauge(name, tags, number, Number::doubleValue);
     }
 
@@ -515,7 +531,7 @@ public abstract class MeterRegistry {
      * of an assignment statement.
      */
     @Nullable
-    public <T extends Collection<?>> T gaugeCollectionSize(String name, Iterable<Tag> tags, T collection) {
+    public <T extends Collection<?>> T gaugeCollectionSize(String name, Iterable<com.jn.agileway.metrics.core.Tag> tags, T collection) {
         return gauge(name, tags, collection, Collection::size);
     }
 
@@ -533,7 +549,7 @@ public abstract class MeterRegistry {
      * assignment statement.
      */
     @Nullable
-    public <T extends Map<?, ?>> T gaugeMapSize(String name, Iterable<Tag> tags, T map) {
+    public <T extends Map<?, ?>> T gaugeMapSize(String name, Iterable<com.jn.agileway.metrics.core.Tag> tags, T map) {
         return gauge(name, tags, map, Map::size);
     }
 
@@ -635,6 +651,7 @@ public abstract class MeterRegistry {
      * registered.
      * @since 1.1.0
      */
+    @Incubating(since = "1.1.0")
     @Nullable
     public Meter remove(Meter meter) {
         return remove(meter.getId());
@@ -648,6 +665,7 @@ public abstract class MeterRegistry {
      * @return The removed meter, or null if the meter is not found
      * @since 1.3.16
      */
+    @Incubating(since = "1.3.16")
     @Nullable
     public Meter removeByPreFilterId(Id preFilterId) {
         return remove(getMappedId(preFilterId));
@@ -662,6 +680,7 @@ public abstract class MeterRegistry {
      * @return The removed meter, or null if no meter matched the provided id.
      * @since 1.1.0
      */
+    @Incubating(since = "1.1.0")
     @Nullable
     public Meter remove(Id mappedId) {
         Meter m = meterMap.get(mappedId);
@@ -693,6 +712,7 @@ public abstract class MeterRegistry {
      * Clear all meters.
      * @since 1.2.0
      */
+    @Incubating(since = "1.2.0")
     public void clear() {
         meterMap.keySet().forEach(this::remove);
     }
@@ -709,7 +729,7 @@ public abstract class MeterRegistry {
          * @param tags Tags to add to every metric.
          * @return This configuration instance.
          */
-        public Config commonTags(Iterable<Tag> tags) {
+        public Config commonTags(Iterable<com.jn.agileway.metrics.core.Tag> tags) {
             return meterFilter(MeterFilter.commonTags(tags));
         }
 
@@ -722,7 +742,7 @@ public abstract class MeterRegistry {
          * @return This configuration instance.
          */
         public Config commonTags(String... tags) {
-            return commonTags(Tags.of(tags));
+            return commonTags(com.jn.agileway.metrics.core.Tags.of(tags));
         }
 
         /**
@@ -755,6 +775,7 @@ public abstract class MeterRegistry {
          * @return This configuration instance.
          * @since 1.1.0
          */
+        @Incubating(since = "1.1.0")
         public Config onMeterRemoved(Consumer<Meter> meterRemovedListener) {
             meterRemovedListeners.add(meterRemovedListener);
             return this;
@@ -767,6 +788,7 @@ public abstract class MeterRegistry {
          * @return This configuration instance
          * @since 1.6.0
          */
+        @Incubating(since = "1.6.0")
         public Config onMeterRegistrationFailed(BiConsumer<Id, String> meterRegistrationFailedListener) {
             meterRegistrationFailedListeners.add(meterRegistrationFailedListener);
             return this;
@@ -802,6 +824,8 @@ public abstract class MeterRegistry {
          * Sets the default pause detector to use for all timers in this registry.
          * @param detector The pause detector to use.
          * @return This configuration instance.
+         * @see NoPauseDetector
+         * @see com.jn.agileway.metrics.core.distribution.pause.ClockDriftPauseDetector
          */
         public Config pauseDetector(PauseDetector detector) {
             pauseDetector = detector;
@@ -816,16 +840,16 @@ public abstract class MeterRegistry {
         }
 
         /**
-         * Creates and starts a new {@link HighCardinalityTagsDetector} for this registry.
+         * Creates and starts a new {@link com.jn.agileway.metrics.core.HighCardinalityTagsDetector} for this registry.
          * @return This configuration instance.
          * @since 1.10.0
          */
         public Config withHighCardinalityTagsDetector() {
-            return withHighCardinalityTagsDetector(new HighCardinalityTagsDetector(MeterRegistry.this));
+            return withHighCardinalityTagsDetector(new com.jn.agileway.metrics.core.HighCardinalityTagsDetector(MeterRegistry.this));
         }
 
         /**
-         * Creates and starts a new {@link HighCardinalityTagsDetector} for this registry.
+         * Creates and starts a new {@link com.jn.agileway.metrics.core.HighCardinalityTagsDetector} for this registry.
          * @param threshold The threshold to use to detect high cardinality tags (if the
          * number of Meters with the same name is higher than this value, that's a high
          * cardinality tag).
@@ -836,10 +860,10 @@ public abstract class MeterRegistry {
          */
         public Config withHighCardinalityTagsDetector(long threshold, Duration delay) {
             return withHighCardinalityTagsDetector(
-                    new HighCardinalityTagsDetector(MeterRegistry.this, threshold, delay));
+                    new com.jn.agileway.metrics.core.HighCardinalityTagsDetector(MeterRegistry.this, threshold, delay));
         }
 
-        private Config withHighCardinalityTagsDetector(HighCardinalityTagsDetector newHighCardinalityTagsDetector) {
+        private Config withHighCardinalityTagsDetector(com.jn.agileway.metrics.core.HighCardinalityTagsDetector newHighCardinalityTagsDetector) {
             if (highCardinalityTagsDetector != null) {
                 highCardinalityTagsDetector.close();
             }
@@ -851,10 +875,10 @@ public abstract class MeterRegistry {
         }
 
         /**
-         * Returns the current {@link HighCardinalityTagsDetector}. You can "deregister"
-         * it by calling {@link HighCardinalityTagsDetector#close()} or register a new one
+         * Returns the current {@link com.jn.agileway.metrics.core.HighCardinalityTagsDetector}. You can "deregister"
+         * it by calling {@link com.jn.agileway.metrics.core.HighCardinalityTagsDetector#close()} or register a new one
          * by closing the previous one and creating a new one.
-         * @return The {@link HighCardinalityTagsDetector} that is currently in effect.
+         * @return The {@link com.jn.agileway.metrics.core.HighCardinalityTagsDetector} that is currently in effect.
          * @since 1.10.0
          */
         @Nullable
@@ -886,7 +910,7 @@ public abstract class MeterRegistry {
          * @param tags Sequence of dimensions for breaking down the name.
          * @return A new or existing long task timer.
          */
-        public LongTaskTimer longTaskTimer(String name, Iterable<Tag> tags) {
+        public LongTaskTimer longTaskTimer(String name, Iterable<com.jn.agileway.metrics.core.Tag> tags) {
             return LongTaskTimer.builder(name).tags(tags).register(MeterRegistry.this);
         }
 
@@ -915,8 +939,8 @@ public abstract class MeterRegistry {
          * extracted.
          * @return A new or existing function counter.
          */
-        public <T> FunctionCounter counter(String name, Iterable<Tag> tags, T obj, ToDoubleFunction<T> countFunction) {
-            return FunctionCounter.builder(name, obj, countFunction).tags(tags).register(MeterRegistry.this);
+        public <T> com.jn.agileway.metrics.core.FunctionCounter counter(String name, Iterable<com.jn.agileway.metrics.core.Tag> tags, T obj, ToDoubleFunction<T> countFunction) {
+            return com.jn.agileway.metrics.core.FunctionCounter.builder(name, obj, countFunction).tags(tags).register(MeterRegistry.this);
         }
 
         /**
@@ -928,8 +952,8 @@ public abstract class MeterRegistry {
          * extracted.
          * @return A new or existing function counter.
          */
-        public <T extends Number> FunctionCounter counter(String name, Iterable<Tag> tags, T number) {
-            return FunctionCounter.builder(name, number, Number::doubleValue).tags(tags).register(MeterRegistry.this);
+        public <T extends Number> com.jn.agileway.metrics.core.FunctionCounter counter(String name, Iterable<com.jn.agileway.metrics.core.Tag> tags, T number) {
+            return com.jn.agileway.metrics.core.FunctionCounter.builder(name, number, Number::doubleValue).tags(tags).register(MeterRegistry.this);
         }
 
         /**
@@ -942,7 +966,7 @@ public abstract class MeterRegistry {
          * extracted.
          * @return A new or existing function counter.
          */
-        <T> FunctionCounter counter(Id id, T obj, ToDoubleFunction<T> countFunction) {
+        <T> com.jn.agileway.metrics.core.FunctionCounter counter(Id id, T obj, ToDoubleFunction<T> countFunction) {
             return registerMeterIfNecessary(FunctionCounter.class, id,
                     id2 -> newFunctionCounter(id2, obj, countFunction), NoopFunctionCounter::new);
         }
@@ -962,9 +986,9 @@ public abstract class MeterRegistry {
          * extracted.
          * @return A new or existing function timer.
          */
-        public <T> FunctionTimer timer(String name, Iterable<Tag> tags, T obj, ToLongFunction<T> countFunction,
+        public <T> com.jn.agileway.metrics.core.FunctionTimer timer(String name, Iterable<com.jn.agileway.metrics.core.Tag> tags, T obj, ToLongFunction<T> countFunction,
                                                                      ToDoubleFunction<T> totalTimeFunction, TimeUnit totalTimeFunctionUnit) {
-            return FunctionTimer.builder(name, obj, countFunction, totalTimeFunction, totalTimeFunctionUnit).tags(tags)
+            return com.jn.agileway.metrics.core.FunctionTimer.builder(name, obj, countFunction, totalTimeFunction, totalTimeFunctionUnit).tags(tags)
                     .register(MeterRegistry.this);
         }
 
@@ -982,7 +1006,7 @@ public abstract class MeterRegistry {
          * extracted.F
          * @return A new or existing function timer.
          */
-        <T> FunctionTimer timer(Id id, T obj, ToLongFunction<T> countFunction,
+        <T> com.jn.agileway.metrics.core.FunctionTimer timer(Id id, T obj, ToLongFunction<T> countFunction,
                                                               ToDoubleFunction<T> totalTimeFunction, TimeUnit totalTimeFunctionUnit) {
             return registerMeterIfNecessary(FunctionTimer.class, id, id2 -> {
                 Id withUnit = id2.withBaseUnit(getBaseTimeUnitStr());

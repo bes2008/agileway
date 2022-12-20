@@ -15,8 +15,8 @@
  */
 package com.jn.agileway.metrics.core;
 
-import com.jn.agileway.metrics.core.config.NamingConvention;
 import com.jn.langx.annotation.Nullable;
+import io.micrometer.core.instrument.config.NamingConvention;
 
 import java.util.ArrayList;
 import java.util.Collections;

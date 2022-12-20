@@ -16,9 +16,9 @@
 package com.jn.agileway.metrics.core.composite;
 
 import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.config.NamingConvention;
 import com.jn.agileway.metrics.core.impl.DistributionStatisticConfig;
 import com.jn.langx.annotation.Nullable;
+import io.micrometer.core.instrument.distribution.pause.PauseDetector;
 
 import java.util.Collections;
 import java.util.IdentityHashMap;

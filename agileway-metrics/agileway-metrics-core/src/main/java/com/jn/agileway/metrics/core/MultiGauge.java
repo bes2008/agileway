@@ -15,9 +15,10 @@
  */
 package com.jn.agileway.metrics.core;
 
+import io.micrometer.common.lang.Nullable;
+import io.micrometer.core.annotation.Incubating;
 import com.jn.agileway.metrics.core.Tag;
 import com.jn.agileway.metrics.core.Tags;
-import com.jn.langx.annotation.Nullable;
 
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -33,6 +34,7 @@ import static java.util.stream.Collectors.toSet;
  * @author Jon Schneider
  * @since 1.1.0
  */
+@Incubating(since = "1.1.0")
 public class MultiGauge {
 
     private final MeterRegistry registry;

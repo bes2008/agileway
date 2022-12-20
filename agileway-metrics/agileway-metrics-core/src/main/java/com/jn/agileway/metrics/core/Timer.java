@@ -18,7 +18,6 @@ package com.jn.agileway.metrics.core;
 import com.jn.agileway.metrics.core.impl.CountAtBucket;
 import com.jn.agileway.metrics.core.impl.HistogramSupport;
 import com.jn.agileway.metrics.core.impl.ValueAtPercentile;
-import com.jn.langx.annotation.Nullable;
 
 import java.time.Duration;
 import java.util.Arrays;
