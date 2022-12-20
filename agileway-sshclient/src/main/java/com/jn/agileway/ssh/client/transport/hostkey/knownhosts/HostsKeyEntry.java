@@ -10,14 +10,12 @@ public interface HostsKeyEntry extends Serializable {
      * 判断是否可用于指定的 host, key algorithm
      * @param host
      * @param keyType
-     * @return
      */
     boolean applicableTo(@NonNull String host, @Nullable String keyType);
 
     /**
      * 进行验证
      * @param key 可选类型有3种： byte[], byte[]的base64, java.security.PublicKey
-     * @return
      */
     boolean verify(Object key);
 
@@ -31,7 +29,6 @@ public interface HostsKeyEntry extends Serializable {
 
     /**
      * base64 格式的 public key，同时也是 known_hosts 中完全一样
-     * @return
      */
     Object getPublicKey();
 

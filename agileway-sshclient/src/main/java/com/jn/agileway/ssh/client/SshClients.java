@@ -106,7 +106,6 @@ public class SshClients {
      * 获取当前用户的 user id
      *
      * @param connection
-     * @return
      */
     public static int getUid(SshConnection connection) {
         SshCommandResponse response = SshClients.exec(connection, "id -u");
@@ -120,7 +119,6 @@ public class SshClients {
      * 获取当前用户所属的Group的id集
      *
      * @param connection
-     * @return
      */
     public static int[] getGroupIds(SshConnection connection) {
         SshCommandResponse response = SshClients.exec(connection, "id -G");

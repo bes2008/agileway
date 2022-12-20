@@ -58,7 +58,6 @@ public abstract class SftpFile implements Closeable {
     /**
      * FSTAT
      *
-     * @return
      * @throws IOException
      */
     public abstract FileAttrs getAttributes() throws IOException;

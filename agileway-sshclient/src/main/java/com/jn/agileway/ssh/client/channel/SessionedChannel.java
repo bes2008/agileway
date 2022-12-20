@@ -91,7 +91,6 @@ public interface SessionedChannel extends Channel {
     /**
      * 远程机器错误输出的内容，会作为这里的错误输入
      *
-     * @return
      */
     InputStream getErrorInputStream() throws SshException;
 

@@ -62,7 +62,6 @@ public interface SftpSession extends Closeable {
      * packet_type: REALPATH
      *
      * @param path
-     * @return
      * @throws IOException
      */
     String canonicalPath(String path) throws SftpException;
@@ -127,7 +126,6 @@ public interface SftpSession extends Closeable {
      *
      * @param directory
      * @param attributes
-     * @return
      */
     void mkdir(String directory, FileAttrs attributes) throws SftpException;
 
@@ -154,7 +152,6 @@ public interface SftpSession extends Closeable {
      * |packet_type|req_id|path|
      *
      * @param filepath
-     * @return
      */
     void rm(String filepath) throws SftpException;
 
@@ -168,7 +165,6 @@ public interface SftpSession extends Closeable {
      *
      * @param oldFilepath
      * @param newFilepath
-     * @return
      */
     void mv(String oldFilepath, String newFilepath) throws SftpException;
 

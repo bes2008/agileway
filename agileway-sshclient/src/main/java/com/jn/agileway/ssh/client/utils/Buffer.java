@@ -282,7 +282,6 @@ public class Buffer<T extends Buffer<T>> {
     /**
      * // 读取4个字节
      *
-     * @return
      */
     public int readUInt32AsInt() {
         return (int) readUInt32();
