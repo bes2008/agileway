@@ -14,8 +14,12 @@ import java.util.function.ToLongFunction;
  * places where dependency injection of {@link MeterRegistry} is not possible for an
  * instrumented type.
  *
+ * @author Jon Schneider
  */
 public class Metrics {
+    public static Meter.Builder builder(String name, Meter.Type type, Iterable<Measurement> measurements) {
+        return new Metrics.Builder(name, type, measurements);
+    }
 
     public static final CompositeMeterRegistry globalRegistry = new CompositeMeterRegistry();
 

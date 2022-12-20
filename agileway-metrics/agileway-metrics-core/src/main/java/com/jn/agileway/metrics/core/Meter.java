@@ -32,11 +32,11 @@ import static java.util.Collections.singletonList;
 /**
  * A named and dimensioned producer of one or more measurements.
  *
+ * @author Jon Schneider
  */
 public interface Meter {
-    static Meter.Builder builder(String name, Meter.Type type, Iterable<Measurement> measurements) {
-        return new Meter.Builder(name, type, measurements);
-    }
+
+
 
     /**
      * @return A unique combination of name and tags
