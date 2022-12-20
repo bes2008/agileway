@@ -1,7 +1,7 @@
 package com.jn.agileway.metrics.core;
 
-import io.micrometer.core.annotation.Incubating;
-import io.micrometer.core.annotation.Timed;
+
+import com.jn.agileway.metrics.core.annotation.Timed;
 
 public class Timers {
     /**
@@ -23,7 +23,6 @@ public class Timers {
      * @return A timing builder that automatically records a timing on close.
      * @since 1.6.0
      */
-    @Incubating(since = "1.6.0")
     static Timer.ResourceSample resource(com.jn.agileway.metrics.core.MeterRegistry registry, String name) {
         return new Timer.ResourceSample(registry, name);
     }
