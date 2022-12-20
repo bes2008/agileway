@@ -23,8 +23,6 @@ import java.util.Locale;
 /**
  * Commonly used formatting of floating-point values used when writing custom exposition
  * to various monitoring systems.
- *
- * @author Jon Schneider
  */
 public final class DoubleFormat {
 
