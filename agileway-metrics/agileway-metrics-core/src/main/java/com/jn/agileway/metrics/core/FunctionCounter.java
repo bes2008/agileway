@@ -15,6 +15,7 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.langx.annotation.Nullable;
 import io.micrometer.common.lang.Nullable;
 import com.jn.agileway.metrics.core.Tag;
 import com.jn.agileway.metrics.core.Tags;

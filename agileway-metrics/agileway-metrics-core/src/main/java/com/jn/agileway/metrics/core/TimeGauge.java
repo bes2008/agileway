@@ -16,12 +16,11 @@
 package com.jn.agileway.metrics.core;
 
 import com.jn.agileway.metrics.core.utils.TimeUtils;
-import io.micrometer.common.lang.Nullable;
-import io.micrometer.core.annotation.Incubating;
 import com.jn.agileway.metrics.core.Gauge;
 import com.jn.agileway.metrics.core.MeterRegistry;
 import com.jn.agileway.metrics.core.Tag;
 import com.jn.agileway.metrics.core.Tags;
+import com.jn.langx.annotation.Nullable;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -49,7 +48,6 @@ public interface TimeGauge extends Gauge {
      * @return A new time gauge builder.
      * @since 1.7.0
      */
-    @Incubating(since = "1.7.0")
     static Builder<Supplier<Number>> builder(String name, Supplier<Number> f, TimeUnit fUnits) {
         return new Builder<>(name, f, fUnits, f2 -> {
             Number val = f2.get();
@@ -146,7 +144,6 @@ public interface TimeGauge extends Gauge {
          * @return The time gauge builder with altered strong reference semantics.
          * @since 1.7.0
          */
-        @Incubating(since = "1.7.0")
         public Builder<T> strongReference(boolean strong) {
             this.strongReference = strong;
             return this;

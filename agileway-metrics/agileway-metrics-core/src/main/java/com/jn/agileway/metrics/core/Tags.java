@@ -15,10 +15,10 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.collection.iter.ArrayIterator;
-import io.micrometer.common.lang.Nullable;
 
 import java.util.*;
 

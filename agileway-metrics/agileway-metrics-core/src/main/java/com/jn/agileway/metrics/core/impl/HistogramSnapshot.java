@@ -16,7 +16,7 @@
 package com.jn.agileway.metrics.core.impl;
 
 import com.jn.agileway.metrics.core.utils.TimeUtils;
-import io.micrometer.common.lang.Nullable;
+import com.jn.langx.annotation.Nullable;
 
 import java.io.PrintStream;
 import java.util.Arrays;

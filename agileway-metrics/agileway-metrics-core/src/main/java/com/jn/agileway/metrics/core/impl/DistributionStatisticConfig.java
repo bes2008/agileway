@@ -16,7 +16,7 @@
 package com.jn.agileway.metrics.core.impl;
 
 import com.jn.agileway.metrics.core.utils.Mergeable;
-import io.micrometer.common.lang.Nullable;
+import com.jn.langx.annotation.Nullable;
 
 import java.time.Duration;
 import java.util.NavigableSet;
