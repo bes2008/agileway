@@ -25,10 +25,6 @@ import static java.util.Objects.requireNonNull;
  *
  */
 public class ImmutableTag implements Tag {
-    @Override
-    public int compareTo(Tag o) {
-        return getKey().compareTo(o.getKey());
-    }
 
     private final String key;
 

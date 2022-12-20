@@ -17,24 +17,17 @@
 package com.jn.agileway.metrics.core;
 
 /**
- * A meter metric which measures mean throughput and one-, five-, and fifteen-minute
- * exponentially-weighted moving average throughput.
- * 一种用于度量一段时间内吞吐率的计量器。例如，一分钟内，五分钟内，十五分钟内的qps指标，
- * 这段时间内的吞吐率通过指数加权的方式计算移动平均得出。
+ * @author wangtao 2019-01-16 10:55
  */
-public interface Meter extends Metered {
+
+public interface ClusterHistogramBuilder<T> extends MetricBuilder {
 
     /**
-     * Mark the occurrence of an event.
-     * 标记一次事件
-     */
-    void mark();
-
-    /**
-     * Mark the occurrence of a given number of events.
-     * 标记n次事件
+     * Create a <T extends Metrics> instance with given name and buckets
      *
-     * @param n the number of events
+     * @param name    the name of the metric
+     * @param buckets an array of long values
+     * @return a metric implementation
      */
-    void mark(long n);
+    T newMetric(MetricName name, long[] buckets);
 }

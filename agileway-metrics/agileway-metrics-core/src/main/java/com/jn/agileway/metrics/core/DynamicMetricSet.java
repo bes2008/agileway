@@ -16,25 +16,20 @@
  */
 package com.jn.agileway.metrics.core;
 
+import java.util.Map;
+
 /**
- * A meter metric which measures mean throughput and one-, five-, and fifteen-minute
- * exponentially-weighted moving average throughput.
- * 一种用于度量一段时间内吞吐率的计量器。例如，一分钟内，五分钟内，十五分钟内的qps指标，
- * 这段时间内的吞吐率通过指数加权的方式计算移动平均得出。
+ * A dynamic metric set.
+ * The metrics inside will change dynamically.
  */
-public interface Meter extends Metered {
+public interface DynamicMetricSet extends Metric {
 
     /**
-     * Mark the occurrence of an event.
-     * 标记一次事件
-     */
-    void mark();
-
-    /**
-     * Mark the occurrence of a given number of events.
-     * 标记n次事件
+     * A map of metric names to metrics.
+     * The metrics inside will change dynamically.
+     * So DO NOT register them at first time.
      *
-     * @param n the number of events
+     * @return the dynamically changing metrics
      */
-    void mark(long n);
+    Map<MetricName, Metric> getDynamicMetrics();
 }

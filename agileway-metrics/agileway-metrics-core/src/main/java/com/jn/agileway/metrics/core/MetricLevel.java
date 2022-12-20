@@ -17,24 +17,37 @@
 package com.jn.agileway.metrics.core;
 
 /**
- * A meter metric which measures mean throughput and one-, five-, and fifteen-minute
- * exponentially-weighted moving average throughput.
- * 一种用于度量一段时间内吞吐率的计量器。例如，一分钟内，五分钟内，十五分钟内的qps指标，
- * 这段时间内的吞吐率通过指数加权的方式计算移动平均得出。
+ * enum的数值不能为负数，且不能太大
  */
-public interface Meter extends Metered {
+public enum MetricLevel {
 
-    /**
-     * Mark the occurrence of an event.
-     * 标记一次事件
-     */
-    void mark();
+    TRIVIAL, // 轻微指标
 
-    /**
-     * Mark the occurrence of a given number of events.
-     * 标记n次事件
-     *
-     * @param n the number of events
-     */
-    void mark(long n);
+    MINOR,   // 次要指标
+
+    NORMAL,  // 一般指标
+
+    MAJOR,   // 重要指标
+
+    CRITICAL; // 关键指标
+
+    static {
+        for (MetricLevel level : MetricLevel.values()) {
+            if (level.ordinal() < 0) {
+                throw new RuntimeException("MetricLevel can not < 0");
+            }
+        }
+    }
+
+    public static int getMaxValue() {
+        MetricLevel[] levels = MetricLevel.values();
+        int max = levels[0].ordinal();
+        for (MetricLevel level : levels) {
+            int value = level.ordinal();
+            if (value > max) {
+                max = value;
+            }
+        }
+        return max;
+    }
 }

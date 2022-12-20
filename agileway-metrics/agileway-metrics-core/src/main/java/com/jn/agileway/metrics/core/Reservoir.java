@@ -17,24 +17,27 @@
 package com.jn.agileway.metrics.core;
 
 /**
- * A meter metric which measures mean throughput and one-, five-, and fifteen-minute
- * exponentially-weighted moving average throughput.
- * 一种用于度量一段时间内吞吐率的计量器。例如，一分钟内，五分钟内，十五分钟内的qps指标，
- * 这段时间内的吞吐率通过指数加权的方式计算移动平均得出。
+ * A statistically representative reservoir of a data stream.
  */
-public interface Meter extends Metered {
-
+public interface Reservoir {
     /**
-     * Mark the occurrence of an event.
-     * 标记一次事件
-     */
-    void mark();
-
-    /**
-     * Mark the occurrence of a given number of events.
-     * 标记n次事件
+     * Returns the number of values recorded.
      *
-     * @param n the number of events
+     * @return the number of values recorded
      */
-    void mark(long n);
+    int size();
+
+    /**
+     * Adds a new recorded value to the reservoir.
+     *
+     * @param value a new recorded value
+     */
+    void update(long value);
+
+    /**
+     * Returns a snapshot of the reservoir's values.
+     *
+     * @return a snapshot of the reservoir's values
+     */
+    Snapshot getSnapshot();
 }

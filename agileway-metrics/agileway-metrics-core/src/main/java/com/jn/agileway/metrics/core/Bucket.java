@@ -16,25 +16,20 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.langx.util.concurrent.longaddr.LongAdder;
+
 /**
- * A meter metric which measures mean throughput and one-, five-, and fifteen-minute
- * exponentially-weighted moving average throughput.
- * 一种用于度量一段时间内吞吐率的计量器。例如，一分钟内，五分钟内，十五分钟内的qps指标，
- * 这段时间内的吞吐率通过指数加权的方式计算移动平均得出。
+ * The abstraction of a bucket for collecting statistics
  */
-public interface Meter extends Metered {
+class Bucket {
 
     /**
-     * Mark the occurrence of an event.
-     * 标记一次事件
+     * The timestamp of this bucket
      */
-    void mark();
+    long timestamp = -1L;
 
     /**
-     * Mark the occurrence of a given number of events.
-     * 标记n次事件
-     *
-     * @param n the number of events
+     * The counter for the bucket, can be updated concurrently
      */
-    void mark(long n);
+    LongAdder count = new LongAdder();
 }

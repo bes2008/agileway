@@ -16,41 +16,70 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.langx.util.concurrent.longaddr.LongAdder;
+
 /**
- * <pre>
  * An incrementing and decrementing counter metric.
- *
- * 计数器型指标，适用于记录调用总量等类型的数据
- * </pre>
  */
-public interface Counter extends Metric, Counting {
+public class CounterImpl implements Counter {
+
+    private final LongAdder count;
+
+    public CounterImpl() {
+        this.count = new LongAdder();
+    }
 
     /**
      * Increment the counter by one.
-     * 计数器加1
      */
-    void inc();
+    public void inc() {
+        inc(1);
+    }
 
     /**
      * Increment the counter by {@code n}.
-     * 计数器加n
      *
      * @param n the amount by which the counter will be increased
      */
-    void inc(long n);
+    public void inc(long n) {
+        count.add(n);
+    }
 
     /**
      * Decrement the counter by one.
-     * 计数器减1
      */
-    void dec();
+    public void dec() {
+        dec(1);
+    }
 
     /**
      * Decrement the counter by {@code n}.
-     * 计数器减n
      *
      * @param n the amount by which the counter will be decreased
      */
-    void dec(long n);
+    public void dec(long n) {
+        count.add(-n);
+    }
 
+    /**
+     * Returns the counter's current value.
+     *
+     * @return the counter's current value
+     */
+    public long getCount() {
+        return count.sum();
+    }
+
+    /**
+     * Implementation notes:
+     * Recording the last updated time for each update is very expensive according to JMH benchmark,
+     * about 6x slower.
+     * Because this implementation is only used internally, so this function just returns 0.
+     *
+     * @return always return 0.
+     */
+    @Override
+    public long lastUpdateTime() {
+        return System.currentTimeMillis();
+    }
 }

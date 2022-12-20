@@ -17,24 +17,24 @@
 package com.jn.agileway.metrics.core;
 
 /**
- * A meter metric which measures mean throughput and one-, five-, and fifteen-minute
- * exponentially-weighted moving average throughput.
- * 一种用于度量一段时间内吞吐率的计量器。例如，一分钟内，五分钟内，十五分钟内的qps指标，
- * 这段时间内的吞吐率通过指数加权的方式计算移动平均得出。
+ * The GOF Visitor pattern.
+ * https://dzone.com/articles/design-patterns-visitor
  */
-public interface Meter extends Metered {
+public interface Collector {
 
-    /**
-     * Mark the occurrence of an event.
-     * 标记一次事件
-     */
-    void mark();
+    void collect(MetricName name, Counter counter, long timestamp);
 
-    /**
-     * Mark the occurrence of a given number of events.
-     * 标记n次事件
-     *
-     * @param n the number of events
-     */
-    void mark(long n);
+    void collect(MetricName name, Gauge gauge, long timestamp);
+
+    void collect(MetricName name, Meter meter, long timestamp);
+
+    void collect(MetricName name, Histogram histogram, long timestamp);
+
+    void collect(MetricName name, Timer timer, long timestamp);
+
+    void collect(MetricName name, Compass compass, long timestamp);
+
+    void collect(MetricName name, FastCompass fastCompass, long timestamp);
+
+    void collect(MetricName name, ClusterHistogram clusterHistogram, long timestamp);
 }

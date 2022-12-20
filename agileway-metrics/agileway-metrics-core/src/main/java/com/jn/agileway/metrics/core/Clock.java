@@ -1,11 +1,12 @@
 /*
- * Copyright 2017 VMware, Inc.
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * https://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,44 +16,60 @@
  */
 package com.jn.agileway.metrics.core;
 
-import com.jn.agileway.metrics.core.MockClock;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 
 /**
- * Used to measure absolute and relative time.
- *
- * @see MockClock for a clock that can be manually advanced for use in tests.
- * @author Jon Schneider
+ * An abstraction for how time passes. It is passed to {@link Timer} to track timing.
  */
-public interface Clock {
+public abstract class Clock {
+    private static final Clock DEFAULT = new UserTimeClock();
 
-    Clock SYSTEM = new Clock() {
-        @Override
-        public long wallTime() {
-            return System.currentTimeMillis();
-        }
+    /**
+     * The default clock to use.
+     *
+     * @return the default {@link Clock} instance
+     * @see Clock.UserTimeClock
+     */
+    public static Clock defaultClock() {
+        return DEFAULT;
+    }
 
+    /**
+     * Returns the current time tick.
+     *
+     * @return time tick in nanoseconds
+     */
+    public abstract long getTick();
+
+    /**
+     * Returns the current time in milliseconds.
+     *
+     * @return time in milliseconds
+     */
+    public long getTime() {
+        return System.currentTimeMillis();
+    }
+
+    /**
+     * A clock implementation which returns the current time in epoch nanoseconds.
+     */
+    public static class UserTimeClock extends Clock {
         @Override
-        public long monotonicTime() {
+        public long getTick() {
             return System.nanoTime();
         }
-    };
+    }
 
     /**
-     * Current wall time in milliseconds since the epoch. Typically equivalent to
-     * System.currentTimeMillis. Should not be used to determine durations. Used for
-     * timestamping metrics being pushed to a monitoring system or for determination of
-     * step boundaries (e.g. {@link
-     * @return Wall time in milliseconds
+     * A clock implementation which returns the current thread's CPU time.
      */
-    long wallTime();
+    public static class CpuTimeClock extends Clock {
+        private static final ThreadMXBean THREAD_MX_BEAN = ManagementFactory.getThreadMXBean();
 
-    /**
-     * Current time from a monotonic clock source. The value is only meaningful when
-     * compared with another snapshot to determine the elapsed time for an operation. The
-     * difference between two samples will have a unit of nanoseconds. The returned value
-     * is typically equivalent to System.nanoTime.
-     * @return Monotonic time in nanoseconds
-     */
-    long monotonicTime();
-
+        @Override
+        public long getTick() {
+            return THREAD_MX_BEAN.getCurrentThreadCpuTime();
+        }
+    }
 }

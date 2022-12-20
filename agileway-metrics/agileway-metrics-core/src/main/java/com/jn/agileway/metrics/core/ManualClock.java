@@ -16,25 +16,35 @@
  */
 package com.jn.agileway.metrics.core;
 
-/**
- * A meter metric which measures mean throughput and one-, five-, and fifteen-minute
- * exponentially-weighted moving average throughput.
- * 一种用于度量一段时间内吞吐率的计量器。例如，一分钟内，五分钟内，十五分钟内的qps指标，
- * 这段时间内的吞吐率通过指数加权的方式计算移动平均得出。
- */
-public interface Meter extends Metered {
+import java.util.concurrent.TimeUnit;
 
-    /**
-     * Mark the occurrence of an event.
-     * 标记一次事件
-     */
-    void mark();
+public class ManualClock extends Clock {
+    long ticksInNanos = 0;
 
-    /**
-     * Mark the occurrence of a given number of events.
-     * 标记n次事件
-     *
-     * @param n the number of events
-     */
-    void mark(long n);
+    public synchronized void addNanos(long nanos) {
+        ticksInNanos += nanos;
+    }
+
+    public synchronized void addSeconds(long seconds) {
+        ticksInNanos += TimeUnit.SECONDS.toNanos(seconds);
+    }
+
+    public synchronized void addMillis(long millis) {
+        ticksInNanos += TimeUnit.MILLISECONDS.toNanos(millis);
+    }
+
+    public synchronized void addHours(long hours) {
+        ticksInNanos += TimeUnit.HOURS.toNanos(hours);
+    }
+
+    @Override
+    public synchronized long getTick() {
+        return ticksInNanos;
+    }
+
+    @Override
+    public synchronized long getTime() {
+        return TimeUnit.NANOSECONDS.toMillis(ticksInNanos);
+    }
+
 }
