@@ -42,7 +42,7 @@ public class CommonEnumByNameConverterFactory<T extends CommonEnum> implements R
         if (targetType.isEnum()) {
             Converter converter = get(targetType);
             if (converter == null) {
-                converter = new NameToCommonEnumConverter<>(targetType);
+                converter = new NameToCommonEnumConverter(targetType);
                 register(targetType, converter);
             }
             return converter;
