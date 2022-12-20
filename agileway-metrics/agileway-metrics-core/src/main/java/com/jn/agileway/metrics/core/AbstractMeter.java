@@ -21,6 +21,8 @@ import com.jn.langx.annotation.Nullable;
 /**
  * Base class for {@link Meter} implementations.
  *
+ * @author Jon Schneider
+ * @author Johnny Lim
  */
 public abstract class AbstractMeter implements Meter {
 
