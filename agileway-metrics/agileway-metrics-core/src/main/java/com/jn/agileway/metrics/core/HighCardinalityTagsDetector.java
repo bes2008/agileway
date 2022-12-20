@@ -15,13 +15,10 @@
  */
 package com.jn.agileway.metrics.core;
 
-import io.micrometer.common.lang.Nullable;
-import io.micrometer.common.util.internal.logging.InternalLogger;
-import io.micrometer.common.util.internal.logging.InternalLoggerFactory;
-import io.micrometer.common.util.internal.logging.WarnThenDebugLogger;
-import com.jn.agileway.metrics.core.Meter;
-import com.jn.agileway.metrics.core.MeterRegistry;
-import io.micrometer.core.instrument.util.NamedThreadFactory;
+import com.jn.langx.annotation.Nullable;
+import com.jn.langx.util.concurrent.CommonThreadFactory;
+import com.jn.langx.util.logging.Loggers;
+import org.slf4j.Logger;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -48,15 +45,12 @@ import java.util.function.Consumer;
  * You can also utilize
  * tags/metrics.
  *
- * @author Jonatan Ivanov
- * @since 1.10.0
  */
 public class HighCardinalityTagsDetector implements AutoCloseable {
 
-    private static final InternalLogger LOGGER = InternalLoggerFactory.getInstance(HighCardinalityTagsDetector.class);
+    private static final Logger LOGGER = Loggers.getLogger(HighCardinalityTagsDetector.class);
 
-    private static final WarnThenDebugLogger WARN_THEN_DEBUG_LOGGER = new WarnThenDebugLogger(
-            HighCardinalityTagsDetector.class);
+    private static final Logger WARN_THEN_DEBUG_LOGGER = Loggers.getLogger(HighCardinalityTagsDetector.class);
 
     private static final Duration DEFAULT_DELAY = Duration.ofMinutes(5);
 
@@ -106,7 +100,7 @@ public class HighCardinalityTagsDetector implements AutoCloseable {
         this.delay = delay;
         this.meterNameConsumer = meterNameConsumer != null ? meterNameConsumer : this::logWarning;
         this.scheduledExecutorService = Executors
-                .newSingleThreadScheduledExecutor(new NamedThreadFactory("high-cardinality-tags-detector"));
+                .newSingleThreadScheduledExecutor(new CommonThreadFactory("high-cardinality-tags-detector",true));
     }
 
     /**
@@ -168,7 +162,7 @@ public class HighCardinalityTagsDetector implements AutoCloseable {
     }
 
     private void logWarning(String name) {
-        WARN_THEN_DEBUG_LOGGER.log(() -> String.format("It seems %s has high cardinality tags (threshold: %d meters).\n"
+        WARN_THEN_DEBUG_LOGGER.warn(String.format("It seems %s has high cardinality tags (threshold: %d meters).\n"
                 + "Check your configuration for the instrumentation of %s to find and fix the cause of the high cardinality (see: https://micrometer.io/docs/concepts#_tag_values).\n"
                 + "If the cardinality is expected and acceptable, raise the threshold for this %s.", name,
                 this.threshold, name, getClass().getSimpleName()));

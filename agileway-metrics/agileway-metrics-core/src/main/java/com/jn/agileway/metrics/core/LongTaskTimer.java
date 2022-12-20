@@ -15,12 +15,10 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.agileway.metrics.core.annotation.Timed;
 import com.jn.agileway.metrics.core.impl.DistributionStatisticConfig;
 import com.jn.agileway.metrics.core.impl.HistogramSupport;
-import io.micrometer.common.lang.Nullable;
-import io.micrometer.core.annotation.Timed;
-import com.jn.agileway.metrics.core.Tag;
-import com.jn.agileway.metrics.core.Tags;
+import com.jn.langx.annotation.Nullable;
 
 import java.time.Duration;
 import java.util.Arrays;
