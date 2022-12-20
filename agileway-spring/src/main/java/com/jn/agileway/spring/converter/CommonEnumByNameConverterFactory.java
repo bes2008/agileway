@@ -38,13 +38,14 @@ public class CommonEnumByNameConverterFactory<T extends CommonEnum> implements R
     }
 
     @Override
-    public <R extends CommonEnum> Converter<String, R> getConverter(Class<R> targetType) {
+    public <T extends CommonEnum> Converter<String, T> getConverter(Class<T> targetType) {
         if (targetType.isEnum()) {
-            Converter<String, T> converter = get(targetType);
+            Converter converter = get(targetType);
             if (converter == null) {
                 converter = new NameToCommonEnumConverter<>(targetType);
                 register(targetType, converter);
             }
+            return converter;
         }
         return null;
     }
