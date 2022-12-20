@@ -32,8 +32,8 @@ import java.util.function.ToLongFunction;
  * @author Jon Schneider
  */
 public class Metrics {
-    public static Meter.Builder builder(String name, Meter.Type type, Iterable<Measurement> measurements) {
-        return new Metrics.Builder(name, type, measurements);
+    static Meter.Builder builder(String name, Meter.Type type, Iterable<Measurement> measurements) {
+        return new Meter.Builder(name, type, measurements);
     }
 
     public static final CompositeMeterRegistry globalRegistry = new CompositeMeterRegistry();

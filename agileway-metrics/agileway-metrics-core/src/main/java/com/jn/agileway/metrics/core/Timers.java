@@ -13,7 +13,7 @@ public class Timers {
         return new Timer.Sample(clock);
     }
 
-    public static Timer.Builder builder(String name) {
+    static Timer.Builder builder(String name) {
         return new Timer.Builder(name);
     }
 

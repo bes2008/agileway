@@ -20,7 +20,7 @@ import com.jn.agileway.metrics.core.DistributionSummary;
 import com.jn.agileway.metrics.core.MeterRegistry;
 import com.jn.agileway.metrics.core.impl.DistributionStatisticConfig;
 import com.jn.agileway.metrics.core.impl.HistogramSnapshot;
-import com.jn.agileway.metrics.core.noop.NoopDistributionSummary;
+import io.micrometer.core.instrument.noop.NoopDistributionSummary;
 
 class CompositeDistributionSummary extends AbstractCompositeMeter<DistributionSummary> implements DistributionSummary {
 

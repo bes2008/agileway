@@ -15,15 +15,13 @@
  */
 package com.jn.agileway.metrics.core.composite;
 
-
-import com.jn.agileway.metrics.core.Clock;
-import com.jn.agileway.metrics.core.MeterRegistry;
-import com.jn.agileway.metrics.core.Timer;
-import com.jn.agileway.metrics.core.Timers;
-import com.jn.agileway.metrics.core.impl.DistributionStatisticConfig;
-import com.jn.agileway.metrics.core.impl.HistogramSnapshot;
-import com.jn.agileway.metrics.core.PauseDetector;
-import com.jn.agileway.metrics.core.noop.NoopTimer;
+import io.micrometer.core.instrument.Clock;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
+import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
+import io.micrometer.core.instrument.distribution.HistogramSnapshot;
+import io.micrometer.core.instrument.distribution.pause.PauseDetector;
+import io.micrometer.core.instrument.noop.NoopTimer;
 
 import java.time.Duration;
 import java.util.concurrent.Callable;
@@ -39,7 +37,7 @@ class CompositeTimer extends AbstractCompositeMeter<Timer> implements Timer {
     private final PauseDetector pauseDetector;
 
     CompositeTimer(Id id, Clock clock, DistributionStatisticConfig distributionStatisticConfig,
-                   PauseDetector pauseDetector) {
+            PauseDetector pauseDetector) {
         super(id);
         this.clock = clock;
         this.distributionStatisticConfig = distributionStatisticConfig;
@@ -65,7 +63,8 @@ class CompositeTimer extends AbstractCompositeMeter<Timer> implements Timer {
         final long s = clock.monotonicTime();
         try {
             return f.get();
-        } finally {
+        }
+        finally {
             final long e = clock.monotonicTime();
             record(e - s, TimeUnit.NANOSECONDS);
         }
@@ -76,7 +75,8 @@ class CompositeTimer extends AbstractCompositeMeter<Timer> implements Timer {
         final long s = clock.monotonicTime();
         try {
             return f.getAsBoolean();
-        } finally {
+        }
+        finally {
             final long e = clock.monotonicTime();
             record(e - s, TimeUnit.NANOSECONDS);
         }
@@ -87,7 +87,8 @@ class CompositeTimer extends AbstractCompositeMeter<Timer> implements Timer {
         final long s = clock.monotonicTime();
         try {
             return f.getAsInt();
-        } finally {
+        }
+        finally {
             final long e = clock.monotonicTime();
             record(e - s, TimeUnit.NANOSECONDS);
         }
@@ -98,7 +99,8 @@ class CompositeTimer extends AbstractCompositeMeter<Timer> implements Timer {
         final long s = clock.monotonicTime();
         try {
             return f.getAsLong();
-        } finally {
+        }
+        finally {
             final long e = clock.monotonicTime();
             record(e - s, TimeUnit.NANOSECONDS);
         }
@@ -109,7 +111,8 @@ class CompositeTimer extends AbstractCompositeMeter<Timer> implements Timer {
         final long s = clock.monotonicTime();
         try {
             return f.getAsDouble();
-        } finally {
+        }
+        finally {
             final long e = clock.monotonicTime();
             record(e - s, TimeUnit.NANOSECONDS);
         }
@@ -120,7 +123,8 @@ class CompositeTimer extends AbstractCompositeMeter<Timer> implements Timer {
         final long s = clock.monotonicTime();
         try {
             return f.call();
-        } finally {
+        }
+        finally {
             final long e = clock.monotonicTime();
             record(e - s, TimeUnit.NANOSECONDS);
         }
@@ -131,7 +135,8 @@ class CompositeTimer extends AbstractCompositeMeter<Timer> implements Timer {
         final long s = clock.monotonicTime();
         try {
             f.run();
-        } finally {
+        }
+        finally {
             final long e = clock.monotonicTime();
             record(e - s, TimeUnit.NANOSECONDS);
         }
@@ -170,7 +175,7 @@ class CompositeTimer extends AbstractCompositeMeter<Timer> implements Timer {
     @SuppressWarnings("ConstantConditions")
     @Override
     Timer registerNewMeter(MeterRegistry registry) {
-        Timer.Builder builder = Timers.builder(getId().getName()).tags(getId().getTagsAsIterable())
+        Timer.Builder builder = Timer.builder(getId().getName()).tags(getId().getTagsAsIterable())
                 .description(getId().getDescription())
                 .maximumExpectedValue(
                         Duration.ofNanos(distributionStatisticConfig.getMaximumExpectedValueAsDouble().longValue()))

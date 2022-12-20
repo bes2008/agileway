@@ -15,11 +15,10 @@
  */
 package com.jn.agileway.metrics.core.composite;
 
-
-import com.jn.agileway.metrics.core.Gauge;
-import com.jn.agileway.metrics.core.MeterRegistry;
-import com.jn.agileway.metrics.core.noop.NoopGauge;
-import com.jn.langx.annotation.Nullable;
+import io.micrometer.common.lang.Nullable;
+import io.micrometer.core.instrument.Gauge;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.noop.NoopGauge;
 
 import java.lang.ref.WeakReference;
 import java.util.function.ToDoubleFunction;

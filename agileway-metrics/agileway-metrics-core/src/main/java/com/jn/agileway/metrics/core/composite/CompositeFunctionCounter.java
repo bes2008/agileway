@@ -18,7 +18,7 @@ package com.jn.agileway.metrics.core.composite;
 
 import com.jn.agileway.metrics.core.FunctionCounter;
 import com.jn.agileway.metrics.core.MeterRegistry;
-import com.jn.agileway.metrics.core.noop.NoopFunctionCounter;
+import io.micrometer.core.instrument.noop.NoopFunctionCounter;
 
 import java.lang.ref.WeakReference;
 import java.util.function.ToDoubleFunction;

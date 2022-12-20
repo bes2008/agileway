@@ -16,7 +16,10 @@
 package com.jn.agileway.metrics.core.composite;
 
 
-import com.jn.agileway.metrics.core.*;
+import com.jn.agileway.metrics.core.Meter;
+import com.jn.agileway.metrics.core.MeterRegistry;
+import io.micrometer.core.instrument.Measurement;
+import io.micrometer.core.instrument.internal.DefaultMeter;
 
 class CompositeCustomMeter extends DefaultMeter implements CompositeMeter {
 
@@ -26,7 +29,7 @@ class CompositeCustomMeter extends DefaultMeter implements CompositeMeter {
 
     @Override
     public void add(MeterRegistry registry) {
-        Metrics.builder(getId().getName(), getType(), measure()).tags(getId().getTagsAsIterable())
+        Meter.builder(getId().getName(), getType(), measure()).tags(getId().getTagsAsIterable())
                 .description(getId().getDescription()).baseUnit(getId().getBaseUnit()).register(registry);
     }
 

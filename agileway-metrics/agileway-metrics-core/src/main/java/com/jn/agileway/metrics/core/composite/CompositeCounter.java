@@ -18,7 +18,7 @@ package com.jn.agileway.metrics.core.composite;
 
 import com.jn.agileway.metrics.core.Counter;
 import com.jn.agileway.metrics.core.MeterRegistry;
-import com.jn.agileway.metrics.core.noop.NoopCounter;
+import io.micrometer.core.instrument.noop.NoopCounter;
 
 class CompositeCounter extends AbstractCompositeMeter<Counter> implements Counter {
 
