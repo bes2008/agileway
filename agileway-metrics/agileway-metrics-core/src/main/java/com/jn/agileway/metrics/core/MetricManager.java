@@ -22,11 +22,11 @@ import java.lang.reflect.Method;
  * The design concept is heavily borrowed from SLF4j (http://www.slf4j.org/), the logging framework.
  * The application only depends on the metrics api.
  * The implementation will be dynamically bound.
- * If the implementation if not found in classpath, by default the {@link NOPMetricManager} will be bound.
+ * If the implementation if not found in classpath, by default the {@link NoopMetricManager} will be bound.
  */
 public class MetricManager {
 
-    public static final IMetricManager NOP_METRIC_MANAGER = new NOPMetricManager();
+    public static final IMetricManager NOP_METRIC_MANAGER = new NoopMetricManager();
     private static final String BINDER_CLASS = "com.jn.agileway.metrics.core.MetricManagerBinder";
     private static volatile IMetricManager iMetricManager;
 

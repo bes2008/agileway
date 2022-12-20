@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * IMetricManager的空实现
  */
-public class NOPMetricManager implements IMetricManager {
+public class NoopMetricManager implements IMetricManager {
 
     static final Counter NOP_COUNTER = new Counter() {
         @Override
