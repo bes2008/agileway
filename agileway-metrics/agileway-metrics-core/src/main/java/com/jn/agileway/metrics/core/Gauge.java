@@ -16,7 +16,8 @@
 package com.jn.agileway.metrics.core;
 
 import com.jn.agileway.metrics.core.impl.HistogramGauges;
-import com.jn.langx.annotation.Nullable;
+import io.micrometer.common.lang.Nullable;
+import io.micrometer.core.annotation.Incubating;
 
 import java.util.Collections;
 import java.util.function.Supplier;
@@ -52,6 +53,7 @@ public interface Gauge extends Meter {
      * @return A new gauge builder.
      * @since 1.1.0
      */
+    @Incubating(since = "1.1.0")
     static Builder<Supplier<Number>> builder(String name, Supplier<Number> f) {
         return new Builder<>(name, f, f2 -> {
             Number val = f2.get();
@@ -164,6 +166,7 @@ public interface Gauge extends Meter {
          *                             synthetic derivative.
          * @return The gauge builder with an added synthetic association.
          */
+        @Incubating(since = "1.1.0")
         public Builder<T> synthetic(Id syntheticAssociation) {
             this.syntheticAssociation = syntheticAssociation;
             return this;
@@ -178,6 +181,7 @@ public interface Gauge extends Meter {
          * @return The gauge builder with altered strong reference semantics.
          * @since 1.1.0
          */
+        @Incubating(since = "1.1.0")
         public Builder<T> strongReference(boolean strong) {
             this.strongReference = strong;
             return this;

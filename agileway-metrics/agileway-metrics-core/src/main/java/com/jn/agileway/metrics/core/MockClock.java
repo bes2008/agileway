@@ -15,6 +15,7 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.agileway.metrics.core.Clock;
 import com.jn.agileway.metrics.core.utils.TimeUtils;
 
 import java.time.Duration;
