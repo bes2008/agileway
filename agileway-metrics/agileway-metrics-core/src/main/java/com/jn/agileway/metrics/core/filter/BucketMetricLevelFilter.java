@@ -18,7 +18,7 @@ package com.jn.agileway.metrics.core.filter;
 
 
 import com.jn.agileway.metrics.core.MetricLevel;
-import com.jn.agileway.metrics.core.common.config.MetricsCollectPeriodConfig;
+import com.jn.agileway.metrics.core.collector.MetricsCollectPeriodConfig;
 
 /**
  * 计算某一个level是否允许report 每到达一个整的时间间隔，就允许report

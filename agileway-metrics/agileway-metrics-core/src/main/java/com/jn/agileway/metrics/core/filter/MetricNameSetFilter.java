@@ -17,10 +17,9 @@
 package com.jn.agileway.metrics.core.filter;
 
 import com.jn.agileway.metrics.core.collector.MetricsCollector;
-import com.jn.agileway.metrics.core.filter.MetricFilter;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.common.MetricObject;
+import com.jn.agileway.metrics.core.collector.MetricObject;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 

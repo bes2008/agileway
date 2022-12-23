@@ -17,7 +17,6 @@
 package com.jn.agileway.metrics.core.collector;
 
 import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.common.MetricObject;
 import com.jn.agileway.metrics.core.filter.MetricFilter;
 import com.jn.agileway.metrics.core.MetricLevel;
 import com.jn.agileway.metrics.core.meter.*;

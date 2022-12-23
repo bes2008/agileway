@@ -17,7 +17,7 @@
 package com.jn.agileway.metrics.core.metricset;
 
 import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.common.config.MetricsCollectPeriodConfig;
+import com.jn.agileway.metrics.core.collector.MetricsCollectPeriodConfig;
 import com.jn.agileway.metrics.core.filter.MetricFilter;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.*;

@@ -17,8 +17,6 @@
 package com.jn.agileway.metrics.core.collector;
 
 import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.common.MetricObject;
-import com.jn.agileway.metrics.core.common.config.MetricsCollectPeriodConfig;
 import com.jn.agileway.metrics.core.filter.MetricFilter;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
@@ -29,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.jn.agileway.metrics.core.common.Constants.NOT_AVAILABLE;
+import static com.jn.agileway.metrics.core.Constants.NOT_AVAILABLE;
 
 public abstract class MetricsCollector implements Collector {
 
