@@ -16,6 +16,7 @@
  */
 package com.jn.agileway.metrics.core.meter;
 
+import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.Sampling;
 
 /**

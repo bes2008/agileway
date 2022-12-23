@@ -16,6 +16,8 @@
  */
 package com.jn.agileway.metrics.core.meter;
 
+import com.jn.agileway.metrics.core.Metric;
+
 /**
  * <pre>
  * An incrementing and decrementing counter metric.
