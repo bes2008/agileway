@@ -28,7 +28,7 @@ import com.jn.agileway.metrics.core.meter.impl.*;
 import com.jn.agileway.metrics.core.noop.*;
 import com.jn.agileway.metrics.core.snapshot.ReservoirType;
 import com.jn.agileway.metrics.core.snapshot.ReservoirTypeBuilder;
-import com.jn.langx.util.reflect.Reflects;
+import com.jn.agileway.metrics.core.snapshot.ReservoirTypeMetricBuilder;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,103 +51,17 @@ public class DefaultMetricRegistry implements MetricRegistry {
     /**
      * A quick and easy way of capturing the notion of default metrics.
      */
-    private MetricBuilder<Counter> COUNTER_BUILDER = new MetricBuilder<Counter>() {
-        @Override
-        public Counter newMetric(MetricName name) {
-            return new BucketCounterImpl(config.period(name.getMetricLevel()));
-        }
+    private CounterBuilder COUNTER_BUILDER = new CounterBuilder();
 
-        @Override
-        public boolean isInstance(Metric metric) {
-            return Reflects.isInstance(Counter.class, metric.getClass());
-        }
-    };
-    private ReservoirTypeBuilder<Histogram> HISTOGRAM_BUILDER = new ReservoirTypeBuilder<Histogram>() {
-        @Override
-        public Histogram newMetric(MetricName name, ReservoirType type) {
-            return new HistogramImpl(config.period(name.getMetricLevel()), type);
-        }
+    private HistogramBuilder HISTOGRAM_BUILDER = new HistogramBuilder();
 
-        @Override
-        public Histogram newMetric(MetricName name) {
-            return new HistogramImpl(config.period(name.getMetricLevel()));
-        }
+    private MeterBuilder METER_BUILDER = new MeterBuilder();
+    private TimerBuilder TIMER_BUILDER = new TimerBuilder();
+    private CompassBuilder COMPASS_BUILDER = new CompassBuilder();
 
-        @Override
-        public boolean isInstance(Metric metric) {
-            return Reflects.isInstance(Histogram.class, metric.getClass());
-        }
-    };
-    private MetricBuilder<Meter> METER_BUILDER = new MetricBuilder<Meter>() {
-        @Override
-        public Meter newMetric(MetricName name) {
-            return new MeterImpl(config.period(name.getMetricLevel()));
-        }
+    private FastCompassBuilder FAST_COMPASS_BUILDER = new FastCompassBuilder();
 
-        @Override
-        public boolean isInstance(Metric metric) {
-            return Reflects.isInstance(Meter.class, metric.getClass());
-        }
-    };
-    private ReservoirTypeBuilder<Timer> TIMER_BUILDER = new ReservoirTypeBuilder<Timer>() {
-        @Override
-        public Timer newMetric(MetricName name) {
-            return new TimerImpl(config.period(name.getMetricLevel()));
-        }
-
-        @Override
-        public Timer newMetric(MetricName name, ReservoirType type) {
-            return new TimerImpl(config.period(name.getMetricLevel()), type);
-        }
-
-        @Override
-        public boolean isInstance(Metric metric) {
-            return Reflects.isInstance(Timer.class, metric.getClass());
-        }
-    };
-    private ReservoirTypeBuilder<Compass> COMPASS_BUILDER = new ReservoirTypeBuilder<Compass>() {
-        @Override
-        public Compass newMetric(MetricName name) {
-            return new CompassImpl(config.period(name.getMetricLevel()));
-        }
-
-        @Override
-        public Compass newMetric(MetricName name, ReservoirType type) {
-            return new CompassImpl(config.period(name.getMetricLevel()), type);
-        }
-
-        @Override
-        public boolean isInstance(Metric metric) {
-            return Reflects.isInstance(Compass.class, metric.getClass());
-        }
-    };
-    private MetricBuilder<FastCompass> FAST_COMPASS_BUILDER = new MetricBuilder<FastCompass>() {
-        @Override
-        public FastCompass newMetric(MetricName name) {
-            return new FastCompassImpl(config.period(name.getMetricLevel()));
-        }
-
-        @Override
-        public boolean isInstance(Metric metric) {
-            return Reflects.isInstance(FastCompass.class, metric.getClass());
-        }
-    };
-    private ClusterHistogramBuilder<ClusterHistogram> CLUSTER_HISTOGRAM_BUILDER = new ClusterHistogramBuilder<ClusterHistogram>() {
-        @Override
-        public ClusterHistogram newMetric(MetricName name, long[] buckets) {
-            return new ClusterHistogramImpl(buckets, config.period(name.getMetricLevel()), null);
-        }
-
-        @Override
-        public ClusterHistogram newMetric(MetricName name) {
-            return new ClusterHistogramImpl(config.period(name.getMetricLevel()), null);
-        }
-
-        @Override
-        public boolean isInstance(Metric metric) {
-            return Reflects.isInstance(ClusterHistogram.class, metric.getClass());
-        }
-    };
+    private ClusterHistogramBuilder CLUSTER_HISTOGRAM_BUILDER = new ClusterHistogramBuilder();
 
     /**
      * Creates a new {@link MetricRegistry}.
@@ -618,6 +532,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
                 if (metrics.size() >= maxMetricCount) {
                     return null;
                 }
+                builder = builder.newBuilder().interval(config.period(name.getMetricLevel()));
                 T newMetric = builder.newMetric(name);
                 if (newMetric == null) return null;
                 return register(name, newMetric);
@@ -644,7 +559,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
                 if (metrics.size() >= maxMetricCount) {
                     return null;
                 }
-                T newMetric = builder.newMetric(name, type);
+                T newMetric = ((ReservoirTypeMetricBuilder<T>)builder.newBuilder().interval(config.period(name.getMetricLevel()))).newMetric(name, type);
                 if (newMetric == null) return null;
                 return register(name, newMetric);
             } catch (IllegalArgumentException e) {
@@ -660,7 +575,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Metric> T getOrAddClusterHistogram(MetricName name, ClusterHistogramBuilder<T> builder, long[] buckets) {
+    private <T extends Metric> T getOrAddClusterHistogram(MetricName name, ClusterHistogramBuilder builder, long[] buckets) {
         final Metric metric = metrics.get(name);
         if (builder.isInstance(metric)) {
             return (T) metric;
@@ -670,9 +585,9 @@ public class DefaultMetricRegistry implements MetricRegistry {
                 if (metrics.size() >= maxMetricCount) {
                     return null;
                 }
-                T newMetric = builder.newMetric(name, buckets);
+                ClusterHistogram newMetric = ((ClusterHistogramBuilder)builder.newBuilder().interval(config.period(name.getMetricLevel()))).newMetric(name, buckets);
                 if (newMetric == null) return null;
-                return register(name, newMetric);
+                return register(name, (T)newMetric);
             } catch (IllegalArgumentException e) {
                 final Metric added = metrics.get(name);
                 if (builder.isInstance(added)) {

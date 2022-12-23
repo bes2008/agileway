@@ -34,4 +34,8 @@ public interface MetricBuilder<T extends Metric> {
      * @return true if the current builder can build this metric
      */
     boolean isInstance(Metric metric);
+
+    MetricBuilder<T> interval(int interval);
+
+    MetricBuilder<T> newBuilder();
 }
