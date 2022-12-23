@@ -80,14 +80,6 @@ public interface Compass extends Metered, Sampling {
      */
     Map<String, BucketCounter> getErrorCodeCounts();
 
-    /**
-     * Get the success rate of the invocation
-     * 获取调用成功率, 这个成功率没有意义, 后续将不再提供
-     *
-     * @return the success rate
-     */
-    @Deprecated
-    double getSuccessRate();
 
     /**
      * Get the success count of the invocation

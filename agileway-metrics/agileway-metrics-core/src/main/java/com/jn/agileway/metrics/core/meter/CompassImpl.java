@@ -288,10 +288,6 @@ public class CompassImpl implements Compass {
         return errorCodeMap;
     }
 
-    @Override
-    public double getSuccessRate() {
-        return Double.NaN;
-    }
 
     @Override
     public long getSuccessCount() {
