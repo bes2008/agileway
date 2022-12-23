@@ -12,4 +12,15 @@ public class Metrics {
     public static MetricRegistry global() {
         return INSTANCE;
     }
+
+
+    /**
+     * Matches all metrics, regardless of type or name.
+     */
+   public static final MetricFilter ALL = new MetricFilter() {
+        @Override
+        public boolean matches(MetricName name, Metric metric) {
+            return true;
+        }
+    };
 }

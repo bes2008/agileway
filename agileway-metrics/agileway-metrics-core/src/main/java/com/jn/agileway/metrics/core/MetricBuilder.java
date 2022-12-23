@@ -16,7 +16,6 @@
  */
 package com.jn.agileway.metrics.core;
 
-import com.jn.agileway.metrics.core.meter.Metric;
 
 public interface MetricBuilder<T extends Metric> {
 

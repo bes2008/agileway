@@ -16,7 +16,8 @@
  */
 package com.jn.agileway.metrics.core.meter.impl;
 
-import com.jn.agileway.metrics.core.meter.Metric;
+
+import com.jn.agileway.metrics.core.Metric;
 
 import java.util.Arrays;
 import java.util.Map;
