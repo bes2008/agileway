@@ -16,12 +16,12 @@
  */
 package com.jn.agileway.metrics.core.meter.impl;
 
-import com.jn.agileway.metrics.core.ExponentiallyDecayingReservoir;
+import com.jn.agileway.metrics.core.snapshot.ExponentiallyDecayingReservoir;
 import com.jn.agileway.metrics.core.meter.Histogram;
 import com.jn.agileway.metrics.core.meter.Meter;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.snapshot.Reservoir;
-import com.jn.agileway.metrics.core.ReservoirType;
+import com.jn.agileway.metrics.core.snapshot.ReservoirType;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
 import com.jn.langx.util.timing.clock.Clock;
 import com.jn.langx.util.timing.clock.Clocks;

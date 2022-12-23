@@ -7,6 +7,7 @@ import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 import com.jn.agileway.metrics.core.metricset.MetricRegistry;
+import com.jn.agileway.metrics.core.snapshot.ReservoirType;
 import com.jn.langx.util.Emptys;
 
 import java.util.*;

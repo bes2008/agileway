@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jn.agileway.metrics.core;
+package com.jn.agileway.metrics.core.metricset;
 
-import com.jn.agileway.metrics.core.metricset.MetricRegistry;
 import com.jn.agileway.metrics.core.metricset.DefaultMetricRegistry;
+import com.jn.agileway.metrics.core.metricset.MetricRegistry;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,8 +27,7 @@ import java.util.concurrent.ConcurrentMap;
  * A map of shared, named metric registries.
  */
 public class SharedMetricRegistries {
-    private static final ConcurrentMap<String, MetricRegistry> REGISTRIES =
-            new ConcurrentHashMap<String, MetricRegistry>();
+    private static final ConcurrentMap<String, MetricRegistry> REGISTRIES = new ConcurrentHashMap<String, MetricRegistry>();
 
     private SharedMetricRegistries() { /* singleton */ }
 

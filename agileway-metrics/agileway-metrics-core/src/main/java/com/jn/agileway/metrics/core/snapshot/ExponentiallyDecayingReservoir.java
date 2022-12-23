@@ -14,11 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jn.agileway.metrics.core;
+package com.jn.agileway.metrics.core.snapshot;
 
-import com.jn.agileway.metrics.core.snapshot.Reservoir;
-import com.jn.agileway.metrics.core.snapshot.Snapshot;
-import com.jn.agileway.metrics.core.snapshot.WeightedSnapshot;
 import com.jn.agileway.metrics.core.snapshot.WeightedSnapshot.WeightedSample;
 import com.jn.langx.util.random.ThreadLocalRandom;
 import com.jn.langx.util.timing.clock.Clock;

@@ -23,6 +23,8 @@ import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.*;
 import com.jn.agileway.metrics.core.noop.*;
+import com.jn.agileway.metrics.core.snapshot.ReservoirType;
+import com.jn.agileway.metrics.core.snapshot.ReservoirTypeBuilder;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

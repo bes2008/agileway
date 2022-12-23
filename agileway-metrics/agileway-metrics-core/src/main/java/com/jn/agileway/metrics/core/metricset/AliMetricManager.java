@@ -21,6 +21,7 @@ import com.jn.agileway.metrics.core.filter.MetricFilter;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
+import com.jn.agileway.metrics.core.snapshot.ReservoirType;
 
 import java.util.*;
 import java.util.Map.Entry;

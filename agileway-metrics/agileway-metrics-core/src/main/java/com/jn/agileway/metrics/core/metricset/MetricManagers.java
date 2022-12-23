@@ -20,6 +20,7 @@ import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 import com.jn.agileway.metrics.core.noop.NoopMetricManager;
+import com.jn.agileway.metrics.core.snapshot.ReservoirType;
 
 import java.lang.reflect.Method;
 
