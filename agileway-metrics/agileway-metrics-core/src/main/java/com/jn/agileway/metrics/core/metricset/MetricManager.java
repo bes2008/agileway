@@ -17,9 +17,9 @@
 package com.jn.agileway.metrics.core.metricset;
 
 import com.jn.agileway.metrics.core.*;
+import com.jn.agileway.metrics.core.filter.MetricFilter;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
-import com.jn.agileway.metrics.core.metricset.MetricRegistry;
 
 import java.util.List;
 import java.util.Map;

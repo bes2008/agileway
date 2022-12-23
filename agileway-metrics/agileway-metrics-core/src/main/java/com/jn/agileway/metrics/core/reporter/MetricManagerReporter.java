@@ -18,8 +18,9 @@ package com.jn.agileway.metrics.core.reporter;
 
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.common.config.MetricsCollectPeriodConfig;
-import com.jn.agileway.metrics.core.common.filter.CompositeMetricFilter;
-import com.jn.agileway.metrics.core.common.filter.TimeMetricLevelFilter;
+import com.jn.agileway.metrics.core.filter.CompositeMetricFilter;
+import com.jn.agileway.metrics.core.filter.TimeMetricLevelFilter;
+import com.jn.agileway.metrics.core.filter.MetricFilter;
 import com.jn.agileway.metrics.core.metricset.MetricManager;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;

@@ -1,5 +1,6 @@
 package com.jn.agileway.metrics.core;
 
+import com.jn.agileway.metrics.core.filter.MetricFilter;
 import com.jn.agileway.metrics.core.metricset.MetricRegistry;
 import com.jn.agileway.metrics.core.metricset.DefaultMetricRegistry;
 

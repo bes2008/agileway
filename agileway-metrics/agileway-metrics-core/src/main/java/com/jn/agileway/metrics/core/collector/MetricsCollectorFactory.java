@@ -16,7 +16,7 @@
  */
 package com.jn.agileway.metrics.core.collector;
 
-import com.jn.agileway.metrics.core.MetricFilter;
+import com.jn.agileway.metrics.core.filter.MetricFilter;
 
 import java.util.HashMap;
 import java.util.Map;
