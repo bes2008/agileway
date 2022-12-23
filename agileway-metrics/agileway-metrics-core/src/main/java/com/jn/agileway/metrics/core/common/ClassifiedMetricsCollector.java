@@ -18,6 +18,7 @@ package com.jn.agileway.metrics.core.common;
 
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.meter.*;
+import com.jn.agileway.metrics.core.snapshot.Snapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;

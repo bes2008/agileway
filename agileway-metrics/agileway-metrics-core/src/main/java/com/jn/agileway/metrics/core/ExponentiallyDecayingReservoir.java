@@ -16,7 +16,10 @@
  */
 package com.jn.agileway.metrics.core;
 
-import com.jn.agileway.metrics.core.WeightedSnapshot.WeightedSample;
+import com.jn.agileway.metrics.core.snapshot.Reservoir;
+import com.jn.agileway.metrics.core.snapshot.Snapshot;
+import com.jn.agileway.metrics.core.snapshot.WeightedSnapshot;
+import com.jn.agileway.metrics.core.snapshot.WeightedSnapshot.WeightedSample;
 import com.jn.langx.util.random.ThreadLocalRandom;
 import com.jn.langx.util.timing.clock.Clock;
 import com.jn.langx.util.timing.clock.Clocks;

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jn.agileway.metrics.core;
+package com.jn.agileway.metrics.core.snapshot;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -22,54 +22,39 @@ import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Comparator;
+
+import static java.lang.Math.floor;
 
 /**
- * A statistical snapshot of a {@link WeightedSnapshot}.
+ * A statistical snapshot of a {@link UniformSnapshot}.
  */
-public class WeightedSnapshot extends AbstractSnapshot {
-
+public class UniformSnapshot extends AbstractSnapshot {
     private static final Charset UTF_8 = Charset.forName("UTF-8");
+
     private final long[] values;
-    private final double[] normWeights;
-    private final double[] quantiles;
+
     /**
      * Create a new {@link Snapshot} with the given values.
      *
      * @param values an unordered set of values in the reservoir
      */
-    public WeightedSnapshot(Collection<WeightedSample> values) {
-        final WeightedSample[] copy = values.toArray(new WeightedSample[]{});
-
-        Arrays.sort(copy, new Comparator<WeightedSample>() {
-                    @Override
-                    public int compare(WeightedSample o1, WeightedSample o2) {
-                        if (o1.value > o2.value)
-                            return 1;
-                        if (o1.value < o2.value)
-                            return -1;
-                        return 0;
-                    }
-                }
-        );
-
+    public UniformSnapshot(Collection<Long> values) {
+        final Object[] copy = values.toArray();
         this.values = new long[copy.length];
-        this.normWeights = new double[copy.length];
-        this.quantiles = new double[copy.length];
-
-        double sumWeight = 0;
-        for (WeightedSample sample : copy) {
-            sumWeight += sample.weight;
-        }
-
         for (int i = 0; i < copy.length; i++) {
-            this.values[i] = copy[i].value;
-            this.normWeights[i] = copy[i].weight / sumWeight;
+            this.values[i] = (Long) copy[i];
         }
+        Arrays.sort(this.values);
+    }
 
-        for (int i = 1; i < copy.length; i++) {
-            this.quantiles[i] = this.quantiles[i - 1] + this.normWeights[i - 1];
-        }
+    /**
+     * Create a new {@link Snapshot} with the given values.
+     *
+     * @param values an unordered set of values in the reservoir
+     */
+    public UniformSnapshot(long[] values) {
+        this.values = Arrays.copyOf(values, values.length);
+        Arrays.sort(this.values);
     }
 
     /**
@@ -88,19 +73,20 @@ public class WeightedSnapshot extends AbstractSnapshot {
             return 0.0;
         }
 
-        int posx = Arrays.binarySearch(quantiles, quantile);
-        if (posx < 0)
-            posx = ((-posx) - 1) - 1;
+        final double pos = quantile * (values.length + 1);
+        final int index = (int) pos;
 
-        if (posx < 1) {
+        if (index < 1) {
             return values[0];
         }
 
-        if (posx >= values.length) {
+        if (index >= values.length) {
             return values[values.length - 1];
         }
 
-        return values[(int) posx];
+        final double lower = values[index - 1];
+        final double upper = values[index];
+        return lower + (pos - floor(pos)) * (upper - lower);
     }
 
     /**
@@ -150,9 +136,9 @@ public class WeightedSnapshot extends AbstractSnapshot {
     }
 
     /**
-     * Returns the weighted arithmetic mean of the values in the snapshot.
+     * Returns the arithmetic mean of the values in the snapshot.
      *
-     * @return the weighted arithmetic mean
+     * @return the arithmetic mean
      */
     @Override
     public double getMean() {
@@ -161,16 +147,16 @@ public class WeightedSnapshot extends AbstractSnapshot {
         }
 
         double sum = 0;
-        for (int i = 0; i < values.length; i++) {
-            sum += values[i] * normWeights[i];
+        for (long value : values) {
+            sum += value;
         }
-        return sum;
+        return sum / values.length;
     }
 
     /**
-     * Returns the weighted standard deviation of the values in the snapshot.
+     * Returns the standard deviation of the values in the snapshot.
      *
-     * @return the weighted standard deviation value
+     * @return the standard deviation value
      */
     @Override
     public double getStdDev() {
@@ -181,13 +167,14 @@ public class WeightedSnapshot extends AbstractSnapshot {
         }
 
         final double mean = getMean();
-        double variance = 0;
+        double sum = 0;
 
-        for (int i = 0; i < values.length; i++) {
-            final double diff = values[i] - mean;
-            variance += normWeights[i] * diff * diff;
+        for (long value : values) {
+            final double diff = value - mean;
+            sum += diff * diff;
         }
 
+        final double variance = sum / (values.length - 1);
         return Math.sqrt(variance);
     }
 
@@ -205,19 +192,6 @@ public class WeightedSnapshot extends AbstractSnapshot {
             }
         } finally {
             out.close();
-        }
-    }
-
-    /**
-     * A single sample item with value and its weights for {@link WeightedSnapshot}.
-     */
-    public static class WeightedSample {
-        public long value;
-        public double weight;
-
-        public WeightedSample(long value, double weight) {
-            this.value = value;
-            this.weight = weight;
         }
     }
 }

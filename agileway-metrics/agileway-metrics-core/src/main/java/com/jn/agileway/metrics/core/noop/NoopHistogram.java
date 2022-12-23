@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.core.noop;
 
-import com.jn.agileway.metrics.core.Snapshot;
+import com.jn.agileway.metrics.core.snapshot.Snapshot;
 import com.jn.agileway.metrics.core.meter.Histogram;
 
 public class NoopHistogram implements Histogram {

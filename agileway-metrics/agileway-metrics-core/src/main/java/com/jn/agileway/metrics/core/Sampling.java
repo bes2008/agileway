@@ -16,6 +16,8 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.agileway.metrics.core.snapshot.Snapshot;
+
 /**
  * An object which samples values.
  */
