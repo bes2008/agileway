@@ -19,7 +19,7 @@ package com.jn.agileway.metrics.core.filter;
 import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.MetricLevel;
 import com.jn.agileway.metrics.core.MetricName;
-import com.jn.agileway.metrics.core.collector.MetricsCollectPeriodConfig;
+import com.jn.agileway.metrics.core.config.MetricsCollectPeriodConfig;
 
 /**
  * 不同Level的Metric有配置不同的report时间间隔。这个Filter用于在report时，

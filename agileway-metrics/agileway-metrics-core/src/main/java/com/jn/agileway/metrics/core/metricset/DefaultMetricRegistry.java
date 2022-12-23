@@ -16,8 +16,11 @@
  */
 package com.jn.agileway.metrics.core.metricset;
 
-import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.collector.MetricsCollectPeriodConfig;
+import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.MetricBuilder;
+import com.jn.agileway.metrics.core.MetricName;
+import com.jn.agileway.metrics.core.Metrics;
+import com.jn.agileway.metrics.core.config.MetricsCollectPeriodConfig;
 import com.jn.agileway.metrics.core.filter.MetricFilter;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.*;
@@ -50,10 +53,6 @@ public class DefaultMetricRegistry implements MetricRegistry {
     private MetricBuilder<Counter> COUNTER_BUILDER = new MetricBuilder<Counter>() {
         @Override
         public Counter newMetric(MetricName name) {
-            // 当已注册的metric数量太多时，返回一个空实现
-            if (metrics.size() >= maxMetricCount) {
-                return null;
-            }
             return new BucketCounterImpl(config.period(name.getMetricLevel()));
         }
 
@@ -65,19 +64,11 @@ public class DefaultMetricRegistry implements MetricRegistry {
     private ReservoirTypeBuilder<Histogram> HISTOGRAM_BUILDER = new ReservoirTypeBuilder<Histogram>() {
         @Override
         public Histogram newMetric(MetricName name, ReservoirType type) {
-            // 当已注册的metric数量太多时，返回一个空实现
-            if (metrics.size() >= maxMetricCount) {
-                return null;
-            }
             return new HistogramImpl(config.period(name.getMetricLevel()), type);
         }
 
         @Override
         public Histogram newMetric(MetricName name) {
-            // 当已注册的metric数量太多时，返回一个空实现
-            if (metrics.size() >= maxMetricCount) {
-                return null;
-            }
             return new HistogramImpl(config.period(name.getMetricLevel()));
         }
 
@@ -89,10 +80,6 @@ public class DefaultMetricRegistry implements MetricRegistry {
     private MetricBuilder<Meter> METER_BUILDER = new MetricBuilder<Meter>() {
         @Override
         public Meter newMetric(MetricName name) {
-            // 当已注册的metric数量太多时，返回一个空实现
-            if (metrics.size() >= maxMetricCount) {
-                return null;
-            }
             return new MeterImpl(config.period(name.getMetricLevel()));
         }
 
@@ -104,19 +91,11 @@ public class DefaultMetricRegistry implements MetricRegistry {
     private ReservoirTypeBuilder<Timer> TIMER_BUILDER = new ReservoirTypeBuilder<Timer>() {
         @Override
         public Timer newMetric(MetricName name) {
-            // 当已注册的metric数量太多时，返回一个空实现
-            if (metrics.size() >= maxMetricCount) {
-                return null;
-            }
             return new TimerImpl(config.period(name.getMetricLevel()));
         }
 
         @Override
         public Timer newMetric(MetricName name, ReservoirType type) {
-            // 当已注册的metric数量太多时，返回一个空实现
-            if (metrics.size() >= maxMetricCount) {
-                return null;
-            }
             return new TimerImpl(config.period(name.getMetricLevel()), type);
         }
 
@@ -128,19 +107,11 @@ public class DefaultMetricRegistry implements MetricRegistry {
     private ReservoirTypeBuilder<Compass> COMPASS_BUILDER = new ReservoirTypeBuilder<Compass>() {
         @Override
         public Compass newMetric(MetricName name) {
-            // 当已注册的metric数量太多时，返回一个空实现
-            if (metrics.size() >= maxMetricCount) {
-                return null;
-            }
             return new CompassImpl(config.period(name.getMetricLevel()));
         }
 
         @Override
         public Compass newMetric(MetricName name, ReservoirType type) {
-            // 当已注册的metric数量太多时，返回一个空实现
-            if (metrics.size() >= maxMetricCount) {
-                return null;
-            }
             return new CompassImpl(config.period(name.getMetricLevel()), type);
         }
 
@@ -176,10 +147,6 @@ public class DefaultMetricRegistry implements MetricRegistry {
 
         @Override
         public ClusterHistogram newMetric(MetricName name) {
-            // 当已注册的metric数量太多时，返回一个空实现
-            if (metrics.size() >= maxMetricCount) {
-                return null;
-            }
             return new ClusterHistogramImpl(config.period(name.getMetricLevel()), null);
         }
 
@@ -656,6 +623,10 @@ public class DefaultMetricRegistry implements MetricRegistry {
             return (T) metric;
         } else if (metric == null) {
             try {
+                // 当已注册的metric数量太多时，返回一个空实现
+                if (metrics.size() >= maxMetricCount) {
+                    return null;
+                }
                 T newMetric = builder.newMetric(name);
                 if (newMetric == null) return null;
                 return register(name, newMetric);
@@ -678,6 +649,10 @@ public class DefaultMetricRegistry implements MetricRegistry {
             return (T) metric;
         } else if (metric == null) {
             try {
+                // 当已注册的metric数量太多时，返回一个空实现
+                if (metrics.size() >= maxMetricCount) {
+                    return null;
+                }
                 T newMetric = builder.newMetric(name, type);
                 if (newMetric == null) return null;
                 return register(name, newMetric);

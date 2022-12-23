@@ -17,6 +17,7 @@
 package com.jn.agileway.metrics.core.collector;
 
 import com.jn.agileway.metrics.core.*;
+import com.jn.agileway.metrics.core.config.MetricsCollectPeriodConfig;
 import com.jn.agileway.metrics.core.filter.MetricFilter;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;

@@ -16,7 +16,6 @@
  */
 package com.jn.agileway.metrics.core.snapshot;
 
-import com.jn.agileway.metrics.core.snapshot.Snapshot;
 
 /**
  * A statistically representative reservoir of a data stream.
