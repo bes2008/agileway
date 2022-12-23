@@ -66,7 +66,6 @@ public abstract class CachedMetricSet implements MetricSet {
         }
     }
 
-    @Override
     public long lastUpdateTime() {
         return lastCollectTime.get();
     }

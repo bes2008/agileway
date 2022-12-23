@@ -195,7 +195,7 @@ public class JmxReporter implements Closeable {
         private TimeUnit rateUnit;
         private TimeUnit durationUnit;
         private ObjectNameFactory objectNameFactory;
-        private MetricFilter filter = MetricFilter.ALL;
+        private MetricFilter filter = Metrics.ALL;
         private String domain;
         private Map<String, TimeUnit> specificDurationUnits;
         private Map<String, TimeUnit> specificRateUnits;
@@ -421,11 +421,11 @@ public class JmxReporter implements Closeable {
     }
 
     private static class JmxMeter extends AbstractBean implements JmxMeterMBean {
-        private final Metered metric;
+        private final Timed metric;
         private final double rateFactor;
         private final String rateUnit;
 
-        private JmxMeter(Metered metric, ObjectName objectName, TimeUnit rateUnit) {
+        private JmxMeter(Timed metric, ObjectName objectName, TimeUnit rateUnit) {
             super(objectName);
             this.metric = metric;
             this.rateFactor = rateUnit.toSeconds(1);

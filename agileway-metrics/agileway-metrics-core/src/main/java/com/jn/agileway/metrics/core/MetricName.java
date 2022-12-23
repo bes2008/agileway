@@ -1,5 +1,7 @@
 package com.jn.agileway.metrics.core;
 
+import com.jn.langx.util.Objs;
+
 import java.util.*;
 
 /**
@@ -152,9 +154,6 @@ public class MetricName implements Comparable<MetricName> {
         return this;
     }
 
-    /**
-     * @see {@link #resolve(String, boolean)}
-     */
     public MetricName resolve(String p) {
         return resolve(p, true);
     }
@@ -237,13 +236,7 @@ public class MetricName implements Comparable<MetricName> {
     public int hashCode() {
 
         if (!hashCodeCached) {
-
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + ((key == null) ? 0 : key.hashCode());
-            result = prime * result + ((tags == null) ? 0 : tags.hashCode());
-
-            hashCode = result;
+            hashCode = Objs.hash(key, tags);;
             hashCodeCached = true;
         }
 

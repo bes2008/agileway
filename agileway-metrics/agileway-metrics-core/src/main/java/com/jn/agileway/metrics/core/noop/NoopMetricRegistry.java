@@ -1,9 +1,6 @@
 package com.jn.agileway.metrics.core.noop;
 
-import com.jn.agileway.metrics.core.MetricFilter;
-import com.jn.agileway.metrics.core.MetricName;
-import com.jn.agileway.metrics.core.MetricRegistryListener;
-import com.jn.agileway.metrics.core.ReservoirType;
+import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 import com.jn.agileway.metrics.core.metricset.MetricRegistry;
@@ -14,7 +11,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.SortedSet;
 
-public class NoopMetricRegistry extends MetricRegistry {
+public class NoopMetricRegistry implements MetricRegistry {
     public static final NoopMetricRegistry NOOP_METRIC_REGISTRY = new NoopMetricRegistry();
 
     @Override
@@ -230,11 +227,6 @@ public class NoopMetricRegistry extends MetricRegistry {
     @SuppressWarnings("unchecked")
     public Map<MetricName, Metric> getMetrics() {
         return Emptys.EMPTY_TREE_MAP;
-    }
-
-    @Override
-    public long lastUpdateTime() {
-        return 0;
     }
 
     @Override

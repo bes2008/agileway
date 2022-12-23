@@ -26,7 +26,7 @@ import java.util.Map;
  *
  * @see MetricRegistry#registerAll(MetricSet)
  */
-public interface MetricSet extends Metric {
+public interface MetricSet{
     /**
      * A map of metric names to metrics.
      *

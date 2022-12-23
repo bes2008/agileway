@@ -17,7 +17,7 @@
 package com.jn.agileway.metrics.core;
 
 import com.jn.agileway.metrics.core.metricset.MetricRegistry;
-import com.jn.agileway.metrics.core.metricset.MetricRegistryImpl;
+import com.jn.agileway.metrics.core.metricset.DefaultMetricRegistry;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,7 +51,7 @@ public class SharedMetricRegistries {
     public static MetricRegistry getOrCreate(String name) {
         final MetricRegistry existing = REGISTRIES.get(name);
         if (existing == null) {
-            final MetricRegistry created = new MetricRegistryImpl();
+            final MetricRegistry created = new DefaultMetricRegistry();
             final MetricRegistry raced = add(name, created);
             if (raced == null) {
                 return created;

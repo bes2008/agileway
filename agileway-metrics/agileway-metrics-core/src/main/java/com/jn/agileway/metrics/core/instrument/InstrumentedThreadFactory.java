@@ -16,6 +16,7 @@
  */
 package com.jn.agileway.metrics.core.instrument;
 
+import com.jn.agileway.metrics.core.Metrics;
 import com.jn.agileway.metrics.core.meter.Counter;
 import com.jn.agileway.metrics.core.meter.Meter;
 import com.jn.agileway.metrics.core.metricset.MetricRegistry;
@@ -56,9 +57,9 @@ public class InstrumentedThreadFactory implements ThreadFactory {
      */
     public InstrumentedThreadFactory(ThreadFactory delegate, MetricRegistry registry, String name) {
         this.delegate = delegate;
-        this.created = registry.meter(MetricRegistry.name(name, "created"));
-        this.running = registry.counter(MetricRegistry.name(name, "running"));
-        this.terminated = registry.meter(MetricRegistry.name(name, "terminated"));
+        this.created = registry.meter(Metrics.name(name, "created"));
+        this.running = registry.counter(Metrics.name(name, "running"));
+        this.terminated = registry.meter(Metrics.name(name, "terminated"));
     }
 
     /**

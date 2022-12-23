@@ -17,6 +17,7 @@
 package com.jn.agileway.metrics.core.instrument;
 
 
+import com.jn.agileway.metrics.core.Metrics;
 import com.jn.agileway.metrics.core.meter.Counter;
 import com.jn.agileway.metrics.core.meter.Meter;
 import com.jn.agileway.metrics.core.metricset.MetricRegistry;
@@ -65,11 +66,11 @@ public class InstrumentedExecutorService implements ExecutorService {
      */
     public InstrumentedExecutorService(ExecutorService delegate, MetricRegistry registry, String name) {
         this.delegate = delegate;
-        this.submitted = registry.meter(MetricRegistry.name(name, "submitted"));
-        this.running = registry.counter(MetricRegistry.name(name, "running"));
-        this.completed = registry.meter(MetricRegistry.name(name, "completed"));
-        this.duration = registry.timer(MetricRegistry.name(name, "duration"));
-        this.rejected = registry.meter(MetricRegistry.name(name, "rejected"));
+        this.submitted = registry.meter(Metrics.name(name, "submitted"));
+        this.running = registry.counter(Metrics.name(name, "running"));
+        this.completed = registry.meter(Metrics.name(name, "completed"));
+        this.duration = registry.timer(Metrics.name(name, "duration"));
+        this.rejected = registry.meter(Metrics.name(name, "rejected"));
     }
 
     /**

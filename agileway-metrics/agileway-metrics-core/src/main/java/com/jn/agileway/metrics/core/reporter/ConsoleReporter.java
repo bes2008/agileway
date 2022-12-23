@@ -213,7 +213,7 @@ public class ConsoleReporter extends ScheduledReporter {
             this.timeZone = TimeZone.getDefault();
             this.rateUnit = TimeUnit.SECONDS;
             this.durationUnit = TimeUnit.MILLISECONDS;
-            this.filter = MetricFilter.ALL;
+            this.filter = Metrics.ALL;
         }
 
         /**

@@ -18,10 +18,10 @@ package com.jn.agileway.metrics.core.metricset;
 
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.common.config.MetricsCollectPeriodConfig;
+import com.jn.agileway.metrics.core.meter.Timer;
+import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.*;
 import com.jn.agileway.metrics.core.noop.*;
-import com.jn.agileway.metrics.core.meter.*;
-import com.jn.agileway.metrics.core.meter.Timer;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,10 +31,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * A registry of metric instances.
  */
-public class MetricRegistryImpl extends MetricRegistry {
+public class DefaultMetricRegistry implements MetricRegistry {
 
-    private static final int DEFAULT_MAX_METRIC_COUNT =
-            Integer.getInteger("com.jn.agileway.metrics.core.maxMetricCountPerRegistry", 5000);
+    private static final int DEFAULT_MAX_METRIC_COUNT = Integer.getInteger("com.jn.agileway.metrics.core.maxMetricCountPerRegistry", 5000);
 
     // 用于分桶计数统计间隔配置
     private static final MetricsCollectPeriodConfig config = new MetricsCollectPeriodConfig();
@@ -190,11 +189,11 @@ public class MetricRegistryImpl extends MetricRegistry {
     /**
      * Creates a new {@link MetricRegistry}.
      */
-    public MetricRegistryImpl() {
+    public DefaultMetricRegistry() {
         this(DEFAULT_MAX_METRIC_COUNT);
     }
 
-    public MetricRegistryImpl(int maxMetricCount) {
+    public DefaultMetricRegistry(int maxMetricCount) {
         this.metrics = new ConcurrentHashMap<MetricName, Metric>();
         this.listeners = new CopyOnWriteArrayList<MetricRegistryListener>();
         this.maxMetricCount = maxMetricCount;
@@ -627,7 +626,7 @@ public class MetricRegistryImpl extends MetricRegistry {
      *
      * @return the last updated time for the entire MetricRegistry
      */
-    @Override
+
     public long lastUpdateTime() {
         long latest = 0;
         Map<MetricName, Metric> metrics = new HashMap<MetricName, Metric>();

@@ -22,7 +22,7 @@ import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 import com.jn.agileway.metrics.core.metricset.DynamicMetricSet;
 import com.jn.agileway.metrics.core.metricset.MetricRegistry;
-import com.jn.agileway.metrics.core.metricset.MetricRegistryImpl;
+import com.jn.agileway.metrics.core.metricset.DefaultMetricRegistry;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -161,7 +161,7 @@ public class AliMetricManager implements MetricManager {
     @Override
     public MetricRegistry getMetricRegistryByGroup(String group) {
         if (!metricRegistryMap.containsKey(group)) {
-            metricRegistryMap.put(group, new MetricRegistryImpl());
+            metricRegistryMap.put(group, new DefaultMetricRegistry());
         }
         return metricRegistryMap.get(group);
     }
@@ -299,7 +299,7 @@ public class AliMetricManager implements MetricManager {
 
     @Override
     public Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getCategoryMetrics(String group) {
-        return getCategoryMetrics(group, MetricFilter.ALL);
+        return getCategoryMetrics(group, Metrics.ALL);
     }
 
     @Override

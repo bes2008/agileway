@@ -144,7 +144,7 @@ public class NoopMetricManager implements MetricManager {
 
     @Override
     public Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getCategoryMetrics(String group) {
-        return getCategoryMetrics(group, MetricFilter.ALL);
+        return getCategoryMetrics(group, Metrics.ALL);
     }
 
     @Override

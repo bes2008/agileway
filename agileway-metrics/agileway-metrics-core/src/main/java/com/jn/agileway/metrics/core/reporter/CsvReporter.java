@@ -203,7 +203,7 @@ public class CsvReporter extends ScheduledReporter {
             this.rateUnit = TimeUnit.SECONDS;
             this.durationUnit = TimeUnit.MILLISECONDS;
             this.clock = Clocks.defaultClock();
-            this.filter = MetricFilter.ALL;
+            this.filter = Metrics.ALL;
             this.csvFileProvider = new FixedNameCsvFileProvider();
         }
 

@@ -16,6 +16,7 @@
  */
 package com.jn.agileway.metrics.core.instrument;
 
+import com.jn.agileway.metrics.core.Metrics;
 import com.jn.agileway.metrics.core.meter.Counter;
 import com.jn.agileway.metrics.core.meter.Histogram;
 import com.jn.agileway.metrics.core.meter.Meter;
@@ -70,16 +71,16 @@ public class InstrumentedScheduledExecutorService implements ScheduledExecutorSe
     public InstrumentedScheduledExecutorService(ScheduledExecutorService delegate, MetricRegistry registry, String name) {
         this.delegate = delegate;
 
-        this.submitted = registry.meter(MetricRegistry.name(name, "submitted"));
+        this.submitted = registry.meter(Metrics.name(name, "submitted"));
 
-        this.running = registry.counter(MetricRegistry.name(name, "running"));
-        this.completed = registry.meter(MetricRegistry.name(name, "completed"));
-        this.duration = registry.timer(MetricRegistry.name(name, "duration"));
+        this.running = registry.counter(Metrics.name(name, "running"));
+        this.completed = registry.meter(Metrics.name(name, "completed"));
+        this.duration = registry.timer(Metrics.name(name, "duration"));
 
-        this.scheduledOnce = registry.meter(MetricRegistry.name(name, "scheduled.once"));
-        this.scheduledRepetitively = registry.meter(MetricRegistry.name(name, "scheduled.repetitively"));
-        this.scheduledOverrun = registry.counter(MetricRegistry.name(name, "scheduled.overrun"));
-        this.percentOfPeriod = registry.histogram(MetricRegistry.name(name, "scheduled.percent-of-period"));
+        this.scheduledOnce = registry.meter(Metrics.name(name, "scheduled.once"));
+        this.scheduledRepetitively = registry.meter(Metrics.name(name, "scheduled.repetitively"));
+        this.scheduledOverrun = registry.counter(Metrics.name(name, "scheduled.overrun"));
+        this.percentOfPeriod = registry.histogram(Metrics.name(name, "scheduled.percent-of-period"));
     }
 
     /**
