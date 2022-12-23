@@ -14,9 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jn.agileway.metrics.core.meter;
+package com.jn.agileway.metrics.core.meter.impl;
 
 import com.jn.agileway.metrics.core.ExponentiallyDecayingReservoir;
+import com.jn.agileway.metrics.core.meter.Histogram;
+import com.jn.agileway.metrics.core.meter.Meter;
+import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.snapshot.Reservoir;
 import com.jn.agileway.metrics.core.ReservoirType;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;

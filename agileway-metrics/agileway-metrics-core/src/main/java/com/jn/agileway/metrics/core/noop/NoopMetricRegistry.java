@@ -5,6 +5,7 @@ import com.jn.agileway.metrics.core.MetricName;
 import com.jn.agileway.metrics.core.MetricRegistryListener;
 import com.jn.agileway.metrics.core.ReservoirType;
 import com.jn.agileway.metrics.core.meter.*;
+import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 import com.jn.agileway.metrics.core.metricset.MetricRegistry;
 import com.jn.agileway.metrics.core.metricset.MetricSet;
 import com.jn.langx.util.Emptys;

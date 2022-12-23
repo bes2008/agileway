@@ -18,6 +18,7 @@ package com.jn.agileway.metrics.core.collector;
 
 import com.jn.agileway.metrics.core.MetricName;
 import com.jn.agileway.metrics.core.meter.*;
+import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 
 /**
  * The GOF Visitor pattern.

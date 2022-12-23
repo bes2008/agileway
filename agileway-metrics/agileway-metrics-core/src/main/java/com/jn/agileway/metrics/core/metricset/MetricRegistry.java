@@ -22,6 +22,7 @@ import com.jn.agileway.metrics.core.MetricName;
 import com.jn.agileway.metrics.core.MetricRegistryListener;
 import com.jn.agileway.metrics.core.ReservoirType;
 import com.jn.agileway.metrics.core.meter.*;
+import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 
 import java.util.SortedMap;
 import java.util.SortedSet;

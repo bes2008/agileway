@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jn.agileway.metrics.core.meter;
+package com.jn.agileway.metrics.core.meter.impl;
 
 import com.jn.agileway.metrics.core.meter.Metric;
 
@@ -42,7 +42,6 @@ public abstract class ClusterHistogram implements Metric {
         } else if (buckets.length > MAX_BUCKET_COUNT) {
             throw new IllegalStateException("The number of buckets should be no larger than " + MAX_BUCKET_COUNT);
         } else {
-            this.buckets = buckets;
             this.buckets = new long[buckets.length + 1];
             for (int i = 0; i < buckets.length; i++) {
                 this.buckets[i] = buckets[i];

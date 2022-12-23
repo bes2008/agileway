@@ -20,6 +20,7 @@ import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.common.MetricObject;
 import com.jn.agileway.metrics.core.common.config.MetricsCollectPeriodConfig;
 import com.jn.agileway.metrics.core.meter.*;
+import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 
 import java.util.ArrayList;
 import java.util.HashMap;
