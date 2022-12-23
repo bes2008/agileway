@@ -28,6 +28,7 @@ import com.jn.agileway.metrics.core.meter.impl.*;
 import com.jn.agileway.metrics.core.noop.*;
 import com.jn.agileway.metrics.core.snapshot.ReservoirType;
 import com.jn.agileway.metrics.core.snapshot.ReservoirTypeBuilder;
+import com.jn.langx.util.reflect.Reflects;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -58,7 +59,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
 
         @Override
         public boolean isInstance(Metric metric) {
-            return Counter.class.isInstance(metric);
+            return Reflects.isInstance(Counter.class, metric.getClass());
         }
     };
     private ReservoirTypeBuilder<Histogram> HISTOGRAM_BUILDER = new ReservoirTypeBuilder<Histogram>() {
@@ -74,7 +75,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
 
         @Override
         public boolean isInstance(Metric metric) {
-            return Histogram.class.isInstance(metric);
+            return Reflects.isInstance(Histogram.class, metric.getClass());
         }
     };
     private MetricBuilder<Meter> METER_BUILDER = new MetricBuilder<Meter>() {
@@ -85,7 +86,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
 
         @Override
         public boolean isInstance(Metric metric) {
-            return Meter.class.isInstance(metric);
+            return Reflects.isInstance(Meter.class, metric.getClass());
         }
     };
     private ReservoirTypeBuilder<Timer> TIMER_BUILDER = new ReservoirTypeBuilder<Timer>() {
@@ -101,7 +102,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
 
         @Override
         public boolean isInstance(Metric metric) {
-            return Timer.class.isInstance(metric);
+            return Reflects.isInstance(Timer.class, metric.getClass());
         }
     };
     private ReservoirTypeBuilder<Compass> COMPASS_BUILDER = new ReservoirTypeBuilder<Compass>() {
@@ -117,31 +118,23 @@ public class DefaultMetricRegistry implements MetricRegistry {
 
         @Override
         public boolean isInstance(Metric metric) {
-            return Compass.class.isInstance(metric);
+            return Reflects.isInstance(Compass.class, metric.getClass());
         }
     };
     private MetricBuilder<FastCompass> FAST_COMPASS_BUILDER = new MetricBuilder<FastCompass>() {
         @Override
         public FastCompass newMetric(MetricName name) {
-            // 当已注册的metric数量太多时，返回一个空实现
-            if (metrics.size() >= maxMetricCount) {
-                return null;
-            }
             return new FastCompassImpl(config.period(name.getMetricLevel()));
         }
 
         @Override
         public boolean isInstance(Metric metric) {
-            return FastCompass.class.isInstance(metric);
+            return Reflects.isInstance(FastCompass.class, metric.getClass());
         }
     };
     private ClusterHistogramBuilder<ClusterHistogram> CLUSTER_HISTOGRAM_BUILDER = new ClusterHistogramBuilder<ClusterHistogram>() {
         @Override
         public ClusterHistogram newMetric(MetricName name, long[] buckets) {
-            // 当已注册的metric数量太多时，返回一个空实现
-            if (metrics.size() >= maxMetricCount) {
-                return null;
-            }
             return new ClusterHistogramImpl(buckets, config.period(name.getMetricLevel()), null);
         }
 
@@ -152,7 +145,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
 
         @Override
         public boolean isInstance(Metric metric) {
-            return metric instanceof ClusterHistogram;
+            return Reflects.isInstance(ClusterHistogram.class, metric.getClass());
         }
     };
 
@@ -182,10 +175,8 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * eg:
      * When collecting remote machine JVM metrics through the JMX port, May be due to network jitter or
      * remote process restart, Need to cancel the previously collected metrics and re-register.
-     *
-     * @date 2019.06.06 14:35:45
      */
-    public void unRegisterAll() {
+    public void unregisterAll() {
         metrics.clear();
     }
 
@@ -675,6 +666,10 @@ public class DefaultMetricRegistry implements MetricRegistry {
             return (T) metric;
         } else if (metric == null) {
             try {
+                // 当已注册的metric数量太多时，返回一个空实现
+                if (metrics.size() >= maxMetricCount) {
+                    return null;
+                }
                 T newMetric = builder.newMetric(name, buckets);
                 if (newMetric == null) return null;
                 return register(name, newMetric);
