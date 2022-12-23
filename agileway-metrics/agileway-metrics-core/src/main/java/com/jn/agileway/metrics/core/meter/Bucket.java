@@ -14,24 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jn.agileway.metrics.core;
+package com.jn.agileway.metrics.core.meter;
 
-import com.jn.agileway.metrics.core.meter.Metric;
-
-import java.util.Map;
+import com.jn.langx.util.concurrent.longaddr.LongAdder;
 
 /**
- * A dynamic metric set.
- * The metrics inside will change dynamically.
+ * The abstraction of a bucket for collecting statistics
  */
-public interface DynamicMetricSet extends Metric {
+class Bucket {
 
     /**
-     * A map of metric names to metrics.
-     * The metrics inside will change dynamically.
-     * So DO NOT register them at first time.
-     *
-     * @return the dynamically changing metrics
+     * The timestamp of this bucket
      */
-    Map<MetricName, Metric> getDynamicMetrics();
+    long timestamp = -1L;
+
+    /**
+     * The counter for the bucket, can be updated concurrently
+     */
+    LongAdder count = new LongAdder();
 }

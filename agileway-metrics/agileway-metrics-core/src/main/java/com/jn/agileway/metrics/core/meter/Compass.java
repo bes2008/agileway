@@ -16,7 +16,6 @@
  */
 package com.jn.agileway.metrics.core.meter;
 
-import com.jn.agileway.metrics.core.BucketCounter;
 import com.jn.agileway.metrics.core.Sampling;
 
 import java.io.Closeable;
