@@ -22,7 +22,7 @@ package com.jn.agileway.metrics.core.meter;
  * 一种用于度量一段时间内吞吐率的计量器。例如，一分钟内，五分钟内，十五分钟内的qps指标，
  * 这段时间内的吞吐率通过指数加权的方式计算移动平均得出。
  */
-public interface Meter extends Metered {
+public interface Meter extends Timed {
 
     /**
      * Mark the occurrence of an event.

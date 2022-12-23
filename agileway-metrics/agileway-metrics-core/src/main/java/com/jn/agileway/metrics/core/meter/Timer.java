@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
  * throughput statistics via {@link Meter}.
  * Timer相当于Meter+Histogram的组合，同时统计一段代码，一个方法的qps，以及执行时间的分布情况
  */
-public interface Timer extends Metered, Sampling {
+public interface Timer extends Timed, Sampling {
     /**
      * Adds a recorded duration.
      *

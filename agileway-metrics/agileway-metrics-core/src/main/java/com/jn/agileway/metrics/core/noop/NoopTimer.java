@@ -44,12 +44,12 @@ public class NoopTimer implements Timer {
     }
 
     @Override
-    public double getFifteenMinuteRate() {
+    public double getM15Rate() {
         return 0;
     }
 
     @Override
-    public double getFiveMinuteRate() {
+    public double getM5Rate() {
         return 0;
     }
 
@@ -59,7 +59,7 @@ public class NoopTimer implements Timer {
     }
 
     @Override
-    public double getOneMinuteRate() {
+    public double getM1Rate() {
         return 0;
     }
 

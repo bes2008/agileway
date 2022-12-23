@@ -79,7 +79,7 @@ public class MeterImpl implements Meter {
      * @param interval       the time interval for each bucket
      */
     public MeterImpl(Clock clock, int numberOfBucket, int interval) {
-        clock = clock==null ? Clocks.defaultClock(): clock;
+        clock = clock == null ? Clocks.defaultClock() : clock;
         this.clock = clock;
         this.startTime = this.clock.getTick();
         this.lastTick = new AtomicLong(startTime);
@@ -141,14 +141,19 @@ public class MeterImpl implements Meter {
         return bucketCounter.getBucketInterval();
     }
 
-    public double getFifteenMinuteRate() {
+    public double getM15Rate() {
         tickIfNecessary();
         return m15Rate.getRate(TimeUnit.SECONDS);
     }
 
-    public double getFiveMinuteRate() {
+    public double getM5Rate() {
         tickIfNecessary();
         return m5Rate.getRate(TimeUnit.SECONDS);
+    }
+
+    public double getM1Rate() {
+        tickIfNecessary();
+        return m1Rate.getRate(TimeUnit.SECONDS);
     }
 
     public double getMeanRate() {
@@ -160,10 +165,6 @@ public class MeterImpl implements Meter {
         }
     }
 
-    public double getOneMinuteRate() {
-        tickIfNecessary();
-        return m1Rate.getRate(TimeUnit.SECONDS);
-    }
 
     @Override
     public long lastUpdateTime() {

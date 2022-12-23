@@ -444,17 +444,17 @@ public class JmxReporter implements Closeable {
 
         @Override
         public double getOneMinuteRate() {
-            return metric.getOneMinuteRate() * rateFactor;
+            return metric.getM1Rate() * rateFactor;
         }
 
         @Override
         public double getFiveMinuteRate() {
-            return metric.getFiveMinuteRate() * rateFactor;
+            return metric.getM5Rate() * rateFactor;
         }
 
         @Override
         public double getFifteenMinuteRate() {
-            return metric.getFifteenMinuteRate() * rateFactor;
+            return metric.getM15Rate() * rateFactor;
         }
 
         @Override

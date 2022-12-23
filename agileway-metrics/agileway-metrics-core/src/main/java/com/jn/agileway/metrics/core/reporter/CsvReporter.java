@@ -116,9 +116,9 @@ public class CsvReporter extends ScheduledReporter {
                 convertDuration(snapshot.get99thPercentile()),
                 convertDuration(snapshot.get999thPercentile()),
                 convertRate(timer.getMeanRate()),
-                convertRate(timer.getOneMinuteRate()),
-                convertRate(timer.getFiveMinuteRate()),
-                convertRate(timer.getFifteenMinuteRate()),
+                convertRate(timer.getM1Rate()),
+                convertRate(timer.getM5Rate()),
+                convertRate(timer.getM15Rate()),
                 getRateUnit(),
                 getDurationUnit());
     }
@@ -130,9 +130,9 @@ public class CsvReporter extends ScheduledReporter {
                 "%d,%f,%f,%f,%f,events/%s",
                 meter.getCount(),
                 convertRate(meter.getMeanRate()),
-                convertRate(meter.getOneMinuteRate()),
-                convertRate(meter.getFiveMinuteRate()),
-                convertRate(meter.getFifteenMinuteRate()),
+                convertRate(meter.getM1Rate()),
+                convertRate(meter.getM5Rate()),
+                convertRate(meter.getM15Rate()),
                 getRateUnit());
     }
 

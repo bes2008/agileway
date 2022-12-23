@@ -133,9 +133,9 @@ public class ConsoleReporter extends ScheduledReporter {
     private void printMeter(Meter meter) {
         output.printf(locale, "             count = %d%n", meter.getCount());
         output.printf(locale, "         mean rate = %2.2f events/%s%n", convertRate(meter.getMeanRate()), getRateUnit());
-        output.printf(locale, "     1-minute rate = %2.2f events/%s%n", convertRate(meter.getOneMinuteRate()), getRateUnit());
-        output.printf(locale, "     5-minute rate = %2.2f events/%s%n", convertRate(meter.getFiveMinuteRate()), getRateUnit());
-        output.printf(locale, "    15-minute rate = %2.2f events/%s%n", convertRate(meter.getFifteenMinuteRate()), getRateUnit());
+        output.printf(locale, "     1-minute rate = %2.2f events/%s%n", convertRate(meter.getM1Rate()), getRateUnit());
+        output.printf(locale, "     5-minute rate = %2.2f events/%s%n", convertRate(meter.getM5Rate()), getRateUnit());
+        output.printf(locale, "    15-minute rate = %2.2f events/%s%n", convertRate(meter.getM15Rate()), getRateUnit());
     }
 
     private void printCounter(Map.Entry<MetricName, Counter> entry) {
@@ -165,9 +165,9 @@ public class ConsoleReporter extends ScheduledReporter {
         final Snapshot snapshot = timer.getSnapshot();
         output.printf(locale, "             count = %d%n", timer.getCount());
         output.printf(locale, "         mean rate = %2.2f calls/%s%n", convertRate(timer.getMeanRate()), getRateUnit());
-        output.printf(locale, "     1-minute rate = %2.2f calls/%s%n", convertRate(timer.getOneMinuteRate()), getRateUnit());
-        output.printf(locale, "     5-minute rate = %2.2f calls/%s%n", convertRate(timer.getFiveMinuteRate()), getRateUnit());
-        output.printf(locale, "    15-minute rate = %2.2f calls/%s%n", convertRate(timer.getFifteenMinuteRate()), getRateUnit());
+        output.printf(locale, "     1-minute rate = %2.2f calls/%s%n", convertRate(timer.getM1Rate()), getRateUnit());
+        output.printf(locale, "     5-minute rate = %2.2f calls/%s%n", convertRate(timer.getM5Rate()), getRateUnit());
+        output.printf(locale, "    15-minute rate = %2.2f calls/%s%n", convertRate(timer.getM15Rate()), getRateUnit());
 
         output.printf(locale, "               min = %2.2f %s%n", convertDuration(snapshot.getMin()), getDurationUnit());
         output.printf(locale, "               max = %2.2f %s%n", convertDuration(snapshot.getMax()), getDurationUnit());

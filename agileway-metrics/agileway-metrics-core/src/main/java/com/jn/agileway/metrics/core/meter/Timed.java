@@ -19,9 +19,12 @@ package com.jn.agileway.metrics.core.meter;
 import java.util.Map;
 
 /**
+ *
+ * A meter measures the rate of events over time
+ *
  * An object which maintains mean and exponentially-weighted rate.
  */
-public interface Metered extends Metric, Counting {
+interface Timed extends Metric, Counting {
 
     /**
      * Returns the number of events which have been marked.
@@ -62,7 +65,7 @@ public interface Metered extends Metric, Counting {
      * @return the fifteen-minute exponentially-weighted moving average rate at which events have
      * occurred since the meter was created
      */
-    double getFifteenMinuteRate();
+    double getM15Rate();
 
     /**
      * Returns the five-minute exponentially-weighted moving average rate at which events have
@@ -74,7 +77,7 @@ public interface Metered extends Metric, Counting {
      * @return the five-minute exponentially-weighted moving average rate at which events have
      * occurred since the meter was created
      */
-    double getFiveMinuteRate();
+    double getM5Rate();
 
     /**
      * Returns the mean rate at which events have occurred since the meter was created.
@@ -93,5 +96,5 @@ public interface Metered extends Metric, Counting {
      * @return the one-minute exponentially-weighted moving average rate at which events have
      * occurred since the meter was created
      */
-    double getOneMinuteRate();
+    double getM1Rate();
 }

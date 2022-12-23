@@ -244,13 +244,13 @@ public class CompassImpl implements Compass {
     }
 
     @Override
-    public double getFifteenMinuteRate() {
+    public double getM15Rate() {
         tickIfNecessary();
         return m15Rate.getRate(TimeUnit.SECONDS);
     }
 
     @Override
-    public double getFiveMinuteRate() {
+    public double getM5Rate() {
         tickIfNecessary();
         return m5Rate.getRate(TimeUnit.SECONDS);
     }
@@ -266,7 +266,7 @@ public class CompassImpl implements Compass {
     }
 
     @Override
-    public double getOneMinuteRate() {
+    public double getM1Rate() {
         tickIfNecessary();
         return m1Rate.getRate(TimeUnit.SECONDS);
     }

@@ -37,7 +37,7 @@ public class CompactMetricsCollector extends MetricsCollector {
         final Snapshot snapshot = timer.getSnapshot();
         this.addMetric(name, "count", timer.getCount(), timestamp, MetricObject.MetricType.COUNTER)
                 // convert rate
-                .addMetric(name, "m1", convertRate(timer.getOneMinuteRate()), timestamp)
+                .addMetric(name, "m1", convertRate(timer.getM1Rate()), timestamp)
                 // convert duration
                 .addMetric(name, "rt", convertDuration(snapshot.getMean()), timestamp)
                 .addMetric(name, "mean", convertDuration(snapshot.getMean()), timestamp);
@@ -57,7 +57,7 @@ public class CompactMetricsCollector extends MetricsCollector {
         final Snapshot snapshot = compass.getSnapshot();
         this.addMetric(name, "count", compass.getCount(), timestamp, MetricObject.MetricType.COUNTER)
                 // convert rate
-                .addMetric(name, "m1", convertRate(compass.getOneMinuteRate()), timestamp)
+                .addMetric(name, "m1", convertRate(compass.getM1Rate()), timestamp)
                 // convert duration
                 .addMetric(name, "rt", convertDuration(snapshot.getMean()), timestamp)
                 .addMetric(name, "mean", convertDuration(snapshot.getMean()), timestamp);
@@ -79,7 +79,7 @@ public class CompactMetricsCollector extends MetricsCollector {
     public void collect(MetricName name, Meter meter, long timestamp) {
         this.addMetric(name, "count", meter.getCount(), timestamp, MetricObject.MetricType.COUNTER)
                 // convert rate
-                .addMetric(name, "m1", convertRate(meter.getOneMinuteRate()), timestamp);
+                .addMetric(name, "m1", convertRate(meter.getM1Rate()), timestamp);
 
         // instant count
         addInstantCountMetric(meter.getInstantCount(), name, meter.getInstantCountInterval(), timestamp);

@@ -122,20 +122,20 @@ public class TimerImpl implements Timer {
         return histogram.getCount();
     }
 
-    public double getFifteenMinuteRate() {
-        return meter.getFifteenMinuteRate();
+    public double getM15Rate() {
+        return meter.getM15Rate();
     }
 
-    public double getFiveMinuteRate() {
-        return meter.getFiveMinuteRate();
+    public double getM5Rate() {
+        return meter.getM5Rate();
     }
 
     public double getMeanRate() {
         return meter.getMeanRate();
     }
 
-    public double getOneMinuteRate() {
-        return meter.getOneMinuteRate();
+    public double getM1Rate() {
+        return meter.getM1Rate();
     }
 
     @Override

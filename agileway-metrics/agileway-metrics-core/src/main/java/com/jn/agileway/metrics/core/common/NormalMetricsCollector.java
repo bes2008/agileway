@@ -34,9 +34,9 @@ public class NormalMetricsCollector extends MetricsCollector {
         final Snapshot snapshot = timer.getSnapshot();
 
         this.addMetric(name, "count", timer.getCount(), timestamp, MetricObject.MetricType.COUNTER)
-                .addMetric(name, "m1", convertRate(timer.getOneMinuteRate()), timestamp)
-                .addMetric(name, "m5", convertRate(timer.getFiveMinuteRate()), timestamp)
-                .addMetric(name, "m15", convertRate(timer.getFifteenMinuteRate()), timestamp)
+                .addMetric(name, "m1", convertRate(timer.getM1Rate()), timestamp)
+                .addMetric(name, "m5", convertRate(timer.getM5Rate()), timestamp)
+                .addMetric(name, "m15", convertRate(timer.getM15Rate()), timestamp)
                 // convert duration
                 .addMetric(name, "max", convertDuration(snapshot.getMax()), timestamp)
                 .addMetric(name, "min", convertDuration(snapshot.getMin()), timestamp)
@@ -71,9 +71,9 @@ public class NormalMetricsCollector extends MetricsCollector {
         final Snapshot snapshot = compass.getSnapshot();
         this.addMetric(name, "count", compass.getCount(), timestamp, MetricObject.MetricType.COUNTER)
                 // convert rate
-                .addMetric(name, "m1", convertRate(compass.getOneMinuteRate()), timestamp)
-                .addMetric(name, "m5", convertRate(compass.getFiveMinuteRate()), timestamp)
-                .addMetric(name, "m15", convertRate(compass.getFifteenMinuteRate()), timestamp)
+                .addMetric(name, "m1", convertRate(compass.getM1Rate()), timestamp)
+                .addMetric(name, "m5", convertRate(compass.getM5Rate()), timestamp)
+                .addMetric(name, "m15", convertRate(compass.getM15Rate()), timestamp)
                 // convert duration
                 .addMetric(name, "max", convertDuration(snapshot.getMax()), timestamp)
                 .addMetric(name, "min", convertDuration(snapshot.getMin()), timestamp)
@@ -102,9 +102,9 @@ public class NormalMetricsCollector extends MetricsCollector {
     public void collect(MetricName name, Meter meter, long timestamp) {
         this.addMetric(name, "count", meter.getCount(), timestamp, MetricObject.MetricType.COUNTER)
                 // convert rate
-                .addMetric(name, "m1", convertRate(meter.getOneMinuteRate()), timestamp)
-                .addMetric(name, "m5", convertRate(meter.getFiveMinuteRate()), timestamp)
-                .addMetric(name, "m15", convertRate(meter.getFifteenMinuteRate()), timestamp);
+                .addMetric(name, "m1", convertRate(meter.getM1Rate()), timestamp)
+                .addMetric(name, "m5", convertRate(meter.getM5Rate()), timestamp)
+                .addMetric(name, "m15", convertRate(meter.getM15Rate()), timestamp);
 
         // instant count
         addInstantCountMetric(meter.getInstantCount(), name, meter.getInstantCountInterval(), timestamp);

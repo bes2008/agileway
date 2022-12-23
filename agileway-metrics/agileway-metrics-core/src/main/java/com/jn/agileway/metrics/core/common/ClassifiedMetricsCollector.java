@@ -148,13 +148,13 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
         }
 
         this.addMetric(name, "count", meter.getCount(), guageTimestamp, MetricObject.MetricType.COUNTER, METER_NAME);
-        this.addMetric(name, "m1", convertRate(meter.getOneMinuteRate()), guageTimestamp, MetricObject.MetricType.GAUGE,
+        this.addMetric(name, "m1", convertRate(meter.getM1Rate()), guageTimestamp, MetricObject.MetricType.GAUGE,
                 METER_NAME);
 
         if (advancedMetricsReport) {
-            this.addMetric(name, "m5", convertRate(meter.getFiveMinuteRate()), guageTimestamp,
+            this.addMetric(name, "m5", convertRate(meter.getM5Rate()), guageTimestamp,
                     MetricObject.MetricType.GAUGE, METER_NAME);
-            this.addMetric(name, "m15", convertRate(meter.getFifteenMinuteRate()), guageTimestamp,
+            this.addMetric(name, "m15", convertRate(meter.getM15Rate()), guageTimestamp,
                     MetricObject.MetricType.GAUGE, METER_NAME);
         }
 
@@ -223,16 +223,16 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
 
         this.addMetric(name, "count", timer.getCount(), guageTimestamp, MetricObject.MetricType.COUNTER, TIMER_NAME);
 
-        this.addMetric(name, "m1", convertRate(timer.getOneMinuteRate()), guageTimestamp, MetricObject.MetricType.GAUGE,
+        this.addMetric(name, "m1", convertRate(timer.getM1Rate()), guageTimestamp, MetricObject.MetricType.GAUGE,
                 TIMER_NAME);
         this.addMetric(name, "mean", convertDuration(snapshot.getMean()), guageTimestamp, MetricObject.MetricType.GAUGE,
                 TIMER_NAME);
 
         if (advancedMetricsReport) {
 
-            this.addMetric(name, "m5", convertRate(timer.getFiveMinuteRate()), guageTimestamp,
+            this.addMetric(name, "m5", convertRate(timer.getM5Rate()), guageTimestamp,
                     MetricObject.MetricType.GAUGE, TIMER_NAME);
-            this.addMetric(name, "m15", convertRate(timer.getFifteenMinuteRate()), guageTimestamp,
+            this.addMetric(name, "m15", convertRate(timer.getM15Rate()), guageTimestamp,
                     MetricObject.MetricType.GAUGE, TIMER_NAME);
             this.addMetric(name, "max", convertDuration(snapshot.getMax()), guageTimestamp,
                     MetricObject.MetricType.GAUGE, TIMER_NAME);
@@ -361,7 +361,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
             }
         }
 
-        this.addMetric(name, "m1", convertRate(compass.getOneMinuteRate()), guageTimestamp,
+        this.addMetric(name, "m1", convertRate(compass.getM1Rate()), guageTimestamp,
                 MetricObject.MetricType.GAUGE, COMPASS_NAME);
         this.addMetric(name, "mean", convertDuration(snapshot.getMean()), guageTimestamp, MetricObject.MetricType.GAUGE,
                 COMPASS_NAME);
@@ -370,9 +370,9 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
 
         if (advancedMetricsReport) {
 
-            this.addMetric(name, "m5", convertRate(compass.getFiveMinuteRate()), guageTimestamp,
+            this.addMetric(name, "m5", convertRate(compass.getM5Rate()), guageTimestamp,
                     MetricObject.MetricType.GAUGE, COMPASS_NAME);
-            this.addMetric(name, "m15", convertRate(compass.getFifteenMinuteRate()), guageTimestamp,
+            this.addMetric(name, "m15", convertRate(compass.getM15Rate()), guageTimestamp,
                     MetricObject.MetricType.GAUGE, COMPASS_NAME);
             this.addMetric(name, "max", convertDuration(snapshot.getMax()), guageTimestamp, MetricObject.MetricType.GAUGE,
                     COMPASS_NAME);
