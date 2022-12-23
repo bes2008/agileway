@@ -21,7 +21,7 @@ import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.MetricName;
 
 /**
- * A filter used to determine whether or not a metric should be reported, among other things.
+ * A filter used to determine whether a metric should be reported, among other things or not .
  */
 public interface MetricFilter {
 
