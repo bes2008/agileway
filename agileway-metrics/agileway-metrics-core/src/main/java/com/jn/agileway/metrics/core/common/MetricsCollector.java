@@ -18,6 +18,10 @@ package com.jn.agileway.metrics.core.common;
 
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.common.config.MetricsCollectPeriodConfig;
+import com.jn.agileway.metrics.core.meter.ClusterHistogram;
+import com.jn.agileway.metrics.core.meter.Collector;
+import com.jn.agileway.metrics.core.meter.Compass;
+import com.jn.agileway.metrics.core.meter.FastCompass;
 
 import java.util.ArrayList;
 import java.util.HashMap;

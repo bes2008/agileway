@@ -14,8 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jn.agileway.metrics.core;
+package com.jn.agileway.metrics.core.metricset;
 
+import com.jn.agileway.metrics.core.MetricName;
+import com.jn.agileway.metrics.core.MetricRegistry;
 import com.jn.agileway.metrics.core.meter.Metric;
 
 import java.util.Map;

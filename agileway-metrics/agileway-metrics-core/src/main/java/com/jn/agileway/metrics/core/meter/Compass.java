@@ -14,12 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jn.agileway.metrics.core;
+package com.jn.agileway.metrics.core.meter;
 
-import com.jn.agileway.metrics.core.meter.Counter;
-import com.jn.agileway.metrics.core.meter.Metered;
-import com.jn.agileway.metrics.core.meter.RatioGauge;
-import com.jn.agileway.metrics.core.meter.Timer;
+import com.jn.agileway.metrics.core.BucketCounter;
+import com.jn.agileway.metrics.core.Sampling;
 
 import java.io.Closeable;
 import java.util.Map;
