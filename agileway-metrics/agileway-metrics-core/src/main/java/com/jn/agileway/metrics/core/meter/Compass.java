@@ -17,6 +17,7 @@
 package com.jn.agileway.metrics.core.meter;
 
 import com.jn.agileway.metrics.core.Sampling;
+import com.jn.agileway.metrics.core.meter.impl.RatioGauge;
 
 import java.io.Closeable;
 import java.util.Map;

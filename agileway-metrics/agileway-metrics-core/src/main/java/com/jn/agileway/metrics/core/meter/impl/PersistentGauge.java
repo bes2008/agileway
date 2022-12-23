@@ -14,22 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jn.agileway.metrics.core.meter;
+package com.jn.agileway.metrics.core.meter.impl;
 
-import com.jn.agileway.metrics.core.MetricBuilder;
-import com.jn.agileway.metrics.core.MetricName;
+import com.jn.agileway.metrics.core.meter.Gauge;
 
 /**
- * @author wangtao 2019-01-16 10:55
+ * A subclass of {@link Gauge} which should be persistent.
+ * A gauge that is never invalidated.
  */
-public interface ClusterHistogramBuilder<T> extends MetricBuilder {
+public abstract class PersistentGauge<T> implements Gauge<T> {
 
     /**
-     * Create a <T extends Metrics> instance with given name and buckets
-     *
-     * @param name    the name of the metric
-     * @param buckets an array of long values
-     * @return a metric implementation
+     * This gauge is always available, and be updated constantly.
      */
-    T newMetric(MetricName name, long[] buckets);
+    @Override
+    public long lastUpdateTime() {
+        return System.currentTimeMillis();
+    }
 }
