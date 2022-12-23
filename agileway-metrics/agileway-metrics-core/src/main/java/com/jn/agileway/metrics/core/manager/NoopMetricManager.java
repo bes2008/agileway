@@ -3,266 +3,19 @@ package com.jn.agileway.metrics.core.manager;
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.*;
-import com.jn.agileway.metrics.core.meter.noop.NoopCompass;
+import com.jn.agileway.metrics.core.meter.noop.*;
 import com.jn.agileway.metrics.core.metricset.MetricRegistry;
 import com.jn.agileway.metrics.core.metricset.MetricSet;
 import com.jn.langx.util.Emptys;
 
-import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 /**
  * IMetricManager的空实现
  */
 public class NoopMetricManager implements IMetricManager {
 
-    public static final Counter NOP_COUNTER = new Counter() {
-        @Override
-        public void inc() {
-        }
-
-        @Override
-        public void inc(long n) {
-        }
-
-        @Override
-        public void dec() {
-        }
-
-        @Override
-        public void dec(long n) {
-        }
-
-        @Override
-        public long getCount() {
-            return 0;
-        }
-
-        @Override
-        public long lastUpdateTime() {
-            return 0;
-        }
-    };
-    public static final Meter NOP_METER = new Meter() {
-        @Override
-        public void mark() {
-        }
-
-        @Override
-        public void mark(long n) {
-        }
-
-        @Override
-        public long getCount() {
-            return 0;
-        }
-
-        @Override
-        public double getFifteenMinuteRate() {
-            return 0;
-        }
-
-        @Override
-        public double getFiveMinuteRate() {
-            return 0;
-        }
-
-        @Override
-        public double getMeanRate() {
-            return 0;
-        }
-
-        @Override
-        public double getOneMinuteRate() {
-            return 0;
-        }
-
-        @Override
-        public Map<Long, Long> getInstantCount() {
-            return Emptys.EMPTY_TREE_MAP;
-        }
-
-        @Override
-        public int getInstantCountInterval() {
-            return 0;
-        }
-
-        @Override
-        public Map<Long, Long> getInstantCount(long startTime) {
-            return Emptys.EMPTY_TREE_MAP;
-        }
-
-        @Override
-        public long lastUpdateTime() {
-            return 0;
-        }
-    };
-    public static final FastCompass NOP_FAST_COMPASS = new FastCompass() {
-        @Override
-        public void record(long duration, String subCategory) {
-
-        }
-
-        @Override
-        public Map<String, Map<Long, Long>> getMethodCountPerCategory() {
-            return Emptys.EMPTY_TREE_MAP;
-        }
-
-        @Override
-        public Map<String, Map<Long, Long>> getMethodRtPerCategory() {
-            return Emptys.EMPTY_TREE_MAP;
-        }
-
-        @Override
-        public Map<String, Map<Long, Long>> getMethodCountPerCategory(long startTime) {
-            return Emptys.EMPTY_TREE_MAP;
-        }
-
-        @Override
-        public Map<String, Map<Long, Long>> getMethodRtPerCategory(long startTime) {
-            return Emptys.EMPTY_TREE_MAP;
-        }
-
-        @Override
-        public int getBucketInterval() {
-            return 0;
-        }
-
-        @Override
-        public Map<String, Map<Long, Long>> getCountAndRtPerCategory() {
-            return Emptys.EMPTY_TREE_MAP;
-        }
-
-        @Override
-        public Map<String, Map<Long, Long>> getCountAndRtPerCategory(long startTime) {
-            return Emptys.EMPTY_TREE_MAP;
-        }
-
-        @Override
-        public long lastUpdateTime() {
-            return 0;
-        }
-    };
-    public static final ClusterHistogram NOP_CLUSTER_HISTOGRAM = new ClusterHistogram() {
-        @Override
-        public void update(long value) {
-
-        }
-
-        @Override
-        public Map<Long, Map<Long, Long>> getBucketValues(long startTime) {
-            return Emptys.EMPTY_TREE_MAP;
-        }
-
-        @Override
-        public long lastUpdateTime() {
-            return 0;
-        }
-    };
     private static final SortedSet emptySet = new TreeSet();
-    private static final Timer.Context NOP_CONTEXT = new Timer.Context() {
-
-        @Override
-        public void close() throws IOException {
-        }
-
-        @Override
-        public long stop() {
-            return 0;
-        }
-    };
-
-    public static final Histogram NOP_HISTOGRAM = new Histogram() {
-        @Override
-        public void update(int value) {
-        }
-
-        @Override
-        public void update(long value) {
-        }
-
-        @Override
-        public long getCount() {
-            return 0;
-        }
-
-        @Override
-        public Snapshot getSnapshot() {
-            return NoopCompass.NOOP_COMPASS.getSnapshot();
-        }
-
-        @Override
-        public long lastUpdateTime() {
-            return 0;
-        }
-    };
-    public static final Timer NOP_TIMER = new Timer() {
-        @Override
-        public void update(long duration, TimeUnit unit) {
-        }
-
-        @Override
-        public <T> T time(Callable<T> event) throws Exception {
-            return event.call();
-        }
-
-        @Override
-        public Context time() {
-            return NOP_CONTEXT;
-        }
-
-        @Override
-        public long getCount() {
-            return 0;
-        }
-
-        @Override
-        public double getFifteenMinuteRate() {
-            return 0;
-        }
-
-        @Override
-        public double getFiveMinuteRate() {
-            return 0;
-        }
-
-        @Override
-        public double getMeanRate() {
-            return 0;
-        }
-
-        @Override
-        public double getOneMinuteRate() {
-            return 0;
-        }
-
-        @Override
-        public Snapshot getSnapshot() {
-            return NoopCompass.NOOP_COMPASS.getSnapshot();
-        }
-
-        @Override
-        public Map<Long, Long> getInstantCount() {
-            return Emptys.EMPTY_TREE_MAP;
-        }
-
-        @Override
-        public int getInstantCountInterval() {
-            return 0;
-        }
-
-        @Override
-        public Map<Long, Long> getInstantCount(long startTime) {
-            return Emptys.EMPTY_TREE_MAP;
-        }
-
-        @Override
-        public long lastUpdateTime() {
-            return 0;
-        }
-    };
 
     private static final MetricRegistry NOP_REGISTRY = new MetricRegistry() {
         @Override
@@ -282,52 +35,52 @@ public class NoopMetricManager implements IMetricManager {
 
         @Override
         public Counter counter(String name) {
-            return NOP_COUNTER;
+            return NoopCounter.NOOP_COUNTER;
         }
 
         @Override
         public Counter counter(MetricName name) {
-            return NOP_COUNTER;
+            return NoopCounter.NOOP_COUNTER;
         }
 
         @Override
         public Histogram histogram(MetricName name) {
-            return NOP_HISTOGRAM;
+            return NoopHistogram.NOOP_HISTOGRAM;
         }
 
         @Override
         public Histogram histogram(MetricName name, ReservoirType type) {
-            return NOP_HISTOGRAM;
+            return NoopHistogram.NOOP_HISTOGRAM;
         }
 
         @Override
         public Histogram histogram(String name) {
-            return NOP_HISTOGRAM;
+            return NoopHistogram.NOOP_HISTOGRAM;
         }
 
         @Override
         public Meter meter(MetricName name) {
-            return NOP_METER;
+            return NoopMeter.NOOP_METER;
         }
 
         @Override
         public Meter meter(String name) {
-            return NOP_METER;
+            return NoopMeter.NOOP_METER;
         }
 
         @Override
         public Timer timer(MetricName name) {
-            return NOP_TIMER;
+            return NoopTimer.NOOP_TIMER;
         }
 
         @Override
         public Timer timer(String name) {
-            return NOP_TIMER;
+            return NoopTimer.NOOP_TIMER;
         }
 
         @Override
         public Timer timer(MetricName name, ReservoirType type) {
-            return NOP_TIMER;
+            return NoopTimer.NOOP_TIMER;
         }
 
         @Override
@@ -347,12 +100,12 @@ public class NoopMetricManager implements IMetricManager {
 
         @Override
         public FastCompass fastCompass(MetricName name) {
-            return NOP_FAST_COMPASS;
+            return NoopFastCompass.NOOP_FAST_COMPASS;
         }
 
         @Override
         public ClusterHistogram clusterHistogram(MetricName name, long[] buckets) {
-            return NOP_CLUSTER_HISTOGRAM;
+            return NoopClusterHistogram.NOOP_CLUSTER_HISTOGRAM;
         }
 
         @Override
@@ -494,32 +247,32 @@ public class NoopMetricManager implements IMetricManager {
 
     @Override
     public Meter getMeter(String group, MetricName name) {
-        return NOP_METER;
+        return NoopMeter.NOOP_METER;
     }
 
     @Override
     public Counter getCounter(String group, MetricName name) {
-        return NOP_COUNTER;
+        return NoopCounter.NOOP_COUNTER;
     }
 
     @Override
     public Histogram getHistogram(String group, MetricName name) {
-        return NOP_HISTOGRAM;
+        return NoopHistogram.NOOP_HISTOGRAM;
     }
 
     @Override
     public Histogram getHistogram(String group, MetricName name, ReservoirType type) {
-        return NOP_HISTOGRAM;
+        return NoopHistogram.NOOP_HISTOGRAM;
     }
 
     @Override
     public Timer getTimer(String group, MetricName name) {
-        return NOP_TIMER;
+        return NoopTimer.NOOP_TIMER;
     }
 
     @Override
     public Timer getTimer(String group, MetricName name, ReservoirType type) {
-        return NOP_TIMER;
+        return NoopTimer.NOOP_TIMER;
     }
 
     @Override
@@ -534,12 +287,12 @@ public class NoopMetricManager implements IMetricManager {
 
     @Override
     public FastCompass getFastCompass(String group, MetricName name) {
-        return NOP_FAST_COMPASS;
+        return NoopFastCompass.NOOP_FAST_COMPASS;
     }
 
     @Override
     public ClusterHistogram getClusterHistogram(String group, MetricName name, long[] buckets) {
-        return NOP_CLUSTER_HISTOGRAM;
+        return NoopClusterHistogram.NOOP_CLUSTER_HISTOGRAM;
     }
 
     @Override
