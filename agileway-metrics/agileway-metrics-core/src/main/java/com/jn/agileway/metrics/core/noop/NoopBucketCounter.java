@@ -1,4 +1,4 @@
-package com.jn.agileway.metrics.core.meter.noop;
+package com.jn.agileway.metrics.core.noop;
 
 import com.jn.agileway.metrics.core.meter.BucketCounter;
 import com.jn.langx.util.Emptys;

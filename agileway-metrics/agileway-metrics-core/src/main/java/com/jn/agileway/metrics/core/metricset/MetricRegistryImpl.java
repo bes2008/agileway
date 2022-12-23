@@ -18,7 +18,7 @@ package com.jn.agileway.metrics.core.metricset;
 
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.common.config.MetricsCollectPeriodConfig;
-import com.jn.agileway.metrics.core.manager.NoopMetricManager;
+import com.jn.agileway.metrics.core.noop.*;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.Timer;
 
@@ -269,7 +269,7 @@ public class MetricRegistryImpl extends MetricRegistry {
     public Counter counter(MetricName name) {
         Counter counter = getOrAdd(name, COUNTER_BUILDER);
         if (counter == null) {
-            return NoopMetricManager.NOP_COUNTER;
+            return NoopCounter.NOOP_COUNTER;
         }
         return counter;
     }
@@ -303,7 +303,7 @@ public class MetricRegistryImpl extends MetricRegistry {
     public Histogram histogram(MetricName name, ReservoirType type) {
         Histogram histogram = getOrAdd(name, HISTOGRAM_BUILDER, type);
         if (histogram == null) {
-            return NoopMetricManager.NOP_HISTOGRAM;
+            return NoopHistogram.NOOP_HISTOGRAM;
         }
         return histogram;
     }
@@ -325,7 +325,7 @@ public class MetricRegistryImpl extends MetricRegistry {
     public Meter meter(MetricName name) {
         Meter meter = getOrAdd(name, METER_BUILDER);
         if (meter == null) {
-            return NoopMetricManager.NOP_METER;
+            return NoopMeter.NOOP_METER;
         }
         return meter;
     }
@@ -359,7 +359,7 @@ public class MetricRegistryImpl extends MetricRegistry {
     public Timer timer(MetricName name, ReservoirType type) {
         Timer timer = getOrAdd(name, TIMER_BUILDER, type);
         if (timer == null) {
-            return NoopMetricManager.NOP_TIMER;
+            return NoopTimer.NOOP_TIMER;
         }
         return timer;
     }
@@ -387,7 +387,7 @@ public class MetricRegistryImpl extends MetricRegistry {
     public Compass compass(MetricName name, ReservoirType type) {
         Compass compass = getOrAdd(name, COMPASS_BUILDER, type);
         if (compass == null) {
-            return NoopMetricManager.NOP_COMPASS;
+            return NoopCompass.NOOP_COMPASS;
         }
         return compass;
     }
@@ -404,7 +404,7 @@ public class MetricRegistryImpl extends MetricRegistry {
     public FastCompass fastCompass(MetricName name) {
         FastCompass compass = getOrAdd(name, FAST_COMPASS_BUILDER);
         if (compass == null) {
-            return NoopMetricManager.NOP_FAST_COMPASS;
+            return NoopFastCompass.NOOP_FAST_COMPASS;
         }
         return compass;
     }
@@ -413,7 +413,7 @@ public class MetricRegistryImpl extends MetricRegistry {
     public ClusterHistogram clusterHistogram(MetricName name, long[] buckets) {
         ClusterHistogram clusterHistogram = getOrAddClusterHistogram(name, CLUSTER_HISTOGRAM_BUILDER, buckets);
         if (clusterHistogram == null) {
-            return NoopMetricManager.NOP_CLUSTER_HISTOGRAM;
+            return NoopClusterHistogram.NOOP_CLUSTER_HISTOGRAM;
         }
         return clusterHistogram;
     }
