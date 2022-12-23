@@ -16,6 +16,7 @@
  */
 package com.jn.agileway.metrics.core.common.filter;
 
+import com.jn.agileway.metrics.core.collector.MetricsCollector;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.common.MetricObject;
@@ -143,7 +144,7 @@ public class MetricNameSetFilter implements MetricFilter {
                 success = matchInternal(nameToMatch, name, clusterHistogramSuffixSet, false);
             } else if (metric == null) {
                 /**
-                 * Should only come from {@link com.jn.agileway.metrics.core.common.MetricsCollector#addMetric(MetricObject)}
+                 * Should only come from {@link MetricsCollector#addMetric(MetricObject)}
                  * For compatibility reason.
                  */
                 if (nameToMatch.equals(name.getKey())) {

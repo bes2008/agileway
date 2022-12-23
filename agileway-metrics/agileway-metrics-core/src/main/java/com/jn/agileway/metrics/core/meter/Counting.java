@@ -19,7 +19,7 @@ package com.jn.agileway.metrics.core.meter;
 /**
  * An interface for metric types which have counts.
  */
-public interface Counting {
+interface Counting {
     /**
      * Returns the current count.
      *

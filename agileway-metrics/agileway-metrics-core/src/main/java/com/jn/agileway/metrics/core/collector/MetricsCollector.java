@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jn.agileway.metrics.core.common;
+package com.jn.agileway.metrics.core.collector;
 
 import com.jn.agileway.metrics.core.*;
+import com.jn.agileway.metrics.core.common.MetricObject;
 import com.jn.agileway.metrics.core.common.config.MetricsCollectPeriodConfig;
 import com.jn.agileway.metrics.core.meter.*;
 
