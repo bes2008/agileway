@@ -16,6 +16,8 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.agileway.metrics.core.meter.*;
+
 /**
  * The GOF Visitor pattern.
  * https://dzone.com/articles/design-patterns-visitor

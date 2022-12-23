@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jn.agileway.metrics.core;
+package com.jn.agileway.metrics.core.meter;
 
 /**
  * An interface to indicate that a class is a metric.

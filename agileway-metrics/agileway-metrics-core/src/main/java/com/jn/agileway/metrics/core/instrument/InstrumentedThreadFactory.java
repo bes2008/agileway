@@ -16,8 +16,8 @@
  */
 package com.jn.agileway.metrics.core.instrument;
 
-import com.jn.agileway.metrics.core.Counter;
-import com.jn.agileway.metrics.core.Meter;
+import com.jn.agileway.metrics.core.meter.Counter;
+import com.jn.agileway.metrics.core.meter.Meter;
 import com.jn.agileway.metrics.core.MetricRegistry;
 
 import java.util.concurrent.ThreadFactory;

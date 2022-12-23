@@ -16,6 +16,8 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.agileway.metrics.core.meter.Metric;
+
 /**
  * A filter used to determine whether or not a metric should be reported, among other things.
  */

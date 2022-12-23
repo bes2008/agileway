@@ -16,6 +16,9 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.agileway.metrics.core.meter.*;
+import com.jn.agileway.metrics.core.meter.Timer;
+
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;

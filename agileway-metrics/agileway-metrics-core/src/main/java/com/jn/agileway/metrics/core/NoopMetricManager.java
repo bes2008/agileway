@@ -16,6 +16,9 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.agileway.metrics.core.meter.*;
+import com.jn.agileway.metrics.core.meter.Timer;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;

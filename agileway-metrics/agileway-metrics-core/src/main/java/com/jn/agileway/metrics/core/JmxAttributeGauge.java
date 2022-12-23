@@ -16,6 +16,8 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.agileway.metrics.core.meter.Gauge;
+
 import javax.management.JMException;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;

@@ -14,30 +14,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jn.agileway.metrics.core;
-
+package com.jn.agileway.metrics.core.meter;
 
 /**
  * <pre>
- * A gauge metric is an instantaneous reading of a particular value. To instrument a queue's depth,
- * for example:
+ * An incrementing and decrementing counter metric.
  *
- * final Queue&lt;String&gt; queue = new ConcurrentLinkedQueue&lt;String&gt;();
- * final Gauge&lt;Integer&gt; queueDepth = new Gauge&lt;Integer&gt;() {
- *     public Integer getValue() {
- *         return queue.size();
- *     }
- * };
- *
- * 一种实时数据的度量，反映的是瞬态的数据，不具有累加性。
- * 具体的实现由具体定义，例如，获取当前jvm的活跃线程数
+ * 计数器型指标，适用于记录调用总量等类型的数据
  * </pre>
- *
- * @param <T> the type of the metric's value
  */
-public interface Gauge<T> extends Metric {
+public interface Counter extends Metric, Counting {
+
     /**
-     * @return the metric's current value
+     * Increment the counter by one.
+     * 计数器加1
      */
-    T getValue();
+    void inc();
+
+    /**
+     * Increment the counter by {@code n}.
+     * 计数器加n
+     *
+     * @param n the amount by which the counter will be increased
+     */
+    void inc(long n);
+
+    /**
+     * Decrement the counter by one.
+     * 计数器减1
+     */
+    void dec();
+
+    /**
+     * Decrement the counter by {@code n}.
+     * 计数器减n
+     *
+     * @param n the amount by which the counter will be decreased
+     */
+    void dec(long n);
+
 }

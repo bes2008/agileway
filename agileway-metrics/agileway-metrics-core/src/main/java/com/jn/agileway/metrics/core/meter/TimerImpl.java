@@ -14,8 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jn.agileway.metrics.core;
+package com.jn.agileway.metrics.core.meter;
 
+import com.jn.agileway.metrics.core.ExponentiallyDecayingReservoir;
+import com.jn.agileway.metrics.core.Reservoir;
+import com.jn.agileway.metrics.core.ReservoirType;
+import com.jn.agileway.metrics.core.Snapshot;
 import com.jn.langx.util.timing.clock.Clock;
 import com.jn.langx.util.timing.clock.Clocks;
 

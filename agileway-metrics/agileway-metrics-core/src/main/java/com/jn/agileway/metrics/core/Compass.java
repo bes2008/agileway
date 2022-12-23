@@ -16,6 +16,11 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.agileway.metrics.core.meter.Counter;
+import com.jn.agileway.metrics.core.meter.Metered;
+import com.jn.agileway.metrics.core.meter.RatioGauge;
+import com.jn.agileway.metrics.core.meter.Timer;
+
 import java.io.Closeable;
 import java.util.Map;
 import java.util.concurrent.Callable;

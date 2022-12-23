@@ -16,6 +16,8 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.agileway.metrics.core.meter.Gauge;
+
 /**
  * A gauge whose value is derived from the value of another gauge.
  *

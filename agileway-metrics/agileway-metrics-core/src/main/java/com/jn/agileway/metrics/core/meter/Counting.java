@@ -14,19 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jn.agileway.metrics.core;
+package com.jn.agileway.metrics.core.meter;
 
 /**
- * A subclass of {@link Gauge} which should be persistent.
- * A gauge that is never invalidated.
+ * An interface for metric types which have counts.
  */
-public abstract class PersistentGauge<T> implements Gauge<T> {
-
+public interface Counting {
     /**
-     * This gauge is always available, and be updated constantly.
+     * Returns the current count.
+     *
+     * @return the current count
      */
-    @Override
-    public long lastUpdateTime() {
-        return System.currentTimeMillis();
-    }
+    long getCount();
 }

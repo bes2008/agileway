@@ -17,7 +17,8 @@
 package com.jn.agileway.metrics.core;
 
 import com.jn.agileway.metrics.core.common.config.MetricsCollectPeriodConfig;
-import com.jn.langx.util.timing.clock.Clock;
+import com.jn.agileway.metrics.core.meter.*;
+import com.jn.agileway.metrics.core.meter.Timer;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
