@@ -1,4 +1,8 @@
-package com.jn.agileway.metrics.core;
+package com.jn.agileway.metrics.core.meter.impl;
+
+import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.MetricBuilder;
+import com.jn.agileway.metrics.core.MetricName;
 
 public abstract class AbstractMetricBuilder<T extends Metric> implements MetricBuilder<T> {
     protected int interval;

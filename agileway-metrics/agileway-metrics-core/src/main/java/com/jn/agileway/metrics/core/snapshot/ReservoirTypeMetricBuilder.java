@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.core.snapshot;
 
-import com.jn.agileway.metrics.core.AbstractMetricBuilder;
+import com.jn.agileway.metrics.core.meter.impl.AbstractMetricBuilder;
 import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.MetricName;
 
