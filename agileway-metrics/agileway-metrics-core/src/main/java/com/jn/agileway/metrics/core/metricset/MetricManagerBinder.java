@@ -23,7 +23,7 @@ public class MetricManagerBinder {
     private MetricManager manager;
 
     private MetricManagerBinder() {
-        manager = new AliMetricManager();
+        manager = new DefaultMetricManager();
     }
 
     public static MetricManagerBinder getSingleton() {

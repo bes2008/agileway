@@ -27,7 +27,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class AliMetricManager implements MetricManager {
+public class DefaultMetricManager implements MetricManager {
 
     @SuppressWarnings("rawtypes")
     final private static SortedMap emptySortedMap = new TreeMap();
@@ -36,7 +36,7 @@ public class AliMetricManager implements MetricManager {
 
     private volatile boolean enabled;
 
-    public AliMetricManager() {
+    public DefaultMetricManager() {
         metricRegistryMap = new ConcurrentHashMap<String, MetricRegistry>();
         enabled = true;
     }
