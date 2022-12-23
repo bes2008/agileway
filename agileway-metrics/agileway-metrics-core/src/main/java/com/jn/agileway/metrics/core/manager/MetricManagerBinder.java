@@ -20,7 +20,7 @@ public class MetricManagerBinder {
 
     private static final MetricManagerBinder instance = new MetricManagerBinder();
 
-    private IMetricManager manager;
+    private MetricManager manager;
 
     private MetricManagerBinder() {
         manager = new AliMetricManager();
@@ -30,7 +30,7 @@ public class MetricManagerBinder {
         return instance;
     }
 
-    public IMetricManager getMetricManager() {
+    public MetricManager getMetricManager() {
         return manager;
     }
 }

@@ -20,7 +20,7 @@ import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.common.config.MetricsCollectPeriodConfig;
 import com.jn.agileway.metrics.core.common.filter.CompositeMetricFilter;
 import com.jn.agileway.metrics.core.common.filter.TimeMetricLevelFilter;
-import com.jn.agileway.metrics.core.manager.IMetricManager;
+import com.jn.agileway.metrics.core.manager.MetricManager;
 import com.jn.agileway.metrics.core.meter.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +44,7 @@ public abstract class MetricManagerReporter implements Closeable {
     protected final double durationFactor;
     protected final double rateFactor;
 
-    private final IMetricManager metricManager;
+    private final MetricManager metricManager;
     private final ScheduledExecutorService executor;
     private final String durationUnit;
     private final String rateUnit;
@@ -81,14 +81,14 @@ public abstract class MetricManagerReporter implements Closeable {
     /**
      * Creates a new {@link MetricManagerReporter} instance.
      *
-     * @param metricManager the {@link IMetricManager} containing the metrics this
+     * @param metricManager the {@link MetricManager} containing the metrics this
      *                      reporter will report
      * @param name          the reporter's name
      * @param filter        the filter for which metrics to report
      * @param rateUnit      a unit of time
      * @param durationUnit  a unit of time
      */
-    protected MetricManagerReporter(IMetricManager metricManager,
+    protected MetricManagerReporter(MetricManager metricManager,
                                     String name,
                                     MetricFilter filter,
                                     MetricsCollectPeriodConfig metricsReportPeriodConfig,
@@ -102,14 +102,14 @@ public abstract class MetricManagerReporter implements Closeable {
     /**
      * Creates a new {@link MetricManagerReporter} instance.
      *
-     * @param metricManager the {@link IMetricManager} containing the metrics this
+     * @param metricManager the {@link MetricManager} containing the metrics this
      *                      reporter will report
      * @param name          the reporter's name
      * @param filter        the filter for which metrics to report
      * @param rateUnit      a unit of time
      * @param durationUnit  a unit of time
      */
-    protected MetricManagerReporter(IMetricManager metricManager,
+    protected MetricManagerReporter(MetricManager metricManager,
                                     String name,
                                     MetricFilter filter,
                                     TimeMetricLevelFilter timeMetricLevelFilter,
@@ -123,12 +123,12 @@ public abstract class MetricManagerReporter implements Closeable {
     /**
      * Creates a new {@link MetricManagerReporter} instance.
      *
-     * @param metricManager the {@link IMetricManager} containing the metrics this
+     * @param metricManager the {@link MetricManager} containing the metrics this
      *                      reporter will report
      * @param filter        the filter for which metrics to report
      * @param executor      the executor to use while scheduling reporting of metrics.
      */
-    protected MetricManagerReporter(IMetricManager metricManager,
+    protected MetricManagerReporter(MetricManager metricManager,
                                     MetricFilter filter,
                                     TimeMetricLevelFilter timeMetricLevelFilter,
                                     TimeUnit rateUnit,

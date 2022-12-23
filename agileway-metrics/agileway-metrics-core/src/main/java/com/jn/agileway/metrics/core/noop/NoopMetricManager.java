@@ -1,7 +1,7 @@
 package com.jn.agileway.metrics.core.noop;
 
 import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.manager.IMetricManager;
+import com.jn.agileway.metrics.core.manager.MetricManager;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.metricset.MetricRegistry;
@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * IMetricManager的空实现
  */
-public class NoopMetricManager implements IMetricManager {
+public class NoopMetricManager implements MetricManager {
 
 
     @Override

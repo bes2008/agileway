@@ -27,7 +27,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class AliMetricManager implements IMetricManager {
+public class AliMetricManager implements MetricManager {
 
     @SuppressWarnings("rawtypes")
     final private static SortedMap emptySortedMap = new TreeMap();
@@ -44,7 +44,7 @@ public class AliMetricManager implements IMetricManager {
     @Override
     public Meter getMeter(String group, MetricName name) {
         if (!this.enabled) {
-            return MetricManager.NOP_METRIC_MANAGER.getMeter(group, name);
+            return MetricManagers.NOP_METRIC_MANAGER.getMeter(group, name);
         }
         return getMetricRegistryByGroup(group).meter(name);
     }
@@ -52,7 +52,7 @@ public class AliMetricManager implements IMetricManager {
     @Override
     public Counter getCounter(String group, MetricName name) {
         if (!this.enabled) {
-            return MetricManager.NOP_METRIC_MANAGER.getCounter(group, name);
+            return MetricManagers.NOP_METRIC_MANAGER.getCounter(group, name);
         }
         return getMetricRegistryByGroup(group).counter(name);
     }
@@ -60,7 +60,7 @@ public class AliMetricManager implements IMetricManager {
     @Override
     public Histogram getHistogram(String group, MetricName name) {
         if (!this.enabled) {
-            return MetricManager.NOP_METRIC_MANAGER.getHistogram(group, name);
+            return MetricManagers.NOP_METRIC_MANAGER.getHistogram(group, name);
         }
         return getMetricRegistryByGroup(group).histogram(name);
     }
@@ -68,7 +68,7 @@ public class AliMetricManager implements IMetricManager {
     @Override
     public Histogram getHistogram(String group, MetricName name, ReservoirType type) {
         if (!this.enabled) {
-            return MetricManager.NOP_METRIC_MANAGER.getHistogram(group, name, type);
+            return MetricManagers.NOP_METRIC_MANAGER.getHistogram(group, name, type);
         }
         return getMetricRegistryByGroup(group).histogram(name, type);
     }
@@ -76,7 +76,7 @@ public class AliMetricManager implements IMetricManager {
     @Override
     public Timer getTimer(String group, MetricName name) {
         if (!this.enabled) {
-            return MetricManager.NOP_METRIC_MANAGER.getTimer(group, name);
+            return MetricManagers.NOP_METRIC_MANAGER.getTimer(group, name);
         }
         return getMetricRegistryByGroup(group).timer(name);
     }
@@ -84,7 +84,7 @@ public class AliMetricManager implements IMetricManager {
     @Override
     public Timer getTimer(String group, MetricName name, ReservoirType type) {
         if (!this.enabled) {
-            return MetricManager.NOP_METRIC_MANAGER.getTimer(group, name, type);
+            return MetricManagers.NOP_METRIC_MANAGER.getTimer(group, name, type);
         }
         return getMetricRegistryByGroup(group).timer(name, type);
     }
@@ -92,7 +92,7 @@ public class AliMetricManager implements IMetricManager {
     @Override
     public Compass getCompass(String group, MetricName name) {
         if (!this.enabled) {
-            return MetricManager.NOP_METRIC_MANAGER.getCompass(group, name);
+            return MetricManagers.NOP_METRIC_MANAGER.getCompass(group, name);
         }
         return getMetricRegistryByGroup(group).compass(name);
     }
@@ -100,7 +100,7 @@ public class AliMetricManager implements IMetricManager {
     @Override
     public Compass getCompass(String group, MetricName name, ReservoirType type) {
         if (!this.enabled) {
-            return MetricManager.NOP_METRIC_MANAGER.getCompass(group, name, type);
+            return MetricManagers.NOP_METRIC_MANAGER.getCompass(group, name, type);
         }
         return getMetricRegistryByGroup(group).compass(name, type);
     }
@@ -108,7 +108,7 @@ public class AliMetricManager implements IMetricManager {
     @Override
     public FastCompass getFastCompass(String group, MetricName name) {
         if (!this.enabled) {
-            return MetricManager.NOP_METRIC_MANAGER.getFastCompass(group, name);
+            return MetricManagers.NOP_METRIC_MANAGER.getFastCompass(group, name);
         }
         return getMetricRegistryByGroup(group).fastCompass(name);
     }
@@ -116,7 +116,7 @@ public class AliMetricManager implements IMetricManager {
     @Override
     public ClusterHistogram getClusterHistogram(String group, MetricName name, long[] buckets) {
         if (!this.enabled) {
-            return MetricManager.NOP_METRIC_MANAGER.getClusterHistogram(group, name, buckets);
+            return MetricManagers.NOP_METRIC_MANAGER.getClusterHistogram(group, name, buckets);
         }
         return getMetricRegistryByGroup(group).clusterHistogram(name, buckets);
     }
