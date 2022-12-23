@@ -18,6 +18,8 @@ package com.jn.agileway.metrics.core.reporter;
 
 import com.jn.agileway.metrics.core.Timer;
 import com.jn.agileway.metrics.core.*;
+import com.jn.langx.util.timing.clock.Clock;
+import com.jn.langx.util.timing.clock.Clocks;
 
 import java.io.PrintStream;
 import java.text.DateFormat;
@@ -33,6 +35,7 @@ public class ConsoleReporter extends ScheduledReporter {
     private final Locale locale;
     private final Clock clock;
     private final DateFormat dateFormat;
+
     private ConsoleReporter(MetricRegistry registry,
                             PrintStream output,
                             Locale locale,
@@ -44,6 +47,7 @@ public class ConsoleReporter extends ScheduledReporter {
         super(registry, "console-reporter", filter, rateUnit, durationUnit);
         this.output = output;
         this.locale = locale;
+        clock = clock == null ? Clocks.defaultClock() : clock;
         this.clock = clock;
         this.dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT,
                 DateFormat.MEDIUM,
@@ -199,7 +203,7 @@ public class ConsoleReporter extends ScheduledReporter {
             this.registry = registry;
             this.output = System.out;
             this.locale = Locale.getDefault();
-            this.clock = Clock.defaultClock();
+            this.clock = Clocks.defaultClock();
             this.timeZone = TimeZone.getDefault();
             this.rateUnit = TimeUnit.SECONDS;
             this.durationUnit = TimeUnit.MILLISECONDS;

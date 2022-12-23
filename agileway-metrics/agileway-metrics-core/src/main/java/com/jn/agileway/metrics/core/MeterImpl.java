@@ -17,6 +17,8 @@
 package com.jn.agileway.metrics.core;
 
 import com.jn.langx.util.concurrent.longaddr.LongAdder;
+import com.jn.langx.util.timing.clock.Clock;
+import com.jn.langx.util.timing.clock.Clocks;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -50,14 +52,14 @@ public class MeterImpl implements Meter {
      * Creates a new {@link Meter}.
      */
     public MeterImpl() {
-        this(Clock.defaultClock(), DEFAULT_NUM_OF_BUCKET, 60);
+        this(null, DEFAULT_NUM_OF_BUCKET, 60);
     }
 
     /**
      * Creates a new {@link Meter} with given bucket interval
      */
     public MeterImpl(int interval) {
-        this(Clock.defaultClock(), DEFAULT_NUM_OF_BUCKET, interval);
+        this(null, DEFAULT_NUM_OF_BUCKET, interval);
     }
 
     public MeterImpl(Clock clock) {
@@ -76,6 +78,7 @@ public class MeterImpl implements Meter {
      * @param interval       the time interval for each bucket
      */
     public MeterImpl(Clock clock, int numberOfBucket, int interval) {
+        clock = clock==null ? Clocks.defaultClock(): clock;
         this.clock = clock;
         this.startTime = this.clock.getTick();
         this.lastTick = new AtomicLong(startTime);

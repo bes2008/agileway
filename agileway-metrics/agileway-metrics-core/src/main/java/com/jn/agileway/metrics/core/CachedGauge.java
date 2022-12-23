@@ -16,6 +16,9 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.langx.util.timing.clock.Clock;
+import com.jn.langx.util.timing.clock.Clocks;
+
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -39,7 +42,7 @@ public abstract class CachedGauge<T> implements Gauge<T> {
      * @param timeoutUnit the unit of {@code timeout}
      */
     protected CachedGauge(long timeout, TimeUnit timeoutUnit) {
-        this(Clock.defaultClock(), timeout, timeoutUnit);
+        this(null, timeout, timeoutUnit);
     }
 
     /**
@@ -50,6 +53,7 @@ public abstract class CachedGauge<T> implements Gauge<T> {
      * @param timeoutUnit the unit of {@code timeout}
      */
     protected CachedGauge(Clock clock, long timeout, TimeUnit timeoutUnit) {
+        clock = clock==null ? Clocks.defaultClock(): clock;
         this.clock = clock;
         this.reloadAt = new AtomicLong(clock.getTick());
         this.timeoutNS = timeoutUnit.toNanos(timeout);

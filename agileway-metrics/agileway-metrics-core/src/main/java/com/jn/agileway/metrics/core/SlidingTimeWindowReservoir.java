@@ -16,6 +16,9 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.langx.util.timing.clock.Clock;
+import com.jn.langx.util.timing.clock.Clocks;
+
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
@@ -43,7 +46,7 @@ public class SlidingTimeWindowReservoir implements Reservoir {
      * @param windowUnit the unit of {@code window}
      */
     public SlidingTimeWindowReservoir(long window, TimeUnit windowUnit) {
-        this(window, windowUnit, Clock.defaultClock());
+        this(window, windowUnit, null);
     }
 
     /**
@@ -54,6 +57,7 @@ public class SlidingTimeWindowReservoir implements Reservoir {
      * @param clock      the {@link Clock} to use
      */
     public SlidingTimeWindowReservoir(long window, TimeUnit windowUnit, Clock clock) {
+        clock = clock==null ? Clocks.defaultClock(): clock;
         this.clock = clock;
         this.measurements = new ConcurrentSkipListMap<Long, Long>();
         this.window = windowUnit.toNanos(window) * COLLISION_BUFFER;

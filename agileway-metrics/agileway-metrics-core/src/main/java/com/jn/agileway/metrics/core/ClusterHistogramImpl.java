@@ -16,6 +16,8 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.langx.util.timing.clock.Clock;
+
 import java.util.HashMap;
 import java.util.Map;
 

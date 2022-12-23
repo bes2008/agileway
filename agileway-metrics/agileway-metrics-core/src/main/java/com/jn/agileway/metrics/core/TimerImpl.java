@@ -16,6 +16,9 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.langx.util.timing.clock.Clock;
+import com.jn.langx.util.timing.clock.Clocks;
+
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
@@ -33,15 +36,15 @@ public class TimerImpl implements Timer {
      * {@link Clock}.
      */
     public TimerImpl() {
-        this(ReservoirType.EXPONENTIALLY_DECAYING, Clock.defaultClock(), 60);
+        this(ReservoirType.EXPONENTIALLY_DECAYING, null, 60);
     }
 
     public TimerImpl(int interval) {
-        this(ReservoirType.EXPONENTIALLY_DECAYING, Clock.defaultClock(), interval);
+        this(ReservoirType.EXPONENTIALLY_DECAYING, null, interval);
     }
 
     public TimerImpl(int interval, ReservoirType type) {
-        this(type, Clock.defaultClock(), interval);
+        this(type, null, interval);
     }
 
     /**
@@ -50,7 +53,7 @@ public class TimerImpl implements Timer {
      * @param reservoir the {@link Reservoir} implementation the timer should use
      */
     public TimerImpl(ReservoirType reservoir) {
-        this(reservoir, Clock.defaultClock(), 60);
+        this(reservoir, null, 60);
     }
 
     /**
@@ -62,6 +65,7 @@ public class TimerImpl implements Timer {
      */
     public TimerImpl(ReservoirType reservoir, Clock clock, int interval) {
         this.meter = new MeterImpl(clock, interval);
+        clock = clock==null ? Clocks.defaultClock(): clock;
         this.clock = clock;
         this.histogram = new HistogramImpl(reservoir, interval, 10, clock);
     }

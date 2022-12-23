@@ -18,6 +18,8 @@ package com.jn.agileway.metrics.core;
 
 import com.jn.agileway.metrics.core.WeightedSnapshot.WeightedSample;
 import com.jn.langx.util.random.ThreadLocalRandom;
+import com.jn.langx.util.timing.clock.Clock;
+import com.jn.langx.util.timing.clock.Clocks;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -75,7 +77,7 @@ public class ExponentiallyDecayingReservoir implements Reservoir {
      *              will be towards newer values
      */
     public ExponentiallyDecayingReservoir(int size, double alpha) {
-        this(size, alpha, Clock.defaultClock());
+        this(size, alpha, null);
     }
 
     /**
@@ -87,6 +89,7 @@ public class ExponentiallyDecayingReservoir implements Reservoir {
      * @param clock the clock used to timestamp samples and track rescaling
      */
     public ExponentiallyDecayingReservoir(int size, double alpha, Clock clock) {
+        clock = clock==null ? Clocks.defaultClock(): clock;
         this.values = new ConcurrentSkipListMap<Double, WeightedSample>();
         this.lock = new ReentrantReadWriteLock();
         this.alpha = alpha;

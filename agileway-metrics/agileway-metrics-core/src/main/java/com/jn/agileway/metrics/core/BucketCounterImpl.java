@@ -16,6 +16,9 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.langx.util.timing.clock.Clock;
+import com.jn.langx.util.timing.clock.Clocks;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -58,11 +61,11 @@ public class BucketCounterImpl implements BucketCounter {
     private long initTimestamp;
 
     public BucketCounterImpl(int interval, boolean updateTotalCount) {
-        this(interval, 10, Clock.defaultClock(), updateTotalCount);
+        this(interval, 10, null, updateTotalCount);
     }
 
     public BucketCounterImpl(int interval) {
-        this(interval, 10, Clock.defaultClock(), true);
+        this(interval, 10, null, true);
     }
 
     public BucketCounterImpl(int interval, int numberOfBucket, Clock clock) {
@@ -70,6 +73,7 @@ public class BucketCounterImpl implements BucketCounter {
     }
 
     public BucketCounterImpl(int interval, int numberOfBucket, Clock clock, boolean updateTotalCount) {
+        clock = clock==null ? Clocks.defaultClock(): clock;
         this.totalCount = new CounterImpl();
         this.interval = interval;
         this.buckets = new BucketDeque(numberOfBucket + 1);

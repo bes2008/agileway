@@ -19,7 +19,6 @@ package com.jn.agileway.metrics.core;
 /**
  * @author wangtao 2019-01-16 10:55
  */
-
 public interface ClusterHistogramBuilder<T> extends MetricBuilder {
 
     /**

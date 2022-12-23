@@ -16,6 +16,9 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.langx.util.timing.clock.Clock;
+import com.jn.langx.util.timing.clock.Clocks;
+
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -32,15 +35,16 @@ public abstract class CachedMetricSet implements MetricSet {
     protected Clock clock;
 
     public CachedMetricSet() {
-        this(DEFAULT_DATA_TTL, TimeUnit.MILLISECONDS, Clock.defaultClock());
+        this(DEFAULT_DATA_TTL, TimeUnit.MILLISECONDS, null);
     }
 
     public CachedMetricSet(long dataTTL, TimeUnit unit) {
-        this(dataTTL, unit, Clock.defaultClock());
+        this(dataTTL, unit, null);
     }
 
     public CachedMetricSet(long dataTTL, TimeUnit unit, Clock clock) {
         this.dataTTL = unit.toMillis(dataTTL);
+        clock = clock==null ? Clocks.defaultClock(): clock;
         this.clock = clock;
         this.lastCollectTime = new AtomicLong(0);
     }

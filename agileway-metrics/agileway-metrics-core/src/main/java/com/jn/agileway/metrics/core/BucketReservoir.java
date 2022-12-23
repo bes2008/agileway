@@ -16,6 +16,9 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.langx.util.timing.clock.Clock;
+import com.jn.langx.util.timing.clock.Clocks;
+
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +38,7 @@ public class BucketReservoir implements Reservoir {
      * @param count          the total count, which will be update outside
      */
     public BucketReservoir(int interval, int numberOfBucket, Clock clock, BucketCounter count) {
+        clock = clock==null ? Clocks.defaultClock(): clock;
         this.clock = clock;
         this.interval = interval;
         this.valuePerBucket = new BucketCounterImpl(interval, numberOfBucket, clock);

@@ -16,6 +16,9 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.langx.util.timing.clock.Clock;
+import com.jn.langx.util.timing.clock.Clocks;
+
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -35,15 +38,15 @@ public class HistogramImpl implements Histogram {
      * @param type the reservoir type to create a histogram from
      */
     public HistogramImpl(ReservoirType type) {
-        this(type, 60, 10, Clock.defaultClock());
+        this(type, 60, 10, Clocks.defaultClock());
     }
 
     public HistogramImpl(int interval, ReservoirType type) {
-        this(type, interval, 10, Clock.defaultClock());
+        this(type, interval, 10, Clocks.defaultClock());
     }
 
     public HistogramImpl(int interval) {
-        this(ReservoirType.EXPONENTIALLY_DECAYING, interval, 10, Clock.defaultClock());
+        this(ReservoirType.EXPONENTIALLY_DECAYING, interval, 10, Clocks.defaultClock());
     }
 
     /**
@@ -55,6 +58,7 @@ public class HistogramImpl implements Histogram {
      * @param clock          the clock the create bucket counter
      */
     public HistogramImpl(ReservoirType type, int interval, int numberOfBucket, Clock clock) {
+        clock = clock==null ? Clocks.defaultClock(): clock;
         this.count = new BucketCounterImpl(interval, numberOfBucket, clock);
         switch (type) {
             case EXPONENTIALLY_DECAYING:

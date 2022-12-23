@@ -17,6 +17,8 @@
 package com.jn.agileway.metrics.core;
 
 import com.jn.langx.util.concurrent.longaddr.LongAdder;
+import com.jn.langx.util.timing.clock.Clock;
+import com.jn.langx.util.timing.clock.Clocks;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -111,17 +113,17 @@ public class CompassImpl implements Compass {
      * {@link Clock}.
      */
     public CompassImpl() {
-        this(ReservoirType.EXPONENTIALLY_DECAYING, Clock.defaultClock(),
+        this(ReservoirType.EXPONENTIALLY_DECAYING, null,
                 10, 60, MAX_ERROR_CODE_COUNT, MAX_ADDON_COUNT);
     }
 
     public CompassImpl(int bucketInterval) {
-        this(ReservoirType.EXPONENTIALLY_DECAYING, Clock.defaultClock(), 10, bucketInterval,
+        this(ReservoirType.EXPONENTIALLY_DECAYING, null, 10, bucketInterval,
                 MAX_ERROR_CODE_COUNT, MAX_ADDON_COUNT);
     }
 
     public CompassImpl(int bucketInterval, ReservoirType type) {
-        this(type, Clock.defaultClock(), 10, bucketInterval, MAX_ERROR_CODE_COUNT, MAX_ADDON_COUNT);
+        this(type, null, 10, bucketInterval, MAX_ERROR_CODE_COUNT, MAX_ADDON_COUNT);
     }
 
     /**
@@ -138,6 +140,7 @@ public class CompassImpl implements Compass {
         this.bucketInterval = bucketInterval;
         this.numberOfBucket = numberOfBucket;
         this.totalCount = new BucketCounterImpl(bucketInterval, numberOfBucket, clock);
+        clock = clock == null ? Clocks.defaultClock() : clock;
         this.clock = clock;
         this.startTime = this.clock.getTick();
         this.lastTick = new AtomicLong(this.startTime);

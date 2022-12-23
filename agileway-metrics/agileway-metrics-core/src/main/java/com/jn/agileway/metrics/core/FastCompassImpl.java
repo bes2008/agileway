@@ -16,6 +16,10 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.langx.util.concurrent.longaddr.LongAdder;
+import com.jn.langx.util.timing.clock.Clock;
+import com.jn.langx.util.timing.clock.Clocks;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -70,12 +74,13 @@ public class FastCompassImpl implements FastCompass {
     private int maxCategoryCount;
 
     public FastCompassImpl(int bucketInterval) {
-        this(bucketInterval, DEFAULT_BUCKET_COUNT, Clock.defaultClock(), MAX_SUBCATEGORY_SIZE);
+        this(bucketInterval, DEFAULT_BUCKET_COUNT, null, MAX_SUBCATEGORY_SIZE);
     }
 
     public FastCompassImpl(int bucketInterval, int numberOfBuckets, Clock clock, int maxCategoryCount) {
         this.bucketInterval = bucketInterval;
         this.numberOfBuckets = numberOfBuckets;
+        clock = clock==null ? Clocks.defaultClock(): clock;
         this.clock = clock;
         this.maxCategoryCount = maxCategoryCount;
         this.subCategories = new ConcurrentHashMap<String, BucketCounter>();

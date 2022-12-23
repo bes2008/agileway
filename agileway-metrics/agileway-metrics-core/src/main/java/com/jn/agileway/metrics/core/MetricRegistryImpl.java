@@ -17,6 +17,7 @@
 package com.jn.agileway.metrics.core;
 
 import com.jn.agileway.metrics.core.common.config.MetricsCollectPeriodConfig;
+import com.jn.langx.util.timing.clock.Clock;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -164,7 +165,7 @@ public class MetricRegistryImpl extends MetricRegistry {
             if (metrics.size() >= maxMetricCount) {
                 return null;
             }
-            return new ClusterHistogramImpl(buckets, config.period(name.getMetricLevel()), Clock.defaultClock());
+            return new ClusterHistogramImpl(buckets, config.period(name.getMetricLevel()), null);
         }
 
         @Override
@@ -173,7 +174,7 @@ public class MetricRegistryImpl extends MetricRegistry {
             if (metrics.size() >= maxMetricCount) {
                 return null;
             }
-            return new ClusterHistogramImpl(config.period(name.getMetricLevel()), Clock.defaultClock());
+            return new ClusterHistogramImpl(config.period(name.getMetricLevel()), null);
         }
 
         @Override

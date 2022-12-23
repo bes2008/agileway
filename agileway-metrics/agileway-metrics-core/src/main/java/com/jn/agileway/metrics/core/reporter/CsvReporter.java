@@ -17,6 +17,9 @@
 package com.jn.agileway.metrics.core.reporter;
 
 import com.jn.agileway.metrics.core.*;
+import com.jn.langx.util.io.Charsets;
+import com.jn.langx.util.timing.clock.Clock;
+import com.jn.langx.util.timing.clock.Clocks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +35,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class CsvReporter extends ScheduledReporter {
     private static final Logger LOGGER = LoggerFactory.getLogger(CsvReporter.class);
-    private static final Charset UTF_8 = Charset.forName("UTF-8");
+    private static final Charset UTF_8 = Charsets.UTF_8;
     private final File directory;
     private final Locale locale;
     private final Clock clock;
@@ -196,7 +199,7 @@ public class CsvReporter extends ScheduledReporter {
             this.locale = Locale.getDefault();
             this.rateUnit = TimeUnit.SECONDS;
             this.durationUnit = TimeUnit.MILLISECONDS;
-            this.clock = Clock.defaultClock();
+            this.clock = Clocks.defaultClock();
             this.filter = MetricFilter.ALL;
             this.csvFileProvider = new FixedNameCsvFileProvider();
         }
