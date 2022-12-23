@@ -38,9 +38,9 @@ public class MeterImpl implements Meter {
     private static final int DEFAULT_NUM_OF_BUCKET =
             Integer.getInteger("com.jn.agileway.metrics.core.numberOfBucket", 10);
 
-    private final EWMA m1Rate = EWMA.oneMinuteEWMA();
-    private final EWMA m5Rate = EWMA.fiveMinuteEWMA();
-    private final EWMA m15Rate = EWMA.fifteenMinuteEWMA();
+    private final EWMA m1Rate = EWMA.m1EWMA();
+    private final EWMA m5Rate = EWMA.m5EWMA();
+    private final EWMA m15Rate = EWMA.m15EWMA();
 
     private final long startTime;
     private final AtomicLong lastTick;

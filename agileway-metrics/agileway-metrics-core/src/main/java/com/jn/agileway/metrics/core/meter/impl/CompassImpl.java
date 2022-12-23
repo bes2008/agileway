@@ -59,17 +59,17 @@ public class CompassImpl implements Compass {
     /**
      * The 1-min moving average
      */
-    private final EWMA m1Rate = EWMA.oneMinuteEWMA();
+    private final EWMA m1Rate = EWMA.m1EWMA();
 
     /**
      * The 5-min moving average
      */
-    private final EWMA m5Rate = EWMA.fiveMinuteEWMA();
+    private final EWMA m5Rate = EWMA.m5EWMA();
 
     /**
      * The 15-min moving average
      */
-    private final EWMA m15Rate = EWMA.fifteenMinuteEWMA();
+    private final EWMA m15Rate = EWMA.m15EWMA();
 
     /**
      * The time of start collecting

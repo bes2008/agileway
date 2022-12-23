@@ -63,7 +63,7 @@ public class EWMA {
      *
      * @return a one-minute EWMA
      */
-    public static EWMA oneMinuteEWMA() {
+    public static EWMA m1EWMA() {
         return new EWMA(M1_ALPHA, INTERVAL, TimeUnit.SECONDS);
     }
 
@@ -73,7 +73,7 @@ public class EWMA {
      *
      * @return a five-minute EWMA
      */
-    public static EWMA fiveMinuteEWMA() {
+    public static EWMA m5EWMA() {
         return new EWMA(M5_ALPHA, INTERVAL, TimeUnit.SECONDS);
     }
 
@@ -83,7 +83,7 @@ public class EWMA {
      *
      * @return a fifteen-minute EWMA
      */
-    public static EWMA fifteenMinuteEWMA() {
+    public static EWMA m15EWMA() {
         return new EWMA(M15_ALPHA, INTERVAL, TimeUnit.SECONDS);
     }
 
