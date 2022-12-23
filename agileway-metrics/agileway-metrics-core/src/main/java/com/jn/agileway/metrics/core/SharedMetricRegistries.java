@@ -16,6 +16,9 @@
  */
 package com.jn.agileway.metrics.core;
 
+import com.jn.agileway.metrics.core.metricset.MetricRegistry;
+import com.jn.agileway.metrics.core.metricset.MetricRegistryImpl;
+
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;

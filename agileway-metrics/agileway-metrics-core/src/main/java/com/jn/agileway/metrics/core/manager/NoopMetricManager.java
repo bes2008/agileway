@@ -19,6 +19,7 @@ package com.jn.agileway.metrics.core.manager;
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.Timer;
+import com.jn.agileway.metrics.core.metricset.MetricRegistry;
 import com.jn.agileway.metrics.core.metricset.MetricSet;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class NoopMetricManager implements IMetricManager {
 
-    static final Counter NOP_COUNTER = new Counter() {
+    public static final Counter NOP_COUNTER = new Counter() {
         @Override
         public void inc() {
         }
@@ -60,7 +61,7 @@ public class NoopMetricManager implements IMetricManager {
         }
     };
     private static final SortedMap emptyMap = new TreeMap();
-    static final Meter NOP_METER = new Meter() {
+    public  static final Meter NOP_METER = new Meter() {
         @Override
         public void mark() {
         }
@@ -114,7 +115,7 @@ public class NoopMetricManager implements IMetricManager {
             return 0;
         }
     };
-    static final BucketCounter NOP_BUCKET_COUNTER = new BucketCounter() {
+    public  static final BucketCounter NOP_BUCKET_COUNTER = new BucketCounter() {
 
         @Override
         public void update() {
@@ -171,7 +172,7 @@ public class NoopMetricManager implements IMetricManager {
             return 0;
         }
     };
-    static final FastCompass NOP_FAST_COMPASS = new FastCompass() {
+    public static final FastCompass NOP_FAST_COMPASS = new FastCompass() {
         @Override
         public void record(long duration, String subCategory) {
 
@@ -217,7 +218,7 @@ public class NoopMetricManager implements IMetricManager {
             return 0;
         }
     };
-    static final ClusterHistogram NOP_CLUSTER_HISTOGRAM = new ClusterHistogram() {
+    public static final ClusterHistogram NOP_CLUSTER_HISTOGRAM = new ClusterHistogram() {
         @Override
         public void update(long value) {
 
@@ -341,7 +342,7 @@ public class NoopMetricManager implements IMetricManager {
         public void dump(OutputStream output) {
         }
     };
-    static final Histogram NOP_HISTOGRAM = new Histogram() {
+   public static final Histogram NOP_HISTOGRAM = new Histogram() {
         @Override
         public void update(int value) {
         }
@@ -365,7 +366,7 @@ public class NoopMetricManager implements IMetricManager {
             return 0;
         }
     };
-    static final Timer NOP_TIMER = new Timer() {
+    public static final Timer NOP_TIMER = new Timer() {
         @Override
         public void update(long duration, TimeUnit unit) {
         }
@@ -430,7 +431,7 @@ public class NoopMetricManager implements IMetricManager {
             return 0;
         }
     };
-    static final Compass NOP_COMPASS = new Compass() {
+    public static final Compass NOP_COMPASS = new Compass() {
 
         @Override
         public Map<String, BucketCounter> getErrorCodeCounts() {

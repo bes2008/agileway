@@ -16,11 +16,11 @@
  */
 package com.jn.agileway.metrics.core.instrument;
 
-import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.meter.Counter;
 import com.jn.agileway.metrics.core.meter.Histogram;
 import com.jn.agileway.metrics.core.meter.Meter;
 import com.jn.agileway.metrics.core.meter.Timer;
+import com.jn.agileway.metrics.core.metricset.MetricRegistry;
 
 import java.util.ArrayList;
 import java.util.Collection;
