@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.jn.agileway.metrics.core.Constants.NOT_AVAILABLE;
+import static com.jn.agileway.metrics.core.common.Constants.NOT_AVAILABLE;
 
 public abstract class MetricsCollector implements Collector {
 

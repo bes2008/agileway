@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import static com.jn.agileway.metrics.core.Constants.NOT_AVAILABLE;
+import static com.jn.agileway.metrics.core.common.Constants.NOT_AVAILABLE;
 import static java.lang.Math.exp;
 import static java.lang.Math.min;
 
