@@ -395,21 +395,21 @@ public class DefaultMetricManager implements MetricManager {
 
         MetricName metricName = entry.getKey();
         Metric metric = entry.getValue();
-        if (metric instanceof Gauge && filter.matches(metricName, metric)) {
+        if (metric instanceof Gauge && filter.accept(metricName, metric)) {
             gauges.put(metricName, (Gauge) metric);
-        } else if (metric instanceof Counter && filter.matches(metricName, metric)) {
+        } else if (metric instanceof Counter && filter.accept(metricName, metric)) {
             counters.put(metricName, (Counter) metric);
-        } else if (metric instanceof Histogram && filter.matches(metricName, metric)) {
+        } else if (metric instanceof Histogram && filter.accept(metricName, metric)) {
             histograms.put(metricName, (Histogram) metric);
-        } else if (metric instanceof Meter && filter.matches(metricName, metric)) {
+        } else if (metric instanceof Meter && filter.accept(metricName, metric)) {
             meters.put(metricName, (Meter) metric);
-        } else if (metric instanceof Timer && filter.matches(metricName, metric)) {
+        } else if (metric instanceof Timer && filter.accept(metricName, metric)) {
             timers.put(metricName, (Timer) metric);
-        } else if (metric instanceof Compass && filter.matches(metricName, metric)) {
+        } else if (metric instanceof Compass && filter.accept(metricName, metric)) {
             compasses.put(metricName, (Compass) metric);
-        } else if (metric instanceof FastCompass && filter.matches(metricName, metric)) {
+        } else if (metric instanceof FastCompass && filter.accept(metricName, metric)) {
             fastCompasses.put(metricName, (FastCompass) metric);
-        } else if (metric instanceof ClusterHistogram && filter.matches(metricName, metric)) {
+        } else if (metric instanceof ClusterHistogram && filter.accept(metricName, metric)) {
             clusterHistogrames.put(metricName, (ClusterHistogram) metric);
         } else if (metric instanceof DynamicMetricSet) {
             DynamicMetricSet dynamicMetricSet = (DynamicMetricSet) metric;

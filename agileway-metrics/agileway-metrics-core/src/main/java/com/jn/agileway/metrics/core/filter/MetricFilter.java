@@ -29,9 +29,9 @@ public interface MetricFilter {
     /**
      * Returns {@code true} if the metric matches the filter; {@code false} otherwise.
      *
-     * @param name   the metric's name
+     * @param name   the metric name
      * @param metric the metric
      * @return {@code true} if the metric matches the filter
      */
-    boolean matches(MetricName name, Metric metric);
+    boolean accept(MetricName name, Metric metric);
 }

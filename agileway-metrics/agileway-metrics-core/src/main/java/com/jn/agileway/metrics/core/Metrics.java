@@ -18,7 +18,7 @@ public class Metrics {
          */
         public static final MetricFilter TRUE = new MetricFilter() {
             @Override
-            public boolean matches(MetricName name, Metric metric) {
+            public boolean accept(MetricName name, Metric metric) {
                 return true;
             }
         };

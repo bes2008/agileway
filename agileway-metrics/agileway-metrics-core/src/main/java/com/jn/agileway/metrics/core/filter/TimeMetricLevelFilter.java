@@ -109,7 +109,7 @@ public class TimeMetricLevelFilter implements MetricFilter {
     }
 
     @Override
-    public boolean matches(MetricName name, Metric metric) {
+    public boolean accept(MetricName name, Metric metric) {
         if (config == null) {
             return true;
         }

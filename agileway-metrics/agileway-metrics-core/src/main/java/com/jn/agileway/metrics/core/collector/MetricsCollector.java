@@ -107,7 +107,7 @@ public abstract class MetricsCollector implements Collector {
             return this;
         }
 
-        if ((filter == null || filter.matches(MetricName.build(object.getMetric()), null))
+        if ((filter == null || filter.accept(MetricName.build(object.getMetric()), null))
                 && object.getValue() != null) {
             this.metrics.add(object);
         }

@@ -314,7 +314,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      */
     public void removeMatching(MetricFilter filter) {
         for (Map.Entry<MetricName, Metric> entry : metrics.entrySet()) {
-            if (filter.matches(entry.getKey(), entry.getValue())) {
+            if (filter.accept(entry.getKey(), entry.getValue())) {
                 remove(entry.getKey());
             }
         }
@@ -603,14 +603,14 @@ public class DefaultMetricRegistry implements MetricRegistry {
     private <T extends Metric> SortedMap<MetricName, T> getMetrics(Class<T> klass, MetricFilter filter) {
         final TreeMap<MetricName, T> timers = new TreeMap<MetricName, T>();
         for (Map.Entry<MetricName, Metric> entry : metrics.entrySet()) {
-            if (klass.isInstance(entry.getValue()) && filter.matches(entry.getKey(),
+            if (klass.isInstance(entry.getValue()) && filter.accept(entry.getKey(),
                     entry.getValue())) {
                 timers.put(entry.getKey(), (T) entry.getValue());
             } else if (entry.getValue() instanceof DynamicMetricSet) {
                 for (Map.Entry<MetricName, Metric> dynamicEntry :
                         ((DynamicMetricSet) entry.getValue()).getDynamicMetrics().entrySet()) {
                     if (klass.isInstance(dynamicEntry.getValue()) &&
-                            filter.matches(dynamicEntry.getKey(), dynamicEntry.getValue())) {
+                            filter.accept(dynamicEntry.getKey(), dynamicEntry.getValue())) {
                         timers.put(dynamicEntry.getKey(), (T) dynamicEntry.getValue());
                     }
                 }

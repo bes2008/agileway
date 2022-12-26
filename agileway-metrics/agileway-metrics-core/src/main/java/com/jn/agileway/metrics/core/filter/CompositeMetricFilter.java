@@ -42,10 +42,10 @@ public class CompositeMetricFilter implements MetricFilter {
     }
 
     @Override
-    public boolean matches(MetricName name, Metric metric) {
+    public boolean accept(MetricName name, Metric metric) {
         if (filters != null) {
             for (MetricFilter filter : filters) {
-                if (!filter.matches(name, metric)) {
+                if (!filter.accept(name, metric)) {
                     return false;
                 }
             }

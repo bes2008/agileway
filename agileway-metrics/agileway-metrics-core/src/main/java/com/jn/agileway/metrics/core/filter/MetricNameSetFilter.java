@@ -121,7 +121,7 @@ public class MetricNameSetFilter implements MetricFilter {
     }
 
     @Override
-    public boolean matches(MetricName name, Metric metric) {
+    public boolean accept(MetricName name, Metric metric) {
         for (String nameToMatch : metricNames) {
             boolean success;
             if (metric instanceof Counter) {

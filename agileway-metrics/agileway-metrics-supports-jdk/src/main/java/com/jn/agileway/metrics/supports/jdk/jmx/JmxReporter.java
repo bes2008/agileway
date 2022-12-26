@@ -587,7 +587,7 @@ public class JmxReporter implements Closeable {
         @Override
         public void onGaugeAdded(MetricName name, Gauge<?> gauge) {
             try {
-                if (filter.matches(name, gauge)) {
+                if (filter.accept(name, gauge)) {
                     final ObjectName objectName = createName("gauges", name);
                     registerMBean(new JmxGauge(gauge, objectName), objectName);
                 }
@@ -613,7 +613,7 @@ public class JmxReporter implements Closeable {
         @Override
         public void onCounterAdded(MetricName name, Counter counter) {
             try {
-                if (filter.matches(name, counter)) {
+                if (filter.accept(name, counter)) {
                     final ObjectName objectName = createName("counters", name);
                     registerMBean(new JmxCounter(counter, objectName), objectName);
                 }
@@ -639,7 +639,7 @@ public class JmxReporter implements Closeable {
         @Override
         public void onHistogramAdded(MetricName name, Histogram histogram) {
             try {
-                if (filter.matches(name, histogram)) {
+                if (filter.accept(name, histogram)) {
                     final ObjectName objectName = createName("histograms", name);
                     registerMBean(new JmxHistogram(histogram, objectName), objectName);
                 }
@@ -665,7 +665,7 @@ public class JmxReporter implements Closeable {
         @Override
         public void onMeterAdded(MetricName name, Meter meter) {
             try {
-                if (filter.matches(name, meter)) {
+                if (filter.accept(name, meter)) {
                     final ObjectName objectName = createName("meters", name);
                     registerMBean(new JmxMeter(meter, objectName, timeUnits.rateFor(name.getKey())), objectName);
                 }
@@ -691,7 +691,7 @@ public class JmxReporter implements Closeable {
         @Override
         public void onTimerAdded(MetricName name, Timer timer) {
             try {
-                if (filter.matches(name, timer)) {
+                if (filter.accept(name, timer)) {
                     final ObjectName objectName = createName("timers", name);
                     registerMBean(new JmxTimer(timer, objectName, timeUnits.rateFor(name.getKey()), timeUnits.durationFor(name.getKey())), objectName);
                 }
