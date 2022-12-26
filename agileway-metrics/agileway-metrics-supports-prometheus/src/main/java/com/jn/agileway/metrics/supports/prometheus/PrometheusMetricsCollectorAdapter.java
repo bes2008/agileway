@@ -18,10 +18,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class AgilewayMetricsExports extends Collector implements Collector.Describable {
-    private static final Logger LOGGER = Logger.getLogger(AgilewayMetricsExports.class.getName());
+public class PrometheusMetricsCollectorAdapter extends Collector implements Collector.Describable {
+    private static final Logger LOGGER = Logger.getLogger(PrometheusMetricsCollectorAdapter.class.getName());
     private MetricRegistry registry;
-    private MetricPredicate metricFilter;
+    private MetricPredicate predicate;
     private SampleBuilder sampleBuilder;
 
     /**
@@ -29,9 +29,9 @@ public class AgilewayMetricsExports extends Collector implements Collector.Descr
      *
      * @param registry a metric registry to export in prometheus.
      */
-    public AgilewayMetricsExports(MetricRegistry registry) {
+    public PrometheusMetricsCollectorAdapter(MetricRegistry registry) {
         this.registry = registry;
-        this.metricFilter = FixedPredicate.TRUE;
+        this.predicate = FixedPredicate.TRUE;
         this.sampleBuilder = new DefaultSampleBuilder();
     }
 
@@ -41,9 +41,9 @@ public class AgilewayMetricsExports extends Collector implements Collector.Descr
      * @param registry     a metric registry to export in prometheus.
      * @param metricFilter a custom metric filter.
      */
-    public AgilewayMetricsExports(MetricRegistry registry, MetricPredicate metricFilter) {
+    public PrometheusMetricsCollectorAdapter(MetricRegistry registry, MetricPredicate metricFilter) {
         this.registry = registry;
-        this.metricFilter = metricFilter;
+        this.predicate = metricFilter;
         this.sampleBuilder = new DefaultSampleBuilder();
     }
 
@@ -51,9 +51,9 @@ public class AgilewayMetricsExports extends Collector implements Collector.Descr
      * @param registry      a metric registry to export in prometheus.
      * @param sampleBuilder sampleBuilder to use to create prometheus samples.
      */
-    public AgilewayMetricsExports(MetricRegistry registry, SampleBuilder sampleBuilder) {
+    public PrometheusMetricsCollectorAdapter(MetricRegistry registry, SampleBuilder sampleBuilder) {
         this.registry = registry;
-        this.metricFilter = FixedPredicate.TRUE;
+        this.predicate = FixedPredicate.TRUE;
         this.sampleBuilder = sampleBuilder;
     }
 
@@ -62,9 +62,9 @@ public class AgilewayMetricsExports extends Collector implements Collector.Descr
      * @param metricFilter  a custom metric filter.
      * @param sampleBuilder sampleBuilder to use to create prometheus samples.
      */
-    public AgilewayMetricsExports(MetricRegistry registry, MetricPredicate metricFilter, SampleBuilder sampleBuilder) {
+    public PrometheusMetricsCollectorAdapter(MetricRegistry registry, MetricPredicate metricFilter, SampleBuilder sampleBuilder) {
         this.registry = registry;
-        this.metricFilter = metricFilter;
+        this.predicate = metricFilter;
         this.sampleBuilder = sampleBuilder;
     }
 
@@ -159,19 +159,19 @@ public class AgilewayMetricsExports extends Collector implements Collector.Descr
     public List<MetricFamilySamples> collect() {
         Map<String, MetricFamilySamples> mfSamplesMap = new HashMap<String, MetricFamilySamples>();
 
-        for (Map.Entry<MetricName, Gauge> entry : registry.getGauges(metricFilter).entrySet()) {
+        for (Map.Entry<MetricName, Gauge> entry : registry.getGauges(predicate).entrySet()) {
             addToMap(mfSamplesMap, fromGauge(entry.getKey(), entry.getValue()));
         }
-        for (Map.Entry<MetricName, Counter> entry : registry.getCounters(metricFilter).entrySet()) {
+        for (Map.Entry<MetricName, Counter> entry : registry.getCounters(predicate).entrySet()) {
             addToMap(mfSamplesMap, fromCounter(entry.getKey(), entry.getValue()));
         }
-        for (Map.Entry<MetricName, Histogram> entry : registry.getHistograms(metricFilter).entrySet()) {
+        for (Map.Entry<MetricName, Histogram> entry : registry.getHistograms(predicate).entrySet()) {
             addToMap(mfSamplesMap, fromHistogram(entry.getKey(), entry.getValue()));
         }
-        for (Map.Entry<MetricName, Timer> entry : registry.getTimers(metricFilter).entrySet()) {
+        for (Map.Entry<MetricName, Timer> entry : registry.getTimers(predicate).entrySet()) {
             addToMap(mfSamplesMap, fromTimer(entry.getKey(), entry.getValue()));
         }
-        for (Map.Entry<MetricName, Meter> entry : registry.getMeters(metricFilter).entrySet()) {
+        for (Map.Entry<MetricName, Meter> entry : registry.getMeters(predicate).entrySet()) {
             addToMap(mfSamplesMap, fromMeter(entry.getKey(), entry.getValue()));
         }
         return new ArrayList<MetricFamilySamples>(mfSamplesMap.values());
