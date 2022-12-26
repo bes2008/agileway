@@ -19,6 +19,9 @@ import java.util.Map;
  * status: ${1}_${2}
  * <p>
  * agileway metrics that match the "match" pattern will be further processed to have a new name and new labels based on this config.
+ *
+ *
+ * @since 4.1.0
  */
 public class MapperConfig {
     // each part of the metric name between dots

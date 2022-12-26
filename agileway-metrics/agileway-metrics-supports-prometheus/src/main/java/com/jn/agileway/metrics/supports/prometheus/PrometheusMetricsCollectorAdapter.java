@@ -18,6 +18,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * @since 4.1.0
+ */
 public class PrometheusMetricsCollectorAdapter extends Collector implements Collector.Describable {
     private static final Logger LOGGER = Logger.getLogger(PrometheusMetricsCollectorAdapter.class.getName());
     private MetricRegistry registry;

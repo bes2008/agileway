@@ -14,6 +14,8 @@ import java.util.Map;
  * Prometheus metric name and labels are extracted from the Dropwizard name based on the provided list of {@link MapperConfig}s.
  * The FIRST matching config will be used.
  * If no config is matched, the {@link DefaultSampleBuilder} is used.
+ *
+ * @since 4.1.0
  */
 public class CustomMappingSampleBuilder implements SampleBuilder {
     private final List<CompiledMapperConfig> compiledMapperConfigs;

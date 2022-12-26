@@ -21,6 +21,8 @@ import static com.jn.agileway.metrics.supports.prometheus.simple.MapperConfig.ME
  * </ul>
  * <p>
  * It contains logic to match a metric name and to extract named parameters from it.
+ *
+ * @since 4.1.0
  */
 class GraphiteNamePattern {
     private static final Regexp VALIDATION_PATTERN = Regexps.compile(METRIC_GLOB_REGEX);

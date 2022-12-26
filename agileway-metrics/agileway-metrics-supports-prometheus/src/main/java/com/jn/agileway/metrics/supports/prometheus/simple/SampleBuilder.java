@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * SampleBuilder defines the action of creating a {@link Collector.MetricFamilySamples.Sample} for the given parameters.
+ *
+ * @since 4.1.0
  */
 public interface SampleBuilder {
 

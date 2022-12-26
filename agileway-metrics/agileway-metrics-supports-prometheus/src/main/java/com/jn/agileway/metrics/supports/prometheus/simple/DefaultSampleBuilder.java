@@ -14,6 +14,8 @@ import java.util.List;
  * Sanitises the metric name if necessary.
  *
  * @see Collector#sanitizeMetricName(String)
+ *
+ * @since 4.1.0
  */
 public class DefaultSampleBuilder implements SampleBuilder {
     @Override
