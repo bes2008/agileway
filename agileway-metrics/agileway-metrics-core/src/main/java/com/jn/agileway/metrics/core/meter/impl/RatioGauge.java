@@ -18,7 +18,7 @@ package com.jn.agileway.metrics.core.meter.impl;
 
 import com.jn.agileway.metrics.core.meter.Gauge;
 
-import static com.jn.agileway.metrics.core.Constants.NOT_AVAILABLE;
+import static com.jn.agileway.metrics.core.Metrics.NOT_AVAILABLE;
 import static java.lang.Double.isInfinite;
 import static java.lang.Double.isNaN;
 

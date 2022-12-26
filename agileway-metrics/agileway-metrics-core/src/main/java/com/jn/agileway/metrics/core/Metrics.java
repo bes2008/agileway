@@ -6,6 +6,12 @@ public class Metrics {
     private Metrics() {
     }
 
+    /**
+     * A special number to represent an invalid data
+     * 一个特殊的数字来代表一个无效的结果
+     */
+    public static long NOT_AVAILABLE = -10001L;
+
     public static class Filters{
         /**
          * Matches all metrics, regardless of type or name.

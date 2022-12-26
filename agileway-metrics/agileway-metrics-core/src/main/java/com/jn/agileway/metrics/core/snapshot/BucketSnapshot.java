@@ -18,7 +18,7 @@ package com.jn.agileway.metrics.core.snapshot;
 
 import java.io.OutputStream;
 
-import static com.jn.agileway.metrics.core.Constants.NOT_AVAILABLE;
+import static com.jn.agileway.metrics.core.Metrics.NOT_AVAILABLE;
 
 public class BucketSnapshot implements Snapshot {
 
