@@ -1,5 +1,6 @@
 package com.jn.agileway.metrics.supports.prometheus.simple;
 
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.regexp.Regexp;
 import com.jn.langx.util.regexp.Regexps;
 
@@ -19,7 +20,6 @@ import java.util.Map;
  * status: ${1}_${2}
  * <p>
  * agileway metrics that match the "match" pattern will be further processed to have a new name and new labels based on this config.
- *
  *
  * @since 4.1.0
  */
@@ -123,15 +123,13 @@ public class MapperConfig {
         this.labels = labels;
     }
 
-    private void validateMatch(final String match)
-    {
+    private void validateMatch(final String match) {
         if (!MATCH_EXPRESSION_PATTERN.matcher(match).matches()) {
             throw new IllegalArgumentException(String.format("Match expression [%s] does not match required pattern %s", match, MATCH_EXPRESSION_PATTERN));
         }
     }
 
-    private void validateLabels(final Map<String, String> labels)
-    {
+    private void validateLabels(final Map<String, String> labels) {
         if (labels != null) {
             for (final String key : labels.keySet()) {
                 if (!LABEL_PATTERN.matcher(key).matches()) {
@@ -149,9 +147,16 @@ public class MapperConfig {
 
         final MapperConfig that = (MapperConfig) o;
 
-        if (match != null ? !match.equals(that.match) : that.match != null) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        return labels != null ? labels.equals(that.labels) : that.labels == null;
+        if (!Objs.equals(match, that.match)) {
+            return false;
+        }
+        if (!Objs.equals(name, that.name)) {
+            return false;
+        }
+        if (!Objs.equals(labels, that.labels)) {
+            return false;
+        }
+        return true;
     }
 
     @Override
