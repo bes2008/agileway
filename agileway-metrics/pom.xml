@@ -15,6 +15,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>agileway-metrics-core</module>
+        <module>agileway-metrics-supports-csv</module>
     </modules>
 
 </project>
