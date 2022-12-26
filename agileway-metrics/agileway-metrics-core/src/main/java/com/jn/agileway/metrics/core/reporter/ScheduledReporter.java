@@ -20,8 +20,8 @@ import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.filter.MetricFilter;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.metricset.MetricRegistry;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.util.Locale;
@@ -41,7 +41,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public abstract class ScheduledReporter implements Closeable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ScheduledReporter.class);
+    private static final Logger LOG = Loggers.getLogger(ScheduledReporter.class);
     private static final AtomicInteger FACTORY_ID = new AtomicInteger();
     private final MetricRegistry registry;
     private final ScheduledExecutorService executor;

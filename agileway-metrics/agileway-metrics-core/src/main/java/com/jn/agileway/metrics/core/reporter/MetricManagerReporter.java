@@ -24,8 +24,8 @@ import com.jn.agileway.metrics.core.filter.MetricFilter;
 import com.jn.agileway.metrics.core.metricset.MetricManager;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.util.Locale;
@@ -40,7 +40,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public abstract class MetricManagerReporter implements Closeable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MetricManagerReporter.class);
+    private static final Logger LOG = Loggers.getLogger(MetricManagerReporter.class);
     private static final AtomicInteger FACTORY_ID = new AtomicInteger();
 
     protected final double durationFactor;

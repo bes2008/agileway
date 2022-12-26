@@ -21,8 +21,8 @@ import com.jn.agileway.metrics.core.filter.MetricFilter;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.metricset.MetricRegistry;
 import com.jn.agileway.metrics.core.metricset.MetricRegistryListener;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.management.*;
 import java.io.Closeable;
@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
  * A reporter which listens for new metrics and exposes them as namespaced MBeans.
  */
 public class JmxReporter implements Closeable {
-    private static final Logger LOGGER = LoggerFactory.getLogger(JmxReporter.class);
+    private static final Logger LOGGER = Loggers.getLogger(JmxReporter.class);
     private final MetricRegistry registry;
     private final JmxListener listener;
 

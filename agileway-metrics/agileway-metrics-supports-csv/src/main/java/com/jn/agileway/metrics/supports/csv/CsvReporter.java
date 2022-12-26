@@ -23,10 +23,10 @@ import com.jn.agileway.metrics.core.metricset.MetricRegistry;
 import com.jn.agileway.metrics.core.reporter.ScheduledReporter;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
 import com.jn.langx.util.io.Charsets;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.timing.clock.Clock;
 import com.jn.langx.util.timing.clock.Clocks;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
  * A reporter which creates a comma-separated values file of the measurements for each metric.
  */
 public class CsvReporter extends ScheduledReporter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CsvReporter.class);
+    private static final Logger LOGGER = Loggers.getLogger(CsvReporter.class);
     private static final Charset UTF_8 = Charsets.UTF_8;
     private final File directory;
     private final Locale locale;

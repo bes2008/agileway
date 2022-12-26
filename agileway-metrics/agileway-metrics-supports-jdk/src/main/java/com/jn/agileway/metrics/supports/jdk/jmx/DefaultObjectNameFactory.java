@@ -17,15 +17,15 @@
 package com.jn.agileway.metrics.supports.jdk.jmx;
 
 import com.jn.agileway.metrics.core.MetricName;
+import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
 public class DefaultObjectNameFactory implements ObjectNameFactory {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JmxReporter.class);
+    private static final Logger LOGGER = Loggers.getLogger(JmxReporter.class);
 
     public ObjectName createName(String type, String domain, MetricName metricName) {
         String name = metricName.getKey();
