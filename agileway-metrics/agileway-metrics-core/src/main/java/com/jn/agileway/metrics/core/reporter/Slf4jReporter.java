@@ -21,7 +21,6 @@ import com.jn.agileway.metrics.core.filter.MetricFilter;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.metricset.MetricRegistry;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
-import com.jn.agileway.metrics.supports.csv.CsvReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -32,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * A reporter class for logging metrics values to a SLF4J {@link Logger} periodically, similar to
- * {@link ConsoleReporter} or {@link CsvReporter}, but using the SLF4J framework instead. It also
+ * {@link ConsoleReporter}, but using the SLF4J framework instead. It also
  * supports specifying a {@link Marker} instance that can be used by custom appenders and filters
  * for the bound logging toolkit to further process metrics reports.
  */

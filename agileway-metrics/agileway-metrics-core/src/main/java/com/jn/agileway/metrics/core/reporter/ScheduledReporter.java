@@ -20,7 +20,6 @@ import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.filter.MetricFilter;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.metricset.MetricRegistry;
-import com.jn.agileway.metrics.supports.csv.CsvReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +37,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * metrics periodically).
  *
  * @see ConsoleReporter
- * @see CsvReporter
  * @see Slf4jReporter
  */
 public abstract class ScheduledReporter implements Closeable {
