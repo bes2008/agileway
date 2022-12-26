@@ -361,7 +361,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @return all the gauges in the registry
      */
     public SortedMap<MetricName, Gauge> getGauges() {
-        return getGauges(Metrics.ALL);
+        return getGauges(Metrics.TRUE);
     }
 
     /**
@@ -380,7 +380,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @return all the counters in the registry
      */
     public SortedMap<MetricName, Counter> getCounters() {
-        return getCounters(Metrics.ALL);
+        return getCounters(Metrics.TRUE);
     }
 
     /**
@@ -400,7 +400,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @return all the histograms in the registry
      */
     public SortedMap<MetricName, Histogram> getHistograms() {
-        return getHistograms(Metrics.ALL);
+        return getHistograms(Metrics.TRUE);
     }
 
     /**
@@ -420,7 +420,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @return all the meters in the registry
      */
     public SortedMap<MetricName, Meter> getMeters() {
-        return getMeters(Metrics.ALL);
+        return getMeters(Metrics.TRUE);
     }
 
     /**
@@ -439,7 +439,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @return all the timers in the registry
      */
     public SortedMap<MetricName, Timer> getTimers() {
-        return getTimers(Metrics.ALL);
+        return getTimers(Metrics.TRUE);
     }
 
     /**
@@ -459,12 +459,12 @@ public class DefaultMetricRegistry implements MetricRegistry {
 
     @Override
     public SortedMap<MetricName, Compass> getCompasses() {
-        return getCompasses(Metrics.ALL);
+        return getCompasses(Metrics.TRUE);
     }
 
     @Override
     public SortedMap<MetricName, FastCompass> getFastCompasses() {
-        return getFastCompasses(Metrics.ALL);
+        return getFastCompasses(Metrics.TRUE);
     }
 
     @Override
@@ -479,7 +479,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
 
     @Override
     public SortedMap<MetricName, ClusterHistogram> getClusterHistograms() {
-        return getMetrics(ClusterHistogram.class, Metrics.ALL);
+        return getMetrics(ClusterHistogram.class, Metrics.TRUE);
     }
 
     @Override
@@ -505,14 +505,14 @@ public class DefaultMetricRegistry implements MetricRegistry {
     public long lastUpdateTime() {
         long latest = 0;
         Map<MetricName, Metric> metrics = new HashMap<MetricName, Metric>();
-        metrics.putAll(getCounters(Metrics.ALL));
-        metrics.putAll(getMeters(Metrics.ALL));
-        metrics.putAll(getHistograms(Metrics.ALL));
-        metrics.putAll(getGauges(Metrics.ALL));
-        metrics.putAll(getTimers(Metrics.ALL));
-        metrics.putAll(getCompasses(Metrics.ALL));
-        metrics.putAll(getFastCompasses(Metrics.ALL));
-        metrics.putAll(getClusterHistograms(Metrics.ALL));
+        metrics.putAll(getCounters(Metrics.TRUE));
+        metrics.putAll(getMeters(Metrics.TRUE));
+        metrics.putAll(getHistograms(Metrics.TRUE));
+        metrics.putAll(getGauges(Metrics.TRUE));
+        metrics.putAll(getTimers(Metrics.TRUE));
+        metrics.putAll(getCompasses(Metrics.TRUE));
+        metrics.putAll(getFastCompasses(Metrics.TRUE));
+        metrics.putAll(getClusterHistograms(Metrics.TRUE));
         for (Map.Entry<MetricName, Metric> entry : metrics.entrySet()) {
             if (latest < entry.getValue().lastUpdateTime()) {
                 latest = entry.getValue().lastUpdateTime();

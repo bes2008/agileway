@@ -17,7 +17,6 @@
 package com.jn.agileway.metrics.core.filter;
 
 import com.jn.agileway.metrics.core.Metric;
-import com.jn.agileway.metrics.core.filter.MetricFilter;
 import com.jn.agileway.metrics.core.MetricName;
 import com.jn.agileway.metrics.core.Metrics;
 
@@ -30,13 +29,13 @@ public class CompositeMetricFilter implements MetricFilter {
     MetricFilter[] filters;
 
     /**
-     * 如果包含 {@link Metrics#ALL} 则直接丢弃，减少一次无谓的判断
+     * 如果包含 {@link Metrics#TRUE} 则直接丢弃，减少一次无谓的判断
      *
      * @param filters
      */
     public CompositeMetricFilter(MetricFilter... filters) {
         List<MetricFilter> filterList = new ArrayList<MetricFilter>(Arrays.asList(filters));
-        filterList.remove(Metrics.ALL);
+        filterList.remove(Metrics.TRUE);
         if (!filterList.isEmpty()) {
             this.filters = filterList.toArray(new MetricFilter[filterList.size()]);
         }

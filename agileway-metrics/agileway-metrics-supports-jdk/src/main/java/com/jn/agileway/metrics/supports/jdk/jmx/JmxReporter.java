@@ -197,7 +197,7 @@ public class JmxReporter implements Closeable {
         private TimeUnit rateUnit;
         private TimeUnit durationUnit;
         private ObjectNameFactory objectNameFactory;
-        private MetricFilter filter = Metrics.ALL;
+        private MetricFilter filter = Metrics.TRUE;
         private String domain;
         private Map<String, TimeUnit> specificDurationUnits;
         private Map<String, TimeUnit> specificRateUnits;
