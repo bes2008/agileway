@@ -3,11 +3,11 @@ package com.jn.agileway.metrics.core.noop;
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.predicate.FixedPredicate;
 import com.jn.agileway.metrics.core.predicate.MetricPredicate;
-import com.jn.agileway.metrics.core.metricset.MetricFactory;
+import com.jn.agileway.metrics.core.meterset.MetricFactory;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
-import com.jn.agileway.metrics.core.metricset.MetricRegistry;
+import com.jn.agileway.metrics.core.meterset.MetricRegistry;
 import com.jn.agileway.metrics.core.snapshot.ReservoirType;
 import com.jn.langx.util.Emptys;
 

@@ -8,7 +8,7 @@ import com.jn.agileway.metrics.core.meter.Counter;
 import com.jn.agileway.metrics.core.meter.Gauge;
 import com.jn.agileway.metrics.core.meter.Histogram;
 import com.jn.agileway.metrics.core.meter.Metered;
-import com.jn.agileway.metrics.core.metricset.MetricRegistry;
+import com.jn.agileway.metrics.core.meterset.MetricRegistry;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
 import com.jn.langx.util.timing.clock.Clock;
 import com.jn.langx.util.timing.clock.Clocks;

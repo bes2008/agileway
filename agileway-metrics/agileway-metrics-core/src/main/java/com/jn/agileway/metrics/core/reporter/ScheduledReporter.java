@@ -3,7 +3,7 @@ package com.jn.agileway.metrics.core.reporter;
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.*;
-import com.jn.agileway.metrics.core.metricset.MetricRegistry;
+import com.jn.agileway.metrics.core.meterset.MetricRegistry;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 

@@ -2,7 +2,7 @@ package com.jn.agileway.metrics.core.noop;
 
 import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.meter.*;
-import com.jn.agileway.metrics.core.metricset.MetricRegistryListener;
+import com.jn.agileway.metrics.core.meterset.MetricRegistryListener;
 
 /**
  * @since 4.1.0
