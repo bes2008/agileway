@@ -16,7 +16,7 @@ import java.util.*;
 /**
  * IMetricManager的空实现
  */
-public class NoopMetricManager implements MetricFactory {
+public class NoopMetricFactory implements MetricFactory {
 
 
     @Override

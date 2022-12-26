@@ -20,7 +20,7 @@ import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 import com.jn.agileway.metrics.core.metricset.MetricFactory;
 import com.jn.agileway.metrics.core.metricset.MetricFactoryBinder;
-import com.jn.agileway.metrics.core.noop.NoopMetricManager;
+import com.jn.agileway.metrics.core.noop.NoopMetricFactory;
 import com.jn.agileway.metrics.core.snapshot.ReservoirType;
 import com.jn.langx.util.reflect.Reflects;
 
@@ -75,7 +75,7 @@ public class Metrics {
         return name(klass.getName(), names);
     }
 
-    public static final MetricFactory NOOP_METRIC_MANAGER = new NoopMetricManager();
+    public static final MetricFactory NOOP_METRIC_MANAGER = new NoopMetricFactory();
     private static final String BINDER_CLASS = Reflects.getFQNClassName(MetricFactoryBinder.class);
     private static volatile MetricFactory metricFactory;
 
