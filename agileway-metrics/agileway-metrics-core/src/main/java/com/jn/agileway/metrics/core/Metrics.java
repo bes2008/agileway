@@ -12,7 +12,7 @@ public class Metrics {
      */
     public static long NOT_AVAILABLE = -10001L;
 
-    public static class Filters{
+    public static class Predicates {
         /**
          * Matches all metrics, regardless of type or name.
          */

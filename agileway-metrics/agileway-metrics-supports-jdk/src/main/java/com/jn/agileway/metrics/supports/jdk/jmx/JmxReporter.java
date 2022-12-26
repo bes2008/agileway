@@ -197,7 +197,7 @@ public class JmxReporter implements Closeable {
         private TimeUnit rateUnit;
         private TimeUnit durationUnit;
         private ObjectNameFactory objectNameFactory;
-        private MetricPredicate filter = Metrics.Filters.TRUE;
+        private MetricPredicate filter = Metrics.Predicates.TRUE;
         private String domain;
         private Map<String, TimeUnit> specificDurationUnits;
         private Map<String, TimeUnit> specificRateUnits;

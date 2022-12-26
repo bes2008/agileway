@@ -29,13 +29,13 @@ public class CompositeMetricPredicate implements MetricPredicate {
     MetricPredicate[] predicates;
 
     /**
-     * 如果包含 {@link Metrics.Filters#TRUE} 则直接丢弃，减少一次无谓的判断
+     * 如果包含 {@link Metrics.Predicates#TRUE} 则直接丢弃，减少一次无谓的判断
      *
      * @param filters
      */
     public CompositeMetricPredicate(MetricPredicate... filters) {
         List<MetricPredicate> filterList = new ArrayList<MetricPredicate>(Arrays.asList(filters));
-        filterList.remove(Metrics.Filters.TRUE);
+        filterList.remove(Metrics.Predicates.TRUE);
         if (!filterList.isEmpty()) {
             this.predicates = filterList.toArray(new MetricPredicate[filterList.size()]);
         }
