@@ -23,7 +23,7 @@ public class MetricFactoryBinder {
     private MetricFactory factory;
 
     private MetricFactoryBinder() {
-        factory = new DefaultMetricManager();
+        factory = new DefaultMetricFactory();
     }
 
     public static MetricFactoryBinder getSingleton() {

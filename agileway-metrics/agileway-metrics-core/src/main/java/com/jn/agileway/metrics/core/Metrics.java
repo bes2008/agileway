@@ -75,9 +75,9 @@ public class Metrics {
         return name(klass.getName(), names);
     }
 
-    public static final MetricFactory NOP_METRIC_MANAGER = new NoopMetricManager();
+    public static final MetricFactory NOOP_METRIC_MANAGER = new NoopMetricManager();
     private static final String BINDER_CLASS = Reflects.getFQNClassName(MetricFactoryBinder.class);
-    private static volatile MetricFactory metricManager;
+    private static volatile MetricFactory metricFactory;
 
     /**
      * Create a {@link Meter} metric in given group, and name.
@@ -90,7 +90,7 @@ public class Metrics {
      * @return an instance of meter
      */
     public static Meter getMeter(String group, MetricName name) {
-        MetricFactory manager = getMetricManager();
+        MetricFactory manager = getMetricFactory();
         return manager.getMeter(group, name);
     }
 
@@ -105,7 +105,7 @@ public class Metrics {
      * @return an instance of counter
      */
     public static Counter getCounter(String group, MetricName name) {
-        MetricFactory manager = getMetricManager();
+        MetricFactory manager = getMetricFactory();
         return manager.getCounter(group, name);
     }
 
@@ -121,7 +121,7 @@ public class Metrics {
      * @return an instance of histogram
      */
     public static Histogram getHistogram(String group, MetricName name) {
-        MetricFactory manager = getMetricManager();
+        MetricFactory manager = getMetricFactory();
         return manager.getHistogram(group, name);
     }
 
@@ -138,7 +138,7 @@ public class Metrics {
      * @return an instance of histogram
      */
     public static Histogram getHistogram(String group, MetricName name, ReservoirType type) {
-        MetricFactory manager = getMetricManager();
+        MetricFactory manager = getMetricFactory();
         return manager.getHistogram(group, name, type);
     }
 
@@ -154,7 +154,7 @@ public class Metrics {
      * @return an instance of timer
      */
     public static Timer getTimer(String group, MetricName name) {
-        MetricFactory manager = getMetricManager();
+        MetricFactory manager = getMetricFactory();
         return manager.getTimer(group, name);
     }
 
@@ -171,7 +171,7 @@ public class Metrics {
      * @return an instance of timer
      */
     public static Timer getTimer(String group, MetricName name, ReservoirType type) {
-        MetricFactory manager = getMetricManager();
+        MetricFactory manager = getMetricFactory();
         return manager.getTimer(group, name, type);
     }
 
@@ -186,7 +186,7 @@ public class Metrics {
      * @return an instance of compass
      */
     public static Compass getCompass(String group, MetricName name) {
-        MetricFactory manager = getMetricManager();
+        MetricFactory manager = getMetricFactory();
         return manager.getCompass(group, name);
     }
 
@@ -201,7 +201,7 @@ public class Metrics {
      * @return an instance of compass
      */
     public static Compass getCompass(String group, MetricName name, ReservoirType type) {
-        MetricFactory manager = getMetricManager();
+        MetricFactory manager = getMetricFactory();
         return manager.getCompass(group, name, type);
     }
 
@@ -216,7 +216,7 @@ public class Metrics {
      * @return an instance of {@link FastCompass}
      */
     public static FastCompass getFastCompass(String group, MetricName name) {
-        MetricFactory manager = getMetricManager();
+        MetricFactory manager = getMetricFactory();
         return manager.getFastCompass(group, name);
     }
 
@@ -231,7 +231,7 @@ public class Metrics {
      * @return an instance of {@link ClusterHistogram}
      */
     public static ClusterHistogram getClusterHistogram(String group, MetricName name, long[] buckets) {
-        MetricFactory manager = getMetricManager();
+        MetricFactory manager = getMetricFactory();
         return manager.getClusterHistogram(group, name, buckets);
     }
 
@@ -246,7 +246,7 @@ public class Metrics {
      * @return an instance of {@link ClusterHistogram}
      */
     public static ClusterHistogram getClusterHistogram(String group, MetricName name) {
-        MetricFactory manager = getMetricManager();
+        MetricFactory manager = getMetricFactory();
         return manager.getClusterHistogram(group, name, null);
     }
 
@@ -258,7 +258,7 @@ public class Metrics {
      * @param metric the metric to register
      */
     public static void register(String group, MetricName name, Metric metric) {
-        MetricFactory manager = getMetricManager();
+        MetricFactory manager = getMetricFactory();
         manager.register(group, name, metric);
     }
 
@@ -268,23 +268,23 @@ public class Metrics {
      * @return the {@link MetricFactory} instance bound
      */
     @SuppressWarnings("unchecked")
-    public static MetricFactory getMetricManager() {
-        if (metricManager == null) {
+    public static MetricFactory getMetricFactory() {
+        if (metricFactory == null) {
             synchronized (Metrics.class) {
-                if (metricManager == null) {
+                if (metricFactory == null) {
                     try {
                         Class binderClazz = Metrics.class.getClassLoader().loadClass(BINDER_CLASS);
                         Method getSingleton = binderClazz.getMethod("getSingleton");
                         Object binderObject = getSingleton.invoke(null);
-                        Method getMetricManager = binderClazz.getMethod("getMetricManager");
-                        metricManager = (MetricFactory) getMetricManager.invoke(binderObject);
+                        Method getMetricManager = binderClazz.getMethod("getMetricFactory");
+                        metricFactory = (MetricFactory) getMetricManager.invoke(binderObject);
                     } catch (Exception e) {
-                        metricManager = NOP_METRIC_MANAGER;
+                        metricFactory = NOOP_METRIC_MANAGER;
                     }
                 }
             }
         }
-        return metricManager;
+        return metricFactory;
     }
 
 }
