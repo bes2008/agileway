@@ -60,7 +60,7 @@ public class CsvReporter extends ScheduledReporter {
     public void report(Map<MetricName, Gauge> gauges,
                        Map<MetricName, Counter> counters,
                        Map<MetricName, Histogram> histograms,
-                       Map<MetricName, Meter> meters,
+                       Map<MetricName, Metered> meters,
                        Map<MetricName, Timer> timers) {
         final long timestamp = TimeUnit.MILLISECONDS.toSeconds(clock.getTime());
 
@@ -76,7 +76,7 @@ public class CsvReporter extends ScheduledReporter {
             reportHistogram(timestamp, entry.getKey(), entry.getValue());
         }
 
-        for (Map.Entry<MetricName, Meter> entry : meters.entrySet()) {
+        for (Map.Entry<MetricName, Metered> entry : meters.entrySet()) {
             reportMeter(timestamp, entry.getKey(), entry.getValue());
         }
 
@@ -111,7 +111,7 @@ public class CsvReporter extends ScheduledReporter {
                 getDurationUnit());
     }
 
-    private void reportMeter(long timestamp, MetricName name, Meter meter) {
+    private void reportMeter(long timestamp, MetricName name, Metered meter) {
         report(timestamp,
                 name,
                 "count,mean_rate,m1_rate,m5_rate,m15_rate,rate_unit",

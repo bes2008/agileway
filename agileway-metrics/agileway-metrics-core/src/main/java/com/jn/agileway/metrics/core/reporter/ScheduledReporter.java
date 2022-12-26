@@ -153,7 +153,7 @@ public abstract class ScheduledReporter implements Closeable {
     public abstract void report(Map<MetricName, Gauge> gauges,
                                 Map<MetricName, Counter> counters,
                                 Map<MetricName, Histogram> histograms,
-                                Map<MetricName, Meter> meters,
+                                Map<MetricName, Metered> meters,
                                 Map<MetricName, Timer> timers);
 
     protected String getRateUnit() {

@@ -54,7 +54,7 @@ public class Slf4jReporter extends ScheduledReporter {
     public void report(Map<MetricName, Gauge> gauges,
                        Map<MetricName, Counter> counters,
                        Map<MetricName, Histogram> histograms,
-                       Map<MetricName, Meter> meters,
+                       Map<MetricName, Metered> meters,
                        Map<MetricName, Timer> timers) {
         if (loggerProxy.isEnabled(marker)) {
             for (Entry<MetricName, Gauge> entry : gauges.entrySet()) {
@@ -69,7 +69,7 @@ public class Slf4jReporter extends ScheduledReporter {
                 logHistogram(entry.getKey(), entry.getValue());
             }
 
-            for (Entry<MetricName, Meter> entry : meters.entrySet()) {
+            for (Entry<MetricName, Metered> entry : meters.entrySet()) {
                 logMeter(entry.getKey(), entry.getValue());
             }
 
@@ -106,7 +106,7 @@ public class Slf4jReporter extends ScheduledReporter {
                 getDurationUnit());
     }
 
-    private void logMeter(MetricName name, Meter meter) {
+    private void logMeter(MetricName name, Metered meter) {
         loggerProxy.log(marker,
                 "type={}, name={}, count={}, mean_rate={}, m1={}, m5={}, m15={}, rate_unit={}",
                 "METER",

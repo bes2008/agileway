@@ -20,12 +20,12 @@ public class NoopMetricRegistry implements MetricRegistry {
     public static final NoopMetricRegistry NOOP_METRIC_REGISTRY = new NoopMetricRegistry();
 
     @Override
-    public <T extends Metric> T register(String name, T metric) throws IllegalArgumentException {
+    public <T extends Meter> T register(String name, T metric) throws IllegalArgumentException {
         return metric;
     }
 
     @Override
-    public <T extends Metric> T register(MetricName name, T metric) throws IllegalArgumentException {
+    public <T extends Meter> T register(MetricName name, T metric) throws IllegalArgumentException {
         return metric;
     }
 
@@ -60,12 +60,12 @@ public class NoopMetricRegistry implements MetricRegistry {
     }
 
     @Override
-    public Meter meter(MetricName name) {
+    public Metered meter(MetricName name) {
         return NoopMeter.NOOP_METER;
     }
 
     @Override
-    public Meter meter(String name) {
+    public Metered meter(String name) {
         return NoopMeter.NOOP_METER;
     }
 
@@ -165,12 +165,12 @@ public class NoopMetricRegistry implements MetricRegistry {
     }
 
     @Override
-    public Map<MetricName, Meter> getMeters() {
+    public Map<MetricName, Metered> getMeters() {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<MetricName, Meter> getMeters(MetricPredicate filter) {
+    public Map<MetricName, Metered> getMeters(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
@@ -210,12 +210,12 @@ public class NoopMetricRegistry implements MetricRegistry {
     }
 
     @Override
-    public Map<MetricName, Metric> getMetrics(MetricPredicate filter) {
+    public Map<MetricName, Meter> getMetrics(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<MetricName, Metric> getMetrics() {
+    public Map<MetricName, Meter> getMetrics() {
         return Emptys.EMPTY_TREE_MAP;
     }
 

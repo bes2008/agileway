@@ -87,7 +87,7 @@ public class NormalMetricsCollector extends MetricsCollector {
     }
 
     @Override
-    public void collect(MetricName name, Meter meter, long timestamp) {
+    public void collect(MetricName name, Metered meter, long timestamp) {
         this.addMetric(name, "count", meter.getCount(), timestamp, MetricObject.MetricType.COUNTER)
                 // convert rate
                 .addMetric(name, "m1", convertRate(meter.getM1Rate()), timestamp)

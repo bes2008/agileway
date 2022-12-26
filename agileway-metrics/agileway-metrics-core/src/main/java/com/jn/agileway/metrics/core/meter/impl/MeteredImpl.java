@@ -1,7 +1,7 @@
 package com.jn.agileway.metrics.core.meter.impl;
 
 import com.jn.agileway.metrics.core.EWMA;
-import com.jn.agileway.metrics.core.meter.Meter;
+import com.jn.agileway.metrics.core.meter.Metered;
 import com.jn.langx.util.concurrent.longaddr.LongAdder;
 import com.jn.langx.util.timing.clock.Clock;
 import com.jn.langx.util.timing.clock.Clocks;
@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @since 4.1.0
  */
-public class MeterImpl implements Meter {
+public class MeteredImpl implements Metered {
 
     private static final long TICK_INTERVAL = TimeUnit.SECONDS.toNanos(5);
     private static final int DEFAULT_NUM_OF_BUCKET =
@@ -37,35 +37,35 @@ public class MeterImpl implements Meter {
     private final LongAdder uncounted = new LongAdder();
 
     /**
-     * Creates a new {@link Meter}.
+     * Creates a new {@link Metered}.
      */
-    public MeterImpl() {
+    public MeteredImpl() {
         this(null, DEFAULT_NUM_OF_BUCKET, 60);
     }
 
     /**
-     * Creates a new {@link Meter} with given bucket interval
+     * Creates a new {@link Metered} with given bucket interval
      */
-    public MeterImpl(int interval) {
+    public MeteredImpl(int interval) {
         this(null, DEFAULT_NUM_OF_BUCKET, interval);
     }
 
-    public MeterImpl(Clock clock) {
+    public MeteredImpl(Clock clock) {
         this(clock, DEFAULT_NUM_OF_BUCKET, 60);
     }
 
-    public MeterImpl(Clock clock, int interval) {
+    public MeteredImpl(Clock clock, int interval) {
         this(clock, DEFAULT_NUM_OF_BUCKET, interval);
     }
 
     /**
-     * Creates a new {@link Meter}.
+     * Creates a new {@link Metered}.
      *
      * @param clock          the clock to use for the meter ticks
      * @param numberOfBucket the number of bucket to store
      * @param interval       the time interval for each bucket
      */
-    public MeterImpl(Clock clock, int numberOfBucket, int interval) {
+    public MeteredImpl(Clock clock, int numberOfBucket, int interval) {
         clock = clock == null ? Clocks.defaultClock() : clock;
         this.clock = clock;
         this.startTime = this.clock.getTick();

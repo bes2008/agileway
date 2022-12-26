@@ -16,14 +16,14 @@ import java.util.Set;
 public interface MetricFactory{
 
     /**
-     * Create a {@link Meter} metric in given group, and name.
+     * Create a {@link Metered} metric in given group, and name.
      * if not exist, an instance will be created.
      *
      * @param group the group of MetricRegistry
      * @param name  the name of the metric
      * @return an instance of meter
      */
-    Meter getMeter(String group, MetricName name);
+    Metered getMeter(String group, MetricName name);
 
     /**
      * Create a {@link Counter} metric in given group, and name.
@@ -126,7 +126,7 @@ public interface MetricFactory{
      * @param group: the group name of MetricRegistry
      * @param metric the metric to register
      */
-    void register(String group, MetricName name, Metric metric);
+    void register(String group, MetricName name, Meter metric);
 
     /**
      * Get a list of group in current factory
@@ -169,7 +169,7 @@ public interface MetricFactory{
 
     Map<MetricName, Histogram> getHistograms(String group, MetricPredicate filter);
 
-    Map<MetricName, Meter> getMeters(String group, MetricPredicate filter);
+    Map<MetricName, Metered> getMeters(String group, MetricPredicate filter);
 
     Map<MetricName, Timer> getTimers(String group, MetricPredicate filter);
 
@@ -184,7 +184,7 @@ public interface MetricFactory{
      *
      * @return the metrics
      */
-    Map<MetricName, Metric> getMetrics(String group);
+    Map<MetricName, Meter> getMetrics(String group);
 
     /**
      * 返回不同Metric分类，各自保存好的map
@@ -192,7 +192,7 @@ public interface MetricFactory{
      * @param group
      * @return
      */
-    Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getCategoryMetrics(String group);
+    Map<Class<? extends Meter>, Map<MetricName, ? extends Meter>> getCategoryMetrics(String group);
 
     /**
      * 返回不同Metric分类，各自保存好的map
@@ -201,8 +201,8 @@ public interface MetricFactory{
      * @param filter
      * @return
      */
-    Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getCategoryMetrics(String group,
-                                                                                       MetricPredicate filter);
+    Map<Class<? extends Meter>, Map<MetricName, ? extends Meter>> getCategoryMetrics(String group,
+                                                                                     MetricPredicate filter);
 
     /**
      * return all metrics
@@ -210,7 +210,7 @@ public interface MetricFactory{
      * @param filter
      * @return
      */
-    Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getAllCategoryMetrics(MetricPredicate filter);
+    Map<Class<? extends Meter>, Map<MetricName, ? extends Meter>> getAllCategoryMetrics(MetricPredicate filter);
 
 
     void clear();

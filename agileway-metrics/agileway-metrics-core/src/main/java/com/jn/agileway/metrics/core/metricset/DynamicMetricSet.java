@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.core.metricset;
 
-import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.Meter;
 import com.jn.agileway.metrics.core.MetricName;
 
 import java.util.Map;
@@ -11,7 +11,7 @@ import java.util.Map;
  *
  * @since 4.1.0
  */
-public interface DynamicMetricSet extends Metric {
+public interface DynamicMetricSet extends Meter {
 
     /**
      * A map of metric names to metrics.
@@ -20,5 +20,5 @@ public interface DynamicMetricSet extends Metric {
      *
      * @return the dynamically changing metrics
      */
-    Map<MetricName, Metric> getDynamicMetrics();
+    Map<MetricName, Meter> getDynamicMetrics();
 }

@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.core.meter;
 
-import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.Meter;
 
 import java.util.Map;
 
@@ -11,7 +11,7 @@ import java.util.Map;
  *
  * @since 4.1.0
  */
-public interface FastCompass extends Metric {
+public interface FastCompass extends Meter {
 
     /**
      * 记录一次方法调用的RT和子类别，子类别应当是正交的，不能有重叠

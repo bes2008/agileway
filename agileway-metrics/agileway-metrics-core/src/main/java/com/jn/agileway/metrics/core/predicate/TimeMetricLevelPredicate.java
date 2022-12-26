@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.core.predicate;
 
-import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.Meter;
 import static com.jn.agileway.metrics.core.MetricName.MetricLevel;
 import com.jn.agileway.metrics.core.MetricName;
 import com.jn.agileway.metrics.core.config.MetricsCollectPeriodConfig;
@@ -95,7 +95,7 @@ public class TimeMetricLevelPredicate implements MetricPredicate {
     }
 
     @Override
-    public boolean test(MetricName name, Metric metric) {
+    public boolean test(MetricName name, Meter metric) {
         if (config == null) {
             return true;
         }

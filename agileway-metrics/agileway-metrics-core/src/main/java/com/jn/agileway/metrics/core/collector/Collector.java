@@ -16,7 +16,7 @@ public interface Collector {
 
     void collect(MetricName name, Gauge gauge, long timestamp);
 
-    void collect(MetricName name, Meter meter, long timestamp);
+    void collect(MetricName name, Metered meter, long timestamp);
 
     void collect(MetricName name, Histogram histogram, long timestamp);
 

@@ -33,7 +33,7 @@ abstract class NoopMetricRegistryListener implements MetricRegistryListener {
     }
 
     @Override
-    public void onMeterAdded(MetricName name, Meter meter) {
+    public void onMeterAdded(MetricName name, Metered meter) {
     }
 
     @Override

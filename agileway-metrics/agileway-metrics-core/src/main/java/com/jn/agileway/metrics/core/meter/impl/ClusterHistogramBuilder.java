@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.core.meter.impl;
 
-import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.Meter;
 import com.jn.agileway.metrics.core.metricset.MetricBuilder;
 import com.jn.agileway.metrics.core.MetricName;
 import com.jn.langx.util.reflect.Reflects;
@@ -27,7 +27,7 @@ public class ClusterHistogramBuilder extends AbstractMetricBuilder<ClusterHistog
     }
 
     @Override
-    public boolean isInstance(Metric metric) {
+    public boolean isInstance(Meter metric) {
         return Reflects.isInstance(metric, ClusterHistogram.class);
     }
 

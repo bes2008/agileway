@@ -1,13 +1,13 @@
 package com.jn.agileway.metrics.core.meter.impl;
 
-import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.Meter;
 import com.jn.agileway.metrics.core.metricset.MetricBuilder;
 import com.jn.agileway.metrics.core.MetricName;
 
 /**
  * @since 4.1.0
  */
-public abstract class AbstractMetricBuilder<T extends Metric> implements MetricBuilder<T> {
+public abstract class AbstractMetricBuilder<T extends Meter> implements MetricBuilder<T> {
     protected int interval;
 
     public AbstractMetricBuilder<T> interval(int interval) {
@@ -19,7 +19,7 @@ public abstract class AbstractMetricBuilder<T extends Metric> implements MetricB
     public abstract T newMetric(MetricName name);
 
     @Override
-    public abstract boolean isInstance(Metric metric);
+    public abstract boolean isInstance(Meter metric);
 
 
     @Override

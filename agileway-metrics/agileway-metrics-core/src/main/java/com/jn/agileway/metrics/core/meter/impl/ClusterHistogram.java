@@ -1,7 +1,7 @@
 package com.jn.agileway.metrics.core.meter.impl;
 
 
-import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.Meter;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -12,7 +12,7 @@ import java.util.Map;
  *
  * @since 4.1.0
  */
-public abstract class ClusterHistogram implements Metric {
+public abstract class ClusterHistogram implements Meter {
 
     private static final int MAX_BUCKET_COUNT =
             Integer.getInteger("com.jn.agileway.metrics.core.maxClusterHistogramBucketCount", 100);

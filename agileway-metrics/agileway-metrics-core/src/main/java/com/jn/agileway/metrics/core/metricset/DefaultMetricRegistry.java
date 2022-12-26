@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.core.metricset;
 
-import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.Meter;
 import com.jn.agileway.metrics.core.MetricName;
 import com.jn.agileway.metrics.core.config.MetricsCollectPeriodConfig;
 import com.jn.agileway.metrics.core.meter.Timer;
@@ -30,7 +30,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
     // 用于分桶计数统计间隔配置
     private static final MetricsCollectPeriodConfig config = new MetricsCollectPeriodConfig();
 
-    private final ConcurrentMap<MetricName, Metric> metrics;
+    private final ConcurrentMap<MetricName, Meter> metrics;
     private final List<MetricRegistryListener> listeners;
     private final int maxMetricCount;
     /**
@@ -40,7 +40,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
 
     private HistogramBuilder HISTOGRAM_BUILDER = new HistogramBuilder();
 
-    private MeterBuilder METER_BUILDER = new MeterBuilder();
+    private MeteredBuilder METER_BUILDER = new MeteredBuilder();
     private TimerBuilder TIMER_BUILDER = new TimerBuilder();
     private CompassBuilder COMPASS_BUILDER = new CompassBuilder();
 
@@ -56,15 +56,15 @@ public class DefaultMetricRegistry implements MetricRegistry {
     }
 
     public DefaultMetricRegistry(int maxMetricCount) {
-        this.metrics = new ConcurrentHashMap<MetricName, Metric>();
+        this.metrics = new ConcurrentHashMap<MetricName, Meter>();
         this.listeners = new CopyOnWriteArrayList<MetricRegistryListener>();
         this.maxMetricCount = maxMetricCount;
     }
 
     /**
-     * @see #register(MetricName, Metric)
+     * @see #register(MetricName, Meter)
      */
-    public <T extends Metric> T register(String name, T metric) throws IllegalArgumentException {
+    public <T extends Meter> T register(String name, T metric) throws IllegalArgumentException {
         return register(MetricName.build(name), metric);
     }
 
@@ -80,7 +80,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
     }
 
     /**
-     * Given a {@link Metric}, registers it under the given name.
+     * Given a {@link Meter}, registers it under the given name.
      *
      * @param name   the name of the metric
      * @param metric the metric
@@ -88,11 +88,11 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @return {@code metric}
      * @throws IllegalArgumentException if the name is already registered
      */
-    public <T extends Metric> T register(MetricName name, T metric) throws IllegalArgumentException {
+    public <T extends Meter> T register(MetricName name, T metric) throws IllegalArgumentException {
         if (metric instanceof MetricSet && !(metric instanceof DynamicMetricSet)) {
             registerAll(name, (MetricSet) metric);
         } else {
-            final Metric existing = metrics.putIfAbsent(name, metric);
+            final Meter existing = metrics.putIfAbsent(name, metric);
             if (existing == null) {
                 onMetricAdded(name, metric);
             } else {
@@ -171,19 +171,19 @@ public class DefaultMetricRegistry implements MetricRegistry {
     /**
      * @see #meter(MetricName)
      */
-    public Meter meter(String name) {
+    public Metered meter(String name) {
         return meter(MetricName.build(name));
     }
 
     /**
-     * Return the {@link Meter} registered under this name; or create and register
-     * a new {@link Meter} if none is registered.
+     * Return the {@link Metered} registered under this name; or create and register
+     * a new {@link Metered} if none is registered.
      *
      * @param name the name of the metric
-     * @return a new or pre-existing {@link Meter}
+     * @return a new or pre-existing {@link Metered}
      */
-    public Meter meter(MetricName name) {
-        Meter meter = getOrAdd(name, METER_BUILDER);
+    public Metered meter(MetricName name) {
+        Metered meter = getOrAdd(name, METER_BUILDER);
         if (meter == null) {
             return NoopMeter.NOOP_METER;
         }
@@ -285,7 +285,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @return whether or not the metric was removed
      */
     public boolean remove(MetricName name) {
-        final Metric metric = metrics.remove(name);
+        final Meter metric = metrics.remove(name);
         if (metric != null) {
             onMetricRemoved(name, metric);
             return true;
@@ -299,7 +299,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @param predicate a predicate
      */
     public void removeMatching(MetricPredicate predicate) {
-        for (Map.Entry<MetricName, Metric> entry : metrics.entrySet()) {
+        for (Map.Entry<MetricName, Meter> entry : metrics.entrySet()) {
             if (predicate.test(entry.getKey(), entry.getValue())) {
                 remove(entry.getKey());
             }
@@ -317,7 +317,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
     public void addListener(MetricRegistryListener listener) {
         listeners.add(listener);
 
-        for (Map.Entry<MetricName, Metric> entry : metrics.entrySet()) {
+        for (Map.Entry<MetricName, Meter> entry : metrics.entrySet()) {
             notifyListenerOfAddedMetric(listener, entry.getValue(), entry.getKey());
         }
     }
@@ -404,7 +404,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      *
      * @return all the meters in the registry
      */
-    public Map<MetricName, Meter> getMeters() {
+    public Map<MetricName, Metered> getMeters() {
         return getMeters(FixedPredicate.TRUE);
     }
 
@@ -414,8 +414,8 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @param filter the metric filter to match
      * @return all the meters in the registry
      */
-    public Map<MetricName, Meter> getMeters(MetricPredicate filter) {
-        return getMetrics(Meter.class, filter);
+    public Map<MetricName, Metered> getMeters(MetricPredicate filter) {
+        return getMetrics(Metered.class, filter);
     }
 
     /**
@@ -468,8 +468,8 @@ public class DefaultMetricRegistry implements MetricRegistry {
     }
 
     @Override
-    public Map<MetricName, Metric> getMetrics(MetricPredicate filter) {
-        final TreeMap<MetricName, Metric> filteredMetrics = new TreeMap<MetricName, Metric>();
+    public Map<MetricName, Meter> getMetrics(MetricPredicate filter) {
+        final TreeMap<MetricName, Meter> filteredMetrics = new TreeMap<MetricName, Meter>();
         filteredMetrics.putAll(getCounters(filter));
         filteredMetrics.putAll(getMeters(filter));
         filteredMetrics.putAll(getHistograms(filter));
@@ -489,7 +489,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
 
     public long lastUpdateTime() {
         long latest = 0;
-        Map<MetricName, Metric> metrics = new HashMap<MetricName, Metric>();
+        Map<MetricName, Meter> metrics = new HashMap<MetricName, Meter>();
         metrics.putAll(getCounters(FixedPredicate.TRUE));
         metrics.putAll(getMeters(FixedPredicate.TRUE));
         metrics.putAll(getHistograms(FixedPredicate.TRUE));
@@ -498,7 +498,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
         metrics.putAll(getCompasses(FixedPredicate.TRUE));
         metrics.putAll(getFastCompasses(FixedPredicate.TRUE));
         metrics.putAll(getClusterHistograms(FixedPredicate.TRUE));
-        for (Map.Entry<MetricName, Metric> entry : metrics.entrySet()) {
+        for (Map.Entry<MetricName, Meter> entry : metrics.entrySet()) {
             if (latest < entry.getValue().lastUpdateTime()) {
                 latest = entry.getValue().lastUpdateTime();
             }
@@ -507,8 +507,8 @@ public class DefaultMetricRegistry implements MetricRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Metric> T getOrAdd(MetricName name, MetricBuilder<T> builder) {
-        final Metric metric = metrics.get(name);
+    private <T extends Meter> T getOrAdd(MetricName name, MetricBuilder<T> builder) {
+        final Meter metric = metrics.get(name);
         if (metric != null && builder.isInstance(metric)) {
             return (T) metric;
         } else if (metric == null) {
@@ -524,7 +524,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
                 }
                 return register(name, newMetric);
             } catch (IllegalArgumentException e) {
-                final Metric added = metrics.get(name);
+                final Meter added = metrics.get(name);
                 if (builder.isInstance(added)) {
                     return (T) added;
                 } else {
@@ -536,8 +536,8 @@ public class DefaultMetricRegistry implements MetricRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Metric> T getOrAdd(MetricName name, ReservoirTypeBuilder<T> builder, ReservoirType type) {
-        final Metric metric = metrics.get(name);
+    private <T extends Meter> T getOrAdd(MetricName name, ReservoirTypeBuilder<T> builder, ReservoirType type) {
+        final Meter metric = metrics.get(name);
         if (metric != null && builder.isInstance(metric)) {
             return (T) metric;
         } else if (metric == null) {
@@ -550,7 +550,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
                 if (newMetric == null) return null;
                 return register(name, newMetric);
             } catch (IllegalArgumentException e) {
-                final Metric added = metrics.get(name);
+                final Meter added = metrics.get(name);
                 if (builder.isInstance(added)) {
                     return (T) added;
                 } else {
@@ -562,8 +562,8 @@ public class DefaultMetricRegistry implements MetricRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Metric> T getOrAddClusterHistogram(MetricName name, ClusterHistogramBuilder builder, long[] buckets) {
-        final Metric metric = metrics.get(name);
+    private <T extends Meter> T getOrAddClusterHistogram(MetricName name, ClusterHistogramBuilder builder, long[] buckets) {
+        final Meter metric = metrics.get(name);
         if (metric != null && builder.isInstance(metric)) {
             return (T) metric;
         } else if (metric == null) {
@@ -578,7 +578,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
                 }
                 return register(name, (T) newMetric);
             } catch (IllegalArgumentException e) {
-                final Metric added = metrics.get(name);
+                final Meter added = metrics.get(name);
                 if (builder.isInstance(added)) {
                     return (T) added;
                 } else {
@@ -589,13 +589,13 @@ public class DefaultMetricRegistry implements MetricRegistry {
         throw new IllegalArgumentException(name + " is already used for a different type of metric");
     }
 
-    private <T extends Metric> SortedMap<MetricName, T> getMetrics(Class<T> klass, MetricPredicate predicate) {
+    private <T extends Meter> SortedMap<MetricName, T> getMetrics(Class<T> klass, MetricPredicate predicate) {
         final TreeMap<MetricName, T> timers = new TreeMap<MetricName, T>();
-        for (Map.Entry<MetricName, Metric> entry : metrics.entrySet()) {
+        for (Map.Entry<MetricName, Meter> entry : metrics.entrySet()) {
             if (klass.isInstance(entry.getValue()) && predicate.test(entry.getKey(), entry.getValue())) {
                 timers.put(entry.getKey(), (T) entry.getValue());
             } else if (entry.getValue() instanceof DynamicMetricSet) {
-                for (Map.Entry<MetricName, Metric> dynamicEntry : ((DynamicMetricSet) entry.getValue()).getDynamicMetrics().entrySet()) {
+                for (Map.Entry<MetricName, Meter> dynamicEntry : ((DynamicMetricSet) entry.getValue()).getDynamicMetrics().entrySet()) {
                     if (klass.isInstance(dynamicEntry.getValue()) &&
                             predicate.test(dynamicEntry.getKey(), dynamicEntry.getValue())) {
                         timers.put(dynamicEntry.getKey(), (T) dynamicEntry.getValue());
@@ -606,21 +606,21 @@ public class DefaultMetricRegistry implements MetricRegistry {
         return Collections.unmodifiableSortedMap(timers);
     }
 
-    private void onMetricAdded(MetricName name, Metric metric) {
+    private void onMetricAdded(MetricName name, Meter metric) {
         for (MetricRegistryListener listener : listeners) {
             notifyListenerOfAddedMetric(listener, metric, name);
         }
     }
 
-    private void notifyListenerOfAddedMetric(MetricRegistryListener listener, Metric metric, MetricName name) {
+    private void notifyListenerOfAddedMetric(MetricRegistryListener listener, Meter metric, MetricName name) {
         if (metric instanceof Gauge) {
             listener.onGaugeAdded(name, (Gauge<?>) metric);
         } else if (metric instanceof Counter) {
             listener.onCounterAdded(name, (Counter) metric);
         } else if (metric instanceof Histogram) {
             listener.onHistogramAdded(name, (Histogram) metric);
-        } else if (metric instanceof Meter) {
-            listener.onMeterAdded(name, (Meter) metric);
+        } else if (metric instanceof Metered) {
+            listener.onMeterAdded(name, (Metered) metric);
         } else if (metric instanceof Timer) {
             listener.onTimerAdded(name, (Timer) metric);
         } else if (metric instanceof Compass) {
@@ -632,20 +632,20 @@ public class DefaultMetricRegistry implements MetricRegistry {
         }
     }
 
-    private void onMetricRemoved(MetricName name, Metric metric) {
+    private void onMetricRemoved(MetricName name, Meter metric) {
         for (MetricRegistryListener listener : listeners) {
             notifyListenerOfRemovedMetric(name, metric, listener);
         }
     }
 
-    private void notifyListenerOfRemovedMetric(MetricName name, Metric metric, MetricRegistryListener listener) {
+    private void notifyListenerOfRemovedMetric(MetricName name, Meter metric, MetricRegistryListener listener) {
         if (metric instanceof Gauge) {
             listener.onGaugeRemoved(name);
         } else if (metric instanceof Counter) {
             listener.onCounterRemoved(name);
         } else if (metric instanceof Histogram) {
             listener.onHistogramRemoved(name);
-        } else if (metric instanceof Meter) {
+        } else if (metric instanceof Metered) {
             listener.onMeterRemoved(name);
         } else if (metric instanceof Timer) {
             listener.onTimerRemoved(name);
@@ -662,7 +662,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
         if (prefix == null)
             prefix = MetricName.EMPTY;
 
-        for (Map.Entry<MetricName, Metric> entry : metrics.getMetrics().entrySet()) {
+        for (Map.Entry<MetricName, Meter> entry : metrics.getMetrics().entrySet()) {
             if (entry.getValue() instanceof MetricSet && !(entry.getValue() instanceof DynamicMetricSet)) {
                 // skip dynamic metric set, the metrics will be collected later on.
                 registerAll(MetricName.join(prefix, entry.getKey()), (MetricSet) entry.getValue());
@@ -673,7 +673,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
     }
 
     @Override
-    public Map<MetricName, Metric> getMetrics() {
+    public Map<MetricName, Meter> getMetrics() {
         return Collections.unmodifiableMap(metrics);
     }
 

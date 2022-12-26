@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.core.meter;
 
-import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.Meter;
 import com.jn.agileway.metrics.core.Sampling;
 
 /**
@@ -13,7 +13,7 @@ import com.jn.agileway.metrics.core.Sampling;
  *
  * @since 4.1.0
  */
-public interface Histogram extends Metric, Sampling, Counting {
+public interface Histogram extends Meter, Sampling, Counting {
 
     /**
      * Adds a recorded value.

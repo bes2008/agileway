@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.core.meter;
 
-import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.Meter;
 
 /**
  * <pre>
@@ -12,7 +12,7 @@ import com.jn.agileway.metrics.core.Metric;
  *
  * @since 4.1.0
  */
-public interface Counter extends Metric, Counting {
+public interface Counter extends Meter, Counting {
 
     /**
      * Increment the counter by one.

@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.core.meter;
 
-import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.Meter;
 
 import java.util.Map;
 
@@ -13,7 +13,7 @@ import java.util.Map;
  *
  * @since 4.1.0
  */
-public interface Timed extends Metric, Counting {
+public interface Timed extends Meter, Counting {
 
     /**
      * Returns the number of events which have been marked.

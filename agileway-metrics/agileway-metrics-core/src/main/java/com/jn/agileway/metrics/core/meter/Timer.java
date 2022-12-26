@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * A timer metric which aggregates timing durations and provides duration statistics, plus
- * throughput statistics via {@link Meter}.
+ * throughput statistics via {@link Metered}.
  * Timer相当于Meter+Histogram的组合，同时统计一段代码，一个方法的qps，以及执行时间的分布情况
  *
  *

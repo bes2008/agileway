@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.core.meter.impl;
 
-import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.Meter;
 import com.jn.agileway.metrics.core.MetricName;
 import com.jn.agileway.metrics.core.meter.Compass;
 import com.jn.agileway.metrics.core.snapshot.ReservoirType;
@@ -22,7 +22,7 @@ public class CompassBuilder extends ReservoirTypeMetricBuilder<Compass> {
     }
 
     @Override
-    public boolean isInstance(Metric metric) {
+    public boolean isInstance(Meter metric) {
         return Reflects.isInstance(metric, Compass.class);
     }
 

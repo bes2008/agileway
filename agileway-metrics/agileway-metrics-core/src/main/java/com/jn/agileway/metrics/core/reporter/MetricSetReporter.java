@@ -203,13 +203,13 @@ public abstract class MetricSetReporter implements Closeable {
     public void report() {
         synchronized (this) {
 
-            Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> categoryMetrics = factory
+            Map<Class<? extends Meter>, Map<MetricName, ? extends Meter>> categoryMetrics = factory
                     .getAllCategoryMetrics(compositeMetricPredicate);
 
             report((Map<MetricName, Gauge>) categoryMetrics.get(Gauge.class),
                     (Map<MetricName, Counter>) categoryMetrics.get(Counter.class),
                     (Map<MetricName, Histogram>) categoryMetrics.get(Histogram.class),
-                    (Map<MetricName, Meter>) categoryMetrics.get(Meter.class),
+                    (Map<MetricName, Metered>) categoryMetrics.get(Metered.class),
                     (Map<MetricName, Timer>) categoryMetrics.get(Timer.class),
                     (Map<MetricName, Compass>) categoryMetrics.get(Compass.class),
                     (Map<MetricName, FastCompass>) categoryMetrics.get(FastCompass.class),
@@ -230,7 +230,7 @@ public abstract class MetricSetReporter implements Closeable {
     public abstract void report(Map<MetricName, Gauge> gauges,
                                 Map<MetricName, Counter> counters,
                                 Map<MetricName, Histogram> histograms,
-                                Map<MetricName, Meter> meters,
+                                Map<MetricName, Metered> meters,
                                 Map<MetricName, Timer> timers,
                                 Map<MetricName, Compass> compasses,
                                 Map<MetricName, FastCompass> fastCompasses,

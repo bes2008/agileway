@@ -20,7 +20,7 @@ public class NoopMetricFactory implements MetricFactory {
 
 
     @Override
-    public Meter getMeter(String group, MetricName name) {
+    public Metered getMeter(String group, MetricName name) {
         return NoopMeter.NOOP_METER;
     }
 
@@ -113,7 +113,7 @@ public class NoopMetricFactory implements MetricFactory {
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Meter> getMeters(String group, MetricPredicate filter) {
+    public SortedMap<MetricName, Metered> getMeters(String group, MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
@@ -136,29 +136,29 @@ public class NoopMetricFactory implements MetricFactory {
     }
 
     @Override
-    public void register(String group, MetricName name, Metric metric) {
+    public void register(String group, MetricName name, Meter metric) {
 
     }
 
     @Override
-    public Map<MetricName, Metric> getMetrics(String group) {
+    public Map<MetricName, Meter> getMetrics(String group) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getCategoryMetrics(String group) {
+    public Map<Class<? extends Meter>, Map<MetricName, ? extends Meter>> getCategoryMetrics(String group) {
         return getCategoryMetrics(group, FixedPredicate.TRUE);
     }
 
     @Override
-    public Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getCategoryMetrics(String group,
-                                                                                              MetricPredicate filter) {
-        Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> result = new HashMap<Class<? extends Metric>, Map<MetricName, ? extends Metric>>();
+    public Map<Class<? extends Meter>, Map<MetricName, ? extends Meter>> getCategoryMetrics(String group,
+                                                                                            MetricPredicate filter) {
+        Map<Class<? extends Meter>, Map<MetricName, ? extends Meter>> result = new HashMap<Class<? extends Meter>, Map<MetricName, ? extends Meter>>();
 
         Map<MetricName, Gauge> gauges = Collections.emptyMap();
         Map<MetricName, Counter> counters = Collections.emptyMap();
         Map<MetricName, Histogram> histograms = Collections.emptyMap();
-        Map<MetricName, Meter> meters = Collections.emptyMap();
+        Map<MetricName, Metered> meters = Collections.emptyMap();
         Map<MetricName, Timer> timers = Collections.emptyMap();
         Map<MetricName, Compass> compasses = Collections.emptyMap();
         Map<MetricName, FastCompass> fastCompasses = Collections.emptyMap();
@@ -167,7 +167,7 @@ public class NoopMetricFactory implements MetricFactory {
         result.put(Gauge.class, gauges);
         result.put(Counter.class, counters);
         result.put(Histogram.class, histograms);
-        result.put(Meter.class, meters);
+        result.put(Metered.class, meters);
         result.put(Timer.class, timers);
         result.put(Compass.class, compasses);
         result.put(FastCompass.class, fastCompasses);
@@ -182,7 +182,7 @@ public class NoopMetricFactory implements MetricFactory {
     }
 
     @Override
-    public Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getAllCategoryMetrics(MetricPredicate filter) {
+    public Map<Class<? extends Meter>, Map<MetricName, ? extends Meter>> getAllCategoryMetrics(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 

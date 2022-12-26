@@ -22,7 +22,7 @@ public interface MetricRegistry extends MetricSet {
 
 
     /**
-     * Given a {@link Metric}, registers it under the given name.
+     * Given a {@link Meter}, registers it under the given name.
      *
      * @param name   the name of the metric
      * @param metric the metric
@@ -30,10 +30,10 @@ public interface MetricRegistry extends MetricSet {
      * @return {@code metric}
      * @throws IllegalArgumentException if the name is already registered
      */
-    <T extends Metric> T register(String name, T metric) throws IllegalArgumentException;
+    <T extends Meter> T register(String name, T metric) throws IllegalArgumentException;
 
     /**
-     * Given a {@link Metric}, registers it under the given name.
+     * Given a {@link Meter}, registers it under the given name.
      *
      * @param name   the name of the metric
      * @param metric the metric
@@ -41,7 +41,7 @@ public interface MetricRegistry extends MetricSet {
      * @return {@code metric}
      * @throws IllegalArgumentException if the name is already registered
      */
-    <T extends Metric> T register(MetricName name, T metric) throws IllegalArgumentException;
+    <T extends Meter> T register(MetricName name, T metric) throws IllegalArgumentException;
 
     /**
      * Given a metric set, registers them.
@@ -95,21 +95,21 @@ public interface MetricRegistry extends MetricSet {
     Histogram histogram(String name);
 
     /**
-     * Return the {@link Meter} registered under this name; or create and register
-     * a new {@link Meter} if none is registered.
+     * Return the {@link Metered} registered under this name; or create and register
+     * a new {@link Metered} if none is registered.
      *
      * @param name the name of the metric
-     * @return a new or pre-existing {@link Meter}
+     * @return a new or pre-existing {@link Metered}
      */
-    Meter meter(MetricName name);
+    Metered meter(MetricName name);
 
     /**
-     * Creates a new {@link Meter} and registers it under the given name.
+     * Creates a new {@link Metered} and registers it under the given name.
      *
      * @param name the name of the metric
-     * @return a new {@link Meter}
+     * @return a new {@link Metered}
      */
-    Meter meter(String name);
+    Metered meter(String name);
 
     /**
      * Return the {@link Timer} registered under this name; or create and register
@@ -273,7 +273,7 @@ public interface MetricRegistry extends MetricSet {
      *
      * @return all the meters in the registry
      */
-    Map<MetricName, Meter> getMeters();
+    Map<MetricName, Metered> getMeters();
 
     /**
      * Returns a map of all the meters in the registry and their names which match the given filter.
@@ -281,7 +281,7 @@ public interface MetricRegistry extends MetricSet {
      * @param filter the metric filter to match
      * @return all the meters in the registry
      */
-    Map<MetricName, Meter> getMeters(MetricPredicate filter);
+    Map<MetricName, Metered> getMeters(MetricPredicate filter);
 
     /**
      * Returns a map of all the timers in the registry and their names.
@@ -349,7 +349,7 @@ public interface MetricRegistry extends MetricSet {
      * @param filter the metric filter to match
      * @return all the metrics in the registry
      */
-    Map<MetricName, Metric> getMetrics(MetricPredicate filter);
+    Map<MetricName, Meter> getMetrics(MetricPredicate filter);
 
 
 }

@@ -18,7 +18,7 @@ package com.jn.agileway.metrics.core.meter.impl;
 
 import com.jn.agileway.metrics.core.snapshot.ExponentiallyDecayingReservoir;
 import com.jn.agileway.metrics.core.meter.Histogram;
-import com.jn.agileway.metrics.core.meter.Meter;
+import com.jn.agileway.metrics.core.meter.Metered;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.snapshot.Reservoir;
 import com.jn.agileway.metrics.core.snapshot.ReservoirType;
@@ -32,12 +32,12 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * A timer metric which aggregates timing durations and provides duration statistics, plus
- * throughput statistics via {@link Meter}.
+ * throughput statistics via {@link Metered}.
  *
  * @since 4.1.0
  */
 public class TimerImpl implements Timer {
-    private final Meter meter;
+    private final Metered meter;
     private final Histogram histogram;
     private final Clock clock;
     /**
@@ -73,14 +73,14 @@ public class TimerImpl implements Timer {
      * @param interval  the interval in seconds for bucket counter
      */
     public TimerImpl(ReservoirType reservoir, Clock clock, int interval) {
-        this.meter = new MeterImpl(clock, interval);
+        this.meter = new MeteredImpl(clock, interval);
         clock = clock==null ? Clocks.defaultClock(): clock;
         this.clock = clock;
         this.histogram = new HistogramImpl(reservoir, interval, 10, clock);
     }
 
     public TimerImpl(Reservoir reservoir, Clock clock, int interval) {
-        this.meter = new MeterImpl(clock, interval);
+        this.meter = new MeteredImpl(clock, interval);
         this.clock = clock;
         this.histogram = new HistogramImpl(reservoir, interval, 10, clock);
     }

@@ -650,7 +650,7 @@ public class JmxReporter implements Closeable {
         }
 
         @Override
-        public void onMeterAdded(MetricName name, Meter meter) {
+        public void onMeterAdded(MetricName name, Metered meter) {
             try {
                 if (predicate.test(name, meter)) {
                     final ObjectName objectName = createName("meters", name);

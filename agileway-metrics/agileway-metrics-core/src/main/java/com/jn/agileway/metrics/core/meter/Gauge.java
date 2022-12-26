@@ -1,7 +1,7 @@
 package com.jn.agileway.metrics.core.meter;
 
 
-import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.Meter;
 
 /**
  * <pre>
@@ -22,7 +22,7 @@ import com.jn.agileway.metrics.core.Metric;
  * @param <T> the type of the metric's value
  *
  */
-public interface Gauge<T> extends Metric {
+public interface Gauge<T> extends Meter {
     /**
      * @return the metric's current value
      */

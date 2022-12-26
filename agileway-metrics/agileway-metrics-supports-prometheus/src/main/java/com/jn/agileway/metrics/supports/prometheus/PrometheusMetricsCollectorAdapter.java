@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.supports.prometheus;
 
-import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.Meter;
 import com.jn.agileway.metrics.core.MetricName;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.*;
@@ -65,7 +65,7 @@ public class PrometheusMetricsCollectorAdapter extends Collector implements Coll
         this.sampleBuilder = sampleBuilder;
     }
 
-    private static String getHelpMessage(String metricName, Metric metric) {
+    private static String getHelpMessage(String metricName, Meter metric) {
         return String.format("Generated from Dropwizard metric import (metric=%s, type=%s)",
                 metricName, metric.getClass().getName());
     }
@@ -142,7 +142,7 @@ public class PrometheusMetricsCollectorAdapter extends Collector implements Coll
     /**
      * Export a Meter as as prometheus COUNTER.
      */
-    MetricFamilySamples fromMeter(MetricName metricName, Meter meter) {
+    MetricFamilySamples fromMeter(MetricName metricName, Metered meter) {
         String dropwizardName = metricName.getKey();
         final MetricFamilySamples.Sample sample = sampleBuilder.createSample(metricName, "_total",
                 new ArrayList<String>(),
@@ -168,7 +168,7 @@ public class PrometheusMetricsCollectorAdapter extends Collector implements Coll
         for (Map.Entry<MetricName, Timer> entry : registry.getTimers(predicate).entrySet()) {
             addToMap(mfSamplesMap, fromTimer(entry.getKey(), entry.getValue()));
         }
-        for (Map.Entry<MetricName, Meter> entry : registry.getMeters(predicate).entrySet()) {
+        for (Map.Entry<MetricName, Metered> entry : registry.getMeters(predicate).entrySet()) {
             addToMap(mfSamplesMap, fromMeter(entry.getKey(), entry.getValue()));
         }
         return new ArrayList<MetricFamilySamples>(mfSamplesMap.values());

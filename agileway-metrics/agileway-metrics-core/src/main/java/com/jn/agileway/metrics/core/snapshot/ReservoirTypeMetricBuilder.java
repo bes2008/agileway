@@ -1,19 +1,19 @@
 package com.jn.agileway.metrics.core.snapshot;
 
 import com.jn.agileway.metrics.core.meter.impl.AbstractMetricBuilder;
-import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.Meter;
 import com.jn.agileway.metrics.core.MetricName;
 
 /**
  * @since 4.1.0
  */
-public abstract class ReservoirTypeMetricBuilder<T extends Metric> extends AbstractMetricBuilder<T> implements ReservoirTypeBuilder<T> {
+public abstract class ReservoirTypeMetricBuilder<T extends Meter> extends AbstractMetricBuilder<T> implements ReservoirTypeBuilder<T> {
     protected int interval;
     @Override
     public abstract T newMetric(MetricName name);
 
     @Override
-    public abstract boolean isInstance(Metric metric);
+    public abstract boolean isInstance(Meter metric);
 
     @Override
     public abstract ReservoirTypeMetricBuilder<T> newBuilder();

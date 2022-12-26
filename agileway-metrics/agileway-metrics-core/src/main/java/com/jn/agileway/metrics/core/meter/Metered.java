@@ -8,7 +8,7 @@ package com.jn.agileway.metrics.core.meter;
  *
  * @since 4.1.0
  */
-public interface Meter extends Timed {
+public interface Metered extends Timed {
 
     /**
      * Mark the occurrence of an event.

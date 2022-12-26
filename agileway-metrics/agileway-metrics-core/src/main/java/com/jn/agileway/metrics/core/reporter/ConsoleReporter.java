@@ -7,7 +7,7 @@ import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.meter.Counter;
 import com.jn.agileway.metrics.core.meter.Gauge;
 import com.jn.agileway.metrics.core.meter.Histogram;
-import com.jn.agileway.metrics.core.meter.Meter;
+import com.jn.agileway.metrics.core.meter.Metered;
 import com.jn.agileway.metrics.core.metricset.MetricRegistry;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
 import com.jn.langx.util.timing.clock.Clock;
@@ -61,7 +61,7 @@ public class ConsoleReporter extends ScheduledReporter {
     public void report(Map<MetricName, Gauge> gauges,
                        Map<MetricName, Counter> counters,
                        Map<MetricName, Histogram> histograms,
-                       Map<MetricName, Meter> meters,
+                       Map<MetricName, Metered> meters,
                        Map<MetricName, Timer> timers) {
         final String dateTime = dateFormat.format(new Date(clock.getTime()));
         printWithBanner(dateTime, '=');
@@ -96,7 +96,7 @@ public class ConsoleReporter extends ScheduledReporter {
 
         if (!meters.isEmpty()) {
             printWithBanner("-- Meters", '-');
-            for (Map.Entry<MetricName, Meter> entry : meters.entrySet()) {
+            for (Map.Entry<MetricName, Metered> entry : meters.entrySet()) {
                 output.println(entry.getKey());
                 printMeter(entry.getValue());
             }
@@ -116,7 +116,7 @@ public class ConsoleReporter extends ScheduledReporter {
         output.flush();
     }
 
-    private void printMeter(Meter meter) {
+    private void printMeter(Metered meter) {
         output.printf(locale, "             count = %d%n", meter.getCount());
         output.printf(locale, "         mean rate = %2.2f events/%s%n", convertRate(meter.getMeanRate()), getRateUnit());
         output.printf(locale, "     1-minute rate = %2.2f events/%s%n", convertRate(meter.getM1Rate()), getRateUnit());

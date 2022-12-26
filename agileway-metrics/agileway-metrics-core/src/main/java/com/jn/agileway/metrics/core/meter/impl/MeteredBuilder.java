@@ -3,25 +3,26 @@ package com.jn.agileway.metrics.core.meter.impl;
 import com.jn.agileway.metrics.core.Meter;
 import com.jn.agileway.metrics.core.metricset.MetricBuilder;
 import com.jn.agileway.metrics.core.MetricName;
-import com.jn.agileway.metrics.core.meter.Counter;
+import com.jn.agileway.metrics.core.meter.Metered;
 import com.jn.langx.util.reflect.Reflects;
 
 /**
  * @since 4.1.0
  */
-public class CounterBuilder extends AbstractMetricBuilder<Counter> {
+public class MeteredBuilder extends AbstractMetricBuilder<Metered> {
     @Override
-    public Counter newMetric(MetricName name) {
-        return  new BucketCounterImpl(this.interval);
+    public Metered newMetric(MetricName name) {
+        return new MeteredImpl(this.interval);
     }
 
     @Override
     public boolean isInstance(Meter metric) {
-        return Reflects.isInstance(metric, Counter.class);
+        return Reflects.isInstance(metric, Metered.class);
     }
 
     @Override
-    public MetricBuilder<Counter> newBuilder() {
-        return new CounterBuilder();
+    public MetricBuilder<Metered> newBuilder() {
+        return new MeteredBuilder();
     }
+
 }

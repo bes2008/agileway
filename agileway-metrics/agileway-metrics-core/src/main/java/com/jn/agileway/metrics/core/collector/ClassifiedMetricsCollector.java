@@ -113,7 +113,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
     }
 
     @Override
-    public void collect(MetricName name, Meter meter, long timestamp) {
+    public void collect(MetricName name, Metered meter, long timestamp) {
 
         Map<Long, Long> totalCounts = meter.getInstantCount(lastTimestamp.get(name.getMetricLevel()));
 

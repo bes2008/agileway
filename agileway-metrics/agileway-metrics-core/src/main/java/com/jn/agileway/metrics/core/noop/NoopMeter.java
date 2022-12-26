@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.core.noop;
 
-import com.jn.agileway.metrics.core.meter.Meter;
+import com.jn.agileway.metrics.core.meter.Metered;
 import com.jn.langx.util.Emptys;
 
 import java.util.Map;
@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * @since 4.1.0
  */
-public class NoopMeter implements Meter {
+public class NoopMeter implements Metered {
     public static final NoopMeter NOOP_METER = new NoopMeter();
 
     @Override

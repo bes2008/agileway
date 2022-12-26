@@ -57,15 +57,15 @@ public interface MetricRegistryListener extends EventListener {
     void onHistogramRemoved(MetricName name);
 
     /**
-     * Called when a {@link Meter} is added to the registry.
+     * Called when a {@link Metered} is added to the registry.
      *
      * @param name  the meter's name
      * @param meter the meter
      */
-    void onMeterAdded(MetricName name, Meter meter);
+    void onMeterAdded(MetricName name, Metered meter);
 
     /**
-     * Called when a {@link Meter} is removed from the registry.
+     * Called when a {@link Metered} is removed from the registry.
      *
      * @param name the meter's name
      */

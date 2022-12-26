@@ -1,14 +1,14 @@
 package com.jn.agileway.metrics.core.metricset;
 
 
-import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.Meter;
 import com.jn.agileway.metrics.core.MetricName;
 
 /**
  * @since 4.1.0
  * @param <T>
  */
-public interface MetricBuilder<T extends Metric> {
+public interface MetricBuilder<T extends Meter> {
 
     /**
      * create a new metric instance
@@ -24,7 +24,7 @@ public interface MetricBuilder<T extends Metric> {
      * @param metric the metric to check
      * @return true if the current builder can build this metric
      */
-    boolean isInstance(Metric metric);
+    boolean isInstance(Meter metric);
 
     MetricBuilder<T> interval(int interval);
 

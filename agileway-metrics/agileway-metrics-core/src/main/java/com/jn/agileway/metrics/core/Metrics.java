@@ -67,7 +67,7 @@ public class Metrics {
     private static volatile MetricFactory metricFactory;
 
     /**
-     * Create a {@link Meter} metric in given group, and name.
+     * Create a {@link Metered} metric in given group, and name.
      * if not exist, an instance will be created.
      * 根据给定的group和name, 获取一个Meter实例，如果不存在则会创建
      * Meter(计量器)主要用于统计调用qps, 包括最近1min, 5min, 15min的移动平均qps
@@ -76,7 +76,7 @@ public class Metrics {
      * @param name  the name of the metric
      * @return an instance of meter
      */
-    public static Meter getMeter(String group, MetricName name) {
+    public static Metered getMeter(String group, MetricName name) {
         MetricFactory factory = getMetricFactory();
         return factory.getMeter(group, name);
     }
@@ -244,7 +244,7 @@ public class Metrics {
      * @param group  the group name of MetricRegistry
      * @param metric the metric to register
      */
-    public static void register(String group, MetricName name, Metric metric) {
+    public static void register(String group, MetricName name, Meter metric) {
         MetricFactory factory = getMetricFactory();
         factory.register(group, name, metric);
     }

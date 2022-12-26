@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.core.meter.impl;
 
-import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.Meter;
 import com.jn.agileway.metrics.core.MetricName;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.snapshot.ReservoirType;
@@ -14,7 +14,7 @@ public class TimerBuilder extends ReservoirTypeMetricBuilder<Timer> {
 
 
     @Override
-    public boolean isInstance(Metric metric) {
+    public boolean isInstance(Meter metric) {
         return Reflects.isInstance(metric, Timer.class);
     }
 

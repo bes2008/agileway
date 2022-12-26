@@ -108,12 +108,12 @@ public class MetricNameSetPredicate implements MetricPredicate {
     }
 
     @Override
-    public boolean test(MetricName name, Metric metric) {
+    public boolean test(MetricName name, Meter metric) {
         for (String nameToMatch : metricNames) {
             boolean success;
             if (metric instanceof Counter) {
                 success = matchInternal(nameToMatch, name, counterSuffixSet, false);
-            } else if (metric instanceof Meter) {
+            } else if (metric instanceof Metered) {
                 success = matchInternal(nameToMatch, name, meterSuffixSet, false);
             } else if (metric instanceof Histogram) {
                 success = matchInternal(nameToMatch, name, histogramSuffixSet, false);

@@ -5,7 +5,7 @@ package com.jn.agileway.metrics.core;
  *
  * @since 4.1.0
  */
-public interface Metric {
+public interface Meter {
 
     /**
      * Return the last update time in milliseconds
