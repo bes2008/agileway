@@ -2,7 +2,7 @@ package com.jn.agileway.metrics.core.meter.impl;
 
 import com.jn.agileway.metrics.core.Meter;
 import com.jn.agileway.metrics.core.metricset.MetricBuilder;
-import com.jn.agileway.metrics.core.MetricName;
+import com.jn.agileway.metrics.core.Metric;
 
 /**
  * @since 4.1.0
@@ -16,7 +16,7 @@ public abstract class AbstractMetricBuilder<T extends Meter> implements MetricBu
     }
 
     @Override
-    public abstract T newMetric(MetricName name);
+    public abstract T newMetric(Metric name);
 
     @Override
     public abstract boolean isInstance(Meter metric);

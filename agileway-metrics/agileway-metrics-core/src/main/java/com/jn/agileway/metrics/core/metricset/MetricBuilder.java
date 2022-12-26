@@ -2,7 +2,7 @@ package com.jn.agileway.metrics.core.metricset;
 
 
 import com.jn.agileway.metrics.core.Meter;
-import com.jn.agileway.metrics.core.MetricName;
+import com.jn.agileway.metrics.core.Metric;
 
 /**
  * @since 4.1.0
@@ -16,7 +16,7 @@ public interface MetricBuilder<T extends Meter> {
      * @param name the name of the metric
      * @return a metric instance
      */
-    T newMetric(MetricName name);
+    T newMetric(Metric name);
 
     /**
      * check if the current builder can build the given metric

@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.supports.prometheus.simple;
 
-import com.jn.agileway.metrics.core.MetricName;
+import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.tag.TagList;
 import com.jn.langx.util.Maths;
 import io.prometheus.client.Collector;
@@ -33,7 +33,7 @@ public class CustomMappingSampleBuilder implements SampleBuilder {
     }
 
     @Override
-    public Collector.MetricFamilySamples.Sample createSample(final MetricName metricName, final String nameSuffix, final List<String> additionalLabelNames, final List<String> additionalLabelValues, final double value) {
+    public Collector.MetricFamilySamples.Sample createSample(final Metric metricName, final String nameSuffix, final List<String> additionalLabelNames, final List<String> additionalLabelValues, final double value) {
         String agilewayName = metricName.getKey();
         if (agilewayName == null) {
             throw new IllegalArgumentException("Dropwizard metric name cannot be null");
@@ -55,7 +55,7 @@ public class CustomMappingSampleBuilder implements SampleBuilder {
                 tagList = tagList.and(additionalLabelNames.get(i), additionalLabelValues.get(i));
             }
             String newName =  getMetricName(matchingConfig.mapperConfig, params);
-            MetricName newMetric= new MetricName(newName, metricName.getTags(), metricName.getMetricLevel());
+            Metric newMetric= new Metric(newName, metricName.getTags(), metricName.getMetricLevel());
             return defaultMetricSampleBuilder.createSample(
                     newMetric, nameSuffix,
                     tagList.getKeys(),

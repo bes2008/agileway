@@ -2,7 +2,7 @@ package com.jn.agileway.metrics.core.meter.impl;
 
 import com.jn.agileway.metrics.core.Meter;
 import com.jn.agileway.metrics.core.metricset.MetricBuilder;
-import com.jn.agileway.metrics.core.MetricName;
+import com.jn.agileway.metrics.core.Metric;
 import com.jn.langx.util.reflect.Reflects;
 
 /**
@@ -17,12 +17,12 @@ public class ClusterHistogramBuilder extends AbstractMetricBuilder<ClusterHistog
      * @param buckets an array of long values
      * @return a metric implementation
      */
-    public ClusterHistogram newMetric(MetricName name, long[] buckets){
+    public ClusterHistogram newMetric(Metric name, long[] buckets){
         return new ClusterHistogramImpl(buckets, this.interval, null);
     }
 
     @Override
-    public ClusterHistogram newMetric(MetricName name) {
+    public ClusterHistogram newMetric(Metric name) {
         return new ClusterHistogramImpl(this.interval, null);
     }
 

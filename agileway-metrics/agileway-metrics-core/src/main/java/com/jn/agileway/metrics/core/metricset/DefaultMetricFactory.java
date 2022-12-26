@@ -32,81 +32,81 @@ public class DefaultMetricFactory implements MetricFactory {
     }
 
     @Override
-    public Metered getMeter(String group, MetricName name) {
+    public Metered getMeter(String group, Metric name) {
         if (!this.enabled) {
-            return Metrics.NOOP_METRIC_FACTORY.getMeter(group, name);
+            return Meters.NOOP_METRIC_FACTORY.getMeter(group, name);
         }
         return getMetricRegistryByGroup(group).meter(name);
     }
 
     @Override
-    public Counter getCounter(String group, MetricName name) {
+    public Counter getCounter(String group, Metric name) {
         if (!this.enabled) {
-            return Metrics.NOOP_METRIC_FACTORY.getCounter(group, name);
+            return Meters.NOOP_METRIC_FACTORY.getCounter(group, name);
         }
         return getMetricRegistryByGroup(group).counter(name);
     }
 
     @Override
-    public Histogram getHistogram(String group, MetricName name) {
+    public Histogram getHistogram(String group, Metric name) {
         if (!this.enabled) {
-            return Metrics.NOOP_METRIC_FACTORY.getHistogram(group, name);
+            return Meters.NOOP_METRIC_FACTORY.getHistogram(group, name);
         }
         return getMetricRegistryByGroup(group).histogram(name);
     }
 
     @Override
-    public Histogram getHistogram(String group, MetricName name, ReservoirType type) {
+    public Histogram getHistogram(String group, Metric name, ReservoirType type) {
         if (!this.enabled) {
-            return Metrics.NOOP_METRIC_FACTORY.getHistogram(group, name, type);
+            return Meters.NOOP_METRIC_FACTORY.getHistogram(group, name, type);
         }
         return getMetricRegistryByGroup(group).histogram(name, type);
     }
 
     @Override
-    public Timer getTimer(String group, MetricName name) {
+    public Timer getTimer(String group, Metric name) {
         if (!this.enabled) {
-            return Metrics.NOOP_METRIC_FACTORY.getTimer(group, name);
+            return Meters.NOOP_METRIC_FACTORY.getTimer(group, name);
         }
         return getMetricRegistryByGroup(group).timer(name);
     }
 
     @Override
-    public Timer getTimer(String group, MetricName name, ReservoirType type) {
+    public Timer getTimer(String group, Metric name, ReservoirType type) {
         if (!this.enabled) {
-            return Metrics.NOOP_METRIC_FACTORY.getTimer(group, name, type);
+            return Meters.NOOP_METRIC_FACTORY.getTimer(group, name, type);
         }
         return getMetricRegistryByGroup(group).timer(name, type);
     }
 
     @Override
-    public Compass getCompass(String group, MetricName name) {
+    public Compass getCompass(String group, Metric name) {
         if (!this.enabled) {
-            return Metrics.NOOP_METRIC_FACTORY.getCompass(group, name);
+            return Meters.NOOP_METRIC_FACTORY.getCompass(group, name);
         }
         return getMetricRegistryByGroup(group).compass(name);
     }
 
     @Override
-    public Compass getCompass(String group, MetricName name, ReservoirType type) {
+    public Compass getCompass(String group, Metric name, ReservoirType type) {
         if (!this.enabled) {
-            return Metrics.NOOP_METRIC_FACTORY.getCompass(group, name, type);
+            return Meters.NOOP_METRIC_FACTORY.getCompass(group, name, type);
         }
         return getMetricRegistryByGroup(group).compass(name, type);
     }
 
     @Override
-    public FastCompass getFastCompass(String group, MetricName name) {
+    public FastCompass getFastCompass(String group, Metric name) {
         if (!this.enabled) {
-            return Metrics.NOOP_METRIC_FACTORY.getFastCompass(group, name);
+            return Meters.NOOP_METRIC_FACTORY.getFastCompass(group, name);
         }
         return getMetricRegistryByGroup(group).fastCompass(name);
     }
 
     @Override
-    public ClusterHistogram getClusterHistogram(String group, MetricName name, long[] buckets) {
+    public ClusterHistogram getClusterHistogram(String group, Metric name, long[] buckets) {
         if (!this.enabled) {
-            return Metrics.NOOP_METRIC_FACTORY.getClusterHistogram(group, name, buckets);
+            return Meters.NOOP_METRIC_FACTORY.getClusterHistogram(group, name, buckets);
         }
         return getMetricRegistryByGroup(group).clusterHistogram(name, buckets);
     }
@@ -132,14 +132,14 @@ public class DefaultMetricFactory implements MetricFactory {
     }
 
     @Override
-    public Map<String, Set<MetricName>> listMetricNamesByGroup() {
+    public Map<String, Set<Metric>> listMetricNamesByGroup() {
         if (!this.enabled) {
             return Collections.emptyMap();
         }
-        Map<String, Set<MetricName>> result = new HashMap<String, Set<MetricName>>();
+        Map<String, Set<Metric>> result = new HashMap<String, Set<Metric>>();
         for (Map.Entry<String, MetricRegistry> entry : metricRegistryMap.entrySet()) {
-            Set<MetricName> metricNames = new TreeSet<MetricName>();
-            for (Map.Entry<MetricName, Meter> metricEntry : entry.getValue().getMetrics().entrySet()) {
+            Set<Metric> metricNames = new TreeSet<Metric>();
+            for (Map.Entry<Metric, Meter> metricEntry : entry.getValue().getMetrics().entrySet()) {
                 metricNames.add(metricEntry.getKey());
             }
             result.put(entry.getKey(), metricNames);
@@ -156,7 +156,7 @@ public class DefaultMetricFactory implements MetricFactory {
     }
 
     @Override
-    public Map<MetricName, Gauge> getGauges(String group, MetricPredicate filter) {
+    public Map<Metric, Gauge> getGauges(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -168,7 +168,7 @@ public class DefaultMetricFactory implements MetricFactory {
     }
 
     @Override
-    public Map<MetricName, Counter> getCounters(String group, MetricPredicate filter) {
+    public Map<Metric, Counter> getCounters(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -181,7 +181,7 @@ public class DefaultMetricFactory implements MetricFactory {
     }
 
     @Override
-    public Map<MetricName, Histogram> getHistograms(String group, MetricPredicate filter) {
+    public Map<Metric, Histogram> getHistograms(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -194,7 +194,7 @@ public class DefaultMetricFactory implements MetricFactory {
     }
 
     @Override
-    public Map<MetricName, Metered> getMeters(String group, MetricPredicate filter) {
+    public Map<Metric, Metered> getMeters(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -207,7 +207,7 @@ public class DefaultMetricFactory implements MetricFactory {
     }
 
     @Override
-    public Map<MetricName, Timer> getTimers(String group, MetricPredicate filter) {
+    public Map<Metric, Timer> getTimers(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -220,7 +220,7 @@ public class DefaultMetricFactory implements MetricFactory {
     }
 
     @Override
-    public Map<MetricName, Compass> getCompasses(String group, MetricPredicate filter) {
+    public Map<Metric, Compass> getCompasses(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -233,7 +233,7 @@ public class DefaultMetricFactory implements MetricFactory {
     }
 
     @Override
-    public Map<MetricName, FastCompass> getFastCompasses(String group, MetricPredicate filter) {
+    public Map<Metric, FastCompass> getFastCompasses(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -246,7 +246,7 @@ public class DefaultMetricFactory implements MetricFactory {
     }
 
     @Override
-    public Map<MetricName, ClusterHistogram> getClusterHistogram(String group, MetricPredicate filter) {
+    public Map<Metric, ClusterHistogram> getClusterHistogram(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -259,7 +259,7 @@ public class DefaultMetricFactory implements MetricFactory {
     }
 
     @Override
-    public void register(String group, MetricName name, Meter metric) {
+    public void register(String group, Metric name, Meter metric) {
         if (!this.enabled) {
             return;
         }
@@ -269,7 +269,7 @@ public class DefaultMetricFactory implements MetricFactory {
     }
 
     @Override
-    public Map<MetricName, Meter> getMetrics(String group) {
+    public Map<Metric, Meter> getMetrics(String group) {
         if (!this.enabled) {
             return Collections.emptyMap();
         }
@@ -282,47 +282,47 @@ public class DefaultMetricFactory implements MetricFactory {
     }
 
     @Override
-    public Map<Class<? extends Meter>, Map<MetricName, ? extends Meter>> getCategoryMetrics(String group) {
+    public Map<Class<? extends Meter>, Map<Metric, ? extends Meter>> getCategoryMetrics(String group) {
         return getCategoryMetrics(group, FixedPredicate.TRUE);
     }
 
     @Override
-    public Map<Class<? extends Meter>, Map<MetricName, ? extends Meter>> getCategoryMetrics(String group,
-                                                                                            MetricPredicate filter) {
+    public Map<Class<? extends Meter>, Map<Metric, ? extends Meter>> getCategoryMetrics(String group,
+                                                                                        MetricPredicate filter) {
         if (!this.enabled) {
             return Collections.emptyMap();
         }
 
         MetricRegistry metricRegistry = this.metricRegistryMap.get(group);
-        Map<MetricName, Meter> metrics = metricRegistry.getMetrics();
+        Map<Metric, Meter> metrics = metricRegistry.getMetrics();
         return getCategoryMetrics(metrics, filter);
     }
 
     @Override
-    public Map<Class<? extends Meter>, Map<MetricName, ? extends Meter>> getAllCategoryMetrics(MetricPredicate filter) {
+    public Map<Class<? extends Meter>, Map<Metric, ? extends Meter>> getAllCategoryMetrics(MetricPredicate filter) {
 
         if (!this.enabled) {
             return Collections.emptyMap();
         }
 
-        Map<Class<? extends Meter>, Map<MetricName, ? extends Meter>> result = new HashMap<Class<? extends Meter>, Map<MetricName, ? extends Meter>>();
+        Map<Class<? extends Meter>, Map<Metric, ? extends Meter>> result = new HashMap<Class<? extends Meter>, Map<Metric, ? extends Meter>>();
 
-        Map<MetricName, Gauge> gauges = new HashMap<MetricName, Gauge>();
-        Map<MetricName, Counter> counters = new HashMap<MetricName, Counter>();
-        Map<MetricName, Histogram> histograms = new HashMap<MetricName, Histogram>();
-        Map<MetricName, Metered> meters = new HashMap<MetricName, Metered>();
-        Map<MetricName, Timer> timers = new HashMap<MetricName, Timer>();
-        Map<MetricName, Compass> compasses = new HashMap<MetricName, Compass>();
-        Map<MetricName, FastCompass> fastCompasses = new HashMap<MetricName, FastCompass>();
-        Map<MetricName, ClusterHistogram> clusterHistogrames = new HashMap<MetricName, ClusterHistogram>();
+        Map<Metric, Gauge> gauges = new HashMap<Metric, Gauge>();
+        Map<Metric, Counter> counters = new HashMap<Metric, Counter>();
+        Map<Metric, Histogram> histograms = new HashMap<Metric, Histogram>();
+        Map<Metric, Metered> meters = new HashMap<Metric, Metered>();
+        Map<Metric, Timer> timers = new HashMap<Metric, Timer>();
+        Map<Metric, Compass> compasses = new HashMap<Metric, Compass>();
+        Map<Metric, FastCompass> fastCompasses = new HashMap<Metric, FastCompass>();
+        Map<Metric, ClusterHistogram> clusterHistogrames = new HashMap<Metric, ClusterHistogram>();
 
         for (Entry<String, MetricRegistry> entry : metricRegistryMap.entrySet()) {
 
             MetricRegistry metricRegistry = entry.getValue();
 
-            Map<MetricName, Meter> metrics = metricRegistry.getMetrics();
+            Map<Metric, Meter> metrics = metricRegistry.getMetrics();
 
-            for (Entry<MetricName, Meter> entry1 : metrics.entrySet()) {
+            for (Entry<Metric, Meter> entry1 : metrics.entrySet()) {
 
                 checkAndAdd(entry1, filter, gauges, counters, histograms, meters, timers, compasses, fastCompasses, clusterHistogrames);
 
@@ -341,24 +341,24 @@ public class DefaultMetricFactory implements MetricFactory {
         return result;
     }
 
-    private Map<Class<? extends Meter>, Map<MetricName, ? extends Meter>> getCategoryMetrics(
-            Map<MetricName, Meter> metrics, MetricPredicate filter) {
+    private Map<Class<? extends Meter>, Map<Metric, ? extends Meter>> getCategoryMetrics(
+            Map<Metric, Meter> metrics, MetricPredicate filter) {
         if (!this.enabled) {
             return Collections.emptyMap();
         }
 
-        Map<Class<? extends Meter>, Map<MetricName, ? extends Meter>> result = new HashMap<Class<? extends Meter>, Map<MetricName, ? extends Meter>>();
+        Map<Class<? extends Meter>, Map<Metric, ? extends Meter>> result = new HashMap<Class<? extends Meter>, Map<Metric, ? extends Meter>>();
 
-        Map<MetricName, Gauge> gauges = new HashMap<MetricName, Gauge>();
-        Map<MetricName, Counter> counters = new HashMap<MetricName, Counter>();
-        Map<MetricName, Histogram> histograms = new HashMap<MetricName, Histogram>();
-        Map<MetricName, Metered> meters = new HashMap<MetricName, Metered>();
-        Map<MetricName, Timer> timers = new HashMap<MetricName, Timer>();
-        Map<MetricName, Compass> compasses = new HashMap<MetricName, Compass>();
-        Map<MetricName, FastCompass> fastCompasses = new HashMap<MetricName, FastCompass>();
-        Map<MetricName, ClusterHistogram> clusterHistogrames = new HashMap<MetricName, ClusterHistogram>();
+        Map<Metric, Gauge> gauges = new HashMap<Metric, Gauge>();
+        Map<Metric, Counter> counters = new HashMap<Metric, Counter>();
+        Map<Metric, Histogram> histograms = new HashMap<Metric, Histogram>();
+        Map<Metric, Metered> meters = new HashMap<Metric, Metered>();
+        Map<Metric, Timer> timers = new HashMap<Metric, Timer>();
+        Map<Metric, Compass> compasses = new HashMap<Metric, Compass>();
+        Map<Metric, FastCompass> fastCompasses = new HashMap<Metric, FastCompass>();
+        Map<Metric, ClusterHistogram> clusterHistogrames = new HashMap<Metric, ClusterHistogram>();
 
-        for (Map.Entry<MetricName, Meter> entry : metrics.entrySet()) {
+        for (Map.Entry<Metric, Meter> entry : metrics.entrySet()) {
             checkAndAdd(entry, filter, gauges, counters, histograms, meters, timers, compasses, fastCompasses, clusterHistogrames);
         }
 
@@ -374,11 +374,11 @@ public class DefaultMetricFactory implements MetricFactory {
         return result;
     }
 
-    private void checkAndAdd(Map.Entry<MetricName, Meter> entry, MetricPredicate predicate, Map<MetricName, Gauge> gauges,
-                             Map<MetricName, Counter> counters, Map<MetricName, Histogram> histograms, Map<MetricName, Metered> meters,
-                             Map<MetricName, Timer> timers, Map<MetricName, Compass> compasses, Map<MetricName, FastCompass> fastCompasses, Map<MetricName, ClusterHistogram> clusterHistogrames) {
+    private void checkAndAdd(Map.Entry<Metric, Meter> entry, MetricPredicate predicate, Map<Metric, Gauge> gauges,
+                             Map<Metric, Counter> counters, Map<Metric, Histogram> histograms, Map<Metric, Metered> meters,
+                             Map<Metric, Timer> timers, Map<Metric, Compass> compasses, Map<Metric, FastCompass> fastCompasses, Map<Metric, ClusterHistogram> clusterHistogrames) {
 
-        MetricName metricName = entry.getKey();
+        Metric metricName = entry.getKey();
         Meter metric = entry.getValue();
         if (metric instanceof Gauge && predicate.test(metricName, metric)) {
             gauges.put(metricName, (Gauge) metric);
@@ -398,8 +398,8 @@ public class DefaultMetricFactory implements MetricFactory {
             clusterHistogrames.put(metricName, (ClusterHistogram) metric);
         } else if (metric instanceof DynamicMetricSet) {
             DynamicMetricSet dynamicMetricSet = (DynamicMetricSet) metric;
-            Map<MetricName, Meter> dynamicMetrics = dynamicMetricSet.getDynamicMetrics();
-            for (Map.Entry<MetricName, Meter> dynamicMetricEntry : dynamicMetrics.entrySet()) {
+            Map<Metric, Meter> dynamicMetrics = dynamicMetricSet.getDynamicMetrics();
+            for (Map.Entry<Metric, Meter> dynamicMetricEntry : dynamicMetrics.entrySet()) {
                 checkAndAdd(dynamicMetricEntry, predicate, gauges, counters, histograms, meters, timers, compasses, fastCompasses, clusterHistogrames);
             }
         }

@@ -15,7 +15,7 @@ import java.util.*;
  *
  * @since 4.1.0
  */
-public class MetricName implements Comparable<MetricName> {
+public class Metric implements Comparable<Metric> {
 
     /**
      * enum的数值不能为负数，且不能太大
@@ -47,7 +47,7 @@ public class MetricName implements Comparable<MetricName> {
 
     public static final String SEPARATOR = ".";
     public static final Map<String, String> EMPTY_TAGS = Collections.emptyMap();
-    public static final MetricName EMPTY = new MetricName();
+    public static final Metric EMPTY = new Metric();
 
     private final String key;
     private final TagList tags;
@@ -58,27 +58,27 @@ public class MetricName implements Comparable<MetricName> {
 
     private boolean hashCodeCached = false;
 
-    public MetricName() {
+    public Metric() {
         this(null, (Map<String, String>) null, null);
     }
 
-    public MetricName(String key) {
+    public Metric(String key) {
         this(key, (Map<String, String>) null, null);
     }
 
-    public MetricName(String key, Map<String, String> tags) {
+    public Metric(String key, Map<String, String> tags) {
         this(key, tags, null);
     }
 
-    public MetricName(String key, MetricLevel level) {
+    public Metric(String key, MetricLevel level) {
         this(key, (Map<String, String>) null, level);
     }
 
-    public MetricName(String key, Map<String, String> tags, MetricLevel level) {
+    public Metric(String key, Map<String, String> tags, MetricLevel level) {
         this(key, Tags.listOf(tags), level);
     }
 
-    public MetricName(String key, TagList tags, MetricLevel level) {
+    public Metric(String key, TagList tags, MetricLevel level) {
         this.key = key;
         this.tags = Tags.listOf(tags);
         this.level = level == null ? MetricLevel.NORMAL : level;
@@ -91,14 +91,14 @@ public class MetricName implements Comparable<MetricName> {
      * @return A newly created metric name which has the name of the specified
      * parts and includes all tags of all child metric names.
      **/
-    public static MetricName join(MetricName... parts) {
+    public static Metric join(Metric... parts) {
         final StringBuilder nameBuilder = new StringBuilder();
         final Map<String, String> tags = new HashMap<String, String>();
 
         boolean first = true;
-        MetricName firstName = null;
+        Metric firstName = null;
 
-        for (MetricName part : parts) {
+        for (Metric part : parts) {
             final String name = part.getKey();
 
             if (name != null && !name.isEmpty()) {
@@ -117,7 +117,7 @@ public class MetricName implements Comparable<MetricName> {
         }
 
         MetricLevel level = firstName == null ? null : firstName.getMetricLevel();
-        return new MetricName(nameBuilder.toString(), tags, level);
+        return new Metric(nameBuilder.toString(), tags, level);
     }
 
     /**
@@ -126,14 +126,14 @@ public class MetricName implements Comparable<MetricName> {
      * @param parts Path of the new metric name.
      * @return A newly created metric name with the specified path.
      **/
-    public static MetricName build(String... parts) {
+    public static Metric build(String... parts) {
         if (parts == null || parts.length == 0)
-            return MetricName.EMPTY;
+            return Metric.EMPTY;
 
         if (parts.length == 1)
-            return new MetricName(parts[0], EMPTY_TAGS);
+            return new Metric(parts[0], EMPTY_TAGS);
 
-        return new MetricName(buildName(parts), EMPTY_TAGS);
+        return new Metric(buildName(parts), EMPTY_TAGS);
     }
 
     private static String buildName(String... names) {
@@ -187,12 +187,12 @@ public class MetricName implements Comparable<MetricName> {
      *
      * @param level the level to set
      */
-    public MetricName level(MetricLevel level) {
+    public Metric level(MetricLevel level) {
         this.level = level;
         return this;
     }
 
-    public MetricName resolve(String p) {
+    public Metric resolve(String p) {
         return resolve(p, true);
     }
 
@@ -206,7 +206,7 @@ public class MetricName implements Comparable<MetricName> {
      * @return A new metric name relative to the original by the path specified
      * in p.
      */
-    public MetricName resolve(String p, boolean inheritTags) {
+    public Metric resolve(String p, boolean inheritTags) {
         final String next;
 
         if (p != null && !p.isEmpty()) {
@@ -219,7 +219,7 @@ public class MetricName implements Comparable<MetricName> {
             next = this.key;
         }
 
-        return inheritTags ? new MetricName(next, tags, level) : new MetricName(next, level);
+        return inheritTags ? new Metric(next, tags, level) : new Metric(next, level);
     }
 
 
@@ -229,13 +229,13 @@ public class MetricName implements Comparable<MetricName> {
      * @param add Tags to add.
      * @return A newly created metric name with the specified tags associated with it.
      */
-    public MetricName tags(Map<String, String> add) {
+    public Metric tags(Map<String, String> add) {
         final Map<String, String> tags = new HashMap<String, String>(add);
         tags.putAll(this.getTagsAsMap());
-        return new MetricName(key, tags, level);
+        return new Metric(key, tags, level);
     }
 
-    public MetricName tag(String tagKey, String tagValue) {
+    public Metric tag(String tagKey, String tagValue) {
         return tags(tagKey, tagValue);
     }
 
@@ -248,7 +248,7 @@ public class MetricName implements Comparable<MetricName> {
      * with it.
      * @see #tags(Map)
      */
-    public MetricName tags(String... pairs) {
+    public Metric tags(String... pairs) {
         if (pairs == null) {
             return this;
         }
@@ -301,7 +301,7 @@ public class MetricName implements Comparable<MetricName> {
         if (getClass() != obj.getClass())
             return false;
 
-        MetricName other = (MetricName) obj;
+        Metric other = (Metric) obj;
 
         if (key == null) {
             if (other.key != null)
@@ -316,7 +316,7 @@ public class MetricName implements Comparable<MetricName> {
     }
 
     @Override
-    public int compareTo(MetricName o) {
+    public int compareTo(Metric o) {
         if (o == null)
             return -1;
 

@@ -1,7 +1,7 @@
 package com.jn.agileway.metrics.core.meter.impl;
 
 import com.jn.agileway.metrics.core.Meter;
-import com.jn.agileway.metrics.core.MetricName;
+import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.snapshot.ReservoirType;
 import com.jn.agileway.metrics.core.snapshot.ReservoirTypeMetricBuilder;
@@ -24,12 +24,12 @@ public class TimerBuilder extends ReservoirTypeMetricBuilder<Timer> {
     }
 
     @Override
-    public Timer newMetric(MetricName name) {
+    public Timer newMetric(Metric name) {
         return new TimerImpl(this.interval);
     }
 
     @Override
-    public Timer newMetric(MetricName name, ReservoirType type) {
+    public Timer newMetric(Metric name, ReservoirType type) {
         return new TimerImpl(this.interval, type);
     }
 }

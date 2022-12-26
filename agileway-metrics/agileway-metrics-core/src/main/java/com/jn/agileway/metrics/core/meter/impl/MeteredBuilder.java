@@ -2,7 +2,7 @@ package com.jn.agileway.metrics.core.meter.impl;
 
 import com.jn.agileway.metrics.core.Meter;
 import com.jn.agileway.metrics.core.metricset.MetricBuilder;
-import com.jn.agileway.metrics.core.MetricName;
+import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.meter.Metered;
 import com.jn.langx.util.reflect.Reflects;
 
@@ -11,7 +11,7 @@ import com.jn.langx.util.reflect.Reflects;
  */
 public class MeteredBuilder extends AbstractMetricBuilder<Metered> {
     @Override
-    public Metered newMetric(MetricName name) {
+    public Metered newMetric(Metric name) {
         return new MeteredImpl(this.interval);
     }
 

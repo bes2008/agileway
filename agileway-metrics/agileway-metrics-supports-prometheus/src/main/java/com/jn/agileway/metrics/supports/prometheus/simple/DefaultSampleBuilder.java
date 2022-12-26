@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.supports.prometheus.simple;
 
-import com.jn.agileway.metrics.core.MetricName;
+import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.tag.TagList;
 import com.jn.langx.util.Objs;
 import io.prometheus.client.Collector;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class DefaultSampleBuilder implements SampleBuilder {
     @Override
-    public Collector.MetricFamilySamples.Sample createSample(MetricName metricName, String nameSuffix, List<String> additionalLabelNames, List<String> additionalLabelValues, double value) {
+    public Collector.MetricFamilySamples.Sample createSample(Metric metricName, String nameSuffix, List<String> additionalLabelNames, List<String> additionalLabelValues, double value) {
         final String suffix = nameSuffix == null ? "" : nameSuffix;
         TagList tags = metricName.getTags();
         List<String> tagNames = Objs.isEmpty(tags) ? null : tags.getKeys();

@@ -1,7 +1,7 @@
 package com.jn.agileway.metrics.core.metricset;
 
 import com.jn.agileway.metrics.core.Meter;
-import com.jn.agileway.metrics.core.MetricName;
+import com.jn.agileway.metrics.core.Metric;
 
 import java.util.Map;
 
@@ -18,5 +18,5 @@ public interface MetricSet{
      *
      * @return the metrics
      */
-    Map<MetricName, Meter> getMetrics();
+    Map<Metric, Meter> getMetrics();
 }

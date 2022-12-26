@@ -23,7 +23,7 @@ public interface MetricFactory{
      * @param name  the name of the metric
      * @return an instance of meter
      */
-    Metered getMeter(String group, MetricName name);
+    Metered getMeter(String group, Metric name);
 
     /**
      * Create a {@link Counter} metric in given group, and name.
@@ -33,7 +33,7 @@ public interface MetricFactory{
      * @param name  the name of the metric
      * @return an instance of counter
      */
-    Counter getCounter(String group, MetricName name);
+    Counter getCounter(String group, Metric name);
 
     /**
      * Create a {@link Histogram} metric in given group, and name.
@@ -43,7 +43,7 @@ public interface MetricFactory{
      * @param name  the name of the metric
      * @return an instance of histogram
      */
-    Histogram getHistogram(String group, MetricName name);
+    Histogram getHistogram(String group, Metric name);
 
     /**
      * Create a {@link Histogram} metric in given group, name, and type
@@ -54,7 +54,7 @@ public interface MetricFactory{
      * @param type  the type of the reservoir
      * @return an instance of histogram
      */
-    Histogram getHistogram(String group, MetricName name, ReservoirType type);
+    Histogram getHistogram(String group, Metric name, ReservoirType type);
 
     /**
      * Create a {@link Timer} metric in given group, and name.
@@ -64,7 +64,7 @@ public interface MetricFactory{
      * @param name  the name of the metric
      * @return an instance of timer
      */
-    Timer getTimer(String group, MetricName name);
+    Timer getTimer(String group, Metric name);
 
     /**
      * Create a {@link Timer} metric in given group, name, and type
@@ -75,7 +75,7 @@ public interface MetricFactory{
      * @param type  the type of the reservoir
      * @return an instance of timer
      */
-    Timer getTimer(String group, MetricName name, ReservoirType type);
+    Timer getTimer(String group, Metric name, ReservoirType type);
 
     /**
      * Create a {@link Compass} metric in given group, and name.
@@ -85,7 +85,7 @@ public interface MetricFactory{
      * @param name  the name of the metric
      * @return an instance of compass
      */
-    Compass getCompass(String group, MetricName name);
+    Compass getCompass(String group, Metric name);
 
     /**
      * Create a {@link Compass} metric in given group, name, and type
@@ -96,7 +96,7 @@ public interface MetricFactory{
      * @param type  the type of the reservoir
      * @return an instance of compass
      */
-    Compass getCompass(String group, MetricName name, ReservoirType type);
+    Compass getCompass(String group, Metric name, ReservoirType type);
 
     /**
      * Create a {@link FastCompass} metric in give group, name, and type
@@ -106,7 +106,7 @@ public interface MetricFactory{
      * @param name  the name of the metric
      * @return an instance of {@link FastCompass}
      */
-    FastCompass getFastCompass(String group, MetricName name);
+    FastCompass getFastCompass(String group, Metric name);
 
 
     /**
@@ -118,7 +118,7 @@ public interface MetricFactory{
      * @param buckets if the buckets is null, a default bucket will be created.
      * @return an instance of {@link ClusterHistogram}
      */
-    ClusterHistogram getClusterHistogram(String group, MetricName name, long[] buckets);
+    ClusterHistogram getClusterHistogram(String group, Metric name, long[] buckets);
 
     /**
      * Register a customized metric to specified group.
@@ -126,7 +126,7 @@ public interface MetricFactory{
      * @param group: the group name of MetricRegistry
      * @param metric the metric to register
      */
-    void register(String group, MetricName name, Meter metric);
+    void register(String group, Metric name, Meter metric);
 
     /**
      * Get a list of group in current factory
@@ -152,7 +152,7 @@ public interface MetricFactory{
      *
      * @return a map of metric name set, keyed by group name
      */
-    Map<String, Set<MetricName>> listMetricNamesByGroup();
+    Map<String, Set<Metric>> listMetricNamesByGroup();
 
     /**
      * Get metric registry by group name,
@@ -163,28 +163,28 @@ public interface MetricFactory{
      */
     MetricRegistry getMetricRegistryByGroup(String group);
 
-    Map<MetricName, Gauge> getGauges(String group, MetricPredicate filter);
+    Map<Metric, Gauge> getGauges(String group, MetricPredicate filter);
 
-    Map<MetricName, Counter> getCounters(String group, MetricPredicate filter);
+    Map<Metric, Counter> getCounters(String group, MetricPredicate filter);
 
-    Map<MetricName, Histogram> getHistograms(String group, MetricPredicate filter);
+    Map<Metric, Histogram> getHistograms(String group, MetricPredicate filter);
 
-    Map<MetricName, Metered> getMeters(String group, MetricPredicate filter);
+    Map<Metric, Metered> getMeters(String group, MetricPredicate filter);
 
-    Map<MetricName, Timer> getTimers(String group, MetricPredicate filter);
+    Map<Metric, Timer> getTimers(String group, MetricPredicate filter);
 
-    Map<MetricName, Compass> getCompasses(String group, MetricPredicate filter);
+    Map<Metric, Compass> getCompasses(String group, MetricPredicate filter);
 
-    Map<MetricName, FastCompass> getFastCompasses(String group, MetricPredicate filter);
+    Map<Metric, FastCompass> getFastCompasses(String group, MetricPredicate filter);
 
-    Map<MetricName, ClusterHistogram> getClusterHistogram(String group, MetricPredicate filter);
+    Map<Metric, ClusterHistogram> getClusterHistogram(String group, MetricPredicate filter);
 
     /**
      * A map of metric names to metrics.
      *
      * @return the metrics
      */
-    Map<MetricName, Meter> getMetrics(String group);
+    Map<Metric, Meter> getMetrics(String group);
 
     /**
      * 返回不同Metric分类，各自保存好的map
@@ -192,7 +192,7 @@ public interface MetricFactory{
      * @param group
      * @return
      */
-    Map<Class<? extends Meter>, Map<MetricName, ? extends Meter>> getCategoryMetrics(String group);
+    Map<Class<? extends Meter>, Map<Metric, ? extends Meter>> getCategoryMetrics(String group);
 
     /**
      * 返回不同Metric分类，各自保存好的map
@@ -201,8 +201,8 @@ public interface MetricFactory{
      * @param filter
      * @return
      */
-    Map<Class<? extends Meter>, Map<MetricName, ? extends Meter>> getCategoryMetrics(String group,
-                                                                                     MetricPredicate filter);
+    Map<Class<? extends Meter>, Map<Metric, ? extends Meter>> getCategoryMetrics(String group,
+                                                                                 MetricPredicate filter);
 
     /**
      * return all metrics
@@ -210,7 +210,7 @@ public interface MetricFactory{
      * @param filter
      * @return
      */
-    Map<Class<? extends Meter>, Map<MetricName, ? extends Meter>> getAllCategoryMetrics(MetricPredicate filter);
+    Map<Class<? extends Meter>, Map<Metric, ? extends Meter>> getAllCategoryMetrics(MetricPredicate filter);
 
 
     void clear();

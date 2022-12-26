@@ -41,7 +41,7 @@ public interface MetricRegistry extends MetricSet {
      * @return {@code metric}
      * @throws IllegalArgumentException if the name is already registered
      */
-    <T extends Meter> T register(MetricName name, T metric) throws IllegalArgumentException;
+    <T extends Meter> T register(Metric name, T metric) throws IllegalArgumentException;
 
     /**
      * Given a metric set, registers them.
@@ -66,7 +66,7 @@ public interface MetricRegistry extends MetricSet {
      * @param name the name of the metric
      * @return a new or pre-existing {@link Counter}
      */
-    Counter counter(MetricName name);
+    Counter counter(Metric name);
 
     /**
      * Return the {@link Histogram} registered under this name; or create and register
@@ -75,7 +75,7 @@ public interface MetricRegistry extends MetricSet {
      * @param name the name of the metric
      * @return a new or pre-existing {@link Histogram}
      */
-    Histogram histogram(MetricName name);
+    Histogram histogram(Metric name);
 
     /**
      * Create a histogram with given name, and reservoir type
@@ -84,7 +84,7 @@ public interface MetricRegistry extends MetricSet {
      * @param type the type of reservoir
      * @return a histogram instance
      */
-    Histogram histogram(MetricName name, ReservoirType type);
+    Histogram histogram(Metric name, ReservoirType type);
 
     /**
      * Creates a new {@link Histogram} and registers it under the given name.
@@ -101,7 +101,7 @@ public interface MetricRegistry extends MetricSet {
      * @param name the name of the metric
      * @return a new or pre-existing {@link Metered}
      */
-    Metered meter(MetricName name);
+    Metered meter(Metric name);
 
     /**
      * Creates a new {@link Metered} and registers it under the given name.
@@ -118,7 +118,7 @@ public interface MetricRegistry extends MetricSet {
      * @param name the name of the metric
      * @return a new or pre-existing {@link Timer}
      */
-    Timer timer(MetricName name);
+    Timer timer(Metric name);
 
     /**
      * Create a timer with given name, and reservoir type
@@ -127,7 +127,7 @@ public interface MetricRegistry extends MetricSet {
      * @param type the type of reservoir
      * @return a timer instance
      */
-    Timer timer(MetricName name, ReservoirType type);
+    Timer timer(Metric name, ReservoirType type);
 
     /**
      * Creates a new {@link Timer} and registers it under the given name.
@@ -144,7 +144,7 @@ public interface MetricRegistry extends MetricSet {
      * @param name the name of the metric
      * @return a new or pre-existing {@link Compass}
      */
-    Compass compass(MetricName name);
+    Compass compass(Metric name);
 
     /**
      * Create a compass with given name, and reservoir type
@@ -153,7 +153,7 @@ public interface MetricRegistry extends MetricSet {
      * @param type the type of reservoir
      * @return a compass instance
      */
-    Compass compass(MetricName name, ReservoirType type);
+    Compass compass(Metric name, ReservoirType type);
 
     /**
      * Create a FastCompass with given name
@@ -161,7 +161,7 @@ public interface MetricRegistry extends MetricSet {
      * @param name the name of the metric
      * @return a FastCompass instance
      */
-    FastCompass fastCompass(MetricName name);
+    FastCompass fastCompass(Metric name);
 
     /**
      * Creates a new {@link Compass} and registers it under the given name.
@@ -179,7 +179,7 @@ public interface MetricRegistry extends MetricSet {
      * @param buckets the array of long values for buckets
      * @return a new {@link ClusterHistogram}
      */
-    ClusterHistogram clusterHistogram(MetricName name, long[] buckets);
+    ClusterHistogram clusterHistogram(Metric name, long[] buckets);
 
 
     /**
@@ -188,7 +188,7 @@ public interface MetricRegistry extends MetricSet {
      * @param name the name of the metric
      * @return whether or not the metric was removed
      */
-    boolean remove(MetricName name);
+    boolean remove(Metric name);
 
     /**
      * Removes all metrics which match the given filter.
@@ -219,14 +219,14 @@ public interface MetricRegistry extends MetricSet {
      *
      * @return the names of all the metrics
      */
-    Set<MetricName> getNames();
+    Set<Metric> getNames();
 
     /**
      * Returns a map of all the gauges in the registry and their names.
      *
      * @return all the gauges in the registry
      */
-    Map<MetricName, Gauge> getGauges();
+    Map<Metric, Gauge> getGauges();
 
     /**
      * Returns a map of all the gauges in the registry and their names which match the given filter.
@@ -234,14 +234,14 @@ public interface MetricRegistry extends MetricSet {
      * @param filter the metric filter to match
      * @return all the gauges in the registry
      */
-    Map<MetricName, Gauge> getGauges(MetricPredicate filter);
+    Map<Metric, Gauge> getGauges(MetricPredicate filter);
 
     /**
      * Returns a map of all the counters in the registry and their names.
      *
      * @return all the counters in the registry
      */
-    Map<MetricName, Counter> getCounters();
+    Map<Metric, Counter> getCounters();
 
     /**
      * Returns a map of all the counters in the registry and their names which match the given
@@ -250,14 +250,14 @@ public interface MetricRegistry extends MetricSet {
      * @param filter the metric filter to match
      * @return all the counters in the registry
      */
-    Map<MetricName, Counter> getCounters(MetricPredicate filter);
+    Map<Metric, Counter> getCounters(MetricPredicate filter);
 
     /**
      * Returns a map of all the histograms in the registry and their names.
      *
      * @return all the histograms in the registry
      */
-    Map<MetricName, Histogram> getHistograms();
+    Map<Metric, Histogram> getHistograms();
 
     /**
      * Returns a map of all the histograms in the registry and their names which match the given
@@ -266,14 +266,14 @@ public interface MetricRegistry extends MetricSet {
      * @param filter the metric filter to match
      * @return all the histograms in the registry
      */
-    Map<MetricName, Histogram> getHistograms(MetricPredicate filter);
+    Map<Metric, Histogram> getHistograms(MetricPredicate filter);
 
     /**
      * Returns a map of all the meters in the registry and their names.
      *
      * @return all the meters in the registry
      */
-    Map<MetricName, Metered> getMeters();
+    Map<Metric, Metered> getMeters();
 
     /**
      * Returns a map of all the meters in the registry and their names which match the given filter.
@@ -281,14 +281,14 @@ public interface MetricRegistry extends MetricSet {
      * @param filter the metric filter to match
      * @return all the meters in the registry
      */
-    Map<MetricName, Metered> getMeters(MetricPredicate filter);
+    Map<Metric, Metered> getMeters(MetricPredicate filter);
 
     /**
      * Returns a map of all the timers in the registry and their names.
      *
      * @return all the timers in the registry
      */
-    Map<MetricName, Timer> getTimers();
+    Map<Metric, Timer> getTimers();
 
     /**
      * Returns a map of all the timers in the registry and their names which match the given filter.
@@ -296,7 +296,7 @@ public interface MetricRegistry extends MetricSet {
      * @param filter the metric filter to match
      * @return all the timers in the registry
      */
-    Map<MetricName, Timer> getTimers(MetricPredicate filter);
+    Map<Metric, Timer> getTimers(MetricPredicate filter);
 
 
     /**
@@ -304,7 +304,7 @@ public interface MetricRegistry extends MetricSet {
      *
      * @return all the compasses in the registry
      */
-    Map<MetricName, Compass> getCompasses();
+    Map<Metric, Compass> getCompasses();
 
     /**
      * Returns a map of all the compasses in the registry and their names which match the given filter.
@@ -312,14 +312,14 @@ public interface MetricRegistry extends MetricSet {
      * @param filter the metric filter to match
      * @return all the compasses in the registry
      */
-    Map<MetricName, Compass> getCompasses(MetricPredicate filter);
+    Map<Metric, Compass> getCompasses(MetricPredicate filter);
 
     /**
      * Returns a map of all the compasses in the registry and their names.
      *
      * @return all the compasses in the registry
      */
-    Map<MetricName, FastCompass> getFastCompasses();
+    Map<Metric, FastCompass> getFastCompasses();
 
     /**
      * Returns a map of all the compasses in the registry and their names which match the given filter.
@@ -327,12 +327,12 @@ public interface MetricRegistry extends MetricSet {
      * @param filter the metric filter to match
      * @return all the compasses in the registry
      */
-    Map<MetricName, FastCompass> getFastCompasses(MetricPredicate filter);
+    Map<Metric, FastCompass> getFastCompasses(MetricPredicate filter);
 
     /**
      * Returns a map of all the {@link ClusterHistogram} in the registry and their names which match the given filter.
      */
-    Map<MetricName, ClusterHistogram> getClusterHistograms();
+    Map<Metric, ClusterHistogram> getClusterHistograms();
 
     /**
      * Returns a map of all the {@link ClusterHistogram} in the registry and their names which match the given filter.
@@ -340,7 +340,7 @@ public interface MetricRegistry extends MetricSet {
      * @param filter the metric filter to match
      * @return all the {@link ClusterHistogram} in the registry
      */
-    Map<MetricName, ClusterHistogram> getClusterHistograms(MetricPredicate filter);
+    Map<Metric, ClusterHistogram> getClusterHistograms(MetricPredicate filter);
 
 
     /**
@@ -349,7 +349,7 @@ public interface MetricRegistry extends MetricSet {
      * @param filter the metric filter to match
      * @return all the metrics in the registry
      */
-    Map<MetricName, Meter> getMetrics(MetricPredicate filter);
+    Map<Metric, Meter> getMetrics(MetricPredicate filter);
 
 
 }

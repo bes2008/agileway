@@ -1,7 +1,7 @@
 package com.jn.agileway.metrics.supports.prometheus;
 
 import com.jn.agileway.metrics.core.Meter;
-import com.jn.agileway.metrics.core.MetricName;
+import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.metricset.MetricRegistry;
@@ -73,7 +73,7 @@ public class PrometheusMetricsCollectorAdapter extends Collector implements Coll
     /**
      * Export counter as Prometheus <a href="https://prometheus.io/docs/concepts/metric_types/#gauge">Gauge</a>.
      */
-    MetricFamilySamples fromCounter(MetricName metricName, Counter counter) {
+    MetricFamilySamples fromCounter(Metric metricName, Counter counter) {
         String dropwizardName = metricName.getKey();
         MetricFamilySamples.Sample sample = sampleBuilder.createSample(metricName, "", new ArrayList<String>(), new ArrayList<String>(),
                 new Long(counter.getCount()).doubleValue());
@@ -83,7 +83,7 @@ public class PrometheusMetricsCollectorAdapter extends Collector implements Coll
     /**
      * Export gauge as a prometheus gauge.
      */
-    MetricFamilySamples fromGauge(MetricName metricName, Gauge gauge) {
+    MetricFamilySamples fromGauge(Metric metricName, Gauge gauge) {
         Object obj = gauge.getValue();
         double value;
         String dropwizardName = metricName.getKey();
@@ -108,7 +108,7 @@ public class PrometheusMetricsCollectorAdapter extends Collector implements Coll
      * @param count      the total sample count for this snapshot.
      * @param factor     a factor to apply to histogram values.
      */
-    MetricFamilySamples fromSnapshotAndCount(MetricName metricName, Snapshot snapshot, long count, double factor, String helpMessage) {
+    MetricFamilySamples fromSnapshotAndCount(Metric metricName, Snapshot snapshot, long count, double factor, String helpMessage) {
         List<MetricFamilySamples.Sample> samples = Collects.asList(
                 sampleBuilder.createSample(metricName, "", Collects.asList("quantile"), Collects.asList("0.5"), snapshot.getMedian() * factor),
                 sampleBuilder.createSample(metricName, "", Collects.asList("quantile"), Collects.asList("0.75"), snapshot.get75thPercentile() * factor),
@@ -124,7 +124,7 @@ public class PrometheusMetricsCollectorAdapter extends Collector implements Coll
     /**
      * Convert histogram snapshot.
      */
-    MetricFamilySamples fromHistogram(MetricName metricName, Histogram histogram) {
+    MetricFamilySamples fromHistogram(Metric metricName, Histogram histogram) {
         String dropwizardName = metricName.getKey();
         return fromSnapshotAndCount(metricName, histogram.getSnapshot(), histogram.getCount(), 1.0,
                 getHelpMessage(dropwizardName, histogram));
@@ -133,7 +133,7 @@ public class PrometheusMetricsCollectorAdapter extends Collector implements Coll
     /**
      * Export Dropwizard Timer as a histogram. Use TIME_UNIT as time unit.
      */
-    MetricFamilySamples fromTimer(MetricName metricName, Timer timer) {
+    MetricFamilySamples fromTimer(Metric metricName, Timer timer) {
         String dropwizardName = metricName.getKey();
         return fromSnapshotAndCount(metricName, timer.getSnapshot(), timer.getCount(),
                 1.0D / TimeUnit.SECONDS.toNanos(1L), getHelpMessage(dropwizardName, timer));
@@ -142,7 +142,7 @@ public class PrometheusMetricsCollectorAdapter extends Collector implements Coll
     /**
      * Export a Meter as as prometheus COUNTER.
      */
-    MetricFamilySamples fromMeter(MetricName metricName, Metered meter) {
+    MetricFamilySamples fromMeter(Metric metricName, Metered meter) {
         String dropwizardName = metricName.getKey();
         final MetricFamilySamples.Sample sample = sampleBuilder.createSample(metricName, "_total",
                 new ArrayList<String>(),
@@ -156,19 +156,19 @@ public class PrometheusMetricsCollectorAdapter extends Collector implements Coll
     public List<MetricFamilySamples> collect() {
         Map<String, MetricFamilySamples> mfSamplesMap = new HashMap<String, MetricFamilySamples>();
 
-        for (Map.Entry<MetricName, Gauge> entry : registry.getGauges(predicate).entrySet()) {
+        for (Map.Entry<Metric, Gauge> entry : registry.getGauges(predicate).entrySet()) {
             addToMap(mfSamplesMap, fromGauge(entry.getKey(), entry.getValue()));
         }
-        for (Map.Entry<MetricName, Counter> entry : registry.getCounters(predicate).entrySet()) {
+        for (Map.Entry<Metric, Counter> entry : registry.getCounters(predicate).entrySet()) {
             addToMap(mfSamplesMap, fromCounter(entry.getKey(), entry.getValue()));
         }
-        for (Map.Entry<MetricName, Histogram> entry : registry.getHistograms(predicate).entrySet()) {
+        for (Map.Entry<Metric, Histogram> entry : registry.getHistograms(predicate).entrySet()) {
             addToMap(mfSamplesMap, fromHistogram(entry.getKey(), entry.getValue()));
         }
-        for (Map.Entry<MetricName, Timer> entry : registry.getTimers(predicate).entrySet()) {
+        for (Map.Entry<Metric, Timer> entry : registry.getTimers(predicate).entrySet()) {
             addToMap(mfSamplesMap, fromTimer(entry.getKey(), entry.getValue()));
         }
-        for (Map.Entry<MetricName, Metered> entry : registry.getMeters(predicate).entrySet()) {
+        for (Map.Entry<Metric, Metered> entry : registry.getMeters(predicate).entrySet()) {
             addToMap(mfSamplesMap, fromMeter(entry.getKey(), entry.getValue()));
         }
         return new ArrayList<MetricFamilySamples>(mfSamplesMap.values());

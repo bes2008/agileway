@@ -13,8 +13,8 @@ import java.lang.reflect.Method;
 /**
  * @since 4.1.0
  */
-public class Metrics {
-    private Metrics() {
+public class Meters {
+    private Meters() {
     }
 
     /**
@@ -27,15 +27,15 @@ public class Metrics {
     /**
      * Shorthand method for backwards compatibility in creating metric names.
      * <p>
-     * Uses {@link MetricName#build(String...)} for its
+     * Uses {@link Metric#build(String...)} for its
      * heavy lifting.
      *
      * @param name  The first element of the name
      * @param names The remaining elements of the name
      * @return A metric name matching the specified components.
-     * @see MetricName#build(String...)
+     * @see Metric#build(String...)
      */
-    public static MetricName name(String name, String... names) {
+    public static Metric name(String name, String... names) {
         final int length;
 
         if (names == null) {
@@ -51,14 +51,14 @@ public class Metrics {
             parts[i + 1] = names[i];
         }
 
-        return MetricName.build(parts);
+        return Metric.build(parts);
     }
     // ******************** start static method ************************
 
     /**
      * @see #name(String, String...)
      */
-    public static MetricName name(Class<?> klass, String... names) {
+    public static Metric name(Class<?> klass, String... names) {
         return name(klass.getName(), names);
     }
 
@@ -76,7 +76,7 @@ public class Metrics {
      * @param name  the name of the metric
      * @return an instance of meter
      */
-    public static Metered getMeter(String group, MetricName name) {
+    public static Metered getMeter(String group, Metric name) {
         MetricFactory factory = getMetricFactory();
         return factory.getMeter(group, name);
     }
@@ -91,7 +91,7 @@ public class Metrics {
      * @param name  the name of the metric
      * @return an instance of counter
      */
-    public static Counter getCounter(String group, MetricName name) {
+    public static Counter getCounter(String group, Metric name) {
         MetricFactory factory = getMetricFactory();
         return factory.getCounter(group, name);
     }
@@ -107,7 +107,7 @@ public class Metrics {
      * @param name  the name of the metric
      * @return an instance of histogram
      */
-    public static Histogram getHistogram(String group, MetricName name) {
+    public static Histogram getHistogram(String group, Metric name) {
         MetricFactory factory = getMetricFactory();
         return factory.getHistogram(group, name);
     }
@@ -124,7 +124,7 @@ public class Metrics {
      * @param type  the type of the {@link ReservoirType}
      * @return an instance of histogram
      */
-    public static Histogram getHistogram(String group, MetricName name, ReservoirType type) {
+    public static Histogram getHistogram(String group, Metric name, ReservoirType type) {
         MetricFactory factory = getMetricFactory();
         return factory.getHistogram(group, name, type);
     }
@@ -140,7 +140,7 @@ public class Metrics {
      * @param name  the name of the metric
      * @return an instance of timer
      */
-    public static Timer getTimer(String group, MetricName name) {
+    public static Timer getTimer(String group, Metric name) {
         MetricFactory factory = getMetricFactory();
         return factory.getTimer(group, name);
     }
@@ -157,7 +157,7 @@ public class Metrics {
      * @param type  the type of reservoir
      * @return an instance of timer
      */
-    public static Timer getTimer(String group, MetricName name, ReservoirType type) {
+    public static Timer getTimer(String group, Metric name, ReservoirType type) {
         MetricFactory factory = getMetricFactory();
         return factory.getTimer(group, name, type);
     }
@@ -172,7 +172,7 @@ public class Metrics {
      * @param name  the name of the metric
      * @return an instance of compass
      */
-    public static Compass getCompass(String group, MetricName name) {
+    public static Compass getCompass(String group, Metric name) {
         MetricFactory factory = getMetricFactory();
         return factory.getCompass(group, name);
     }
@@ -187,7 +187,7 @@ public class Metrics {
      * @param name  the name of the metric
      * @return an instance of compass
      */
-    public static Compass getCompass(String group, MetricName name, ReservoirType type) {
+    public static Compass getCompass(String group, Metric name, ReservoirType type) {
         MetricFactory factory = getMetricFactory();
         return factory.getCompass(group, name, type);
     }
@@ -202,7 +202,7 @@ public class Metrics {
      * @param name  the name of the metric
      * @return an instance of {@link FastCompass}
      */
-    public static FastCompass getFastCompass(String group, MetricName name) {
+    public static FastCompass getFastCompass(String group, Metric name) {
         MetricFactory factory = getMetricFactory();
         return factory.getFastCompass(group, name);
     }
@@ -217,7 +217,7 @@ public class Metrics {
      * @param name  the name of the metric
      * @return an instance of {@link ClusterHistogram}
      */
-    public static ClusterHistogram getClusterHistogram(String group, MetricName name, long[] buckets) {
+    public static ClusterHistogram getClusterHistogram(String group, Metric name, long[] buckets) {
         MetricFactory factory = getMetricFactory();
         return factory.getClusterHistogram(group, name, buckets);
     }
@@ -232,7 +232,7 @@ public class Metrics {
      * @param name  the name of the metric
      * @return an instance of {@link ClusterHistogram}
      */
-    public static ClusterHistogram getClusterHistogram(String group, MetricName name) {
+    public static ClusterHistogram getClusterHistogram(String group, Metric name) {
         MetricFactory factory = getMetricFactory();
         return factory.getClusterHistogram(group, name, null);
     }
@@ -244,7 +244,7 @@ public class Metrics {
      * @param group  the group name of MetricRegistry
      * @param metric the metric to register
      */
-    public static void register(String group, MetricName name, Meter metric) {
+    public static void register(String group, Metric name, Meter metric) {
         MetricFactory factory = getMetricFactory();
         factory.register(group, name, metric);
     }
@@ -257,10 +257,10 @@ public class Metrics {
     @SuppressWarnings("unchecked")
     public static MetricFactory getMetricFactory() {
         if (metricFactory == null) {
-            synchronized (Metrics.class) {
+            synchronized (Meters.class) {
                 if (metricFactory == null) {
                     try {
-                        Class binderClazz = Metrics.class.getClassLoader().loadClass(BINDER_CLASS);
+                        Class binderClazz = Meters.class.getClassLoader().loadClass(BINDER_CLASS);
                         Method getSingleton = binderClazz.getMethod("getSingleton");
                         Object binderObject = getSingleton.invoke(null);
                         Method getMetricFactory = binderClazz.getMethod("getMetricFactory");

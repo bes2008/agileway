@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.supports.prometheus.simple;
 
-import com.jn.agileway.metrics.core.MetricName;
+import com.jn.agileway.metrics.core.Metric;
 import io.prometheus.client.Collector;
 
 import java.util.List;
@@ -20,5 +20,5 @@ public interface SampleBuilder {
      * @param value                 Metric value
      * @return A new {@link Collector.MetricFamilySamples.Sample}.
      */
-    Collector.MetricFamilySamples.Sample createSample(MetricName metricName, String nameSuffix, List<String> additionalLabelNames, List<String> additionalLabelValues, double value);
+    Collector.MetricFamilySamples.Sample createSample(Metric metricName, String nameSuffix, List<String> additionalLabelNames, List<String> additionalLabelValues, double value);
 }
