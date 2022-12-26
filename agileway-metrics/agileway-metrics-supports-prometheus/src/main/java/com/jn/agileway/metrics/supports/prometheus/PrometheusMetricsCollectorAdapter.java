@@ -28,7 +28,7 @@ public class PrometheusMetricsCollectorAdapter extends Collector implements Coll
     private SampleBuilder sampleBuilder;
 
     /**
-     * Creates a new DropwizardExports with a {@link DefaultSampleBuilder} and {@link FixedPredicate#TRUE}.
+     * Creates a new adapter with a {@link DefaultSampleBuilder} and {@link FixedPredicate#TRUE}.
      *
      * @param registry a metric registry to export in prometheus.
      */
