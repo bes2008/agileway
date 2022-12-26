@@ -512,7 +512,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
             return this;
         }
 
-        if ((filter == null || filter.test(MetricName.build(object.getMetric()), null))
+        if ((predicate == null || predicate.test(MetricName.build(object.getMetric()), null))
                 && object.getValue() != null) {
 
             MetricLevel level = object.getMetricLevel();

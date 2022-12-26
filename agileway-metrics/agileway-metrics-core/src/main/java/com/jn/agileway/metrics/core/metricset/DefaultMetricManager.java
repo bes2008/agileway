@@ -390,33 +390,33 @@ public class DefaultMetricManager implements MetricManager {
         return result;
     }
 
-    private void checkAndAdd(Map.Entry<MetricName, Metric> entry, MetricPredicate filter, Map<MetricName, Gauge> gauges,
+    private void checkAndAdd(Map.Entry<MetricName, Metric> entry, MetricPredicate predicate, Map<MetricName, Gauge> gauges,
                              Map<MetricName, Counter> counters, Map<MetricName, Histogram> histograms, Map<MetricName, Meter> meters,
                              Map<MetricName, Timer> timers, Map<MetricName, Compass> compasses, Map<MetricName, FastCompass> fastCompasses, Map<MetricName, ClusterHistogram> clusterHistogrames) {
 
         MetricName metricName = entry.getKey();
         Metric metric = entry.getValue();
-        if (metric instanceof Gauge && filter.test(metricName, metric)) {
+        if (metric instanceof Gauge && predicate.test(metricName, metric)) {
             gauges.put(metricName, (Gauge) metric);
-        } else if (metric instanceof Counter && filter.test(metricName, metric)) {
+        } else if (metric instanceof Counter && predicate.test(metricName, metric)) {
             counters.put(metricName, (Counter) metric);
-        } else if (metric instanceof Histogram && filter.test(metricName, metric)) {
+        } else if (metric instanceof Histogram && predicate.test(metricName, metric)) {
             histograms.put(metricName, (Histogram) metric);
-        } else if (metric instanceof Meter && filter.test(metricName, metric)) {
+        } else if (metric instanceof Meter && predicate.test(metricName, metric)) {
             meters.put(metricName, (Meter) metric);
-        } else if (metric instanceof Timer && filter.test(metricName, metric)) {
+        } else if (metric instanceof Timer && predicate.test(metricName, metric)) {
             timers.put(metricName, (Timer) metric);
-        } else if (metric instanceof Compass && filter.test(metricName, metric)) {
+        } else if (metric instanceof Compass && predicate.test(metricName, metric)) {
             compasses.put(metricName, (Compass) metric);
-        } else if (metric instanceof FastCompass && filter.test(metricName, metric)) {
+        } else if (metric instanceof FastCompass && predicate.test(metricName, metric)) {
             fastCompasses.put(metricName, (FastCompass) metric);
-        } else if (metric instanceof ClusterHistogram && filter.test(metricName, metric)) {
+        } else if (metric instanceof ClusterHistogram && predicate.test(metricName, metric)) {
             clusterHistogrames.put(metricName, (ClusterHistogram) metric);
         } else if (metric instanceof DynamicMetricSet) {
             DynamicMetricSet dynamicMetricSet = (DynamicMetricSet) metric;
             Map<MetricName, Metric> dynamicMetrics = dynamicMetricSet.getDynamicMetrics();
             for (Map.Entry<MetricName, Metric> dynamicMetricEntry : dynamicMetrics.entrySet()) {
-                checkAndAdd(dynamicMetricEntry, filter, gauges, counters, histograms, meters, timers, compasses, fastCompasses, clusterHistogrames);
+                checkAndAdd(dynamicMetricEntry, predicate, gauges, counters, histograms, meters, timers, compasses, fastCompasses, clusterHistogrames);
             }
         }
     }

@@ -49,7 +49,7 @@ public abstract class MetricsCollector implements Collector {
     /**
      * Use this filer to filter out any metric object that is not needed.
      */
-    protected MetricPredicate filter;
+    protected MetricPredicate predicate;
     private boolean collectNAValue;
     private double notAvailable;
 
@@ -73,7 +73,7 @@ public abstract class MetricsCollector implements Collector {
         this.globalTags = globalTags;
         this.rateFactor = rateFactor;
         this.durationFactor = durationFactor;
-        this.filter = filter;
+        this.predicate = filter;
         this.collectNAValue = collectNAValue;
         this.notAvailable = NOT_AVAILABLE * durationFactor;
         this.metricsCollectPeriodConfig = new MetricsCollectPeriodConfig();
@@ -107,7 +107,7 @@ public abstract class MetricsCollector implements Collector {
             return this;
         }
 
-        if ((filter == null || filter.test(MetricName.build(object.getMetric()), null))
+        if ((predicate == null || predicate.test(MetricName.build(object.getMetric()), null))
                 && object.getValue() != null) {
             this.metrics.add(object);
         }

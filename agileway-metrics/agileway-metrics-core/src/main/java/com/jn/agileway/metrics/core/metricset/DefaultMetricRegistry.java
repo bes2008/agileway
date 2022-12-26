@@ -309,13 +309,13 @@ public class DefaultMetricRegistry implements MetricRegistry {
     }
 
     /**
-     * Removes all metrics which match the given filter.
+     * Removes all metrics which match the given predicate.
      *
-     * @param filter a filter
+     * @param predicate a predicate
      */
-    public void removeMatching(MetricPredicate filter) {
+    public void removeMatching(MetricPredicate predicate) {
         for (Map.Entry<MetricName, Metric> entry : metrics.entrySet()) {
-            if (filter.test(entry.getKey(), entry.getValue())) {
+            if (predicate.test(entry.getKey(), entry.getValue())) {
                 remove(entry.getKey());
             }
         }
@@ -600,18 +600,17 @@ public class DefaultMetricRegistry implements MetricRegistry {
         throw new IllegalArgumentException(name + " is already used for a different type of metric");
     }
 
-    @SuppressWarnings("unchecked")
-    private <T extends Metric> SortedMap<MetricName, T> getMetrics(Class<T> klass, MetricPredicate filter) {
+    private <T extends Metric> SortedMap<MetricName, T> getMetrics(Class<T> klass, MetricPredicate predicate) {
         final TreeMap<MetricName, T> timers = new TreeMap<MetricName, T>();
         for (Map.Entry<MetricName, Metric> entry : metrics.entrySet()) {
-            if (klass.isInstance(entry.getValue()) && filter.test(entry.getKey(),
+            if (klass.isInstance(entry.getValue()) && predicate.test(entry.getKey(),
                     entry.getValue())) {
                 timers.put(entry.getKey(), (T) entry.getValue());
             } else if (entry.getValue() instanceof DynamicMetricSet) {
                 for (Map.Entry<MetricName, Metric> dynamicEntry :
                         ((DynamicMetricSet) entry.getValue()).getDynamicMetrics().entrySet()) {
                     if (klass.isInstance(dynamicEntry.getValue()) &&
-                            filter.test(dynamicEntry.getKey(), dynamicEntry.getValue())) {
+                            predicate.test(dynamicEntry.getKey(), dynamicEntry.getValue())) {
                         timers.put(dynamicEntry.getKey(), (T) dynamicEntry.getValue());
                     }
                 }
