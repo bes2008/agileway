@@ -11,8 +11,7 @@ import com.jn.agileway.metrics.core.snapshot.ReservoirType;
 import com.jn.langx.util.Emptys;
 
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.SortedSet;
+import java.util.Set;
 
 public class NoopMetricRegistry implements MetricRegistry {
     public static final NoopMetricRegistry NOOP_METRIC_REGISTRY = new NoopMetricRegistry();
@@ -128,112 +127,97 @@ public class NoopMetricRegistry implements MetricRegistry {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public SortedSet<MetricName> getNames() {
+    public Set<MetricName> getNames() {
         return Emptys.EMPTY_TREE_SET;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Gauge> getGauges() {
+    public Map<MetricName, Gauge> getGauges() {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Gauge> getGauges(MetricPredicate filter) {
+    public Map<MetricName, Gauge> getGauges(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Counter> getCounters() {
+    public Map<MetricName, Counter> getCounters() {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Counter> getCounters(MetricPredicate filter) {
+    public Map<MetricName, Counter> getCounters(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Histogram> getHistograms() {
+    public Map<MetricName, Histogram> getHistograms() {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Histogram> getHistograms(MetricPredicate filter) {
+    public Map<MetricName, Histogram> getHistograms(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Meter> getMeters() {
+    public Map<MetricName, Meter> getMeters() {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Meter> getMeters(MetricPredicate filter) {
+    public Map<MetricName, Meter> getMeters(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Timer> getTimers() {
+    public Map<MetricName, Timer> getTimers() {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Timer> getTimers(MetricPredicate filter) {
+    public Map<MetricName, Timer> getTimers(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Compass> getCompasses(MetricPredicate filter) {
+    public Map<MetricName, Compass> getCompasses(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Compass> getCompasses() {
+    public Map<MetricName, Compass> getCompasses() {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public SortedMap<MetricName, FastCompass> getFastCompasses() {
+    public Map<MetricName, FastCompass> getFastCompasses() {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public SortedMap<MetricName, FastCompass> getFastCompasses(MetricPredicate filter) {
+    public Map<MetricName, FastCompass> getFastCompasses(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public SortedMap<MetricName, ClusterHistogram> getClusterHistograms(MetricPredicate filter) {
+    public Map<MetricName, ClusterHistogram> getClusterHistograms(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Metric> getMetrics(MetricPredicate filter) {
+    public Map<MetricName, Metric> getMetrics(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Map<MetricName, Metric> getMetrics() {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public SortedMap<MetricName, ClusterHistogram> getClusterHistograms() {
+    public Map<MetricName, ClusterHistogram> getClusterHistograms() {
         return Emptys.EMPTY_TREE_MAP;
     }
 }

@@ -72,11 +72,11 @@ public class ConsoleReporter extends ScheduledReporter {
     }
 
     @Override
-    public void report(SortedMap<MetricName, Gauge> gauges,
-                       SortedMap<MetricName, Counter> counters,
-                       SortedMap<MetricName, Histogram> histograms,
-                       SortedMap<MetricName, Meter> meters,
-                       SortedMap<MetricName, Timer> timers) {
+    public void report(Map<MetricName, Gauge> gauges,
+                       Map<MetricName, Counter> counters,
+                       Map<MetricName, Histogram> histograms,
+                       Map<MetricName, Meter> meters,
+                       Map<MetricName, Timer> timers) {
         final String dateTime = dateFormat.format(new Date(clock.getTime()));
         printWithBanner(dateTime, '=');
         output.println();

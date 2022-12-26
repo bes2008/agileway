@@ -350,7 +350,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      *
      * @return the names of all the metrics
      */
-    public SortedSet<MetricName> getNames() {
+    public Set<MetricName> getNames() {
         return Collections.unmodifiableSortedSet(new TreeSet<MetricName>(metrics.keySet()));
     }
 
@@ -359,7 +359,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      *
      * @return all the gauges in the registry
      */
-    public SortedMap<MetricName, Gauge> getGauges() {
+    public Map<MetricName, Gauge> getGauges() {
         return getGauges(FixedPredicate.TRUE);
     }
 
@@ -369,7 +369,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @param filter the metric filter to match
      * @return all the gauges in the registry
      */
-    public SortedMap<MetricName, Gauge> getGauges(MetricPredicate filter) {
+    public Map<MetricName, Gauge> getGauges(MetricPredicate filter) {
         return getMetrics(Gauge.class, filter);
     }
 
@@ -378,7 +378,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      *
      * @return all the counters in the registry
      */
-    public SortedMap<MetricName, Counter> getCounters() {
+    public Map<MetricName, Counter> getCounters() {
         return getCounters(FixedPredicate.TRUE);
     }
 
@@ -389,7 +389,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @param filter the metric filter to match
      * @return all the counters in the registry
      */
-    public SortedMap<MetricName, Counter> getCounters(MetricPredicate filter) {
+    public Map<MetricName, Counter> getCounters(MetricPredicate filter) {
         return getMetrics(Counter.class, filter);
     }
 
@@ -398,7 +398,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      *
      * @return all the histograms in the registry
      */
-    public SortedMap<MetricName, Histogram> getHistograms() {
+    public Map<MetricName, Histogram> getHistograms() {
         return getHistograms(FixedPredicate.TRUE);
     }
 
@@ -409,7 +409,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @param filter the metric filter to match
      * @return all the histograms in the registry
      */
-    public SortedMap<MetricName, Histogram> getHistograms(MetricPredicate filter) {
+    public Map<MetricName, Histogram> getHistograms(MetricPredicate filter) {
         return getMetrics(Histogram.class, filter);
     }
 
@@ -418,7 +418,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      *
      * @return all the meters in the registry
      */
-    public SortedMap<MetricName, Meter> getMeters() {
+    public Map<MetricName, Meter> getMeters() {
         return getMeters(FixedPredicate.TRUE);
     }
 
@@ -428,7 +428,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @param filter the metric filter to match
      * @return all the meters in the registry
      */
-    public SortedMap<MetricName, Meter> getMeters(MetricPredicate filter) {
+    public Map<MetricName, Meter> getMeters(MetricPredicate filter) {
         return getMetrics(Meter.class, filter);
     }
 
@@ -437,7 +437,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      *
      * @return all the timers in the registry
      */
-    public SortedMap<MetricName, Timer> getTimers() {
+    public Map<MetricName, Timer> getTimers() {
         return getTimers(FixedPredicate.TRUE);
     }
 
@@ -447,42 +447,42 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @param filter the metric filter to match
      * @return all the timers in the registry
      */
-    public SortedMap<MetricName, Timer> getTimers(MetricPredicate filter) {
+    public Map<MetricName, Timer> getTimers(MetricPredicate filter) {
         return getMetrics(Timer.class, filter);
     }
 
     @Override
-    public SortedMap<MetricName, Compass> getCompasses(MetricPredicate filter) {
+    public Map<MetricName, Compass> getCompasses(MetricPredicate filter) {
         return getMetrics(Compass.class, filter);
     }
 
     @Override
-    public SortedMap<MetricName, Compass> getCompasses() {
+    public Map<MetricName, Compass> getCompasses() {
         return getCompasses(FixedPredicate.TRUE);
     }
 
     @Override
-    public SortedMap<MetricName, FastCompass> getFastCompasses() {
+    public Map<MetricName, FastCompass> getFastCompasses() {
         return getFastCompasses(FixedPredicate.TRUE);
     }
 
     @Override
-    public SortedMap<MetricName, FastCompass> getFastCompasses(MetricPredicate filter) {
+    public Map<MetricName, FastCompass> getFastCompasses(MetricPredicate filter) {
         return getMetrics(FastCompass.class, filter);
     }
 
     @Override
-    public SortedMap<MetricName, ClusterHistogram> getClusterHistograms(MetricPredicate filter) {
+    public Map<MetricName, ClusterHistogram> getClusterHistograms(MetricPredicate filter) {
         return getMetrics(ClusterHistogram.class, filter);
     }
 
     @Override
-    public SortedMap<MetricName, ClusterHistogram> getClusterHistograms() {
+    public Map<MetricName, ClusterHistogram> getClusterHistograms() {
         return getMetrics(ClusterHistogram.class, FixedPredicate.TRUE);
     }
 
     @Override
-    public SortedMap<MetricName, Metric> getMetrics(MetricPredicate filter) {
+    public Map<MetricName, Metric> getMetrics(MetricPredicate filter) {
         final TreeMap<MetricName, Metric> filteredMetrics = new TreeMap<MetricName, Metric>();
         filteredMetrics.putAll(getCounters(filter));
         filteredMetrics.putAll(getMeters(filter));
@@ -605,8 +605,9 @@ public class DefaultMetricRegistry implements MetricRegistry {
             if (klass.isInstance(entry.getValue()) && predicate.test(entry.getKey(), entry.getValue())) {
                 timers.put(entry.getKey(), (T) entry.getValue());
             } else if (entry.getValue() instanceof DynamicMetricSet) {
-                for (Map.Entry<MetricName, Metric> dynamicEntry :  ((DynamicMetricSet) entry.getValue()).getDynamicMetrics().entrySet()) {
-                    if (klass.isInstance(dynamicEntry.getValue()) && predicate.test(dynamicEntry.getKey(), dynamicEntry.getValue())) {
+                for (Map.Entry<MetricName, Metric> dynamicEntry : ((DynamicMetricSet) entry.getValue()).getDynamicMetrics().entrySet()) {
+                    if (klass.isInstance(dynamicEntry.getValue()) &&
+                            predicate.test(dynamicEntry.getKey(), dynamicEntry.getValue())) {
                         timers.put(dynamicEntry.getKey(), (T) dynamicEntry.getValue());
                     }
                 }

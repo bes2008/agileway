@@ -33,7 +33,6 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.Map;
-import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -72,11 +71,11 @@ public class CsvReporter extends ScheduledReporter {
     }
 
     @Override
-    public void report(SortedMap<MetricName, Gauge> gauges,
-                       SortedMap<MetricName, Counter> counters,
-                       SortedMap<MetricName, Histogram> histograms,
-                       SortedMap<MetricName, Meter> meters,
-                       SortedMap<MetricName, Timer> timers) {
+    public void report(Map<MetricName, Gauge> gauges,
+                       Map<MetricName, Counter> counters,
+                       Map<MetricName, Histogram> histograms,
+                       Map<MetricName, Meter> meters,
+                       Map<MetricName, Timer> timers) {
         final long timestamp = TimeUnit.MILLISECONDS.toSeconds(clock.getTime());
 
         for (Map.Entry<MetricName, Gauge> entry : gauges.entrySet()) {

@@ -25,7 +25,6 @@ import com.jn.agileway.metrics.core.snapshot.ReservoirType;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
 
 public interface MetricFactory {
 
@@ -177,21 +176,21 @@ public interface MetricFactory {
      */
     MetricRegistry getMetricRegistryByGroup(String group);
 
-    SortedMap<MetricName, Gauge> getGauges(String group, MetricPredicate filter);
+    Map<MetricName, Gauge> getGauges(String group, MetricPredicate filter);
 
-    SortedMap<MetricName, Counter> getCounters(String group, MetricPredicate filter);
+    Map<MetricName, Counter> getCounters(String group, MetricPredicate filter);
 
-    SortedMap<MetricName, Histogram> getHistograms(String group, MetricPredicate filter);
+    Map<MetricName, Histogram> getHistograms(String group, MetricPredicate filter);
 
-    SortedMap<MetricName, Meter> getMeters(String group, MetricPredicate filter);
+    Map<MetricName, Meter> getMeters(String group, MetricPredicate filter);
 
-    SortedMap<MetricName, Timer> getTimers(String group, MetricPredicate filter);
+    Map<MetricName, Timer> getTimers(String group, MetricPredicate filter);
 
-    SortedMap<MetricName, Compass> getCompasses(String group, MetricPredicate filter);
+    Map<MetricName, Compass> getCompasses(String group, MetricPredicate filter);
 
-    SortedMap<MetricName, FastCompass> getFastCompasses(String group, MetricPredicate filter);
+    Map<MetricName, FastCompass> getFastCompasses(String group, MetricPredicate filter);
 
-    SortedMap<MetricName, ClusterHistogram> getClusterHistogram(String group, MetricPredicate filter);
+    Map<MetricName, ClusterHistogram> getClusterHistogram(String group, MetricPredicate filter);
 
     /**
      * A map of metric names to metrics.
@@ -226,8 +225,6 @@ public interface MetricFactory {
      */
     Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getAllCategoryMetrics(MetricPredicate filter);
 
-    /**
-     * 清空IMetricManager
-     */
+
     void clear();
 }

@@ -165,8 +165,7 @@ public class DefaultMetricFactory implements MetricFactory {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Gauge> getGauges(String group, MetricPredicate filter) {
+    public Map<MetricName, Gauge> getGauges(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -178,8 +177,7 @@ public class DefaultMetricFactory implements MetricFactory {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Counter> getCounters(String group, MetricPredicate filter) {
+    public Map<MetricName, Counter> getCounters(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -192,8 +190,7 @@ public class DefaultMetricFactory implements MetricFactory {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Histogram> getHistograms(String group, MetricPredicate filter) {
+    public Map<MetricName, Histogram> getHistograms(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -206,7 +203,7 @@ public class DefaultMetricFactory implements MetricFactory {
     }
 
     @Override
-    public SortedMap<MetricName, Meter> getMeters(String group, MetricPredicate filter) {
+    public Map<MetricName, Meter> getMeters(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -219,7 +216,7 @@ public class DefaultMetricFactory implements MetricFactory {
     }
 
     @Override
-    public SortedMap<MetricName, Timer> getTimers(String group, MetricPredicate filter) {
+    public Map<MetricName, Timer> getTimers(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -232,7 +229,7 @@ public class DefaultMetricFactory implements MetricFactory {
     }
 
     @Override
-    public SortedMap<MetricName, Compass> getCompasses(String group, MetricPredicate filter) {
+    public Map<MetricName, Compass> getCompasses(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -245,7 +242,7 @@ public class DefaultMetricFactory implements MetricFactory {
     }
 
     @Override
-    public SortedMap<MetricName, FastCompass> getFastCompasses(String group, MetricPredicate filter) {
+    public Map<MetricName, FastCompass> getFastCompasses(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -258,7 +255,7 @@ public class DefaultMetricFactory implements MetricFactory {
     }
 
     @Override
-    public SortedMap<MetricName, ClusterHistogram> getClusterHistogram(String group, MetricPredicate filter) {
+    public Map<MetricName, ClusterHistogram> getClusterHistogram(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }

@@ -26,8 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 
+import java.util.Map;
 import java.util.Map.Entry;
-import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -65,11 +65,11 @@ public class Slf4jReporter extends ScheduledReporter {
     }
 
     @Override
-    public void report(SortedMap<MetricName, Gauge> gauges,
-                       SortedMap<MetricName, Counter> counters,
-                       SortedMap<MetricName, Histogram> histograms,
-                       SortedMap<MetricName, Meter> meters,
-                       SortedMap<MetricName, Timer> timers) {
+    public void report(Map<MetricName, Gauge> gauges,
+                       Map<MetricName, Counter> counters,
+                       Map<MetricName, Histogram> histograms,
+                       Map<MetricName, Meter> meters,
+                       Map<MetricName, Timer> timers) {
         if (loggerProxy.isEnabled(marker)) {
             for (Entry<MetricName, Gauge> entry : gauges.entrySet()) {
                 logGauge(entry.getKey(), entry.getValue());

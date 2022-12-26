@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 
 import java.io.Closeable;
 import java.util.Locale;
-import java.util.SortedMap;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
@@ -164,11 +164,11 @@ public abstract class ScheduledReporter implements Closeable {
      * @param meters     all of the meters in the registry
      * @param timers     all of the timers in the registry
      */
-    public abstract void report(SortedMap<MetricName, Gauge> gauges,
-                                SortedMap<MetricName, Counter> counters,
-                                SortedMap<MetricName, Histogram> histograms,
-                                SortedMap<MetricName, Meter> meters,
-                                SortedMap<MetricName, Timer> timers);
+    public abstract void report(Map<MetricName, Gauge> gauges,
+                                Map<MetricName, Counter> counters,
+                                Map<MetricName, Histogram> histograms,
+                                Map<MetricName, Meter> meters,
+                                Map<MetricName, Timer> timers);
 
     protected String getRateUnit() {
         return rateUnit;
