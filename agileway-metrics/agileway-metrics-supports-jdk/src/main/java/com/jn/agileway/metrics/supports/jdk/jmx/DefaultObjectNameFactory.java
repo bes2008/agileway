@@ -17,7 +17,6 @@
 package com.jn.agileway.metrics.supports.jdk.jmx;
 
 import com.jn.agileway.metrics.core.MetricName;
-import com.jn.agileway.metrics.core.reporter.ObjectNameFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
