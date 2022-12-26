@@ -129,7 +129,7 @@ public interface MetricFactory{
     void register(String group, MetricName name, Metric metric);
 
     /**
-     * Get a list of group in current MetricManager
+     * Get a list of group in current factory
      *
      * @return a list of group name
      */

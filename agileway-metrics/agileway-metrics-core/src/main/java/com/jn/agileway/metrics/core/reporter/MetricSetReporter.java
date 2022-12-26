@@ -68,58 +68,58 @@ public abstract class MetricSetReporter implements Closeable {
     /**
      * Creates a new {@link MetricSetReporter} instance.
      *
-     * @param metricManager the {@link MetricFactory} containing the metrics this
+     * @param factory the {@link MetricFactory} containing the metrics this
      *                      reporter will report
      * @param name          the reporter's name
      * @param predicate        the predicate for which metrics to report
      * @param rateUnit      a unit of time
      * @param durationUnit  a unit of time
      */
-    protected MetricSetReporter(MetricFactory metricManager,
+    protected MetricSetReporter(MetricFactory factory,
                                 String name,
                                 MetricPredicate predicate,
                                 MetricsCollectPeriodConfig metricsReportPeriodConfig,
                                 TimeUnit rateUnit,
                                 TimeUnit durationUnit) {
-        this(metricManager, predicate, new TimeMetricLevelPredicate(metricsReportPeriodConfig), rateUnit, durationUnit,
+        this(factory, predicate, new TimeMetricLevelPredicate(metricsReportPeriodConfig), rateUnit, durationUnit,
                 Executors.newSingleThreadScheduledExecutor( new CommonThreadFactory(name,true)));
     }
 
     /**
      * Creates a new {@link MetricSetReporter} instance.
      *
-     * @param metricManager the {@link MetricFactory} containing the metrics this
+     * @param factory the {@link MetricFactory} containing the metrics this
      *                      reporter will report
      * @param name          the reporter's name
      * @param predicate        the predicate for which metrics to report
      * @param rateUnit      a unit of time
      * @param durationUnit  a unit of time
      */
-    protected MetricSetReporter(MetricFactory metricManager,
+    protected MetricSetReporter(MetricFactory factory,
                                 String name,
                                 MetricPredicate predicate,
                                 TimeMetricLevelPredicate timeMetricLevelFilter,
                                 TimeUnit rateUnit,
                                 TimeUnit durationUnit) {
-        this(metricManager, predicate, timeMetricLevelFilter, rateUnit, durationUnit,
+        this(factory, predicate, timeMetricLevelFilter, rateUnit, durationUnit,
                 Executors.newSingleThreadScheduledExecutor(new CommonThreadFactory(name, true)));
     }
 
     /**
      * Creates a new {@link MetricSetReporter} instance.
      *
-     * @param metricManager the {@link MetricFactory} containing the metrics this
+     * @param factory the {@link MetricFactory} containing the metrics this
      *                      reporter will report
      * @param predicate        the predicate for which metrics to report
      * @param executor      the executor to use while scheduling reporting of metrics.
      */
-    protected MetricSetReporter(MetricFactory metricManager,
+    protected MetricSetReporter(MetricFactory factory,
                                 MetricPredicate predicate,
                                 TimeMetricLevelPredicate timeMetricLevelFilter,
                                 TimeUnit rateUnit,
                                 TimeUnit durationUnit,
                                 ScheduledExecutorService executor) {
-        this.factory = metricManager;
+        this.factory = factory;
         this.executor = executor;
         this.rateFactor = rateUnit.toSeconds(1);
         this.rateUnit = calculateRateUnit(rateUnit);
@@ -198,7 +198,7 @@ public abstract class MetricSetReporter implements Closeable {
     }
 
     /**
-     * Report the current values of all metrics in the metricManager.
+     * Report the current values of all metrics in the factory.
      */
     public void report() {
         synchronized (this) {
@@ -220,12 +220,12 @@ public abstract class MetricSetReporter implements Closeable {
     /**
      * Called periodically by the polling thread. Subclasses should report all the given metrics.
      *
-     * @param gauges     all of the gauges in the metricManager
-     * @param counters   all of the counters in the metricManager
-     * @param histograms all of the histograms in the metricManager
-     * @param meters     all of the meters in the metricManager
-     * @param timers     all of the timers in the metricManager
-     * @param compasses  all of the compasses in the metricManager
+     * @param gauges     all of the gauges in the factory
+     * @param counters   all of the counters in the factory
+     * @param histograms all of the histograms in the factory
+     * @param meters     all of the meters in the factory
+     * @param timers     all of the timers in the factory
+     * @param compasses  all of the compasses in the factory
      */
     public abstract void report(Map<MetricName, Gauge> gauges,
                                 Map<MetricName, Counter> counters,

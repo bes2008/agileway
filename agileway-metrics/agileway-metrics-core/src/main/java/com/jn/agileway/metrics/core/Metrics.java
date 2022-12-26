@@ -263,8 +263,8 @@ public class Metrics {
                         Class binderClazz = Metrics.class.getClassLoader().loadClass(BINDER_CLASS);
                         Method getSingleton = binderClazz.getMethod("getSingleton");
                         Object binderObject = getSingleton.invoke(null);
-                        Method getMetricManager = binderClazz.getMethod("getMetricFactory");
-                        metricFactory = (MetricFactory) getMetricManager.invoke(binderObject);
+                        Method getMetricFactory = binderClazz.getMethod("getMetricFactory");
+                        metricFactory = (MetricFactory) getMetricFactory.invoke(binderObject);
                     } catch (Exception e) {
                         metricFactory = NOOP_METRIC_FACTORY;
                     }
