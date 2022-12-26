@@ -14,11 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jn.agileway.metrics.supports.jmx;
+package com.jn.agileway.metrics.supports.jdk.jmx;
 
 import com.jn.agileway.metrics.core.MetricName;
 import com.jn.agileway.metrics.core.reporter.ObjectNameFactory;
-import com.jn.agileway.metrics.supports.jmx.JmxReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

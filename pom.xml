@@ -132,7 +132,7 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.github.bes2008.solution.agileway</groupId>
+                <groupId>io.github.bes2008.solution.agileway.metrics</groupId>
                 <artifactId>agileway-metrics-core</artifactId>
                 <version>${project.version}</version>
             </dependency>

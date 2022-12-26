@@ -16,6 +16,7 @@
     <modules>
         <module>agileway-metrics-core</module>
         <module>agileway-metrics-supports-csv</module>
+        <module>agileway-metrics-supports-jdk</module>
     </modules>
 
 </project>
