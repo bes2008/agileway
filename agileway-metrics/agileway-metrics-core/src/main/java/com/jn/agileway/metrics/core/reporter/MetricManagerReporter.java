@@ -54,8 +54,8 @@ public abstract class MetricManagerReporter implements Closeable {
     private long schedulePeriod = 1;
     private TimeUnit scheduleUnit = TimeUnit.SECONDS;
 
-    private TimeMetricLevelPredicate timeMetricLevelFilter;
-    private CompositeMetricPredicate compositeMetricFilter;
+    private TimeMetricLevelPredicate timeMetricLevelPredicate;
+    private CompositeMetricPredicate compositeMetricPredicate;
     private ScheduledFuture futureTask;
     /**
      * 控制Report的启动和停止
@@ -69,13 +69,13 @@ public abstract class MetricManagerReporter implements Closeable {
             }
 
             try {
-                timeMetricLevelFilter.beforeReport();
+                timeMetricLevelPredicate.beforeReport();
                 report();
             } catch (Throwable ex) {
                 LOG.error("Throwable RuntimeException thrown from {}#report. Exception was suppressed.",
                         MetricManagerReporter.this.getClass().getSimpleName(), ex);
             } finally {
-                timeMetricLevelFilter.afterReport();
+                timeMetricLevelPredicate.afterReport();
             }
         }
     };
@@ -86,17 +86,17 @@ public abstract class MetricManagerReporter implements Closeable {
      * @param metricManager the {@link MetricManager} containing the metrics this
      *                      reporter will report
      * @param name          the reporter's name
-     * @param filter        the filter for which metrics to report
+     * @param predicate        the predicate for which metrics to report
      * @param rateUnit      a unit of time
      * @param durationUnit  a unit of time
      */
     protected MetricManagerReporter(MetricManager metricManager,
                                     String name,
-                                    MetricPredicate filter,
+                                    MetricPredicate predicate,
                                     MetricsCollectPeriodConfig metricsReportPeriodConfig,
                                     TimeUnit rateUnit,
                                     TimeUnit durationUnit) {
-        this(metricManager, filter, new TimeMetricLevelPredicate(metricsReportPeriodConfig), rateUnit, durationUnit,
+        this(metricManager, predicate, new TimeMetricLevelPredicate(metricsReportPeriodConfig), rateUnit, durationUnit,
                 Executors.newSingleThreadScheduledExecutor(
                         new NamedThreadFactory(name + '-' + FACTORY_ID.incrementAndGet())));
     }
@@ -107,17 +107,17 @@ public abstract class MetricManagerReporter implements Closeable {
      * @param metricManager the {@link MetricManager} containing the metrics this
      *                      reporter will report
      * @param name          the reporter's name
-     * @param filter        the filter for which metrics to report
+     * @param predicate        the predicate for which metrics to report
      * @param rateUnit      a unit of time
      * @param durationUnit  a unit of time
      */
     protected MetricManagerReporter(MetricManager metricManager,
                                     String name,
-                                    MetricPredicate filter,
+                                    MetricPredicate predicate,
                                     TimeMetricLevelPredicate timeMetricLevelFilter,
                                     TimeUnit rateUnit,
                                     TimeUnit durationUnit) {
-        this(metricManager, filter, timeMetricLevelFilter, rateUnit, durationUnit,
+        this(metricManager, predicate, timeMetricLevelFilter, rateUnit, durationUnit,
                 Executors.newSingleThreadScheduledExecutor(
                         new NamedThreadFactory(name + '-' + FACTORY_ID.incrementAndGet())));
     }
@@ -127,11 +127,11 @@ public abstract class MetricManagerReporter implements Closeable {
      *
      * @param metricManager the {@link MetricManager} containing the metrics this
      *                      reporter will report
-     * @param filter        the filter for which metrics to report
+     * @param predicate        the predicate for which metrics to report
      * @param executor      the executor to use while scheduling reporting of metrics.
      */
     protected MetricManagerReporter(MetricManager metricManager,
-                                    MetricPredicate filter,
+                                    MetricPredicate predicate,
                                     TimeMetricLevelPredicate timeMetricLevelFilter,
                                     TimeUnit rateUnit,
                                     TimeUnit durationUnit,
@@ -142,8 +142,8 @@ public abstract class MetricManagerReporter implements Closeable {
         this.rateUnit = calculateRateUnit(rateUnit);
         this.durationFactor = 1.0 / durationUnit.toNanos(1);
         this.durationUnit = durationUnit.toString().toLowerCase(Locale.US);
-        this.timeMetricLevelFilter = timeMetricLevelFilter;
-        this.compositeMetricFilter = new CompositeMetricPredicate(timeMetricLevelFilter, filter);
+        this.timeMetricLevelPredicate = timeMetricLevelFilter;
+        this.compositeMetricPredicate = new CompositeMetricPredicate(timeMetricLevelFilter, predicate);
     }
 
     /**
@@ -221,7 +221,7 @@ public abstract class MetricManagerReporter implements Closeable {
         synchronized (this) {
 
             Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> categoryMetrics = metricManager
-                    .getAllCategoryMetrics(compositeMetricFilter);
+                    .getAllCategoryMetrics(compositeMetricPredicate);
 
             report((Map<MetricName, Gauge>) categoryMetrics.get(Gauge.class),
                     (Map<MetricName, Counter>) categoryMetrics.get(Counter.class),

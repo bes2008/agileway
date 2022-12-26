@@ -18,7 +18,6 @@ package com.jn.agileway.metrics.core.predicate;
 
 import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.MetricName;
-import com.jn.agileway.metrics.core.Metrics;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,23 +28,23 @@ public class CompositeMetricPredicate implements MetricPredicate {
     MetricPredicate[] predicates;
 
     /**
-     * 如果包含 {@link Metrics.Predicates#TRUE} 则直接丢弃，减少一次无谓的判断
+     * 如果包含 {@link FixedPredicate#TRUE} 则直接丢弃，减少一次无谓的判断
      *
-     * @param filters
+     * @param predicates
      */
-    public CompositeMetricPredicate(MetricPredicate... filters) {
-        List<MetricPredicate> filterList = new ArrayList<MetricPredicate>(Arrays.asList(filters));
-        filterList.remove(Metrics.Predicates.TRUE);
-        if (!filterList.isEmpty()) {
-            this.predicates = filterList.toArray(new MetricPredicate[filterList.size()]);
+    public CompositeMetricPredicate(MetricPredicate... predicates) {
+        List<MetricPredicate> predicateList = new ArrayList<MetricPredicate>(Arrays.asList(predicates));
+        predicateList.remove(FixedPredicate.TRUE);
+        if (!predicateList.isEmpty()) {
+            this.predicates = predicateList.toArray(new MetricPredicate[predicateList.size()]);
         }
     }
 
     @Override
     public boolean test(MetricName name, Metric metric) {
         if (predicates != null) {
-            for (MetricPredicate filter : predicates) {
-                if (!filter.test(name, metric)) {
+            for (MetricPredicate predicate : predicates) {
+                if (!predicate.test(name, metric)) {
                     return false;
                 }
             }

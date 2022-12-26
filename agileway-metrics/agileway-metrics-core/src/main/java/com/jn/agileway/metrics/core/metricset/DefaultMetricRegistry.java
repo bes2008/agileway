@@ -20,6 +20,7 @@ import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.MetricName;
 import com.jn.agileway.metrics.core.Metrics;
 import com.jn.agileway.metrics.core.config.MetricsCollectPeriodConfig;
+import com.jn.agileway.metrics.core.predicate.FixedPredicate;
 import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.*;
@@ -360,7 +361,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @return all the gauges in the registry
      */
     public SortedMap<MetricName, Gauge> getGauges() {
-        return getGauges(Metrics.Predicates.TRUE);
+        return getGauges(FixedPredicate.TRUE);
     }
 
     /**
@@ -379,7 +380,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @return all the counters in the registry
      */
     public SortedMap<MetricName, Counter> getCounters() {
-        return getCounters(Metrics.Predicates.TRUE);
+        return getCounters(FixedPredicate.TRUE);
     }
 
     /**
@@ -399,7 +400,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @return all the histograms in the registry
      */
     public SortedMap<MetricName, Histogram> getHistograms() {
-        return getHistograms(Metrics.Predicates.TRUE);
+        return getHistograms(FixedPredicate.TRUE);
     }
 
     /**
@@ -419,7 +420,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @return all the meters in the registry
      */
     public SortedMap<MetricName, Meter> getMeters() {
-        return getMeters(Metrics.Predicates.TRUE);
+        return getMeters(FixedPredicate.TRUE);
     }
 
     /**
@@ -438,7 +439,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @return all the timers in the registry
      */
     public SortedMap<MetricName, Timer> getTimers() {
-        return getTimers(Metrics.Predicates.TRUE);
+        return getTimers(FixedPredicate.TRUE);
     }
 
     /**
@@ -458,12 +459,12 @@ public class DefaultMetricRegistry implements MetricRegistry {
 
     @Override
     public SortedMap<MetricName, Compass> getCompasses() {
-        return getCompasses(Metrics.Predicates.TRUE);
+        return getCompasses(FixedPredicate.TRUE);
     }
 
     @Override
     public SortedMap<MetricName, FastCompass> getFastCompasses() {
-        return getFastCompasses(Metrics.Predicates.TRUE);
+        return getFastCompasses(FixedPredicate.TRUE);
     }
 
     @Override
@@ -478,7 +479,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
 
     @Override
     public SortedMap<MetricName, ClusterHistogram> getClusterHistograms() {
-        return getMetrics(ClusterHistogram.class, Metrics.Predicates.TRUE);
+        return getMetrics(ClusterHistogram.class, FixedPredicate.TRUE);
     }
 
     @Override
@@ -504,14 +505,14 @@ public class DefaultMetricRegistry implements MetricRegistry {
     public long lastUpdateTime() {
         long latest = 0;
         Map<MetricName, Metric> metrics = new HashMap<MetricName, Metric>();
-        metrics.putAll(getCounters(Metrics.Predicates.TRUE));
-        metrics.putAll(getMeters(Metrics.Predicates.TRUE));
-        metrics.putAll(getHistograms(Metrics.Predicates.TRUE));
-        metrics.putAll(getGauges(Metrics.Predicates.TRUE));
-        metrics.putAll(getTimers(Metrics.Predicates.TRUE));
-        metrics.putAll(getCompasses(Metrics.Predicates.TRUE));
-        metrics.putAll(getFastCompasses(Metrics.Predicates.TRUE));
-        metrics.putAll(getClusterHistograms(Metrics.Predicates.TRUE));
+        metrics.putAll(getCounters(FixedPredicate.TRUE));
+        metrics.putAll(getMeters(FixedPredicate.TRUE));
+        metrics.putAll(getHistograms(FixedPredicate.TRUE));
+        metrics.putAll(getGauges(FixedPredicate.TRUE));
+        metrics.putAll(getTimers(FixedPredicate.TRUE));
+        metrics.putAll(getCompasses(FixedPredicate.TRUE));
+        metrics.putAll(getFastCompasses(FixedPredicate.TRUE));
+        metrics.putAll(getClusterHistograms(FixedPredicate.TRUE));
         for (Map.Entry<MetricName, Metric> entry : metrics.entrySet()) {
             if (latest < entry.getValue().lastUpdateTime()) {
                 latest = entry.getValue().lastUpdateTime();

@@ -1,6 +1,5 @@
 package com.jn.agileway.metrics.core;
 
-import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 
 public class Metrics {
     private Metrics() {
@@ -11,19 +10,6 @@ public class Metrics {
      * 一个特殊的数字来代表一个无效的结果
      */
     public static long NOT_AVAILABLE = -10001L;
-
-    public static class Predicates {
-        /**
-         * Matches all metrics, regardless of type or name.
-         */
-        public static final MetricPredicate TRUE = new MetricPredicate() {
-            @Override
-            public boolean test(MetricName name, Metric metric) {
-                return true;
-            }
-        };
-    }
-
 
 
     /**

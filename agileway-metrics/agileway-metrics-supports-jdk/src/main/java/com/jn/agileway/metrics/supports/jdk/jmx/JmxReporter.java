@@ -17,6 +17,7 @@
 package com.jn.agileway.metrics.supports.jdk.jmx;
 
 import com.jn.agileway.metrics.core.*;
+import com.jn.agileway.metrics.core.predicate.FixedPredicate;
 import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.metricset.MetricRegistry;
@@ -44,11 +45,11 @@ public class JmxReporter implements Closeable {
     private JmxReporter(MBeanServer mBeanServer,
                         String domain,
                         MetricRegistry registry,
-                        MetricPredicate filter,
+                        MetricPredicate predicate,
                         MetricTimeUnits timeUnits,
                         ObjectNameFactory objectNameFactory) {
         this.registry = registry;
-        this.listener = new JmxListener(mBeanServer, domain, filter, timeUnits, objectNameFactory);
+        this.listener = new JmxListener(mBeanServer, domain, predicate, timeUnits, objectNameFactory);
     }
     // CHECKSTYLE:ON
 
@@ -197,7 +198,7 @@ public class JmxReporter implements Closeable {
         private TimeUnit rateUnit;
         private TimeUnit durationUnit;
         private ObjectNameFactory objectNameFactory;
-        private MetricPredicate filter = Metrics.Predicates.TRUE;
+        private MetricPredicate filter = FixedPredicate.TRUE;
         private String domain;
         private Map<String, TimeUnit> specificDurationUnits;
         private Map<String, TimeUnit> specificRateUnits;
@@ -549,15 +550,15 @@ public class JmxReporter implements Closeable {
     private static class JmxListener implements MetricRegistryListener {
         private final String name;
         private final MBeanServer mBeanServer;
-        private final MetricPredicate filter;
+        private final MetricPredicate predicate;
         private final MetricTimeUnits timeUnits;
         private final Map<ObjectName, ObjectName> registered;
         private final ObjectNameFactory objectNameFactory;
 
-        private JmxListener(MBeanServer mBeanServer, String name, MetricPredicate filter, MetricTimeUnits timeUnits, ObjectNameFactory objectNameFactory) {
+        private JmxListener(MBeanServer mBeanServer, String name, MetricPredicate predicate, MetricTimeUnits timeUnits, ObjectNameFactory objectNameFactory) {
             this.mBeanServer = mBeanServer;
             this.name = name;
-            this.filter = filter;
+            this.predicate = predicate;
             this.timeUnits = timeUnits;
             this.registered = new ConcurrentHashMap<ObjectName, ObjectName>();
             this.objectNameFactory = objectNameFactory;
@@ -587,7 +588,7 @@ public class JmxReporter implements Closeable {
         @Override
         public void onGaugeAdded(MetricName name, Gauge<?> gauge) {
             try {
-                if (filter.test(name, gauge)) {
+                if (predicate.test(name, gauge)) {
                     final ObjectName objectName = createName("gauges", name);
                     registerMBean(new JmxGauge(gauge, objectName), objectName);
                 }
@@ -613,7 +614,7 @@ public class JmxReporter implements Closeable {
         @Override
         public void onCounterAdded(MetricName name, Counter counter) {
             try {
-                if (filter.test(name, counter)) {
+                if (predicate.test(name, counter)) {
                     final ObjectName objectName = createName("counters", name);
                     registerMBean(new JmxCounter(counter, objectName), objectName);
                 }
@@ -639,7 +640,7 @@ public class JmxReporter implements Closeable {
         @Override
         public void onHistogramAdded(MetricName name, Histogram histogram) {
             try {
-                if (filter.test(name, histogram)) {
+                if (predicate.test(name, histogram)) {
                     final ObjectName objectName = createName("histograms", name);
                     registerMBean(new JmxHistogram(histogram, objectName), objectName);
                 }
@@ -665,7 +666,7 @@ public class JmxReporter implements Closeable {
         @Override
         public void onMeterAdded(MetricName name, Meter meter) {
             try {
-                if (filter.test(name, meter)) {
+                if (predicate.test(name, meter)) {
                     final ObjectName objectName = createName("meters", name);
                     registerMBean(new JmxMeter(meter, objectName, timeUnits.rateFor(name.getKey())), objectName);
                 }
@@ -691,7 +692,7 @@ public class JmxReporter implements Closeable {
         @Override
         public void onTimerAdded(MetricName name, Timer timer) {
             try {
-                if (filter.test(name, timer)) {
+                if (predicate.test(name, timer)) {
                     final ObjectName objectName = createName("timers", name);
                     registerMBean(new JmxTimer(timer, objectName, timeUnits.rateFor(name.getKey()), timeUnits.durationFor(name.getKey())), objectName);
                 }

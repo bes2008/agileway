@@ -17,6 +17,7 @@
 package com.jn.agileway.metrics.supports.csv;
 
 import com.jn.agileway.metrics.core.*;
+import com.jn.agileway.metrics.core.predicate.FixedPredicate;
 import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.metricset.MetricRegistry;
@@ -205,7 +206,7 @@ public class CsvReporter extends ScheduledReporter {
             this.rateUnit = TimeUnit.SECONDS;
             this.durationUnit = TimeUnit.MILLISECONDS;
             this.clock = Clocks.defaultClock();
-            this.filter = Metrics.Predicates.TRUE;
+            this.filter = FixedPredicate.TRUE;
             this.csvFileProvider = new FixedNameCsvFileProvider();
         }
 

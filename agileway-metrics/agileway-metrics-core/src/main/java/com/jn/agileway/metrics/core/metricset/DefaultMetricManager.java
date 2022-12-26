@@ -17,6 +17,7 @@
 package com.jn.agileway.metrics.core.metricset;
 
 import com.jn.agileway.metrics.core.*;
+import com.jn.agileway.metrics.core.predicate.FixedPredicate;
 import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.Timer;
@@ -298,7 +299,7 @@ public class DefaultMetricManager implements MetricManager {
 
     @Override
     public Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getCategoryMetrics(String group) {
-        return getCategoryMetrics(group, Metrics.Predicates.TRUE);
+        return getCategoryMetrics(group, FixedPredicate.TRUE);
     }
 
     @Override

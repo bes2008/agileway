@@ -1,6 +1,7 @@
 package com.jn.agileway.metrics.core.noop;
 
 import com.jn.agileway.metrics.core.*;
+import com.jn.agileway.metrics.core.predicate.FixedPredicate;
 import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.metricset.MetricManager;
 import com.jn.agileway.metrics.core.meter.Timer;
@@ -146,7 +147,7 @@ public class NoopMetricManager implements MetricManager {
 
     @Override
     public Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getCategoryMetrics(String group) {
-        return getCategoryMetrics(group, Metrics.Predicates.TRUE);
+        return getCategoryMetrics(group, FixedPredicate.TRUE);
     }
 
     @Override

@@ -16,6 +16,7 @@
  */
 package com.jn.agileway.metrics.core.reporter;
 
+import com.jn.agileway.metrics.core.predicate.FixedPredicate;
 import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.*;
@@ -56,9 +57,7 @@ public class ConsoleReporter extends ScheduledReporter {
         this.locale = locale;
         clock = clock == null ? Clocks.defaultClock() : clock;
         this.clock = clock;
-        this.dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT,
-                DateFormat.MEDIUM,
-                locale);
+        this.dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, locale);
         dateFormat.setTimeZone(timeZone);
     }
 
@@ -214,7 +213,7 @@ public class ConsoleReporter extends ScheduledReporter {
             this.timeZone = TimeZone.getDefault();
             this.rateUnit = TimeUnit.SECONDS;
             this.durationUnit = TimeUnit.MILLISECONDS;
-            this.filter = Metrics.Predicates.TRUE;
+            this.filter = FixedPredicate.TRUE;
         }
 
         /**

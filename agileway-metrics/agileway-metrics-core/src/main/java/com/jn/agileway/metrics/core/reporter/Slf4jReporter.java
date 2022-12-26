@@ -17,6 +17,7 @@
 package com.jn.agileway.metrics.core.reporter;
 
 import com.jn.agileway.metrics.core.*;
+import com.jn.agileway.metrics.core.predicate.FixedPredicate;
 import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.metricset.MetricRegistry;
@@ -193,7 +194,7 @@ public class Slf4jReporter extends ScheduledReporter {
             this.prefix = "";
             this.rateUnit = TimeUnit.SECONDS;
             this.durationUnit = TimeUnit.MILLISECONDS;
-            this.filter = Metrics.Predicates.TRUE;
+            this.filter = FixedPredicate.TRUE;
             this.loggingLevel = LoggingLevel.INFO;
         }
 
