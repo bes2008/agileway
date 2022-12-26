@@ -14,7 +14,7 @@ import com.jn.langx.util.Emptys;
 import java.util.*;
 
 /**
- * IMetricManager的空实现
+ * @since 4.1.0
  */
 public class NoopMetricFactory implements MetricFactory {
 

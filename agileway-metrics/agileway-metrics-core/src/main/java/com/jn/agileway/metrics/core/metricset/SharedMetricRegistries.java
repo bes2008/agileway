@@ -6,6 +6,8 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * A map of shared, named metric registries.
+ *
+ * @since 4.1.0
  */
 public class SharedMetricRegistries {
     private static final ConcurrentMap<String, MetricRegistry> REGISTRIES = new ConcurrentHashMap<String, MetricRegistry>();

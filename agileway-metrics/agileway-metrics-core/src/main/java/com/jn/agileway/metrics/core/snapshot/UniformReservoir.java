@@ -12,6 +12,8 @@ import java.util.concurrent.atomic.AtomicLongArray;
  * statistically representative sample.
  *
  * @see <a href="http://www.cs.umd.edu/~samir/498/vitter.pdf">Random Sampling with a Reservoir</a>
+ *
+ * @since 4.1.0
  */
 public class UniformReservoir implements Reservoir {
     private static final int DEFAULT_SIZE = 1028;

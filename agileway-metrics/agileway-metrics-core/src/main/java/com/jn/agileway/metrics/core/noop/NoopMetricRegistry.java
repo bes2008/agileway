@@ -13,6 +13,9 @@ import com.jn.langx.util.Emptys;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @since 4.1.0
+ */
 public class NoopMetricRegistry implements MetricRegistry {
     public static final NoopMetricRegistry NOOP_METRIC_REGISTRY = new NoopMetricRegistry();
 

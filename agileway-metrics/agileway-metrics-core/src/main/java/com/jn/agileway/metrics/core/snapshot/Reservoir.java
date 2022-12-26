@@ -3,6 +3,8 @@ package com.jn.agileway.metrics.core.snapshot;
 
 /**
  * A statistically representative reservoir of a data stream.
+ *
+ * @since 4.1.0
  */
 public interface Reservoir {
     /**

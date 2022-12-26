@@ -10,6 +10,9 @@ import com.jn.langx.util.reflect.Reflects;
 
 import java.lang.reflect.Method;
 
+/**
+ * @since 4.1.0
+ */
 public class Metrics {
     private Metrics() {
     }

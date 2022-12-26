@@ -19,6 +19,8 @@ import java.util.concurrent.TimeUnit;
  * {@link ConsoleReporter}, but using the SLF4J framework instead. It also
  * supports specifying a {@link Marker} instance that can be used by custom appenders and filters
  * for the bound logging toolkit to further process metrics reports.
+ *
+ * @since 4.1.0
  */
 public class Slf4jReporter extends ScheduledReporter {
     private final LoggerProxy loggerProxy;

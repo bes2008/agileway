@@ -12,6 +12,8 @@ import java.util.Set;
 
 /**
  * A registry of metric instances.
+ *
+ * @since 4.1.0
  */
 public interface MetricRegistry extends MetricSet {
 

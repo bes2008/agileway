@@ -13,6 +13,9 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @since 4.1.0
+ */
 public class DefaultMetricFactory implements MetricFactory {
 
     private Map<String, MetricRegistry> metricRegistryMap;

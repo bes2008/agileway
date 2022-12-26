@@ -9,6 +9,8 @@ import java.util.Map;
  * A set of named metrics.
  *
  * @see MetricRegistry#registerAll(MetricSet)
+ *
+ * @since 4.1.0
  */
 public interface MetricSet{
     /**

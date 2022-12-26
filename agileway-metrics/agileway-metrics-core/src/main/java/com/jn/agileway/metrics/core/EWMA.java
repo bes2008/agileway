@@ -14,6 +14,8 @@ import static java.lang.Math.exp;
  * @see <a href="http://www.teamquest.com/pdfs/whitepaper/ldavg2.pdf">UNIX Load Average Part 2: Not
  * Your Average Average</a>
  * @see <a href="http://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average">EMA</a>
+ *
+ * @since 4.1.0
  */
 public class EWMA {
     private static final int INTERVAL = 5;

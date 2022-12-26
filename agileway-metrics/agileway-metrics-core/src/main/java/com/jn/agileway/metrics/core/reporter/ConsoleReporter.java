@@ -20,6 +20,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * A reporter which outputs measurements to a {@link PrintStream}, like {@code System.out}.
+ *
+ * @since 4.1.0
  */
 public class ConsoleReporter extends ScheduledReporter {
     private static final int CONSOLE_WIDTH = 80;

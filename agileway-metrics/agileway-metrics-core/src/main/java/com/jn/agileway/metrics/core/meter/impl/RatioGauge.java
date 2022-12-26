@@ -28,6 +28,8 @@ import static java.lang.Double.isNaN;
  * If the denominator is zero, not a number, or infinite, the resulting ratio is not a number.
  * <p>
  * 一种衡量比率的度量器，传入分子和分母，该度量器会自动计算比率
+ *
+ * @since 4.1.0
  */
 public abstract class RatioGauge implements Gauge<Double> {
 

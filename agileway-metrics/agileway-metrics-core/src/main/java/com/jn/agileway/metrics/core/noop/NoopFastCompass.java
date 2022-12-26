@@ -5,6 +5,9 @@ import com.jn.langx.util.Emptys;
 
 import java.util.Map;
 
+/**
+ * @since 4.1.0
+ */
 public class NoopFastCompass implements FastCompass {
     public static final NoopFastCompass NOOP_FAST_COMPASS = new NoopFastCompass();
     @Override

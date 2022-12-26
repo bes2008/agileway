@@ -8,6 +8,9 @@ import com.jn.agileway.metrics.core.Metric;
  *
  * 计数器型指标，适用于记录调用总量等类型的数据
  * </pre>
+ *
+ *
+ * @since 4.1.0
  */
 public interface Counter extends Metric, Counting {
 

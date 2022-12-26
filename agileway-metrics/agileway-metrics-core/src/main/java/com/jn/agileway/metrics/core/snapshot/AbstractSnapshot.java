@@ -2,6 +2,8 @@ package com.jn.agileway.metrics.core.snapshot;
 
 /**
  * A statistical snapshot of a {@link AbstractSnapshot}.
+ *
+ * @since 4.1.0
  */
 public abstract class AbstractSnapshot implements Snapshot {
 

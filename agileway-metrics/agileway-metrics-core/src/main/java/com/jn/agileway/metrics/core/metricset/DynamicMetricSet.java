@@ -8,6 +8,8 @@ import java.util.Map;
 /**
  * A dynamic metric set.
  * The metrics inside will change dynamically.
+ *
+ * @since 4.1.0
  */
 public interface DynamicMetricSet extends Metric {
 

@@ -4,6 +4,9 @@ import com.jn.agileway.metrics.core.meter.impl.AbstractMetricBuilder;
 import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.MetricName;
 
+/**
+ * @since 4.1.0
+ */
 public abstract class ReservoirTypeMetricBuilder<T extends Metric> extends AbstractMetricBuilder<T> implements ReservoirTypeBuilder<T> {
     protected int interval;
     @Override

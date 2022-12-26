@@ -4,6 +4,9 @@ import java.io.OutputStream;
 
 import static com.jn.agileway.metrics.core.Metrics.NOT_AVAILABLE;
 
+/**
+ * @since 4.1.0
+ */
 public class BucketSnapshot implements Snapshot {
 
     private static final long[] EMPTY = new long[0];

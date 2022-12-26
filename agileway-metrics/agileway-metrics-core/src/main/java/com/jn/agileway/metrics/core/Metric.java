@@ -2,6 +2,8 @@ package com.jn.agileway.metrics.core;
 
 /**
  * An interface to indicate that a class is a metric.
+ *
+ * @since 4.1.0
  */
 public interface Metric {
 

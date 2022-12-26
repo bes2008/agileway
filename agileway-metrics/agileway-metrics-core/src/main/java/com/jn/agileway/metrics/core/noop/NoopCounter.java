@@ -2,6 +2,9 @@ package com.jn.agileway.metrics.core.noop;
 
 import com.jn.agileway.metrics.core.meter.Counter;
 
+/**
+ * @since 4.1.0
+ */
 public class NoopCounter implements Counter {
     public static final NoopCounter NOOP_COUNTER = new NoopCounter();
 

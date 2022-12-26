@@ -11,6 +11,8 @@ import static java.lang.Math.floor;
 
 /**
  * A statistical snapshot of a {@link UniformSnapshot}.
+ *
+ * @since 4.1.0
  */
 public class UniformSnapshot extends AbstractSnapshot {
     private static final Charset UTF_8 = Charset.forName("UTF-8");

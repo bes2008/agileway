@@ -22,6 +22,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @see ConsoleReporter
  * @see Slf4jReporter
+ *
+ * @since 4.1.0
  */
 public abstract class ScheduledReporter implements Closeable {
 

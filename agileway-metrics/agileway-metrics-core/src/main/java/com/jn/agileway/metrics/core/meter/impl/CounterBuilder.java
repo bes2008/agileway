@@ -6,6 +6,9 @@ import com.jn.agileway.metrics.core.MetricName;
 import com.jn.agileway.metrics.core.meter.Counter;
 import com.jn.langx.util.reflect.Reflects;
 
+/**
+ * @since 4.1.0
+ */
 public class CounterBuilder extends AbstractMetricBuilder<Counter> {
     @Override
     public Counter newMetric(MetricName name) {

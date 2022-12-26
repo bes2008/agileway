@@ -7,6 +7,9 @@ import com.jn.agileway.metrics.core.snapshot.ReservoirType;
 import com.jn.agileway.metrics.core.snapshot.ReservoirTypeMetricBuilder;
 import com.jn.langx.util.reflect.Reflects;
 
+/**
+ * @since 4.1.0
+ */
 public class HistogramBuilder extends ReservoirTypeMetricBuilder<Histogram> {
     @Override
     public Histogram newMetric(MetricName name) {

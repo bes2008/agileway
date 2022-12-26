@@ -15,6 +15,8 @@ import com.jn.agileway.metrics.core.config.MetricsCollectPeriodConfig;
  * e.g.
  * TimeMetricLevelFilter#matches costs: 227 ms for 20,000,000 calls. (HashMap based)
  * TimeMetricLevelFilter#matches costs: 145 ms for 20,000,000 calls. (Array based)
+ *
+ * @since 4.1.0
  */
 public class TimeMetricLevelPredicate implements MetricPredicate {
 

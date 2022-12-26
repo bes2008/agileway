@@ -7,6 +7,8 @@ import java.util.EventListener;
 
 /**
  * Listeners for events from the registry.  Listeners must be thread-safe.
+ *
+ * @since 4.1.0
  */
 public interface MetricRegistryListener extends EventListener {
     /**

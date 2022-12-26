@@ -15,6 +15,8 @@ import java.util.concurrent.TimeUnit;
  * a {@link RatioGauge} to measure the success rate
  * a {@link Map} of <error_code, {@link Counter}> to record the count for each error code
  * a {@link Map} of <addon, {@link Counter}> to record the count for each addon
+ *
+ * @since 4.1.0
  */
 public interface Compass extends Timed, Sampling {
 

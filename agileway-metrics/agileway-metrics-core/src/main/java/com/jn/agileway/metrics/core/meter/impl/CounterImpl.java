@@ -5,6 +5,8 @@ import com.jn.langx.util.concurrent.longaddr.LongAdder;
 
 /**
  * An incrementing and decrementing counter metric.
+ *
+ * @since 4.1.0
  */
 public class CounterImpl implements Counter {
 

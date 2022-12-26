@@ -6,6 +6,8 @@ import java.util.Map;
  * 提供分桶计数功能，每个桶统计一定时间间隔内的计数。
  * BucketCounter只保留最近N个时间间隔内的计数，再老的会被丢弃。
  * 同时保存从创建开始到现在的累计计数。
+ *
+ * @since 4.1.0
  */
 public interface BucketCounter extends Counter {
 

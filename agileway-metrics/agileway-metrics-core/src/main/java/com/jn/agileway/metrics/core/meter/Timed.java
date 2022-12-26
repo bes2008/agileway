@@ -9,6 +9,9 @@ import java.util.Map;
  * A meter measures the rate of events over time
  *
  * An object which maintains mean and exponentially-weighted rate.
+ *
+ *
+ * @since 4.1.0
  */
 public interface Timed extends Metric, Counting {
 

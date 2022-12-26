@@ -3,6 +3,9 @@ package com.jn.agileway.metrics.core.noop;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
 import com.jn.agileway.metrics.core.meter.Histogram;
 
+/**
+ * @since 4.1.0
+ */
 public class NoopHistogram implements Histogram {
     public static final NoopHistogram NOOP_HISTOGRAM = new NoopHistogram();
     @Override

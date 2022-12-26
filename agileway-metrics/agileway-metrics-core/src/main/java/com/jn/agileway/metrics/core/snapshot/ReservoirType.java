@@ -2,6 +2,8 @@ package com.jn.agileway.metrics.core.snapshot;
 
 /**
  * An enum of various reservoir type
+ *
+ * @since 4.1.0
  */
 public enum ReservoirType {
 

@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @since 4.1.0
+ */
 public class CompositeMetricPredicate implements MetricPredicate {
 
     MetricPredicate[] predicates;

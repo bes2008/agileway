@@ -4,6 +4,10 @@ package com.jn.agileway.metrics.core.metricset;
 import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.MetricName;
 
+/**
+ * @since 4.1.0
+ * @param <T>
+ */
 public interface MetricBuilder<T extends Metric> {
 
     /**

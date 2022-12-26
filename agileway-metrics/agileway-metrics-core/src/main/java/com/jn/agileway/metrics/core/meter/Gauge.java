@@ -18,8 +18,9 @@ import com.jn.agileway.metrics.core.Metric;
  * 一种实时数据的度量，反映的是瞬态的数据，不具有累加性。
  * 具体的实现由具体定义，例如，获取当前jvm的活跃线程数
  * </pre>
- *
+ * @since 4.1.0
  * @param <T> the type of the metric's value
+ *
  */
 public interface Gauge<T> extends Metric {
     /**

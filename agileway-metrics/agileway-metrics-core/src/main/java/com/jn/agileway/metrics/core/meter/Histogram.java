@@ -9,6 +9,9 @@ import com.jn.agileway.metrics.core.Sampling;
  *
  * @see <a href="http://www.johndcook.com/standard_deviation.html">Accurately computing running
  * variance</a>
+ *
+ *
+ * @since 4.1.0
  */
 public interface Histogram extends Metric, Sampling, Counting {
 

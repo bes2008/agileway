@@ -9,6 +9,8 @@ import java.util.*;
  * <p>
  * This replaces the previous style where metric names where strictly
  * dot-separated strings.
+ *
+ * @since 4.1.0
  */
 public class MetricName implements Comparable<MetricName> {
 

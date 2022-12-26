@@ -8,6 +8,9 @@ import com.jn.langx.util.timing.clock.Clocks;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @since 4.1.0
+ */
 public class BucketReservoir implements Reservoir {
 
     private BucketCounter countPerBucket;

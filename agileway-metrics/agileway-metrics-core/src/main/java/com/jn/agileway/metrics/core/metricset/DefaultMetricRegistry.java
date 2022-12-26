@@ -20,6 +20,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * A registry of metric instances.
+ *
+ * @since 4.1.0
  */
 public class DefaultMetricRegistry implements MetricRegistry {
 

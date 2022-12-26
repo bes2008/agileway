@@ -8,6 +8,8 @@ import java.util.Map;
  * 用于在高吞吐率环境下，快速统计方法的qps，rt，成功率和错误码。
  * 保证最多只进行一次 com.jn.agileway.metrics.core.LongAdder#add() 计数操作
  * 典型的应用场景，中间件的tair客户端
+ *
+ * @since 4.1.0
  */
 public interface FastCompass extends Metric {
 

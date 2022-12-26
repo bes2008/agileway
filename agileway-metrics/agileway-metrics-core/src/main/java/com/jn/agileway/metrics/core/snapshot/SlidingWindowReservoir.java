@@ -5,6 +5,8 @@ import static java.lang.Math.min;
 /**
  * A {@link Reservoir} implementation backed by a sliding window that stores the last {@code N}
  * measurements.
+ *
+ * @since 4.1.0
  */
 public class SlidingWindowReservoir implements Reservoir {
     private final long[] measurements;

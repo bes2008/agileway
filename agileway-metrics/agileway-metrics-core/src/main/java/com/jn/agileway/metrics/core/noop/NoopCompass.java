@@ -12,6 +12,9 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @since 4.1.0
+ */
 public class NoopCompass implements Compass {
 
     private static final Compass.Context NOP_COMPASS_CONTEXT = new Compass.Context() {

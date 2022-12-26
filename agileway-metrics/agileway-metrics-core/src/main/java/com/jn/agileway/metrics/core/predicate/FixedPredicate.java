@@ -3,6 +3,9 @@ package com.jn.agileway.metrics.core.predicate;
 import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.MetricName;
 
+/**
+ * @since 4.1.0
+ */
 public class FixedPredicate implements MetricPredicate{
     private final boolean value;
     public FixedPredicate(boolean value){

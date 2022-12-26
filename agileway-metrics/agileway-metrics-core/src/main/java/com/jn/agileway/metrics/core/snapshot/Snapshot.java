@@ -2,6 +2,9 @@ package com.jn.agileway.metrics.core.snapshot;
 
 import java.io.OutputStream;
 
+/**
+ * @since 4.1.0
+ */
 public interface Snapshot {
 
     /**

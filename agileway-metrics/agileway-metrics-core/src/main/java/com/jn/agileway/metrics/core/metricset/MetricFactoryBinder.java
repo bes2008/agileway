@@ -1,5 +1,8 @@
 package com.jn.agileway.metrics.core.metricset;
 
+/**
+ * @since 4.1.0
+ */
 public class MetricFactoryBinder {
 
     private static final MetricFactoryBinder instance = new MetricFactoryBinder();

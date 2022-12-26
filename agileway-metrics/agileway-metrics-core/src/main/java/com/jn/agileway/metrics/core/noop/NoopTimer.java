@@ -9,6 +9,9 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @since 4.1.0
+ */
 public class NoopTimer implements Timer {
     public static final NoopTimer NOOP_TIMER = new NoopTimer();
 

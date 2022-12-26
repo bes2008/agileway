@@ -5,6 +5,9 @@ import com.jn.langx.util.Emptys;
 
 import java.util.Map;
 
+/**
+ * @since 4.1.0
+ */
 public class NoopBucketCounter implements BucketCounter {
     public static NoopBucketCounter NOOP_BUCKET_COUNTER = new NoopBucketCounter();
     @Override

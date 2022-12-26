@@ -7,6 +7,8 @@ import com.jn.langx.util.function.Predicate2;
 
 /**
  * A filter used to determine whether a metric should be reported, among other things or not .
+ *
+ * @since 4.1.0
  */
 public interface MetricPredicate extends Predicate2<MetricName, Metric> {
 

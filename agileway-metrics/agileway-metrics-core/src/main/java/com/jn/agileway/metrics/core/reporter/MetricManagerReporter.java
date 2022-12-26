@@ -21,6 +21,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * report MetricManager 里所有的metrics
  *
  * @see ScheduledReporter
+ *
+ * @since 4.1.0
  */
 public abstract class MetricManagerReporter implements Closeable {
 

@@ -10,6 +10,8 @@ import java.util.Comparator;
 
 /**
  * A statistical snapshot of a {@link WeightedSnapshot}.
+ *
+ * @since 4.1.0
  */
 public class WeightedSnapshot extends AbstractSnapshot {
 

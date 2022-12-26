@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @since 4.1.0
+ */
 public interface MetricFactory {
 
     /**

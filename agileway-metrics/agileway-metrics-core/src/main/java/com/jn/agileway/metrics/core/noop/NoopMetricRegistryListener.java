@@ -4,6 +4,9 @@ import com.jn.agileway.metrics.core.MetricName;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.metricset.MetricRegistryListener;
 
+/**
+ * @since 4.1.0
+ */
 abstract class NoopMetricRegistryListener implements MetricRegistryListener {
     @Override
     public void onGaugeAdded(MetricName name, Gauge<?> gauge) {

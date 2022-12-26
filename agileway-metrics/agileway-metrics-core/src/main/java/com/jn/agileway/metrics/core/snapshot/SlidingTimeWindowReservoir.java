@@ -10,6 +10,8 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * A {@link Reservoir} implementation backed by a sliding window that stores only the measurements made
  * in the last {@code N} seconds (or other time unit).
+ *
+ * @since 4.1.0
  */
 public class SlidingTimeWindowReservoir implements Reservoir {
     // allow for this many duplicate ticks before overwriting measurements

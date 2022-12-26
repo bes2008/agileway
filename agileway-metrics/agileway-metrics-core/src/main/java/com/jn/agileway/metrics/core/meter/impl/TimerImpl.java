@@ -33,6 +33,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * A timer metric which aggregates timing durations and provides duration statistics, plus
  * throughput statistics via {@link Meter}.
+ *
+ * @since 4.1.0
  */
 public class TimerImpl implements Timer {
     private final Meter meter;
