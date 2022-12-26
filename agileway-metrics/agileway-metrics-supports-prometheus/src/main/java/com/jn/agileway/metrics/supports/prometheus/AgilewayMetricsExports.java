@@ -10,13 +10,15 @@ import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
 import com.jn.agileway.metrics.supports.prometheus.simple.DefaultSampleBuilder;
 import com.jn.agileway.metrics.supports.prometheus.simple.SampleBuilder;
+import com.jn.langx.util.collection.Collects;
+import io.prometheus.client.Collector;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class AgilewayMetricsExports extends io.prometheus.client.Collector implements io.prometheus.client.Collector.Describable {
+public class AgilewayMetricsExports extends Collector implements Collector.Describable {
     private static final Logger LOGGER = Logger.getLogger(AgilewayMetricsExports.class.getName());
     private MetricRegistry registry;
     private MetricPredicate metricFilter;
@@ -110,13 +112,13 @@ public class AgilewayMetricsExports extends io.prometheus.client.Collector imple
      * @param factor         a factor to apply to histogram values.
      */
     MetricFamilySamples fromSnapshotAndCount(MetricName metricName, Snapshot snapshot, long count, double factor, String helpMessage) {
-        List<MetricFamilySamples.Sample> samples = Arrays.asList(
-                sampleBuilder.createSample(metricName, "", Arrays.asList("quantile"), Arrays.asList("0.5"), snapshot.getMedian() * factor),
-                sampleBuilder.createSample(metricName, "", Arrays.asList("quantile"), Arrays.asList("0.75"), snapshot.get75thPercentile() * factor),
-                sampleBuilder.createSample(metricName, "", Arrays.asList("quantile"), Arrays.asList("0.95"), snapshot.get95thPercentile() * factor),
-                sampleBuilder.createSample(metricName, "", Arrays.asList("quantile"), Arrays.asList("0.98"), snapshot.get98thPercentile() * factor),
-                sampleBuilder.createSample(metricName, "", Arrays.asList("quantile"), Arrays.asList("0.99"), snapshot.get99thPercentile() * factor),
-                sampleBuilder.createSample(metricName, "", Arrays.asList("quantile"), Arrays.asList("0.999"), snapshot.get999thPercentile() * factor),
+        List<MetricFamilySamples.Sample> samples = Collects.asList(
+                sampleBuilder.createSample(metricName, "", Collects.asList("quantile"), Collects.asList("0.5"), snapshot.getMedian() * factor),
+                sampleBuilder.createSample(metricName, "", Collects.asList("quantile"), Collects.asList("0.75"), snapshot.get75thPercentile() * factor),
+                sampleBuilder.createSample(metricName, "", Collects.asList("quantile"), Collects.asList("0.95"), snapshot.get95thPercentile() * factor),
+                sampleBuilder.createSample(metricName, "", Collects.asList("quantile"), Collects.asList("0.98"), snapshot.get98thPercentile() * factor),
+                sampleBuilder.createSample(metricName, "", Collects.asList("quantile"), Collects.asList("0.99"), snapshot.get99thPercentile() * factor),
+                sampleBuilder.createSample(metricName, "", Collects.asList("quantile"), Collects.asList("0.999"), snapshot.get999thPercentile() * factor),
                 sampleBuilder.createSample(metricName, "_count", new ArrayList<String>(), new ArrayList<String>(), count)
         );
         return new MetricFamilySamples(samples.get(0).name, Type.SUMMARY, helpMessage, samples);

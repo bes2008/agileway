@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  * processor: ${0}
  * status: ${1}_${2}
  * <p>
- * Dropwizard metrics that match the "match" pattern will be further processed to have a new name and new labels based on this config.
+ * agileway metrics that match the "match" pattern will be further processed to have a new name and new labels based on this config.
  */
 public class MapperConfig {
     // each part of the metric name between dots
