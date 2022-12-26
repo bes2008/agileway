@@ -20,52 +20,52 @@ public class NoopMetricFactory implements MetricFactory {
 
 
     @Override
-    public Metered getMeter(String group, MetricName name) {
+    public Metered getMeter(String group, Metric name) {
         return NoopMeter.NOOP_METER;
     }
 
     @Override
-    public Counter getCounter(String group, MetricName name) {
+    public Counter getCounter(String group, Metric name) {
         return NoopCounter.NOOP_COUNTER;
     }
 
     @Override
-    public Histogram getHistogram(String group, MetricName name) {
+    public Histogram getHistogram(String group, Metric name) {
         return NoopHistogram.NOOP_HISTOGRAM;
     }
 
     @Override
-    public Histogram getHistogram(String group, MetricName name, ReservoirType type) {
+    public Histogram getHistogram(String group, Metric name, ReservoirType type) {
         return NoopHistogram.NOOP_HISTOGRAM;
     }
 
     @Override
-    public Timer getTimer(String group, MetricName name) {
+    public Timer getTimer(String group, Metric name) {
         return NoopTimer.NOOP_TIMER;
     }
 
     @Override
-    public Timer getTimer(String group, MetricName name, ReservoirType type) {
+    public Timer getTimer(String group, Metric name, ReservoirType type) {
         return NoopTimer.NOOP_TIMER;
     }
 
     @Override
-    public Compass getCompass(String group, MetricName name, ReservoirType type) {
+    public Compass getCompass(String group, Metric name, ReservoirType type) {
         return NoopCompass.NOOP_COMPASS;
     }
 
     @Override
-    public Compass getCompass(String group, MetricName name) {
+    public Compass getCompass(String group, Metric name) {
         return NoopCompass.NOOP_COMPASS;
     }
 
     @Override
-    public FastCompass getFastCompass(String group, MetricName name) {
+    public FastCompass getFastCompass(String group, Metric name) {
         return NoopFastCompass.NOOP_FAST_COMPASS;
     }
 
     @Override
-    public ClusterHistogram getClusterHistogram(String group, MetricName name, long[] buckets) {
+    public ClusterHistogram getClusterHistogram(String group, Metric name, long[] buckets) {
         return NoopClusterHistogram.NOOP_CLUSTER_HISTOGRAM;
     }
 
@@ -84,7 +84,7 @@ public class NoopMetricFactory implements MetricFactory {
     }
 
     @Override
-    public Map<String, Set<MetricName>> listMetricNamesByGroup() {
+    public Map<String, Set<Metric>> listMetricNamesByGroup() {
         return Collections.emptyMap();
     }
 
@@ -95,74 +95,74 @@ public class NoopMetricFactory implements MetricFactory {
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Gauge> getGauges(String group, MetricPredicate filter) {
+    public SortedMap<Metric, Gauge> getGauges(String group, MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Counter> getCounters(String group, MetricPredicate filter) {
+    public SortedMap<Metric, Counter> getCounters(String group, MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Histogram> getHistograms(String group, MetricPredicate filter) {
+    public SortedMap<Metric, Histogram> getHistograms(String group, MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Metered> getMeters(String group, MetricPredicate filter) {
+    public SortedMap<Metric, Metered> getMeters(String group, MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Timer> getTimers(String group, MetricPredicate filter) {
+    public SortedMap<Metric, Timer> getTimers(String group, MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Compass> getCompasses(String group, MetricPredicate filter) {
+    public SortedMap<Metric, Compass> getCompasses(String group, MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, FastCompass> getFastCompasses(String group, MetricPredicate filter) {
+    public SortedMap<Metric, FastCompass> getFastCompasses(String group, MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public void register(String group, MetricName name, Meter metric) {
+    public void register(String group, Metric name, Meter metric) {
 
     }
 
     @Override
-    public Map<MetricName, Meter> getMetrics(String group) {
+    public Map<Metric, Meter> getMetrics(String group) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<Class<? extends Meter>, Map<MetricName, ? extends Meter>> getCategoryMetrics(String group) {
+    public Map<Class<? extends Meter>, Map<Metric, ? extends Meter>> getCategoryMetrics(String group) {
         return getCategoryMetrics(group, FixedPredicate.TRUE);
     }
 
     @Override
-    public Map<Class<? extends Meter>, Map<MetricName, ? extends Meter>> getCategoryMetrics(String group,
-                                                                                            MetricPredicate filter) {
-        Map<Class<? extends Meter>, Map<MetricName, ? extends Meter>> result = new HashMap<Class<? extends Meter>, Map<MetricName, ? extends Meter>>();
+    public Map<Class<? extends Meter>, Map<Metric, ? extends Meter>> getCategoryMetrics(String group,
+                                                                                        MetricPredicate filter) {
+        Map<Class<? extends Meter>, Map<Metric, ? extends Meter>> result = new HashMap<Class<? extends Meter>, Map<Metric, ? extends Meter>>();
 
-        Map<MetricName, Gauge> gauges = Collections.emptyMap();
-        Map<MetricName, Counter> counters = Collections.emptyMap();
-        Map<MetricName, Histogram> histograms = Collections.emptyMap();
-        Map<MetricName, Metered> meters = Collections.emptyMap();
-        Map<MetricName, Timer> timers = Collections.emptyMap();
-        Map<MetricName, Compass> compasses = Collections.emptyMap();
-        Map<MetricName, FastCompass> fastCompasses = Collections.emptyMap();
-        Map<MetricName, ClusterHistogram> clusterHistogrames = Collections.emptyMap();
+        Map<Metric, Gauge> gauges = Collections.emptyMap();
+        Map<Metric, Counter> counters = Collections.emptyMap();
+        Map<Metric, Histogram> histograms = Collections.emptyMap();
+        Map<Metric, Metered> meters = Collections.emptyMap();
+        Map<Metric, Timer> timers = Collections.emptyMap();
+        Map<Metric, Compass> compasses = Collections.emptyMap();
+        Map<Metric, FastCompass> fastCompasses = Collections.emptyMap();
+        Map<Metric, ClusterHistogram> clusterHistogrames = Collections.emptyMap();
 
         result.put(Gauge.class, gauges);
         result.put(Counter.class, counters);
@@ -182,12 +182,12 @@ public class NoopMetricFactory implements MetricFactory {
     }
 
     @Override
-    public Map<Class<? extends Meter>, Map<MetricName, ? extends Meter>> getAllCategoryMetrics(MetricPredicate filter) {
+    public Map<Class<? extends Meter>, Map<Metric, ? extends Meter>> getAllCategoryMetrics(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public SortedMap<MetricName, ClusterHistogram> getClusterHistogram(String group, MetricPredicate filter) {
+    public SortedMap<Metric, ClusterHistogram> getClusterHistogram(String group, MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 

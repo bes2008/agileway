@@ -2,7 +2,7 @@ package com.jn.agileway.metrics.core.snapshot;
 
 import com.jn.agileway.metrics.core.Meter;
 import com.jn.agileway.metrics.core.metricset.MetricBuilder;
-import com.jn.agileway.metrics.core.MetricName;
+import com.jn.agileway.metrics.core.Metric;
 
 /**
  * @since 4.1.0
@@ -16,7 +16,7 @@ public interface ReservoirTypeBuilder<T extends Meter> extends MetricBuilder<T> 
      * @param type the type of reservoir type specified in {@link ReservoirType}
      * @return a metric implementation
      */
-    T newMetric(MetricName name, ReservoirType type);
+    T newMetric(Metric name, ReservoirType type);
 
     @Override
     MetricBuilder<T> newBuilder();

@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.supports.csv;
 
-import com.jn.agileway.metrics.core.MetricName;
+import com.jn.agileway.metrics.core.Metric;
 
 import java.io.File;
 
@@ -11,5 +11,5 @@ import java.io.File;
  * @since 4.1.0
  */
 public interface CsvFileProvider {
-    File getFile(File directory, MetricName metricName);
+    File getFile(File directory, Metric metricName);
 }

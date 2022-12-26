@@ -20,7 +20,7 @@ public class CompactMetricsCollector extends MetricsCollector {
     }
 
     @Override
-    public void collect(MetricName name, Timer timer, long timestamp) {
+    public void collect(Metric name, Timer timer, long timestamp) {
         final Snapshot snapshot = timer.getSnapshot();
         this.addMetric(name, "count", timer.getCount(), timestamp, MetricObject.MetricType.COUNTER)
                 // convert rate
@@ -34,13 +34,13 @@ public class CompactMetricsCollector extends MetricsCollector {
     }
 
     @Override
-    public void collect(MetricName name, Histogram histogram, long timestamp) {
+    public void collect(Metric name, Histogram histogram, long timestamp) {
         final Snapshot snapshot = histogram.getSnapshot();
         this.addMetric(name, "mean", snapshot.getMean(), timestamp);
     }
 
     @Override
-    public void collect(MetricName name, Compass compass, long timestamp) {
+    public void collect(Metric name, Compass compass, long timestamp) {
         final Snapshot snapshot = compass.getSnapshot();
         this.addMetric(name, "count", compass.getCount(), timestamp, MetricObject.MetricType.COUNTER)
                 // convert rate
@@ -63,7 +63,7 @@ public class CompactMetricsCollector extends MetricsCollector {
     }
 
     @Override
-    public void collect(MetricName name, Metered meter, long timestamp) {
+    public void collect(Metric name, Metered meter, long timestamp) {
         this.addMetric(name, "count", meter.getCount(), timestamp, MetricObject.MetricType.COUNTER)
                 // convert rate
                 .addMetric(name, "m1", convertRate(meter.getM1Rate()), timestamp);
@@ -73,8 +73,8 @@ public class CompactMetricsCollector extends MetricsCollector {
     }
 
     @Override
-    public void collect(MetricName name, Counter counter, long timestamp) {
-        MetricName normalizedName = name.getKey().endsWith("count") ? name : name.resolve("count");
+    public void collect(Metric name, Counter counter, long timestamp) {
+        Metric normalizedName = name.getKey().endsWith("count") ? name : name.resolve("count");
         this.addMetric(normalizedName, counter.getCount(), timestamp, MetricObject.MetricType.COUNTER,
                 metricsCollectPeriodConfig.period(name.getMetricLevel()));
 
@@ -86,7 +86,7 @@ public class CompactMetricsCollector extends MetricsCollector {
     }
 
     @Override
-    public void collect(MetricName name, Gauge gauge, long timestamp) {
+    public void collect(Metric name, Gauge gauge, long timestamp) {
         this.addMetric(name, gauge.getValue(), timestamp, MetricObject.MetricType.GAUGE,
                 metricsCollectPeriodConfig.period(name.getMetricLevel()));
     }

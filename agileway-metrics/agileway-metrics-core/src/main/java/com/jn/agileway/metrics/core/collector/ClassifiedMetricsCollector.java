@@ -5,7 +5,7 @@ import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
-import static com.jn.agileway.metrics.core.MetricName.MetricLevel;
+import static com.jn.agileway.metrics.core.Metric.MetricLevel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +52,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
     }
 
     @Override
-    public void collect(MetricName name, Counter counter, long timestamp) {
+    public void collect(Metric name, Counter counter, long timestamp) {
 
         int interval = metricsCollectPeriodConfig.period(name.getMetricLevel()) * 1000;
 
@@ -94,7 +94,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
     }
 
     @Override
-    public void collect(MetricName name, Gauge gauge, long timestamp) {
+    public void collect(Metric name, Gauge gauge, long timestamp) {
 
         int interval = metricsCollectPeriodConfig.period(name.getMetricLevel()) * 1000;
 
@@ -113,7 +113,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
     }
 
     @Override
-    public void collect(MetricName name, Metered meter, long timestamp) {
+    public void collect(Metric name, Metered meter, long timestamp) {
 
         Map<Long, Long> totalCounts = meter.getInstantCount(lastTimestamp.get(name.getMetricLevel()));
 
@@ -151,7 +151,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
     }
 
     @Override
-    public void collect(MetricName name, Histogram histogram, long timestamp) {
+    public void collect(Metric name, Histogram histogram, long timestamp) {
 
         final Snapshot snapshot = histogram.getSnapshot();
 
@@ -187,7 +187,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
     }
 
     @Override
-    public void collect(MetricName name, Timer timer, long timestamp) {
+    public void collect(Metric name, Timer timer, long timestamp) {
 
         final Snapshot snapshot = timer.getSnapshot();
         Map<Long, Long> totalCounts = timer.getInstantCount(lastTimestamp.get(name.getMetricLevel()));
@@ -244,7 +244,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
     }
 
     @Override
-    public void collect(MetricName name, Compass compass, long timestamp) {
+    public void collect(Metric name, Compass compass, long timestamp) {
 
         final Snapshot snapshot = compass.getSnapshot();
 
@@ -384,7 +384,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
     }
 
     @Override
-    public void collect(MetricName name, FastCompass fastCompass, long timestamp) {
+    public void collect(Metric name, FastCompass fastCompass, long timestamp) {
 
         int intervalSeconds = metricsCollectPeriodConfig.period(name.getMetricLevel());
         int interval = metricsCollectPeriodConfig.period(name.getMetricLevel()) * 1000;
@@ -466,7 +466,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
     }
 
     @Override
-    public void collect(MetricName name, ClusterHistogram clusterHistogram, long timestamp) {
+    public void collect(Metric name, ClusterHistogram clusterHistogram, long timestamp) {
         int interval = metricsCollectPeriodConfig.period(name.getMetricLevel()) * 1000;
         long startTime = lastTimestamp.get(name.getMetricLevel()) + interval;
         long endTime = (timestamp / interval - 1) * interval;
@@ -486,9 +486,9 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
         }
     }
 
-    public MetricsCollector addMetric(MetricName name, String suffix, Object value, long timestamp,
+    public MetricsCollector addMetric(Metric name, String suffix, Object value, long timestamp,
                                       MetricObject.MetricType type, String meterName) {
-        MetricName fullName = name.resolve(suffix);
+        Metric fullName = name.resolve(suffix);
         return addMetric(fullName, value, timestamp, type, meterName);
     }
 
@@ -499,7 +499,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
             return this;
         }
 
-        if ((predicate == null || predicate.test(MetricName.build(object.getMetric()), null))
+        if ((predicate == null || predicate.test(Metric.build(object.getMetric()), null))
                 && object.getValue() != null) {
 
             MetricLevel level = object.getMetricLevel();
@@ -526,7 +526,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
         return this;
     }
 
-    private MetricsCollector addMetric(MetricName fullName, Object value, long timestamp, MetricObject.MetricType type,
+    private MetricsCollector addMetric(Metric fullName, Object value, long timestamp, MetricObject.MetricType type,
                                        String meterName) {
         MetricObject obj = MetricObject.named(fullName.getKey()).withType(type).withTimestamp(timestamp)
                 .withValue(value).withTags(merge(globalTags, fullName.getTagsAsMap())).withLevel(fullName.getMetricLevel())

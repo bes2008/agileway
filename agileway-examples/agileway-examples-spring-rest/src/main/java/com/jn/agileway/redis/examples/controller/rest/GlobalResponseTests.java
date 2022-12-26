@@ -1,7 +1,7 @@
 package com.jn.agileway.redis.examples.controller.rest;
 
-import com.jn.agileway.metrics.core.MetricName;
-import com.jn.agileway.metrics.core.Metrics;
+import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.Meters;
 import com.jn.agileway.metrics.core.meter.Metered;
 import com.jn.agileway.redis.examples.controller.redis_examples.Person;
 import com.jn.agileway.web.servlet.RRHolder;
@@ -20,10 +20,10 @@ import java.util.List;
 @RequestMapping("/rest/global_response")
 @RestController
 public class GlobalResponseTests {
-    MetricName metricName = Metrics.name("http", "qps").tag("instance", "ins-1");
+    Metric metricName = Meters.name("http", "qps").tag("instance", "ins-1");
     @GetMapping("/testBean")
     public Person aPerson() {
-        Metered meter = Metrics.getMeter("test", metricName);
+        Metered meter = Meters.getMeter("test", metricName);
         meter.mark();
         Person p = new Person();
         p.setAge(10);
@@ -33,7 +33,7 @@ public class GlobalResponseTests {
 
     @GetMapping("/testListBeans")
     public List<Person> listBeans(){
-        Metered meter = Metrics.getMeter("test", metricName);
+        Metered meter = Meters.getMeter("test", metricName);
         meter.mark();
         List<Person> list = Collects.newArrayList();
         for(int i =0; i< 3;i++) {
@@ -47,7 +47,7 @@ public class GlobalResponseTests {
 
     @GetMapping("/testResponseEntityBean")
     public ResponseEntity get() {
-        Metered meter = Metrics.getMeter("test", metricName);
+        Metered meter = Meters.getMeter("test", metricName);
         meter.mark();
         Person p = new Person();
         p.setAge(10);
@@ -61,7 +61,7 @@ public class GlobalResponseTests {
     @GetMapping("/showRequest")
     @PostMapping
     public Object showRequest(){
-        Metered meter = Metrics.getMeter("test", metricName);
+        Metered meter = Meters.getMeter("test", metricName);
         meter.mark();
 
         HttpServletRequest request = RRHolder.getRequest();

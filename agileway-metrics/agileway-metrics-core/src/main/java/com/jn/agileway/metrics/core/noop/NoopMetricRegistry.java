@@ -25,7 +25,7 @@ public class NoopMetricRegistry implements MetricRegistry {
     }
 
     @Override
-    public <T extends Meter> T register(MetricName name, T metric) throws IllegalArgumentException {
+    public <T extends Meter> T register(Metric name, T metric) throws IllegalArgumentException {
         return metric;
     }
 
@@ -40,17 +40,17 @@ public class NoopMetricRegistry implements MetricRegistry {
     }
 
     @Override
-    public Counter counter(MetricName name) {
+    public Counter counter(Metric name) {
         return NoopCounter.NOOP_COUNTER;
     }
 
     @Override
-    public Histogram histogram(MetricName name) {
+    public Histogram histogram(Metric name) {
         return NoopHistogram.NOOP_HISTOGRAM;
     }
 
     @Override
-    public Histogram histogram(MetricName name, ReservoirType type) {
+    public Histogram histogram(Metric name, ReservoirType type) {
         return NoopHistogram.NOOP_HISTOGRAM;
     }
 
@@ -60,7 +60,7 @@ public class NoopMetricRegistry implements MetricRegistry {
     }
 
     @Override
-    public Metered meter(MetricName name) {
+    public Metered meter(Metric name) {
         return NoopMeter.NOOP_METER;
     }
 
@@ -70,7 +70,7 @@ public class NoopMetricRegistry implements MetricRegistry {
     }
 
     @Override
-    public Timer timer(MetricName name) {
+    public Timer timer(Metric name) {
         return NoopTimer.NOOP_TIMER;
     }
 
@@ -80,12 +80,12 @@ public class NoopMetricRegistry implements MetricRegistry {
     }
 
     @Override
-    public Timer timer(MetricName name, ReservoirType type) {
+    public Timer timer(Metric name, ReservoirType type) {
         return NoopTimer.NOOP_TIMER;
     }
 
     @Override
-    public Compass compass(MetricName name) {
+    public Compass compass(Metric name) {
         return NoopCompass.NOOP_COMPASS;
     }
 
@@ -95,22 +95,22 @@ public class NoopMetricRegistry implements MetricRegistry {
     }
 
     @Override
-    public Compass compass(MetricName name, ReservoirType type) {
+    public Compass compass(Metric name, ReservoirType type) {
         return NoopCompass.NOOP_COMPASS;
     }
 
     @Override
-    public FastCompass fastCompass(MetricName name) {
+    public FastCompass fastCompass(Metric name) {
         return NoopFastCompass.NOOP_FAST_COMPASS;
     }
 
     @Override
-    public ClusterHistogram clusterHistogram(MetricName name, long[] buckets) {
+    public ClusterHistogram clusterHistogram(Metric name, long[] buckets) {
         return NoopClusterHistogram.NOOP_CLUSTER_HISTOGRAM;
     }
 
     @Override
-    public boolean remove(MetricName name) {
+    public boolean remove(Metric name) {
         return false;
     }
 
@@ -130,97 +130,97 @@ public class NoopMetricRegistry implements MetricRegistry {
     }
 
     @Override
-    public Set<MetricName> getNames() {
+    public Set<Metric> getNames() {
         return Emptys.EMPTY_TREE_SET;
     }
 
     @Override
-    public Map<MetricName, Gauge> getGauges() {
+    public Map<Metric, Gauge> getGauges() {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<MetricName, Gauge> getGauges(MetricPredicate filter) {
+    public Map<Metric, Gauge> getGauges(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<MetricName, Counter> getCounters() {
+    public Map<Metric, Counter> getCounters() {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<MetricName, Counter> getCounters(MetricPredicate filter) {
+    public Map<Metric, Counter> getCounters(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<MetricName, Histogram> getHistograms() {
+    public Map<Metric, Histogram> getHistograms() {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<MetricName, Histogram> getHistograms(MetricPredicate filter) {
+    public Map<Metric, Histogram> getHistograms(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<MetricName, Metered> getMeters() {
+    public Map<Metric, Metered> getMeters() {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<MetricName, Metered> getMeters(MetricPredicate filter) {
+    public Map<Metric, Metered> getMeters(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<MetricName, Timer> getTimers() {
+    public Map<Metric, Timer> getTimers() {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<MetricName, Timer> getTimers(MetricPredicate filter) {
+    public Map<Metric, Timer> getTimers(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<MetricName, Compass> getCompasses(MetricPredicate filter) {
+    public Map<Metric, Compass> getCompasses(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<MetricName, Compass> getCompasses() {
+    public Map<Metric, Compass> getCompasses() {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<MetricName, FastCompass> getFastCompasses() {
+    public Map<Metric, FastCompass> getFastCompasses() {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<MetricName, FastCompass> getFastCompasses(MetricPredicate filter) {
+    public Map<Metric, FastCompass> getFastCompasses(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<MetricName, ClusterHistogram> getClusterHistograms(MetricPredicate filter) {
+    public Map<Metric, ClusterHistogram> getClusterHistograms(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<MetricName, Meter> getMetrics(MetricPredicate filter) {
+    public Map<Metric, Meter> getMetrics(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<MetricName, Meter> getMetrics() {
+    public Map<Metric, Meter> getMetrics() {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<MetricName, ClusterHistogram> getClusterHistograms() {
+    public Map<Metric, ClusterHistogram> getClusterHistograms() {
         return Emptys.EMPTY_TREE_MAP;
     }
 }

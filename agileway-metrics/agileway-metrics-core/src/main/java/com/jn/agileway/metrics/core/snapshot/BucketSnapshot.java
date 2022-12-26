@@ -2,7 +2,7 @@ package com.jn.agileway.metrics.core.snapshot;
 
 import java.io.OutputStream;
 
-import static com.jn.agileway.metrics.core.Metrics.NOT_AVAILABLE;
+import static com.jn.agileway.metrics.core.Meters.NOT_AVAILABLE;
 
 /**
  * @since 4.1.0

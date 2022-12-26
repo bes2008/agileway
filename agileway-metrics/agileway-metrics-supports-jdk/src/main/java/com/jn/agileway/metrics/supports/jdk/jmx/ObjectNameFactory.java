@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.supports.jdk.jmx;
 
-import com.jn.agileway.metrics.core.MetricName;
+import com.jn.agileway.metrics.core.Metric;
 
 import javax.management.ObjectName;
 
@@ -9,5 +9,5 @@ import javax.management.ObjectName;
  */
 public interface ObjectNameFactory {
 
-    ObjectName createName(String type, String domain, MetricName name);
+    ObjectName createName(String type, String domain, Metric name);
 }

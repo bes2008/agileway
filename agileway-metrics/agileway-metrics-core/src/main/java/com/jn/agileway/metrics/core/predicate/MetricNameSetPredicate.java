@@ -108,7 +108,7 @@ public class MetricNameSetPredicate implements MetricPredicate {
     }
 
     @Override
-    public boolean test(MetricName name, Meter metric) {
+    public boolean test(Metric name, Meter metric) {
         for (String nameToMatch : metricNames) {
             boolean success;
             if (metric instanceof Counter) {
@@ -153,7 +153,7 @@ public class MetricNameSetPredicate implements MetricPredicate {
         return false;
     }
 
-    private boolean matchInternal(String nameToMatch, MetricName name, Set<String> suffixSet, boolean matchDynamic) {
+    private boolean matchInternal(String nameToMatch, Metric name, Set<String> suffixSet, boolean matchDynamic) {
         if (nameToMatch == null) {
             return false;
         }
@@ -180,7 +180,7 @@ public class MetricNameSetPredicate implements MetricPredicate {
         return false;
     }
 
-    private boolean matchCompassAddon(String nameToMatch, MetricName name, Compass compass) {
+    private boolean matchCompassAddon(String nameToMatch, Metric name, Compass compass) {
         if (nameToMatch == null) {
             return false;
         }

@@ -1,7 +1,7 @@
 package com.jn.agileway.metrics.core.predicate;
 
 import com.jn.agileway.metrics.core.Meter;
-import com.jn.agileway.metrics.core.MetricName;
+import com.jn.agileway.metrics.core.Metric;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +28,7 @@ public class CompositeMetricPredicate implements MetricPredicate {
     }
 
     @Override
-    public boolean test(MetricName name, Meter metric) {
+    public boolean test(Metric name, Meter metric) {
         if (predicates != null) {
             for (MetricPredicate predicate : predicates) {
                 if (!predicate.test(name, metric)) {

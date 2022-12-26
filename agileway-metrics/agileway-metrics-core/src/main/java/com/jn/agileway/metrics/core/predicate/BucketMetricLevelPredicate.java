@@ -1,7 +1,7 @@
 package com.jn.agileway.metrics.core.predicate;
 
 
-import static com.jn.agileway.metrics.core.MetricName.MetricLevel;
+import static com.jn.agileway.metrics.core.Metric.MetricLevel;
 import com.jn.agileway.metrics.core.config.MetricsCollectPeriodConfig;
 
 /**

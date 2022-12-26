@@ -572,7 +572,7 @@ public class JmxReporter implements Closeable {
         }
 
         @Override
-        public void onGaugeAdded(MetricName name, Gauge<?> gauge) {
+        public void onGaugeAdded(Metric name, Gauge<?> gauge) {
             try {
                 if (predicate.test(name, gauge)) {
                     final ObjectName objectName = createName("gauges", name);
@@ -586,7 +586,7 @@ public class JmxReporter implements Closeable {
         }
 
         @Override
-        public void onGaugeRemoved(MetricName name) {
+        public void onGaugeRemoved(Metric name) {
             try {
                 final ObjectName objectName = createName("gauges", name);
                 unregisterMBean(objectName);
@@ -598,7 +598,7 @@ public class JmxReporter implements Closeable {
         }
 
         @Override
-        public void onCounterAdded(MetricName name, Counter counter) {
+        public void onCounterAdded(Metric name, Counter counter) {
             try {
                 if (predicate.test(name, counter)) {
                     final ObjectName objectName = createName("counters", name);
@@ -612,7 +612,7 @@ public class JmxReporter implements Closeable {
         }
 
         @Override
-        public void onCounterRemoved(MetricName name) {
+        public void onCounterRemoved(Metric name) {
             try {
                 final ObjectName objectName = createName("counters", name);
                 unregisterMBean(objectName);
@@ -624,7 +624,7 @@ public class JmxReporter implements Closeable {
         }
 
         @Override
-        public void onHistogramAdded(MetricName name, Histogram histogram) {
+        public void onHistogramAdded(Metric name, Histogram histogram) {
             try {
                 if (predicate.test(name, histogram)) {
                     final ObjectName objectName = createName("histograms", name);
@@ -638,7 +638,7 @@ public class JmxReporter implements Closeable {
         }
 
         @Override
-        public void onHistogramRemoved(MetricName name) {
+        public void onHistogramRemoved(Metric name) {
             try {
                 final ObjectName objectName = createName("histograms", name);
                 unregisterMBean(objectName);
@@ -650,7 +650,7 @@ public class JmxReporter implements Closeable {
         }
 
         @Override
-        public void onMeterAdded(MetricName name, Metered meter) {
+        public void onMeterAdded(Metric name, Metered meter) {
             try {
                 if (predicate.test(name, meter)) {
                     final ObjectName objectName = createName("meters", name);
@@ -664,7 +664,7 @@ public class JmxReporter implements Closeable {
         }
 
         @Override
-        public void onMeterRemoved(MetricName name) {
+        public void onMeterRemoved(Metric name) {
             try {
                 final ObjectName objectName = createName("meters", name);
                 unregisterMBean(objectName);
@@ -676,7 +676,7 @@ public class JmxReporter implements Closeable {
         }
 
         @Override
-        public void onTimerAdded(MetricName name, Timer timer) {
+        public void onTimerAdded(Metric name, Timer timer) {
             try {
                 if (predicate.test(name, timer)) {
                     final ObjectName objectName = createName("timers", name);
@@ -690,7 +690,7 @@ public class JmxReporter implements Closeable {
         }
 
         @Override
-        public void onTimerRemoved(MetricName name) {
+        public void onTimerRemoved(Metric name) {
             try {
                 final ObjectName objectName = createName("timers", name);
                 unregisterMBean(objectName);
@@ -702,26 +702,26 @@ public class JmxReporter implements Closeable {
         }
 
         @Override
-        public void onCompassAdded(MetricName name, Compass compass) {
+        public void onCompassAdded(Metric name, Compass compass) {
             // TODO
         }
 
         @Override
-        public void onCompassRemoved(MetricName name) {
+        public void onCompassRemoved(Metric name) {
             // TODO
         }
 
         @Override
-        public void onFastCompassAdded(MetricName name, FastCompass compass) {
+        public void onFastCompassAdded(Metric name, FastCompass compass) {
             // TODO
         }
 
         @Override
-        public void onFastCompassRemoved(MetricName name) {
+        public void onFastCompassRemoved(Metric name) {
             // TODO
         }
 
-        private ObjectName createName(String type, MetricName name) {
+        private ObjectName createName(String type, Metric name) {
             return objectNameFactory.createName(type, this.name, name);
         }
 

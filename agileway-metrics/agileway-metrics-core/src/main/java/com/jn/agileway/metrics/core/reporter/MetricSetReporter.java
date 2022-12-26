@@ -203,17 +203,17 @@ public abstract class MetricSetReporter implements Closeable {
     public void report() {
         synchronized (this) {
 
-            Map<Class<? extends Meter>, Map<MetricName, ? extends Meter>> categoryMetrics = factory
+            Map<Class<? extends Meter>, Map<Metric, ? extends Meter>> categoryMetrics = factory
                     .getAllCategoryMetrics(compositeMetricPredicate);
 
-            report((Map<MetricName, Gauge>) categoryMetrics.get(Gauge.class),
-                    (Map<MetricName, Counter>) categoryMetrics.get(Counter.class),
-                    (Map<MetricName, Histogram>) categoryMetrics.get(Histogram.class),
-                    (Map<MetricName, Metered>) categoryMetrics.get(Metered.class),
-                    (Map<MetricName, Timer>) categoryMetrics.get(Timer.class),
-                    (Map<MetricName, Compass>) categoryMetrics.get(Compass.class),
-                    (Map<MetricName, FastCompass>) categoryMetrics.get(FastCompass.class),
-                    (Map<MetricName, ClusterHistogram>) categoryMetrics.get(ClusterHistogram.class));
+            report((Map<Metric, Gauge>) categoryMetrics.get(Gauge.class),
+                    (Map<Metric, Counter>) categoryMetrics.get(Counter.class),
+                    (Map<Metric, Histogram>) categoryMetrics.get(Histogram.class),
+                    (Map<Metric, Metered>) categoryMetrics.get(Metered.class),
+                    (Map<Metric, Timer>) categoryMetrics.get(Timer.class),
+                    (Map<Metric, Compass>) categoryMetrics.get(Compass.class),
+                    (Map<Metric, FastCompass>) categoryMetrics.get(FastCompass.class),
+                    (Map<Metric, ClusterHistogram>) categoryMetrics.get(ClusterHistogram.class));
         }
     }
 
@@ -227,14 +227,14 @@ public abstract class MetricSetReporter implements Closeable {
      * @param timers     all of the timers in the factory
      * @param compasses  all of the compasses in the factory
      */
-    public abstract void report(Map<MetricName, Gauge> gauges,
-                                Map<MetricName, Counter> counters,
-                                Map<MetricName, Histogram> histograms,
-                                Map<MetricName, Metered> meters,
-                                Map<MetricName, Timer> timers,
-                                Map<MetricName, Compass> compasses,
-                                Map<MetricName, FastCompass> fastCompasses,
-                                Map<MetricName, ClusterHistogram> clusterHistogrames);
+    public abstract void report(Map<Metric, Gauge> gauges,
+                                Map<Metric, Counter> counters,
+                                Map<Metric, Histogram> histograms,
+                                Map<Metric, Metered> meters,
+                                Map<Metric, Timer> timers,
+                                Map<Metric, Compass> compasses,
+                                Map<Metric, FastCompass> fastCompasses,
+                                Map<Metric, ClusterHistogram> clusterHistogrames);
 
     protected String getRateUnit() {
         return rateUnit;

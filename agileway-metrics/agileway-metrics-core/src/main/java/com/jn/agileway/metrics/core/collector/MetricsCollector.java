@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.jn.agileway.metrics.core.Metrics.NOT_AVAILABLE;
+import static com.jn.agileway.metrics.core.Meters.NOT_AVAILABLE;
 
 /**
  * @since 4.1.0
@@ -66,19 +66,19 @@ public abstract class MetricsCollector implements Collector {
         this.metricsCollectPeriodConfig = new MetricsCollectPeriodConfig();
     }
 
-    public MetricsCollector addMetric(MetricName name, String suffix, Object value, long timestamp) {
+    public MetricsCollector addMetric(Metric name, String suffix, Object value, long timestamp) {
         return addMetric(name, suffix, value, timestamp, MetricObject.MetricType.GAUGE);
     }
 
-    public MetricsCollector addMetric(MetricName name, String suffix, Object value, long timestamp,
+    public MetricsCollector addMetric(Metric name, String suffix, Object value, long timestamp,
                                       MetricObject.MetricType type) {
-        MetricName fullName = name.resolve(suffix);
+        Metric fullName = name.resolve(suffix);
         return addMetric(fullName, value, timestamp, type, metricsCollectPeriodConfig.period(fullName.getMetricLevel()));
     }
 
-    public MetricsCollector addMetric(MetricName name, String suffix, Object value, long timestamp,
+    public MetricsCollector addMetric(Metric name, String suffix, Object value, long timestamp,
                                       MetricObject.MetricType type, int interval) {
-        MetricName fullName = name.resolve(suffix);
+        Metric fullName = name.resolve(suffix);
         return addMetric(fullName, value, timestamp, type, interval);
     }
 
@@ -94,20 +94,20 @@ public abstract class MetricsCollector implements Collector {
             return this;
         }
 
-        if ((predicate == null || predicate.test(MetricName.build(object.getMetric()), null))
+        if ((predicate == null || predicate.test(Metric.build(object.getMetric()), null))
                 && object.getValue() != null) {
             this.metrics.add(object);
         }
         return this;
     }
 
-    public MetricsCollector addMetric(MetricName name, MetricName suffix, Object value, long timestamp,
+    public MetricsCollector addMetric(Metric name, Metric suffix, Object value, long timestamp,
                                       MetricObject.MetricType type, int interval) {
-        MetricName fullName = MetricName.join(name, suffix);
+        Metric fullName = Metric.join(name, suffix);
         return addMetric(fullName, value, timestamp, type, interval);
     }
 
-    public MetricsCollector addMetric(MetricName fullName, Object value, long timestamp,
+    public MetricsCollector addMetric(Metric fullName, Object value, long timestamp,
                                       MetricObject.MetricType type, int interval) {
         MetricObject obj = MetricObject.named(fullName.getKey())
                 .withType(type)
@@ -133,7 +133,7 @@ public abstract class MetricsCollector implements Collector {
 
 
     @Override
-    public void collect(MetricName name, FastCompass fastCompass, long timestamp) {
+    public void collect(Metric name, FastCompass fastCompass, long timestamp) {
 
         int bucketInterval = fastCompass.getBucketInterval();
 
@@ -184,7 +184,7 @@ public abstract class MetricsCollector implements Collector {
     }
 
     @Override
-    public void collect(MetricName name, ClusterHistogram clusterHistogram, long timestamp) {
+    public void collect(Metric name, ClusterHistogram clusterHistogram, long timestamp) {
         long start = getNormalizedStartTime(timestamp, metricsCollectPeriodConfig.period(name.getMetricLevel()));
         Map<Long, Map<Long, Long>> values = clusterHistogram.getBucketValues(start);
         long[] buckets = clusterHistogram.getBuckets();
@@ -215,7 +215,7 @@ public abstract class MetricsCollector implements Collector {
         return duration * durationFactor;
     }
 
-    protected void addInstantCountMetric(Map<Long, Long> instantCount, MetricName name, int countInterval, long timestamp) {
+    protected void addInstantCountMetric(Map<Long, Long> instantCount, Metric name, int countInterval, long timestamp) {
         long start = getNormalizedStartTime(timestamp, countInterval);
         // only the latest instant rate, for compatibility
         if (instantCount.containsKey(start)) {
@@ -231,14 +231,14 @@ public abstract class MetricsCollector implements Collector {
         }
     }
 
-    protected void addCompassErrorCode(MetricName name, Compass compass, long timestamp) {
+    protected void addCompassErrorCode(Metric name, Compass compass, long timestamp) {
         int countInterval = compass.getInstantCountInterval();
         long start = getNormalizedStartTime(timestamp, countInterval);
         for (Map.Entry<String, BucketCounter> entry : compass.getErrorCodeCounts().entrySet()) {
-            this.addMetric(name, MetricName.build("error.count").tags("error", entry.getKey()),
+            this.addMetric(name, Metric.build("error.count").tags("error", entry.getKey()),
                     entry.getValue().getCount(), timestamp, MetricObject.MetricType.COUNTER,
                     metricsCollectPeriodConfig.period(name.getMetricLevel()));
-            MetricName errorName = MetricName.build("error_bucket_count").tags("error", entry.getKey());
+            Metric errorName = Metric.build("error_bucket_count").tags("error", entry.getKey());
             Map<Long, Long> errorCodeBucket = entry.getValue().getBucketCounts();
             if (errorCodeBucket.containsKey(start)) {
                 this.addMetric(name, errorName, errorCodeBucket.get(start), start,
@@ -250,14 +250,14 @@ public abstract class MetricsCollector implements Collector {
         }
     }
 
-    protected void addAddonMetric(MetricName name, Compass compass, long timestamp) {
+    protected void addAddonMetric(Metric name, Compass compass, long timestamp) {
         int countInterval = compass.getInstantCountInterval();
         long start = getNormalizedStartTime(timestamp, countInterval);
         for (Map.Entry<String, BucketCounter> entry : compass.getAddonCounts().entrySet()) {
-            MetricName addonName = MetricName.build(entry.getKey(), "count");
+            Metric addonName = Metric.build(entry.getKey(), "count");
             this.addMetric(name, addonName, entry.getValue().getCount(), timestamp,
                     MetricObject.MetricType.COUNTER, metricsCollectPeriodConfig.period(name.getMetricLevel()));
-            MetricName addonBucketName = MetricName.build(entry.getKey() + "_bucket_count");
+            Metric addonBucketName = Metric.build(entry.getKey() + "_bucket_count");
             Map<Long, Long> addOnBucket = entry.getValue().getBucketCounts();
             if (addOnBucket.containsKey(start)) {
                 this.addMetric(name, addonBucketName, addOnBucket.get(start), start,
@@ -279,7 +279,7 @@ public abstract class MetricsCollector implements Collector {
         }
     }
 
-    protected void addInstantSuccessCount(MetricName name, Compass compass, long timestamp) {
+    protected void addInstantSuccessCount(Metric name, Compass compass, long timestamp) {
         this.addMetric(name, "success_count", compass.getBucketSuccessCount().getCount(),
                 timestamp, MetricObject.MetricType.COUNTER);
 

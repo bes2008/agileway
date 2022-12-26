@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.core.noop;
 
-import com.jn.agileway.metrics.core.MetricName;
+import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.metricset.MetricRegistryListener;
 
@@ -9,62 +9,62 @@ import com.jn.agileway.metrics.core.metricset.MetricRegistryListener;
  */
 abstract class NoopMetricRegistryListener implements MetricRegistryListener {
     @Override
-    public void onGaugeAdded(MetricName name, Gauge<?> gauge) {
+    public void onGaugeAdded(Metric name, Gauge<?> gauge) {
     }
 
     @Override
-    public void onGaugeRemoved(MetricName name) {
+    public void onGaugeRemoved(Metric name) {
     }
 
     @Override
-    public void onCounterAdded(MetricName name, Counter counter) {
+    public void onCounterAdded(Metric name, Counter counter) {
     }
 
     @Override
-    public void onCounterRemoved(MetricName name) {
+    public void onCounterRemoved(Metric name) {
     }
 
     @Override
-    public void onHistogramAdded(MetricName name, Histogram histogram) {
+    public void onHistogramAdded(Metric name, Histogram histogram) {
     }
 
     @Override
-    public void onHistogramRemoved(MetricName name) {
+    public void onHistogramRemoved(Metric name) {
     }
 
     @Override
-    public void onMeterAdded(MetricName name, Metered meter) {
+    public void onMeterAdded(Metric name, Metered meter) {
     }
 
     @Override
-    public void onMeterRemoved(MetricName name) {
+    public void onMeterRemoved(Metric name) {
     }
 
     @Override
-    public void onTimerAdded(MetricName name, Timer timer) {
+    public void onTimerAdded(Metric name, Timer timer) {
     }
 
     @Override
-    public void onTimerRemoved(MetricName name) {
+    public void onTimerRemoved(Metric name) {
     }
 
     @Override
-    public void onCompassAdded(MetricName name, Compass compass) {
-
-    }
-
-    @Override
-    public void onCompassRemoved(MetricName name) {
+    public void onCompassAdded(Metric name, Compass compass) {
 
     }
 
     @Override
-    public void onFastCompassAdded(MetricName name, FastCompass compass) {
+    public void onCompassRemoved(Metric name) {
 
     }
 
     @Override
-    public void onFastCompassRemoved(MetricName name) {
+    public void onFastCompassAdded(Metric name, FastCompass compass) {
+
+    }
+
+    @Override
+    public void onFastCompassRemoved(Metric name) {
 
     }
 }

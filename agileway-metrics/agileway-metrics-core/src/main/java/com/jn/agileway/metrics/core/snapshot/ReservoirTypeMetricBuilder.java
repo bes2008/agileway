@@ -2,7 +2,7 @@ package com.jn.agileway.metrics.core.snapshot;
 
 import com.jn.agileway.metrics.core.meter.impl.AbstractMetricBuilder;
 import com.jn.agileway.metrics.core.Meter;
-import com.jn.agileway.metrics.core.MetricName;
+import com.jn.agileway.metrics.core.Metric;
 
 /**
  * @since 4.1.0
@@ -10,7 +10,7 @@ import com.jn.agileway.metrics.core.MetricName;
 public abstract class ReservoirTypeMetricBuilder<T extends Meter> extends AbstractMetricBuilder<T> implements ReservoirTypeBuilder<T> {
     protected int interval;
     @Override
-    public abstract T newMetric(MetricName name);
+    public abstract T newMetric(Metric name);
 
     @Override
     public abstract boolean isInstance(Meter metric);
@@ -24,5 +24,5 @@ public abstract class ReservoirTypeMetricBuilder<T extends Meter> extends Abstra
     }
 
     @Override
-    public abstract T newMetric(MetricName name, ReservoirType type);
+    public abstract T newMetric(Metric name, ReservoirType type);
 }

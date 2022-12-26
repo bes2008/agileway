@@ -2,7 +2,7 @@ package com.jn.agileway.metrics.core.predicate;
 
 
 import com.jn.agileway.metrics.core.Meter;
-import com.jn.agileway.metrics.core.MetricName;
+import com.jn.agileway.metrics.core.Metric;
 import com.jn.langx.util.function.Predicate2;
 
 /**
@@ -10,7 +10,7 @@ import com.jn.langx.util.function.Predicate2;
  *
  * @since 4.1.0
  */
-public interface MetricPredicate extends Predicate2<MetricName, Meter> {
+public interface MetricPredicate extends Predicate2<Metric, Meter> {
 
 
     /**
@@ -20,5 +20,5 @@ public interface MetricPredicate extends Predicate2<MetricName, Meter> {
      * @param metric the metric
      * @return {@code true} if the metric matches the filter
      */
-    boolean test(MetricName name, Meter metric);
+    boolean test(Metric name, Meter metric);
 }

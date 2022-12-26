@@ -57,35 +57,35 @@ public class CsvReporter extends ScheduledReporter {
     }
 
     @Override
-    public void report(Map<MetricName, Gauge> gauges,
-                       Map<MetricName, Counter> counters,
-                       Map<MetricName, Histogram> histograms,
-                       Map<MetricName, Metered> meters,
-                       Map<MetricName, Timer> timers) {
+    public void report(Map<Metric, Gauge> gauges,
+                       Map<Metric, Counter> counters,
+                       Map<Metric, Histogram> histograms,
+                       Map<Metric, Metered> meters,
+                       Map<Metric, Timer> timers) {
         final long timestamp = TimeUnit.MILLISECONDS.toSeconds(clock.getTime());
 
-        for (Map.Entry<MetricName, Gauge> entry : gauges.entrySet()) {
+        for (Map.Entry<Metric, Gauge> entry : gauges.entrySet()) {
             reportGauge(timestamp, entry.getKey(), entry.getValue());
         }
 
-        for (Map.Entry<MetricName, Counter> entry : counters.entrySet()) {
+        for (Map.Entry<Metric, Counter> entry : counters.entrySet()) {
             reportCounter(timestamp, entry.getKey(), entry.getValue());
         }
 
-        for (Map.Entry<MetricName, Histogram> entry : histograms.entrySet()) {
+        for (Map.Entry<Metric, Histogram> entry : histograms.entrySet()) {
             reportHistogram(timestamp, entry.getKey(), entry.getValue());
         }
 
-        for (Map.Entry<MetricName, Metered> entry : meters.entrySet()) {
+        for (Map.Entry<Metric, Metered> entry : meters.entrySet()) {
             reportMeter(timestamp, entry.getKey(), entry.getValue());
         }
 
-        for (Map.Entry<MetricName, Timer> entry : timers.entrySet()) {
+        for (Map.Entry<Metric, Timer> entry : timers.entrySet()) {
             reportTimer(timestamp, entry.getKey(), entry.getValue());
         }
     }
 
-    private void reportTimer(long timestamp, MetricName name, Timer timer) {
+    private void reportTimer(long timestamp, Metric name, Timer timer) {
         final Snapshot snapshot = timer.getSnapshot();
 
         report(timestamp,
@@ -111,7 +111,7 @@ public class CsvReporter extends ScheduledReporter {
                 getDurationUnit());
     }
 
-    private void reportMeter(long timestamp, MetricName name, Metered meter) {
+    private void reportMeter(long timestamp, Metric name, Metered meter) {
         report(timestamp,
                 name,
                 "count,mean_rate,m1_rate,m5_rate,m15_rate,rate_unit",
@@ -124,7 +124,7 @@ public class CsvReporter extends ScheduledReporter {
                 getRateUnit());
     }
 
-    private void reportHistogram(long timestamp, MetricName name, Histogram histogram) {
+    private void reportHistogram(long timestamp, Metric name, Histogram histogram) {
         final Snapshot snapshot = histogram.getSnapshot();
 
         report(timestamp,
@@ -144,15 +144,15 @@ public class CsvReporter extends ScheduledReporter {
                 snapshot.get999thPercentile());
     }
 
-    private void reportCounter(long timestamp, MetricName name, Counter counter) {
+    private void reportCounter(long timestamp, Metric name, Counter counter) {
         report(timestamp, name, "count", "%d", counter.getCount());
     }
 
-    private void reportGauge(long timestamp, MetricName name, Gauge gauge) {
+    private void reportGauge(long timestamp, Metric name, Gauge gauge) {
         report(timestamp, name, "value", "%s", gauge.getValue());
     }
 
-    private void report(long timestamp, MetricName name, String header, String line, Object... values) {
+    private void report(long timestamp, Metric name, String header, String line, Object... values) {
         try {
             final File file = csvFileProvider.getFile(directory, name);
             final boolean fileAlreadyExists = file.exists();

@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.supports.jdk.jmx;
 
-import com.jn.agileway.metrics.core.MetricName;
+import com.jn.agileway.metrics.core.Metric;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
@@ -14,7 +14,7 @@ public class DefaultObjectNameFactory implements ObjectNameFactory {
 
     private static final Logger LOGGER = Loggers.getLogger(JmxReporter.class);
 
-    public ObjectName createName(String type, String domain, MetricName metricName) {
+    public ObjectName createName(String type, String domain, Metric metricName) {
         String name = metricName.getKey();
         try {
             ObjectName objectName = new ObjectName(domain, "name", name);

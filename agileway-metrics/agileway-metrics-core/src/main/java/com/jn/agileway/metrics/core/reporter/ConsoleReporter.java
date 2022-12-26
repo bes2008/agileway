@@ -58,18 +58,18 @@ public class ConsoleReporter extends ScheduledReporter {
     }
 
     @Override
-    public void report(Map<MetricName, Gauge> gauges,
-                       Map<MetricName, Counter> counters,
-                       Map<MetricName, Histogram> histograms,
-                       Map<MetricName, Metered> meters,
-                       Map<MetricName, Timer> timers) {
+    public void report(Map<Metric, Gauge> gauges,
+                       Map<Metric, Counter> counters,
+                       Map<Metric, Histogram> histograms,
+                       Map<Metric, Metered> meters,
+                       Map<Metric, Timer> timers) {
         final String dateTime = dateFormat.format(new Date(clock.getTime()));
         printWithBanner(dateTime, '=');
         output.println();
 
         if (!gauges.isEmpty()) {
             printWithBanner("-- Gauges", '-');
-            for (Map.Entry<MetricName, Gauge> entry : gauges.entrySet()) {
+            for (Map.Entry<Metric, Gauge> entry : gauges.entrySet()) {
                 output.println(entry.getKey());
                 printGauge(entry);
             }
@@ -78,7 +78,7 @@ public class ConsoleReporter extends ScheduledReporter {
 
         if (!counters.isEmpty()) {
             printWithBanner("-- Counters", '-');
-            for (Map.Entry<MetricName, Counter> entry : counters.entrySet()) {
+            for (Map.Entry<Metric, Counter> entry : counters.entrySet()) {
                 output.println(entry.getKey());
                 printCounter(entry);
             }
@@ -87,7 +87,7 @@ public class ConsoleReporter extends ScheduledReporter {
 
         if (!histograms.isEmpty()) {
             printWithBanner("-- Histograms", '-');
-            for (Map.Entry<MetricName, Histogram> entry : histograms.entrySet()) {
+            for (Map.Entry<Metric, Histogram> entry : histograms.entrySet()) {
                 output.println(entry.getKey());
                 printHistogram(entry.getValue());
             }
@@ -96,7 +96,7 @@ public class ConsoleReporter extends ScheduledReporter {
 
         if (!meters.isEmpty()) {
             printWithBanner("-- Meters", '-');
-            for (Map.Entry<MetricName, Metered> entry : meters.entrySet()) {
+            for (Map.Entry<Metric, Metered> entry : meters.entrySet()) {
                 output.println(entry.getKey());
                 printMeter(entry.getValue());
             }
@@ -105,7 +105,7 @@ public class ConsoleReporter extends ScheduledReporter {
 
         if (!timers.isEmpty()) {
             printWithBanner("-- Timers", '-');
-            for (Map.Entry<MetricName, Timer> entry : timers.entrySet()) {
+            for (Map.Entry<Metric, Timer> entry : timers.entrySet()) {
                 output.println(entry.getKey());
                 printTimer(entry.getValue());
             }
@@ -124,11 +124,11 @@ public class ConsoleReporter extends ScheduledReporter {
         output.printf(locale, "    15-minute rate = %2.2f events/%s%n", convertRate(meter.getM15Rate()), getRateUnit());
     }
 
-    private void printCounter(Map.Entry<MetricName, Counter> entry) {
+    private void printCounter(Map.Entry<Metric, Counter> entry) {
         output.printf(locale, "             count = %d%n", entry.getValue().getCount());
     }
 
-    private void printGauge(Map.Entry<MetricName, Gauge> entry) {
+    private void printGauge(Map.Entry<Metric, Gauge> entry) {
         output.printf(locale, "             value = %s%n", entry.getValue().getValue());
     }
 
