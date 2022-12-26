@@ -6,16 +6,19 @@ public class Metrics {
     private Metrics() {
     }
 
+    public static class Filters{
+        /**
+         * Matches all metrics, regardless of type or name.
+         */
+        public static final MetricFilter TRUE = new MetricFilter() {
+            @Override
+            public boolean matches(MetricName name, Metric metric) {
+                return true;
+            }
+        };
+    }
 
-    /**
-     * Matches all metrics, regardless of type or name.
-     */
-   public static final MetricFilter TRUE = new MetricFilter() {
-        @Override
-        public boolean matches(MetricName name, Metric metric) {
-            return true;
-        }
-    };
+
 
     /**
      * Shorthand method for backwards compatibility in creating metric names.

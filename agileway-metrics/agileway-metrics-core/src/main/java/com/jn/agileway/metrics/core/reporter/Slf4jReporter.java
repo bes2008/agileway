@@ -193,7 +193,7 @@ public class Slf4jReporter extends ScheduledReporter {
             this.prefix = "";
             this.rateUnit = TimeUnit.SECONDS;
             this.durationUnit = TimeUnit.MILLISECONDS;
-            this.filter = Metrics.TRUE;
+            this.filter = Metrics.Filters.TRUE;
             this.loggingLevel = LoggingLevel.INFO;
         }
 

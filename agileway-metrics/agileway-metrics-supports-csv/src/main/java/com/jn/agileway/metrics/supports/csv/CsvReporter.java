@@ -205,7 +205,7 @@ public class CsvReporter extends ScheduledReporter {
             this.rateUnit = TimeUnit.SECONDS;
             this.durationUnit = TimeUnit.MILLISECONDS;
             this.clock = Clocks.defaultClock();
-            this.filter = Metrics.TRUE;
+            this.filter = Metrics.Filters.TRUE;
             this.csvFileProvider = new FixedNameCsvFileProvider();
         }
 
