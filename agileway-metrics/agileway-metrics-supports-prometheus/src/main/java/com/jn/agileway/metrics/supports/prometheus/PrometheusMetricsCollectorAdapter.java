@@ -33,21 +33,17 @@ public class PrometheusMetricsCollectorAdapter extends Collector implements Coll
      * @param registry a metric registry to export in prometheus.
      */
     public PrometheusMetricsCollectorAdapter(MetricRegistry registry) {
-        this.registry = registry;
-        this.predicate = FixedPredicate.TRUE;
-        this.sampleBuilder = new DefaultSampleBuilder();
+        this(registry, FixedPredicate.TRUE);
     }
 
     /**
      * Creates a new DropwizardExports with a {@link DefaultSampleBuilder} and custom {@link MetricPredicate}.
      *
-     * @param registry     a metric registry to export in prometheus.
-     * @param metricFilter a custom metric filter.
+     * @param registry  a metric registry to export in prometheus.
+     * @param predicate a custom metric filter.
      */
-    public PrometheusMetricsCollectorAdapter(MetricRegistry registry, MetricPredicate metricFilter) {
-        this.registry = registry;
-        this.predicate = metricFilter;
-        this.sampleBuilder = new DefaultSampleBuilder();
+    public PrometheusMetricsCollectorAdapter(MetricRegistry registry, MetricPredicate predicate) {
+        this(registry, predicate, new DefaultSampleBuilder());
     }
 
     /**
@@ -55,19 +51,17 @@ public class PrometheusMetricsCollectorAdapter extends Collector implements Coll
      * @param sampleBuilder sampleBuilder to use to create prometheus samples.
      */
     public PrometheusMetricsCollectorAdapter(MetricRegistry registry, SampleBuilder sampleBuilder) {
-        this.registry = registry;
-        this.predicate = FixedPredicate.TRUE;
-        this.sampleBuilder = sampleBuilder;
+        this(registry, FixedPredicate.TRUE, sampleBuilder);
     }
 
     /**
      * @param registry      a metric registry to export in prometheus.
-     * @param metricFilter  a custom metric filter.
+     * @param predicate     a custom metric filter.
      * @param sampleBuilder sampleBuilder to use to create prometheus samples.
      */
-    public PrometheusMetricsCollectorAdapter(MetricRegistry registry, MetricPredicate metricFilter, SampleBuilder sampleBuilder) {
+    public PrometheusMetricsCollectorAdapter(MetricRegistry registry, MetricPredicate predicate, SampleBuilder sampleBuilder) {
         this.registry = registry;
-        this.predicate = metricFilter;
+        this.predicate = predicate;
         this.sampleBuilder = sampleBuilder;
     }
 
@@ -110,9 +104,9 @@ public class PrometheusMetricsCollectorAdapter extends Collector implements Coll
      * Export a histogram snapshot as a prometheus SUMMARY.
      *
      * @param metricName metric name.
-     * @param snapshot       the histogram snapshot.
-     * @param count          the total sample count for this snapshot.
-     * @param factor         a factor to apply to histogram values.
+     * @param snapshot   the histogram snapshot.
+     * @param count      the total sample count for this snapshot.
+     * @param factor     a factor to apply to histogram values.
      */
     MetricFamilySamples fromSnapshotAndCount(MetricName metricName, Snapshot snapshot, long count, double factor, String helpMessage) {
         List<MetricFamilySamples.Sample> samples = Collects.asList(
