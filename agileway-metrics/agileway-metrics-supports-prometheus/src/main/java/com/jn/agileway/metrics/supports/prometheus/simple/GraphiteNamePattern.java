@@ -1,9 +1,11 @@
 package com.jn.agileway.metrics.supports.prometheus.simple;
 
+import com.jn.langx.util.regexp.Regexp;
+import com.jn.langx.util.regexp.RegexpMatcher;
+import com.jn.langx.util.regexp.Regexps;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.jn.agileway.metrics.supports.prometheus.simple.MapperConfig.METRIC_GLOB_REGEX;
 
@@ -21,9 +23,9 @@ import static com.jn.agileway.metrics.supports.prometheus.simple.MapperConfig.ME
  * It contains logic to match a metric name and to extract named parameters from it.
  */
 class GraphiteNamePattern {
-    private static final Pattern VALIDATION_PATTERN = Pattern.compile(METRIC_GLOB_REGEX);
+    private static final Regexp VALIDATION_PATTERN = Regexps.compile(METRIC_GLOB_REGEX);
 
-    private Pattern pattern;
+    private Regexp pattern;
     private String patternStr;
 
     /**
@@ -60,7 +62,7 @@ class GraphiteNamePattern {
      * @return A parameter map where keys are named '${n}' where n is 0 based parameter position in the pattern.
      */
     Map<String, String> extractParameters(final String metricName) {
-        final Matcher matcher = this.pattern.matcher(metricName);
+        final RegexpMatcher matcher = this.pattern.matcher(metricName);
         final Map<String, String> params = new HashMap<String, String>();
         if (matcher.find()) {
             for (int i = 1; i <= matcher.groupCount(); i++) {
@@ -77,16 +79,16 @@ class GraphiteNamePattern {
      * @param pattern The pattern to use
      */
     private void initializePattern(final String pattern) {
-        final String[] split = pattern.split(Pattern.quote("*"), -1);
-        final StringBuilder escapedPattern = new StringBuilder(Pattern.quote(split[0]));
+        final String[] split = pattern.split(Regexps.quote("*"), -1);
+        final StringBuilder escapedPattern = new StringBuilder(Regexps.quote(split[0]));
         for (int i = 1; i < split.length; i++) {
-            String quoted = Pattern.quote(split[i]);
+            String quoted = Regexps.quote(split[i]);
             escapedPattern.append("([^.]*)").append(quoted);
         }
 
         final String regex = "^" + escapedPattern.toString() + "$";
         this.patternStr = regex;
-        this.pattern = Pattern.compile(regex);
+        this.pattern = Regexps.compile(regex);
     }
 
     String getPatternString() {

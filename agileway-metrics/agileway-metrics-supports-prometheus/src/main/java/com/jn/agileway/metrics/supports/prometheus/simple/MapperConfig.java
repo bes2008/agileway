@@ -1,8 +1,10 @@
 package com.jn.agileway.metrics.supports.prometheus.simple;
 
+import com.jn.langx.util.regexp.Regexp;
+import com.jn.langx.util.regexp.Regexps;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 /**
  * POJO containing info on how to map a graphite metric to a prometheus one.
@@ -25,8 +27,8 @@ public class MapperConfig {
     static final String METRIC_GLOB_REGEX = "^(\\*\\.|" + METRIC_PART_REGEX + "\\.)+(\\*|" + METRIC_PART_REGEX + ")$";
     // Labels validation.
     private static final String LABEL_REGEX = "^[a-zA-Z_][a-zA-Z0-9_]+$";
-    private static final Pattern MATCH_EXPRESSION_PATTERN = Pattern.compile(METRIC_GLOB_REGEX);
-    private static final Pattern LABEL_PATTERN = Pattern.compile(LABEL_REGEX);
+    private static final Regexp MATCH_EXPRESSION_PATTERN = Regexps.compile(METRIC_GLOB_REGEX);
+    private static final Regexp LABEL_PATTERN = Regexps.compile(LABEL_REGEX);
 
     /**
      * Regex used to match incoming metric name.
