@@ -23,15 +23,13 @@ import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 import com.jn.agileway.metrics.core.snapshot.ReservoirType;
+import com.jn.langx.util.Emptys;
 
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DefaultMetricManager implements MetricManager {
-
-    @SuppressWarnings("rawtypes")
-    final private static SortedMap emptySortedMap = new TreeMap();
 
     private Map<String, MetricRegistry> metricRegistryMap;
 
@@ -170,11 +168,11 @@ public class DefaultMetricManager implements MetricManager {
     @SuppressWarnings("unchecked")
     public SortedMap<MetricName, Gauge> getGauges(String group, MetricPredicate filter) {
         if (!this.enabled) {
-            return emptySortedMap;
+            return Emptys.EMPTY_TREE_MAP;
         }
         MetricRegistry metricRegistry = this.getMetricRegistryByGroup(group);
         if (metricRegistry == null) {
-            return emptySortedMap;
+            return Emptys.EMPTY_TREE_MAP;
         }
         return metricRegistry.getGauges(filter);
     }
@@ -183,12 +181,12 @@ public class DefaultMetricManager implements MetricManager {
     @SuppressWarnings("unchecked")
     public SortedMap<MetricName, Counter> getCounters(String group, MetricPredicate filter) {
         if (!this.enabled) {
-            return emptySortedMap;
+            return Emptys.EMPTY_TREE_MAP;
         }
 
         MetricRegistry metricRegistry = this.getMetricRegistryByGroup(group);
         if (metricRegistry == null) {
-            return emptySortedMap;
+            return Emptys.EMPTY_TREE_MAP;
         }
         return metricRegistry.getCounters(filter);
     }
@@ -197,40 +195,38 @@ public class DefaultMetricManager implements MetricManager {
     @SuppressWarnings("unchecked")
     public SortedMap<MetricName, Histogram> getHistograms(String group, MetricPredicate filter) {
         if (!this.enabled) {
-            return emptySortedMap;
+            return Emptys.EMPTY_TREE_MAP;
         }
 
         MetricRegistry metricRegistry = this.getMetricRegistryByGroup(group);
         if (metricRegistry == null) {
-            return emptySortedMap;
+            return Emptys.EMPTY_TREE_MAP;
         }
         return metricRegistry.getHistograms(filter);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public SortedMap<MetricName, Meter> getMeters(String group, MetricPredicate filter) {
         if (!this.enabled) {
-            return emptySortedMap;
+            return Emptys.EMPTY_TREE_MAP;
         }
 
         MetricRegistry metricRegistry = this.getMetricRegistryByGroup(group);
         if (metricRegistry == null) {
-            return emptySortedMap;
+            return Emptys.EMPTY_TREE_MAP;
         }
         return metricRegistry.getMeters(filter);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public SortedMap<MetricName, Timer> getTimers(String group, MetricPredicate filter) {
         if (!this.enabled) {
-            return emptySortedMap;
+            return Emptys.EMPTY_TREE_MAP;
         }
 
         MetricRegistry metricRegistry = this.getMetricRegistryByGroup(group);
         if (metricRegistry == null) {
-            return emptySortedMap;
+            return Emptys.EMPTY_TREE_MAP;
         }
         return metricRegistry.getTimers(filter);
     }
@@ -238,12 +234,12 @@ public class DefaultMetricManager implements MetricManager {
     @Override
     public SortedMap<MetricName, Compass> getCompasses(String group, MetricPredicate filter) {
         if (!this.enabled) {
-            return emptySortedMap;
+            return Emptys.EMPTY_TREE_MAP;
         }
 
         MetricRegistry metricRegistry = this.getMetricRegistryByGroup(group);
         if (metricRegistry == null) {
-            return emptySortedMap;
+            return Emptys.EMPTY_TREE_MAP;
         }
         return metricRegistry.getCompasses(filter);
     }
@@ -251,12 +247,12 @@ public class DefaultMetricManager implements MetricManager {
     @Override
     public SortedMap<MetricName, FastCompass> getFastCompasses(String group, MetricPredicate filter) {
         if (!this.enabled) {
-            return emptySortedMap;
+            return Emptys.EMPTY_TREE_MAP;
         }
 
         MetricRegistry metricRegistry = this.getMetricRegistryByGroup(group);
         if (metricRegistry == null) {
-            return emptySortedMap;
+            return Emptys.EMPTY_TREE_MAP;
         }
         return metricRegistry.getFastCompasses(filter);
     }
@@ -264,12 +260,12 @@ public class DefaultMetricManager implements MetricManager {
     @Override
     public SortedMap<MetricName, ClusterHistogram> getClusterHistogram(String group, MetricPredicate filter) {
         if (!this.enabled) {
-            return emptySortedMap;
+            return Emptys.EMPTY_TREE_MAP;
         }
 
         MetricRegistry metricRegistry = this.getMetricRegistryByGroup(group);
         if (metricRegistry == null) {
-            return emptySortedMap;
+            return Emptys.EMPTY_TREE_MAP;
         }
         return metricRegistry.getClusterHistograms(filter);
     }
