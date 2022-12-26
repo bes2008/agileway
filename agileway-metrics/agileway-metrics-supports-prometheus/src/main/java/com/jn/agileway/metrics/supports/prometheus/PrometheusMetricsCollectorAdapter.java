@@ -4,7 +4,7 @@ import com.jn.agileway.metrics.core.Meter;
 import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.*;
-import com.jn.agileway.metrics.core.metricset.MetricRegistry;
+import com.jn.agileway.metrics.core.meterset.MetricRegistry;
 import com.jn.agileway.metrics.core.predicate.FixedPredicate;
 import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;

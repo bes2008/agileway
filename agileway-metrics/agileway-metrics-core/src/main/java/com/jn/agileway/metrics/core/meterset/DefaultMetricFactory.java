@@ -1,4 +1,4 @@
-package com.jn.agileway.metrics.core.metricset;
+package com.jn.agileway.metrics.core.meterset;
 
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.predicate.FixedPredicate;

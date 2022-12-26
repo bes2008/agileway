@@ -1,4 +1,4 @@
-package com.jn.agileway.metrics.core.metricset;
+package com.jn.agileway.metrics.core.meterset;
 
 import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.meter.*;

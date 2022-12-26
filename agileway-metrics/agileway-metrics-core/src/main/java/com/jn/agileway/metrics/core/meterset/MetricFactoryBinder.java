@@ -1,4 +1,4 @@
-package com.jn.agileway.metrics.core.metricset;
+package com.jn.agileway.metrics.core.meterset;
 
 /**
  * @since 4.1.0

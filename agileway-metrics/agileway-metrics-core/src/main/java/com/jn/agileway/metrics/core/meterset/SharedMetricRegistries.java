@@ -1,4 +1,4 @@
-package com.jn.agileway.metrics.core.metricset;
+package com.jn.agileway.metrics.core.meterset;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
