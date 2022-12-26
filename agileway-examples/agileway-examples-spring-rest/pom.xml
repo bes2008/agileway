@@ -73,6 +73,10 @@
             <artifactId>agileway-redis</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.github.bes2008.solution.agileway.metrics</groupId>
+            <artifactId>agileway-metrics-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.github.bes2008.solution.agileway</groupId>
             <artifactId>agileway-shiro-redis</artifactId>
         </dependency>

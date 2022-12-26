@@ -225,6 +225,10 @@ public class MetricName implements Comparable<MetricName> {
         return new MetricName(key, tags, level);
     }
 
+    public MetricName tag(String tagKey, String tagValue) {
+        return tags(tagKey, tagValue);
+    }
+
     /**
      * Same as {@link #tags(Map)}, but takes a variadic list
      * of arguments.
@@ -240,7 +244,10 @@ public class MetricName implements Comparable<MetricName> {
         }
         int len = pairs.length;
         if (pairs.length % 2 != 0) {
-            len = pairs.length-1;
+            len = pairs.length - 1;
+        }
+        if (len <= 0) {
+            return this;
         }
 
         final Map<String, String> add = new HashMap<String, String>();
@@ -265,7 +272,8 @@ public class MetricName implements Comparable<MetricName> {
     public int hashCode() {
 
         if (!hashCodeCached) {
-            hashCode = Objs.hash(key, tags);;
+            hashCode = Objs.hash(key, tags);
+            ;
             hashCodeCached = true;
         }
 
