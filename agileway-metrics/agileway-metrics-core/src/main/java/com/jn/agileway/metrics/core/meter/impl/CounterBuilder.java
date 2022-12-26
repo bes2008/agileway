@@ -17,7 +17,7 @@ public class CounterBuilder extends AbstractMetricBuilder<Counter> {
 
     @Override
     public boolean isInstance(Metric metric) {
-        return Reflects.isInstance(Counter.class, metric.getClass());
+        return Reflects.isInstance(metric, Counter.class);
     }
 
     @Override

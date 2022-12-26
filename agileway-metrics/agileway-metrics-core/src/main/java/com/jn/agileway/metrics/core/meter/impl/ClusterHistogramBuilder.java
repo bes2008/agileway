@@ -28,7 +28,7 @@ public class ClusterHistogramBuilder extends AbstractMetricBuilder<ClusterHistog
 
     @Override
     public boolean isInstance(Metric metric) {
-        return Reflects.isInstance(ClusterHistogram.class, metric.getClass());
+        return Reflects.isInstance(metric, ClusterHistogram.class);
     }
 
     @Override

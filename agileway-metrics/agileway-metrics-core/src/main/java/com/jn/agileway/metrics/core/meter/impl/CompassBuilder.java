@@ -23,7 +23,7 @@ public class CompassBuilder extends ReservoirTypeMetricBuilder<Compass> {
 
     @Override
     public boolean isInstance(Metric metric) {
-        return Reflects.isInstance(Compass.class, metric.getClass());
+        return Reflects.isInstance(metric, Compass.class);
     }
 
     @Override

@@ -16,7 +16,7 @@ agileway:
       level: BODY
     waf:
       allowed:
-        methods: POST
+        methods: POST,GET
       xss:
         enabled: true
         predicates:

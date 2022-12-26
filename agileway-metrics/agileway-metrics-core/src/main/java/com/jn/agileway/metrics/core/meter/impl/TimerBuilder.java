@@ -15,7 +15,7 @@ public class TimerBuilder extends ReservoirTypeMetricBuilder<Timer> {
 
     @Override
     public boolean isInstance(Metric metric) {
-        return Reflects.isInstance(Timer.class, metric.getClass());
+        return Reflects.isInstance(metric, Timer.class);
     }
 
     @Override

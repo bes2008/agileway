@@ -17,7 +17,7 @@ public class FastCompassBuilder extends AbstractMetricBuilder<FastCompass> {
 
     @Override
     public boolean isInstance(Metric metric) {
-        return Reflects.isInstance(FastCompass.class, metric.getClass());
+        return Reflects.isInstance(metric, FastCompass.class);
     }
 
 

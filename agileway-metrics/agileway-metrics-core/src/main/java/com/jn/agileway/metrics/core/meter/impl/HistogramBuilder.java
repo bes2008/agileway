@@ -23,7 +23,7 @@ public class HistogramBuilder extends ReservoirTypeMetricBuilder<Histogram> {
 
     @Override
     public boolean isInstance(Metric metric) {
-        return Reflects.isInstance(Histogram.class, metric.getClass());
+        return Reflects.isInstance(metric, Histogram.class);
     }
 
     @Override

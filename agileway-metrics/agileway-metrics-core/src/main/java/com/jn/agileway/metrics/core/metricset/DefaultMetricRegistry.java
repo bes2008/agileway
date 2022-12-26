@@ -3,12 +3,12 @@ package com.jn.agileway.metrics.core.metricset;
 import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.MetricName;
 import com.jn.agileway.metrics.core.config.MetricsCollectPeriodConfig;
-import com.jn.agileway.metrics.core.predicate.FixedPredicate;
-import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.*;
 import com.jn.agileway.metrics.core.noop.*;
+import com.jn.agileway.metrics.core.predicate.FixedPredicate;
+import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.snapshot.ReservoirType;
 import com.jn.agileway.metrics.core.snapshot.ReservoirTypeBuilder;
 import com.jn.agileway.metrics.core.snapshot.ReservoirTypeMetricBuilder;
@@ -25,7 +25,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class DefaultMetricRegistry implements MetricRegistry {
 
-    private static final int DEFAULT_MAX_METRIC_COUNT = Integer.getInteger("com.jn.agileway.metrics.core.maxMetricCountPerRegistry", 5000);
+    private static final int DEFAULT_MAX_METRIC_COUNT = Integer.getInteger("com.jn.agileway.metrics.core.maxMetricCountPerRegistry", 50000);
 
     // 用于分桶计数统计间隔配置
     private static final MetricsCollectPeriodConfig config = new MetricsCollectPeriodConfig();
@@ -509,7 +509,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
     @SuppressWarnings("unchecked")
     private <T extends Metric> T getOrAdd(MetricName name, MetricBuilder<T> builder) {
         final Metric metric = metrics.get(name);
-        if (builder.isInstance(metric)) {
+        if (metric != null && builder.isInstance(metric)) {
             return (T) metric;
         } else if (metric == null) {
             try {
@@ -519,7 +519,9 @@ public class DefaultMetricRegistry implements MetricRegistry {
                 }
                 builder = builder.newBuilder().interval(config.period(name.getMetricLevel()));
                 T newMetric = builder.newMetric(name);
-                if (newMetric == null) return null;
+                if (newMetric == null) {
+                    return null;
+                }
                 return register(name, newMetric);
             } catch (IllegalArgumentException e) {
                 final Metric added = metrics.get(name);
@@ -536,7 +538,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
     @SuppressWarnings("unchecked")
     private <T extends Metric> T getOrAdd(MetricName name, ReservoirTypeBuilder<T> builder, ReservoirType type) {
         final Metric metric = metrics.get(name);
-        if (builder.isInstance(metric)) {
+        if (metric != null && builder.isInstance(metric)) {
             return (T) metric;
         } else if (metric == null) {
             try {
@@ -544,7 +546,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
                 if (metrics.size() >= maxMetricCount) {
                     return null;
                 }
-                T newMetric = ((ReservoirTypeMetricBuilder<T>)builder.newBuilder().interval(config.period(name.getMetricLevel()))).newMetric(name, type);
+                T newMetric = ((ReservoirTypeMetricBuilder<T>) builder.newBuilder().interval(config.period(name.getMetricLevel()))).newMetric(name, type);
                 if (newMetric == null) return null;
                 return register(name, newMetric);
             } catch (IllegalArgumentException e) {
@@ -562,7 +564,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
     @SuppressWarnings("unchecked")
     private <T extends Metric> T getOrAddClusterHistogram(MetricName name, ClusterHistogramBuilder builder, long[] buckets) {
         final Metric metric = metrics.get(name);
-        if (builder.isInstance(metric)) {
+        if (metric != null && builder.isInstance(metric)) {
             return (T) metric;
         } else if (metric == null) {
             try {
@@ -570,9 +572,11 @@ public class DefaultMetricRegistry implements MetricRegistry {
                 if (metrics.size() >= maxMetricCount) {
                     return null;
                 }
-                ClusterHistogram newMetric = ((ClusterHistogramBuilder)builder.newBuilder().interval(config.period(name.getMetricLevel()))).newMetric(name, buckets);
-                if (newMetric == null) return null;
-                return register(name, (T)newMetric);
+                ClusterHistogram newMetric = ((ClusterHistogramBuilder) builder.newBuilder().interval(config.period(name.getMetricLevel()))).newMetric(name, buckets);
+                if (newMetric == null) {
+                    return null;
+                }
+                return register(name, (T) newMetric);
             } catch (IllegalArgumentException e) {
                 final Metric added = metrics.get(name);
                 if (builder.isInstance(added)) {
