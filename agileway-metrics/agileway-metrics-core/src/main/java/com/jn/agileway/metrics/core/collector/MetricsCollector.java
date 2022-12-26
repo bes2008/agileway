@@ -113,7 +113,7 @@ public abstract class MetricsCollector implements Collector {
                 .withType(type)
                 .withTimestamp(timestamp)
                 .withValue(value)
-                .withTags(merge(globalTags, fullName.getTags()))
+                .withTags(merge(globalTags, fullName.getTagsAsMap()))
                 .withLevel(fullName.getMetricLevel())
                 .withInterval(interval)
                 .build();

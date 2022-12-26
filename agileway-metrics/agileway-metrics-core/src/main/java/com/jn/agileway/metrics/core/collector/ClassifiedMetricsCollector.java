@@ -86,7 +86,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
 
         MetricObject metricObject = MetricObject.named(normalizedName).withTimestamp(guageTimestamp)
                 .withType(MetricObject.MetricType.COUNTER).withValue(counter.getCount())
-                .withLevel(name.getMetricLevel()).withTags(merge(globalTags, name.getTags()))
+                .withLevel(name.getMetricLevel()).withTags(merge(globalTags, name.getTagsAsMap()))
                 .withMeterName(COUNTER_NAME).build();
 
         this.addMetric(metricObject);
@@ -107,7 +107,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
 
         MetricObject metricObject = MetricObject.named(name.getKey()).withValue(gauge.getValue())
                 .withTimestamp(guageTimestamp).withType(MetricObject.MetricType.GAUGE).withLevel(name.getMetricLevel())
-                .withTags(merge(globalTags, name.getTags())).withMeterName(GAUGE_NAME).build();
+                .withTags(merge(globalTags, name.getTagsAsMap())).withMeterName(GAUGE_NAME).build();
 
         this.addMetric(metricObject);
     }
@@ -529,7 +529,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
     private MetricsCollector addMetric(MetricName fullName, Object value, long timestamp, MetricObject.MetricType type,
                                        String meterName) {
         MetricObject obj = MetricObject.named(fullName.getKey()).withType(type).withTimestamp(timestamp)
-                .withValue(value).withTags(merge(globalTags, fullName.getTags())).withLevel(fullName.getMetricLevel())
+                .withValue(value).withTags(merge(globalTags, fullName.getTagsAsMap())).withLevel(fullName.getMetricLevel())
                 .withMeterName(meterName).build();
         return addMetric(obj);
     }

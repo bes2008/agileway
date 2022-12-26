@@ -1,6 +1,9 @@
 package com.jn.agileway.metrics.core;
 
+import com.jn.agileway.metrics.core.tag.TagList;
+import com.jn.agileway.metrics.core.tag.Tags;
 import com.jn.langx.util.Objs;
+import com.jn.langx.util.collection.Collects;
 
 import java.util.*;
 
@@ -47,7 +50,7 @@ public class MetricName implements Comparable<MetricName> {
     public static final MetricName EMPTY = new MetricName();
 
     private final String key;
-    private final Map<String, String> tags;
+    private final TagList tags;
     // the level to indicate the importance of a metric
     private MetricLevel level;
 
@@ -56,11 +59,11 @@ public class MetricName implements Comparable<MetricName> {
     private boolean hashCodeCached = false;
 
     public MetricName() {
-        this(null, null, null);
+        this(null, (Map<String, String>) null, null);
     }
 
     public MetricName(String key) {
-        this(key, null, null);
+        this(key, (Map<String, String>) null, null);
     }
 
     public MetricName(String key, Map<String, String> tags) {
@@ -68,12 +71,16 @@ public class MetricName implements Comparable<MetricName> {
     }
 
     public MetricName(String key, MetricLevel level) {
-        this(key, null, level);
+        this(key, (Map<String, String>) null, level);
     }
 
     public MetricName(String key, Map<String, String> tags, MetricLevel level) {
+        this(key, Tags.listOf(tags), level);
+    }
+
+    public MetricName(String key, TagList tags, MetricLevel level) {
         this.key = key;
-        this.tags = checkTags(tags);
+        this.tags = Tags.listOf(tags);
         this.level = level == null ? MetricLevel.NORMAL : level;
     }
 
@@ -106,7 +113,7 @@ public class MetricName implements Comparable<MetricName> {
             }
 
             if (!part.getTags().isEmpty())
-                tags.putAll(part.getTags());
+                tags.putAll(part.getTagsAsMap());
         }
 
         MetricLevel level = firstName == null ? null : firstName.getMetricLevel();
@@ -149,20 +156,20 @@ public class MetricName implements Comparable<MetricName> {
         return builder.toString();
     }
 
-    private Map<String, String> checkTags(Map<String, String> tags) {
-        if (tags == null || tags.isEmpty()) {
-            return EMPTY_TAGS;
-        }
-
-        return Collections.unmodifiableMap(tags);
-    }
 
     public String getKey() {
         return key;
     }
 
-    public Map<String, String> getTags() {
+    public TagList getTags() {
         return tags;
+    }
+
+    public Map<String,String> getTagsAsMap(){
+        if( Objs.isEmpty(this.tags)){
+            return Collects.emptyHashMap(true);
+        }
+        return this.tags.asMap();
     }
 
     /**
@@ -215,6 +222,7 @@ public class MetricName implements Comparable<MetricName> {
         return inheritTags ? new MetricName(next, tags, level) : new MetricName(next, level);
     }
 
+
     /**
      * Add tags to a metric name and return the newly created MetricName.
      *
@@ -223,7 +231,7 @@ public class MetricName implements Comparable<MetricName> {
      */
     public MetricName tags(Map<String, String> add) {
         final Map<String, String> tags = new HashMap<String, String>(add);
-        tags.putAll(this.tags);
+        tags.putAll(this.getTagsAsMap());
         return new MetricName(key, tags, level);
     }
 
@@ -317,7 +325,7 @@ public class MetricName implements Comparable<MetricName> {
         if (c != 0)
             return c;
 
-        return compareTags(tags, o.getTags());
+        return compareTags(this.getTagsAsMap(), o.getTagsAsMap());
     }
 
     private int compareName(String left, String right) {

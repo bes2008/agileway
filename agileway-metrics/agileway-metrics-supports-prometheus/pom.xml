@@ -9,11 +9,11 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>agileway-metrics-supports-jdk</artifactId>
+    <artifactId>agileway-metrics-supports-prometheus</artifactId>
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
     <properties>
-        <maven.compiler.source>1.6</maven.compiler.source>
-        <maven.compiler.target>1.6</maven.compiler.target>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -21,6 +21,11 @@
             <groupId>io.github.bes2008.solution.agileway.metrics</groupId>
             <artifactId>agileway-metrics-core</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient</artifactId>
+            <version>0.16.0</version>
+        </dependency>
     </dependencies>
+
 </project>
