@@ -327,11 +327,11 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
                         metricValue1 = errors.get(time);
                     }
 
-                    this.addMetric(name.tagged("error", errorCode), "error_bucket_count", metricValue1, time,
+                    this.addMetric(name.tags("error", errorCode), "error_bucket_count", metricValue1, time,
                             MetricObject.MetricType.DELTA, COMPASS_NAME);
                 }
 
-                this.addMetric(name.tagged("error", errorCode), "error.count", metricValue.getCount(), guageTimestamp,
+                this.addMetric(name.tags("error", errorCode), "error.count", metricValue.getCount(), guageTimestamp,
                         MetricObject.MetricType.COUNTER, COMPASS_NAME);
 
             }
@@ -492,7 +492,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
             Map<Long, Long> bucketAndValues = bucketValues.get(curTime);
             long[] buckets = clusterHistogram.getBuckets();
             for (long bucket : buckets) {
-                this.addMetric(name.tagged("bucket", bucket == Long.MAX_VALUE ? "+Inf" : Long.toString(bucket)),
+                this.addMetric(name.tags("bucket", bucket == Long.MAX_VALUE ? "+Inf" : Long.toString(bucket)),
                         "cluster_percentile", bucketAndValues.containsKey(bucket) ? bucketAndValues.get(bucket) : 0L,
                         curTime, MetricObject.MetricType.PERCENTILE);
             }

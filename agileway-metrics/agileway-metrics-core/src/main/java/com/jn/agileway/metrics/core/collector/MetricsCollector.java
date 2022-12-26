@@ -204,7 +204,7 @@ public abstract class MetricsCollector implements Collector {
         if (values.containsKey(start)) {
             Map<Long, Long> bucketAndValues = values.get(start);
             for (long bucket : buckets) {
-                this.addMetric(name.tagged("bucket", bucket == Long.MAX_VALUE ? "+Inf" : Long.toString(bucket)),
+                this.addMetric(name.tags("bucket", bucket == Long.MAX_VALUE ? "+Inf" : Long.toString(bucket)),
                         "cluster_percentile", bucketAndValues.containsKey(bucket) ? bucketAndValues.get(bucket) : 0L,
                         start, MetricObject.MetricType.PERCENTILE);
             }
@@ -248,10 +248,10 @@ public abstract class MetricsCollector implements Collector {
         int countInterval = compass.getInstantCountInterval();
         long start = getNormalizedStartTime(timestamp, countInterval);
         for (Map.Entry<String, BucketCounter> entry : compass.getErrorCodeCounts().entrySet()) {
-            this.addMetric(name, MetricName.build("error.count").tagged("error", entry.getKey()),
+            this.addMetric(name, MetricName.build("error.count").tags("error", entry.getKey()),
                     entry.getValue().getCount(), timestamp, MetricObject.MetricType.COUNTER,
                     metricsCollectPeriodConfig.period(name.getMetricLevel()));
-            MetricName errorName = MetricName.build("error_bucket_count").tagged("error", entry.getKey());
+            MetricName errorName = MetricName.build("error_bucket_count").tags("error", entry.getKey());
             Map<Long, Long> errorCodeBucket = entry.getValue().getBucketCounts();
             if (errorCodeBucket.containsKey(start)) {
                 this.addMetric(name, errorName, errorCodeBucket.get(start), start,

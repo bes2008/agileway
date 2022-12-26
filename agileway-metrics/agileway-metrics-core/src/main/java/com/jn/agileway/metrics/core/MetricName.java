@@ -190,37 +190,37 @@ public class MetricName implements Comparable<MetricName> {
      * @param add Tags to add.
      * @return A newly created metric name with the specified tags associated with it.
      */
-    public MetricName tagged(Map<String, String> add) {
+    public MetricName tags(Map<String, String> add) {
         final Map<String, String> tags = new HashMap<String, String>(add);
         tags.putAll(this.tags);
         return new MetricName(key, tags, level);
     }
 
     /**
-     * Same as {@link #tagged(Map)}, but takes a variadic list
+     * Same as {@link #tags(Map)}, but takes a variadic list
      * of arguments.
      *
      * @param pairs An even list of strings acting as key-value pairs.
      * @return A newly created metric name with the specified tags associated
      * with it.
-     * @see #tagged(Map)
+     * @see #tags(Map)
      */
-    public MetricName tagged(String... pairs) {
+    public MetricName tags(String... pairs) {
         if (pairs == null) {
             return this;
         }
-
+        int len = pairs.length;
         if (pairs.length % 2 != 0) {
-            throw new IllegalArgumentException("Argument count must be even");
+            len = pairs.length-1;
         }
 
         final Map<String, String> add = new HashMap<String, String>();
 
-        for (int i = 0; i < pairs.length; i += 2) {
+        for (int i = 0; i < len; i += 2) {
             add.put(pairs[i], pairs[i + 1]);
         }
 
-        return tagged(add);
+        return tags(add);
     }
 
     @Override
