@@ -40,6 +40,13 @@
                 <optional>true</optional>
             </dependency>
             <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <optional>true</optional>
+            </dependency>
+
+
+            <dependency>
                 <groupId>io.activej</groupId>
                 <artifactId>activej-serializer</artifactId>
                 <version>${activej.serializer.version}</version>
