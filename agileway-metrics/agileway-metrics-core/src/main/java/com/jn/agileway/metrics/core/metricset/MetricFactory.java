@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * @since 4.1.0
  */
-public interface MetricFactory {
+public interface MetricFactory{
 
     /**
      * Create a {@link Meter} metric in given group, and name.

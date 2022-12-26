@@ -18,21 +18,21 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * report MetricManager 里所有的metrics
+ * report factory 里所有的metrics
  *
  * @see ScheduledReporter
  *
  * @since 4.1.0
  */
-public abstract class MetricManagerReporter implements Closeable {
+public abstract class MetricSetReporter implements Closeable {
 
-    private static final Logger LOG = Loggers.getLogger(MetricManagerReporter.class);
+    private static final Logger LOG = Loggers.getLogger(MetricSetReporter.class);
     private static final AtomicInteger FACTORY_ID = new AtomicInteger();
 
     protected final double durationFactor;
     protected final double rateFactor;
 
-    private final MetricFactory metricManager;
+    private final MetricFactory factory;
     private final ScheduledExecutorService executor;
     private final String durationUnit;
     private final String rateUnit;
@@ -59,7 +59,7 @@ public abstract class MetricManagerReporter implements Closeable {
                 report();
             } catch (Throwable ex) {
                 LOG.error("Throwable RuntimeException thrown from {}#report. Exception was suppressed.",
-                        MetricManagerReporter.this.getClass().getSimpleName(), ex);
+                        MetricSetReporter.this.getClass().getSimpleName(), ex);
             } finally {
                 timeMetricLevelPredicate.afterReport();
             }
@@ -67,7 +67,7 @@ public abstract class MetricManagerReporter implements Closeable {
     };
 
     /**
-     * Creates a new {@link MetricManagerReporter} instance.
+     * Creates a new {@link MetricSetReporter} instance.
      *
      * @param metricManager the {@link MetricFactory} containing the metrics this
      *                      reporter will report
@@ -76,19 +76,19 @@ public abstract class MetricManagerReporter implements Closeable {
      * @param rateUnit      a unit of time
      * @param durationUnit  a unit of time
      */
-    protected MetricManagerReporter(MetricFactory metricManager,
-                                    String name,
-                                    MetricPredicate predicate,
-                                    MetricsCollectPeriodConfig metricsReportPeriodConfig,
-                                    TimeUnit rateUnit,
-                                    TimeUnit durationUnit) {
+    protected MetricSetReporter(MetricFactory metricManager,
+                                String name,
+                                MetricPredicate predicate,
+                                MetricsCollectPeriodConfig metricsReportPeriodConfig,
+                                TimeUnit rateUnit,
+                                TimeUnit durationUnit) {
         this(metricManager, predicate, new TimeMetricLevelPredicate(metricsReportPeriodConfig), rateUnit, durationUnit,
                 Executors.newSingleThreadScheduledExecutor(
                         new NamedThreadFactory(name + '-' + FACTORY_ID.incrementAndGet())));
     }
 
     /**
-     * Creates a new {@link MetricManagerReporter} instance.
+     * Creates a new {@link MetricSetReporter} instance.
      *
      * @param metricManager the {@link MetricFactory} containing the metrics this
      *                      reporter will report
@@ -97,32 +97,32 @@ public abstract class MetricManagerReporter implements Closeable {
      * @param rateUnit      a unit of time
      * @param durationUnit  a unit of time
      */
-    protected MetricManagerReporter(MetricFactory metricManager,
-                                    String name,
-                                    MetricPredicate predicate,
-                                    TimeMetricLevelPredicate timeMetricLevelFilter,
-                                    TimeUnit rateUnit,
-                                    TimeUnit durationUnit) {
+    protected MetricSetReporter(MetricFactory metricManager,
+                                String name,
+                                MetricPredicate predicate,
+                                TimeMetricLevelPredicate timeMetricLevelFilter,
+                                TimeUnit rateUnit,
+                                TimeUnit durationUnit) {
         this(metricManager, predicate, timeMetricLevelFilter, rateUnit, durationUnit,
                 Executors.newSingleThreadScheduledExecutor(
                         new NamedThreadFactory(name + '-' + FACTORY_ID.incrementAndGet())));
     }
 
     /**
-     * Creates a new {@link MetricManagerReporter} instance.
+     * Creates a new {@link MetricSetReporter} instance.
      *
      * @param metricManager the {@link MetricFactory} containing the metrics this
      *                      reporter will report
      * @param predicate        the predicate for which metrics to report
      * @param executor      the executor to use while scheduling reporting of metrics.
      */
-    protected MetricManagerReporter(MetricFactory metricManager,
-                                    MetricPredicate predicate,
-                                    TimeMetricLevelPredicate timeMetricLevelFilter,
-                                    TimeUnit rateUnit,
-                                    TimeUnit durationUnit,
-                                    ScheduledExecutorService executor) {
-        this.metricManager = metricManager;
+    protected MetricSetReporter(MetricFactory metricManager,
+                                MetricPredicate predicate,
+                                TimeMetricLevelPredicate timeMetricLevelFilter,
+                                TimeUnit rateUnit,
+                                TimeUnit durationUnit,
+                                ScheduledExecutorService executor) {
+        this.factory = metricManager;
         this.executor = executor;
         this.rateFactor = rateUnit.toSeconds(1);
         this.rateUnit = calculateRateUnit(rateUnit);
@@ -206,7 +206,7 @@ public abstract class MetricManagerReporter implements Closeable {
     public void report() {
         synchronized (this) {
 
-            Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> categoryMetrics = metricManager
+            Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> categoryMetrics = factory
                     .getAllCategoryMetrics(compositeMetricPredicate);
 
             report((Map<MetricName, Gauge>) categoryMetrics.get(Gauge.class),

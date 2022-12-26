@@ -62,7 +62,7 @@ public class Metrics {
         return name(klass.getName(), names);
     }
 
-    public static final MetricFactory NOOP_METRIC_MANAGER = new NoopMetricFactory();
+    public static final MetricFactory NOOP_METRIC_FACTORY = new NoopMetricFactory();
     private static final String BINDER_CLASS = Reflects.getFQNClassName(MetricFactoryBinder.class);
     private static volatile MetricFactory metricFactory;
 
@@ -266,7 +266,7 @@ public class Metrics {
                         Method getMetricManager = binderClazz.getMethod("getMetricFactory");
                         metricFactory = (MetricFactory) getMetricManager.invoke(binderObject);
                     } catch (Exception e) {
-                        metricFactory = NOOP_METRIC_MANAGER;
+                        metricFactory = NOOP_METRIC_FACTORY;
                     }
                 }
             }

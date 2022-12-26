@@ -18,6 +18,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultMetricFactory implements MetricFactory {
 
+    /**
+     * key: group
+     * value: registry
+     */
     private Map<String, MetricRegistry> metricRegistryMap;
 
     private volatile boolean enabled;
@@ -30,7 +34,7 @@ public class DefaultMetricFactory implements MetricFactory {
     @Override
     public Meter getMeter(String group, MetricName name) {
         if (!this.enabled) {
-            return Metrics.NOOP_METRIC_MANAGER.getMeter(group, name);
+            return Metrics.NOOP_METRIC_FACTORY.getMeter(group, name);
         }
         return getMetricRegistryByGroup(group).meter(name);
     }
@@ -38,7 +42,7 @@ public class DefaultMetricFactory implements MetricFactory {
     @Override
     public Counter getCounter(String group, MetricName name) {
         if (!this.enabled) {
-            return Metrics.NOOP_METRIC_MANAGER.getCounter(group, name);
+            return Metrics.NOOP_METRIC_FACTORY.getCounter(group, name);
         }
         return getMetricRegistryByGroup(group).counter(name);
     }
@@ -46,7 +50,7 @@ public class DefaultMetricFactory implements MetricFactory {
     @Override
     public Histogram getHistogram(String group, MetricName name) {
         if (!this.enabled) {
-            return Metrics.NOOP_METRIC_MANAGER.getHistogram(group, name);
+            return Metrics.NOOP_METRIC_FACTORY.getHistogram(group, name);
         }
         return getMetricRegistryByGroup(group).histogram(name);
     }
@@ -54,7 +58,7 @@ public class DefaultMetricFactory implements MetricFactory {
     @Override
     public Histogram getHistogram(String group, MetricName name, ReservoirType type) {
         if (!this.enabled) {
-            return Metrics.NOOP_METRIC_MANAGER.getHistogram(group, name, type);
+            return Metrics.NOOP_METRIC_FACTORY.getHistogram(group, name, type);
         }
         return getMetricRegistryByGroup(group).histogram(name, type);
     }
@@ -62,7 +66,7 @@ public class DefaultMetricFactory implements MetricFactory {
     @Override
     public Timer getTimer(String group, MetricName name) {
         if (!this.enabled) {
-            return Metrics.NOOP_METRIC_MANAGER.getTimer(group, name);
+            return Metrics.NOOP_METRIC_FACTORY.getTimer(group, name);
         }
         return getMetricRegistryByGroup(group).timer(name);
     }
@@ -70,7 +74,7 @@ public class DefaultMetricFactory implements MetricFactory {
     @Override
     public Timer getTimer(String group, MetricName name, ReservoirType type) {
         if (!this.enabled) {
-            return Metrics.NOOP_METRIC_MANAGER.getTimer(group, name, type);
+            return Metrics.NOOP_METRIC_FACTORY.getTimer(group, name, type);
         }
         return getMetricRegistryByGroup(group).timer(name, type);
     }
@@ -78,7 +82,7 @@ public class DefaultMetricFactory implements MetricFactory {
     @Override
     public Compass getCompass(String group, MetricName name) {
         if (!this.enabled) {
-            return Metrics.NOOP_METRIC_MANAGER.getCompass(group, name);
+            return Metrics.NOOP_METRIC_FACTORY.getCompass(group, name);
         }
         return getMetricRegistryByGroup(group).compass(name);
     }
@@ -86,7 +90,7 @@ public class DefaultMetricFactory implements MetricFactory {
     @Override
     public Compass getCompass(String group, MetricName name, ReservoirType type) {
         if (!this.enabled) {
-            return Metrics.NOOP_METRIC_MANAGER.getCompass(group, name, type);
+            return Metrics.NOOP_METRIC_FACTORY.getCompass(group, name, type);
         }
         return getMetricRegistryByGroup(group).compass(name, type);
     }
@@ -94,7 +98,7 @@ public class DefaultMetricFactory implements MetricFactory {
     @Override
     public FastCompass getFastCompass(String group, MetricName name) {
         if (!this.enabled) {
-            return Metrics.NOOP_METRIC_MANAGER.getFastCompass(group, name);
+            return Metrics.NOOP_METRIC_FACTORY.getFastCompass(group, name);
         }
         return getMetricRegistryByGroup(group).fastCompass(name);
     }
@@ -102,7 +106,7 @@ public class DefaultMetricFactory implements MetricFactory {
     @Override
     public ClusterHistogram getClusterHistogram(String group, MetricName name, long[] buckets) {
         if (!this.enabled) {
-            return Metrics.NOOP_METRIC_MANAGER.getClusterHistogram(group, name, buckets);
+            return Metrics.NOOP_METRIC_FACTORY.getClusterHistogram(group, name, buckets);
         }
         return getMetricRegistryByGroup(group).clusterHistogram(name, buckets);
     }
