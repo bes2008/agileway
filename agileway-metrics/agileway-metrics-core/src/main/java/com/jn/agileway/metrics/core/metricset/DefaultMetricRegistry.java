@@ -602,14 +602,11 @@ public class DefaultMetricRegistry implements MetricRegistry {
     private <T extends Metric> SortedMap<MetricName, T> getMetrics(Class<T> klass, MetricPredicate predicate) {
         final TreeMap<MetricName, T> timers = new TreeMap<MetricName, T>();
         for (Map.Entry<MetricName, Metric> entry : metrics.entrySet()) {
-            if (klass.isInstance(entry.getValue()) && predicate.test(entry.getKey(),
-                    entry.getValue())) {
+            if (klass.isInstance(entry.getValue()) && predicate.test(entry.getKey(), entry.getValue())) {
                 timers.put(entry.getKey(), (T) entry.getValue());
             } else if (entry.getValue() instanceof DynamicMetricSet) {
-                for (Map.Entry<MetricName, Metric> dynamicEntry :
-                        ((DynamicMetricSet) entry.getValue()).getDynamicMetrics().entrySet()) {
-                    if (klass.isInstance(dynamicEntry.getValue()) &&
-                            predicate.test(dynamicEntry.getKey(), dynamicEntry.getValue())) {
+                for (Map.Entry<MetricName, Metric> dynamicEntry :  ((DynamicMetricSet) entry.getValue()).getDynamicMetrics().entrySet()) {
+                    if (klass.isInstance(dynamicEntry.getValue()) && predicate.test(dynamicEntry.getKey(), dynamicEntry.getValue())) {
                         timers.put(dynamicEntry.getKey(), (T) dynamicEntry.getValue());
                     }
                 }
