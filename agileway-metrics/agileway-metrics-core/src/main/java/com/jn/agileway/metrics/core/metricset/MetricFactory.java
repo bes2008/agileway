@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 
-public interface MetricManager {
+public interface MetricFactory {
 
     /**
      * Create a {@link Meter} metric in given group, and name.

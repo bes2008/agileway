@@ -3,7 +3,7 @@ package com.jn.agileway.metrics.core.noop;
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.predicate.FixedPredicate;
 import com.jn.agileway.metrics.core.predicate.MetricPredicate;
-import com.jn.agileway.metrics.core.metricset.MetricManager;
+import com.jn.agileway.metrics.core.metricset.MetricFactory;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
@@ -16,7 +16,7 @@ import java.util.*;
 /**
  * IMetricManager的空实现
  */
-public class NoopMetricManager implements MetricManager {
+public class NoopMetricManager implements MetricFactory {
 
 
     @Override

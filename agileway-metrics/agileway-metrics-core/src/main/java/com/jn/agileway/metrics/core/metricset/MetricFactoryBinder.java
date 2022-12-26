@@ -16,21 +16,21 @@
  */
 package com.jn.agileway.metrics.core.metricset;
 
-public class MetricManagerBinder {
+public class MetricFactoryBinder {
 
-    private static final MetricManagerBinder instance = new MetricManagerBinder();
+    private static final MetricFactoryBinder instance = new MetricFactoryBinder();
 
-    private MetricManager manager;
+    private MetricFactory factory;
 
-    private MetricManagerBinder() {
-        manager = new DefaultMetricManager();
+    private MetricFactoryBinder() {
+        factory = new DefaultMetricManager();
     }
 
-    public static MetricManagerBinder getSingleton() {
+    public static MetricFactoryBinder getSingleton() {
         return instance;
     }
 
-    public MetricManager getMetricManager() {
-        return manager;
+    public MetricFactory getMetricFactory() {
+        return factory;
     }
 }
