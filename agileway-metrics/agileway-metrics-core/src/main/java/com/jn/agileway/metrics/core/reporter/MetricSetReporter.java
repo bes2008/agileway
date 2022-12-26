@@ -8,6 +8,7 @@ import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.metricset.MetricFactory;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
+import com.jn.langx.util.concurrent.CommonThreadFactory;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
@@ -15,7 +16,6 @@ import java.io.Closeable;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * report factory 里所有的metrics
@@ -27,7 +27,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public abstract class MetricSetReporter implements Closeable {
 
     private static final Logger LOG = Loggers.getLogger(MetricSetReporter.class);
-    private static final AtomicInteger FACTORY_ID = new AtomicInteger();
 
     protected final double durationFactor;
     protected final double rateFactor;
@@ -83,8 +82,7 @@ public abstract class MetricSetReporter implements Closeable {
                                 TimeUnit rateUnit,
                                 TimeUnit durationUnit) {
         this(metricManager, predicate, new TimeMetricLevelPredicate(metricsReportPeriodConfig), rateUnit, durationUnit,
-                Executors.newSingleThreadScheduledExecutor(
-                        new NamedThreadFactory(name + '-' + FACTORY_ID.incrementAndGet())));
+                Executors.newSingleThreadScheduledExecutor( new CommonThreadFactory(name,true)));
     }
 
     /**
@@ -104,8 +102,7 @@ public abstract class MetricSetReporter implements Closeable {
                                 TimeUnit rateUnit,
                                 TimeUnit durationUnit) {
         this(metricManager, predicate, timeMetricLevelFilter, rateUnit, durationUnit,
-                Executors.newSingleThreadScheduledExecutor(
-                        new NamedThreadFactory(name + '-' + FACTORY_ID.incrementAndGet())));
+                Executors.newSingleThreadScheduledExecutor(new CommonThreadFactory(name, true)));
     }
 
     /**
@@ -260,28 +257,4 @@ public abstract class MetricSetReporter implements Closeable {
         return s.substring(0, s.length() - 1);
     }
 
-    /**
-     * A simple named thread factory.
-     */
-    private static class NamedThreadFactory implements ThreadFactory {
-        private final ThreadGroup group;
-        private final AtomicInteger threadNumber = new AtomicInteger(1);
-        private final String namePrefix;
-
-        private NamedThreadFactory(String name) {
-            final SecurityManager s = System.getSecurityManager();
-            this.group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
-            this.namePrefix = "metrics-" + name + "-thread-";
-        }
-
-        @Override
-        public Thread newThread(Runnable r) {
-            final Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
-            t.setDaemon(true);
-            if (t.getPriority() != Thread.NORM_PRIORITY) {
-                t.setPriority(Thread.NORM_PRIORITY);
-            }
-            return t;
-        }
-    }
 }
