@@ -17,7 +17,7 @@
 package com.jn.agileway.metrics.core.collector;
 
 import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.filter.MetricFilter;
+import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.MetricLevel;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
@@ -59,7 +59,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
     private boolean advancedMetricsReport = false;
 
     ClassifiedMetricsCollector(Map<String, String> globalTags, double rateFactor, double durationFactor,
-                               MetricFilter filter) {
+                               MetricPredicate filter) {
         super(globalTags, rateFactor, durationFactor, filter);
         metrics = new HashMap<MetricLevel, Map<Long, List<MetricObject>>>();
     }
@@ -512,7 +512,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
             return this;
         }
 
-        if ((filter == null || filter.accept(MetricName.build(object.getMetric()), null))
+        if ((filter == null || filter.test(MetricName.build(object.getMetric()), null))
                 && object.getValue() != null) {
 
             MetricLevel level = object.getMetricLevel();

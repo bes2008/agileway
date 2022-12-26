@@ -17,7 +17,7 @@
 package com.jn.agileway.metrics.core.reporter;
 
 import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.filter.MetricFilter;
+import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.metricset.MetricRegistry;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
@@ -46,7 +46,7 @@ public class Slf4jReporter extends ScheduledReporter {
                           String prefix,
                           TimeUnit rateUnit,
                           TimeUnit durationUnit,
-                          MetricFilter filter) {
+                          MetricPredicate filter) {
         super(registry, "logger-reporter", filter, rateUnit, durationUnit);
         this.loggerProxy = loggerProxy;
         this.marker = marker;
@@ -184,7 +184,7 @@ public class Slf4jReporter extends ScheduledReporter {
         private String prefix;
         private TimeUnit rateUnit;
         private TimeUnit durationUnit;
-        private MetricFilter filter;
+        private MetricPredicate filter;
 
         private Builder(MetricRegistry registry) {
             this.registry = registry;
@@ -255,10 +255,10 @@ public class Slf4jReporter extends ScheduledReporter {
         /**
          * Only report metrics which match the given filter.
          *
-         * @param filter a {@link MetricFilter}
+         * @param filter a {@link MetricPredicate}
          * @return {@code this}
          */
-        public Builder filter(MetricFilter filter) {
+        public Builder filter(MetricPredicate filter) {
             this.filter = filter;
             return this;
         }

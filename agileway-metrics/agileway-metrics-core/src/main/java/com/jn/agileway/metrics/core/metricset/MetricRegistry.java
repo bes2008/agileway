@@ -18,7 +18,7 @@ package com.jn.agileway.metrics.core.metricset;
 
 
 import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.filter.MetricFilter;
+import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 import com.jn.agileway.metrics.core.snapshot.ReservoirType;
@@ -209,7 +209,7 @@ public interface MetricRegistry extends MetricSet {
      *
      * @param filter a filter
      */
-    void removeMatching(MetricFilter filter);
+    void removeMatching(MetricPredicate filter);
 
     /**
      * Adds a {@link MetricRegistryListener} to a collection of listeners that will be notified on
@@ -248,7 +248,7 @@ public interface MetricRegistry extends MetricSet {
      * @param filter the metric filter to match
      * @return all the gauges in the registry
      */
-    SortedMap<MetricName, Gauge> getGauges(MetricFilter filter);
+    SortedMap<MetricName, Gauge> getGauges(MetricPredicate filter);
 
     /**
      * Returns a map of all the counters in the registry and their names.
@@ -264,7 +264,7 @@ public interface MetricRegistry extends MetricSet {
      * @param filter the metric filter to match
      * @return all the counters in the registry
      */
-    SortedMap<MetricName, Counter> getCounters(MetricFilter filter);
+    SortedMap<MetricName, Counter> getCounters(MetricPredicate filter);
 
     /**
      * Returns a map of all the histograms in the registry and their names.
@@ -280,7 +280,7 @@ public interface MetricRegistry extends MetricSet {
      * @param filter the metric filter to match
      * @return all the histograms in the registry
      */
-    SortedMap<MetricName, Histogram> getHistograms(MetricFilter filter);
+    SortedMap<MetricName, Histogram> getHistograms(MetricPredicate filter);
 
     /**
      * Returns a map of all the meters in the registry and their names.
@@ -295,7 +295,7 @@ public interface MetricRegistry extends MetricSet {
      * @param filter the metric filter to match
      * @return all the meters in the registry
      */
-    SortedMap<MetricName, Meter> getMeters(MetricFilter filter);
+    SortedMap<MetricName, Meter> getMeters(MetricPredicate filter);
 
     /**
      * Returns a map of all the timers in the registry and their names.
@@ -310,7 +310,7 @@ public interface MetricRegistry extends MetricSet {
      * @param filter the metric filter to match
      * @return all the timers in the registry
      */
-    SortedMap<MetricName, Timer> getTimers(MetricFilter filter);
+    SortedMap<MetricName, Timer> getTimers(MetricPredicate filter);
 
 
     /**
@@ -326,7 +326,7 @@ public interface MetricRegistry extends MetricSet {
      * @param filter the metric filter to match
      * @return all the compasses in the registry
      */
-    SortedMap<MetricName, Compass> getCompasses(MetricFilter filter);
+    SortedMap<MetricName, Compass> getCompasses(MetricPredicate filter);
 
     /**
      * Returns a map of all the compasses in the registry and their names.
@@ -341,7 +341,7 @@ public interface MetricRegistry extends MetricSet {
      * @param filter the metric filter to match
      * @return all the compasses in the registry
      */
-    SortedMap<MetricName, FastCompass> getFastCompasses(MetricFilter filter);
+    SortedMap<MetricName, FastCompass> getFastCompasses(MetricPredicate filter);
 
     /**
      * Returns a map of all the {@link ClusterHistogram} in the registry and their names which match the given filter.
@@ -354,7 +354,7 @@ public interface MetricRegistry extends MetricSet {
      * @param filter the metric filter to match
      * @return all the {@link ClusterHistogram} in the registry
      */
-    SortedMap<MetricName, ClusterHistogram> getClusterHistograms(MetricFilter filter);
+    SortedMap<MetricName, ClusterHistogram> getClusterHistograms(MetricPredicate filter);
 
 
     /**
@@ -363,7 +363,7 @@ public interface MetricRegistry extends MetricSet {
      * @param filter the metric filter to match
      * @return all the metrics in the registry
      */
-    SortedMap<MetricName, Metric> getMetrics(MetricFilter filter);
+    SortedMap<MetricName, Metric> getMetrics(MetricPredicate filter);
 
 
 }

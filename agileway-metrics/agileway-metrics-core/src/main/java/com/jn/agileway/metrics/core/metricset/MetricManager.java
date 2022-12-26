@@ -17,7 +17,7 @@
 package com.jn.agileway.metrics.core.metricset;
 
 import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.filter.MetricFilter;
+import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 import com.jn.agileway.metrics.core.snapshot.ReservoirType;
@@ -177,21 +177,21 @@ public interface MetricManager {
      */
     MetricRegistry getMetricRegistryByGroup(String group);
 
-    SortedMap<MetricName, Gauge> getGauges(String group, MetricFilter filter);
+    SortedMap<MetricName, Gauge> getGauges(String group, MetricPredicate filter);
 
-    SortedMap<MetricName, Counter> getCounters(String group, MetricFilter filter);
+    SortedMap<MetricName, Counter> getCounters(String group, MetricPredicate filter);
 
-    SortedMap<MetricName, Histogram> getHistograms(String group, MetricFilter filter);
+    SortedMap<MetricName, Histogram> getHistograms(String group, MetricPredicate filter);
 
-    SortedMap<MetricName, Meter> getMeters(String group, MetricFilter filter);
+    SortedMap<MetricName, Meter> getMeters(String group, MetricPredicate filter);
 
-    SortedMap<MetricName, Timer> getTimers(String group, MetricFilter filter);
+    SortedMap<MetricName, Timer> getTimers(String group, MetricPredicate filter);
 
-    SortedMap<MetricName, Compass> getCompasses(String group, MetricFilter filter);
+    SortedMap<MetricName, Compass> getCompasses(String group, MetricPredicate filter);
 
-    SortedMap<MetricName, FastCompass> getFastCompasses(String group, MetricFilter filter);
+    SortedMap<MetricName, FastCompass> getFastCompasses(String group, MetricPredicate filter);
 
-    SortedMap<MetricName, ClusterHistogram> getClusterHistogram(String group, MetricFilter filter);
+    SortedMap<MetricName, ClusterHistogram> getClusterHistogram(String group, MetricPredicate filter);
 
     /**
      * A map of metric names to metrics.
@@ -216,7 +216,7 @@ public interface MetricManager {
      * @return
      */
     Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getCategoryMetrics(String group,
-                                                                                       MetricFilter filter);
+                                                                                       MetricPredicate filter);
 
     /**
      * return all metrics
@@ -224,7 +224,7 @@ public interface MetricManager {
      * @param filter
      * @return
      */
-    Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getAllCategoryMetrics(MetricFilter filter);
+    Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getAllCategoryMetrics(MetricPredicate filter);
 
     /**
      * 清空IMetricManager

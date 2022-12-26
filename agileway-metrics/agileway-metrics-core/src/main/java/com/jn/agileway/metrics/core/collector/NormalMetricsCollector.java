@@ -17,7 +17,7 @@
 package com.jn.agileway.metrics.core.collector;
 
 import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.filter.MetricFilter;
+import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
 
@@ -26,7 +26,7 @@ import java.util.Map;
 public class NormalMetricsCollector extends MetricsCollector {
 
     NormalMetricsCollector(Map<String, String> globalTags, double rateFactor,
-                           double durationFactor, MetricFilter filter) {
+                           double durationFactor, MetricPredicate filter) {
         super(globalTags, rateFactor, durationFactor, filter);
     }
 

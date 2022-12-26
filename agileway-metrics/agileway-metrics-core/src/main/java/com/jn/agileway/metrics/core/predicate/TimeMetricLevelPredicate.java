@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jn.agileway.metrics.core.filter;
+package com.jn.agileway.metrics.core.predicate;
 
 import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.MetricLevel;
@@ -32,7 +32,7 @@ import com.jn.agileway.metrics.core.config.MetricsCollectPeriodConfig;
  * TimeMetricLevelFilter#matches costs: 227 ms for 20,000,000 calls. (HashMap based)
  * TimeMetricLevelFilter#matches costs: 145 ms for 20,000,000 calls. (Array based)
  */
-public class TimeMetricLevelFilter implements MetricFilter {
+public class TimeMetricLevelPredicate implements MetricPredicate {
 
     /**
      * 记录上次MetricLevel的report相关的信息
@@ -42,11 +42,11 @@ public class TimeMetricLevelFilter implements MetricFilter {
 
     protected MetricsCollectPeriodConfig config;
 
-    public TimeMetricLevelFilter() {
+    public TimeMetricLevelPredicate() {
 
     }
 
-    public TimeMetricLevelFilter(MetricsCollectPeriodConfig config) {
+    public TimeMetricLevelPredicate(MetricsCollectPeriodConfig config) {
         this.config = config;
 
         /**
@@ -109,7 +109,7 @@ public class TimeMetricLevelFilter implements MetricFilter {
     }
 
     @Override
-    public boolean accept(MetricName name, Metric metric) {
+    public boolean test(MetricName name, Metric metric) {
         if (config == null) {
             return true;
         }

@@ -14,16 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jn.agileway.metrics.core.filter;
+package com.jn.agileway.metrics.core.predicate;
 
 
 import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.MetricName;
+import com.jn.langx.util.function.Predicate2;
 
 /**
  * A filter used to determine whether a metric should be reported, among other things or not .
  */
-public interface MetricFilter {
+public interface MetricPredicate extends Predicate2<MetricName, Metric> {
 
 
     /**
@@ -33,5 +34,5 @@ public interface MetricFilter {
      * @param metric the metric
      * @return {@code true} if the metric matches the filter
      */
-    boolean accept(MetricName name, Metric metric);
+    boolean test(MetricName name, Metric metric);
 }

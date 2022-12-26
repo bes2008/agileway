@@ -1,7 +1,7 @@
 package com.jn.agileway.metrics.core.noop;
 
 import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.filter.MetricFilter;
+import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.metricset.MetricManager;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.*;
@@ -94,43 +94,43 @@ public class NoopMetricManager implements MetricManager {
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Gauge> getGauges(String group, MetricFilter filter) {
+    public SortedMap<MetricName, Gauge> getGauges(String group, MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Counter> getCounters(String group, MetricFilter filter) {
+    public SortedMap<MetricName, Counter> getCounters(String group, MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Histogram> getHistograms(String group, MetricFilter filter) {
+    public SortedMap<MetricName, Histogram> getHistograms(String group, MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Meter> getMeters(String group, MetricFilter filter) {
+    public SortedMap<MetricName, Meter> getMeters(String group, MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Timer> getTimers(String group, MetricFilter filter) {
+    public SortedMap<MetricName, Timer> getTimers(String group, MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Compass> getCompasses(String group, MetricFilter filter) {
+    public SortedMap<MetricName, Compass> getCompasses(String group, MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, FastCompass> getFastCompasses(String group, MetricFilter filter) {
+    public SortedMap<MetricName, FastCompass> getFastCompasses(String group, MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
@@ -151,7 +151,7 @@ public class NoopMetricManager implements MetricManager {
 
     @Override
     public Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getCategoryMetrics(String group,
-                                                                                              MetricFilter filter) {
+                                                                                              MetricPredicate filter) {
         Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> result = new HashMap<Class<? extends Metric>, Map<MetricName, ? extends Metric>>();
 
         Map<MetricName, Gauge> gauges = Collections.emptyMap();
@@ -181,12 +181,12 @@ public class NoopMetricManager implements MetricManager {
     }
 
     @Override
-    public Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getAllCategoryMetrics(MetricFilter filter) {
+    public Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getAllCategoryMetrics(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public SortedMap<MetricName, ClusterHistogram> getClusterHistogram(String group, MetricFilter filter) {
+    public SortedMap<MetricName, ClusterHistogram> getClusterHistogram(String group, MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 

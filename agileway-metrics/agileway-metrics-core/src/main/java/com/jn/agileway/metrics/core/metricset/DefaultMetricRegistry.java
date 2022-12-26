@@ -20,7 +20,7 @@ import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.MetricName;
 import com.jn.agileway.metrics.core.Metrics;
 import com.jn.agileway.metrics.core.config.MetricsCollectPeriodConfig;
-import com.jn.agileway.metrics.core.filter.MetricFilter;
+import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.*;
@@ -312,9 +312,9 @@ public class DefaultMetricRegistry implements MetricRegistry {
      *
      * @param filter a filter
      */
-    public void removeMatching(MetricFilter filter) {
+    public void removeMatching(MetricPredicate filter) {
         for (Map.Entry<MetricName, Metric> entry : metrics.entrySet()) {
-            if (filter.accept(entry.getKey(), entry.getValue())) {
+            if (filter.test(entry.getKey(), entry.getValue())) {
                 remove(entry.getKey());
             }
         }
@@ -369,7 +369,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @param filter the metric filter to match
      * @return all the gauges in the registry
      */
-    public SortedMap<MetricName, Gauge> getGauges(MetricFilter filter) {
+    public SortedMap<MetricName, Gauge> getGauges(MetricPredicate filter) {
         return getMetrics(Gauge.class, filter);
     }
 
@@ -389,7 +389,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @param filter the metric filter to match
      * @return all the counters in the registry
      */
-    public SortedMap<MetricName, Counter> getCounters(MetricFilter filter) {
+    public SortedMap<MetricName, Counter> getCounters(MetricPredicate filter) {
         return getMetrics(Counter.class, filter);
     }
 
@@ -409,7 +409,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @param filter the metric filter to match
      * @return all the histograms in the registry
      */
-    public SortedMap<MetricName, Histogram> getHistograms(MetricFilter filter) {
+    public SortedMap<MetricName, Histogram> getHistograms(MetricPredicate filter) {
         return getMetrics(Histogram.class, filter);
     }
 
@@ -428,7 +428,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @param filter the metric filter to match
      * @return all the meters in the registry
      */
-    public SortedMap<MetricName, Meter> getMeters(MetricFilter filter) {
+    public SortedMap<MetricName, Meter> getMeters(MetricPredicate filter) {
         return getMetrics(Meter.class, filter);
     }
 
@@ -447,12 +447,12 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @param filter the metric filter to match
      * @return all the timers in the registry
      */
-    public SortedMap<MetricName, Timer> getTimers(MetricFilter filter) {
+    public SortedMap<MetricName, Timer> getTimers(MetricPredicate filter) {
         return getMetrics(Timer.class, filter);
     }
 
     @Override
-    public SortedMap<MetricName, Compass> getCompasses(MetricFilter filter) {
+    public SortedMap<MetricName, Compass> getCompasses(MetricPredicate filter) {
         return getMetrics(Compass.class, filter);
     }
 
@@ -467,12 +467,12 @@ public class DefaultMetricRegistry implements MetricRegistry {
     }
 
     @Override
-    public SortedMap<MetricName, FastCompass> getFastCompasses(MetricFilter filter) {
+    public SortedMap<MetricName, FastCompass> getFastCompasses(MetricPredicate filter) {
         return getMetrics(FastCompass.class, filter);
     }
 
     @Override
-    public SortedMap<MetricName, ClusterHistogram> getClusterHistograms(MetricFilter filter) {
+    public SortedMap<MetricName, ClusterHistogram> getClusterHistograms(MetricPredicate filter) {
         return getMetrics(ClusterHistogram.class, filter);
     }
 
@@ -482,7 +482,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
     }
 
     @Override
-    public SortedMap<MetricName, Metric> getMetrics(MetricFilter filter) {
+    public SortedMap<MetricName, Metric> getMetrics(MetricPredicate filter) {
         final TreeMap<MetricName, Metric> filteredMetrics = new TreeMap<MetricName, Metric>();
         filteredMetrics.putAll(getCounters(filter));
         filteredMetrics.putAll(getMeters(filter));
@@ -600,17 +600,17 @@ public class DefaultMetricRegistry implements MetricRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Metric> SortedMap<MetricName, T> getMetrics(Class<T> klass, MetricFilter filter) {
+    private <T extends Metric> SortedMap<MetricName, T> getMetrics(Class<T> klass, MetricPredicate filter) {
         final TreeMap<MetricName, T> timers = new TreeMap<MetricName, T>();
         for (Map.Entry<MetricName, Metric> entry : metrics.entrySet()) {
-            if (klass.isInstance(entry.getValue()) && filter.accept(entry.getKey(),
+            if (klass.isInstance(entry.getValue()) && filter.test(entry.getKey(),
                     entry.getValue())) {
                 timers.put(entry.getKey(), (T) entry.getValue());
             } else if (entry.getValue() instanceof DynamicMetricSet) {
                 for (Map.Entry<MetricName, Metric> dynamicEntry :
                         ((DynamicMetricSet) entry.getValue()).getDynamicMetrics().entrySet()) {
                     if (klass.isInstance(dynamicEntry.getValue()) &&
-                            filter.accept(dynamicEntry.getKey(), dynamicEntry.getValue())) {
+                            filter.test(dynamicEntry.getKey(), dynamicEntry.getValue())) {
                         timers.put(dynamicEntry.getKey(), (T) dynamicEntry.getValue());
                     }
                 }

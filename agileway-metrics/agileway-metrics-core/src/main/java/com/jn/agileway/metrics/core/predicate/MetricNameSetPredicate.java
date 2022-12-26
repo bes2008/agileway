@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jn.agileway.metrics.core.filter;
+package com.jn.agileway.metrics.core.predicate;
 
 import com.jn.agileway.metrics.core.collector.MetricsCollector;
 import com.jn.agileway.metrics.core.meter.Timer;
@@ -25,7 +25,7 @@ import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 
 import java.util.*;
 
-public class MetricNameSetFilter implements MetricFilter {
+public class MetricNameSetPredicate implements MetricPredicate {
 
     private static final Set<String> counterSuffixSet = new LinkedHashSet<String>();
     private static final Set<String> meterSuffixSet = new LinkedHashSet<String>();
@@ -112,16 +112,16 @@ public class MetricNameSetFilter implements MetricFilter {
 
     private Set<String> metricNames;
 
-    public MetricNameSetFilter(String... names) {
+    public MetricNameSetPredicate(String... names) {
         this.metricNames = new HashSet<String>(Arrays.asList(names));
     }
 
-    public MetricNameSetFilter(final Set<String> metricNames) {
+    public MetricNameSetPredicate(final Set<String> metricNames) {
         this.metricNames = metricNames;
     }
 
     @Override
-    public boolean accept(MetricName name, Metric metric) {
+    public boolean test(MetricName name, Metric metric) {
         for (String nameToMatch : metricNames) {
             boolean success;
             if (metric instanceof Counter) {

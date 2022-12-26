@@ -18,9 +18,9 @@ package com.jn.agileway.metrics.core.reporter;
 
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.config.MetricsCollectPeriodConfig;
-import com.jn.agileway.metrics.core.filter.CompositeMetricFilter;
-import com.jn.agileway.metrics.core.filter.TimeMetricLevelFilter;
-import com.jn.agileway.metrics.core.filter.MetricFilter;
+import com.jn.agileway.metrics.core.predicate.CompositeMetricPredicate;
+import com.jn.agileway.metrics.core.predicate.TimeMetricLevelPredicate;
+import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.metricset.MetricManager;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
@@ -54,8 +54,8 @@ public abstract class MetricManagerReporter implements Closeable {
     private long schedulePeriod = 1;
     private TimeUnit scheduleUnit = TimeUnit.SECONDS;
 
-    private TimeMetricLevelFilter timeMetricLevelFilter;
-    private CompositeMetricFilter compositeMetricFilter;
+    private TimeMetricLevelPredicate timeMetricLevelFilter;
+    private CompositeMetricPredicate compositeMetricFilter;
     private ScheduledFuture futureTask;
     /**
      * 控制Report的启动和停止
@@ -92,11 +92,11 @@ public abstract class MetricManagerReporter implements Closeable {
      */
     protected MetricManagerReporter(MetricManager metricManager,
                                     String name,
-                                    MetricFilter filter,
+                                    MetricPredicate filter,
                                     MetricsCollectPeriodConfig metricsReportPeriodConfig,
                                     TimeUnit rateUnit,
                                     TimeUnit durationUnit) {
-        this(metricManager, filter, new TimeMetricLevelFilter(metricsReportPeriodConfig), rateUnit, durationUnit,
+        this(metricManager, filter, new TimeMetricLevelPredicate(metricsReportPeriodConfig), rateUnit, durationUnit,
                 Executors.newSingleThreadScheduledExecutor(
                         new NamedThreadFactory(name + '-' + FACTORY_ID.incrementAndGet())));
     }
@@ -113,8 +113,8 @@ public abstract class MetricManagerReporter implements Closeable {
      */
     protected MetricManagerReporter(MetricManager metricManager,
                                     String name,
-                                    MetricFilter filter,
-                                    TimeMetricLevelFilter timeMetricLevelFilter,
+                                    MetricPredicate filter,
+                                    TimeMetricLevelPredicate timeMetricLevelFilter,
                                     TimeUnit rateUnit,
                                     TimeUnit durationUnit) {
         this(metricManager, filter, timeMetricLevelFilter, rateUnit, durationUnit,
@@ -131,8 +131,8 @@ public abstract class MetricManagerReporter implements Closeable {
      * @param executor      the executor to use while scheduling reporting of metrics.
      */
     protected MetricManagerReporter(MetricManager metricManager,
-                                    MetricFilter filter,
-                                    TimeMetricLevelFilter timeMetricLevelFilter,
+                                    MetricPredicate filter,
+                                    TimeMetricLevelPredicate timeMetricLevelFilter,
                                     TimeUnit rateUnit,
                                     TimeUnit durationUnit,
                                     ScheduledExecutorService executor) {
@@ -143,7 +143,7 @@ public abstract class MetricManagerReporter implements Closeable {
         this.durationFactor = 1.0 / durationUnit.toNanos(1);
         this.durationUnit = durationUnit.toString().toLowerCase(Locale.US);
         this.timeMetricLevelFilter = timeMetricLevelFilter;
-        this.compositeMetricFilter = new CompositeMetricFilter(timeMetricLevelFilter, filter);
+        this.compositeMetricFilter = new CompositeMetricPredicate(timeMetricLevelFilter, filter);
     }
 
     /**

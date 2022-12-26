@@ -17,7 +17,7 @@
 package com.jn.agileway.metrics.core.metricset;
 
 import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.filter.MetricFilter;
+import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
@@ -167,7 +167,7 @@ public class DefaultMetricManager implements MetricManager {
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Gauge> getGauges(String group, MetricFilter filter) {
+    public SortedMap<MetricName, Gauge> getGauges(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return emptySortedMap;
         }
@@ -180,7 +180,7 @@ public class DefaultMetricManager implements MetricManager {
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Counter> getCounters(String group, MetricFilter filter) {
+    public SortedMap<MetricName, Counter> getCounters(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return emptySortedMap;
         }
@@ -194,7 +194,7 @@ public class DefaultMetricManager implements MetricManager {
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Histogram> getHistograms(String group, MetricFilter filter) {
+    public SortedMap<MetricName, Histogram> getHistograms(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return emptySortedMap;
         }
@@ -208,7 +208,7 @@ public class DefaultMetricManager implements MetricManager {
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Meter> getMeters(String group, MetricFilter filter) {
+    public SortedMap<MetricName, Meter> getMeters(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return emptySortedMap;
         }
@@ -222,7 +222,7 @@ public class DefaultMetricManager implements MetricManager {
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Timer> getTimers(String group, MetricFilter filter) {
+    public SortedMap<MetricName, Timer> getTimers(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return emptySortedMap;
         }
@@ -235,7 +235,7 @@ public class DefaultMetricManager implements MetricManager {
     }
 
     @Override
-    public SortedMap<MetricName, Compass> getCompasses(String group, MetricFilter filter) {
+    public SortedMap<MetricName, Compass> getCompasses(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return emptySortedMap;
         }
@@ -248,7 +248,7 @@ public class DefaultMetricManager implements MetricManager {
     }
 
     @Override
-    public SortedMap<MetricName, FastCompass> getFastCompasses(String group, MetricFilter filter) {
+    public SortedMap<MetricName, FastCompass> getFastCompasses(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return emptySortedMap;
         }
@@ -261,7 +261,7 @@ public class DefaultMetricManager implements MetricManager {
     }
 
     @Override
-    public SortedMap<MetricName, ClusterHistogram> getClusterHistogram(String group, MetricFilter filter) {
+    public SortedMap<MetricName, ClusterHistogram> getClusterHistogram(String group, MetricPredicate filter) {
         if (!this.enabled) {
             return emptySortedMap;
         }
@@ -303,7 +303,7 @@ public class DefaultMetricManager implements MetricManager {
 
     @Override
     public Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getCategoryMetrics(String group,
-                                                                                              MetricFilter filter) {
+                                                                                              MetricPredicate filter) {
         if (!this.enabled) {
             return Collections.emptyMap();
         }
@@ -314,7 +314,7 @@ public class DefaultMetricManager implements MetricManager {
     }
 
     @Override
-    public Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getAllCategoryMetrics(MetricFilter filter) {
+    public Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getAllCategoryMetrics(MetricPredicate filter) {
 
         if (!this.enabled) {
             return Collections.emptyMap();
@@ -357,7 +357,7 @@ public class DefaultMetricManager implements MetricManager {
     }
 
     private Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getCategoryMetrics(
-            Map<MetricName, Metric> metrics, MetricFilter filter) {
+            Map<MetricName, Metric> metrics, MetricPredicate filter) {
         if (!this.enabled) {
             return Collections.emptyMap();
         }
@@ -389,27 +389,27 @@ public class DefaultMetricManager implements MetricManager {
         return result;
     }
 
-    private void checkAndAdd(Map.Entry<MetricName, Metric> entry, MetricFilter filter, Map<MetricName, Gauge> gauges,
+    private void checkAndAdd(Map.Entry<MetricName, Metric> entry, MetricPredicate filter, Map<MetricName, Gauge> gauges,
                              Map<MetricName, Counter> counters, Map<MetricName, Histogram> histograms, Map<MetricName, Meter> meters,
                              Map<MetricName, Timer> timers, Map<MetricName, Compass> compasses, Map<MetricName, FastCompass> fastCompasses, Map<MetricName, ClusterHistogram> clusterHistogrames) {
 
         MetricName metricName = entry.getKey();
         Metric metric = entry.getValue();
-        if (metric instanceof Gauge && filter.accept(metricName, metric)) {
+        if (metric instanceof Gauge && filter.test(metricName, metric)) {
             gauges.put(metricName, (Gauge) metric);
-        } else if (metric instanceof Counter && filter.accept(metricName, metric)) {
+        } else if (metric instanceof Counter && filter.test(metricName, metric)) {
             counters.put(metricName, (Counter) metric);
-        } else if (metric instanceof Histogram && filter.accept(metricName, metric)) {
+        } else if (metric instanceof Histogram && filter.test(metricName, metric)) {
             histograms.put(metricName, (Histogram) metric);
-        } else if (metric instanceof Meter && filter.accept(metricName, metric)) {
+        } else if (metric instanceof Meter && filter.test(metricName, metric)) {
             meters.put(metricName, (Meter) metric);
-        } else if (metric instanceof Timer && filter.accept(metricName, metric)) {
+        } else if (metric instanceof Timer && filter.test(metricName, metric)) {
             timers.put(metricName, (Timer) metric);
-        } else if (metric instanceof Compass && filter.accept(metricName, metric)) {
+        } else if (metric instanceof Compass && filter.test(metricName, metric)) {
             compasses.put(metricName, (Compass) metric);
-        } else if (metric instanceof FastCompass && filter.accept(metricName, metric)) {
+        } else if (metric instanceof FastCompass && filter.test(metricName, metric)) {
             fastCompasses.put(metricName, (FastCompass) metric);
-        } else if (metric instanceof ClusterHistogram && filter.accept(metricName, metric)) {
+        } else if (metric instanceof ClusterHistogram && filter.test(metricName, metric)) {
             clusterHistogrames.put(metricName, (ClusterHistogram) metric);
         } else if (metric instanceof DynamicMetricSet) {
             DynamicMetricSet dynamicMetricSet = (DynamicMetricSet) metric;

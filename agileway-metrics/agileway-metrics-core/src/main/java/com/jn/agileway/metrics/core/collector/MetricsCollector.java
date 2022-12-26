@@ -18,7 +18,7 @@ package com.jn.agileway.metrics.core.collector;
 
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.config.MetricsCollectPeriodConfig;
-import com.jn.agileway.metrics.core.filter.MetricFilter;
+import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 
@@ -49,12 +49,12 @@ public abstract class MetricsCollector implements Collector {
     /**
      * Use this filer to filter out any metric object that is not needed.
      */
-    protected MetricFilter filter;
+    protected MetricPredicate filter;
     private boolean collectNAValue;
     private double notAvailable;
 
     MetricsCollector(Map<String, String> globalTags, double rateFactor,
-                     double durationFactor, MetricFilter filter) {
+                     double durationFactor, MetricPredicate filter) {
         this(globalTags, rateFactor, durationFactor, filter, false);
     }
 
@@ -68,7 +68,7 @@ public abstract class MetricsCollector implements Collector {
      * @param filter
      */
     MetricsCollector(Map<String, String> globalTags, double rateFactor,
-                     double durationFactor, MetricFilter filter, boolean collectNAValue) {
+                     double durationFactor, MetricPredicate filter, boolean collectNAValue) {
         this.metrics = new ArrayList<MetricObject>();
         this.globalTags = globalTags;
         this.rateFactor = rateFactor;
@@ -107,7 +107,7 @@ public abstract class MetricsCollector implements Collector {
             return this;
         }
 
-        if ((filter == null || filter.accept(MetricName.build(object.getMetric()), null))
+        if ((filter == null || filter.test(MetricName.build(object.getMetric()), null))
                 && object.getValue() != null) {
             this.metrics.add(object);
         }

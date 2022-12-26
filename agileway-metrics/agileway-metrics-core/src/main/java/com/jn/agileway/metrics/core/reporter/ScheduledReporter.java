@@ -17,7 +17,7 @@
 package com.jn.agileway.metrics.core.reporter;
 
 import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.filter.MetricFilter;
+import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.metricset.MetricRegistry;
 import com.jn.langx.util.logging.Loggers;
@@ -45,7 +45,7 @@ public abstract class ScheduledReporter implements Closeable {
     private static final AtomicInteger FACTORY_ID = new AtomicInteger();
     private final MetricRegistry registry;
     private final ScheduledExecutorService executor;
-    private final MetricFilter filter;
+    private final MetricPredicate filter;
     private final double durationFactor;
     private final String durationUnit;
     private final double rateFactor;
@@ -62,7 +62,7 @@ public abstract class ScheduledReporter implements Closeable {
      */
     protected ScheduledReporter(MetricRegistry registry,
                                 String name,
-                                MetricFilter filter,
+                                MetricPredicate filter,
                                 TimeUnit rateUnit,
                                 TimeUnit durationUnit) {
         this(registry, filter, rateUnit, durationUnit,
@@ -78,7 +78,7 @@ public abstract class ScheduledReporter implements Closeable {
      * @param executor the executor to use while scheduling reporting of metrics.
      */
     protected ScheduledReporter(MetricRegistry registry,
-                                MetricFilter filter,
+                                MetricPredicate filter,
                                 TimeUnit rateUnit,
                                 TimeUnit durationUnit,
                                 ScheduledExecutorService executor) {

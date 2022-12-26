@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jn.agileway.metrics.core.filter;
+package com.jn.agileway.metrics.core.predicate;
 
 
 import com.jn.agileway.metrics.core.MetricLevel;
@@ -23,13 +23,13 @@ import com.jn.agileway.metrics.core.config.MetricsCollectPeriodConfig;
 /**
  * 计算某一个level是否允许report 每到达一个整的时间间隔，就允许report
  */
-public class BucketMetricLevelFilter extends TimeMetricLevelFilter {
+public class BucketMetricLevelPredicate extends TimeMetricLevelPredicate {
 
-    public BucketMetricLevelFilter() {
+    public BucketMetricLevelPredicate() {
         super();
     }
 
-    public BucketMetricLevelFilter(MetricsCollectPeriodConfig config) {
+    public BucketMetricLevelPredicate(MetricsCollectPeriodConfig config) {
         super(config);
     }
 

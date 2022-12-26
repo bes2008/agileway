@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.core;
 
-import com.jn.agileway.metrics.core.filter.MetricFilter;
+import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 
 public class Metrics {
     private Metrics() {
@@ -16,9 +16,9 @@ public class Metrics {
         /**
          * Matches all metrics, regardless of type or name.
          */
-        public static final MetricFilter TRUE = new MetricFilter() {
+        public static final MetricPredicate TRUE = new MetricPredicate() {
             @Override
-            public boolean accept(MetricName name, Metric metric) {
+            public boolean test(MetricName name, Metric metric) {
                 return true;
             }
         };

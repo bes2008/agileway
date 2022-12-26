@@ -1,7 +1,7 @@
 package com.jn.agileway.metrics.core.noop;
 
 import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.filter.MetricFilter;
+import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 import com.jn.agileway.metrics.core.metricset.MetricRegistry;
@@ -113,7 +113,7 @@ public class NoopMetricRegistry implements MetricRegistry {
     }
 
     @Override
-    public void removeMatching(MetricFilter filter) {
+    public void removeMatching(MetricPredicate filter) {
 
     }
 
@@ -141,7 +141,7 @@ public class NoopMetricRegistry implements MetricRegistry {
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Gauge> getGauges(MetricFilter filter) {
+    public SortedMap<MetricName, Gauge> getGauges(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
@@ -153,7 +153,7 @@ public class NoopMetricRegistry implements MetricRegistry {
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Counter> getCounters(MetricFilter filter) {
+    public SortedMap<MetricName, Counter> getCounters(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
@@ -165,7 +165,7 @@ public class NoopMetricRegistry implements MetricRegistry {
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Histogram> getHistograms(MetricFilter filter) {
+    public SortedMap<MetricName, Histogram> getHistograms(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
@@ -177,7 +177,7 @@ public class NoopMetricRegistry implements MetricRegistry {
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Meter> getMeters(MetricFilter filter) {
+    public SortedMap<MetricName, Meter> getMeters(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
@@ -189,13 +189,13 @@ public class NoopMetricRegistry implements MetricRegistry {
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Timer> getTimers(MetricFilter filter) {
+    public SortedMap<MetricName, Timer> getTimers(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Compass> getCompasses(MetricFilter filter) {
+    public SortedMap<MetricName, Compass> getCompasses(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
@@ -211,18 +211,18 @@ public class NoopMetricRegistry implements MetricRegistry {
     }
 
     @Override
-    public SortedMap<MetricName, FastCompass> getFastCompasses(MetricFilter filter) {
+    public SortedMap<MetricName, FastCompass> getFastCompasses(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public SortedMap<MetricName, ClusterHistogram> getClusterHistograms(MetricFilter filter) {
+    public SortedMap<MetricName, ClusterHistogram> getClusterHistograms(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<MetricName, Metric> getMetrics(MetricFilter filter) {
+    public SortedMap<MetricName, Metric> getMetrics(MetricPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
