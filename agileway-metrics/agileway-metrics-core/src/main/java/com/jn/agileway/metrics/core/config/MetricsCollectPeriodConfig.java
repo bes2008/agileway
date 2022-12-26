@@ -17,11 +17,11 @@
 package com.jn.agileway.metrics.core.config;
 
 
-import com.jn.agileway.metrics.core.MetricLevel;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import static com.jn.agileway.metrics.core.MetricName.MetricLevel;
 
 /**
  * 配置不同的Level的Metrics的report时间间隔。

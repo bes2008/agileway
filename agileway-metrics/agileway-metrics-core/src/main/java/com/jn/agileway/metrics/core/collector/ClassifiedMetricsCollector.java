@@ -18,10 +18,10 @@ package com.jn.agileway.metrics.core.collector;
 
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.predicate.MetricPredicate;
-import com.jn.agileway.metrics.core.MetricLevel;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
+import static com.jn.agileway.metrics.core.MetricName.MetricLevel;
 
 import java.util.ArrayList;
 import java.util.HashMap;

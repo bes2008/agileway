@@ -16,7 +16,7 @@
  */
 package com.jn.agileway.metrics.core.collector;
 
-import com.jn.agileway.metrics.core.MetricLevel;
+import static com.jn.agileway.metrics.core.MetricName.MetricLevel;
 
 import java.util.Arrays;
 import java.util.HashMap;
