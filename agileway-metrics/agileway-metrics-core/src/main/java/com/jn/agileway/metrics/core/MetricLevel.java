@@ -15,14 +15,6 @@ public enum MetricLevel {
 
     CRITICAL; // 关键指标
 
-    static {
-        for (MetricLevel level : MetricLevel.values()) {
-            if (level.ordinal() < 0) {
-                throw new RuntimeException("MetricLevel can not < 0");
-            }
-        }
-    }
-
     public static int getMaxValue() {
         MetricLevel[] levels = MetricLevel.values();
         int max = levels[0].ordinal();

@@ -17,7 +17,7 @@
 package com.jn.agileway.metrics.core.snapshot;
 
 import com.jn.agileway.metrics.core.Metric;
-import com.jn.agileway.metrics.core.MetricBuilder;
+import com.jn.agileway.metrics.core.metricset.MetricBuilder;
 import com.jn.agileway.metrics.core.MetricName;
 
 public interface ReservoirTypeBuilder<T extends Metric> extends MetricBuilder<T> {
