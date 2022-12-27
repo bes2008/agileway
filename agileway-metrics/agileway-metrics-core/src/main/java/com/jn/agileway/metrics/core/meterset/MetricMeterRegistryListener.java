@@ -10,7 +10,7 @@ import java.util.EventListener;
  *
  * @since 4.1.0
  */
-public interface MetricRegistryListener extends EventListener {
+public interface MetricMeterRegistryListener extends EventListener {
     /**
      * Called when a {@link Gauge} is added to the registry.
      *

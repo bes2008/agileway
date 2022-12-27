@@ -1,7 +1,7 @@
 package com.jn.agileway.metrics.core.meter.impl;
 
 import com.jn.agileway.metrics.core.Meter;
-import com.jn.agileway.metrics.core.meterset.MetricBuilder;
+import com.jn.agileway.metrics.core.meterset.MetricMeterBuilder;
 import com.jn.agileway.metrics.core.Metric;
 import com.jn.langx.util.reflect.Reflects;
 
@@ -32,7 +32,7 @@ public class ClusterHistogramBuilder extends AbstractMetricBuilder<ClusterHistog
     }
 
     @Override
-    public MetricBuilder<ClusterHistogram> newBuilder() {
+    public MetricMeterBuilder<ClusterHistogram> newBuilder() {
         return new ClusterHistogramBuilder();
     }
 }

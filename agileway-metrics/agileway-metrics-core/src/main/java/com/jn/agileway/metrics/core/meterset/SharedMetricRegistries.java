@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentMap;
  * @since 4.1.0
  */
 public class SharedMetricRegistries {
-    private static final ConcurrentMap<String, MetricRegistry> REGISTRIES = new ConcurrentHashMap<String, MetricRegistry>();
+    private static final ConcurrentMap<String, MetricMeterRegistry> REGISTRIES = new ConcurrentHashMap<String, MetricMeterRegistry>();
 
     private SharedMetricRegistries() { /* singleton */ }
 
@@ -26,15 +26,15 @@ public class SharedMetricRegistries {
         REGISTRIES.remove(key);
     }
 
-    public static MetricRegistry add(String name, MetricRegistry registry) {
+    public static MetricMeterRegistry add(String name, MetricMeterRegistry registry) {
         return REGISTRIES.putIfAbsent(name, registry);
     }
 
-    public static MetricRegistry getOrCreate(String name) {
-        final MetricRegistry existing = REGISTRIES.get(name);
+    public static MetricMeterRegistry getOrCreate(String name) {
+        final MetricMeterRegistry existing = REGISTRIES.get(name);
         if (existing == null) {
-            final MetricRegistry created = new DefaultMetricRegistry();
-            final MetricRegistry raced = add(name, created);
+            final MetricMeterRegistry created = new DefaultMetricRegistry();
+            final MetricMeterRegistry raced = add(name, created);
             if (raced == null) {
                 return created;
             }

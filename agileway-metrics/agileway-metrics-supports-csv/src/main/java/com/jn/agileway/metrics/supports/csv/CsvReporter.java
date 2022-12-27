@@ -4,7 +4,7 @@ import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.predicate.FixedPredicate;
 import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.*;
-import com.jn.agileway.metrics.core.meterset.MetricRegistry;
+import com.jn.agileway.metrics.core.meterset.MetricMeterRegistry;
 import com.jn.agileway.metrics.core.reporter.ScheduledReporter;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
 import com.jn.langx.util.io.Charsets;
@@ -31,7 +31,7 @@ public class CsvReporter extends ScheduledReporter {
     private final Locale locale;
     private final Clock clock;
     private final CsvFileProvider csvFileProvider;
-    private CsvReporter(MetricRegistry registry,
+    private CsvReporter(MetricMeterRegistry registry,
                         File directory,
                         Locale locale,
                         TimeUnit rateUnit,
@@ -52,7 +52,7 @@ public class CsvReporter extends ScheduledReporter {
      * @param registry the registry to report
      * @return a {@link Builder} instance for a {@link CsvReporter}
      */
-    public static Builder forRegistry(MetricRegistry registry) {
+    public static Builder forRegistry(MetricMeterRegistry registry) {
         return new Builder(registry);
     }
 
@@ -177,7 +177,7 @@ public class CsvReporter extends ScheduledReporter {
      * rates to events/second, converting durations to milliseconds, and not filtering metrics.
      */
     public static class Builder {
-        private final MetricRegistry registry;
+        private final MetricMeterRegistry registry;
         private Locale locale;
         private TimeUnit rateUnit;
         private TimeUnit durationUnit;
@@ -185,7 +185,7 @@ public class CsvReporter extends ScheduledReporter {
         private MetricPredicate filter;
         private CsvFileProvider csvFileProvider;
 
-        private Builder(MetricRegistry registry) {
+        private Builder(MetricMeterRegistry registry) {
             this.registry = registry;
             this.locale = Locale.getDefault();
             this.rateUnit = TimeUnit.SECONDS;

@@ -8,7 +8,7 @@ import com.jn.agileway.metrics.core.meter.Counter;
 import com.jn.agileway.metrics.core.meter.Gauge;
 import com.jn.agileway.metrics.core.meter.Histogram;
 import com.jn.agileway.metrics.core.meter.Metered;
-import com.jn.agileway.metrics.core.meterset.MetricRegistry;
+import com.jn.agileway.metrics.core.meterset.MetricMeterRegistry;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
 import com.jn.langx.util.timing.clock.Clock;
 import com.jn.langx.util.timing.clock.Clocks;
@@ -30,7 +30,7 @@ public class ConsoleReporter extends ScheduledReporter {
     private final Clock clock;
     private final DateFormat dateFormat;
 
-    private ConsoleReporter(MetricRegistry registry,
+    private ConsoleReporter(MetricMeterRegistry registry,
                             PrintStream output,
                             Locale locale,
                             Clock clock,
@@ -53,7 +53,7 @@ public class ConsoleReporter extends ScheduledReporter {
      * @param registry the registry to report
      * @return a {@link Builder} instance for a {@link ConsoleReporter}
      */
-    public static Builder forRegistry(MetricRegistry registry) {
+    public static Builder forRegistry(MetricMeterRegistry registry) {
         return new Builder(registry);
     }
 
@@ -182,7 +182,7 @@ public class ConsoleReporter extends ScheduledReporter {
      * durations to milliseconds, and not filtering metrics.
      */
     public static class Builder {
-        private final MetricRegistry registry;
+        private final MetricMeterRegistry registry;
         private PrintStream output;
         private Locale locale;
         private Clock clock;
@@ -191,7 +191,7 @@ public class ConsoleReporter extends ScheduledReporter {
         private TimeUnit durationUnit;
         private MetricPredicate filter;
 
-        private Builder(MetricRegistry registry) {
+        private Builder(MetricMeterRegistry registry) {
             this.registry = registry;
             this.output = System.out;
             this.locale = Locale.getDefault();

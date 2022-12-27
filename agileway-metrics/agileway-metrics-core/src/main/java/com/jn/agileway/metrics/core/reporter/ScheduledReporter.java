@@ -3,7 +3,7 @@ package com.jn.agileway.metrics.core.reporter;
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.*;
-import com.jn.agileway.metrics.core.meterset.MetricRegistry;
+import com.jn.agileway.metrics.core.meterset.MetricMeterRegistry;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
@@ -29,7 +29,7 @@ public abstract class ScheduledReporter implements Closeable {
 
     private static final Logger LOG = Loggers.getLogger(ScheduledReporter.class);
     private static final AtomicInteger FACTORY_ID = new AtomicInteger();
-    private final MetricRegistry registry;
+    private final MetricMeterRegistry registry;
     private final ScheduledExecutorService executor;
     private final MetricPredicate filter;
     private final double durationFactor;
@@ -39,14 +39,14 @@ public abstract class ScheduledReporter implements Closeable {
     /**
      * Creates a new {@link ScheduledReporter} instance.
      *
-     * @param registry     the {@link MetricRegistry} containing the metrics this
+     * @param registry     the {@link MetricMeterRegistry} containing the metrics this
      *                     reporter will report
      * @param name         the reporter's name
      * @param filter       the filter for which metrics to report
      * @param rateUnit     a unit of time
      * @param durationUnit a unit of time
      */
-    protected ScheduledReporter(MetricRegistry registry,
+    protected ScheduledReporter(MetricMeterRegistry registry,
                                 String name,
                                 MetricPredicate filter,
                                 TimeUnit rateUnit,
@@ -58,12 +58,12 @@ public abstract class ScheduledReporter implements Closeable {
     /**
      * Creates a new {@link ScheduledReporter} instance.
      *
-     * @param registry the {@link MetricRegistry} containing the metrics this
+     * @param registry the {@link MetricMeterRegistry} containing the metrics this
      *                 reporter will report
      * @param filter   the filter for which metrics to report
      * @param executor the executor to use while scheduling reporting of metrics.
      */
-    protected ScheduledReporter(MetricRegistry registry,
+    protected ScheduledReporter(MetricMeterRegistry registry,
                                 MetricPredicate filter,
                                 TimeUnit rateUnit,
                                 TimeUnit durationUnit,

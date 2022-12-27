@@ -5,7 +5,7 @@ import com.jn.agileway.metrics.core.config.MetricsCollectPeriodConfig;
 import com.jn.agileway.metrics.core.predicate.CompositeMetricPredicate;
 import com.jn.agileway.metrics.core.predicate.TimeMetricLevelPredicate;
 import com.jn.agileway.metrics.core.predicate.MetricPredicate;
-import com.jn.agileway.metrics.core.meterset.MetricFactory;
+import com.jn.agileway.metrics.core.meterset.MetricMeterFactory;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 import com.jn.langx.util.concurrent.CommonThreadFactory;
@@ -31,7 +31,7 @@ public abstract class MetricSetReporter implements Closeable {
     protected final double durationFactor;
     protected final double rateFactor;
 
-    private final MetricFactory factory;
+    private final MetricMeterFactory factory;
     private final ScheduledExecutorService executor;
     private final String durationUnit;
     private final String rateUnit;
@@ -68,14 +68,14 @@ public abstract class MetricSetReporter implements Closeable {
     /**
      * Creates a new {@link MetricSetReporter} instance.
      *
-     * @param factory the {@link MetricFactory} containing the metrics this
+     * @param factory the {@link MetricMeterFactory} containing the metrics this
      *                      reporter will report
      * @param name          the reporter's name
      * @param predicate        the predicate for which metrics to report
      * @param rateUnit      a unit of time
      * @param durationUnit  a unit of time
      */
-    protected MetricSetReporter(MetricFactory factory,
+    protected MetricSetReporter(MetricMeterFactory factory,
                                 String name,
                                 MetricPredicate predicate,
                                 MetricsCollectPeriodConfig metricsReportPeriodConfig,
@@ -88,14 +88,14 @@ public abstract class MetricSetReporter implements Closeable {
     /**
      * Creates a new {@link MetricSetReporter} instance.
      *
-     * @param factory the {@link MetricFactory} containing the metrics this
+     * @param factory the {@link MetricMeterFactory} containing the metrics this
      *                      reporter will report
      * @param name          the reporter's name
      * @param predicate        the predicate for which metrics to report
      * @param rateUnit      a unit of time
      * @param durationUnit  a unit of time
      */
-    protected MetricSetReporter(MetricFactory factory,
+    protected MetricSetReporter(MetricMeterFactory factory,
                                 String name,
                                 MetricPredicate predicate,
                                 TimeMetricLevelPredicate timeMetricLevelFilter,
@@ -108,12 +108,12 @@ public abstract class MetricSetReporter implements Closeable {
     /**
      * Creates a new {@link MetricSetReporter} instance.
      *
-     * @param factory the {@link MetricFactory} containing the metrics this
+     * @param factory the {@link MetricMeterFactory} containing the metrics this
      *                      reporter will report
      * @param predicate        the predicate for which metrics to report
      * @param executor      the executor to use while scheduling reporting of metrics.
      */
-    protected MetricSetReporter(MetricFactory factory,
+    protected MetricSetReporter(MetricMeterFactory factory,
                                 MetricPredicate predicate,
                                 TimeMetricLevelPredicate timeMetricLevelFilter,
                                 TimeUnit rateUnit,

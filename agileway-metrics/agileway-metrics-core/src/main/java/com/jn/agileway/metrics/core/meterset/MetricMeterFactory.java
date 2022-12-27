@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * @since 4.1.0
  */
-public interface MetricFactory{
+public interface MetricMeterFactory {
 
     /**
      * Create a {@link Metered} metric in given group, and name.
@@ -161,7 +161,7 @@ public interface MetricFactory{
      * @param group the group name to query
      * @return the MetricRegistry that is correspondent to the group
      */
-    MetricRegistry getMetricRegistryByGroup(String group);
+    MetricMeterRegistry getMetricRegistryByGroup(String group);
 
     Map<Metric, Gauge> getGauges(String group, MetricPredicate filter);
 

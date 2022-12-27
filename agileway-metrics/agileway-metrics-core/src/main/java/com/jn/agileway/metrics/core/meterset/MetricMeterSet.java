@@ -8,15 +8,15 @@ import java.util.Map;
 /**
  * A set of named metrics.
  *
- * @see MetricRegistry#registerAll(MetricSet)
+ * @see MetricMeterRegistry#registerAll(MetricMeterSet)
  *
  * @since 4.1.0
  */
-public interface MetricSet{
+public interface MetricMeterSet {
     /**
      * A map of metric names to metrics.
      *
      * @return the metrics
      */
-    Map<Metric, Meter> getMetrics();
+    Map<Metric, Meter> getMetricMeters();
 }

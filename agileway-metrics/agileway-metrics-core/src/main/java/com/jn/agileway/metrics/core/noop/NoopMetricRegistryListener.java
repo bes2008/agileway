@@ -2,12 +2,12 @@ package com.jn.agileway.metrics.core.noop;
 
 import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.meter.*;
-import com.jn.agileway.metrics.core.meterset.MetricRegistryListener;
+import com.jn.agileway.metrics.core.meterset.MetricMeterRegistryListener;
 
 /**
  * @since 4.1.0
  */
-abstract class NoopMetricRegistryListener implements MetricRegistryListener {
+abstract class NoopMetricRegistryListener implements MetricMeterRegistryListener {
     @Override
     public void onGaugeAdded(Metric name, Gauge<?> gauge) {
     }

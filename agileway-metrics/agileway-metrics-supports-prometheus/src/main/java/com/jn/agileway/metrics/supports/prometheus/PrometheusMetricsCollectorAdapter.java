@@ -4,7 +4,7 @@ import com.jn.agileway.metrics.core.Meter;
 import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.*;
-import com.jn.agileway.metrics.core.meterset.MetricRegistry;
+import com.jn.agileway.metrics.core.meterset.MetricMeterRegistry;
 import com.jn.agileway.metrics.core.predicate.FixedPredicate;
 import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  */
 public class PrometheusMetricsCollectorAdapter extends Collector implements Collector.Describable {
     private static final Logger LOGGER = Logger.getLogger(PrometheusMetricsCollectorAdapter.class.getName());
-    private MetricRegistry registry;
+    private MetricMeterRegistry registry;
     private MetricPredicate predicate;
     private SampleBuilder sampleBuilder;
 
@@ -32,7 +32,7 @@ public class PrometheusMetricsCollectorAdapter extends Collector implements Coll
      *
      * @param registry a metric registry to export in prometheus.
      */
-    public PrometheusMetricsCollectorAdapter(MetricRegistry registry) {
+    public PrometheusMetricsCollectorAdapter(MetricMeterRegistry registry) {
         this(registry, FixedPredicate.TRUE);
     }
 
@@ -42,7 +42,7 @@ public class PrometheusMetricsCollectorAdapter extends Collector implements Coll
      * @param registry  a metric registry to export in prometheus.
      * @param predicate a custom metric filter.
      */
-    public PrometheusMetricsCollectorAdapter(MetricRegistry registry, MetricPredicate predicate) {
+    public PrometheusMetricsCollectorAdapter(MetricMeterRegistry registry, MetricPredicate predicate) {
         this(registry, predicate, new DefaultSampleBuilder());
     }
 
@@ -50,7 +50,7 @@ public class PrometheusMetricsCollectorAdapter extends Collector implements Coll
      * @param registry      a metric registry to export in prometheus.
      * @param sampleBuilder sampleBuilder to use to create prometheus samples.
      */
-    public PrometheusMetricsCollectorAdapter(MetricRegistry registry, SampleBuilder sampleBuilder) {
+    public PrometheusMetricsCollectorAdapter(MetricMeterRegistry registry, SampleBuilder sampleBuilder) {
         this(registry, FixedPredicate.TRUE, sampleBuilder);
     }
 
@@ -59,7 +59,7 @@ public class PrometheusMetricsCollectorAdapter extends Collector implements Coll
      * @param predicate     a custom metric filter.
      * @param sampleBuilder sampleBuilder to use to create prometheus samples.
      */
-    public PrometheusMetricsCollectorAdapter(MetricRegistry registry, MetricPredicate predicate, SampleBuilder sampleBuilder) {
+    public PrometheusMetricsCollectorAdapter(MetricMeterRegistry registry, MetricPredicate predicate, SampleBuilder sampleBuilder) {
         this.registry = registry;
         this.predicate = predicate;
         this.sampleBuilder = sampleBuilder;

@@ -23,7 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *
  * @since 4.1.0
  */
-public class DefaultMetricRegistry implements MetricRegistry {
+public class DefaultMetricRegistry implements MetricMeterRegistry {
 
     private static final int DEFAULT_MAX_METRIC_COUNT = Integer.getInteger("com.jn.agileway.metrics.core.maxMetricCountPerRegistry", 50000);
 
@@ -31,7 +31,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
     private static final MetricsCollectPeriodConfig config = new MetricsCollectPeriodConfig();
 
     private final ConcurrentMap<Metric, Meter> metrics;
-    private final List<MetricRegistryListener> listeners;
+    private final List<MetricMeterRegistryListener> listeners;
     private final int maxMetricCount;
     /**
      * A quick and easy way of capturing the notion of default metrics.
@@ -49,7 +49,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
     private ClusterHistogramBuilder CLUSTER_HISTOGRAM_BUILDER = new ClusterHistogramBuilder();
 
     /**
-     * Creates a new {@link MetricRegistry}.
+     * Creates a new {@link MetricMeterRegistry}.
      */
     public DefaultMetricRegistry() {
         this(DEFAULT_MAX_METRIC_COUNT);
@@ -57,7 +57,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
 
     public DefaultMetricRegistry(int maxMetricCount) {
         this.metrics = new ConcurrentHashMap<Metric, Meter>();
-        this.listeners = new CopyOnWriteArrayList<MetricRegistryListener>();
+        this.listeners = new CopyOnWriteArrayList<MetricMeterRegistryListener>();
         this.maxMetricCount = maxMetricCount;
     }
 
@@ -89,8 +89,8 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @throws IllegalArgumentException if the name is already registered
      */
     public <T extends Meter> T register(Metric name, T metric) throws IllegalArgumentException {
-        if (metric instanceof MetricSet && !(metric instanceof DynamicMetricSet)) {
-            registerAll(name, (MetricSet) metric);
+        if (metric instanceof MetricMeterSet && !(metric instanceof DynamicMetricMeterSet)) {
+            registerAll(name, (MetricMeterSet) metric);
         } else {
             final Meter existing = metrics.putIfAbsent(name, metric);
             if (existing == null) {
@@ -108,7 +108,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
      * @param metrics a set of metrics
      * @throws IllegalArgumentException if any of the names are already registered
      */
-    public void registerAll(MetricSet metrics) throws IllegalArgumentException {
+    public void registerAll(MetricMeterSet metrics) throws IllegalArgumentException {
         registerAll(null, metrics);
     }
 
@@ -307,14 +307,14 @@ public class DefaultMetricRegistry implements MetricRegistry {
     }
 
     /**
-     * Adds a {@link MetricRegistryListener} to a collection of listeners that will be notified on
+     * Adds a {@link MetricMeterRegistryListener} to a collection of listeners that will be notified on
      * metric creation.  Listeners will be notified in the order in which they are added.
      * <p/>
      * <b>N.B.:</b> The listener will be notified of all existing metrics when it first registers.
      *
      * @param listener the listener that will be notified
      */
-    public void addListener(MetricRegistryListener listener) {
+    public void addListener(MetricMeterRegistryListener listener) {
         listeners.add(listener);
 
         for (Map.Entry<Metric, Meter> entry : metrics.entrySet()) {
@@ -323,11 +323,11 @@ public class DefaultMetricRegistry implements MetricRegistry {
     }
 
     /**
-     * Removes a {@link MetricRegistryListener} from this registry's collection of listeners.
+     * Removes a {@link MetricMeterRegistryListener} from this registry's collection of listeners.
      *
      * @param listener the listener that will be removed
      */
-    public void removeListener(MetricRegistryListener listener) {
+    public void removeListener(MetricMeterRegistryListener listener) {
         listeners.remove(listener);
     }
 
@@ -507,7 +507,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Meter> T getOrAdd(Metric name, MetricBuilder<T> builder) {
+    private <T extends Meter> T getOrAdd(Metric name, MetricMeterBuilder<T> builder) {
         final Meter metric = metrics.get(name);
         if (metric != null && builder.isInstance(metric)) {
             return (T) metric;
@@ -594,8 +594,8 @@ public class DefaultMetricRegistry implements MetricRegistry {
         for (Map.Entry<Metric, Meter> entry : metrics.entrySet()) {
             if (klass.isInstance(entry.getValue()) && predicate.test(entry.getKey(), entry.getValue())) {
                 timers.put(entry.getKey(), (T) entry.getValue());
-            } else if (entry.getValue() instanceof DynamicMetricSet) {
-                for (Map.Entry<Metric, Meter> dynamicEntry : ((DynamicMetricSet) entry.getValue()).getDynamicMetrics().entrySet()) {
+            } else if (entry.getValue() instanceof DynamicMetricMeterSet) {
+                for (Map.Entry<Metric, Meter> dynamicEntry : ((DynamicMetricMeterSet) entry.getValue()).getDynamicMetrics().entrySet()) {
                     if (klass.isInstance(dynamicEntry.getValue()) &&
                             predicate.test(dynamicEntry.getKey(), dynamicEntry.getValue())) {
                         timers.put(dynamicEntry.getKey(), (T) dynamicEntry.getValue());
@@ -607,12 +607,12 @@ public class DefaultMetricRegistry implements MetricRegistry {
     }
 
     private void onMetricAdded(Metric name, Meter metric) {
-        for (MetricRegistryListener listener : listeners) {
+        for (MetricMeterRegistryListener listener : listeners) {
             notifyListenerOfAddedMetric(listener, metric, name);
         }
     }
 
-    private void notifyListenerOfAddedMetric(MetricRegistryListener listener, Meter metric, Metric name) {
+    private void notifyListenerOfAddedMetric(MetricMeterRegistryListener listener, Meter metric, Metric name) {
         if (metric instanceof Gauge) {
             listener.onGaugeAdded(name, (Gauge<?>) metric);
         } else if (metric instanceof Counter) {
@@ -633,12 +633,12 @@ public class DefaultMetricRegistry implements MetricRegistry {
     }
 
     private void onMetricRemoved(Metric name, Meter metric) {
-        for (MetricRegistryListener listener : listeners) {
+        for (MetricMeterRegistryListener listener : listeners) {
             notifyListenerOfRemovedMetric(name, metric, listener);
         }
     }
 
-    private void notifyListenerOfRemovedMetric(Metric name, Meter metric, MetricRegistryListener listener) {
+    private void notifyListenerOfRemovedMetric(Metric name, Meter metric, MetricMeterRegistryListener listener) {
         if (metric instanceof Gauge) {
             listener.onGaugeRemoved(name);
         } else if (metric instanceof Counter) {
@@ -658,14 +658,14 @@ public class DefaultMetricRegistry implements MetricRegistry {
         }
     }
 
-    private void registerAll(Metric prefix, MetricSet metrics) throws IllegalArgumentException {
+    private void registerAll(Metric prefix, MetricMeterSet metrics) throws IllegalArgumentException {
         if (prefix == null)
             prefix = Metric.EMPTY;
 
-        for (Map.Entry<Metric, Meter> entry : metrics.getMetrics().entrySet()) {
-            if (entry.getValue() instanceof MetricSet && !(entry.getValue() instanceof DynamicMetricSet)) {
+        for (Map.Entry<Metric, Meter> entry : metrics.getMetricMeters().entrySet()) {
+            if (entry.getValue() instanceof MetricMeterSet && !(entry.getValue() instanceof DynamicMetricMeterSet)) {
                 // skip dynamic metric set, the metrics will be collected later on.
-                registerAll(Metric.join(prefix, entry.getKey()), (MetricSet) entry.getValue());
+                registerAll(Metric.join(prefix, entry.getKey()), (MetricMeterSet) entry.getValue());
             } else {
                 register(Metric.join(prefix, entry.getKey()), entry.getValue());
             }
@@ -673,7 +673,7 @@ public class DefaultMetricRegistry implements MetricRegistry {
     }
 
     @Override
-    public Map<Metric, Meter> getMetrics() {
+    public Map<Metric, Meter> getMetricMeters() {
         return Collections.unmodifiableMap(metrics);
     }
 

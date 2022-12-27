@@ -3,11 +3,11 @@ package com.jn.agileway.metrics.core.noop;
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.predicate.FixedPredicate;
 import com.jn.agileway.metrics.core.predicate.MetricPredicate;
-import com.jn.agileway.metrics.core.meterset.MetricFactory;
+import com.jn.agileway.metrics.core.meterset.MetricMeterFactory;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
-import com.jn.agileway.metrics.core.meterset.MetricRegistry;
+import com.jn.agileway.metrics.core.meterset.MetricMeterRegistry;
 import com.jn.agileway.metrics.core.snapshot.ReservoirType;
 import com.jn.langx.util.Emptys;
 
@@ -16,7 +16,7 @@ import java.util.*;
 /**
  * @since 4.1.0
  */
-public class NoopMetricFactory implements MetricFactory {
+public class NoopMetricFactory implements MetricMeterFactory {
 
 
     @Override
@@ -89,7 +89,7 @@ public class NoopMetricFactory implements MetricFactory {
     }
 
     @Override
-    public MetricRegistry getMetricRegistryByGroup(String group) {
+    public MetricMeterRegistry getMetricRegistryByGroup(String group) {
         return NoopMetricRegistry.NOOP_METRIC_REGISTRY;
     }
 

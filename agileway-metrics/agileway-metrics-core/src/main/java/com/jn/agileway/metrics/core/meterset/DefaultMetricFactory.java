@@ -16,18 +16,18 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @since 4.1.0
  */
-public class DefaultMetricFactory implements MetricFactory {
+public class DefaultMetricFactory implements MetricMeterFactory {
 
     /**
      * key: group
      * value: registry
      */
-    private Map<String, MetricRegistry> metricRegistryMap;
+    private Map<String, MetricMeterRegistry> metricRegistryMap;
 
     private volatile boolean enabled;
 
     public DefaultMetricFactory() {
-        metricRegistryMap = new ConcurrentHashMap<String, MetricRegistry>();
+        metricRegistryMap = new ConcurrentHashMap<String, MetricMeterRegistry>();
         enabled = true;
     }
 
@@ -137,9 +137,9 @@ public class DefaultMetricFactory implements MetricFactory {
             return Collections.emptyMap();
         }
         Map<String, Set<Metric>> result = new HashMap<String, Set<Metric>>();
-        for (Map.Entry<String, MetricRegistry> entry : metricRegistryMap.entrySet()) {
+        for (Map.Entry<String, MetricMeterRegistry> entry : metricRegistryMap.entrySet()) {
             Set<Metric> metricNames = new TreeSet<Metric>();
-            for (Map.Entry<Metric, Meter> metricEntry : entry.getValue().getMetrics().entrySet()) {
+            for (Map.Entry<Metric, Meter> metricEntry : entry.getValue().getMetricMeters().entrySet()) {
                 metricNames.add(metricEntry.getKey());
             }
             result.put(entry.getKey(), metricNames);
@@ -148,7 +148,7 @@ public class DefaultMetricFactory implements MetricFactory {
     }
 
     @Override
-    public MetricRegistry getMetricRegistryByGroup(String group) {
+    public MetricMeterRegistry getMetricRegistryByGroup(String group) {
         if (!metricRegistryMap.containsKey(group)) {
             metricRegistryMap.put(group, new DefaultMetricRegistry());
         }
@@ -160,7 +160,7 @@ public class DefaultMetricFactory implements MetricFactory {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
-        MetricRegistry metricRegistry = this.getMetricRegistryByGroup(group);
+        MetricMeterRegistry metricRegistry = this.getMetricRegistryByGroup(group);
         if (metricRegistry == null) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -173,7 +173,7 @@ public class DefaultMetricFactory implements MetricFactory {
             return Emptys.EMPTY_TREE_MAP;
         }
 
-        MetricRegistry metricRegistry = this.getMetricRegistryByGroup(group);
+        MetricMeterRegistry metricRegistry = this.getMetricRegistryByGroup(group);
         if (metricRegistry == null) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -186,7 +186,7 @@ public class DefaultMetricFactory implements MetricFactory {
             return Emptys.EMPTY_TREE_MAP;
         }
 
-        MetricRegistry metricRegistry = this.getMetricRegistryByGroup(group);
+        MetricMeterRegistry metricRegistry = this.getMetricRegistryByGroup(group);
         if (metricRegistry == null) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -199,7 +199,7 @@ public class DefaultMetricFactory implements MetricFactory {
             return Emptys.EMPTY_TREE_MAP;
         }
 
-        MetricRegistry metricRegistry = this.getMetricRegistryByGroup(group);
+        MetricMeterRegistry metricRegistry = this.getMetricRegistryByGroup(group);
         if (metricRegistry == null) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -212,7 +212,7 @@ public class DefaultMetricFactory implements MetricFactory {
             return Emptys.EMPTY_TREE_MAP;
         }
 
-        MetricRegistry metricRegistry = this.getMetricRegistryByGroup(group);
+        MetricMeterRegistry metricRegistry = this.getMetricRegistryByGroup(group);
         if (metricRegistry == null) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -225,7 +225,7 @@ public class DefaultMetricFactory implements MetricFactory {
             return Emptys.EMPTY_TREE_MAP;
         }
 
-        MetricRegistry metricRegistry = this.getMetricRegistryByGroup(group);
+        MetricMeterRegistry metricRegistry = this.getMetricRegistryByGroup(group);
         if (metricRegistry == null) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -238,7 +238,7 @@ public class DefaultMetricFactory implements MetricFactory {
             return Emptys.EMPTY_TREE_MAP;
         }
 
-        MetricRegistry metricRegistry = this.getMetricRegistryByGroup(group);
+        MetricMeterRegistry metricRegistry = this.getMetricRegistryByGroup(group);
         if (metricRegistry == null) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -251,7 +251,7 @@ public class DefaultMetricFactory implements MetricFactory {
             return Emptys.EMPTY_TREE_MAP;
         }
 
-        MetricRegistry metricRegistry = this.getMetricRegistryByGroup(group);
+        MetricMeterRegistry metricRegistry = this.getMetricRegistryByGroup(group);
         if (metricRegistry == null) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -264,7 +264,7 @@ public class DefaultMetricFactory implements MetricFactory {
             return;
         }
 
-        MetricRegistry metricRegistry = this.getMetricRegistryByGroup(group);
+        MetricMeterRegistry metricRegistry = this.getMetricRegistryByGroup(group);
         metricRegistry.register(name, metric);
     }
 
@@ -274,9 +274,9 @@ public class DefaultMetricFactory implements MetricFactory {
             return Collections.emptyMap();
         }
 
-        MetricRegistry metricRegistry = this.metricRegistryMap.get(group);
+        MetricMeterRegistry metricRegistry = this.metricRegistryMap.get(group);
         if (metricRegistry != null) {
-            return metricRegistry.getMetrics();
+            return metricRegistry.getMetricMeters();
         }
         return Collections.emptyMap();
     }
@@ -293,8 +293,8 @@ public class DefaultMetricFactory implements MetricFactory {
             return Collections.emptyMap();
         }
 
-        MetricRegistry metricRegistry = this.metricRegistryMap.get(group);
-        Map<Metric, Meter> metrics = metricRegistry.getMetrics();
+        MetricMeterRegistry metricRegistry = this.metricRegistryMap.get(group);
+        Map<Metric, Meter> metrics = metricRegistry.getMetricMeters();
         return getCategoryMetrics(metrics, filter);
     }
 
@@ -316,11 +316,11 @@ public class DefaultMetricFactory implements MetricFactory {
         Map<Metric, FastCompass> fastCompasses = new HashMap<Metric, FastCompass>();
         Map<Metric, ClusterHistogram> clusterHistogrames = new HashMap<Metric, ClusterHistogram>();
 
-        for (Entry<String, MetricRegistry> entry : metricRegistryMap.entrySet()) {
+        for (Entry<String, MetricMeterRegistry> entry : metricRegistryMap.entrySet()) {
 
-            MetricRegistry metricRegistry = entry.getValue();
+            MetricMeterRegistry metricRegistry = entry.getValue();
 
-            Map<Metric, Meter> metrics = metricRegistry.getMetrics();
+            Map<Metric, Meter> metrics = metricRegistry.getMetricMeters();
 
             for (Entry<Metric, Meter> entry1 : metrics.entrySet()) {
 
@@ -396,8 +396,8 @@ public class DefaultMetricFactory implements MetricFactory {
             fastCompasses.put(metricName, (FastCompass) metric);
         } else if (metric instanceof ClusterHistogram && predicate.test(metricName, metric)) {
             clusterHistogrames.put(metricName, (ClusterHistogram) metric);
-        } else if (metric instanceof DynamicMetricSet) {
-            DynamicMetricSet dynamicMetricSet = (DynamicMetricSet) metric;
+        } else if (metric instanceof DynamicMetricMeterSet) {
+            DynamicMetricMeterSet dynamicMetricSet = (DynamicMetricMeterSet) metric;
             Map<Metric, Meter> dynamicMetrics = dynamicMetricSet.getDynamicMetrics();
             for (Map.Entry<Metric, Meter> dynamicMetricEntry : dynamicMetrics.entrySet()) {
                 checkAndAdd(dynamicMetricEntry, predicate, gauges, counters, histograms, meters, timers, compasses, fastCompasses, clusterHistogrames);

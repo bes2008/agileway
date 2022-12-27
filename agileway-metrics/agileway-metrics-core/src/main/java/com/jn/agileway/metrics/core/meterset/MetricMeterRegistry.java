@@ -15,7 +15,7 @@ import java.util.Set;
  *
  * @since 4.1.0
  */
-public interface MetricRegistry extends MetricSet {
+public interface MetricMeterRegistry extends MetricMeterSet {
 
 
     // ******************** end static method ************************
@@ -49,7 +49,7 @@ public interface MetricRegistry extends MetricSet {
      * @param metrics a set of metrics
      * @throws IllegalArgumentException if any of the names are already registered
      */
-    void registerAll(MetricSet metrics) throws IllegalArgumentException;
+    void registerAll(MetricMeterSet metrics) throws IllegalArgumentException;
 
     /**
      * Creates a new {@link Counter} and registers it under the given name.
@@ -198,21 +198,21 @@ public interface MetricRegistry extends MetricSet {
     void removeMatching(MetricPredicate filter);
 
     /**
-     * Adds a {@link MetricRegistryListener} to a collection of listeners that will be notified on
+     * Adds a {@link MetricMeterRegistryListener} to a collection of listeners that will be notified on
      * metric creation.  Listeners will be notified in the order in which they are added.
      * <p/>
      * <b>N.B.:</b> The listener will be notified of all existing metrics when it first registers.
      *
      * @param listener the listener that will be notified
      */
-    void addListener(MetricRegistryListener listener);
+    void addListener(MetricMeterRegistryListener listener);
 
     /**
-     * Removes a {@link MetricRegistryListener} from this registry's collection of listeners.
+     * Removes a {@link MetricMeterRegistryListener} from this registry's collection of listeners.
      *
      * @param listener the listener that will be removed
      */
-    void removeListener(MetricRegistryListener listener);
+    void removeListener(MetricMeterRegistryListener listener);
 
     /**
      * Returns a set of the names of all the metrics in the registry.

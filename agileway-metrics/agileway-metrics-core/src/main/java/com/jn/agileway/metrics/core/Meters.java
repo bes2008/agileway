@@ -2,8 +2,8 @@ package com.jn.agileway.metrics.core;
 
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
-import com.jn.agileway.metrics.core.meterset.MetricFactory;
-import com.jn.agileway.metrics.core.meterset.MetricFactoryBinder;
+import com.jn.agileway.metrics.core.meterset.MetricMeterFactory;
+import com.jn.agileway.metrics.core.meterset.MetricMeterFactoryBinder;
 import com.jn.agileway.metrics.core.noop.NoopMetricFactory;
 import com.jn.agileway.metrics.core.snapshot.ReservoirType;
 import com.jn.langx.util.reflect.Reflects;
@@ -62,9 +62,9 @@ public class Meters {
         return name(klass.getName(), names);
     }
 
-    public static final MetricFactory NOOP_METRIC_FACTORY = new NoopMetricFactory();
-    private static final String BINDER_CLASS = Reflects.getFQNClassName(MetricFactoryBinder.class);
-    private static volatile MetricFactory metricFactory;
+    public static final MetricMeterFactory NOOP_METRIC_FACTORY = new NoopMetricFactory();
+    private static final String BINDER_CLASS = Reflects.getFQNClassName(MetricMeterFactoryBinder.class);
+    private static volatile MetricMeterFactory metricFactory;
 
     /**
      * Create a {@link Metered} metric in given group, and name.
@@ -77,7 +77,7 @@ public class Meters {
      * @return an instance of meter
      */
     public static Metered getMeter(String group, Metric name) {
-        MetricFactory factory = getMetricFactory();
+        MetricMeterFactory factory = getMetricFactory();
         return factory.getMeter(group, name);
     }
 
@@ -92,7 +92,7 @@ public class Meters {
      * @return an instance of counter
      */
     public static Counter getCounter(String group, Metric name) {
-        MetricFactory factory = getMetricFactory();
+        MetricMeterFactory factory = getMetricFactory();
         return factory.getCounter(group, name);
     }
 
@@ -108,7 +108,7 @@ public class Meters {
      * @return an instance of histogram
      */
     public static Histogram getHistogram(String group, Metric name) {
-        MetricFactory factory = getMetricFactory();
+        MetricMeterFactory factory = getMetricFactory();
         return factory.getHistogram(group, name);
     }
 
@@ -125,7 +125,7 @@ public class Meters {
      * @return an instance of histogram
      */
     public static Histogram getHistogram(String group, Metric name, ReservoirType type) {
-        MetricFactory factory = getMetricFactory();
+        MetricMeterFactory factory = getMetricFactory();
         return factory.getHistogram(group, name, type);
     }
 
@@ -141,7 +141,7 @@ public class Meters {
      * @return an instance of timer
      */
     public static Timer getTimer(String group, Metric name) {
-        MetricFactory factory = getMetricFactory();
+        MetricMeterFactory factory = getMetricFactory();
         return factory.getTimer(group, name);
     }
 
@@ -158,7 +158,7 @@ public class Meters {
      * @return an instance of timer
      */
     public static Timer getTimer(String group, Metric name, ReservoirType type) {
-        MetricFactory factory = getMetricFactory();
+        MetricMeterFactory factory = getMetricFactory();
         return factory.getTimer(group, name, type);
     }
 
@@ -173,7 +173,7 @@ public class Meters {
      * @return an instance of compass
      */
     public static Compass getCompass(String group, Metric name) {
-        MetricFactory factory = getMetricFactory();
+        MetricMeterFactory factory = getMetricFactory();
         return factory.getCompass(group, name);
     }
 
@@ -188,7 +188,7 @@ public class Meters {
      * @return an instance of compass
      */
     public static Compass getCompass(String group, Metric name, ReservoirType type) {
-        MetricFactory factory = getMetricFactory();
+        MetricMeterFactory factory = getMetricFactory();
         return factory.getCompass(group, name, type);
     }
 
@@ -203,7 +203,7 @@ public class Meters {
      * @return an instance of {@link FastCompass}
      */
     public static FastCompass getFastCompass(String group, Metric name) {
-        MetricFactory factory = getMetricFactory();
+        MetricMeterFactory factory = getMetricFactory();
         return factory.getFastCompass(group, name);
     }
 
@@ -218,7 +218,7 @@ public class Meters {
      * @return an instance of {@link ClusterHistogram}
      */
     public static ClusterHistogram getClusterHistogram(String group, Metric name, long[] buckets) {
-        MetricFactory factory = getMetricFactory();
+        MetricMeterFactory factory = getMetricFactory();
         return factory.getClusterHistogram(group, name, buckets);
     }
 
@@ -233,7 +233,7 @@ public class Meters {
      * @return an instance of {@link ClusterHistogram}
      */
     public static ClusterHistogram getClusterHistogram(String group, Metric name) {
-        MetricFactory factory = getMetricFactory();
+        MetricMeterFactory factory = getMetricFactory();
         return factory.getClusterHistogram(group, name, null);
     }
 
@@ -245,17 +245,17 @@ public class Meters {
      * @param metric the metric to register
      */
     public static void register(String group, Metric name, Meter metric) {
-        MetricFactory factory = getMetricFactory();
+        MetricMeterFactory factory = getMetricFactory();
         factory.register(group, name, metric);
     }
 
     /**
-     * get dynamically bound {@link MetricFactory} instance
+     * get dynamically bound {@link MetricMeterFactory} instance
      *
-     * @return the {@link MetricFactory} instance bound
+     * @return the {@link MetricMeterFactory} instance bound
      */
     @SuppressWarnings("unchecked")
-    public static MetricFactory getMetricFactory() {
+    public static MetricMeterFactory getMetricFactory() {
         if (metricFactory == null) {
             synchronized (Meters.class) {
                 if (metricFactory == null) {
@@ -264,7 +264,7 @@ public class Meters {
                         Method getSingleton = binderClazz.getMethod("getSingleton");
                         Object binderObject = getSingleton.invoke(null);
                         Method getMetricFactory = binderClazz.getMethod("getMetricFactory");
-                        metricFactory = (MetricFactory) getMetricFactory.invoke(binderObject);
+                        metricFactory = (MetricMeterFactory) getMetricFactory.invoke(binderObject);
                     } catch (Exception e) {
                         metricFactory = NOOP_METRIC_FACTORY;
                     }

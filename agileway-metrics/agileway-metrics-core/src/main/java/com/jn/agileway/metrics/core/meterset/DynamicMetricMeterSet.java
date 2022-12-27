@@ -11,7 +11,7 @@ import java.util.Map;
  *
  * @since 4.1.0
  */
-public interface DynamicMetricSet extends Meter {
+public interface DynamicMetricMeterSet extends Meter {
 
     /**
      * A map of metric names to metrics.

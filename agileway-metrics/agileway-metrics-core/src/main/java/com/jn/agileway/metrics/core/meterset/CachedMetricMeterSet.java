@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * @since 4.1.0
  */
-public abstract class CachedMetricSet implements MetricSet {
+public abstract class CachedMetricMeterSet implements MetricMeterSet {
 
     protected static long DEFAULT_DATA_TTL = 5000;
     // The lock used to collect metric
@@ -21,15 +21,15 @@ public abstract class CachedMetricSet implements MetricSet {
     // The clock used to calculate time
     protected Clock clock;
 
-    public CachedMetricSet() {
+    public CachedMetricMeterSet() {
         this(DEFAULT_DATA_TTL, TimeUnit.MILLISECONDS, null);
     }
 
-    public CachedMetricSet(long dataTTL, TimeUnit unit) {
+    public CachedMetricMeterSet(long dataTTL, TimeUnit unit) {
         this(dataTTL, unit, null);
     }
 
-    public CachedMetricSet(long dataTTL, TimeUnit unit, Clock clock) {
+    public CachedMetricMeterSet(long dataTTL, TimeUnit unit, Clock clock) {
         this.dataTTL = unit.toMillis(dataTTL);
         clock = clock==null ? Clocks.defaultClock(): clock;
         this.clock = clock;

@@ -4,8 +4,8 @@ import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.predicate.FixedPredicate;
 import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.*;
-import com.jn.agileway.metrics.core.meterset.MetricRegistry;
-import com.jn.agileway.metrics.core.meterset.MetricRegistryListener;
+import com.jn.agileway.metrics.core.meterset.MetricMeterRegistry;
+import com.jn.agileway.metrics.core.meterset.MetricMeterRegistryListener;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
@@ -25,12 +25,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class JmxReporter implements Closeable {
     private static final Logger LOGGER = Loggers.getLogger(JmxReporter.class);
-    private final MetricRegistry registry;
+    private final MetricMeterRegistry registry;
     private final JmxListener listener;
 
     private JmxReporter(MBeanServer mBeanServer,
                         String domain,
-                        MetricRegistry registry,
+                        MetricMeterRegistry registry,
                         MetricPredicate predicate,
                         MetricTimeUnits timeUnits,
                         ObjectNameFactory objectNameFactory) {
@@ -45,7 +45,7 @@ public class JmxReporter implements Closeable {
      * @param registry the registry to report
      * @return a {@link Builder} instance for a {@link JmxReporter}
      */
-    public static Builder forRegistry(MetricRegistry registry) {
+    public static Builder forRegistry(MetricMeterRegistry registry) {
         return new Builder(registry);
     }
 
@@ -179,7 +179,7 @@ public class JmxReporter implements Closeable {
      * not filtering metrics.
      */
     public static class Builder {
-        private final MetricRegistry registry;
+        private final MetricMeterRegistry registry;
         private MBeanServer mBeanServer;
         private TimeUnit rateUnit;
         private TimeUnit durationUnit;
@@ -189,7 +189,7 @@ public class JmxReporter implements Closeable {
         private Map<String, TimeUnit> specificDurationUnits;
         private Map<String, TimeUnit> specificRateUnits;
 
-        private Builder(MetricRegistry registry) {
+        private Builder(MetricMeterRegistry registry) {
             this.registry = registry;
             this.rateUnit = TimeUnit.SECONDS;
             this.durationUnit = TimeUnit.MILLISECONDS;
@@ -533,7 +533,7 @@ public class JmxReporter implements Closeable {
         }
     }
 
-    private static class JmxListener implements MetricRegistryListener {
+    private static class JmxListener implements MetricMeterRegistryListener {
         private final String name;
         private final MBeanServer mBeanServer;
         private final MetricPredicate predicate;

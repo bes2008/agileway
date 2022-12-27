@@ -4,9 +4,9 @@ import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
-import com.jn.agileway.metrics.core.meterset.MetricRegistry;
-import com.jn.agileway.metrics.core.meterset.MetricRegistryListener;
-import com.jn.agileway.metrics.core.meterset.MetricSet;
+import com.jn.agileway.metrics.core.meterset.MetricMeterRegistry;
+import com.jn.agileway.metrics.core.meterset.MetricMeterRegistryListener;
+import com.jn.agileway.metrics.core.meterset.MetricMeterSet;
 import com.jn.agileway.metrics.core.snapshot.ReservoirType;
 import com.jn.langx.util.Emptys;
 
@@ -16,7 +16,7 @@ import java.util.Set;
 /**
  * @since 4.1.0
  */
-public class NoopMetricRegistry implements MetricRegistry {
+public class NoopMetricRegistry implements MetricMeterRegistry {
     public static final NoopMetricRegistry NOOP_METRIC_REGISTRY = new NoopMetricRegistry();
 
     @Override
@@ -30,7 +30,7 @@ public class NoopMetricRegistry implements MetricRegistry {
     }
 
     @Override
-    public void registerAll(MetricSet metrics) throws IllegalArgumentException {
+    public void registerAll(MetricMeterSet metrics) throws IllegalArgumentException {
 
     }
 
@@ -120,12 +120,12 @@ public class NoopMetricRegistry implements MetricRegistry {
     }
 
     @Override
-    public void addListener(MetricRegistryListener listener) {
+    public void addListener(MetricMeterRegistryListener listener) {
 
     }
 
     @Override
-    public void removeListener(MetricRegistryListener listener) {
+    public void removeListener(MetricMeterRegistryListener listener) {
 
     }
 
@@ -215,7 +215,7 @@ public class NoopMetricRegistry implements MetricRegistry {
     }
 
     @Override
-    public Map<Metric, Meter> getMetrics() {
+    public Map<Metric, Meter> getMetricMeters() {
         return Emptys.EMPTY_TREE_MAP;
     }
 

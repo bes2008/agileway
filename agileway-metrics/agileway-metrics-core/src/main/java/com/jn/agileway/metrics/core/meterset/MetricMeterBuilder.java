@@ -8,7 +8,7 @@ import com.jn.agileway.metrics.core.Metric;
  * @since 4.1.0
  * @param <T>
  */
-public interface MetricBuilder<T extends Meter> {
+public interface MetricMeterBuilder<T extends Meter> {
 
     /**
      * create a new metric instance
@@ -26,7 +26,7 @@ public interface MetricBuilder<T extends Meter> {
      */
     boolean isInstance(Meter metric);
 
-    MetricBuilder<T> interval(int interval);
+    MetricMeterBuilder<T> interval(int interval);
 
-    MetricBuilder<T> newBuilder();
+    MetricMeterBuilder<T> newBuilder();
 }

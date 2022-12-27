@@ -4,7 +4,7 @@ import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.predicate.FixedPredicate;
 import com.jn.agileway.metrics.core.predicate.MetricPredicate;
 import com.jn.agileway.metrics.core.meter.*;
-import com.jn.agileway.metrics.core.meterset.MetricRegistry;
+import com.jn.agileway.metrics.core.meterset.MetricMeterRegistry;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,7 @@ public class Slf4jReporter extends ScheduledReporter {
     private final Marker marker;
     private final Metric prefix;
 
-    private Slf4jReporter(MetricRegistry registry,
+    private Slf4jReporter(MetricMeterRegistry registry,
                           LoggerProxy loggerProxy,
                           Marker marker,
                           String prefix,
@@ -46,7 +46,7 @@ public class Slf4jReporter extends ScheduledReporter {
      * @param registry the registry to report
      * @return a {@link Builder} instance for a {@link Slf4jReporter}
      */
-    public static Builder forRegistry(MetricRegistry registry) {
+    public static Builder forRegistry(MetricMeterRegistry registry) {
         return new Builder(registry);
     }
 
@@ -164,7 +164,7 @@ public class Slf4jReporter extends ScheduledReporter {
      * not filtering metrics.
      */
     public static class Builder {
-        private final MetricRegistry registry;
+        private final MetricMeterRegistry registry;
         private Logger logger;
         private LoggingLevel loggingLevel;
         private Marker marker;
@@ -173,7 +173,7 @@ public class Slf4jReporter extends ScheduledReporter {
         private TimeUnit durationUnit;
         private MetricPredicate filter;
 
-        private Builder(MetricRegistry registry) {
+        private Builder(MetricMeterRegistry registry) {
             this.registry = registry;
             this.logger = LoggerFactory.getLogger("metrics");
             this.marker = null;
