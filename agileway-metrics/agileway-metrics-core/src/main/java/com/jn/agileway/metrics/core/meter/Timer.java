@@ -1,7 +1,5 @@
 package com.jn.agileway.metrics.core.meter;
 
-import com.jn.agileway.metrics.core.Sampling;
-
 import java.io.Closeable;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;

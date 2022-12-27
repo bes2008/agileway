@@ -1,7 +1,6 @@
 package com.jn.agileway.metrics.core.meter;
 
 import com.jn.agileway.metrics.core.Meter;
-import com.jn.agileway.metrics.core.Sampling;
 
 /**
  * A metric which calculates the distribution of a value.

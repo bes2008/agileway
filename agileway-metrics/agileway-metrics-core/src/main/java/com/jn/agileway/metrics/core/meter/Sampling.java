@@ -1,4 +1,4 @@
-package com.jn.agileway.metrics.core;
+package com.jn.agileway.metrics.core.meter;
 
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
 
@@ -6,7 +6,7 @@ import com.jn.agileway.metrics.core.snapshot.Snapshot;
  * An object which samples values.
  * @since 4.1.0
  */
-public interface Sampling {
+interface Sampling {
     /**
      * Returns a snapshot of the values.
      *
