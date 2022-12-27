@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * A reporter class for logging metrics values to a SLF4J {@link Logger} periodically, similar to
- * {@link ConsoleReporter}, but using the SLF4J framework instead. It also
+ * {@link ConsoleMetricOutput}, but using the SLF4J framework instead. It also
  * supports specifying a {@link Marker} instance that can be used by custom appenders and filters
  * for the bound logging toolkit to further process metrics reports.
  *

@@ -1,21 +1,20 @@
 package com.jn.agileway.metrics.core.reporter;
 
+import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.meter.*;
+import com.jn.agileway.metrics.core.meterset.MetricMeterRegistry;
 import com.jn.agileway.metrics.core.predicate.FixedPredicate;
 import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
-import com.jn.agileway.metrics.core.meter.Timer;
-import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.meter.Counter;
-import com.jn.agileway.metrics.core.meter.Gauge;
-import com.jn.agileway.metrics.core.meter.Histogram;
-import com.jn.agileway.metrics.core.meter.Metered;
-import com.jn.agileway.metrics.core.meterset.MetricMeterRegistry;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
 import com.jn.langx.util.timing.clock.Clock;
 import com.jn.langx.util.timing.clock.Clocks;
 
 import java.io.PrintStream;
 import java.text.DateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -23,98 +22,118 @@ import java.util.concurrent.TimeUnit;
  *
  * @since 4.1.0
  */
-public class ConsoleReporter extends ScheduledReporter {
+public class ConsoleMetricOutput extends BaseMetricOutput {
     private static final int CONSOLE_WIDTH = 80;
     private final PrintStream output;
     private final Locale locale;
     private final Clock clock;
     private final DateFormat dateFormat;
 
-    private ConsoleReporter(MetricMeterRegistry registry,
-                            PrintStream output,
-                            Locale locale,
-                            Clock clock,
-                            TimeZone timeZone,
-                            TimeUnit rateUnit,
-                            TimeUnit durationUnit,
-                            MetricMeterPredicate filter) {
-        super(registry, "console-reporter", filter, rateUnit, durationUnit);
+
+    private ConsoleMetricOutput(PrintStream output,
+                                Locale locale,
+                                Clock clock,
+                                TimeZone timeZone,
+                                TimeUnit rateUnit,
+                                TimeUnit durationUnit,
+                                MetricMeterPredicate predicate) {
+        super();
+
         this.output = output;
         this.locale = locale;
         clock = clock == null ? Clocks.defaultClock() : clock;
         this.clock = clock;
         this.dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, locale);
         dateFormat.setTimeZone(timeZone);
+
+        setDurationUnit(durationUnit);
+        setRateUnit(rateUnit);
+        setPredicate(predicate);
     }
 
-    /**
-     * Returns a new {@link Builder} for {@link ConsoleReporter}.
-     *
-     * @param registry the registry to report
-     * @return a {@link Builder} instance for a {@link ConsoleReporter}
-     */
-    public static Builder forRegistry(MetricMeterRegistry registry) {
-        return new Builder(registry);
-    }
 
     @Override
-    public void report(Map<Metric, Gauge> gauges,
-                       Map<Metric, Counter> counters,
-                       Map<Metric, Histogram> histograms,
-                       Map<Metric, Metered> meters,
-                       Map<Metric, Timer> timers) {
+    public void write(MetricMeterRegistry registry, MetricMeterPredicate predicate) {
         final String dateTime = dateFormat.format(new Date(clock.getTime()));
         printWithBanner(dateTime, '=');
         output.println();
+        super.write(registry, predicate);
+        output.println();
+        output.flush();
+    }
 
-        if (!gauges.isEmpty()) {
+    @Override
+    protected void writeGauges(Map<Metric, Gauge> metrics) {
+        if (!metrics.isEmpty()) {
             printWithBanner("-- Gauges", '-');
-            for (Map.Entry<Metric, Gauge> entry : gauges.entrySet()) {
+            for (Map.Entry<Metric, Gauge> entry : metrics.entrySet()) {
                 output.println(entry.getKey());
                 printGauge(entry);
             }
             output.println();
         }
 
-        if (!counters.isEmpty()) {
+    }
+
+    @Override
+    protected void writeCounters(Map<Metric, Counter> metrics) {
+
+        if (!metrics.isEmpty()) {
             printWithBanner("-- Counters", '-');
-            for (Map.Entry<Metric, Counter> entry : counters.entrySet()) {
+            for (Map.Entry<Metric, Counter> entry : metrics.entrySet()) {
                 output.println(entry.getKey());
                 printCounter(entry);
             }
             output.println();
         }
+    }
 
-        if (!histograms.isEmpty()) {
+    @Override
+    protected void writeCompasses(Map<Metric, Compass> metrics) {
+        super.writeCompasses(metrics);
+    }
+
+    @Override
+    protected void writeFastCompasses(Map<Metric, FastCompass> metrics) {
+        super.writeFastCompasses(metrics);
+    }
+
+    @Override
+    protected void writeHistograms(Map<Metric, Histogram> metrics) {
+        if (!metrics.isEmpty()) {
             printWithBanner("-- Histograms", '-');
-            for (Map.Entry<Metric, Histogram> entry : histograms.entrySet()) {
+            for (Map.Entry<Metric, Histogram> entry : metrics.entrySet()) {
                 output.println(entry.getKey());
                 printHistogram(entry.getValue());
             }
             output.println();
         }
+    }
 
-        if (!meters.isEmpty()) {
-            printWithBanner("-- Meters", '-');
-            for (Map.Entry<Metric, Metered> entry : meters.entrySet()) {
-                output.println(entry.getKey());
-                printMeter(entry.getValue());
-            }
-            output.println();
-        }
-
-        if (!timers.isEmpty()) {
+    @Override
+    protected void writeTimers(Map<Metric, Timer> metrics) {
+        if (!metrics.isEmpty()) {
             printWithBanner("-- Timers", '-');
-            for (Map.Entry<Metric, Timer> entry : timers.entrySet()) {
+            for (Map.Entry<Metric, Timer> entry : metrics.entrySet()) {
                 output.println(entry.getKey());
                 printTimer(entry.getValue());
             }
             output.println();
         }
-
-        output.println();
-        output.flush();
     }
+
+    @Override
+    protected void writeMetereds(Map<Metric, Metered> metrics) {
+        if (!metrics.isEmpty()) {
+            printWithBanner("-- Meters", '-');
+            for (Map.Entry<Metric, Metered> entry : metrics.entrySet()) {
+                output.println(entry.getKey());
+                printMeter(entry.getValue());
+            }
+            output.println();
+        }
+    }
+
 
     private void printMeter(Metered meter) {
         output.printf(locale, "             count = %d%n", meter.getCount());
@@ -177,12 +196,11 @@ public class ConsoleReporter extends ScheduledReporter {
     }
 
     /**
-     * A builder for {@link ConsoleReporter} instances. Defaults to using the default locale and
+     * A builder for {@link ConsoleMetricOutput} instances. Defaults to using the default locale and
      * time zone, writing to {@code System.out}, converting rates to events/second, converting
      * durations to milliseconds, and not filtering metrics.
      */
     public static class Builder {
-        private final MetricMeterRegistry registry;
         private PrintStream output;
         private Locale locale;
         private Clock clock;
@@ -191,8 +209,7 @@ public class ConsoleReporter extends ScheduledReporter {
         private TimeUnit durationUnit;
         private MetricMeterPredicate filter;
 
-        private Builder(MetricMeterRegistry registry) {
-            this.registry = registry;
+        private Builder() {
             this.output = System.out;
             this.locale = Locale.getDefault();
             this.clock = Clocks.defaultClock();
@@ -280,13 +297,12 @@ public class ConsoleReporter extends ScheduledReporter {
         }
 
         /**
-         * Builds a {@link ConsoleReporter} with the given properties.
+         * Builds a {@link ConsoleMetricOutput} with the given properties.
          *
-         * @return a {@link ConsoleReporter}
+         * @return a {@link ConsoleMetricOutput}
          */
-        public ConsoleReporter build() {
-            return new ConsoleReporter(registry,
-                    output,
+        public ConsoleMetricOutput build() {
+            return new ConsoleMetricOutput(output,
                     locale,
                     clock,
                     timeZone,

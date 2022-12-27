@@ -1,7 +1,7 @@
 package com.jn.agileway.metrics.core.noop;
 
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
-import com.jn.agileway.metrics.core.meter.BucketCounter;
+import com.jn.agileway.metrics.core.meter.impl.BucketCounter;
 import com.jn.agileway.metrics.core.meter.Compass;
 import com.jn.langx.util.Emptys;
 

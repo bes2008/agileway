@@ -1,6 +1,5 @@
 package com.jn.agileway.metrics.core.meter.impl;
 
-import com.jn.agileway.metrics.core.meter.BucketCounter;
 import com.jn.agileway.metrics.core.meter.Histogram;
 import com.jn.agileway.metrics.core.snapshot.*;
 import com.jn.langx.util.timing.clock.Clock;

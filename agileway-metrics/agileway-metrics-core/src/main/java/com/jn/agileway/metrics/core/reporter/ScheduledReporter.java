@@ -1,34 +1,30 @@
 package com.jn.agileway.metrics.core.reporter;
 
-import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
+import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meterset.MetricMeterRegistry;
+import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
+import com.jn.langx.util.concurrent.CommonThreadFactory;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
-import java.io.Closeable;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The abstract base class for all scheduled reporters (i.e., reporters which process a registry's
  * metrics periodically).
  *
- * @see ConsoleReporter
+ * @see ConsoleMetricOutput
  * @see Slf4jReporter
- *
  * @since 4.1.0
  */
-public abstract class ScheduledReporter implements Closeable {
+public abstract class ScheduledReporter implements Reporter {
 
-    private static final Logger LOG = Loggers.getLogger(ScheduledReporter.class);
-    private static final AtomicInteger FACTORY_ID = new AtomicInteger();
+    private static final Logger logger = Loggers.getLogger(ScheduledReporter.class);
     private final MetricMeterRegistry registry;
     private final ScheduledExecutorService executor;
     private final MetricMeterPredicate filter;
@@ -36,6 +32,8 @@ public abstract class ScheduledReporter implements Closeable {
     private final String durationUnit;
     private final double rateFactor;
     private final String rateUnit;
+    private MetricOutput output;
+
     /**
      * Creates a new {@link ScheduledReporter} instance.
      *
@@ -52,7 +50,7 @@ public abstract class ScheduledReporter implements Closeable {
                                 TimeUnit rateUnit,
                                 TimeUnit durationUnit) {
         this(registry, filter, rateUnit, durationUnit,
-                Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory(name + '-' + FACTORY_ID.incrementAndGet())));
+                Executors.newSingleThreadScheduledExecutor(new CommonThreadFactory(name, true)));
     }
 
     /**
@@ -90,7 +88,7 @@ public abstract class ScheduledReporter implements Closeable {
                 try {
                     report();
                 } catch (Throwable ex) {
-                    LOG.error("Throwable RuntimeException thrown from {}#report. Exception was suppressed.", ScheduledReporter.this.getClass().getSimpleName(), ex);
+                    logger.error("Throwable RuntimeException thrown from {}#report. Exception was suppressed.", ScheduledReporter.this.getClass().getSimpleName(), ex);
                 }
             }
         }, period, period, unit);
@@ -109,7 +107,7 @@ public abstract class ScheduledReporter implements Closeable {
                 executor.shutdownNow(); // Cancel currently executing tasks
                 // Wait a while for tasks to respond to being cancelled
                 if (!executor.awaitTermination(1, TimeUnit.SECONDS)) {
-                    LOG.warn(getClass().getSimpleName() + ": ScheduledExecutorService did not terminate");
+                    logger.warn(getClass().getSimpleName() + ": ScheduledExecutorService did not terminate");
                 }
             }
         } catch (InterruptedException ie) {
@@ -133,22 +131,13 @@ public abstract class ScheduledReporter implements Closeable {
      */
     public void report() {
         synchronized (this) {
-            report(registry.getGauges(filter),
-                    registry.getCounters(filter),
-                    registry.getHistograms(filter),
-                    registry.getMetereds(filter),
-                    registry.getTimers(filter));
+            output.write(registry, filter);
         }
     }
 
     /**
      * Called periodically by the polling thread. Subclasses should report all the given metrics.
      *
-     * @param gauges     all of the gauges in the registry
-     * @param counters   all of the counters in the registry
-     * @param histograms all of the histograms in the registry
-     * @param meters     all of the meters in the registry
-     * @param timers     all of the timers in the registry
      */
     public abstract void report(Map<Metric, Gauge> gauges,
                                 Map<Metric, Counter> counters,
@@ -177,29 +166,5 @@ public abstract class ScheduledReporter implements Closeable {
         return s.substring(0, s.length() - 1);
     }
 
-    /**
-     * A simple named thread factory.
-     */
-    @SuppressWarnings("NullableProblems")
-    private static class NamedThreadFactory implements ThreadFactory {
-        private final ThreadGroup group;
-        private final AtomicInteger threadNumber = new AtomicInteger(1);
-        private final String namePrefix;
 
-        private NamedThreadFactory(String name) {
-            final SecurityManager s = System.getSecurityManager();
-            this.group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
-            this.namePrefix = "metrics-" + name + "-thread-";
-        }
-
-        @Override
-        public Thread newThread(Runnable r) {
-            final Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
-            t.setDaemon(true);
-            if (t.getPriority() != Thread.NORM_PRIORITY) {
-                t.setPriority(Thread.NORM_PRIORITY);
-            }
-            return t;
-        }
-    }
 }

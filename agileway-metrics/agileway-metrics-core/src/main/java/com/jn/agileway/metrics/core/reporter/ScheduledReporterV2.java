@@ -1,32 +1,34 @@
 package com.jn.agileway.metrics.core.reporter;
 
-import com.jn.agileway.metrics.core.*;
+import com.jn.agileway.metrics.core.Meter;
+import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.config.MetricsCollectPeriodConfig;
-import com.jn.agileway.metrics.core.predicate.CompositeMetricPredicate;
-import com.jn.agileway.metrics.core.predicate.TimeMetricLevelPredicate;
-import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
-import com.jn.agileway.metrics.core.meterset.MetricMeterFactory;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
+import com.jn.agileway.metrics.core.meterset.MetricMeterFactory;
+import com.jn.agileway.metrics.core.predicate.CompositeMetricPredicate;
+import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
+import com.jn.agileway.metrics.core.predicate.TimeMetricLevelPredicate;
 import com.jn.langx.util.concurrent.CommonThreadFactory;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
-import java.io.Closeable;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * report factory 里所有的metrics
  *
  * @see ScheduledReporter
- *
  * @since 4.1.0
  */
-public abstract class MetricReporter implements Closeable {
+public abstract class ScheduledReporterV2 implements Reporter {
 
-    private static final Logger LOG = Loggers.getLogger(MetricReporter.class);
+    private static final Logger LOG = Loggers.getLogger(ScheduledReporterV2.class);
 
     protected final double durationFactor;
     protected final double rateFactor;
@@ -58,7 +60,7 @@ public abstract class MetricReporter implements Closeable {
                 report();
             } catch (Throwable ex) {
                 LOG.error("Throwable RuntimeException thrown from {}#report. Exception was suppressed.",
-                        MetricReporter.this.getClass().getSimpleName(), ex);
+                        ScheduledReporterV2.this.getClass().getSimpleName(), ex);
             } finally {
                 timeMetricLevelPredicate.afterReport();
             }
@@ -66,59 +68,59 @@ public abstract class MetricReporter implements Closeable {
     };
 
     /**
-     * Creates a new {@link MetricReporter} instance.
+     * Creates a new {@link ScheduledReporterV2} instance.
      *
-     * @param factory the {@link MetricMeterFactory} containing the metrics this
-     *                      reporter will report
-     * @param name          the reporter's name
-     * @param predicate        the predicate for which metrics to report
-     * @param rateUnit      a unit of time
-     * @param durationUnit  a unit of time
+     * @param factory      the {@link MetricMeterFactory} containing the metrics this
+     *                     reporter will report
+     * @param name         the reporter's name
+     * @param predicate    the predicate for which metrics to report
+     * @param rateUnit     a unit of time
+     * @param durationUnit a unit of time
      */
-    protected MetricReporter(MetricMeterFactory factory,
-                             String name,
-                             MetricMeterPredicate predicate,
-                             MetricsCollectPeriodConfig metricsReportPeriodConfig,
-                             TimeUnit rateUnit,
-                             TimeUnit durationUnit) {
+    protected ScheduledReporterV2(MetricMeterFactory factory,
+                                  String name,
+                                  MetricMeterPredicate predicate,
+                                  MetricsCollectPeriodConfig metricsReportPeriodConfig,
+                                  TimeUnit rateUnit,
+                                  TimeUnit durationUnit) {
         this(factory, predicate, new TimeMetricLevelPredicate(metricsReportPeriodConfig), rateUnit, durationUnit,
-                Executors.newSingleThreadScheduledExecutor( new CommonThreadFactory(name,true)));
+                Executors.newSingleThreadScheduledExecutor(new CommonThreadFactory(name, true)));
     }
 
     /**
-     * Creates a new {@link MetricReporter} instance.
+     * Creates a new {@link ScheduledReporterV2} instance.
      *
-     * @param factory the {@link MetricMeterFactory} containing the metrics this
-     *                      reporter will report
-     * @param name          the reporter's name
-     * @param predicate        the predicate for which metrics to report
-     * @param rateUnit      a unit of time
-     * @param durationUnit  a unit of time
+     * @param factory      the {@link MetricMeterFactory} containing the metrics this
+     *                     reporter will report
+     * @param name         the reporter's name
+     * @param predicate    the predicate for which metrics to report
+     * @param rateUnit     a unit of time
+     * @param durationUnit a unit of time
      */
-    protected MetricReporter(MetricMeterFactory factory,
-                             String name,
-                             MetricMeterPredicate predicate,
-                             TimeMetricLevelPredicate timeMetricLevelFilter,
-                             TimeUnit rateUnit,
-                             TimeUnit durationUnit) {
+    protected ScheduledReporterV2(MetricMeterFactory factory,
+                                  String name,
+                                  MetricMeterPredicate predicate,
+                                  TimeMetricLevelPredicate timeMetricLevelFilter,
+                                  TimeUnit rateUnit,
+                                  TimeUnit durationUnit) {
         this(factory, predicate, timeMetricLevelFilter, rateUnit, durationUnit,
                 Executors.newSingleThreadScheduledExecutor(new CommonThreadFactory(name, true)));
     }
 
     /**
-     * Creates a new {@link MetricReporter} instance.
+     * Creates a new {@link ScheduledReporterV2} instance.
      *
-     * @param factory the {@link MetricMeterFactory} containing the metrics this
-     *                      reporter will report
-     * @param predicate        the predicate for which metrics to report
-     * @param executor      the executor to use while scheduling reporting of metrics.
+     * @param factory   the {@link MetricMeterFactory} containing the metrics this
+     *                  reporter will report
+     * @param predicate the predicate for which metrics to report
+     * @param executor  the executor to use while scheduling reporting of metrics.
      */
-    protected MetricReporter(MetricMeterFactory factory,
-                             MetricMeterPredicate predicate,
-                             TimeMetricLevelPredicate timeMetricLevelFilter,
-                             TimeUnit rateUnit,
-                             TimeUnit durationUnit,
-                             ScheduledExecutorService executor) {
+    protected ScheduledReporterV2(MetricMeterFactory factory,
+                                  MetricMeterPredicate predicate,
+                                  TimeMetricLevelPredicate timeMetricLevelFilter,
+                                  TimeUnit rateUnit,
+                                  TimeUnit durationUnit,
+                                  ScheduledExecutorService executor) {
         this.factory = factory;
         this.executor = executor;
         this.rateFactor = rateUnit.toSeconds(1);
@@ -219,13 +221,6 @@ public abstract class MetricReporter implements Closeable {
 
     /**
      * Called periodically by the polling thread. Subclasses should report all the given metrics.
-     *
-     * @param gauges     all of the gauges in the factory
-     * @param counters   all of the counters in the factory
-     * @param histograms all of the histograms in the factory
-     * @param meters     all of the meters in the factory
-     * @param timers     all of the timers in the factory
-     * @param compasses  all of the compasses in the factory
      */
     public abstract void report(Map<Metric, Gauge> gauges,
                                 Map<Metric, Counter> counters,
@@ -234,7 +229,7 @@ public abstract class MetricReporter implements Closeable {
                                 Map<Metric, Timer> timers,
                                 Map<Metric, Compass> compasses,
                                 Map<Metric, FastCompass> fastCompasses,
-                                Map<Metric, ClusterHistogram> clusterHistogrames);
+                                Map<Metric, ClusterHistogram> clusterHistograms);
 
     protected String getRateUnit() {
         return rateUnit;
