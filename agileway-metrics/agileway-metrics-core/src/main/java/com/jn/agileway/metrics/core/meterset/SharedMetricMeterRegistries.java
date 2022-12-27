@@ -9,10 +9,10 @@ import java.util.concurrent.ConcurrentMap;
  *
  * @since 4.1.0
  */
-public class SharedMetricRegistries {
+public class SharedMetricMeterRegistries {
     private static final ConcurrentMap<String, MetricMeterRegistry> REGISTRIES = new ConcurrentHashMap<String, MetricMeterRegistry>();
 
-    private SharedMetricRegistries() { /* singleton */ }
+    private SharedMetricMeterRegistries() { /* singleton */ }
 
     public static void clear() {
         REGISTRIES.clear();
