@@ -5,12 +5,14 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer2;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 public class Tags {
+    private Tags() {
+    }
+
     public static Tag of(String key, String value) {
         return new ImmutableTag(key, value);
     }
