@@ -3,7 +3,6 @@ package com.jn.agileway.metrics.core.reporter;
 import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meterset.MetricMeterRegistry;
-import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
 import com.jn.langx.util.concurrent.CommonThreadFactory;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
@@ -27,7 +26,6 @@ public abstract class ScheduledReporter implements Reporter {
     private static final Logger logger = Loggers.getLogger(ScheduledReporter.class);
     private final MetricMeterRegistry registry;
     private final ScheduledExecutorService executor;
-    private final MetricMeterPredicate filter;
     private final double durationFactor;
     private final String durationUnit;
     private final double rateFactor;
@@ -40,16 +38,14 @@ public abstract class ScheduledReporter implements Reporter {
      * @param registry     the {@link MetricMeterRegistry} containing the metrics this
      *                     reporter will report
      * @param name         the reporter's name
-     * @param filter       the filter for which metrics to report
      * @param rateUnit     a unit of time
      * @param durationUnit a unit of time
      */
     protected ScheduledReporter(MetricMeterRegistry registry,
                                 String name,
-                                MetricMeterPredicate filter,
                                 TimeUnit rateUnit,
                                 TimeUnit durationUnit) {
-        this(registry, filter, rateUnit, durationUnit,
+        this(registry, rateUnit, durationUnit,
                 Executors.newSingleThreadScheduledExecutor(new CommonThreadFactory(name, true)));
     }
 
@@ -58,16 +54,13 @@ public abstract class ScheduledReporter implements Reporter {
      *
      * @param registry the {@link MetricMeterRegistry} containing the metrics this
      *                 reporter will report
-     * @param filter   the filter for which metrics to report
      * @param executor the executor to use while scheduling reporting of metrics.
      */
     protected ScheduledReporter(MetricMeterRegistry registry,
-                                MetricMeterPredicate filter,
                                 TimeUnit rateUnit,
                                 TimeUnit durationUnit,
                                 ScheduledExecutorService executor) {
         this.registry = registry;
-        this.filter = filter;
         this.executor = executor;
         this.rateFactor = rateUnit.toSeconds(1);
         this.rateUnit = calculateRateUnit(rateUnit);
@@ -131,7 +124,7 @@ public abstract class ScheduledReporter implements Reporter {
      */
     public void report() {
         synchronized (this) {
-            output.write(registry, filter);
+            output.write(registry);
         }
     }
 

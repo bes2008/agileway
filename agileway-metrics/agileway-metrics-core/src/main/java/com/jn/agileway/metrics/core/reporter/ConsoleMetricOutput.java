@@ -53,11 +53,11 @@ public class ConsoleMetricOutput extends BaseMetricOutput {
 
 
     @Override
-    public void write(MetricMeterRegistry registry, MetricMeterPredicate predicate) {
+    public void write(MetricMeterRegistry registry) {
         final String dateTime = dateFormat.format(new Date(clock.getTime()));
         printWithBanner(dateTime, '=');
         output.println();
-        super.write(registry, predicate);
+        super.write(registry);
         output.println();
         output.flush();
     }

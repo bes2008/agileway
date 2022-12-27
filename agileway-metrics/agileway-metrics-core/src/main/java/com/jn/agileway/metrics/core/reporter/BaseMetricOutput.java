@@ -61,7 +61,7 @@ public class BaseMetricOutput implements MetricOutput {
     }
 
     @Override
-    public void write(MetricMeterRegistry registry, MetricMeterPredicate predicate) {
+    public void write(MetricMeterRegistry registry) {
         writeGauges(registry.getGauges(predicate));
         writeCounters(registry.getCounters(predicate));
         writeCompasses(registry.getCompasses(predicate));

@@ -37,9 +37,8 @@ public class CsvReporter extends ScheduledReporter {
                         TimeUnit rateUnit,
                         TimeUnit durationUnit,
                         Clock clock,
-                        MetricMeterPredicate filter,
                         CsvFileProvider csvFileProvider) {
-        super(registry, "csv-reporter", filter, rateUnit, durationUnit);
+        super(registry, "csv-reporter",  rateUnit, durationUnit);
         this.directory = directory;
         this.locale = locale;
         this.clock = clock;
@@ -269,7 +268,6 @@ public class CsvReporter extends ScheduledReporter {
                     rateUnit,
                     durationUnit,
                     clock,
-                    filter,
                     csvFileProvider);
         }
     }

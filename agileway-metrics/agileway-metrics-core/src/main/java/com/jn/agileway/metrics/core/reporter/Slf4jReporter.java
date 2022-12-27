@@ -32,9 +32,8 @@ public class Slf4jReporter extends ScheduledReporter {
                           Marker marker,
                           String prefix,
                           TimeUnit rateUnit,
-                          TimeUnit durationUnit,
-                          MetricMeterPredicate filter) {
-        super(registry, "logger-reporter", filter, rateUnit, durationUnit);
+                          TimeUnit durationUnit) {
+        super(registry, "logger-reporter",  rateUnit, durationUnit);
         this.loggerProxy = loggerProxy;
         this.marker = marker;
         this.prefix = Metric.build(prefix);
@@ -286,7 +285,7 @@ public class Slf4jReporter extends ScheduledReporter {
                     loggerProxy = new DebugLoggerProxy(logger);
                     break;
             }
-            return new Slf4jReporter(registry, loggerProxy, marker, prefix, rateUnit, durationUnit, filter);
+            return new Slf4jReporter(registry, loggerProxy, marker, prefix, rateUnit, durationUnit);
         }
     }
 
