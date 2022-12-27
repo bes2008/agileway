@@ -30,7 +30,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
     // 用于分桶计数统计间隔配置
     private static final MetricsCollectPeriodConfig config = new MetricsCollectPeriodConfig();
 
-    private final ConcurrentMap<Metric, Meter> metrics;
+    private final ConcurrentMap<Metric, Meter> metricMeters;
     private final List<MetricMeterRegistryListener> listeners;
     private final int maxMetricCount;
     /**
@@ -56,7 +56,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
     }
 
     public DefaultMetricRegistry(int maxMetricCount) {
-        this.metrics = new ConcurrentHashMap<Metric, Meter>();
+        this.metricMeters = new ConcurrentHashMap<Metric, Meter>();
         this.listeners = new CopyOnWriteArrayList<MetricMeterRegistryListener>();
         this.maxMetricCount = maxMetricCount;
     }
@@ -76,7 +76,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
      * remote process restart, Need to cancel the previously collected metrics and re-register.
      */
     public void unregisterAll() {
-        metrics.clear();
+        metricMeters.clear();
     }
 
     /**
@@ -92,7 +92,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
         if (metric instanceof MetricMeterSet && !(metric instanceof DynamicMetricMeterSet)) {
             registerAll(name, (MetricMeterSet) metric);
         } else {
-            final Meter existing = metrics.putIfAbsent(name, metric);
+            final Meter existing = metricMeters.putIfAbsent(name, metric);
             if (existing == null) {
                 onMetricAdded(name, metric);
             } else {
@@ -285,7 +285,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
      * @return whether or not the metric was removed
      */
     public boolean remove(Metric name) {
-        final Meter metric = metrics.remove(name);
+        final Meter metric = metricMeters.remove(name);
         if (metric != null) {
             onMetricRemoved(name, metric);
             return true;
@@ -299,7 +299,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
      * @param predicate a predicate
      */
     public void removeMatching(MetricMeterPredicate predicate) {
-        for (Map.Entry<Metric, Meter> entry : metrics.entrySet()) {
+        for (Map.Entry<Metric, Meter> entry : metricMeters.entrySet()) {
             if (predicate.test(entry.getKey(), entry.getValue())) {
                 remove(entry.getKey());
             }
@@ -317,7 +317,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
     public void addListener(MetricMeterRegistryListener listener) {
         listeners.add(listener);
 
-        for (Map.Entry<Metric, Meter> entry : metrics.entrySet()) {
+        for (Map.Entry<Metric, Meter> entry : metricMeters.entrySet()) {
             notifyListenerOfAddedMetric(listener, entry.getValue(), entry.getKey());
         }
     }
@@ -337,7 +337,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
      * @return the names of all the metrics
      */
     public Set<Metric> getNames() {
-        return Collections.unmodifiableSortedSet(new TreeSet<Metric>(metrics.keySet()));
+        return Collections.unmodifiableSortedSet(new TreeSet<Metric>(metricMeters.keySet()));
     }
 
     /**
@@ -508,13 +508,13 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
 
     @SuppressWarnings("unchecked")
     private <T extends Meter> T getOrAdd(Metric name, MetricMeterBuilder<T> builder) {
-        final Meter metric = metrics.get(name);
+        final Meter metric = metricMeters.get(name);
         if (metric != null && builder.isInstance(metric)) {
             return (T) metric;
         } else if (metric == null) {
             try {
                 // 当已注册的metric数量太多时，返回一个空实现
-                if (metrics.size() >= maxMetricCount) {
+                if (metricMeters.size() >= maxMetricCount) {
                     return null;
                 }
                 builder = builder.newBuilder().interval(config.period(name.getMetricLevel()));
@@ -524,7 +524,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
                 }
                 return register(name, newMetric);
             } catch (IllegalArgumentException e) {
-                final Meter added = metrics.get(name);
+                final Meter added = metricMeters.get(name);
                 if (builder.isInstance(added)) {
                     return (T) added;
                 } else {
@@ -537,20 +537,20 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
 
     @SuppressWarnings("unchecked")
     private <T extends Meter> T getOrAdd(Metric name, ReservoirTypeBuilder<T> builder, ReservoirType type) {
-        final Meter metric = metrics.get(name);
+        final Meter metric = metricMeters.get(name);
         if (metric != null && builder.isInstance(metric)) {
             return (T) metric;
         } else if (metric == null) {
             try {
                 // 当已注册的metric数量太多时，返回一个空实现
-                if (metrics.size() >= maxMetricCount) {
+                if (metricMeters.size() >= maxMetricCount) {
                     return null;
                 }
                 T newMetric = ((ReservoirTypeMetricBuilder<T>) builder.newBuilder().interval(config.period(name.getMetricLevel()))).newMetric(name, type);
                 if (newMetric == null) return null;
                 return register(name, newMetric);
             } catch (IllegalArgumentException e) {
-                final Meter added = metrics.get(name);
+                final Meter added = metricMeters.get(name);
                 if (builder.isInstance(added)) {
                     return (T) added;
                 } else {
@@ -563,13 +563,13 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
 
     @SuppressWarnings("unchecked")
     private <T extends Meter> T getOrAddClusterHistogram(Metric name, ClusterHistogramBuilder builder, long[] buckets) {
-        final Meter metric = metrics.get(name);
+        final Meter metric = metricMeters.get(name);
         if (metric != null && builder.isInstance(metric)) {
             return (T) metric;
         } else if (metric == null) {
             try {
                 // 当已注册的metric数量太多时，返回一个空实现
-                if (metrics.size() >= maxMetricCount) {
+                if (metricMeters.size() >= maxMetricCount) {
                     return null;
                 }
                 ClusterHistogram newMetric = ((ClusterHistogramBuilder) builder.newBuilder().interval(config.period(name.getMetricLevel()))).newMetric(name, buckets);
@@ -578,7 +578,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
                 }
                 return register(name, (T) newMetric);
             } catch (IllegalArgumentException e) {
-                final Meter added = metrics.get(name);
+                final Meter added = metricMeters.get(name);
                 if (builder.isInstance(added)) {
                     return (T) added;
                 } else {
@@ -591,7 +591,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
 
     private <T extends Meter> SortedMap<Metric, T> getMetrics(Class<T> klass, MetricMeterPredicate predicate) {
         final TreeMap<Metric, T> timers = new TreeMap<Metric, T>();
-        for (Map.Entry<Metric, Meter> entry : metrics.entrySet()) {
+        for (Map.Entry<Metric, Meter> entry : metricMeters.entrySet()) {
             if (klass.isInstance(entry.getValue()) && predicate.test(entry.getKey(), entry.getValue())) {
                 timers.put(entry.getKey(), (T) entry.getValue());
             } else if (entry.getValue() instanceof DynamicMetricMeterSet) {
@@ -674,7 +674,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
 
     @Override
     public Map<Metric, Meter> getMetricMeters() {
-        return Collections.unmodifiableMap(metrics);
+        return Collections.unmodifiableMap(metricMeters);
     }
 
 }
