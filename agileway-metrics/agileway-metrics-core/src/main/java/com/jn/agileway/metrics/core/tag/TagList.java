@@ -42,7 +42,7 @@ public final class TagList implements Iterable<Tag> {
         this(Collects.asArray(tags, Tag.class));
     }
     public TagList() {
-        this.tags = new ImmutableTag[0];
+        this.tags = new Tag[0];
     }
     /**
      * Return a {@code Tags} instance that contains no elements.

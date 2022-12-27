@@ -7,6 +7,7 @@ import com.jn.agileway.redis.examples.controller.redis_examples.Person;
 import com.jn.agileway.web.servlet.RRHolder;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.logging.Loggers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,10 +21,12 @@ import java.util.List;
 @RequestMapping("/rest/global_response")
 @RestController
 public class GlobalResponseTests {
-    Metric metricName = Meters.name("http", "qps").tag("instance", "ins-1");
+    Metric metric = Meters.name("http", "qps").tag("instance", "ins-1");
+
     @GetMapping("/testBean")
     public Person aPerson() {
-        Metered meter = Meters.getMetered("test", metricName);
+        Metered meter = Meters.getMetered("test", metric);
+        Loggers.getLogger(getClass()).info(metric.toString());
         meter.mark();
         Person p = new Person();
         p.setAge(10);
@@ -33,7 +36,7 @@ public class GlobalResponseTests {
 
     @GetMapping("/testListBeans")
     public List<Person> listBeans(){
-        Metered meter = Meters.getMetered("test", metricName);
+        Metered meter = Meters.getMetered("test", metric);
         meter.mark();
         List<Person> list = Collects.newArrayList();
         for(int i =0; i< 3;i++) {
@@ -47,7 +50,7 @@ public class GlobalResponseTests {
 
     @GetMapping("/testResponseEntityBean")
     public ResponseEntity get() {
-        Metered meter = Meters.getMetered("test", metricName);
+        Metered meter = Meters.getMetered("test", metric);
         meter.mark();
         Person p = new Person();
         p.setAge(10);
@@ -61,7 +64,7 @@ public class GlobalResponseTests {
     @GetMapping("/showRequest")
     @PostMapping
     public Object showRequest(){
-        Metered meter = Meters.getMetered("test", metricName);
+        Metered meter = Meters.getMetered("test", metric);
         meter.mark();
 
         HttpServletRequest request = RRHolder.getRequest();

@@ -166,8 +166,8 @@ public class Metric implements Comparable<Metric> {
         return tags;
     }
 
-    public Map<String,String> getTagsAsMap(){
-        if( Objs.isEmpty(this.tags)){
+    public Map<String, String> getTagsAsMap() {
+        if (Objs.isEmpty(this.tags)) {
             return Collects.emptyHashMap(true);
         }
         return this.tags.asMap();

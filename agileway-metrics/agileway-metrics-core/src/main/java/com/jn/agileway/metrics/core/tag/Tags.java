@@ -13,10 +13,6 @@ public class Tags {
     private Tags() {
     }
 
-    public static Tag of(String key, String value) {
-        return new ImmutableTag(key, value);
-    }
-
     /**
      * Return a new {@code Tags} instance by concatenating the specified collections of
      * tags.
@@ -78,7 +74,7 @@ public class Tags {
         Collects.forEach(tagMap, new Consumer2<String, String>() {
             @Override
             public void accept(String key, String value) {
-                list.add(of(key, value));
+                list.add(Tags.of(key, value));
             }
         });
         return listOf(list);
@@ -117,4 +113,7 @@ public class Tags {
     }
 
 
+    public static Tag of(String key, String value) {
+        return new Tag(key, value);
+    }
 }
