@@ -2,7 +2,7 @@ package com.jn.agileway.metrics.core.collector;
 
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.config.MetricsCollectPeriodConfig;
-import com.jn.agileway.metrics.core.predicate.MetricPredicate;
+import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 
@@ -36,12 +36,12 @@ public abstract class MetricsCollector implements Collector {
     /**
      * Use this filer to filter out any metric object that is not needed.
      */
-    protected MetricPredicate predicate;
+    protected MetricMeterPredicate predicate;
     private boolean collectNAValue;
     private double notAvailable;
 
     MetricsCollector(Map<String, String> globalTags, double rateFactor,
-                     double durationFactor, MetricPredicate filter) {
+                     double durationFactor, MetricMeterPredicate filter) {
         this(globalTags, rateFactor, durationFactor, filter, false);
     }
 
@@ -55,7 +55,7 @@ public abstract class MetricsCollector implements Collector {
      * @param filter
      */
     MetricsCollector(Map<String, String> globalTags, double rateFactor,
-                     double durationFactor, MetricPredicate filter, boolean collectNAValue) {
+                     double durationFactor, MetricMeterPredicate filter, boolean collectNAValue) {
         this.metrics = new ArrayList<MetricObject>();
         this.globalTags = globalTags;
         this.rateFactor = rateFactor;

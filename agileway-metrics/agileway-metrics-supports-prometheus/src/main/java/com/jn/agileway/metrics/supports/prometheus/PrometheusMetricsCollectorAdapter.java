@@ -6,7 +6,7 @@ import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meterset.MetricMeterRegistry;
 import com.jn.agileway.metrics.core.predicate.FixedPredicate;
-import com.jn.agileway.metrics.core.predicate.MetricPredicate;
+import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
 import com.jn.agileway.metrics.supports.prometheus.simple.DefaultSampleBuilder;
 import com.jn.agileway.metrics.supports.prometheus.simple.SampleBuilder;
@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 public class PrometheusMetricsCollectorAdapter extends Collector implements Collector.Describable {
     private static final Logger LOGGER = Logger.getLogger(PrometheusMetricsCollectorAdapter.class.getName());
     private MetricMeterRegistry registry;
-    private MetricPredicate predicate;
+    private MetricMeterPredicate predicate;
     private SampleBuilder sampleBuilder;
 
     /**
@@ -37,12 +37,12 @@ public class PrometheusMetricsCollectorAdapter extends Collector implements Coll
     }
 
     /**
-     * Creates a new DropwizardExports with a {@link DefaultSampleBuilder} and custom {@link MetricPredicate}.
+     * Creates a new DropwizardExports with a {@link DefaultSampleBuilder} and custom {@link MetricMeterPredicate}.
      *
      * @param registry  a metric registry to export in prometheus.
      * @param predicate a custom metric filter.
      */
-    public PrometheusMetricsCollectorAdapter(MetricMeterRegistry registry, MetricPredicate predicate) {
+    public PrometheusMetricsCollectorAdapter(MetricMeterRegistry registry, MetricMeterPredicate predicate) {
         this(registry, predicate, new DefaultSampleBuilder());
     }
 
@@ -59,7 +59,7 @@ public class PrometheusMetricsCollectorAdapter extends Collector implements Coll
      * @param predicate     a custom metric filter.
      * @param sampleBuilder sampleBuilder to use to create prometheus samples.
      */
-    public PrometheusMetricsCollectorAdapter(MetricMeterRegistry registry, MetricPredicate predicate, SampleBuilder sampleBuilder) {
+    public PrometheusMetricsCollectorAdapter(MetricMeterRegistry registry, MetricMeterPredicate predicate, SampleBuilder sampleBuilder) {
         this.registry = registry;
         this.predicate = predicate;
         this.sampleBuilder = sampleBuilder;

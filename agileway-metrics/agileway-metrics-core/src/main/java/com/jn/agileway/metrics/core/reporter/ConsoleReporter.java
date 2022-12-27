@@ -1,7 +1,7 @@
 package com.jn.agileway.metrics.core.reporter;
 
 import com.jn.agileway.metrics.core.predicate.FixedPredicate;
-import com.jn.agileway.metrics.core.predicate.MetricPredicate;
+import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.meter.Counter;
@@ -37,7 +37,7 @@ public class ConsoleReporter extends ScheduledReporter {
                             TimeZone timeZone,
                             TimeUnit rateUnit,
                             TimeUnit durationUnit,
-                            MetricPredicate filter) {
+                            MetricMeterPredicate filter) {
         super(registry, "console-reporter", filter, rateUnit, durationUnit);
         this.output = output;
         this.locale = locale;
@@ -189,7 +189,7 @@ public class ConsoleReporter extends ScheduledReporter {
         private TimeZone timeZone;
         private TimeUnit rateUnit;
         private TimeUnit durationUnit;
-        private MetricPredicate filter;
+        private MetricMeterPredicate filter;
 
         private Builder(MetricMeterRegistry registry) {
             this.registry = registry;
@@ -271,10 +271,10 @@ public class ConsoleReporter extends ScheduledReporter {
         /**
          * Only report metrics which match the given filter.
          *
-         * @param filter a {@link MetricPredicate}
+         * @param filter a {@link MetricMeterPredicate}
          * @return {@code this}
          */
-        public Builder filter(MetricPredicate filter) {
+        public Builder filter(MetricMeterPredicate filter) {
             this.filter = filter;
             return this;
         }

@@ -8,8 +8,8 @@ import java.util.Map;
 /**
  * @since 4.1.0
  */
-public class NoopMeter implements Metered {
-    public static final NoopMeter NOOP_METER = new NoopMeter();
+public class NoopMetered implements Metered {
+    public static final NoopMetered NOOP_METER = new NoopMetered();
 
     @Override
     public void mark() {

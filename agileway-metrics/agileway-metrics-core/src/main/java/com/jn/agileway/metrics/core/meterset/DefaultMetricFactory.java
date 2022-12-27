@@ -2,7 +2,7 @@ package com.jn.agileway.metrics.core.meterset;
 
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.predicate.FixedPredicate;
-import com.jn.agileway.metrics.core.predicate.MetricPredicate;
+import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.Timer;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
@@ -156,7 +156,7 @@ public class DefaultMetricFactory implements MetricMeterFactory {
     }
 
     @Override
-    public Map<Metric, Gauge> getGauges(String group, MetricPredicate filter) {
+    public Map<Metric, Gauge> getGauges(String group, MetricMeterPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -168,7 +168,7 @@ public class DefaultMetricFactory implements MetricMeterFactory {
     }
 
     @Override
-    public Map<Metric, Counter> getCounters(String group, MetricPredicate filter) {
+    public Map<Metric, Counter> getCounters(String group, MetricMeterPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -181,7 +181,7 @@ public class DefaultMetricFactory implements MetricMeterFactory {
     }
 
     @Override
-    public Map<Metric, Histogram> getHistograms(String group, MetricPredicate filter) {
+    public Map<Metric, Histogram> getHistograms(String group, MetricMeterPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -194,7 +194,7 @@ public class DefaultMetricFactory implements MetricMeterFactory {
     }
 
     @Override
-    public Map<Metric, Metered> getMeters(String group, MetricPredicate filter) {
+    public Map<Metric, Metered> getMeters(String group, MetricMeterPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -207,7 +207,7 @@ public class DefaultMetricFactory implements MetricMeterFactory {
     }
 
     @Override
-    public Map<Metric, Timer> getTimers(String group, MetricPredicate filter) {
+    public Map<Metric, Timer> getTimers(String group, MetricMeterPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -220,7 +220,7 @@ public class DefaultMetricFactory implements MetricMeterFactory {
     }
 
     @Override
-    public Map<Metric, Compass> getCompasses(String group, MetricPredicate filter) {
+    public Map<Metric, Compass> getCompasses(String group, MetricMeterPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -233,7 +233,7 @@ public class DefaultMetricFactory implements MetricMeterFactory {
     }
 
     @Override
-    public Map<Metric, FastCompass> getFastCompasses(String group, MetricPredicate filter) {
+    public Map<Metric, FastCompass> getFastCompasses(String group, MetricMeterPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -246,7 +246,7 @@ public class DefaultMetricFactory implements MetricMeterFactory {
     }
 
     @Override
-    public Map<Metric, ClusterHistogram> getClusterHistogram(String group, MetricPredicate filter) {
+    public Map<Metric, ClusterHistogram> getClusterHistogram(String group, MetricMeterPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -288,7 +288,7 @@ public class DefaultMetricFactory implements MetricMeterFactory {
 
     @Override
     public Map<Class<? extends Meter>, Map<Metric, ? extends Meter>> getCategoryMetrics(String group,
-                                                                                        MetricPredicate filter) {
+                                                                                        MetricMeterPredicate filter) {
         if (!this.enabled) {
             return Collections.emptyMap();
         }
@@ -299,7 +299,7 @@ public class DefaultMetricFactory implements MetricMeterFactory {
     }
 
     @Override
-    public Map<Class<? extends Meter>, Map<Metric, ? extends Meter>> getAllCategoryMetrics(MetricPredicate filter) {
+    public Map<Class<? extends Meter>, Map<Metric, ? extends Meter>> getAllCategoryMetrics(MetricMeterPredicate filter) {
 
         if (!this.enabled) {
             return Collections.emptyMap();
@@ -342,7 +342,7 @@ public class DefaultMetricFactory implements MetricMeterFactory {
     }
 
     private Map<Class<? extends Meter>, Map<Metric, ? extends Meter>> getCategoryMetrics(
-            Map<Metric, Meter> metrics, MetricPredicate filter) {
+            Map<Metric, Meter> metrics, MetricMeterPredicate filter) {
         if (!this.enabled) {
             return Collections.emptyMap();
         }
@@ -374,7 +374,7 @@ public class DefaultMetricFactory implements MetricMeterFactory {
         return result;
     }
 
-    private void checkAndAdd(Map.Entry<Metric, Meter> entry, MetricPredicate predicate, Map<Metric, Gauge> gauges,
+    private void checkAndAdd(Map.Entry<Metric, Meter> entry, MetricMeterPredicate predicate, Map<Metric, Gauge> gauges,
                              Map<Metric, Counter> counters, Map<Metric, Histogram> histograms, Map<Metric, Metered> meters,
                              Map<Metric, Timer> timers, Map<Metric, Compass> compasses, Map<Metric, FastCompass> fastCompasses, Map<Metric, ClusterHistogram> clusterHistogrames) {
 

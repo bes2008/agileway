@@ -1,7 +1,7 @@
 package com.jn.agileway.metrics.core.noop;
 
 import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.predicate.MetricPredicate;
+import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 import com.jn.agileway.metrics.core.meterset.MetricMeterRegistry;
@@ -16,8 +16,8 @@ import java.util.Set;
 /**
  * @since 4.1.0
  */
-public class NoopMetricRegistry implements MetricMeterRegistry {
-    public static final NoopMetricRegistry NOOP_METRIC_REGISTRY = new NoopMetricRegistry();
+public class NoopMetricMeterRegistry implements MetricMeterRegistry {
+    public static final NoopMetricMeterRegistry NOOP_METRIC_REGISTRY = new NoopMetricMeterRegistry();
 
     @Override
     public <T extends Meter> T register(String name, T metric) throws IllegalArgumentException {
@@ -61,12 +61,12 @@ public class NoopMetricRegistry implements MetricMeterRegistry {
 
     @Override
     public Metered meter(Metric name) {
-        return NoopMeter.NOOP_METER;
+        return NoopMetered.NOOP_METER;
     }
 
     @Override
     public Metered meter(String name) {
-        return NoopMeter.NOOP_METER;
+        return NoopMetered.NOOP_METER;
     }
 
     @Override
@@ -115,7 +115,7 @@ public class NoopMetricRegistry implements MetricMeterRegistry {
     }
 
     @Override
-    public void removeMatching(MetricPredicate filter) {
+    public void removeMatching(MetricMeterPredicate filter) {
 
     }
 
@@ -140,7 +140,7 @@ public class NoopMetricRegistry implements MetricMeterRegistry {
     }
 
     @Override
-    public Map<Metric, Gauge> getGauges(MetricPredicate filter) {
+    public Map<Metric, Gauge> getGauges(MetricMeterPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
@@ -150,7 +150,7 @@ public class NoopMetricRegistry implements MetricMeterRegistry {
     }
 
     @Override
-    public Map<Metric, Counter> getCounters(MetricPredicate filter) {
+    public Map<Metric, Counter> getCounters(MetricMeterPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
@@ -160,7 +160,7 @@ public class NoopMetricRegistry implements MetricMeterRegistry {
     }
 
     @Override
-    public Map<Metric, Histogram> getHistograms(MetricPredicate filter) {
+    public Map<Metric, Histogram> getHistograms(MetricMeterPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
@@ -170,7 +170,7 @@ public class NoopMetricRegistry implements MetricMeterRegistry {
     }
 
     @Override
-    public Map<Metric, Metered> getMeters(MetricPredicate filter) {
+    public Map<Metric, Metered> getMeters(MetricMeterPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
@@ -180,12 +180,12 @@ public class NoopMetricRegistry implements MetricMeterRegistry {
     }
 
     @Override
-    public Map<Metric, Timer> getTimers(MetricPredicate filter) {
+    public Map<Metric, Timer> getTimers(MetricMeterPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<Metric, Compass> getCompasses(MetricPredicate filter) {
+    public Map<Metric, Compass> getCompasses(MetricMeterPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
@@ -200,17 +200,17 @@ public class NoopMetricRegistry implements MetricMeterRegistry {
     }
 
     @Override
-    public Map<Metric, FastCompass> getFastCompasses(MetricPredicate filter) {
+    public Map<Metric, FastCompass> getFastCompasses(MetricMeterPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<Metric, ClusterHistogram> getClusterHistograms(MetricPredicate filter) {
+    public Map<Metric, ClusterHistogram> getClusterHistograms(MetricMeterPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<Metric, Meter> getMetrics(MetricPredicate filter) {
+    public Map<Metric, Meter> getMetrics(MetricMeterPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 

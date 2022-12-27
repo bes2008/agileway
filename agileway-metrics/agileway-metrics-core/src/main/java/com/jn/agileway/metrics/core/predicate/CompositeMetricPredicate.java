@@ -10,27 +10,27 @@ import java.util.List;
 /**
  * @since 4.1.0
  */
-public class CompositeMetricPredicate implements MetricPredicate {
+public class CompositeMetricPredicate implements MetricMeterPredicate {
 
-    MetricPredicate[] predicates;
+    MetricMeterPredicate[] predicates;
 
     /**
      * 如果包含 {@link FixedPredicate#TRUE} 则直接丢弃，减少一次无谓的判断
      *
      * @param predicates
      */
-    public CompositeMetricPredicate(MetricPredicate... predicates) {
-        List<MetricPredicate> predicateList = new ArrayList<MetricPredicate>(Arrays.asList(predicates));
+    public CompositeMetricPredicate(MetricMeterPredicate... predicates) {
+        List<MetricMeterPredicate> predicateList = new ArrayList<MetricMeterPredicate>(Arrays.asList(predicates));
         predicateList.remove(FixedPredicate.TRUE);
         if (!predicateList.isEmpty()) {
-            this.predicates = predicateList.toArray(new MetricPredicate[predicateList.size()]);
+            this.predicates = predicateList.toArray(new MetricMeterPredicate[predicateList.size()]);
         }
     }
 
     @Override
     public boolean test(Metric name, Meter metric) {
         if (predicates != null) {
-            for (MetricPredicate predicate : predicates) {
+            for (MetricMeterPredicate predicate : predicates) {
                 if (!predicate.test(name, metric)) {
                     return false;
                 }

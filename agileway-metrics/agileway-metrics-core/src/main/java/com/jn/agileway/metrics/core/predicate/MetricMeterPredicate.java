@@ -10,7 +10,7 @@ import com.jn.langx.util.function.Predicate2;
  *
  * @since 4.1.0
  */
-public interface MetricPredicate extends Predicate2<Metric, Meter> {
+public interface MetricMeterPredicate extends Predicate2<Metric, Meter> {
 
 
     /**

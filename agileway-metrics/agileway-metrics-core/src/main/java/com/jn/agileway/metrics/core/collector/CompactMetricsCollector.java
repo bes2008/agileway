@@ -1,7 +1,7 @@
 package com.jn.agileway.metrics.core.collector;
 
 import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.predicate.MetricPredicate;
+import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
 
@@ -15,7 +15,7 @@ import java.util.Map;
 public class CompactMetricsCollector extends MetricsCollector {
 
     CompactMetricsCollector(Map<String, String> globalTags, double rateFactor,
-                            double durationFactor, MetricPredicate filter) {
+                            double durationFactor, MetricMeterPredicate filter) {
         super(globalTags, rateFactor, durationFactor, filter);
     }
 

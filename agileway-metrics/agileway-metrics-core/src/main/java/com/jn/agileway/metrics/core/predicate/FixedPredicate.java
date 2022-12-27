@@ -6,7 +6,7 @@ import com.jn.agileway.metrics.core.Metric;
 /**
  * @since 4.1.0
  */
-public class FixedPredicate implements MetricPredicate{
+public class FixedPredicate implements MetricMeterPredicate {
     private final boolean value;
     public FixedPredicate(boolean value){
         this.value = value;

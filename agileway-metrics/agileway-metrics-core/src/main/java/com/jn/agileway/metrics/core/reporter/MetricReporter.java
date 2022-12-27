@@ -4,7 +4,7 @@ import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.config.MetricsCollectPeriodConfig;
 import com.jn.agileway.metrics.core.predicate.CompositeMetricPredicate;
 import com.jn.agileway.metrics.core.predicate.TimeMetricLevelPredicate;
-import com.jn.agileway.metrics.core.predicate.MetricPredicate;
+import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
 import com.jn.agileway.metrics.core.meterset.MetricMeterFactory;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
@@ -24,9 +24,9 @@ import java.util.concurrent.*;
  *
  * @since 4.1.0
  */
-public abstract class MetricSetReporter implements Closeable {
+public abstract class MetricReporter implements Closeable {
 
-    private static final Logger LOG = Loggers.getLogger(MetricSetReporter.class);
+    private static final Logger LOG = Loggers.getLogger(MetricReporter.class);
 
     protected final double durationFactor;
     protected final double rateFactor;
@@ -58,7 +58,7 @@ public abstract class MetricSetReporter implements Closeable {
                 report();
             } catch (Throwable ex) {
                 LOG.error("Throwable RuntimeException thrown from {}#report. Exception was suppressed.",
-                        MetricSetReporter.this.getClass().getSimpleName(), ex);
+                        MetricReporter.this.getClass().getSimpleName(), ex);
             } finally {
                 timeMetricLevelPredicate.afterReport();
             }
@@ -66,7 +66,7 @@ public abstract class MetricSetReporter implements Closeable {
     };
 
     /**
-     * Creates a new {@link MetricSetReporter} instance.
+     * Creates a new {@link MetricReporter} instance.
      *
      * @param factory the {@link MetricMeterFactory} containing the metrics this
      *                      reporter will report
@@ -75,18 +75,18 @@ public abstract class MetricSetReporter implements Closeable {
      * @param rateUnit      a unit of time
      * @param durationUnit  a unit of time
      */
-    protected MetricSetReporter(MetricMeterFactory factory,
-                                String name,
-                                MetricPredicate predicate,
-                                MetricsCollectPeriodConfig metricsReportPeriodConfig,
-                                TimeUnit rateUnit,
-                                TimeUnit durationUnit) {
+    protected MetricReporter(MetricMeterFactory factory,
+                             String name,
+                             MetricMeterPredicate predicate,
+                             MetricsCollectPeriodConfig metricsReportPeriodConfig,
+                             TimeUnit rateUnit,
+                             TimeUnit durationUnit) {
         this(factory, predicate, new TimeMetricLevelPredicate(metricsReportPeriodConfig), rateUnit, durationUnit,
                 Executors.newSingleThreadScheduledExecutor( new CommonThreadFactory(name,true)));
     }
 
     /**
-     * Creates a new {@link MetricSetReporter} instance.
+     * Creates a new {@link MetricReporter} instance.
      *
      * @param factory the {@link MetricMeterFactory} containing the metrics this
      *                      reporter will report
@@ -95,30 +95,30 @@ public abstract class MetricSetReporter implements Closeable {
      * @param rateUnit      a unit of time
      * @param durationUnit  a unit of time
      */
-    protected MetricSetReporter(MetricMeterFactory factory,
-                                String name,
-                                MetricPredicate predicate,
-                                TimeMetricLevelPredicate timeMetricLevelFilter,
-                                TimeUnit rateUnit,
-                                TimeUnit durationUnit) {
+    protected MetricReporter(MetricMeterFactory factory,
+                             String name,
+                             MetricMeterPredicate predicate,
+                             TimeMetricLevelPredicate timeMetricLevelFilter,
+                             TimeUnit rateUnit,
+                             TimeUnit durationUnit) {
         this(factory, predicate, timeMetricLevelFilter, rateUnit, durationUnit,
                 Executors.newSingleThreadScheduledExecutor(new CommonThreadFactory(name, true)));
     }
 
     /**
-     * Creates a new {@link MetricSetReporter} instance.
+     * Creates a new {@link MetricReporter} instance.
      *
      * @param factory the {@link MetricMeterFactory} containing the metrics this
      *                      reporter will report
      * @param predicate        the predicate for which metrics to report
      * @param executor      the executor to use while scheduling reporting of metrics.
      */
-    protected MetricSetReporter(MetricMeterFactory factory,
-                                MetricPredicate predicate,
-                                TimeMetricLevelPredicate timeMetricLevelFilter,
-                                TimeUnit rateUnit,
-                                TimeUnit durationUnit,
-                                ScheduledExecutorService executor) {
+    protected MetricReporter(MetricMeterFactory factory,
+                             MetricMeterPredicate predicate,
+                             TimeMetricLevelPredicate timeMetricLevelFilter,
+                             TimeUnit rateUnit,
+                             TimeUnit durationUnit,
+                             ScheduledExecutorService executor) {
         this.factory = factory;
         this.executor = executor;
         this.rateFactor = rateUnit.toSeconds(1);

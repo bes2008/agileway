@@ -2,7 +2,7 @@ package com.jn.agileway.metrics.supports.csv;
 
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.predicate.FixedPredicate;
-import com.jn.agileway.metrics.core.predicate.MetricPredicate;
+import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meterset.MetricMeterRegistry;
 import com.jn.agileway.metrics.core.reporter.ScheduledReporter;
@@ -37,7 +37,7 @@ public class CsvReporter extends ScheduledReporter {
                         TimeUnit rateUnit,
                         TimeUnit durationUnit,
                         Clock clock,
-                        MetricPredicate filter,
+                        MetricMeterPredicate filter,
                         CsvFileProvider csvFileProvider) {
         super(registry, "csv-reporter", filter, rateUnit, durationUnit);
         this.directory = directory;
@@ -182,7 +182,7 @@ public class CsvReporter extends ScheduledReporter {
         private TimeUnit rateUnit;
         private TimeUnit durationUnit;
         private Clock clock;
-        private MetricPredicate filter;
+        private MetricMeterPredicate filter;
         private CsvFileProvider csvFileProvider;
 
         private Builder(MetricMeterRegistry registry) {
@@ -242,10 +242,10 @@ public class CsvReporter extends ScheduledReporter {
         /**
          * Only report metrics which match the given filter.
          *
-         * @param filter a {@link MetricPredicate}
+         * @param filter a {@link MetricMeterPredicate}
          * @return {@code this}
          */
-        public Builder filter(MetricPredicate filter) {
+        public Builder filter(MetricMeterPredicate filter) {
             this.filter = filter;
             return this;
         }

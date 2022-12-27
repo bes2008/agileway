@@ -1,7 +1,7 @@
 package com.jn.agileway.metrics.core.collector;
 
 import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.predicate.MetricPredicate;
+import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
@@ -46,7 +46,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
     private boolean advancedMetricsReport = false;
 
     ClassifiedMetricsCollector(Map<String, String> globalTags, double rateFactor, double durationFactor,
-                               MetricPredicate filter) {
+                               MetricMeterPredicate filter) {
         super(globalTags, rateFactor, durationFactor, filter);
         metrics = new HashMap<MetricLevel, Map<Long, List<MetricObject>>>();
     }

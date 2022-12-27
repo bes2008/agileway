@@ -18,7 +18,7 @@ import com.jn.agileway.metrics.core.config.MetricsCollectPeriodConfig;
  *
  * @since 4.1.0
  */
-public class TimeMetricLevelPredicate implements MetricPredicate {
+public class TimeMetricLevelPredicate implements MetricMeterPredicate {
 
     /**
      * 记录上次MetricLevel的report相关的信息

@@ -2,7 +2,7 @@ package com.jn.agileway.metrics.core.meterset;
 
 
 import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.predicate.MetricPredicate;
+import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 import com.jn.agileway.metrics.core.snapshot.ReservoirType;
@@ -195,7 +195,7 @@ public interface MetricMeterRegistry extends MetricMeterSet {
      *
      * @param filter a filter
      */
-    void removeMatching(MetricPredicate filter);
+    void removeMatching(MetricMeterPredicate filter);
 
     /**
      * Adds a {@link MetricMeterRegistryListener} to a collection of listeners that will be notified on
@@ -234,7 +234,7 @@ public interface MetricMeterRegistry extends MetricMeterSet {
      * @param filter the metric filter to match
      * @return all the gauges in the registry
      */
-    Map<Metric, Gauge> getGauges(MetricPredicate filter);
+    Map<Metric, Gauge> getGauges(MetricMeterPredicate filter);
 
     /**
      * Returns a map of all the counters in the registry and their names.
@@ -250,7 +250,7 @@ public interface MetricMeterRegistry extends MetricMeterSet {
      * @param filter the metric filter to match
      * @return all the counters in the registry
      */
-    Map<Metric, Counter> getCounters(MetricPredicate filter);
+    Map<Metric, Counter> getCounters(MetricMeterPredicate filter);
 
     /**
      * Returns a map of all the histograms in the registry and their names.
@@ -266,7 +266,7 @@ public interface MetricMeterRegistry extends MetricMeterSet {
      * @param filter the metric filter to match
      * @return all the histograms in the registry
      */
-    Map<Metric, Histogram> getHistograms(MetricPredicate filter);
+    Map<Metric, Histogram> getHistograms(MetricMeterPredicate filter);
 
     /**
      * Returns a map of all the meters in the registry and their names.
@@ -281,7 +281,7 @@ public interface MetricMeterRegistry extends MetricMeterSet {
      * @param filter the metric filter to match
      * @return all the meters in the registry
      */
-    Map<Metric, Metered> getMeters(MetricPredicate filter);
+    Map<Metric, Metered> getMeters(MetricMeterPredicate filter);
 
     /**
      * Returns a map of all the timers in the registry and their names.
@@ -296,7 +296,7 @@ public interface MetricMeterRegistry extends MetricMeterSet {
      * @param filter the metric filter to match
      * @return all the timers in the registry
      */
-    Map<Metric, Timer> getTimers(MetricPredicate filter);
+    Map<Metric, Timer> getTimers(MetricMeterPredicate filter);
 
 
     /**
@@ -312,7 +312,7 @@ public interface MetricMeterRegistry extends MetricMeterSet {
      * @param filter the metric filter to match
      * @return all the compasses in the registry
      */
-    Map<Metric, Compass> getCompasses(MetricPredicate filter);
+    Map<Metric, Compass> getCompasses(MetricMeterPredicate filter);
 
     /**
      * Returns a map of all the compasses in the registry and their names.
@@ -327,7 +327,7 @@ public interface MetricMeterRegistry extends MetricMeterSet {
      * @param filter the metric filter to match
      * @return all the compasses in the registry
      */
-    Map<Metric, FastCompass> getFastCompasses(MetricPredicate filter);
+    Map<Metric, FastCompass> getFastCompasses(MetricMeterPredicate filter);
 
     /**
      * Returns a map of all the {@link ClusterHistogram} in the registry and their names which match the given filter.
@@ -340,7 +340,7 @@ public interface MetricMeterRegistry extends MetricMeterSet {
      * @param filter the metric filter to match
      * @return all the {@link ClusterHistogram} in the registry
      */
-    Map<Metric, ClusterHistogram> getClusterHistograms(MetricPredicate filter);
+    Map<Metric, ClusterHistogram> getClusterHistograms(MetricMeterPredicate filter);
 
 
     /**
@@ -349,7 +349,7 @@ public interface MetricMeterRegistry extends MetricMeterSet {
      * @param filter the metric filter to match
      * @return all the metrics in the registry
      */
-    Map<Metric, Meter> getMetrics(MetricPredicate filter);
+    Map<Metric, Meter> getMetrics(MetricMeterPredicate filter);
 
 
 }

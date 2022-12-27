@@ -1,6 +1,6 @@
 package com.jn.agileway.metrics.core.collector;
 
-import com.jn.agileway.metrics.core.predicate.MetricPredicate;
+import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,16 +21,16 @@ public class MetricsCollectorFactory {
     }
 
     public static MetricsCollector createNew(CollectLevel level, double rateFactor, double durationFactor,
-                                             MetricPredicate filter) {
+                                             MetricMeterPredicate filter) {
         return createNew(level, new HashMap<String, String>(), rateFactor, durationFactor, filter);
     }
 
-    public static MetricsCollector createNew(double rateFactor, double durationFactor, MetricPredicate filter) {
+    public static MetricsCollector createNew(double rateFactor, double durationFactor, MetricMeterPredicate filter) {
         return createNew(CollectLevel.NORMAL, new HashMap<String, String>(), rateFactor, durationFactor, filter);
     }
 
     public static MetricsCollector createNew(CollectLevel collectLevel, Map<String, String> globalTags, double rateFactor,
-                                             double durationFactor, MetricPredicate filter) {
+                                             double durationFactor, MetricMeterPredicate filter) {
 
         switch (collectLevel) {
             case COMPACT:

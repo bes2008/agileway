@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * @since 4.1.0
  */
-public class MetricNameSetPredicate implements MetricPredicate {
+public class MetricNameSetPredicate implements MetricMeterPredicate {
 
     private static final Set<String> counterSuffixSet = new LinkedHashSet<String>();
     private static final Set<String> meterSuffixSet = new LinkedHashSet<String>();

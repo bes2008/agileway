@@ -8,7 +8,7 @@ import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.*;
 import com.jn.agileway.metrics.core.noop.*;
 import com.jn.agileway.metrics.core.predicate.FixedPredicate;
-import com.jn.agileway.metrics.core.predicate.MetricPredicate;
+import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
 import com.jn.agileway.metrics.core.snapshot.ReservoirType;
 import com.jn.agileway.metrics.core.snapshot.ReservoirTypeBuilder;
 import com.jn.agileway.metrics.core.snapshot.ReservoirTypeMetricBuilder;
@@ -185,7 +185,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
     public Metered meter(Metric name) {
         Metered meter = getOrAdd(name, METER_BUILDER);
         if (meter == null) {
-            return NoopMeter.NOOP_METER;
+            return NoopMetered.NOOP_METER;
         }
         return meter;
     }
@@ -298,7 +298,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
      *
      * @param predicate a predicate
      */
-    public void removeMatching(MetricPredicate predicate) {
+    public void removeMatching(MetricMeterPredicate predicate) {
         for (Map.Entry<Metric, Meter> entry : metrics.entrySet()) {
             if (predicate.test(entry.getKey(), entry.getValue())) {
                 remove(entry.getKey());
@@ -355,7 +355,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
      * @param filter the metric filter to match
      * @return all the gauges in the registry
      */
-    public Map<Metric, Gauge> getGauges(MetricPredicate filter) {
+    public Map<Metric, Gauge> getGauges(MetricMeterPredicate filter) {
         return getMetrics(Gauge.class, filter);
     }
 
@@ -375,7 +375,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
      * @param filter the metric filter to match
      * @return all the counters in the registry
      */
-    public Map<Metric, Counter> getCounters(MetricPredicate filter) {
+    public Map<Metric, Counter> getCounters(MetricMeterPredicate filter) {
         return getMetrics(Counter.class, filter);
     }
 
@@ -395,7 +395,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
      * @param filter the metric filter to match
      * @return all the histograms in the registry
      */
-    public Map<Metric, Histogram> getHistograms(MetricPredicate filter) {
+    public Map<Metric, Histogram> getHistograms(MetricMeterPredicate filter) {
         return getMetrics(Histogram.class, filter);
     }
 
@@ -414,7 +414,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
      * @param filter the metric filter to match
      * @return all the meters in the registry
      */
-    public Map<Metric, Metered> getMeters(MetricPredicate filter) {
+    public Map<Metric, Metered> getMeters(MetricMeterPredicate filter) {
         return getMetrics(Metered.class, filter);
     }
 
@@ -433,12 +433,12 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
      * @param filter the metric filter to match
      * @return all the timers in the registry
      */
-    public Map<Metric, Timer> getTimers(MetricPredicate filter) {
+    public Map<Metric, Timer> getTimers(MetricMeterPredicate filter) {
         return getMetrics(Timer.class, filter);
     }
 
     @Override
-    public Map<Metric, Compass> getCompasses(MetricPredicate filter) {
+    public Map<Metric, Compass> getCompasses(MetricMeterPredicate filter) {
         return getMetrics(Compass.class, filter);
     }
 
@@ -453,12 +453,12 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
     }
 
     @Override
-    public Map<Metric, FastCompass> getFastCompasses(MetricPredicate filter) {
+    public Map<Metric, FastCompass> getFastCompasses(MetricMeterPredicate filter) {
         return getMetrics(FastCompass.class, filter);
     }
 
     @Override
-    public Map<Metric, ClusterHistogram> getClusterHistograms(MetricPredicate filter) {
+    public Map<Metric, ClusterHistogram> getClusterHistograms(MetricMeterPredicate filter) {
         return getMetrics(ClusterHistogram.class, filter);
     }
 
@@ -468,7 +468,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
     }
 
     @Override
-    public Map<Metric, Meter> getMetrics(MetricPredicate filter) {
+    public Map<Metric, Meter> getMetrics(MetricMeterPredicate filter) {
         final TreeMap<Metric, Meter> filteredMetrics = new TreeMap<Metric, Meter>();
         filteredMetrics.putAll(getCounters(filter));
         filteredMetrics.putAll(getMeters(filter));
@@ -589,7 +589,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
         throw new IllegalArgumentException(name + " is already used for a different type of metric");
     }
 
-    private <T extends Meter> SortedMap<Metric, T> getMetrics(Class<T> klass, MetricPredicate predicate) {
+    private <T extends Meter> SortedMap<Metric, T> getMetrics(Class<T> klass, MetricMeterPredicate predicate) {
         final TreeMap<Metric, T> timers = new TreeMap<Metric, T>();
         for (Map.Entry<Metric, Meter> entry : metrics.entrySet()) {
             if (klass.isInstance(entry.getValue()) && predicate.test(entry.getKey(), entry.getValue())) {

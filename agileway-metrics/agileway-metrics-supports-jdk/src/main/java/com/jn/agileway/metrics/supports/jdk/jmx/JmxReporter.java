@@ -2,7 +2,7 @@ package com.jn.agileway.metrics.supports.jdk.jmx;
 
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.predicate.FixedPredicate;
-import com.jn.agileway.metrics.core.predicate.MetricPredicate;
+import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meterset.MetricMeterRegistry;
 import com.jn.agileway.metrics.core.meterset.MetricMeterRegistryListener;
@@ -31,7 +31,7 @@ public class JmxReporter implements Closeable {
     private JmxReporter(MBeanServer mBeanServer,
                         String domain,
                         MetricMeterRegistry registry,
-                        MetricPredicate predicate,
+                        MetricMeterPredicate predicate,
                         MetricTimeUnits timeUnits,
                         ObjectNameFactory objectNameFactory) {
         this.registry = registry;
@@ -184,7 +184,7 @@ public class JmxReporter implements Closeable {
         private TimeUnit rateUnit;
         private TimeUnit durationUnit;
         private ObjectNameFactory objectNameFactory;
-        private MetricPredicate filter = FixedPredicate.TRUE;
+        private MetricMeterPredicate filter = FixedPredicate.TRUE;
         private String domain;
         private Map<String, TimeUnit> specificDurationUnits;
         private Map<String, TimeUnit> specificRateUnits;
@@ -243,10 +243,10 @@ public class JmxReporter implements Closeable {
         /**
          * Only report metrics which match the given filter.
          *
-         * @param filter a {@link MetricPredicate}
+         * @param filter a {@link MetricMeterPredicate}
          * @return {@code this}
          */
-        public Builder filter(MetricPredicate filter) {
+        public Builder filter(MetricMeterPredicate filter) {
             this.filter = filter;
             return this;
         }
@@ -536,12 +536,12 @@ public class JmxReporter implements Closeable {
     private static class JmxListener implements MetricMeterRegistryListener {
         private final String name;
         private final MBeanServer mBeanServer;
-        private final MetricPredicate predicate;
+        private final MetricMeterPredicate predicate;
         private final MetricTimeUnits timeUnits;
         private final Map<ObjectName, ObjectName> registered;
         private final ObjectNameFactory objectNameFactory;
 
-        private JmxListener(MBeanServer mBeanServer, String name, MetricPredicate predicate, MetricTimeUnits timeUnits, ObjectNameFactory objectNameFactory) {
+        private JmxListener(MBeanServer mBeanServer, String name, MetricMeterPredicate predicate, MetricTimeUnits timeUnits, ObjectNameFactory objectNameFactory) {
             this.mBeanServer = mBeanServer;
             this.name = name;
             this.predicate = predicate;

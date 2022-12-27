@@ -1,7 +1,7 @@
 package com.jn.agileway.metrics.core.meterset;
 
 import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.predicate.MetricPredicate;
+import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 import com.jn.agileway.metrics.core.snapshot.ReservoirType;
@@ -163,21 +163,21 @@ public interface MetricMeterFactory {
      */
     MetricMeterRegistry getMetricRegistryByGroup(String group);
 
-    Map<Metric, Gauge> getGauges(String group, MetricPredicate filter);
+    Map<Metric, Gauge> getGauges(String group, MetricMeterPredicate filter);
 
-    Map<Metric, Counter> getCounters(String group, MetricPredicate filter);
+    Map<Metric, Counter> getCounters(String group, MetricMeterPredicate filter);
 
-    Map<Metric, Histogram> getHistograms(String group, MetricPredicate filter);
+    Map<Metric, Histogram> getHistograms(String group, MetricMeterPredicate filter);
 
-    Map<Metric, Metered> getMeters(String group, MetricPredicate filter);
+    Map<Metric, Metered> getMeters(String group, MetricMeterPredicate filter);
 
-    Map<Metric, Timer> getTimers(String group, MetricPredicate filter);
+    Map<Metric, Timer> getTimers(String group, MetricMeterPredicate filter);
 
-    Map<Metric, Compass> getCompasses(String group, MetricPredicate filter);
+    Map<Metric, Compass> getCompasses(String group, MetricMeterPredicate filter);
 
-    Map<Metric, FastCompass> getFastCompasses(String group, MetricPredicate filter);
+    Map<Metric, FastCompass> getFastCompasses(String group, MetricMeterPredicate filter);
 
-    Map<Metric, ClusterHistogram> getClusterHistogram(String group, MetricPredicate filter);
+    Map<Metric, ClusterHistogram> getClusterHistogram(String group, MetricMeterPredicate filter);
 
     /**
      * A map of metric names to metrics.
@@ -202,7 +202,7 @@ public interface MetricMeterFactory {
      * @return
      */
     Map<Class<? extends Meter>, Map<Metric, ? extends Meter>> getCategoryMetrics(String group,
-                                                                                 MetricPredicate filter);
+                                                                                 MetricMeterPredicate filter);
 
     /**
      * return all metrics
@@ -210,7 +210,7 @@ public interface MetricMeterFactory {
      * @param filter
      * @return
      */
-    Map<Class<? extends Meter>, Map<Metric, ? extends Meter>> getAllCategoryMetrics(MetricPredicate filter);
+    Map<Class<? extends Meter>, Map<Metric, ? extends Meter>> getAllCategoryMetrics(MetricMeterPredicate filter);
 
 
     void clear();
