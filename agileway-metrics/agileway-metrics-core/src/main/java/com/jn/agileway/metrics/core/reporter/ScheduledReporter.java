@@ -136,7 +136,7 @@ public abstract class ScheduledReporter implements Closeable {
             report(registry.getGauges(filter),
                     registry.getCounters(filter),
                     registry.getHistograms(filter),
-                    registry.getMeters(filter),
+                    registry.getMetereds(filter),
                     registry.getTimers(filter));
         }
     }

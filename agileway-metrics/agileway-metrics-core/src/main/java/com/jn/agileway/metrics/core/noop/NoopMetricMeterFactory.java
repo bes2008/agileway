@@ -113,7 +113,7 @@ public class NoopMetricMeterFactory implements MetricMeterFactory {
 
     @Override
     @SuppressWarnings("unchecked")
-    public SortedMap<Metric, Metered> getMeters(String group, MetricMeterPredicate filter) {
+    public SortedMap<Metric, Metered> getMetereds(String group, MetricMeterPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 

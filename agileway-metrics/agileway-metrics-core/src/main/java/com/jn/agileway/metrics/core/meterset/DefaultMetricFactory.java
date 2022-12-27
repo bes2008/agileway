@@ -36,7 +36,7 @@ public class DefaultMetricFactory implements MetricMeterFactory {
         if (!this.enabled) {
             return Meters.NOOP_METRIC_FACTORY.getMeter(group, name);
         }
-        return getMetricRegistryByGroup(group).meter(name);
+        return getMetricRegistryByGroup(group).metered(name);
     }
 
     @Override
@@ -194,7 +194,7 @@ public class DefaultMetricFactory implements MetricMeterFactory {
     }
 
     @Override
-    public Map<Metric, Metered> getMeters(String group, MetricMeterPredicate filter) {
+    public Map<Metric, Metered> getMetereds(String group, MetricMeterPredicate filter) {
         if (!this.enabled) {
             return Emptys.EMPTY_TREE_MAP;
         }
@@ -203,7 +203,7 @@ public class DefaultMetricFactory implements MetricMeterFactory {
         if (metricRegistry == null) {
             return Emptys.EMPTY_TREE_MAP;
         }
-        return metricRegistry.getMeters(filter);
+        return metricRegistry.getMetereds(filter);
     }
 
     @Override

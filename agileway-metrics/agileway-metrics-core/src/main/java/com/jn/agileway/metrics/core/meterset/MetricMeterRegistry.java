@@ -101,7 +101,7 @@ public interface MetricMeterRegistry extends MetricMeterSet {
      * @param name the name of the metric
      * @return a new or pre-existing {@link Metered}
      */
-    Metered meter(Metric name);
+    Metered metered(Metric name);
 
     /**
      * Creates a new {@link Metered} and registers it under the given name.
@@ -109,7 +109,7 @@ public interface MetricMeterRegistry extends MetricMeterSet {
      * @param name the name of the metric
      * @return a new {@link Metered}
      */
-    Metered meter(String name);
+    Metered metered(String name);
 
     /**
      * Return the {@link Timer} registered under this name; or create and register
@@ -273,7 +273,7 @@ public interface MetricMeterRegistry extends MetricMeterSet {
      *
      * @return all the meters in the registry
      */
-    Map<Metric, Metered> getMeters();
+    Map<Metric, Metered> getMetereds();
 
     /**
      * Returns a map of all the meters in the registry and their names which match the given filter.
@@ -281,7 +281,7 @@ public interface MetricMeterRegistry extends MetricMeterSet {
      * @param filter the metric filter to match
      * @return all the meters in the registry
      */
-    Map<Metric, Metered> getMeters(MetricMeterPredicate filter);
+    Map<Metric, Metered> getMetereds(MetricMeterPredicate filter);
 
     /**
      * Returns a map of all the timers in the registry and their names.

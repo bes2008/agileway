@@ -169,10 +169,10 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
     }
 
     /**
-     * @see #meter(Metric)
+     * @see #metered(Metric)
      */
-    public Metered meter(String name) {
-        return meter(Metric.build(name));
+    public Metered metered(String name) {
+        return metered(Metric.build(name));
     }
 
     /**
@@ -182,7 +182,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
      * @param name the name of the metric
      * @return a new or pre-existing {@link Metered}
      */
-    public Metered meter(Metric name) {
+    public Metered metered(Metric name) {
         Metered meter = getOrAdd(name, METER_BUILDER);
         if (meter == null) {
             return NoopMetered.NOOP_METER;
@@ -404,8 +404,8 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
      *
      * @return all the meters in the registry
      */
-    public Map<Metric, Metered> getMeters() {
-        return getMeters(FixedPredicate.TRUE);
+    public Map<Metric, Metered> getMetereds() {
+        return getMetereds(FixedPredicate.TRUE);
     }
 
     /**
@@ -414,7 +414,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
      * @param filter the metric filter to match
      * @return all the meters in the registry
      */
-    public Map<Metric, Metered> getMeters(MetricMeterPredicate filter) {
+    public Map<Metric, Metered> getMetereds(MetricMeterPredicate filter) {
         return getMetrics(Metered.class, filter);
     }
 
@@ -471,7 +471,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
     public Map<Metric, Meter> getMetrics(MetricMeterPredicate filter) {
         final TreeMap<Metric, Meter> filteredMetrics = new TreeMap<Metric, Meter>();
         filteredMetrics.putAll(getCounters(filter));
-        filteredMetrics.putAll(getMeters(filter));
+        filteredMetrics.putAll(getMetereds(filter));
         filteredMetrics.putAll(getHistograms(filter));
         filteredMetrics.putAll(getGauges(filter));
         filteredMetrics.putAll(getTimers(filter));
@@ -491,7 +491,7 @@ public class DefaultMetricRegistry implements MetricMeterRegistry {
         long latest = 0;
         Map<Metric, Meter> metrics = new HashMap<Metric, Meter>();
         metrics.putAll(getCounters(FixedPredicate.TRUE));
-        metrics.putAll(getMeters(FixedPredicate.TRUE));
+        metrics.putAll(getMetereds(FixedPredicate.TRUE));
         metrics.putAll(getHistograms(FixedPredicate.TRUE));
         metrics.putAll(getGauges(FixedPredicate.TRUE));
         metrics.putAll(getTimers(FixedPredicate.TRUE));

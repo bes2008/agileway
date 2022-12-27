@@ -60,12 +60,12 @@ public class NoopMetricMeterRegistry implements MetricMeterRegistry {
     }
 
     @Override
-    public Metered meter(Metric name) {
+    public Metered metered(Metric name) {
         return NoopMetered.NOOP_METER;
     }
 
     @Override
-    public Metered meter(String name) {
+    public Metered metered(String name) {
         return NoopMetered.NOOP_METER;
     }
 
@@ -165,12 +165,12 @@ public class NoopMetricMeterRegistry implements MetricMeterRegistry {
     }
 
     @Override
-    public Map<Metric, Metered> getMeters() {
+    public Map<Metric, Metered> getMetereds() {
         return Emptys.EMPTY_TREE_MAP;
     }
 
     @Override
-    public Map<Metric, Metered> getMeters(MetricMeterPredicate filter) {
+    public Map<Metric, Metered> getMetereds(MetricMeterPredicate filter) {
         return Emptys.EMPTY_TREE_MAP;
     }
 

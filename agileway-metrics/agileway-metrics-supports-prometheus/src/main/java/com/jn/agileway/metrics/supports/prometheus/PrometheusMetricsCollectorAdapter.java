@@ -168,7 +168,7 @@ public class PrometheusMetricsCollectorAdapter extends Collector implements Coll
         for (Map.Entry<Metric, Timer> entry : registry.getTimers(predicate).entrySet()) {
             addToMap(mfSamplesMap, fromTimer(entry.getKey(), entry.getValue()));
         }
-        for (Map.Entry<Metric, Metered> entry : registry.getMeters(predicate).entrySet()) {
+        for (Map.Entry<Metric, Metered> entry : registry.getMetereds(predicate).entrySet()) {
             addToMap(mfSamplesMap, fromMeter(entry.getKey(), entry.getValue()));
         }
         return new ArrayList<MetricFamilySamples>(mfSamplesMap.values());

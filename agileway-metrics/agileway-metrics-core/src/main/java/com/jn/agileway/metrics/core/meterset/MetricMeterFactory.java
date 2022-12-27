@@ -169,7 +169,7 @@ public interface MetricMeterFactory {
 
     Map<Metric, Histogram> getHistograms(String group, MetricMeterPredicate filter);
 
-    Map<Metric, Metered> getMeters(String group, MetricMeterPredicate filter);
+    Map<Metric, Metered> getMetereds(String group, MetricMeterPredicate filter);
 
     Map<Metric, Timer> getTimers(String group, MetricMeterPredicate filter);
 
