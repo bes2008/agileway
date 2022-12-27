@@ -24,13 +24,13 @@ import java.util.concurrent.TimeUnit;
  *
  * @since 4.1.0
  */
-public class Slf4jOutput extends BaseMetricOutput {
+public class Slf4jMetricOutput extends BaseMetricOutput {
     private final Logger logger;
     private Level loggingLevel;
     private final Marker marker;
     private final Metric prefix;
 
-    private Slf4jOutput(
+    private Slf4jMetricOutput(
             Logger loggerProxy,
             Level loggingLevel,
             Marker marker,
@@ -161,7 +161,7 @@ public class Slf4jOutput extends BaseMetricOutput {
 
 
     /**
-     * A builder for {@link Slf4jOutput} instances. Defaults to logging to {@code metrics}, not
+     * A builder for {@link Slf4jMetricOutput} instances. Defaults to logging to {@code metrics}, not
      * using a marker, converting rates to events/second, converting durations to milliseconds, and
      * not filtering metrics.
      */
@@ -264,12 +264,12 @@ public class Slf4jOutput extends BaseMetricOutput {
         }
 
         /**
-         * Builds a {@link Slf4jOutput} with the given properties.
+         * Builds a {@link Slf4jMetricOutput} with the given properties.
          *
-         * @return a {@link Slf4jOutput}
+         * @return a {@link Slf4jMetricOutput}
          */
-        public Slf4jOutput build() {
-            return new Slf4jOutput(logger, loggingLevel, marker, prefix, rateUnit, durationUnit);
+        public Slf4jMetricOutput build() {
+            return new Slf4jMetricOutput(logger, loggingLevel, marker, prefix, rateUnit, durationUnit);
         }
     }
 
