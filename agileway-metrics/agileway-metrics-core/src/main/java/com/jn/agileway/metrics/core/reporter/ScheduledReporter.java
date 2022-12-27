@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * metrics periodically).
  *
  * @see ConsoleMetricOutput
- * @see Slf4jReporter
+ * @see Slf4jOutput
  * @since 4.1.0
  */
 public abstract class ScheduledReporter implements Reporter {
