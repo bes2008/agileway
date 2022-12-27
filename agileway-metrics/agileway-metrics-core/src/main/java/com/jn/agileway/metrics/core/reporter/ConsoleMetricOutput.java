@@ -207,7 +207,7 @@ public class ConsoleMetricOutput extends BaseMetricOutput {
         private TimeZone timeZone;
         private TimeUnit rateUnit;
         private TimeUnit durationUnit;
-        private MetricMeterPredicate filter;
+        private MetricMeterPredicate predicate;
 
         private Builder() {
             this.output = System.out;
@@ -216,7 +216,7 @@ public class ConsoleMetricOutput extends BaseMetricOutput {
             this.timeZone = TimeZone.getDefault();
             this.rateUnit = TimeUnit.SECONDS;
             this.durationUnit = TimeUnit.MILLISECONDS;
-            this.filter = FixedPredicate.TRUE;
+            this.predicate = FixedPredicate.TRUE;
         }
 
         /**
@@ -291,8 +291,8 @@ public class ConsoleMetricOutput extends BaseMetricOutput {
          * @param filter a {@link MetricMeterPredicate}
          * @return {@code this}
          */
-        public Builder filter(MetricMeterPredicate filter) {
-            this.filter = filter;
+        public Builder predicate(MetricMeterPredicate filter) {
+            this.predicate = filter;
             return this;
         }
 
@@ -308,7 +308,7 @@ public class ConsoleMetricOutput extends BaseMetricOutput {
                     timeZone,
                     rateUnit,
                     durationUnit,
-                    filter);
+                    predicate);
         }
     }
 }
