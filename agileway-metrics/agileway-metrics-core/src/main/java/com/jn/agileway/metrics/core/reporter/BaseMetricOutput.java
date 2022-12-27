@@ -43,6 +43,11 @@ public class BaseMetricOutput implements MetricOutput {
         return rateUnit;
     }
 
+    protected String getRateUnitString() {
+        return rateUnit.toString();
+    }
+
+
     public void setRateUnit(TimeUnit rateUnit) {
         this.rateUnit = rateUnit;
     }

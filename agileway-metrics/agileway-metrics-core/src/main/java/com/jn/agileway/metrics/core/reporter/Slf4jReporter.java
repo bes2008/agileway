@@ -24,51 +24,63 @@ import java.util.concurrent.TimeUnit;
  *
  * @since 4.1.0
  */
-public class Slf4jReporter extends ScheduledReporter {
+public class Slf4jReporter extends BaseMetricOutput {
     private final Logger logger;
     private Level loggingLevel;
     private final Marker marker;
     private final Metric prefix;
 
-    private Slf4jReporter(MetricMeterRegistry registry,
-                          Logger loggerProxy,
-                          Marker marker,
-                          String prefix,
-                          TimeUnit rateUnit,
-                          TimeUnit durationUnit) {
-        super(registry, "logger-reporter", rateUnit, durationUnit);
+    private Slf4jReporter(
+            Logger loggerProxy,
+            Level loggingLevel,
+            Marker marker,
+            String prefix,
+            TimeUnit rateUnit,
+            TimeUnit durationUnit) {
+        super();
+        setDurationUnit(durationUnit);
+        setRateUnit(rateUnit);
         this.logger = loggerProxy;
+        this.loggingLevel = loggingLevel;
         this.marker = marker;
         this.prefix = Metric.build(prefix);
     }
 
-
     @Override
-    public void report(Map<Metric, Gauge> gauges,
-                       Map<Metric, Counter> counters,
-                       Map<Metric, Histogram> histograms,
-                       Map<Metric, Metered> meters,
-                       Map<Metric, Timer> timers) {
-        for (Entry<Metric, Gauge> entry : gauges.entrySet()) {
-            logGauge(entry.getKey(), entry.getValue());
-        }
-
-        for (Entry<Metric, Counter> entry : counters.entrySet()) {
+    protected void writeCounters(Map<Metric, Counter> metrics) {
+        for (Entry<Metric, Counter> entry : metrics.entrySet()) {
             logCounter(entry.getKey(), entry.getValue());
         }
+    }
 
-        for (Entry<Metric, Histogram> entry : histograms.entrySet()) {
+    @Override
+    protected void writeGauges(Map<Metric, Gauge> metrics) {
+        for (Entry<Metric, Gauge> entry : metrics.entrySet()) {
+            logGauge(entry.getKey(), entry.getValue());
+        }
+    }
+
+    @Override
+    protected void writeHistograms(Map<Metric, Histogram> metrics) {
+        for (Entry<Metric, Histogram> entry : metrics.entrySet()) {
             logHistogram(entry.getKey(), entry.getValue());
         }
+    }
 
-        for (Entry<Metric, Metered> entry : meters.entrySet()) {
+    @Override
+    protected void writeMetereds(Map<Metric, Metered> metrics) {
+        for (Entry<Metric, Metered> entry : metrics.entrySet()) {
             logMeter(entry.getKey(), entry.getValue());
         }
+    }
 
-        for (Entry<Metric, Timer> entry : timers.entrySet()) {
+    @Override
+    protected void writeTimers(Map<Metric, Timer> metrics) {
+        for (Entry<Metric, Timer> entry : metrics.entrySet()) {
             logTimer(entry.getKey(), entry.getValue());
         }
     }
+
 
     private void logTimer(Metric name, Timer timer) {
         final Snapshot snapshot = timer.getSnapshot();
@@ -93,7 +105,7 @@ public class Slf4jReporter extends ScheduledReporter {
                 convertRate(timer.getM1Rate()),
                 convertRate(timer.getM5Rate()),
                 convertRate(timer.getM15Rate()),
-                getRateUnit(),
+                getRateUnitString(),
                 getDurationUnit());
     }
 
@@ -107,7 +119,7 @@ public class Slf4jReporter extends ScheduledReporter {
                 convertRate(meter.getM1Rate()),
                 convertRate(meter.getM5Rate()),
                 convertRate(meter.getM15Rate()),
-                getRateUnit());
+                getRateUnitString());
     }
 
     private void logHistogram(Metric name, Histogram histogram) {
@@ -135,12 +147,12 @@ public class Slf4jReporter extends ScheduledReporter {
     }
 
     private void logGauge(Metric name, Gauge gauge) {
-        Loggers.log(logger, loggingLevel, (Marker) marker, (Throwable) null,"type={}, name={}, value={}", "GAUGE", prefix(name), gauge.getValue());
+        Loggers.log(logger, loggingLevel, (Marker) marker, (Throwable) null, "type={}, name={}, value={}", "GAUGE", prefix(name), gauge.getValue());
     }
 
     @Override
-    protected String getRateUnit() {
-        return "events/" + super.getRateUnit();
+    protected String getRateUnitString() {
+        return "events/" + getRateUnit();
     }
 
     private String prefix(Metric name, String... components) {
@@ -257,7 +269,7 @@ public class Slf4jReporter extends ScheduledReporter {
          * @return a {@link Slf4jReporter}
          */
         public Slf4jReporter build() {
-            return new Slf4jReporter(registry, logger, marker, prefix, rateUnit, durationUnit);
+            return new Slf4jReporter(logger, loggingLevel, marker, prefix, rateUnit, durationUnit);
         }
     }
 
