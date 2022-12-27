@@ -25,30 +25,30 @@ public class Meters {
 
 
     /**
-     * Shorthand method for backwards compatibility in creating metric names.
+     * Shorthand method for backwards compatibility in creating metric moreParts.
      * <p>
      * Uses {@link Metric#build(String...)} for its
      * heavy lifting.
      *
-     * @param name  The first element of the name
-     * @param names The remaining elements of the name
-     * @return A metric name matching the specified components.
+     * @param part  The first element of the part
+     * @param moreParts The remaining elements of the part
+     * @return A metric part matching the specified components.
      * @see Metric#build(String...)
      */
-    public static Metric name(String name, String... names) {
+    public static Metric name(String part, String... moreParts) {
         final int length;
 
-        if (names == null) {
+        if (moreParts == null) {
             length = 0;
         } else {
-            length = names.length;
+            length = moreParts.length;
         }
 
         final String[] parts = new String[length + 1];
-        parts[0] = name;
+        parts[0] = part;
 
         for (int i = 0; i < length; i++) {
-            parts[i + 1] = names[i];
+            parts[i + 1] = moreParts[i];
         }
 
         return Metric.build(parts);
@@ -76,9 +76,9 @@ public class Meters {
      * @param name  the name of the metric
      * @return an instance of meter
      */
-    public static Metered getMeter(String group, Metric name) {
+    public static Metered getMetered(String group, Metric name) {
         MetricMeterFactory factory = getMetricFactory();
-        return factory.getMeter(group, name);
+        return factory.getMetered(group, name);
     }
 
     /**
@@ -254,7 +254,6 @@ public class Meters {
      *
      * @return the {@link MetricMeterFactory} instance bound
      */
-    @SuppressWarnings("unchecked")
     public static MetricMeterFactory getMetricFactory() {
         if (metricFactory == null) {
             synchronized (Meters.class) {

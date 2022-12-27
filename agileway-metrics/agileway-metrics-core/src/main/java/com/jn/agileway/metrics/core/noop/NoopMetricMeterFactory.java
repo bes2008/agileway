@@ -20,7 +20,7 @@ public class NoopMetricMeterFactory implements MetricMeterFactory {
 
 
     @Override
-    public Metered getMeter(String group, Metric name) {
+    public Metered getMetered(String group, Metric name) {
         return NoopMetered.NOOP_METER;
     }
 

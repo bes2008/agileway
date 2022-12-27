@@ -32,9 +32,9 @@ public class DefaultMetricFactory implements MetricMeterFactory {
     }
 
     @Override
-    public Metered getMeter(String group, Metric name) {
+    public Metered getMetered(String group, Metric name) {
         if (!this.enabled) {
-            return Meters.NOOP_METRIC_FACTORY.getMeter(group, name);
+            return Meters.NOOP_METRIC_FACTORY.getMetered(group, name);
         }
         return getMetricRegistryByGroup(group).metered(name);
     }

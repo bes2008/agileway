@@ -23,7 +23,7 @@ public interface MetricMeterFactory {
      * @param name  the name of the metric
      * @return an instance of meter
      */
-    Metered getMeter(String group, Metric name);
+    Metered getMetered(String group, Metric name);
 
     /**
      * Create a {@link Counter} metric in given group, and name.

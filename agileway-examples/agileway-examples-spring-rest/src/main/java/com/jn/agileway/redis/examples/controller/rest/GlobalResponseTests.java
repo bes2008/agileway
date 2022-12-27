@@ -23,7 +23,7 @@ public class GlobalResponseTests {
     Metric metricName = Meters.name("http", "qps").tag("instance", "ins-1");
     @GetMapping("/testBean")
     public Person aPerson() {
-        Metered meter = Meters.getMeter("test", metricName);
+        Metered meter = Meters.getMetered("test", metricName);
         meter.mark();
         Person p = new Person();
         p.setAge(10);
@@ -33,7 +33,7 @@ public class GlobalResponseTests {
 
     @GetMapping("/testListBeans")
     public List<Person> listBeans(){
-        Metered meter = Meters.getMeter("test", metricName);
+        Metered meter = Meters.getMetered("test", metricName);
         meter.mark();
         List<Person> list = Collects.newArrayList();
         for(int i =0; i< 3;i++) {
@@ -47,7 +47,7 @@ public class GlobalResponseTests {
 
     @GetMapping("/testResponseEntityBean")
     public ResponseEntity get() {
-        Metered meter = Meters.getMeter("test", metricName);
+        Metered meter = Meters.getMetered("test", metricName);
         meter.mark();
         Person p = new Person();
         p.setAge(10);
@@ -61,7 +61,7 @@ public class GlobalResponseTests {
     @GetMapping("/showRequest")
     @PostMapping
     public Object showRequest(){
-        Metered meter = Meters.getMeter("test", metricName);
+        Metered meter = Meters.getMetered("test", metricName);
         meter.mark();
 
         HttpServletRequest request = RRHolder.getRequest();

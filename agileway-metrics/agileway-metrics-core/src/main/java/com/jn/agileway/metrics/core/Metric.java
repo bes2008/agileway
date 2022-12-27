@@ -130,8 +130,9 @@ public class Metric implements Comparable<Metric> {
         if (parts == null || parts.length == 0)
             return Metric.EMPTY;
 
-        if (parts.length == 1)
+        if (parts.length == 1) {
             return new Metric(parts[0], EMPTY_TAGS);
+        }
 
         return new Metric(buildName(parts), EMPTY_TAGS);
     }
