@@ -13,7 +13,7 @@ import java.util.Map;
  *
  * @since 4.1.0
  */
-public interface Timed extends Meter, Counting {
+interface Timed extends Meter, Counting {
 
     /**
      * Returns the number of events which have been marked.

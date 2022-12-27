@@ -1,11 +1,11 @@
 package com.jn.agileway.metrics.supports.jdk.jmx;
 
-import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.predicate.FixedPredicate;
-import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
+import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meterset.MetricMeterRegistry;
 import com.jn.agileway.metrics.core.meterset.MetricMeterRegistryListener;
+import com.jn.agileway.metrics.core.predicate.FixedPredicate;
+import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
@@ -409,41 +409,41 @@ public class JmxReporter implements Closeable {
         }
     }
 
-    private static class JmxMeter extends AbstractBean implements JmxMeterMBean {
-        private final Timed metric;
+    private static class JmxMetered extends AbstractBean implements JmxMeterMBean {
+        private final Metered meter;
         private final double rateFactor;
         private final String rateUnit;
 
-        private JmxMeter(Timed metric, ObjectName objectName, TimeUnit rateUnit) {
+        private JmxMetered(Metered metered, ObjectName objectName, TimeUnit rateUnit) {
             super(objectName);
-            this.metric = metric;
+            this.meter = metered;
             this.rateFactor = rateUnit.toSeconds(1);
             this.rateUnit = ("events/" + calculateRateUnit(rateUnit)).intern();
         }
 
         @Override
         public long getCount() {
-            return metric.getCount();
+            return meter.getCount();
         }
 
         @Override
         public double getMeanRate() {
-            return metric.getMeanRate() * rateFactor;
+            return meter.getMeanRate() * rateFactor;
         }
 
         @Override
         public double getOneMinuteRate() {
-            return metric.getM1Rate() * rateFactor;
+            return meter.getM1Rate() * rateFactor;
         }
 
         @Override
         public double getFiveMinuteRate() {
-            return metric.getM5Rate() * rateFactor;
+            return meter.getM5Rate() * rateFactor;
         }
 
         @Override
         public double getFifteenMinuteRate() {
-            return metric.getM15Rate() * rateFactor;
+            return meter.getM15Rate() * rateFactor;
         }
 
         @Override
@@ -451,80 +451,116 @@ public class JmxReporter implements Closeable {
             return rateUnit;
         }
 
-        private String calculateRateUnit(TimeUnit unit) {
-            final String s = unit.toString().toLowerCase(Locale.US);
-            return s.substring(0, s.length() - 1);
-        }
+
     }
 
-    static class JmxTimer extends JmxMeter implements JmxTimerMBean {
-        private final Timer metric;
+    private static String calculateRateUnit(TimeUnit unit) {
+        final String s = unit.toString().toLowerCase(Locale.US);
+        return s.substring(0, s.length() - 1);
+    }
+
+    static class JmxTimer extends AbstractBean implements JmxTimerMBean {
+        private final Timer meter;
         private final double durationFactor;
         private final String durationUnit;
+        private final double rateFactor;
+        private final String rateUnit;
 
-        private JmxTimer(Timer metric,
+        private JmxTimer(Timer timer,
                          ObjectName objectName,
                          TimeUnit rateUnit,
                          TimeUnit durationUnit) {
-            super(metric, objectName, rateUnit);
-            this.metric = metric;
+            super(objectName);
+            this.meter = timer;
+            this.rateFactor = rateUnit.toSeconds(1);
+            this.rateUnit = ("events/" + calculateRateUnit(rateUnit)).intern();
             this.durationFactor = 1.0 / durationUnit.toNanos(1);
             this.durationUnit = durationUnit.toString().toLowerCase(Locale.US);
         }
 
         @Override
+        public double getMeanRate() {
+            return meter.getMeanRate() * rateFactor;
+        }
+
+        @Override
+        public double getOneMinuteRate() {
+            return meter.getM1Rate() * rateFactor;
+        }
+
+        @Override
+        public double getFiveMinuteRate() {
+            return meter.getM5Rate() * rateFactor;
+        }
+
+        @Override
+        public double getFifteenMinuteRate() {
+            return meter.getM15Rate() * rateFactor;
+        }
+
+        @Override
+        public String getRateUnit() {
+            return rateUnit;
+        }
+
+        @Override
+        public long getCount() {
+            return meter.getCount();
+        }
+
+        @Override
         public double get50thPercentile() {
-            return metric.getSnapshot().getMedian() * durationFactor;
+            return meter.getSnapshot().getMedian() * durationFactor;
         }
 
         @Override
         public double getMin() {
-            return metric.getSnapshot().getMin() * durationFactor;
+            return meter.getSnapshot().getMin() * durationFactor;
         }
 
         @Override
         public double getMax() {
-            return metric.getSnapshot().getMax() * durationFactor;
+            return meter.getSnapshot().getMax() * durationFactor;
         }
 
         @Override
         public double getMean() {
-            return metric.getSnapshot().getMean() * durationFactor;
+            return meter.getSnapshot().getMean() * durationFactor;
         }
 
         @Override
         public double getStdDev() {
-            return metric.getSnapshot().getStdDev() * durationFactor;
+            return meter.getSnapshot().getStdDev() * durationFactor;
         }
 
         @Override
         public double get75thPercentile() {
-            return metric.getSnapshot().get75thPercentile() * durationFactor;
+            return meter.getSnapshot().get75thPercentile() * durationFactor;
         }
 
         @Override
         public double get95thPercentile() {
-            return metric.getSnapshot().get95thPercentile() * durationFactor;
+            return meter.getSnapshot().get95thPercentile() * durationFactor;
         }
 
         @Override
         public double get98thPercentile() {
-            return metric.getSnapshot().get98thPercentile() * durationFactor;
+            return meter.getSnapshot().get98thPercentile() * durationFactor;
         }
 
         @Override
         public double get99thPercentile() {
-            return metric.getSnapshot().get99thPercentile() * durationFactor;
+            return meter.getSnapshot().get99thPercentile() * durationFactor;
         }
 
         @Override
         public double get999thPercentile() {
-            return metric.getSnapshot().get999thPercentile() * durationFactor;
+            return meter.getSnapshot().get999thPercentile() * durationFactor;
         }
 
         @Override
         public long[] values() {
-            return metric.getSnapshot().getValues();
+            return meter.getSnapshot().getValues();
         }
 
         @Override
@@ -654,7 +690,7 @@ public class JmxReporter implements Closeable {
             try {
                 if (predicate.test(name, meter)) {
                     final ObjectName objectName = createName("meters", name);
-                    registerMBean(new JmxMeter(meter, objectName, timeUnits.rateFor(name.getKey())), objectName);
+                    registerMBean(new JmxMetered(meter, objectName, timeUnits.rateFor(name.getKey())), objectName);
                 }
             } catch (InstanceAlreadyExistsException e) {
                 LOGGER.debug("Unable to register meter", e);
