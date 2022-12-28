@@ -20,7 +20,7 @@ public class BaseMetricOutput implements MetricOutput {
 
     private MetricMeterPredicate predicate;
 
-    BaseMetricOutput(MetricMeterPredicate predicate, TimeUnit durationUnit, TimeUnit rateUnit) {
+    public BaseMetricOutput(MetricMeterPredicate predicate, TimeUnit durationUnit, TimeUnit rateUnit) {
         this.durationUnit = durationUnit;
         this.rateUnit = rateUnit;
         this.predicate = predicate;
