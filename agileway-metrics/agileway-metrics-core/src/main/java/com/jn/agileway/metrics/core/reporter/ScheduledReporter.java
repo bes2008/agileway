@@ -63,8 +63,9 @@ public abstract class ScheduledReporter implements Reporter {
         this.registry = registry;
         this.executor = executor;
         this.rateFactor = rateUnit.toSeconds(1);
-        this.rateUnit = calculateRateUnit(rateUnit);
+
         this.durationFactor = 1.0 / durationUnit.toNanos(1);
+        this.rateUnit = calculateRateUnit(rateUnit);
         this.durationUnit = durationUnit.toString().toLowerCase(Locale.US);
     }
 

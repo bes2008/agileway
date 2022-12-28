@@ -24,7 +24,7 @@ import com.jn.agileway.metrics.core.Meter;
  */
 public interface Gauge<T> extends Meter {
     /**
-     * @return the metric's current value
+     * @return the metric current value
      */
     T getValue();
 }

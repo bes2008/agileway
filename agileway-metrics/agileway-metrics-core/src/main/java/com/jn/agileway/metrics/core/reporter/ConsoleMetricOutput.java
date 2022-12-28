@@ -34,10 +34,11 @@ public class ConsoleMetricOutput extends BaseMetricOutput {
                                 Locale locale,
                                 Clock clock,
                                 TimeZone timeZone,
+                                MetricMeterPredicate predicate,
                                 TimeUnit rateUnit,
-                                TimeUnit durationUnit,
-                                MetricMeterPredicate predicate) {
-        super();
+                                TimeUnit durationUnit
+    ) {
+        super(predicate, durationUnit, rateUnit);
 
         this.output = output;
         this.locale = locale;
@@ -46,9 +47,6 @@ public class ConsoleMetricOutput extends BaseMetricOutput {
         this.dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, locale);
         dateFormat.setTimeZone(timeZone);
 
-        setDurationUnit(durationUnit);
-        setRateUnit(rateUnit);
-        setPredicate(predicate);
     }
 
 
@@ -306,9 +304,10 @@ public class ConsoleMetricOutput extends BaseMetricOutput {
                     locale,
                     clock,
                     timeZone,
-                    rateUnit,
+                    predicate,
                     durationUnit,
-                    predicate);
+                    rateUnit
+            );
         }
     }
 }

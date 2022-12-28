@@ -14,43 +14,44 @@ public class BaseMetricOutput implements MetricOutput {
     private double durationFactor;
     private TimeUnit durationUnit;
     private double rateFactor;
-
     private TimeUnit rateUnit;
+    private String rateUnitString;
+    private String durationUnitString;
 
     private MetricMeterPredicate predicate;
 
-    public void setPredicate(MetricMeterPredicate predicate) {
+    BaseMetricOutput(MetricMeterPredicate predicate, TimeUnit durationUnit, TimeUnit rateUnit) {
+        this.durationUnit = durationUnit;
+        this.rateUnit = rateUnit;
         this.predicate = predicate;
+        this.rateFactor = rateUnit.toSeconds(1);
+        this.durationFactor = 1.0 / durationUnit.toNanos(1);
+        rateUnitString = calculateRateUnit(rateUnit);
+        durationUnitString = durationUnit.toString().toLowerCase(Locale.US);
     }
 
-    public void setDurationFactor(double durationFactor) {
-        this.durationFactor = durationFactor;
-    }
-
-    public void setRateFactor(double rateFactor) {
-        this.rateFactor = rateFactor;
+    private String calculateRateUnit(TimeUnit unit) {
+        final String s = unit.toString().toLowerCase(Locale.US);
+        return s.substring(0, s.length() - 1);
     }
 
     public TimeUnit getDurationUnit() {
         return durationUnit;
     }
 
-    public void setDurationUnit(TimeUnit durationUnit) {
-        this.durationUnit = durationUnit;
-    }
 
     public TimeUnit getRateUnit() {
         return rateUnit;
     }
 
     protected String getRateUnitString() {
-        return rateUnit.toString();
+        return rateUnitString;
     }
 
-
-    public void setRateUnit(TimeUnit rateUnit) {
-        this.rateUnit = rateUnit;
+    protected String getDurationUnitString() {
+        return durationUnitString;
     }
+
 
     protected double convertDuration(double duration) {
         return duration * durationFactor;
@@ -58,11 +59,6 @@ public class BaseMetricOutput implements MetricOutput {
 
     protected double convertRate(double rate) {
         return rate * rateFactor;
-    }
-
-    private String calculateRateUnit(TimeUnit unit) {
-        final String s = unit.toString().toLowerCase(Locale.US);
-        return s.substring(0, s.length() - 1);
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.jn.agileway.metrics.core.reporter;
 
 import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.meter.*;
-import com.jn.agileway.metrics.core.meterset.MetricMeterRegistry;
 import com.jn.agileway.metrics.core.predicate.FixedPredicate;
 import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
@@ -30,17 +29,16 @@ public class Slf4jMetricOutput extends BaseMetricOutput {
     private final Marker marker;
     private final Metric prefix;
 
-    private Slf4jMetricOutput(
-            Logger loggerProxy,
+    public Slf4jMetricOutput(
+            Logger logger,
             Level loggingLevel,
             Marker marker,
             String prefix,
             TimeUnit rateUnit,
-            TimeUnit durationUnit) {
-        super();
-        setDurationUnit(durationUnit);
-        setRateUnit(rateUnit);
-        this.logger = loggerProxy;
+            TimeUnit durationUnit,
+            MetricMeterPredicate predicate) {
+        super(predicate,  durationUnit,rateUnit);
+        this.logger = logger;
         this.loggingLevel = loggingLevel;
         this.marker = marker;
         this.prefix = Metric.build(prefix);
@@ -166,23 +164,21 @@ public class Slf4jMetricOutput extends BaseMetricOutput {
      * not filtering metrics.
      */
     public static class Builder {
-        private final MetricMeterRegistry registry;
         private Logger logger;
         private Level loggingLevel;
         private Marker marker;
         private String prefix;
         private TimeUnit rateUnit;
         private TimeUnit durationUnit;
-        private MetricMeterPredicate filter;
+        private MetricMeterPredicate predicate;
 
-        private Builder(MetricMeterRegistry registry) {
-            this.registry = registry;
+        private Builder() {
             this.logger = LoggerFactory.getLogger("metrics");
             this.marker = null;
             this.prefix = "";
             this.rateUnit = TimeUnit.SECONDS;
             this.durationUnit = TimeUnit.MILLISECONDS;
-            this.filter = FixedPredicate.TRUE;
+            this.predicate = FixedPredicate.TRUE;
             this.loggingLevel = Level.INFO;
         }
 
@@ -248,7 +244,7 @@ public class Slf4jMetricOutput extends BaseMetricOutput {
          * @return {@code this}
          */
         public Builder filter(MetricMeterPredicate filter) {
-            this.filter = filter;
+            this.predicate = filter;
             return this;
         }
 
@@ -269,7 +265,7 @@ public class Slf4jMetricOutput extends BaseMetricOutput {
          * @return a {@link Slf4jMetricOutput}
          */
         public Slf4jMetricOutput build() {
-            return new Slf4jMetricOutput(logger, loggingLevel, marker, prefix, rateUnit, durationUnit);
+            return new Slf4jMetricOutput(logger, loggingLevel, marker, prefix, rateUnit, durationUnit, predicate);
         }
     }
 
