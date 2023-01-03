@@ -23,7 +23,6 @@ import java.util.concurrent.TimeUnit;
 /**
  * report factory 里所有的metrics
  *
- * @see ScheduledReporter
  * @since 4.1.0
  */
 public abstract class ScheduledReporterV2 implements Reporter {
