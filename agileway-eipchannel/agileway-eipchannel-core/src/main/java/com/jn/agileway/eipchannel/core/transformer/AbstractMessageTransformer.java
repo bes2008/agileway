@@ -20,7 +20,7 @@ public abstract class AbstractMessageTransformer implements MessageTransformer {
         } catch (MessageTransformationException e) {
             throw e;
         } catch (Exception e) {
-            throw new MessageTransformationException(message, "failed to transform message", e);
+            throw new MessageTransformationException(message, "failed to transform message： " + e.getMessage(), e);
         }
     }
 
