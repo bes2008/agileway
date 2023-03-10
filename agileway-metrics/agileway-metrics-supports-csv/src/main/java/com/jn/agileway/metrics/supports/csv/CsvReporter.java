@@ -1,10 +1,11 @@
 package com.jn.agileway.metrics.supports.csv;
 
 import com.jn.agileway.metrics.core.*;
+import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
+import com.jn.agileway.metrics.core.meterset.MetricMeterFactory;
 import com.jn.agileway.metrics.core.predicate.FixedPredicate;
 import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
 import com.jn.agileway.metrics.core.meter.*;
-import com.jn.agileway.metrics.core.meterset.MetricMeterRegistry;
 import com.jn.agileway.metrics.core.reporter.ScheduledReporter;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
 import com.jn.langx.util.io.Charsets;
@@ -31,14 +32,14 @@ public class CsvReporter extends ScheduledReporter {
     private final Locale locale;
     private final Clock clock;
     private final CsvFileProvider csvFileProvider;
-    private CsvReporter(MetricMeterRegistry registry,
+    private CsvReporter(MetricMeterFactory factory,
                         File directory,
                         Locale locale,
                         TimeUnit rateUnit,
                         TimeUnit durationUnit,
                         Clock clock,
                         CsvFileProvider csvFileProvider) {
-        super(registry, "csv-reporter",  rateUnit, durationUnit);
+        super(factory, "csv-reporter",  rateUnit, durationUnit);
         this.directory = directory;
         this.locale = locale;
         this.clock = clock;
@@ -48,11 +49,11 @@ public class CsvReporter extends ScheduledReporter {
     /**
      * Returns a new {@link Builder} for {@link CsvReporter}.
      *
-     * @param registry the registry to report
+     * @param factory the registry to report
      * @return a {@link Builder} instance for a {@link CsvReporter}
      */
-    public static Builder forRegistry(MetricMeterRegistry registry) {
-        return new Builder(registry);
+    public static Builder forRegistry(MetricMeterFactory factory) {
+        return new Builder(factory);
     }
 
     @Override
@@ -60,7 +61,11 @@ public class CsvReporter extends ScheduledReporter {
                        Map<Metric, Counter> counters,
                        Map<Metric, Histogram> histograms,
                        Map<Metric, Metered> meters,
-                       Map<Metric, Timer> timers) {
+                       Map<Metric, Timer> timers,
+                       Map<Metric, Compass> compasses,
+                       Map<Metric, FastCompass> fastCompasses,
+                       Map<Metric, ClusterHistogram> clusterHistograms) {
+
         final long timestamp = TimeUnit.MILLISECONDS.toSeconds(clock.getTime());
 
         for (Map.Entry<Metric, Gauge> entry : gauges.entrySet()) {
@@ -176,7 +181,7 @@ public class CsvReporter extends ScheduledReporter {
      * rates to events/second, converting durations to milliseconds, and not filtering metrics.
      */
     public static class Builder {
-        private final MetricMeterRegistry registry;
+        private final MetricMeterFactory factory;
         private Locale locale;
         private TimeUnit rateUnit;
         private TimeUnit durationUnit;
@@ -184,8 +189,8 @@ public class CsvReporter extends ScheduledReporter {
         private MetricMeterPredicate filter;
         private CsvFileProvider csvFileProvider;
 
-        private Builder(MetricMeterRegistry registry) {
-            this.registry = registry;
+        private Builder(MetricMeterFactory factory) {
+            this.factory = factory;
             this.locale = Locale.getDefault();
             this.rateUnit = TimeUnit.SECONDS;
             this.durationUnit = TimeUnit.MILLISECONDS;
@@ -262,7 +267,7 @@ public class CsvReporter extends ScheduledReporter {
          * @return a {@link CsvReporter}
          */
         public CsvReporter build(File directory) {
-            return new CsvReporter(registry,
+            return new CsvReporter(factory,
                     directory,
                     locale,
                     rateUnit,

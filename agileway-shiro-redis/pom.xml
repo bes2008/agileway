@@ -15,7 +15,7 @@
     <description>Provide the shiro enhances based on redis : cache, session manager</description>
 
     <properties>
-        <shiro.version>[1.4.2,)</shiro.version>
+        <shiro.version>1.11.0</shiro.version>
     </properties>
 
     <dependencies>

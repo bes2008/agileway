@@ -9,6 +9,7 @@ import com.jn.agileway.metrics.core.meterset.MetricMeterFactory;
 import com.jn.agileway.metrics.core.predicate.CompositeMetricPredicate;
 import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
 import com.jn.agileway.metrics.core.predicate.TimeMetricLevelPredicate;
+import com.jn.agileway.metrics.core.predicate.TrueMetricMeterPredicate;
 import com.jn.langx.util.concurrent.CommonThreadFactory;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
@@ -25,9 +26,9 @@ import java.util.concurrent.TimeUnit;
  *
  * @since 4.1.0
  */
-public abstract class ScheduledReporterV2 implements Reporter {
+public abstract class ScheduledReporter implements Reporter {
 
-    private static final Logger LOG = Loggers.getLogger(ScheduledReporterV2.class);
+    private Logger LOG = Loggers.getLogger(this.getClass());
 
     protected final double durationFactor;
     protected final double rateFactor;
@@ -59,15 +60,23 @@ public abstract class ScheduledReporterV2 implements Reporter {
                 report();
             } catch (Throwable ex) {
                 LOG.error("Throwable RuntimeException thrown from {}#report. Exception was suppressed.",
-                        ScheduledReporterV2.this.getClass().getSimpleName(), ex);
+                        ScheduledReporter.this.getClass().getSimpleName(), ex);
             } finally {
                 timeMetricLevelPredicate.afterReport();
             }
         }
     };
 
+    protected ScheduledReporter(MetricMeterFactory factory,
+                                String name,
+                                TimeUnit rateUnit,
+                                TimeUnit durationUnit) {
+        this(factory, new TrueMetricMeterPredicate(), new TimeMetricLevelPredicate(new MetricsCollectPeriodConfig()), rateUnit, durationUnit,
+                Executors.newSingleThreadScheduledExecutor(new CommonThreadFactory(name, true)));
+    }
+
     /**
-     * Creates a new {@link ScheduledReporterV2} instance.
+     * Creates a new {@link ScheduledReporter} instance.
      *
      * @param factory      the {@link MetricMeterFactory} containing the metrics this
      *                     reporter will report
@@ -76,18 +85,18 @@ public abstract class ScheduledReporterV2 implements Reporter {
      * @param rateUnit     a unit of time
      * @param durationUnit a unit of time
      */
-    protected ScheduledReporterV2(MetricMeterFactory factory,
-                                  String name,
-                                  MetricMeterPredicate predicate,
-                                  MetricsCollectPeriodConfig metricsReportPeriodConfig,
-                                  TimeUnit rateUnit,
-                                  TimeUnit durationUnit) {
+    protected ScheduledReporter(MetricMeterFactory factory,
+                                String name,
+                                MetricMeterPredicate predicate,
+                                MetricsCollectPeriodConfig metricsReportPeriodConfig,
+                                TimeUnit rateUnit,
+                                TimeUnit durationUnit) {
         this(factory, predicate, new TimeMetricLevelPredicate(metricsReportPeriodConfig), rateUnit, durationUnit,
                 Executors.newSingleThreadScheduledExecutor(new CommonThreadFactory(name, true)));
     }
 
     /**
-     * Creates a new {@link ScheduledReporterV2} instance.
+     * Creates a new {@link ScheduledReporter} instance.
      *
      * @param factory      the {@link MetricMeterFactory} containing the metrics this
      *                     reporter will report
@@ -96,30 +105,30 @@ public abstract class ScheduledReporterV2 implements Reporter {
      * @param rateUnit     a unit of time
      * @param durationUnit a unit of time
      */
-    protected ScheduledReporterV2(MetricMeterFactory factory,
-                                  String name,
-                                  MetricMeterPredicate predicate,
-                                  TimeMetricLevelPredicate timeMetricLevelFilter,
-                                  TimeUnit rateUnit,
-                                  TimeUnit durationUnit) {
+    protected ScheduledReporter(MetricMeterFactory factory,
+                                String name,
+                                MetricMeterPredicate predicate,
+                                TimeMetricLevelPredicate timeMetricLevelFilter,
+                                TimeUnit rateUnit,
+                                TimeUnit durationUnit) {
         this(factory, predicate, timeMetricLevelFilter, rateUnit, durationUnit,
                 Executors.newSingleThreadScheduledExecutor(new CommonThreadFactory(name, true)));
     }
 
     /**
-     * Creates a new {@link ScheduledReporterV2} instance.
+     * Creates a new {@link ScheduledReporter} instance.
      *
      * @param factory   the {@link MetricMeterFactory} containing the metrics this
      *                  reporter will report
      * @param predicate the predicate for which metrics to report
      * @param executor  the executor to use while scheduling reporting of metrics.
      */
-    protected ScheduledReporterV2(MetricMeterFactory factory,
-                                  MetricMeterPredicate predicate,
-                                  TimeMetricLevelPredicate timeMetricLevelFilter,
-                                  TimeUnit rateUnit,
-                                  TimeUnit durationUnit,
-                                  ScheduledExecutorService executor) {
+    protected ScheduledReporter(MetricMeterFactory factory,
+                                MetricMeterPredicate predicate,
+                                TimeMetricLevelPredicate timeMetricLevelFilter,
+                                TimeUnit rateUnit,
+                                TimeUnit durationUnit,
+                                ScheduledExecutorService executor) {
         this.factory = factory;
         this.executor = executor;
         this.rateFactor = rateUnit.toSeconds(1);
