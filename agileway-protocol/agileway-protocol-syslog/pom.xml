@@ -15,12 +15,7 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
-<dependencies>
-    <dependency>
-        <groupId>com.github.jcustenborder.netty</groupId>
-        <artifactId>netty-codec-syslog</artifactId>
-        <version>0.3.23</version>
-    </dependency>
+    <dependencies>
 
-</dependencies>
+    </dependencies>
 </project>

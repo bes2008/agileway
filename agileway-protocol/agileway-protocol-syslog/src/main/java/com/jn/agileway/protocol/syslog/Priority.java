@@ -1,4 +1,4 @@
-package com.jn.agileway.protocol.syslog.model;
+package com.jn.agileway.protocol.syslog;
 
 public class Priority {
   private Priority() {
