@@ -1,16 +1,16 @@
 package com.jn.agileway.protocol.syslog;
 
+import com.jn.langx.util.regexp.RegexpMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.regex.Matcher;
 
 public class RFC5424MessageParser extends MessageParser {
     private static final Logger log = LoggerFactory.getLogger(RFC5424MessageParser.class);
     private static final String PATTERN = "^<(?<priority>\\d+)>(?<version>\\d{1,3})\\s*(?<date>[0-9:+-TZ]+)\\s*(?<host>\\S+)\\s*(?<appname>\\S+)\\s*(?<procid>\\S+)\\s*(?<msgid>\\S+)\\s*(?<structureddata>(-|\\[.+\\]))\\s*(?<message>.+)$";
-    private final ThreadLocal<Matcher> matcherThreadLocal;
+    private final ThreadLocal<RegexpMatcher> matcherThreadLocal;
 
     public RFC5424MessageParser() {
         this.matcherThreadLocal = initMatcher(PATTERN);
@@ -20,7 +20,7 @@ public class RFC5424MessageParser extends MessageParser {
     public SyslogMessage parse(String line) {
         log.trace("parse() - request = '{}'", line);
         String rawMessage = line;
-        final Matcher matcher = matcherThreadLocal.get().reset(rawMessage);
+        final RegexpMatcher matcher = matcherThreadLocal.get().reset(rawMessage);
 
         if (!matcher.find()) {
             log.trace("parse() - Could not match message. request = '{}'", rawMessage);

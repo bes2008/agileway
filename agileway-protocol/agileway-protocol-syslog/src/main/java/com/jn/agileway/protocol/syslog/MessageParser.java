@@ -1,5 +1,8 @@
 package com.jn.agileway.protocol.syslog;
 
+import com.jn.langx.util.regexp.Regexp;
+import com.jn.langx.util.regexp.RegexpMatcher;
+import com.jn.langx.util.regexp.Regexps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,15 +17,13 @@ import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public abstract class MessageParser {
     private static final Logger log = LoggerFactory.getLogger(MessageParser.class);
     private static final String NULL_TOKEN = "-";
     protected final List<DateTimeFormatter> dateFormats;
-    private final ThreadLocal<Matcher> matcherStructuredData;
-    private final ThreadLocal<Matcher> matcherKeyValue;
+    private final ThreadLocal<RegexpMatcher> matcherStructuredData;
+    private final ThreadLocal<RegexpMatcher> matcherKeyValue;
     private final ZoneId zoneId;
 
     public MessageParser() {
@@ -57,12 +58,12 @@ public abstract class MessageParser {
      */
     public abstract SyslogMessage parse(String line);
 
-    protected final ThreadLocal<Matcher> initMatcher(String pattern) {
+    protected final ThreadLocal<RegexpMatcher> initMatcher(String pattern) {
         return initMatcher(pattern, 0);
     }
 
-    protected final ThreadLocal<Matcher> initMatcher(String pattern, int flags) {
-        final Pattern p = Pattern.compile(pattern, flags);
+    protected final ThreadLocal<RegexpMatcher> initMatcher(String pattern, int flags) {
+        final Regexp p = Regexps.createRegexp(pattern, flags);
         return new MatcherInheritableThreadLocal(p);
     }
 
@@ -109,14 +110,14 @@ public abstract class MessageParser {
 
     protected List<StructuredData> parseStructuredData(String structuredData) {
         log.trace("parseStructuredData() - structuredData = '{}'", structuredData);
-        final Matcher matcher = matcherStructuredData.get().reset(structuredData);
+        final RegexpMatcher matcher = matcherStructuredData.get().reset(structuredData);
         final List<StructuredData> result = new ArrayList<>();
         while (matcher.find()) {
             final String input = matcher.group(1);
             log.trace("parseStructuredData() - input = '{}'", input);
             StructuredData sd = new StructuredData();
 
-            final Matcher kvpMatcher = matcherKeyValue.get().reset(input);
+            final RegexpMatcher kvpMatcher = matcherKeyValue.get().reset(input);
             while (kvpMatcher.find()) {
                 final String key = kvpMatcher.group("key");
                 final String value = kvpMatcher.group("value");
@@ -136,16 +137,16 @@ public abstract class MessageParser {
     }
 
 
-    static class MatcherInheritableThreadLocal extends InheritableThreadLocal<Matcher> {
-        private final Pattern pattern;
+    static class MatcherInheritableThreadLocal extends InheritableThreadLocal<RegexpMatcher> {
+        private final Regexp regexp;
 
-        MatcherInheritableThreadLocal(Pattern pattern) {
-            this.pattern = pattern;
+        MatcherInheritableThreadLocal(Regexp pattern) {
+            this.regexp = pattern;
         }
 
         @Override
-        protected Matcher initialValue() {
-            return this.pattern.matcher("");
+        protected RegexpMatcher initialValue() {
+            return this.regexp.matcher("");
         }
     }
 

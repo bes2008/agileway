@@ -1,5 +1,6 @@
 package com.jn.agileway.protocol.syslog;
 
+import com.jn.langx.util.regexp.RegexpMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,7 +9,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 
 /**
  * https://learn.microsoft.com/en-us/azure/sentinel/connect-common-event-format
@@ -19,9 +19,9 @@ public class CEFMessageParser extends MessageParser {
     private static final String CEF_MAIN_PATTERN = "(?<!\\\\)\\|";
     private static final String PATTERN_EXTENSION = "(\\w+)=";
 
-    private final ThreadLocal<Matcher> matcherCEFPrefix;
-    private final ThreadLocal<Matcher> matcherCEFMain;
-    private final ThreadLocal<Matcher> matcherCEFExtension;
+    private final ThreadLocal<RegexpMatcher> matcherCEFPrefix;
+    private final ThreadLocal<RegexpMatcher> matcherCEFMain;
+    private final ThreadLocal<RegexpMatcher> matcherCEFExtension;
 
 
     public CEFMessageParser() {
@@ -32,7 +32,7 @@ public class CEFMessageParser extends MessageParser {
 
     List<String> splitToList(String data) {
         List<String> result = new ArrayList<>(10);
-        final Matcher matcherData = this.matcherCEFMain.get().reset(data);
+        final RegexpMatcher matcherData = this.matcherCEFMain.get().reset(data);
 
         int start = 0;
         int end = 0;
@@ -53,7 +53,7 @@ public class CEFMessageParser extends MessageParser {
     @Override
     public SyslogMessage parse(String rawMessage) {
         log.trace("parse() - rawMessage = '{}'", rawMessage);
-        final Matcher matcherPrefix = this.matcherCEFPrefix.get().reset(rawMessage);
+        final RegexpMatcher matcherPrefix = this.matcherCEFPrefix.get().reset(rawMessage);
 
         if (!matcherPrefix.find()) {
             log.trace("parse() - Could not match message. request = '{}'", rawMessage);
@@ -130,7 +130,7 @@ public class CEFMessageParser extends MessageParser {
             return result;
         }
 
-        Matcher matcher = this.matcherCEFExtension.get().reset(token);
+        RegexpMatcher matcher = this.matcherCEFExtension.get().reset(token);
 
         String key = null;
         String value;
