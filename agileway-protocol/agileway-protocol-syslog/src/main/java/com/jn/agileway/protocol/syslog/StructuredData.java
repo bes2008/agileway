@@ -26,8 +26,8 @@ public class StructuredData {
         this.structuredDataElements = structuredDataElements;
     }
 
-    public void addStructuredDataElement(String key, String value){
-        if(this.structuredDataElements==null){
+    public void addStructuredDataElement(String key, String value) {
+        if (this.structuredDataElements == null) {
             this.structuredDataElements = new LinkedHashMap<>();
         }
         this.structuredDataElements.put(key, value);

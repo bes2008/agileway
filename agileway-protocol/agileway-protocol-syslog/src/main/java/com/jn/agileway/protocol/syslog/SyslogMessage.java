@@ -22,19 +22,17 @@ public class SyslogMessage {
     private String rawMessage;
     private MessageType type;
     /**
-    Level for the message. Parsed from the message.
+     * Level for the message. Parsed from the message.
      */
     @Nullable
     private Integer level;
     /**
      * Version of the message.
-     *
      */
     @Nullable
     private Integer version;
     /**
      * Facility of the message.
-     *
      */
     @Nullable
     private Integer facility;
@@ -106,7 +104,7 @@ public class SyslogMessage {
     private String severity;
 
     /**
-     *  the {@code extension} attribute
+     * the {@code extension} attribute
      */
     @Nullable
     private Map<String, String> extension;
@@ -380,7 +378,6 @@ public class SyslogMessage {
                 + ", extension=" + extension
                 + "}";
     }
-
 
 
     private static <T> List<T> createSafeList(Iterable<? extends T> iterable, boolean checkNulls, boolean skipNulls) {

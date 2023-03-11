@@ -1,6 +1,6 @@
 package com.jn.agileway.protocol.syslog;
 
-public enum  MessageType {
+public enum MessageType {
     /**
      * Message type for a message that could not be parsed.
      */

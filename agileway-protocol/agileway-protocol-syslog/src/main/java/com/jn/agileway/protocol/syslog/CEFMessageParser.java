@@ -14,7 +14,7 @@ import java.util.regex.Matcher;
  * https://learn.microsoft.com/en-us/azure/sentinel/connect-common-event-format
  */
 public class CEFMessageParser extends MessageParser {
-    private static final Logger log = LoggerFactory.getLogger(com.github.jcustenborder.netty.syslog.CEFMessageParser.class);
+    private static final Logger log = LoggerFactory.getLogger(CEFMessageParser.class);
     private static final String CEF_PREFIX_PATTERN = "^(<(?<priority>\\d+)>)?(?<date>([a-zA-Z]{3}\\s+\\d+\\s+\\d+:\\d+:\\d+)|([0-9T:.Z-]+))\\s+(?<host>\\S+)\\s+CEF:(?<version>\\d+)\\|(?<data>.*)$";
     private static final String CEF_MAIN_PATTERN = "(?<!\\\\)\\|";
     private static final String PATTERN_EXTENSION = "(\\w+)=";
