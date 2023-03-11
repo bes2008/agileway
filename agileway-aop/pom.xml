@@ -5,7 +5,7 @@
     <parent>
         <groupId>io.github.bes2008.solution.agileway</groupId>
         <artifactId>agileway</artifactId>
-        <version>4.1.0</version>
+        <version>4.1.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <description>Adapter aopalliance AOP to langx-java AOP interfaces</description>
