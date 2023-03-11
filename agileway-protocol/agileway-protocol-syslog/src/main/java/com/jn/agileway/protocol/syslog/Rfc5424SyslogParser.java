@@ -14,11 +14,8 @@ import java.util.Map;
  * Parse for RFC 5424 syslog messages; when used with TCP, requires the use
  * of a {@code RFC6587SyslogDeserializer} which decodes the framing.
  *
- * @author Duncan McIntyre
- * @author Gary Russell
- * @author Artem Bilan
  *
- * @since 4.1.1
+ * @since 4.1.0
  *
  */
 public class Rfc5424SyslogParser {
