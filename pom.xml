@@ -31,6 +31,7 @@
         <module>agileway-jaxrs</module>
         <module>agileway-eipchannel</module>
         <module>agileway-metrics</module>
+        <module>agileway-protocol</module>
 
     </modules>
 
