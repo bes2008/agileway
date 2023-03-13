@@ -74,7 +74,7 @@ public class HttpConnectionContext {
     public String getUrl() {
         String url = null;
         if (Emptys.isNotEmpty(getNodes())) {
-            url = getNodes().size() > 1 ? configuration.getLoadbalancerHost() : getNodes().get(0).toString();
+            url = getNodes().size() > 1 ? configuration.getLoadbalancerHost() : (getNodes().get(0).getHost()+":"+getNodes().get(0).getPort());
         } else {
             url = "unknown";
         }
