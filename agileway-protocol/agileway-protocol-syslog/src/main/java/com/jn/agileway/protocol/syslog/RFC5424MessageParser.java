@@ -1,5 +1,7 @@
 package com.jn.agileway.protocol.syslog;
 
+import com.jn.langx.exception.SyntaxException;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.datetime.DateTimeParsedResult;
 import com.jn.langx.util.regexp.RegexpMatcher;
 import org.slf4j.Logger;
@@ -38,10 +40,14 @@ public class RFC5424MessageParser extends MessageParser {
         final String groupStructuredData = matcher.group("structureddata");
         final String groupMessage = matcher.group("message");
 
+        if(Strings.isEmpty(groupPriority)){
+            throw new SyntaxException("invalid syslog-5424 message, the priority is missing");
+        }
+
         final int priority = Integer.parseInt(groupPriority);
-        final int facility = Priority.facility(priority);
-        final DateTimeParsedResult date = parseDate(groupDate);
-        final int level = Priority.level(priority, facility);
+        final int facility = Priority.getFacility(priority);
+        final Severity severity = Priority.getSeverity(priority, facility);
+
         final Integer version = Integer.parseInt(groupVersion);
         final String appName = nullableString(groupAppName);
         final String procID = nullableString(groupProcID);
@@ -52,9 +58,11 @@ public class RFC5424MessageParser extends MessageParser {
         SyslogMessage syslogMessage = new SyslogMessage();
         syslogMessage.setRawMessage(rawMessage);
         syslogMessage.setType(MessageType.RFC5424);
+        final DateTimeParsedResult date = parseDate(groupDate);
         syslogMessage.setTimestamp(date.getTimestamp());
         syslogMessage.setHost(groupHost);
-        syslogMessage.setLevel(level);
+        syslogMessage.setPriority(priority);
+        syslogMessage.setSeverity(severity);
         syslogMessage.setFacility(facility);
         syslogMessage.setMessage(groupMessage);
         syslogMessage.setVersion(version);

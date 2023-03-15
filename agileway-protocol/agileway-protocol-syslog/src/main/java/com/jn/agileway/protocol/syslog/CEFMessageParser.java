@@ -1,11 +1,11 @@
 package com.jn.agileway.protocol.syslog;
 
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.datetime.DateTimeParsedResult;
 import com.jn.langx.util.regexp.RegexpMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -68,9 +68,11 @@ public class CEFMessageParser extends MessageParser {
         final String groupCEFVersion = matcherPrefix.group("version");
         final String groupData = matcherPrefix.group("data");
 
-        final Integer priority = (groupPriority == null || groupPriority.isEmpty()) ? null : Integer.parseInt(groupPriority);
-        final Integer facility = null == priority ? null : Priority.facility(priority);
-        final Integer level = null == priority ? null : Priority.level(priority, facility);
+
+        final Integer priority = Strings.isEmpty(groupPriority) ? null : Integer.parseInt(groupPriority);
+
+        final Integer facility = priority == null ? null : Priority.getFacility(priority);
+        final Severity severity = priority == null ? null : Priority.getSeverity(priority, facility);
         final DateTimeParsedResult date = parseDate(groupDate);
         final Integer cefVersion = Integer.parseInt(groupCEFVersion);
 
@@ -82,7 +84,7 @@ public class CEFMessageParser extends MessageParser {
         syslogMessage.setTimestamp(date.getTimestamp());
         syslogMessage.setVersion(cefVersion);
         syslogMessage.setHost(groupHost);
-        syslogMessage.setLevel(level);
+        syslogMessage.setSeverity(severity);
         syslogMessage.setFacility(facility);
 
 
@@ -108,7 +110,8 @@ public class CEFMessageParser extends MessageParser {
                     syslogMessage.setName(token);
                     break;
                 case 5:
-                    syslogMessage.setSeverity(token);
+                    // syslogMessage.setSeverity(token);
+                    // ignore
                     break;
                 case 6:
                     Map<String, String> extension = parseExtension(token);

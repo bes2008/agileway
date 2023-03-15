@@ -1,18 +1,21 @@
 package com.jn.agileway.protocol.syslog;
 
+
+import com.jn.langx.util.enums.Enums;
+
 public class Priority {
     private Priority() {
     }
 
-    public static int facility(int priority) {
+    public static int getFacility(int priority) {
         return priority >> 3;
     }
 
-    public static int level(int priority, int facility) {
-        return priority - (facility << 3);
+    public static Severity getSeverity(int priority, int facility) {
+        return Enums.ofCode(Severity.class,priority - (facility << 3));
     }
 
-    public static int priority(int level, int facility) {
-        return (facility * 8) + level;
+    public static int createPriority(int severity, int facility) {
+        return (facility * 8) + severity;
     }
 }

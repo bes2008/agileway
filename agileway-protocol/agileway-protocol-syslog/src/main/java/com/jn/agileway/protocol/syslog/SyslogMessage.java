@@ -7,11 +7,7 @@ import java.net.InetAddress;
 import java.util.*;
 
 public class SyslogMessage {
-    /**
-     * Date of the message. This is the parsed date from the client.
-     * UTC 时间戳
-     */
-    private long timestamp;
+
     /**
      * IP Address for the sender of the message.
      */
@@ -22,26 +18,39 @@ public class SyslogMessage {
      */
     private String rawMessage;
     private MessageType type;
+
     /**
-     * Level for the message. Parsed from the message.
+     * Date of the message. This is the parsed date from the client.
+     * UTC 时间戳
      */
-    @Nullable
-    private Integer level;
-    /**
-     * Version of the message.
-     */
-    @Nullable
-    private Integer version;
+    private long timestamp;
+
+    private int priority;
+
     /**
      * Facility of the message.
      */
     @Nullable
     private Integer facility;
+
+    /**
+     * Level for the message. Parsed from the message.
+     */
+    private Severity severity;
+
+
     /**
      * Host of the message. This is the value from the message.
      */
     @Nullable
     private String host;
+
+    /**
+     * Version of the message.
+     */
+    @Nullable
+    private Integer version;
+
     /**
      * Message part of the overall syslog message.
      */
@@ -98,11 +107,6 @@ public class SyslogMessage {
      */
     @Nullable
     private String name;
-    /**
-     * the {@code severity} attribute
-     */
-    @Nullable
-    private String severity;
 
     /**
      * the {@code extension} attribute
@@ -143,12 +147,12 @@ public class SyslogMessage {
         this.type = type;
     }
 
-    public Integer getLevel() {
-        return level;
+    public Severity getSeverity() {
+        return severity;
     }
 
-    public void setLevel(Integer level) {
-        this.level = level;
+    public void setSeverity(Severity severity) {
+        this.severity = severity;
     }
 
     public Integer getVersion() {
@@ -264,13 +268,6 @@ public class SyslogMessage {
         this.name = name;
     }
 
-    public String getSeverity() {
-        return severity;
-    }
-
-    public void setSeverity(String severity) {
-        this.severity = severity;
-    }
 
     public Map<String, String> getExtension() {
         return extension;
@@ -278,6 +275,14 @@ public class SyslogMessage {
 
     public void setExtension(Map<String, String> extension) {
         this.extension = extension;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
     /**
@@ -292,6 +297,9 @@ public class SyslogMessage {
             return false;
         }
         SyslogMessage o = (SyslogMessage) another;
+        if (!Objs.equals(this.priority, o.priority)) {
+            return false;
+        }
         if (!Objs.equals(this.timestamp, o.timestamp)) {
             return false;
         }
@@ -304,10 +312,7 @@ public class SyslogMessage {
         if (!Objs.equals(this.type, o.type)) {
             return false;
         }
-        if (!Objs.equals(this.level, o.level)) {
-            return false;
-        }
-        if (!Objs.equals(this.version, o.version)) {
+        if (!Objs.equals(this.severity, o.severity)) {
             return false;
         }
         if (!Objs.equals(this.facility, o.facility)) {
@@ -316,6 +321,11 @@ public class SyslogMessage {
         if (!Objs.equals(this.host, o.host)) {
             return false;
         }
+        if (!Objs.equals(this.version, o.version)) {
+            return false;
+        }
+
+
         if (!Objs.equals(this.message, o.message)) {
             return false;
         }
@@ -355,9 +365,6 @@ public class SyslogMessage {
         if (!Objs.equals(this.name, o.name)) {
             return false;
         }
-        if (!Objs.equals(this.severity, o.severity)) {
-            return false;
-        }
         if (!Objs.equals(this.extension, o.extension)) {
             return false;
         }
@@ -376,7 +383,7 @@ public class SyslogMessage {
         h += (h << 5) + remoteAddress.hashCode();
         h += (h << 5) + rawMessage.hashCode();
         h += (h << 5) + type.hashCode();
-        h += (h << 5) + Objs.hashCode(level);
+        h += (h << 5) + Objs.hashCode(severity);
         h += (h << 5) + Objs.hashCode(version);
         h += (h << 5) + Objs.hashCode(facility);
         h += (h << 5) + Objs.hashCode(host);
@@ -391,7 +398,6 @@ public class SyslogMessage {
         h += (h << 5) + Objs.hashCode(deviceVersion);
         h += (h << 5) + Objs.hashCode(deviceEventClassId);
         h += (h << 5) + Objs.hashCode(name);
-        h += (h << 5) + Objs.hashCode(severity);
         h += (h << 5) + Objs.hashCode(extension);
         return h;
     }
@@ -408,7 +414,8 @@ public class SyslogMessage {
                 + ", remoteAddress=" + remoteAddress
                 + ", rawMessage=" + rawMessage
                 + ", type=" + type
-                + ", level=" + level
+                + ", priority=" + priority
+                + ", severity=" + severity
                 + ", version=" + version
                 + ", facility=" + facility
                 + ", host=" + host
