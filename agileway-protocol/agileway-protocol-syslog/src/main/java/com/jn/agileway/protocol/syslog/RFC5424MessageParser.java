@@ -44,10 +44,12 @@ public class RFC5424MessageParser extends MessageParser {
             throw new SyntaxException("invalid syslog-5424 message, the priority is missing");
         }
 
-
-
-
-
+        if(Strings.isEmpty(groupDate)){
+            throw new SyntaxException("invalid syslog-5424 message, the timestamp is missing");
+        }
+        if(Strings.isEmpty(groupHost)){
+            throw new SyntaxException("invalid syslog-5424 message, the host is missing");
+        }
 
         SyslogMessage syslogMessage = new SyslogMessage();
         syslogMessage.setRawMessage(rawMessage);
