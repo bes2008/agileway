@@ -44,31 +44,40 @@ public class RFC5424MessageParser extends MessageParser {
             throw new SyntaxException("invalid syslog-5424 message, the priority is missing");
         }
 
-        final int priority = Integer.parseInt(groupPriority);
-        final int facility = Priority.getFacility(priority);
-        final Severity severity = Priority.getSeverity(priority, facility);
 
-        final Integer version = Integer.parseInt(groupVersion);
-        final String appName = nullableString(groupAppName);
-        final String procID = nullableString(groupProcID);
-        final String messageID = nullableString(groupMessageID);
 
-        final List<StructuredElement> structuredData = parseStructuredData(groupStructuredData);
+
+
 
         SyslogMessage syslogMessage = new SyslogMessage();
         syslogMessage.setRawMessage(rawMessage);
         syslogMessage.setType(MessageType.RFC5424);
-        final DateTimeParsedResult date = parseDate(groupDate);
-        syslogMessage.setTimestamp(date.getTimestamp());
-        syslogMessage.setHostname(groupHost);
+
+        final int priority = Integer.parseInt(groupPriority);
+        final int facility = Priority.getFacility(priority);
+        final Severity severity = Priority.getSeverity(priority, facility);
         syslogMessage.setPriority(priority);
         syslogMessage.setSeverity(severity);
         syslogMessage.setFacility(facility);
-        syslogMessage.setContent(groupMessage);
+
+        final Integer version = Integer.parseInt(groupVersion);
         syslogMessage.setVersion(version);
+
+        final DateTimeParsedResult date = parseDate(groupDate);
+        syslogMessage.setTimestamp(date.getTimestamp());
+
+        syslogMessage.setHostname(groupHost);
+
+        final String appName = nullableString(groupAppName);
+        final String procID = nullableString(groupProcID);
+        final String messageID = nullableString(groupMessageID);
+        syslogMessage.setAppName(appName);
         syslogMessage.setProcId(procID);
         syslogMessage.setMsgId(messageID);
-        syslogMessage.setAppName(appName);
+
+        syslogMessage.setContent(groupMessage);
+
+        final List<StructuredElement> structuredData = parseStructuredData(groupStructuredData);
         syslogMessage.setStructuredData(structuredData);
         return syslogMessage;
     }
