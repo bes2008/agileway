@@ -60,14 +60,14 @@ public class RFC5424MessageParser extends MessageParser {
         syslogMessage.setType(MessageType.RFC5424);
         final DateTimeParsedResult date = parseDate(groupDate);
         syslogMessage.setTimestamp(date.getTimestamp());
-        syslogMessage.setHost(groupHost);
+        syslogMessage.setHostname(groupHost);
         syslogMessage.setPriority(priority);
         syslogMessage.setSeverity(severity);
         syslogMessage.setFacility(facility);
-        syslogMessage.setMessage(groupMessage);
+        syslogMessage.setContent(groupMessage);
         syslogMessage.setVersion(version);
-        syslogMessage.setProcessId(procID);
-        syslogMessage.setMessageId(messageID);
+        syslogMessage.setProcId(procID);
+        syslogMessage.setMsgId(messageID);
         syslogMessage.setAppName(appName);
         syslogMessage.setStructuredData(structuredData);
         return syslogMessage;

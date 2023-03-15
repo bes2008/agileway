@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  */
 public class RFC3164MessageParser extends MessageParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(RFC3164MessageParser.class);
-    private static final String PATTERN = "^(<(?<priority>\\d+)>)?(?<date>([a-zA-Z]{3}\\s+\\d+\\s+\\d+:\\d+:\\d+)|([0-9T:.Z-]+))\\s+(?<host>\\S+)\\s+((?<tag>[^\\[\\s\\]]+)(\\[(?<procid>\\d+)\\])?:)*\\s*(?<message>.+)$";
+    private static final String PATTERN = "^(<(?<priority>\\d+)>)?(?<date>([a-zA-Z]{3}\\s+\\d+\\s+\\d+:\\d+:\\d+)|([0-9T:.Z-]+))\\s+(?<host>\\S+)\\s+((?<tag>[^\\[\\s\\]]+)(\\[(?<procid>\\d+)\\])?:)*\\s*(?<content>.+)$";
     private final ThreadLocal<RegexpMatcher> matcherThreadLocal;
 
     public RFC3164MessageParser() {
@@ -45,7 +45,7 @@ public class RFC3164MessageParser extends MessageParser {
             throw new SyntaxException("invalid syslog-3164 message, the timestamp is missing");
         }
         if(Strings.isEmpty(groupHost)){
-            throw new SyntaxException("invalid syslog-3164 message, the timestamp is missing");
+            throw new SyntaxException("invalid syslog-3164 message, the host is missing");
         }
 
 
@@ -63,16 +63,16 @@ public class RFC3164MessageParser extends MessageParser {
         DateTimeParsedResult parsedResult = parseDate(groupDate);
         syslogMessage.setTimestamp(parsedResult.getTimestamp());
 
-        syslogMessage.setHost(groupHost);
+        syslogMessage.setHostname(groupHost);
 
-        final String groupMessage = matcher.group("message");
         final String groupTag = matcher.group("tag");
-        syslogMessage.setMessage(groupMessage);
+        final String groupMessage = matcher.group("content");
+        syslogMessage.setContent(groupMessage);
         syslogMessage.setTag(groupTag);
 
         final String groupProcId = matcher.group("procid");
         final String processId = Strings.isEmpty(groupProcId) ? null : groupProcId;
-        syslogMessage.setProcessId(processId);
+        syslogMessage.setProcId(processId);
         return syslogMessage;
     }
 }

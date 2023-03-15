@@ -83,7 +83,7 @@ public class CEFMessageParser extends MessageParser {
         syslogMessage.setRawMessage(rawMessage);
         syslogMessage.setTimestamp(date.getTimestamp());
         syslogMessage.setVersion(cefVersion);
-        syslogMessage.setHost(groupHost);
+        syslogMessage.setHostname(groupHost);
         syslogMessage.setSeverity(severity);
         syslogMessage.setFacility(facility);
 

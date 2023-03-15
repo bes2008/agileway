@@ -1,17 +1,19 @@
 package com.jn.agileway.protocol.syslog;
 
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 
 import java.net.InetAddress;
 import java.util.*;
 
 public class SyslogMessage {
-
+/*****************************************************
+ *  附加部分， 这部分不属于 syslog message 中的
+ *****************************************************/
     /**
      * IP Address for the sender of the message.
      */
-
     private InetAddress remoteAddress;
     /**
      * Unprocessed copy of the message.
@@ -19,6 +21,10 @@ public class SyslogMessage {
     private String rawMessage;
     private MessageType type;
 
+
+    /***************************************************************
+     * header 部分
+     ***************************************************************/
     /**
      * Date of the message. This is the parsed date from the client.
      * UTC 时间戳
@@ -29,12 +35,14 @@ public class SyslogMessage {
 
     /**
      * Facility of the message.
+     * 从priority 中解析出
      */
     @Nullable
     private Integer facility;
 
     /**
      * Level for the message. Parsed from the message.
+     * 从priority 中解析出
      */
     private Severity severity;
 
@@ -43,24 +51,33 @@ public class SyslogMessage {
      * Host of the message. This is the value from the message.
      */
     @Nullable
-    private String host;
+    private String hostname;
 
     /**
      * Version of the message.
      */
     @Nullable
     private Integer version;
-
     /**
-     * Message part of the overall syslog message.
+     * the {@code messageId} attribute
      */
     @Nullable
-    private String message;
+    private String msgId;
+    /**
+     * the {@code appName} attribute
+     */
+    @Nullable
+    private String appName;
     /**
      * the {@code processId} attribute
      */
     @Nullable
-    private String processId;
+    private String procId;
+
+
+    /***************************************************************
+     * MSG 部分,主要包括 tag, content
+     ***************************************************************/
 
     /**
      * the {@code tag} attribute
@@ -68,20 +85,23 @@ public class SyslogMessage {
     @Nullable
     private String tag;
     /**
-     * the {@code messageId} attribute
+     * Message part of the overall syslog message.
      */
     @Nullable
-    private String messageId;
-    /**
-     * the {@code appName} attribute
-     */
-    @Nullable
-    private String appName;
+    private String content;
+
+
+    /***************************************************************
+     * structured data 部分
+     ***************************************************************/
+
     /**
      * the {@code structuredData} attribute
      */
     @Nullable
-    private List<StructuredData> structuredData;
+    private List<StructuredElement> structuredData;
+
+
     /**
      * the {@code deviceVendor} attribute
      */
@@ -171,28 +191,28 @@ public class SyslogMessage {
         this.facility = facility;
     }
 
-    public String getHost() {
-        return host;
+    public String getHostname() {
+        return hostname;
     }
 
-    public void setHost(String host) {
-        this.host = host;
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
     }
 
-    public String getMessage() {
-        return message;
+    public String getContent() {
+        return content;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public String getProcessId() {
-        return processId;
+    public String getProcId() {
+        return procId;
     }
 
-    public void setProcessId(String processId) {
-        this.processId = processId;
+    public void setProcId(String procId) {
+        this.procId = procId;
     }
 
     public String getTag() {
@@ -203,12 +223,12 @@ public class SyslogMessage {
         this.tag = tag;
     }
 
-    public String getMessageId() {
-        return messageId;
+    public String getMsgId() {
+        return msgId;
     }
 
-    public void setMessageId(String messageId) {
-        this.messageId = messageId;
+    public void setMsgId(String msgId) {
+        this.msgId = msgId;
     }
 
     public String getAppName() {
@@ -219,11 +239,11 @@ public class SyslogMessage {
         this.appName = appName;
     }
 
-    public List<StructuredData> getStructuredData() {
+    public List<StructuredElement> getStructuredData() {
         return structuredData;
     }
 
-    public void setStructuredData(List<StructuredData> structuredData) {
+    public void setStructuredData(List<StructuredElement> structuredData) {
         this.structuredData = structuredData;
     }
 
@@ -318,7 +338,7 @@ public class SyslogMessage {
         if (!Objs.equals(this.facility, o.facility)) {
             return false;
         }
-        if (!Objs.equals(this.host, o.host)) {
+        if (!Objs.equals(this.hostname, o.hostname)) {
             return false;
         }
         if (!Objs.equals(this.version, o.version)) {
@@ -326,16 +346,16 @@ public class SyslogMessage {
         }
 
 
-        if (!Objs.equals(this.message, o.message)) {
+        if (!Objs.equals(this.content, o.content)) {
             return false;
         }
-        if (!Objs.equals(this.processId, o.processId)) {
+        if (!Objs.equals(this.procId, o.procId)) {
             return false;
         }
         if (!Objs.equals(this.tag, o.tag)) {
             return false;
         }
-        if (!Objs.equals(this.messageId, o.messageId)) {
+        if (!Objs.equals(this.msgId, o.msgId)) {
             return false;
         }
         if (!Objs.equals(this.appName, o.appName)) {
@@ -386,11 +406,11 @@ public class SyslogMessage {
         h += (h << 5) + Objs.hashCode(severity);
         h += (h << 5) + Objs.hashCode(version);
         h += (h << 5) + Objs.hashCode(facility);
-        h += (h << 5) + Objs.hashCode(host);
-        h += (h << 5) + Objs.hashCode(message);
-        h += (h << 5) + Objs.hashCode(processId);
+        h += (h << 5) + Objs.hashCode(hostname);
+        h += (h << 5) + Objs.hashCode(content);
+        h += (h << 5) + Objs.hashCode(procId);
         h += (h << 5) + Objs.hashCode(tag);
-        h += (h << 5) + Objs.hashCode(messageId);
+        h += (h << 5) + Objs.hashCode(msgId);
         h += (h << 5) + Objs.hashCode(appName);
         h += (h << 5) + Objs.hashCode(structuredData);
         h += (h << 5) + Objs.hashCode(deviceVendor);
@@ -408,33 +428,40 @@ public class SyslogMessage {
      * @return A string representation of the value
      */
 
-    public String toString() {
-        return "SyslogMessage{"
-                + "timestamp=" + timestamp
-                + ", remoteAddress=" + remoteAddress
-                + ", rawMessage=" + rawMessage
-                + ", type=" + type
-                + ", priority=" + priority
-                + ", severity=" + severity
-                + ", version=" + version
-                + ", facility=" + facility
-                + ", host=" + host
-                + ", message=" + message
-                + ", processId=" + processId
-                + ", tag=" + tag
-                + ", messageId=" + messageId
-                + ", appName=" + appName
-                + ", structuredData=" + structuredData
-                + ", deviceVendor=" + deviceVendor
-                + ", deviceProduct=" + deviceProduct
-                + ", deviceVersion=" + deviceVersion
-                + ", deviceEventClassId=" + deviceEventClassId
-                + ", name=" + name
-                + ", severity=" + severity
-                + ", extension=" + extension
-                + "}";
+    public String toString2() {
+        if (type == MessageType.RFC3164) {
+            return StringTemplates.formatWithPlaceholder("PRI: {}  --  FACILITY: {}, SEVERITY: {}\nHEADER: \n\tTIMESTAMP: {}\n\tHOSTNAME: {}\nMSG:\n\tTAG: {}\n\tPROC-ID: {}\n\tCONTENT: {}\n\nATTACHMENTS\n\tTYPE: {}\n\tTYPE:RAW-MESSAGE: {}", this.priority, this.facility, this.severity, this.timestamp, this.hostname, this.tag, this.procId, this.content, this.type, this.rawMessage);
+        } else if (type == MessageType.RFC5424) {
+            return StringTemplates.formatWithPlaceholder("HEADER: \n\tPRI: {}  --  FACILITY: {}, SEVERITY: {}\n\tVERSION: {}\n\tTIMESTAMP: {}\n\tHOSTNAME: {}\n\tAPP-NAME: {}\n\tPROCID: {}\n\tMSGID: {}\nMSG:\n\tTAG: {}\n\tCONTENT: {}\n\nATTACHMENTS\n\tTYPE: {}\n\tTYPE:RAW-MESSAGE: {}", this.priority, this.facility, this.severity,this.version,  this.timestamp, this.hostname, this.appName,this.procId, this.msgId, this.tag,  this.content, this.type, this.rawMessage);
+        }
+        return defaultToString();
     }
 
+    private String defaultToString() {
+        return "SyslogMessage{" +
+                "remoteAddress=" + remoteAddress +
+                ", rawMessage='" + rawMessage + '\'' +
+                ", type=" + type +
+                ", timestamp=" + timestamp +
+                ", priority=" + priority +
+                ", facility=" + facility +
+                ", severity=" + severity +
+                ", hostname='" + hostname + '\'' +
+                ", version=" + version +
+                ", msgId='" + msgId + '\'' +
+                ", appName='" + appName + '\'' +
+                ", procId='" + procId + '\'' +
+                ", tag='" + tag + '\'' +
+                ", content='" + content + '\'' +
+                ", structuredData=" + structuredData +
+                ", deviceVendor='" + deviceVendor + '\'' +
+                ", deviceProduct='" + deviceProduct + '\'' +
+                ", deviceVersion='" + deviceVersion + '\'' +
+                ", deviceEventClassId='" + deviceEventClassId + '\'' +
+                ", name='" + name + '\'' +
+                ", extension=" + extension +
+                '}';
+    }
 
     private static <T> List<T> createSafeList(Iterable<? extends T> iterable, boolean checkNulls, boolean skipNulls) {
         ArrayList<T> list;
