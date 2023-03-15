@@ -53,7 +53,7 @@ public class RFC5424MessageParser extends MessageParser {
         final String procID = nullableString(groupProcID);
         final String messageID = nullableString(groupMessageID);
 
-        final List<StructuredData> structuredData = parseStructuredData(groupStructuredData);
+        final List<StructuredElement> structuredData = parseStructuredData(groupStructuredData);
 
         SyslogMessage syslogMessage = new SyslogMessage();
         syslogMessage.setRawMessage(rawMessage);

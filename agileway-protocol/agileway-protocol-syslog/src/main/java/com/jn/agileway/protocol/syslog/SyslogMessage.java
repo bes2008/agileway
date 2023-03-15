@@ -400,9 +400,9 @@ public class SyslogMessage {
     public int hashCode() {
         int h = 5381;
         h += (h << 5) + Objs.hash(this.timestamp);
-        h += (h << 5) + remoteAddress.hashCode();
-        h += (h << 5) + rawMessage.hashCode();
-        h += (h << 5) + type.hashCode();
+        h += (h << 5) + Objs.hash(remoteAddress);
+        h += (h << 5) + Objs.hash(rawMessage);
+        h += (h << 5) + Objs.hash(type);
         h += (h << 5) + Objs.hashCode(severity);
         h += (h << 5) + Objs.hashCode(version);
         h += (h << 5) + Objs.hashCode(facility);
@@ -427,8 +427,8 @@ public class SyslogMessage {
      *
      * @return A string representation of the value
      */
-
-    public String toString2() {
+    @Override
+    public String toString() {
         if (type == MessageType.RFC3164) {
             return StringTemplates.formatWithPlaceholder("PRI: {}  --  FACILITY: {}, SEVERITY: {}\nHEADER: \n\tTIMESTAMP: {}\n\tHOSTNAME: {}\nMSG:\n\tTAG: {}\n\tPROC-ID: {}\n\tCONTENT: {}\n\nATTACHMENTS\n\tTYPE: {}\n\tTYPE:RAW-MESSAGE: {}", this.priority, this.facility, this.severity, this.timestamp, this.hostname, this.tag, this.procId, this.content, this.type, this.rawMessage);
         } else if (type == MessageType.RFC5424) {

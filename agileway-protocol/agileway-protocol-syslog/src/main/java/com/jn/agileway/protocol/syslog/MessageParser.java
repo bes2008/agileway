@@ -85,14 +85,14 @@ public abstract class MessageParser {
         return parsedResult;
     }
 
-    protected List<StructuredData> parseStructuredData(String structuredData) {
+    protected List<StructuredElement> parseStructuredData(String structuredData) {
         log.trace("parseStructuredData() - structuredData = '{}'", structuredData);
         final RegexpMatcher matcher = matcherStructuredData.get().reset(structuredData);
-        final List<StructuredData> result = new ArrayList<>();
+        final List<StructuredElement> result = new ArrayList<StructuredElement>();
         while (matcher.find()) {
             final String input = matcher.group(1);
             log.trace("parseStructuredData() - input = '{}'", input);
-            StructuredData sd = new StructuredData();
+            StructuredElement sd = new StructuredElement();
 
             final RegexpMatcher kvpMatcher = matcherKeyValue.get().reset(input);
             while (kvpMatcher.find()) {
@@ -105,7 +105,7 @@ public abstract class MessageParser {
                     sd.setId(id);
                 } else {
                     log.trace("parseStructuredData() - key='{}' value='{}'", key, value);
-                    sd.addStructuredDataElement(key, value);
+                    sd.addParameter(key, value);
                 }
             }
             result.add(sd);
