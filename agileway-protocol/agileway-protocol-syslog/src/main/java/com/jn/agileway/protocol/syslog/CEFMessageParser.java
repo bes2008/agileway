@@ -1,5 +1,6 @@
 package com.jn.agileway.protocol.syslog;
 
+import com.jn.langx.util.datetime.DateTimeParsedResult;
 import com.jn.langx.util.regexp.RegexpMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +71,7 @@ public class CEFMessageParser extends MessageParser {
         final Integer priority = (groupPriority == null || groupPriority.isEmpty()) ? null : Integer.parseInt(groupPriority);
         final Integer facility = null == priority ? null : Priority.facility(priority);
         final Integer level = null == priority ? null : Priority.level(priority, facility);
-        final LocalDateTime date = parseDate(groupDate);
+        final DateTimeParsedResult date = parseDate(groupDate);
         final Integer cefVersion = Integer.parseInt(groupCEFVersion);
 
         final List<String> parts = splitToList(groupData);
@@ -78,7 +79,7 @@ public class CEFMessageParser extends MessageParser {
         SyslogMessage syslogMessage = new SyslogMessage();
         syslogMessage.setType(MessageType.CEF);
         syslogMessage.setRawMessage(rawMessage);
-        syslogMessage.setDate(date);
+        syslogMessage.setTimestamp(date.getTimestamp());
         syslogMessage.setVersion(cefVersion);
         syslogMessage.setHost(groupHost);
         syslogMessage.setLevel(level);

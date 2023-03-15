@@ -1,54 +1,40 @@
 package com.jn.agileway.protocol.syslog;
 
+import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.datetime.DateTimeParsedResult;
+import com.jn.langx.util.datetime.DateTimeParser;
+import com.jn.langx.util.datetime.parser.CandidatePatternsDateTimeParser;
+import com.jn.langx.util.datetime.parser.DateParsedResult;
 import com.jn.langx.util.regexp.Regexp;
 import com.jn.langx.util.regexp.RegexpMatcher;
 import com.jn.langx.util.regexp.Regexps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.ChronoField;
-import java.time.temporal.TemporalAccessor;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public abstract class MessageParser {
     private static final Logger log = LoggerFactory.getLogger(MessageParser.class);
     private static final String NULL_TOKEN = "-";
-    protected final List<DateTimeFormatter> dateFormats;
     private final ThreadLocal<RegexpMatcher> matcherStructuredData;
     private final ThreadLocal<RegexpMatcher> matcherKeyValue;
-    private final ZoneId zoneId;
+
+    protected DateTimeParser dateTimeParser;
+
 
     public MessageParser() {
-        this(ZoneId.of("UTC"));
+        this(TimeZone.getDefault());
     }
 
-    public MessageParser(ZoneId zoneId) {
-        this.zoneId = zoneId;
-
-        this.dateFormats = Arrays.asList(
-                DateTimeFormatter.ISO_OFFSET_DATE_TIME,
-
-                //This supports
-                new DateTimeFormatterBuilder()
-                        .appendPattern("MMM d")
-                        .optionalStart()
-                        .appendPattern("[ yyyy]")
-                        .parseDefaulting(ChronoField.YEAR_OF_ERA, 1)
-                        .optionalEnd()
-                        .appendPattern(" HH:mm:ss")
-                        .toFormatter()
-        );
-
+    public MessageParser(TimeZone timeZone) {
         this.matcherStructuredData = initMatcher("\\[([^\\]]+)\\]");
         this.matcherKeyValue = initMatcher("(?<key>\\S+)=\"(?<value>[^\"]+)\"|(?<id>\\S+)");
+        // 这个是 基于 RFC3164 的格式，如果使用RFC 5424 ，需要调用set方法自定义
+        this.setDateTimeParser(new CandidatePatternsDateTimeParser(Collects.asList("MMM dd hh:mm:ss"), Collects.asList(timeZone, TimeZone.getTimeZone("UTC")), Collects.asList(Locale.getDefault(), Locale.US)));
+    }
+
+    public void setDateTimeParser(DateTimeParser dateTimeParser) {
+        this.dateTimeParser = dateTimeParser;
     }
 
     /**
@@ -71,41 +57,32 @@ public abstract class MessageParser {
         return NULL_TOKEN.equals(groupText) ? null : groupText;
     }
 
-    protected LocalDateTime parseDate(String date) {
+    protected DateTimeParsedResult parseDate(String date) {
         final String cleanDate = date.replaceAll("\\s+", " ");
-        LocalDateTime result = null;
+        DateTimeParsedResult parsedResult = this.dateTimeParser.parse(cleanDate);
 
-        for (DateTimeFormatter formatter : this.dateFormats) {
-            try {
-                final TemporalAccessor temporal = formatter.parseBest(
-                        cleanDate,
-                        OffsetDateTime::from,
-                        LocalDateTime::from
-                );
-
-                if (temporal instanceof LocalDateTime) {
-                    result = ((LocalDateTime) temporal);
-                } else {
-                    result = ((OffsetDateTime) temporal).withOffsetSameInstant(ZoneOffset.UTC).toLocalDateTime();
-                }
-        /*
-        The parser will output dates that do not have a year. If this happens we default the year
-        to 1 AD which I'm pretty sure there were no computers. This means that the sender was a lazy
-        ass and didn't sent a date. This is easy to detect so we set it to the current date.
-         */
-
-                if (result.getLong(ChronoField.YEAR_OF_ERA) == 1) {
-                    result = result.withYear(LocalDateTime.now(this.zoneId).getYear());
-                }
-                break;
-            } catch (java.time.DateTimeException e) {
-                log.trace("parseDate() - Could not parse '{}' with '{}'", cleanDate, formatter.toString());
+        Calendar calendar = Calendar.getInstance(parsedResult.getTimeZone());
+        calendar.setTime(new Date(parsedResult.getTimestamp()));
+        int year = calendar.get(Calendar.YEAR);
+        if (year <= 1970) {
+            int month = calendar.get(Calendar.MONTH) + 1;
+            Calendar now = Calendar.getInstance();
+            int currentMonth = now.get(Calendar.MONTH) + 1;
+            int theYear = now.get(Calendar.YEAR);
+            if (currentMonth < month) {
+                theYear = theYear - 1;
             }
+            calendar.set(Calendar.YEAR, theYear);
+
+            // reset parsedResult
+
+            DateParsedResult r = new DateParsedResult(calendar.getTime(), parsedResult.getTimeZone(), parsedResult.getLocale());
+            r.setOriginText(parsedResult.getOriginText());
+            r.setPattern(parsedResult.getPattern());
+            parsedResult = r;
         }
-        if (null == result) {
-            log.error("Could not parse date '{}'", cleanDate);
-        }
-        return result;
+
+        return parsedResult;
     }
 
     protected List<StructuredData> parseStructuredData(String structuredData) {

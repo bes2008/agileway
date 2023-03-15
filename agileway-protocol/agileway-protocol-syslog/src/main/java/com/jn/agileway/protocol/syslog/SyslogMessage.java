@@ -1,16 +1,17 @@
 package com.jn.agileway.protocol.syslog;
 
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.util.Objs;
 
 import java.net.InetAddress;
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class SyslogMessage {
     /**
      * Date of the message. This is the parsed date from the client.
+     * UTC 时间戳
      */
-    private LocalDateTime date;
+    private long timestamp;
     /**
      * IP Address for the sender of the message.
      */
@@ -109,12 +110,12 @@ public class SyslogMessage {
     @Nullable
     private Map<String, String> extension;
 
-    public LocalDateTime getDate() {
-        return date;
+    public long getTimestamp() {
+        return timestamp;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     public InetAddress getRemoteAddress() {
@@ -287,32 +288,80 @@ public class SyslogMessage {
 
     public boolean equals(Object another) {
         if (this == another) return true;
-        return another instanceof SyslogMessage
-                && equalTo((SyslogMessage) another);
-    }
-
-    private boolean equalTo(SyslogMessage another) {
-        return date.equals(another.date)
-                && remoteAddress.equals(another.remoteAddress)
-                && rawMessage.equals(another.rawMessage)
-                && type.equals(another.type)
-                && Objects.equals(level, another.level)
-                && Objects.equals(version, another.version)
-                && Objects.equals(facility, another.facility)
-                && Objects.equals(host, another.host)
-                && Objects.equals(message, another.message)
-                && Objects.equals(processId, another.processId)
-                && Objects.equals(tag, another.tag)
-                && Objects.equals(messageId, another.messageId)
-                && Objects.equals(appName, another.appName)
-                && Objects.equals(structuredData, another.structuredData)
-                && Objects.equals(deviceVendor, another.deviceVendor)
-                && Objects.equals(deviceProduct, another.deviceProduct)
-                && Objects.equals(deviceVersion, another.deviceVersion)
-                && Objects.equals(deviceEventClassId, another.deviceEventClassId)
-                && Objects.equals(name, another.name)
-                && Objects.equals(severity, another.severity)
-                && Objects.equals(extension, another.extension);
+        if (!(another instanceof SyslogMessage)) {
+            return false;
+        }
+        SyslogMessage o = (SyslogMessage) another;
+        if (!Objs.equals(this.timestamp, o.timestamp)) {
+            return false;
+        }
+        if (!Objs.equals(this.remoteAddress, o.remoteAddress)) {
+            return false;
+        }
+        if (!Objs.equals(this.rawMessage, o.rawMessage)) {
+            return false;
+        }
+        if (!Objs.equals(this.type, o.type)) {
+            return false;
+        }
+        if (!Objs.equals(this.level, o.level)) {
+            return false;
+        }
+        if (!Objs.equals(this.version, o.version)) {
+            return false;
+        }
+        if (!Objs.equals(this.facility, o.facility)) {
+            return false;
+        }
+        if (!Objs.equals(this.host, o.host)) {
+            return false;
+        }
+        if (!Objs.equals(this.message, o.message)) {
+            return false;
+        }
+        if (!Objs.equals(this.processId, o.processId)) {
+            return false;
+        }
+        if (!Objs.equals(this.tag, o.tag)) {
+            return false;
+        }
+        if (!Objs.equals(this.messageId, o.messageId)) {
+            return false;
+        }
+        if (!Objs.equals(this.appName, o.appName)) {
+            return false;
+        }
+        if (!Objs.equals(this.structuredData, o.structuredData)) {
+            return false;
+        }
+        if (!Objs.equals(this.deviceVendor, o.deviceVendor)) {
+            return false;
+        }
+        if (!Objs.equals(this.deviceProduct, o.deviceProduct)) {
+            return false;
+        }
+        if (!Objs.equals(this.deviceVersion, o.deviceVersion)) {
+            return false;
+        }
+        if (!Objs.equals(this.deviceEventClassId, o.deviceEventClassId)) {
+            return false;
+        }
+        if (!Objs.equals(this.name, o.name)) {
+            return false;
+        }
+        if (!Objs.equals(this.deviceEventClassId, o.deviceEventClassId)) {
+            return false;
+        }
+        if (!Objs.equals(this.name, o.name)) {
+            return false;
+        }
+        if (!Objs.equals(this.severity, o.severity)) {
+            return false;
+        }
+        if (!Objs.equals(this.extension, o.extension)) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -323,27 +372,27 @@ public class SyslogMessage {
 
     public int hashCode() {
         int h = 5381;
-        h += (h << 5) + date.hashCode();
+        h += (h << 5) + Objs.hash(this.timestamp);
         h += (h << 5) + remoteAddress.hashCode();
         h += (h << 5) + rawMessage.hashCode();
         h += (h << 5) + type.hashCode();
-        h += (h << 5) + Objects.hashCode(level);
-        h += (h << 5) + Objects.hashCode(version);
-        h += (h << 5) + Objects.hashCode(facility);
-        h += (h << 5) + Objects.hashCode(host);
-        h += (h << 5) + Objects.hashCode(message);
-        h += (h << 5) + Objects.hashCode(processId);
-        h += (h << 5) + Objects.hashCode(tag);
-        h += (h << 5) + Objects.hashCode(messageId);
-        h += (h << 5) + Objects.hashCode(appName);
-        h += (h << 5) + Objects.hashCode(structuredData);
-        h += (h << 5) + Objects.hashCode(deviceVendor);
-        h += (h << 5) + Objects.hashCode(deviceProduct);
-        h += (h << 5) + Objects.hashCode(deviceVersion);
-        h += (h << 5) + Objects.hashCode(deviceEventClassId);
-        h += (h << 5) + Objects.hashCode(name);
-        h += (h << 5) + Objects.hashCode(severity);
-        h += (h << 5) + Objects.hashCode(extension);
+        h += (h << 5) + Objs.hashCode(level);
+        h += (h << 5) + Objs.hashCode(version);
+        h += (h << 5) + Objs.hashCode(facility);
+        h += (h << 5) + Objs.hashCode(host);
+        h += (h << 5) + Objs.hashCode(message);
+        h += (h << 5) + Objs.hashCode(processId);
+        h += (h << 5) + Objs.hashCode(tag);
+        h += (h << 5) + Objs.hashCode(messageId);
+        h += (h << 5) + Objs.hashCode(appName);
+        h += (h << 5) + Objs.hashCode(structuredData);
+        h += (h << 5) + Objs.hashCode(deviceVendor);
+        h += (h << 5) + Objs.hashCode(deviceProduct);
+        h += (h << 5) + Objs.hashCode(deviceVersion);
+        h += (h << 5) + Objs.hashCode(deviceEventClassId);
+        h += (h << 5) + Objs.hashCode(name);
+        h += (h << 5) + Objs.hashCode(severity);
+        h += (h << 5) + Objs.hashCode(extension);
         return h;
     }
 
@@ -355,7 +404,7 @@ public class SyslogMessage {
 
     public String toString() {
         return "SyslogMessage{"
-                + "date=" + date
+                + "timestamp=" + timestamp
                 + ", remoteAddress=" + remoteAddress
                 + ", rawMessage=" + rawMessage
                 + ", type=" + type

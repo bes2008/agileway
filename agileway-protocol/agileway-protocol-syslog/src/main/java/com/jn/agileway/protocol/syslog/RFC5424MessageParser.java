@@ -1,10 +1,10 @@
 package com.jn.agileway.protocol.syslog;
 
+import com.jn.langx.util.datetime.DateTimeParsedResult;
 import com.jn.langx.util.regexp.RegexpMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class RFC5424MessageParser extends MessageParser {
@@ -40,7 +40,7 @@ public class RFC5424MessageParser extends MessageParser {
 
         final int priority = Integer.parseInt(groupPriority);
         final int facility = Priority.facility(priority);
-        final LocalDateTime date = parseDate(groupDate);
+        final DateTimeParsedResult date = parseDate(groupDate);
         final int level = Priority.level(priority, facility);
         final Integer version = Integer.parseInt(groupVersion);
         final String appName = nullableString(groupAppName);
@@ -52,7 +52,7 @@ public class RFC5424MessageParser extends MessageParser {
         SyslogMessage syslogMessage = new SyslogMessage();
         syslogMessage.setRawMessage(rawMessage);
         syslogMessage.setType(MessageType.RFC5424);
-        syslogMessage.setDate(date);
+        syslogMessage.setTimestamp(date.getTimestamp());
         syslogMessage.setHost(groupHost);
         syslogMessage.setLevel(level);
         syslogMessage.setFacility(facility);
