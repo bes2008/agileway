@@ -25,12 +25,10 @@ public class SyslogMessage {
     /***************************************************************
      * header 部分
      ***************************************************************/
-    /**
-     * Date of the message. This is the parsed date from the client.
-     * UTC 时间戳
-     */
-    private long timestamp;
 
+    /**
+     * the PRI header
+     */
     private int priority;
 
     /**
@@ -45,34 +43,40 @@ public class SyslogMessage {
      * 从priority 中解析出
      */
     private Severity severity;
-
-
     /**
-     * Host of the message. This is the value from the message.
+     * the VERSION header
+     */
+    @Nullable
+    private Integer version;
+    /**
+     * Date of the message. This is the parsed date from the client.
+     * UTC 时间戳
+     * <p>
+     * the TIMESTAMP header
+     */
+    private long timestamp;
+    /**
+     * the HOSTNAME header
      */
     @Nullable
     private String hostname;
 
     /**
-     * Version of the message.
-     */
-    @Nullable
-    private Integer version;
-    /**
-     * the {@code messageId} attribute
-     */
-    @Nullable
-    private String msgId;
-    /**
-     * the {@code appName} attribute
+     * the APP-NAME header
      */
     @Nullable
     private String appName;
     /**
-     * the {@code processId} attribute
+     * the PROCID header
      */
     @Nullable
     private String procId;
+
+    /**
+     * the MSGID header
+     */
+    @Nullable
+    private String msgId;
 
 
     /***************************************************************
@@ -80,12 +84,12 @@ public class SyslogMessage {
      ***************************************************************/
 
     /**
-     * the {@code tag} attribute
+     * the message tag, 在 message 部分开头，可有可无
      */
     @Nullable
     private String tag;
     /**
-     * Message part of the overall syslog message.
+     * content of message
      */
     @Nullable
     private String content;
@@ -94,14 +98,13 @@ public class SyslogMessage {
     /***************************************************************
      * structured data 部分
      ***************************************************************/
-
-    /**
-     * the {@code structuredData} attribute
-     */
     @Nullable
     private List<StructuredElement> structuredData;
 
 
+    /***************************************************************
+     * 接下来这部分，是CEF中的，暂时先不做处理
+     ***************************************************************/
     /**
      * the {@code deviceVendor} attribute
      */
@@ -432,7 +435,7 @@ public class SyslogMessage {
         if (type == MessageType.RFC3164) {
             return StringTemplates.formatWithPlaceholder("PRI: {}  --  FACILITY: {}, SEVERITY: {}\nHEADER: \n\tTIMESTAMP: {}\n\tHOSTNAME: {}\nMSG:\n\tTAG: {}\n\tPROC-ID: {}\n\tCONTENT: {}\n\nATTACHMENTS\n\tTYPE: {}\n\tTYPE:RAW-MESSAGE: {}", this.priority, this.facility, this.severity, this.timestamp, this.hostname, this.tag, this.procId, this.content, this.type, this.rawMessage);
         } else if (type == MessageType.RFC5424) {
-            return StringTemplates.formatWithPlaceholder("HEADER: \n\tPRI: {}  --  FACILITY: {}, SEVERITY: {}\n\tVERSION: {}\n\tTIMESTAMP: {}\n\tHOSTNAME: {}\n\tAPP-NAME: {}\n\tPROCID: {}\n\tMSGID: {}\nMSG:\n\tTAG: {}\n\tCONTENT: {}\n\nATTACHMENTS\n\tTYPE: {}\n\tTYPE:RAW-MESSAGE: {}", this.priority, this.facility, this.severity,this.version,  this.timestamp, this.hostname, this.appName,this.procId, this.msgId, this.tag,  this.content, this.type, this.rawMessage);
+            return StringTemplates.formatWithPlaceholder("HEADER: \n\tPRI: {}  --  FACILITY: {}, SEVERITY: {}\n\tVERSION: {}\n\tTIMESTAMP: {}\n\tHOSTNAME: {}\n\tAPP-NAME: {}\n\tPROCID: {}\n\tMSGID: {}\nMSG:\n\tTAG: {}\n\tCONTENT: {}\n\nATTACHMENTS\n\tTYPE: {}\n\tTYPE:RAW-MESSAGE: {}", this.priority, this.facility, this.severity, this.version, this.timestamp, this.hostname, this.appName, this.procId, this.msgId, this.tag, this.content, this.type, this.rawMessage);
         }
         return defaultToString();
     }
