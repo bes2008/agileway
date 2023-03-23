@@ -1,4 +1,4 @@
-package com.jn.agileway.protocol.syslog;
+package com.jn.agileway.syslog.protocol;
 
 public enum MessageType {
     /**

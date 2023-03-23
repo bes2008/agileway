@@ -1,4 +1,4 @@
-package com.jn.agileway.protocol.syslog;
+package com.jn.agileway.syslog.protocol;
 
 import com.jn.langx.exception.SyntaxException;
 import com.jn.langx.util.Strings;

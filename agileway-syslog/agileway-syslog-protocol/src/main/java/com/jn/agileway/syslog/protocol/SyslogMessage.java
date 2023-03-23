@@ -1,4 +1,4 @@
-package com.jn.agileway.protocol.syslog;
+package com.jn.agileway.syslog.protocol;
 
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.text.StringTemplates;

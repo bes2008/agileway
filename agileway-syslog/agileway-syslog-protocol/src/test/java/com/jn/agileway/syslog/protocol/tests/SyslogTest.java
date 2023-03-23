@@ -1,8 +1,8 @@
-package com.jn.agileway.protocol.syslog.tests;
+package com.jn.agileway.syslog.protocol.tests;
 
-import com.jn.agileway.protocol.syslog.RFC3164MessageParser;
-import com.jn.agileway.protocol.syslog.RFC5424MessageParser;
-import com.jn.agileway.protocol.syslog.SyslogMessage;
+import com.jn.agileway.syslog.protocol.RFC3164MessageParser;
+import com.jn.agileway.syslog.protocol.RFC5424MessageParser;
+import com.jn.agileway.syslog.protocol.SyslogMessage;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.datetime.parser.CandidatePatternsDateTimeParser;
 import org.junit.Test;

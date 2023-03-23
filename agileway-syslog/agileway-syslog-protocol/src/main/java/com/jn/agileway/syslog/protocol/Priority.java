@@ -1,4 +1,4 @@
-package com.jn.agileway.protocol.syslog;
+package com.jn.agileway.syslog.protocol;
 
 
 import com.jn.langx.util.enums.Enums;
