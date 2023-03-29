@@ -50,7 +50,7 @@ public class GlobalRestHandlersConfiguration {
         return filterRestResponseHandler;
     }
 
-    @Order(-100)
+    @Order(-1000)
     @Bean
     @Autowired
     public FilterRegistrationBean globalRestFilterRegister(
@@ -63,7 +63,7 @@ public class GlobalRestHandlersConfiguration {
         filter.setExceptionHandler(globalFilterRestExceptionHandler);
         registration.setUrlPatterns(Collects.newArrayList("/*"));
         registration.setName("GlobalRestResponse Filter");
-        registration.setOrder(-100);
+        registration.setOrder(-1000);
         return registration;
     }
 
