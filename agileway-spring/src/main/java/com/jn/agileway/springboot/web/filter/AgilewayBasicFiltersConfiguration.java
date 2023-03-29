@@ -46,7 +46,7 @@ public class AgilewayBasicFiltersConfiguration implements ApplicationContextAwar
     @Value("${agileway.web.encoding:UTF-8}")
     private String encoding = "UTF-8";
 
-    @Value("${agileway.web.streamWrapper: }")
+    @Value("${agileway.web.streamWrapper: false}")
     private boolean streamWrapper = false;
 
     @Order(-1030)
@@ -88,6 +88,7 @@ public class AgilewayBasicFiltersConfiguration implements ApplicationContextAwar
 
     /**
      * the @Order(-100) GlobalFilter
+     *
      * @see com.jn.agileway.springboot.web.rest.GlobalRestHandlersConfiguration
      */
 

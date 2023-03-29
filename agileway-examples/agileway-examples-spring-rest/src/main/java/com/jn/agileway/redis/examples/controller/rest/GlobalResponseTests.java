@@ -4,6 +4,7 @@ import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.Meters;
 import com.jn.agileway.metrics.core.meter.Metered;
 import com.jn.agileway.redis.examples.controller.redis_examples.Person;
+import com.jn.agileway.spring.utils.SpringContextHolder;
 import com.jn.agileway.web.servlet.RRHolder;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.collection.Collects;
@@ -25,6 +26,8 @@ public class GlobalResponseTests {
 
     @GetMapping("/testBean")
     public Person aPerson() {
+        GlobalResponseTests u = SpringContextHolder.getBean(GlobalResponseTests.class);
+
         Metered meter = Meters.getMetered("test", metric);
         Loggers.getLogger(getClass()).info(metric.toString());
         meter.mark();
