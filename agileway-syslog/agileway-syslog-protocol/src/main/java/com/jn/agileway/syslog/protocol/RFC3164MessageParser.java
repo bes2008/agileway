@@ -1,6 +1,7 @@
 package com.jn.agileway.syslog.protocol;
 
 import com.jn.langx.exception.SyntaxException;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.datetime.DateTimeParsedResult;
 import com.jn.langx.util.regexp.RegexpMatcher;
@@ -9,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * https://www.rfc-editor.org/rfc/rfc3164
- *
+ * <p>
  * 时间戳格式必须是：
  * MMM dd hh:mm:ss
  */
@@ -36,15 +37,15 @@ public class RFC3164MessageParser extends MessageParser {
         final String groupDate = matcher.group("date");
         final String groupHost = matcher.group("host");
 
-        if(Strings.isEmpty(groupPriority)){
+        if (Strings.isEmpty(groupPriority)) {
             throw new SyntaxException("invalid syslog-3164 message, the priority is missing");
         }
 
 
-        if(Strings.isEmpty(groupDate)){
+        if (Strings.isEmpty(groupDate)) {
             throw new SyntaxException("invalid syslog-3164 message, the timestamp is missing");
         }
-        if(Strings.isEmpty(groupHost)){
+        if (Strings.isEmpty(groupHost)) {
             throw new SyntaxException("invalid syslog-3164 message, the host is missing");
         }
 
@@ -65,14 +66,17 @@ public class RFC3164MessageParser extends MessageParser {
 
         syslogMessage.setHostname(groupHost);
 
-        final String groupTag = matcher.group("tag");
+        final String groupTagHeader = matcher.group("tag");
         final String groupMessage = matcher.group("content");
         syslogMessage.setContent(groupMessage);
-        syslogMessage.setTag(groupTag);
+        syslogMessage.setTagHeader(groupTagHeader);
 
         final String groupProcId = matcher.group("procid");
         final String processId = Strings.isEmpty(groupProcId) ? null : groupProcId;
         syslogMessage.setProcId(processId);
+
+        String tag = Objs.isNotEmpty(processId) ? (Objs.useValueIfEmpty(groupTagHeader, "") + "[" + groupProcId + "]") : Objs.useValueIfEmpty(groupTagHeader, "");
+        syslogMessage.setTag(tag);
         return syslogMessage;
     }
 }

@@ -89,6 +89,19 @@ public class SyslogMessage {
     @Nullable
     private String tag;
     /**
+     * [] 前面的部分
+     */
+    private String tagHeader;
+
+    public String getTagHeader() {
+        return tagHeader;
+    }
+
+    public void setTagHeader(String tagHeader) {
+        this.tagHeader = tagHeader;
+    }
+
+    /**
      * content of message
      */
     @Nullable
