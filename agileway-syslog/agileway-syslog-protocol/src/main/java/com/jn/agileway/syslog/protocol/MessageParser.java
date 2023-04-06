@@ -30,7 +30,7 @@ public abstract class MessageParser {
         this.matcherStructuredData = initMatcher("\\[([^\\]]+)\\]");
         this.matcherKeyValue = initMatcher("(?<key>\\S+)=\"(?<value>[^\"]+)\"|(?<id>\\S+)");
         // 这个是 基于 RFC3164 的格式，如果使用RFC 5424 ，需要调用set方法自定义
-        this.setDateTimeParser(new CandidatePatternsDateTimeParser(Collects.asList("MMM dd hh:mm:ss"), Collects.asList(timeZone, TimeZone.getTimeZone("UTC")), Collects.asList(Locale.getDefault(), Locale.US)));
+        this.setDateTimeParser(new CandidatePatternsDateTimeParser(Collects.asList("MMM dd hh:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"), Collects.asList(timeZone, TimeZone.getTimeZone("UTC")), Collects.asList(Locale.getDefault(), Locale.US)));
     }
 
     public void setDateTimeParser(DateTimeParser dateTimeParser) {
