@@ -1,6 +1,7 @@
 package com.jn.agileway.syslog.protocol.tests;
 
 import com.jn.agileway.syslog.protocol.RFC3164MessageParser;
+import com.jn.agileway.syslog.protocol.RFC3164SyslogTextGenerator;
 import com.jn.agileway.syslog.protocol.RFC5424MessageParser;
 import com.jn.agileway.syslog.protocol.SyslogMessage;
 import com.jn.langx.util.collection.Collects;
@@ -14,19 +15,26 @@ public class SyslogTest {
     @Test
     public void test3164() {
         RFC3164MessageParser parser = new RFC3164MessageParser();
+        RFC3164SyslogTextGenerator generator = new RFC3164SyslogTextGenerator();
         System.out.println("====================================================");
         String log = "<34>Oct 11 22:14:15 mymachine su: 'su root' failed for lonvick on /dev/pts/8";
         SyslogMessage syslogMessage = parser.parse(log);
         System.out.println(syslogMessage);
+        System.out.println("-------");
+        System.out.println(generator.get(syslogMessage));
         System.out.println("====================================================");
 
         log = "<34>Oct 11 22:14:15 mymachine 'su root' failed for lonvick on /dev/pts/8";
         syslogMessage = parser.parse(log);
         System.out.println(syslogMessage);
+        System.out.println("-------");
+        System.out.println(generator.get(syslogMessage));
         System.out.println("====================================================");
         log = "<34>Oct 11 22:14:15 mymachine su[3]: 'su root' failed for lonvick on /dev/pts/8";
         syslogMessage = parser.parse(log);
         System.out.println(syslogMessage);
+        System.out.println("-------");
+        System.out.println(generator.get(syslogMessage));
         System.out.println("====================================================");
     }
 

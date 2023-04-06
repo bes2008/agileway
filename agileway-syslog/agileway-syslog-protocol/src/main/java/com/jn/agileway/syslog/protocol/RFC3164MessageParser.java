@@ -60,6 +60,7 @@ public class RFC3164MessageParser extends MessageParser {
         final Severity severity = Priority.getSeverity(priority, facility);
         syslogMessage.setSeverity(severity);
         syslogMessage.setFacility(facility);
+        syslogMessage.setPriority(priority);
 
         DateTimeParsedResult parsedResult = parseDate(groupDate);
         syslogMessage.setTimestamp(parsedResult.getTimestamp());

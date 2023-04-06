@@ -21,7 +21,7 @@ public class RFC3164SyslogTextGenerator implements SyslogTextGenerator {
     @Override
     public String get(SyslogMessage syslogMessage) {
         String msg = null;
-        String timestamp = iso8601Enabled ? Dates.format(syslogMessage.getTimestamp(), "yyyy-MM-dd'T'HH:mm:ss.SSSXXX") : Dates.format(syslogMessage.getTimestamp(), "MMM dd hh:mm:ss");
+        String timestamp = iso8601Enabled ? Dates.format(syslogMessage.getTimestamp(), "yyyy-MM-dd'T'HH:mm:ss.SSSXXX") : Dates.format(syslogMessage.getTimestamp(), "MMM dd HH:mm:ss");
 
         if (Objs.isNotEmpty(syslogMessage.getTag())) {
             msg = StringTemplates.formatWithPlaceholder(templateWithTag, syslogMessage.getPriority(), timestamp, syslogMessage.getHostname(), syslogMessage.getTag(), syslogMessage.getContent());
