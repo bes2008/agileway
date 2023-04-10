@@ -25,12 +25,14 @@ public class PathMatchPredicate implements HttpRequestPredicate {
     public void setIncludePatterns(String patternsExpression) {
         if (Objs.isNotEmpty(patternsExpression)) {
             this.includePathMatcher = new AntPathMatcher((String) null, patternsExpression);
+            this.includePathMatcher.setGlobal(true);
         }
     }
 
     public void setExcludePatterns(String patternsExpression) {
         if (Objs.isNotEmpty(patternsExpression)) {
             this.excludePathMatcher = new AntPathMatcher((String) null, patternsExpression);
+            this.includePathMatcher.setGlobal(true);
         }
     }
 
