@@ -41,7 +41,7 @@ public class PathMatchPredicate implements HttpRequestPredicate {
         if (includePathMatcher == null) {
             return false;
         }
-        String requestUri = holder.getRequest().getRequestURI();
+        String requestUri = holder.getRequest().getPath();
 
         if (includePathMatcher.matches(requestUri)) {
             if (excludePathMatcher == null || !excludePathMatcher.matches(requestUri)) {
