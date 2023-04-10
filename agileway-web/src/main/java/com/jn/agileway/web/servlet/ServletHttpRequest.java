@@ -83,4 +83,16 @@ public class ServletHttpRequest implements HttpRequest<HttpServletRequest> {
     public String getRequestURL() {
         return containerRequest.getRequestURL().toString();
     }
+
+    @Override
+    public String getBaseURL() {
+        String requestURL = getRequestURL();
+        String path = getPath();
+        return requestURL.substring(0, requestURL.length() - path.length());
+    }
+
+    @Override
+    public String getPath() {
+        return containerRequest.getServletPath();
+    }
 }

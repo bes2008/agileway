@@ -79,11 +79,21 @@ public class JaxrsHttpRequest implements HttpRequest<ContainerRequestContext> {
     }
 
     public String getRemoteAddr() {
-        return null;
+        return getRemoteHost();
     }
 
     @Override
     public String getRemoteHost() {
-        return null;
+        return this.containerRequest.getUriInfo().getBaseUri().getHost();
+    }
+
+    @Override
+    public String getBaseURL() {
+        return this.containerRequest.getUriInfo().getBaseUri().getPath();
+    }
+
+    @Override
+    public String getPath() {
+        return this.containerRequest.getUriInfo().getPath();
     }
 }

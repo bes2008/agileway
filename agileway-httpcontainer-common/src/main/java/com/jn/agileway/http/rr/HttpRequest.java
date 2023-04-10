@@ -58,7 +58,7 @@ public interface HttpRequest<D> {
      * protocol name up to the query string
      */
 
-    public String getRequestURI();
+    String getRequestURI();
 
     /**
      * Reconstructs the URL the client used to make the request.
@@ -80,5 +80,47 @@ public interface HttpRequest<D> {
      */
     String getRequestURL();
 
+    /**
+     * Reconstructs the URL the client used to make the request.
+     * The returned URL contains a protocol, server name, port
+     * number, and context path, but it does not include query
+     * string parameters.
+     *
+     * <p>If this request has been forwarded using
+     * the server path in the
+     * reconstructed URL must reflect the path used to obtain the
+     * RequestDispatcher, and not the server path specified by the client.
+     *
+     * <p>Because this method returns a <code>StringBuffer</code>,
+     * not a string, you can modify the URL easily, for example,
+     * to append query parameters.
+     *
+     * <p>This method is useful for creating redirect messages
+     * and for reporting errors.
+     */
+    String getBaseURL();
+
+    /**
+     * Reconstructs the URL the client used to make the request.
+     * The returned URL not contains a protocol, server name, port
+     * number, and context path, and it does not include query
+     * string parameters.
+     *
+     *
+     * getBaseURL() + getPath() = getRequestURL()
+     *
+     * <p>If this request has been forwarded using
+     * the server path in the
+     * reconstructed URL must reflect the path used to obtain the
+     * RequestDispatcher, and not the server path specified by the client.
+     *
+     * <p>Because this method returns a <code>StringBuffer</code>,
+     * not a string, you can modify the URL easily, for example,
+     * to append query parameters.
+     *
+     * <p>This method is useful for creating redirect messages
+     * and for reporting errors.
+     */
+    String getPath();
 
 }
