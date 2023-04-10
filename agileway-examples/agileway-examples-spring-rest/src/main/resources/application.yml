@@ -19,8 +19,7 @@ agileway:
         methods: POST,GET
       xss:
         enabled: true
-        predicates:
-          - paths=/** /swagger-ui.html
+        predicates: [paths=/** /swagger-ui.html]
       sql-injection:
         enabled: true
         predicates:
