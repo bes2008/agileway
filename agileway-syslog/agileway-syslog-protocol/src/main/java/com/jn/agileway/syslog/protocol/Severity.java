@@ -11,7 +11,7 @@ public enum Severity implements CommonEnum {
     Warning(4, "Warning", "Warning"),
     Notice(5, "Notice", "Notice"),
     Informational(6, "Informational", "Informational"),
-    Debug(0, "Debug", "Debug");
+    Debug(7, "Debug", "Debug");
 
     private EnumDelegate delegate;
 
