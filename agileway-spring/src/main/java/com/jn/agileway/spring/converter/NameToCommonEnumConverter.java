@@ -4,6 +4,9 @@ import com.jn.langx.util.enums.CommonEnumByNameConverter;
 import com.jn.langx.util.enums.base.CommonEnum;
 import org.springframework.core.convert.converter.Converter;
 
+/**
+ * 主要用于http Get 参数去转换到 enum 的情况
+ */
 public class NameToCommonEnumConverter<T extends CommonEnum> implements Converter<String, T> {
 
     private CommonEnumByNameConverter<T> delegate;
