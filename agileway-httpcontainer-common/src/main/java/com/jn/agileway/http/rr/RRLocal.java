@@ -17,11 +17,19 @@ public class RRLocal {
     }
 
     public static HttpResponse getResponse() {
-        return rr.get().getResponse();
+        RR r = rr.get();
+        if (r != null) {
+            return r.getResponse();
+        }
+        return null;
     }
 
     public static HttpRequest getRequest() {
-        return rr.get().getRequest();
+        RR r = rr.get();
+        if (r != null) {
+            return r.getRequest();
+        }
+        return null;
     }
 
     public static void set(final HttpRequest request, final HttpResponse response) {
