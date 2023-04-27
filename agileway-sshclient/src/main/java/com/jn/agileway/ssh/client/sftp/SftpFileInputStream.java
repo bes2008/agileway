@@ -1,6 +1,7 @@
 package com.jn.agileway.ssh.client.sftp;
 
 import com.jn.langx.util.Preconditions;
+import com.jn.langx.util.Unsigneds;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,8 +51,8 @@ public class SftpFileInputStream extends InputStream {
                 return -1;
             }
         }
-        int v = byteBuffer.get();
-        return v < 0 ? (v + 256) : v;
+        byte b = byteBuffer.get();
+        return Unsigneds.toUnsignedByte(b);
     }
 
 
