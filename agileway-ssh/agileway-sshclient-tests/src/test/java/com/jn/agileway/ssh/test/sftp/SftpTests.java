@@ -6,6 +6,7 @@ import com.jn.agileway.ssh.client.SshConnectionFactory;
 import com.jn.agileway.ssh.client.SshConnectionFactoryRegistry;
 import com.jn.agileway.ssh.client.sftp.*;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
+import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.SystemPropertys;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
@@ -21,26 +22,27 @@ import java.util.List;
 public class SftpTests {
     private static final Logger logger = Loggers.getLogger(SftpTests.class);
     private SshConnectionFactoryRegistry registry = new SshConnectionFactoryRegistry();
+    private String user = "bes";
 
     @Test
     public void testSftp_trilead_ssh2() throws IOException {
-        _test(registry.get("trileadssh2"), "/home/fangjinuo/Templates/test_sftp_trilead_ssh2");
+        _test(registry.get("trileadssh2"), StringTemplates.formatWithPlaceholder("/home/{}/Templates/test_sftp_trilead_ssh2", user));
     }
 
 
     @Test
     public void testSftp_jsch() throws IOException {
-        _test(registry.get("jsch"), "/home/fangjinuo/Templates/test_sftp_jsch");
+        _test(registry.get("jsch"), StringTemplates.formatWithPlaceholder("/home/fangjinuo/Templates/test_sftp_jsch", user));
     }
 
     @Test
     public void testSftp_sshj() throws IOException {
-        _test(registry.get("sshj"), "/home/fangjinuo/Templates/test_sftp_sshj");
+        _test(registry.get("sshj"), StringTemplates.formatWithPlaceholder("/home/fangjinuo/Templates/test_sftp_sshj", user));
     }
 
     @Test
     public void testSftp_synergy() throws IOException {
-        _test(registry.get("synergy"), "/home/fangjinuo/Templates/test_sftp_synergy");
+        _test(registry.get("synergy"), StringTemplates.formatWithPlaceholder("/home/fangjinuo/Templates/test_sftp_synergy", user));
     }
 
     void _test(SshConnectionFactory connectionFactory, final String testWorkingDirectory) throws IOException {
@@ -48,8 +50,8 @@ public class SftpTests {
         //connectionConfig.setHost("192.168.234.128");
         connectionConfig.setHost("192.168.1.70");
         connectionConfig.setPort(22);
-        connectionConfig.setUser("fangjinuo");
-        connectionConfig.setPassword("fjn13570");
+        connectionConfig.setUser(user);
+        connectionConfig.setPassword("password");
 
         SshConnection connection = null;
         SftpSession _session = null;
@@ -59,7 +61,7 @@ public class SftpTests {
             final SftpSession session = connection.openSftpSession();
             _session = session;
 
-            FileAttrs attrs = session.stat("/home/fangjinuo");
+            FileAttrs attrs = session.stat(StringTemplates.formatWithPlaceholder("/home/{}", user));
             System.out.println(attrs);
 
             // 确保testWorkingDirectory 存在，并且是 empty的
