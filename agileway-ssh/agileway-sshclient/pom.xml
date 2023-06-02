@@ -78,14 +78,6 @@
 
 
 
-        <!--采用私有协议，代码和 ganymed-ssh2 基本一样-->
-        <dependency>
-            <groupId>com.trilead</groupId>
-            <artifactId>trilead-ssh2</artifactId>
-            <version>1.0.0-build222</version>
-        </dependency>
-
-
         <!--将 Apache Common-Logging 适配给 slf4j, j2ssh-core 用的是 Common-Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>

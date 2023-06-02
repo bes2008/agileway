@@ -18,6 +18,7 @@
         <module>agileway-sshclient-j2ssh</module>
         <module>agileway-sshclient-tests</module>
         <module>agileway-sshclient-ganymedssh2</module>
+        <module>agileway-sshclient-trileadssh2</module>
     </modules>
 
 </project>
