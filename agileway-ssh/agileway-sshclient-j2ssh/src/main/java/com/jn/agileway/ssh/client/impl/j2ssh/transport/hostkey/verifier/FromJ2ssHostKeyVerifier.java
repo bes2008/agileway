@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.impl.j2ssh.verifier;
+package com.jn.agileway.ssh.client.impl.j2ssh.transport.hostkey.verifier;
 
 import com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier;
 import com.jn.langx.util.logging.Loggers;

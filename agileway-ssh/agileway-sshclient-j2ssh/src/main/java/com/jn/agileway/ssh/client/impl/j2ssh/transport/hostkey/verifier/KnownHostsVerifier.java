@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.impl.j2ssh.verifier;
+package com.jn.agileway.ssh.client.impl.j2ssh.transport.hostkey.verifier;
 
 import com.sshtools.j2ssh.transport.AbstractKnownHostsKeyVerification;
 import com.sshtools.j2ssh.transport.InvalidHostFileException;

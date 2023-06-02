@@ -5,7 +5,7 @@ import com.jn.agileway.ssh.client.SshConnectionStatus;
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
 import com.jn.agileway.ssh.client.channel.forwarding.ForwardingClient;
-import com.jn.agileway.ssh.client.impl.j2ssh.verifier.ToJ2sshHostKeyVerifier;
+import com.jn.agileway.ssh.client.impl.j2ssh.transport.hostkey.verifier.ToJ2sshHostKeyVerifier;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.logging.Loggers;
