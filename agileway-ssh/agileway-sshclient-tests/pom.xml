@@ -32,6 +32,11 @@
             <groupId>io.github.bes2008.solution.agileway.ssh</groupId>
             <artifactId>agileway-sshclient-trileadssh2</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>io.github.bes2008.solution.agileway.ssh</groupId>
+            <artifactId>agileway-sshclient-synergy</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

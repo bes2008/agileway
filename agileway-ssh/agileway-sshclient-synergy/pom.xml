@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>agileway-ssh</artifactId>
+        <groupId>io.github.bes2008.solution.agileway.ssh</groupId>
+        <version>4.2.2</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>agileway-sshclient-synergy</artifactId>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>io.github.bes2008.solution.agileway.ssh</groupId>
+            <artifactId>agileway-sshclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sshtools</groupId>
+            <artifactId>maverick-synergy-client</artifactId>
+            <version>3.0.3-FINAL</version>
+        </dependency>
+
+    </dependencies>
+</project>

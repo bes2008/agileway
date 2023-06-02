@@ -19,6 +19,7 @@
         <module>agileway-sshclient-tests</module>
         <module>agileway-sshclient-ganymedssh2</module>
         <module>agileway-sshclient-trileadssh2</module>
+        <module>agileway-sshclient-synergy</module>
     </modules>
 
 </project>
