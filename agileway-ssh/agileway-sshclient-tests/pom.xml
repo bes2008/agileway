@@ -42,6 +42,12 @@
             <groupId>io.github.bes2008.solution.agileway.ssh</groupId>
             <artifactId>agileway-sshclient-sshj</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>io.github.bes2008.solution.agileway.ssh</groupId>
+            <artifactId>agileway-sshclient-jsch</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

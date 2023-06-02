@@ -21,6 +21,7 @@
         <module>agileway-sshclient-trileadssh2</module>
         <module>agileway-sshclient-synergy</module>
         <module>agileway-sshclient-sshj</module>
+        <module>agileway-sshclient-jsch</module>
     </modules>
 
 </project>
