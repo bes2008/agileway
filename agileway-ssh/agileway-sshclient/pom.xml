@@ -30,7 +30,6 @@
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
             <version>0.1.55</version>
-            <optional>true</optional>
         </dependency>
 
 
@@ -64,19 +63,16 @@
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk15on</artifactId>
             <version>${bouncycastle.version}</version>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcutil-jdk15on</artifactId>
             <version>${bouncycastle.version}</version>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>net.i2p.crypto</groupId>
             <artifactId>eddsa</artifactId>
             <version>${i2p.crypto.version}</version>
-            <optional>true</optional>
         </dependency>
 
 
@@ -86,7 +82,6 @@
             <groupId>com.airlenet.yang</groupId>
             <artifactId>ganymed-ssh2</artifactId>
             <version>1.2.0</version>
-            <optional>true</optional>
         </dependency>
 
         <!--采用私有协议，代码和 ganymed-ssh2 基本一样-->
@@ -94,29 +89,20 @@
             <groupId>com.trilead</groupId>
             <artifactId>trilead-ssh2</artifactId>
             <version>1.0.0-build222</version>
-            <optional>true</optional>
         </dependency>
 
-        <!-- &lt;0.2.8 use LGPL + Apache,  &ge;0.2.8 GPL-->
-        <dependency>
-            <groupId>sshtools</groupId>
-            <artifactId>j2ssh-core</artifactId>
-            <version>0.2.2</version>
-            <optional>true</optional>
-        </dependency>
+
         <!--将 Apache Common-Logging 适配给 slf4j, j2ssh-core 用的是 Common-Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
             <version>${slf4j.version}</version>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>com.sshtools</groupId>
             <artifactId>maverick-synergy-client</artifactId>
             <version>3.0.3-FINAL</version>
-            <optional>true</optional>
         </dependency>
 
     </dependencies>

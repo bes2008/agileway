@@ -24,7 +24,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>io.github.bes2008.solution.agileway</groupId>
+            <groupId>io.github.bes2008.solution.agileway.ssh</groupId>
             <artifactId>agileway-sshclient</artifactId>
         </dependency>
 
