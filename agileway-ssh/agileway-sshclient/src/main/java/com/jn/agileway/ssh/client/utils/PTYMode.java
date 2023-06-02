@@ -15,8 +15,6 @@
  */
 package com.jn.agileway.ssh.client.utils;
 
-import net.schmizz.sshj.common.Buffer;
-
 import java.util.Map;
 import java.util.Map.Entry;
 

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>agileway-ssh</artifactId>
+        <groupId>io.github.bes2008.solution.agileway.ssh</groupId>
+        <version>4.2.2</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>agileway-sshclient-sshj</artifactId>
+
+    <properties>
+        <bouncycastle.version>1.70</bouncycastle.version>
+        <i2p.crypto.version>0.3.0</i2p.crypto.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.github.bes2008.solution.agileway.ssh</groupId>
+            <artifactId>agileway-sshclient</artifactId>
+        </dependency>
+        <!--License: Apache 2.0-->
+        <!--
+        <dependency>
+            <groupId>net.schmizz</groupId>
+            <artifactId>sshj</artifactId>
+            <version>0.10.0</version>
+            <optional>true</optional>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>com.hierynomus</groupId>
+            <artifactId>sshj</artifactId>
+            <version>0.32.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcpkix-jdk15on</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--使用 sshj 时，需要接下来的4个依赖-->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>${bouncycastle.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk15on</artifactId>
+            <version>${bouncycastle.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcutil-jdk15on</artifactId>
+            <version>${bouncycastle.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.i2p.crypto</groupId>
+            <artifactId>eddsa</artifactId>
+            <version>${i2p.crypto.version}</version>
+        </dependency>
+
+
+    </dependencies>
+
+</project>

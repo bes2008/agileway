@@ -37,6 +37,11 @@
             <groupId>io.github.bes2008.solution.agileway.ssh</groupId>
             <artifactId>agileway-sshclient-synergy</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>io.github.bes2008.solution.agileway.ssh</groupId>
+            <artifactId>agileway-sshclient-sshj</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
