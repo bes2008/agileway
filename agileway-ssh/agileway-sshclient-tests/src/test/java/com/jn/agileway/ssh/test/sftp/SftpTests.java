@@ -9,8 +9,6 @@ import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.test.BaseSshTests;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.SystemPropertys;
-import com.jn.langx.util.collection.Collects;
-import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.logging.Loggers;
 import org.junit.Test;
@@ -78,9 +76,9 @@ public class SftpTests extends BaseSshTests {
             }
 
             // 拷贝 agileway-sshclient 模块下所有的文件到  testWorkingDirectory
-            String localRootPath = SystemPropertys.getUserWorkDir();
+            String localRootPath = SystemPropertys.getUserWorkDir()+"/..";
             File localRootDir = new File(localRootPath);
-            _copyDir(session, localRootDir, testWorkingDirectory);
+            Sftps.copy(session, localRootDir, testWorkingDirectory);
         } catch (Throwable ex) {
             logger.error(ex.getMessage(), ex);
         } finally {
@@ -89,53 +87,4 @@ public class SftpTests extends BaseSshTests {
         }
     }
 
-
-    void _copyFile(SftpSession session, File file, String remoteDir) throws IOException {
-        int length = Sftps.copyFile(session, file, remoteDir, null);
-        String filepath = remoteDir + "/" + file.getName();
-        // ganymed-ssh2 的 read 方法对 length 参数有这个限制
-        if (length < 32786) {
-            SftpFile sftpFile = session.open(filepath, OpenMode.READ, null);
-            byte[] buffer = new byte[length];
-            try {
-                int readLength = sftpFile.read(0, buffer, 0, length);
-                logger.info("read length == write length ? {}", length == readLength);
-            } catch (Throwable ex) {
-                logger.error(ex.getMessage(), ex);
-            } finally {
-                sftpFile.close();
-            }
-        }
-        logger.info("canonical path: {}", session.canonicalPath(filepath));
-    }
-
-    void _copyDir(final SftpSession session, File localDirectory, final String remoteDir) throws IOException {
-        boolean remoteDirExist = Sftps.existDirectory(session, remoteDir);
-        if (!remoteDirExist) {
-            session.mkdir(remoteDir, null);
-        }
-        Collects.forEach(localDirectory.listFiles(), new Consumer<File>() {
-            @Override
-            public void accept(File file) {
-                String name = file.getName();
-                try {
-                    if (file.isFile()) {
-                        _copyFile(session, file, remoteDir);
-                    } else {
-                        _copyDir(session, file, remoteDir + "/" + name);
-                    }
-                } catch (Throwable ex) {
-                    logger.error(ex.getMessage(), ex);
-                }
-            }
-        });
-
-        List<SftpResourceInfo> ls = session.listFiles(remoteDir);
-        Collects.forEach(ls, new Consumer<SftpResourceInfo>() {
-            @Override
-            public void accept(SftpResourceInfo sftpResourceInfo) {
-                System.out.println(sftpResourceInfo);
-            }
-        });
-    }
 }
