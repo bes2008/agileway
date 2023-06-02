@@ -32,17 +32,17 @@ public class SftpTests {
 
     @Test
     public void testSftp_jsch() throws IOException {
-        _test(registry.get("jsch"), StringTemplates.formatWithPlaceholder("/home/fangjinuo/Templates/test_sftp_jsch", user));
+        _test(registry.get("jsch"), StringTemplates.formatWithPlaceholder("/home/{}/Templates/test_sftp_jsch", user));
     }
 
     @Test
     public void testSftp_sshj() throws IOException {
-        _test(registry.get("sshj"), StringTemplates.formatWithPlaceholder("/home/fangjinuo/Templates/test_sftp_sshj", user));
+        _test(registry.get("sshj"), StringTemplates.formatWithPlaceholder("/home/{}/Templates/test_sftp_sshj", user));
     }
 
     @Test
     public void testSftp_synergy() throws IOException {
-        _test(registry.get("synergy"), StringTemplates.formatWithPlaceholder("/home/fangjinuo/Templates/test_sftp_synergy", user));
+        _test(registry.get("synergy"), StringTemplates.formatWithPlaceholder("/home/{}/Templates/test_sftp_synergy", user));
     }
 
     void _test(SshConnectionFactory connectionFactory, final String testWorkingDirectory) throws IOException {
