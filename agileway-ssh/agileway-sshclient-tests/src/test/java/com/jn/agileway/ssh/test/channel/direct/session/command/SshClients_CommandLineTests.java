@@ -70,9 +70,9 @@ public class SshClients_CommandLineTests extends BaseSshTests {
         SshConnection connection = connectionFactory.get(connectionConfig);
 
         SshCommandResponse response = null;
-        response = SshClients.exec(connection, "route");
+        response = SshClients.exec(connection, "netstat -apn | grep 22");
         showResult(response);
-        response = SshClients.exec(connection, "ifconfig");
+        response = SshClients.exec(connection, "uname -a");
         showResult(response);
 
         response = SshClients.exec(connection, "ls -al");
@@ -86,9 +86,9 @@ public class SshClients_CommandLineTests extends BaseSshTests {
 
     private static void showResult(SshCommandResponse response) {
         if (response.hasError()) {
-            logger.error(response.getExitErrorMessage());
+            System.out.println(response.getExitErrorMessage());
         } else {
-            logger.info(response.getResult());
+            System.out.println(response.getResult());
         }
         System.out.println("========================");
     }
