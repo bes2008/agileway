@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.plugins.codec;
+package com.jn.agileway.ssh.client.impl.sshj.transport.hostkey.codec;
 
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.transport.hostkey.codec.AbstractPublicKeyCodec;

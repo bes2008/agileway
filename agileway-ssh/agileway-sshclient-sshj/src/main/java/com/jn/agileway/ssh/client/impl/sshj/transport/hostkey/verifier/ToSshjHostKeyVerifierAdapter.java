@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.impl.sshj.verifier;
+package com.jn.agileway.ssh.client.impl.sshj.transport.hostkey.verifier;
 
 import net.schmizz.sshj.transport.verification.HostKeyVerifier;
 

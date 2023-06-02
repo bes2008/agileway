@@ -6,7 +6,7 @@ import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
 import com.jn.agileway.ssh.client.channel.forwarding.ForwardingClient;
 import com.jn.agileway.ssh.client.impl.sshj.sftp.SshjSftpSession;
-import com.jn.agileway.ssh.client.impl.sshj.verifier.ToSshjHostKeyVerifierAdapter;
+import com.jn.agileway.ssh.client.impl.sshj.transport.hostkey.verifier.ToSshjHostKeyVerifierAdapter;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;

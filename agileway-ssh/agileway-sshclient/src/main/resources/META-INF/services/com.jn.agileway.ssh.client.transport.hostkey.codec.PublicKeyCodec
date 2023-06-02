@@ -1,6 +1,2 @@
 com.jn.agileway.ssh.client.transport.hostkey.codec.SshRsaPublicKeyCodec
 com.jn.agileway.ssh.client.transport.hostkey.codec.SshDssPublicKeyCodec
-com.jn.agileway.ssh.client.plugins.codec.Ecdsa256PublicKeyCodec
-com.jn.agileway.ssh.client.plugins.codec.Ecdsa384PublicKeyCodec
-com.jn.agileway.ssh.client.plugins.codec.Ecdsa512PublicKeyCodec
-com.jn.agileway.ssh.client.plugins.codec.Eddsa25519PublicKeyCodec

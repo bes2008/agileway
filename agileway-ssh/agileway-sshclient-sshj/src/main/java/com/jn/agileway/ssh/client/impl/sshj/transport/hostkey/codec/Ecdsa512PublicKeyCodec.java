@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.plugins.codec;
+package com.jn.agileway.ssh.client.impl.sshj.transport.hostkey.codec;
 
 public class Ecdsa512PublicKeyCodec  extends EcdsaXPublicKeyCodec {
     public Ecdsa512PublicKeyCodec() {
