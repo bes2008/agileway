@@ -30,8 +30,8 @@
         <module>agileway-jaxrs</module>
         <module>agileway-eipchannel</module>
         <module>agileway-metrics</module>
-        <module>agileway-syslog</module>
         <module>agileway-ssh</module>
+        <module>agileway-syslog</module>
     </modules>
 
     <description>
