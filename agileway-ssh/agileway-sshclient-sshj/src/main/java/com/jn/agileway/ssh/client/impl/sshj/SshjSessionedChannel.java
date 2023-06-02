@@ -156,7 +156,7 @@ class SshjSessionedChannel extends AbstarctSessionedChannel {
     @Override
     public int getExitStatus() {
         if (subsystem != null) {
-            long maxWait = 5000; // 5s
+            long maxWait = 30000; // 5s
             Integer exitStatus = subsystem.getExitStatus();
             while (exitStatus == null && maxWait > 0) {
                 try {
@@ -172,7 +172,7 @@ class SshjSessionedChannel extends AbstarctSessionedChannel {
             return exitStatus == null ? 0 : exitStatus;
         }
         if (command != null) {
-            long maxWait = 5000;
+            long maxWait = 30000;
             Integer exitStatus = command.getExitStatus();
             while (exitStatus == null && maxWait > 0) {
                 try {
