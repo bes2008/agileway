@@ -9,7 +9,7 @@ import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
 import com.jn.agileway.ssh.client.channel.forwarding.ForwardingClient;
 import com.jn.agileway.ssh.client.impl.ganymedssh2.sftp.Ssh2SftpSession;
-import com.jn.agileway.ssh.client.impl.ganymedssh2.verifier.ToSsh2HostKeyVerifierAdapter;
+import com.jn.agileway.ssh.client.impl.ganymedssh2.transport.hostkey.verifier.ToSsh2HostKeyVerifierAdapter;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.io.Charsets;

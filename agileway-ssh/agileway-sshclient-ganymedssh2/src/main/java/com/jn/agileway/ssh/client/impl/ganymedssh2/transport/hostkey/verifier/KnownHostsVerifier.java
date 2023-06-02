@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.impl.ganymedssh2.verifier;
+package com.jn.agileway.ssh.client.impl.ganymedssh2.transport.hostkey.verifier;
 
 import ch.ethz.ssh2.ServerHostKeyVerifier;
 import com.jn.agileway.ssh.client.transport.hostkey.StrictHostKeyChecking;
