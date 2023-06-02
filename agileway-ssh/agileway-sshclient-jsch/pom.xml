@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>agileway-sshclient-jsch</artifactId>
-
+    <name>${project.groupId}:${project.artifactId}:${project.version}</name>
     <dependencies>
 
         <dependency>

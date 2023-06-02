@@ -12,7 +12,7 @@
     <groupId>io.github.bes2008.solution.agileway.ssh</groupId>
     <artifactId>agileway-ssh</artifactId>
     <packaging>pom</packaging>
-
+    <name>${project.groupId}:${project.artifactId}:${project.version}</name>
     <modules>
         <module>agileway-sshclient</module>
         <module>agileway-sshclient-j2ssh</module>
