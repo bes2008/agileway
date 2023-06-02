@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.impl.jsch.knownhosts;
+package com.jn.agileway.ssh.client.impl.jsch.transport.knownhosts;
 
 import com.jcraft.jsch.HostKey;
 import com.jcraft.jsch.HostKeyRepository;

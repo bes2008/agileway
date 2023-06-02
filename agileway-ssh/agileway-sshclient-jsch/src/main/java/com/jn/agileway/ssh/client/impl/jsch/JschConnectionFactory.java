@@ -4,7 +4,7 @@ import com.jcraft.jsch.ConfigRepository;
 import com.jcraft.jsch.JSch;
 import com.jn.agileway.ssh.client.AbstractSshConnectionFactory;
 import com.jn.agileway.ssh.client.SshConnection;
-import com.jn.agileway.ssh.client.impl.jsch.knownhosts.JschKnownHostsKeyRepository;
+import com.jn.agileway.ssh.client.impl.jsch.transport.knownhosts.JschKnownHostsKeyRepository;
 import com.jn.agileway.ssh.client.transport.hostkey.StrictHostKeyChecking;
 import com.jn.agileway.ssh.client.transport.hostkey.knownhosts.OpenSSHKnownHosts;
 import com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier;
