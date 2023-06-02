@@ -6,6 +6,7 @@ import com.jn.agileway.ssh.client.SshConnectionFactory;
 import com.jn.agileway.ssh.client.SshConnectionFactoryRegistry;
 import com.jn.agileway.ssh.client.sftp.*;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
+import com.jn.agileway.ssh.test.BaseSshTests;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.SystemPropertys;
 import com.jn.langx.util.collection.Collects;
@@ -19,10 +20,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class SftpTests {
+public class SftpTests extends BaseSshTests {
     private static final Logger logger = Loggers.getLogger(SftpTests.class);
     private SshConnectionFactoryRegistry registry = new SshConnectionFactoryRegistry();
-    private String user = "bes";
 
     @Test
     public void testSftp_trilead_ssh2() throws IOException {
@@ -48,10 +48,10 @@ public class SftpTests {
     void _test(SshConnectionFactory connectionFactory, final String testWorkingDirectory) throws IOException {
         SshConnectionConfig connectionConfig = connectionFactory.newConfig();
         //connectionConfig.setHost("192.168.234.128");
-        connectionConfig.setHost("192.168.1.70");
-        connectionConfig.setPort(22);
+        connectionConfig.setHost(host);
+        connectionConfig.setPort(sshPort);
         connectionConfig.setUser(user);
-        connectionConfig.setPassword("password");
+        connectionConfig.setPassword(password);
 
         SshConnection connection = null;
         SftpSession _session = null;

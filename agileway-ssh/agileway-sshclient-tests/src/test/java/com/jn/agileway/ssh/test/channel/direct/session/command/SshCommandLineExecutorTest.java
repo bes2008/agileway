@@ -15,6 +15,7 @@ import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionFactory;
 import com.jn.agileway.ssh.client.impl.synergy.SynergyConnectionConfig;
 import com.jn.agileway.ssh.client.impl.synergy.SynergyConnectionFactory;
 import com.jn.agileway.ssh.client.supports.command.executor.SshCommandLineExecutor;
+import com.jn.agileway.ssh.test.BaseSshTests;
 import com.jn.langx.commandline.CommandLine;
 import com.jn.langx.commandline.DefaultExecuteResultHandler;
 import com.jn.langx.commandline.streamhandler.OutputAsStringExecuteStreamHandler;
@@ -25,7 +26,7 @@ import org.slf4j.Logger;
 import java.io.File;
 import java.io.IOException;
 
-public class SshCommandLineExecutorTest {
+public class SshCommandLineExecutorTest extends BaseSshTests {
     private static Logger logger = Loggers.getLogger(SshCommandLineExecutorTest.class);
 
 
@@ -65,10 +66,10 @@ public class SshCommandLineExecutorTest {
 
     private void testExec(SshConnectionFactory connectionFactory, AbstractSshConnectionConfig connectionConfig) throws SshException, IOException {
         //connectionConfig.setHost("192.168.234.128");
-        connectionConfig.setHost("192.168.1.70");
-        connectionConfig.setPort(22);
-        connectionConfig.setUser("fangjinuo");
-        connectionConfig.setPassword("fjn13570");
+        connectionConfig.setHost(host);
+        connectionConfig.setPort(sshPort);
+        connectionConfig.setUser(user);
+        connectionConfig.setPassword(password);
         SshConnection connection = connectionFactory.get(connectionConfig);
 
         SshCommandLineExecutor executor = new SshCommandLineExecutor(connection);

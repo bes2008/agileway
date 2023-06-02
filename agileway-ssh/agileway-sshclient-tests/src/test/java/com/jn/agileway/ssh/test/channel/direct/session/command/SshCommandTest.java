@@ -10,6 +10,7 @@ import com.jn.agileway.ssh.client.SshConnectionFactory;
 import com.jn.agileway.ssh.client.SshConnectionFactoryRegistry;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
 import com.jn.agileway.ssh.client.impl.jsch.JschLoggerToSlf4jLogger;
+import com.jn.agileway.ssh.test.BaseSshTests;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.logging.Loggers;
 import org.junit.Test;
@@ -18,23 +19,19 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class SshCommandTest {
+public class SshCommandTest extends BaseSshTests {
     private static final Logger logger = Loggers.getLogger(SshCommandTest.class);
 
     @Test
     public void testUseJschAPI() throws Throwable {
-        String password = "fjn13570";
-        String username = "fangjinuo";
         //  String host = "192.168.1.79";
-        String host = "192.168.234.128";
-        int port = 22;
 
         JSch.setConfig("StrictHostKeyChecking", "false");
 
         JSch jsch = new JSch();
         // jsch.setKnownHosts("known_hosts");
         JSch.setLogger(new JschLoggerToSlf4jLogger());
-        Session session = jsch.getSession(username, host, port);
+        Session session = jsch.getSession(user, host, sshPort);
         session.setPassword(password);
         session.connect();
 
@@ -69,16 +66,12 @@ public class SshCommandTest {
         SshConnectionFactory connectionFactory = registry.get("jsch");
         SshConnectionConfig connectionConfig = connectionFactory.newConfig();
 
-        String password = "fjn13570";
-        String username = "fangjinuo";
         //  String host = "192.168.1.79";
-        String host = "192.168.234.128";
-        int port = 22;
 
         connectionConfig.setHost(host);
-        connectionConfig.setPort(port);
+        connectionConfig.setPort(sshPort);
         connectionConfig.setPassword(password);
-        connectionConfig.setUser(username);
+        connectionConfig.setUser(user);
         SshConnection connection = connectionFactory.get(connectionConfig);
 
 

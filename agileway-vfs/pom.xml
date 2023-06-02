@@ -25,36 +25,14 @@
         </dependency>
         <dependency>
             <groupId>io.github.bes2008.solution.agileway.ssh</groupId>
-            <artifactId>agileway-sshclient</artifactId>
+            <artifactId>agileway-sshclient-trileadssh2</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.trilead</groupId>
-            <artifactId>trilead-ssh2</artifactId>
-            <version>1.0.0-build222</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-        <!--
-        <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-            <version>0.1.55</version>
-            <scope>test</scope>
-        </dependency>
-      <dependency>
-            <groupId>net.schmizz</groupId>
-            <artifactId>sshj</artifactId>
-            <version>0.10.0</version>
-            <scope>test</scope>
-        </dependency>
-
-
--->
 
     </dependencies>
 </project>
