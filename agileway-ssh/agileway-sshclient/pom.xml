@@ -77,12 +77,6 @@
 
 
 
-        <!--License: Apache 2.0-->
-        <dependency>
-            <groupId>com.airlenet.yang</groupId>
-            <artifactId>ganymed-ssh2</artifactId>
-            <version>1.2.0</version>
-        </dependency>
 
         <!--采用私有协议，代码和 ganymed-ssh2 基本一样-->
         <dependency>
