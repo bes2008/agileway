@@ -1,7 +1,7 @@
 package com.jn.agileway.ssh.client.impl.sshj.transport.hostkey.codec;
 
 
-import com.jn.agileway.ssh.client.plugins.utils.SecurityUtils;
+import com.jn.agileway.ssh.client.impl.sshj.sec.SecurityUtils;
 import com.jn.agileway.ssh.client.utils.Buffer;
 import com.jn.langx.util.logging.Loggers;
 import org.bouncycastle.asn1.nist.NISTNamedCurves;

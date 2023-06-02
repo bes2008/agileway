@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.plugins.utils;
+package com.jn.agileway.ssh.client.impl.sshj.sec;
 
 
 import com.jn.agileway.ssh.client.SshException;
