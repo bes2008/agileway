@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.impl.trileadssh2.verifier;
+package com.jn.agileway.ssh.client.impl.trileadssh2.transport.hostkey.verifier;
 
 import com.jn.agileway.ssh.client.transport.hostkey.StrictHostKeyChecking;
 import com.jn.agileway.ssh.client.transport.hostkey.knownhosts.KnownHostsFiles;

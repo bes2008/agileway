@@ -6,7 +6,7 @@ import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
 import com.jn.agileway.ssh.client.channel.forwarding.ForwardingClient;
 import com.jn.agileway.ssh.client.impl.synergy.sftp.SynergySftpSession;
-import com.jn.agileway.ssh.client.impl.synergy.verifier.ToSynergyHostKeyVerifierAdapter;
+import com.jn.agileway.ssh.client.impl.synergy.transport.hostkey.verifier.ToSynergyHostKeyVerifierAdapter;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.sshtools.client.SessionChannelNG;
 import com.sshtools.client.SshClient;

@@ -1,4 +1,4 @@
-package com.jn.agileway.ssh.client.impl.synergy.verifier;
+package com.jn.agileway.ssh.client.impl.synergy.transport.hostkey.verifier;
 
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.transport.hostkey.verifier.HostKeyVerifier;

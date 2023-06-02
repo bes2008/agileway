@@ -2,7 +2,7 @@ package com.jn.agileway.ssh.client.impl.synergy;
 
 import com.jn.agileway.ssh.client.AbstractSshConnectionFactory;
 import com.jn.agileway.ssh.client.SshConnection;
-import com.jn.agileway.ssh.client.impl.synergy.verifier.FromSynergyHostKeyVerificationAdapter;
+import com.jn.agileway.ssh.client.impl.synergy.transport.hostkey.verifier.FromSynergyHostKeyVerificationAdapter;
 import com.jn.agileway.ssh.client.utils.SshConfigs;
 import com.jn.langx.annotation.OnClasses;
 import com.jn.langx.util.collection.Collects;

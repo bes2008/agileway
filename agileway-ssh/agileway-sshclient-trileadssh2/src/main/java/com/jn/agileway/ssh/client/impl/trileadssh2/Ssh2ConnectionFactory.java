@@ -2,8 +2,8 @@ package com.jn.agileway.ssh.client.impl.trileadssh2;
 
 import com.jn.agileway.ssh.client.AbstractSshConnectionFactory;
 import com.jn.agileway.ssh.client.SshConnection;
-import com.jn.agileway.ssh.client.impl.trileadssh2.verifier.FromSsh2HostKeyVerifierAdapter;
-import com.jn.agileway.ssh.client.impl.trileadssh2.verifier.KnownHostsVerifier;
+import com.jn.agileway.ssh.client.impl.trileadssh2.transport.hostkey.verifier.FromSsh2HostKeyVerifierAdapter;
+import com.jn.agileway.ssh.client.impl.trileadssh2.transport.hostkey.verifier.KnownHostsVerifier;
 import com.jn.agileway.ssh.client.utils.SshConfigs;
 import com.jn.langx.annotation.OnClasses;
 
