@@ -239,7 +239,7 @@ Java SSH Client 对 SFTP的支持的额外功能：
 |size         | SftpATTRS#getSize()| #size()|||
 
 
-推荐选择顺序：sshj > trilead-ssh2 > jsch 
+推荐选择顺序：sshj > trilead-ssh2 / or ganymedssh2 > jsch 
 sshtools 下的推荐：synergy
 
 
