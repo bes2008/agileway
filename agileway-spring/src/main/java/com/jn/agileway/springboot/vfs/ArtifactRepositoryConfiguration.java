@@ -69,6 +69,10 @@ public class ArtifactRepositoryConfiguration {
             });
         }
 
+        if(!_layoutRegistry.contains("local")){
+            _layoutRegistry.register(localArtifactRepositoryLayout());
+        }
+
         final DefaultArtifactRepositoryFactory factory = new DefaultArtifactRepositoryFactory();
         factory.setArtifactRepositoryLayoutRegistry(layoutRegistry);
 
