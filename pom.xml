@@ -103,17 +103,23 @@
         <junit.version>4.13.1</junit.version>
         <logback.version>1.2.9</logback.version>
         <jackson.version>2.13.1</jackson.version>
+        <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
+        <commons.compress.version>1.21</commons.compress.version>
 
         <!--
-        # spring boot 1.5.x 存在  application.yaml 去注入 string[] 失败的问题
+            # spring boot 1.5.x 存在  application.yaml 去注入 string[] 失败的问题
+        -->
+
+        <!-- spring boot 1.x 版本测试 -->
+        <!--
         <spring.boot.version>1.5.22.RELEASE</spring.boot.version>
         <spring.version>4.3.25.RELEASE</spring.version>
         -->
 
+        <!-- spring boot 2.x 版本测试 -->
         <spring.version>5.3.27</spring.version>
         <spring.boot.version>2.7.12</spring.boot.version>
-        <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
-        <commons.compress.version>1.21</commons.compress.version>
+
     </properties>
     <dependencyManagement>
         <dependencies>
