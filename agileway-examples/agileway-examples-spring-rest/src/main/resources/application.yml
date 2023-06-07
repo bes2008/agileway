@@ -4,6 +4,9 @@ spring:
     host: 192.168.1.79  # company
     port: 6379
     database: 0
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 
 knife4j:

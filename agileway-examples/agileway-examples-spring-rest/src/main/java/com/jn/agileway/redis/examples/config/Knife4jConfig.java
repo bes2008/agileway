@@ -39,7 +39,6 @@ public class Knife4jConfig {
                 .title(swaggerProperties.getApplicationTitle())
                 .description("https://github.com/fangjinuo  http://www.cnblogs.com/f1194361820")
                 .termsOfServiceUrl("https://github.com/fangjinuo")
-                .contact("fs1194361820@163.com")
                 .version("2.0")
                 .build();
 

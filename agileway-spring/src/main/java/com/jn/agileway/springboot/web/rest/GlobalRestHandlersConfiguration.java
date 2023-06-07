@@ -186,24 +186,23 @@ public class GlobalRestHandlersConfiguration {
     @ConditionalOnMissingBean({GlobalRestExceptionHandlerRegistry.class})
     @Autowired
     public GlobalRestExceptionHandlerRegistry globalRestExceptionHandlerRegistry(
-            RestActionExceptionHandlerOrderFinder exceptionHandlerOrderFinder
+            RestActionExceptionHandlerOrderFinder exceptionHandlerOrderFinder,
+            @Autowired(required = false) ObjectProvider<List<RestActionExceptionHandler>> restActionExceptionHandlersProvider
     ) {
-        GlobalRestExceptionHandlerRegistry registry = new GlobalRestExceptionHandlerRegistry();
+        final GlobalRestExceptionHandlerRegistry registry = new GlobalRestExceptionHandlerRegistry();
         registry.setExceptionHandlerOrderFinder(exceptionHandlerOrderFinder);
-        registry.init();
-        return registry;
-    }
 
-    @Autowired
-    public void registerExceptionHandlers(final GlobalRestExceptionHandlerRegistry registry,
-                                          @Autowired(required = false) ObjectProvider<List<RestActionExceptionHandler>> restActionExceptionHandlersProvider) {
         Collects.forEach(restActionExceptionHandlersProvider.getIfAvailable(), new Consumer<RestActionExceptionHandler>() {
             @Override
             public void accept(RestActionExceptionHandler restActionExceptionHandler) {
                 registry.register(restActionExceptionHandler);
             }
         });
+
+        registry.init();
+        return registry;
     }
+
 
     @Bean
     @ConfigurationProperties(prefix = "agileway.rest")
