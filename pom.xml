@@ -112,14 +112,18 @@
 
         <!-- spring boot 1.x 版本测试 -->
         <!--
+
+        -->
         <spring.boot.version>1.5.22.RELEASE</spring.boot.version>
         <spring.version>4.3.25.RELEASE</spring.version>
-        -->
+        <knife4j.version>2.0.4</knife4j.version>
 
         <!-- spring boot 2.x 版本测试 -->
+        <!--
         <spring.version>5.3.27</spring.version>
         <spring.boot.version>2.7.12</spring.boot.version>
-
+        <knife4j.version>3.0.3</knife4j.version>
+        -->
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -387,6 +391,12 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-compress</artifactId>
                 <version>${commons.compress.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
