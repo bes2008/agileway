@@ -7,8 +7,6 @@ public interface Artifact extends IGAV {
 
     /**
      * 文件扩展名
-     *
-     * @return
      */
     String getExtension();
 

@@ -14,7 +14,7 @@
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
 
     <properties>
-        <freemarker.version>2.3.31</freemarker.version>
+        <freemarker.version>2.3.32</freemarker.version>
     </properties>
 
     <dependencies>
