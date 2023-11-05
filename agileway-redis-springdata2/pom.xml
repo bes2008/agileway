@@ -22,7 +22,7 @@
         the enhanced RedisTemplate based on a specified key prefix and the agileway-codec module
     </description>
     <properties>
-        <spring.data.redis.version>2.3.4.RELEASE</spring.data.redis.version>
+        <spring.data.redis.version>2.7.17</spring.data.redis.version>
     </properties>
 
     <dependencyManagement>
