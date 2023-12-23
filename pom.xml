@@ -21,7 +21,6 @@
         <module>agileway-spring</module>
         <module>agileway-redis-springdata2</module>
         <module>agileway-shiro-redis-springdata2</module>
-        <module>agileway-examples</module>
         <module>agileway-feign</module>
         <module>agileway-zip</module>
         <module>agileway-dmmq</module>
