@@ -1,5 +1,6 @@
 package com.jn.agileway.feign.supports.rpc.rest;
 
+import com.jn.agileway.feign.AgilewayFeignDecodeException;
 import com.jn.easyjson.core.JSONFactory;
 import com.jn.easyjson.core.JsonException;
 import com.jn.easyjson.core.factory.JsonFactorys;
@@ -41,7 +42,7 @@ public class EasyjsonDecoder implements Decoder {
             Object obj = jsonFactory.get().fromJson(reader, type);
             return obj;
         } catch (JsonException ex) {
-            throw new DecodeException(ex.getMessage(), ex);
+            throw new AgilewayFeignDecodeException(response.status(), ex.getMessage());
         }
     }
 }
