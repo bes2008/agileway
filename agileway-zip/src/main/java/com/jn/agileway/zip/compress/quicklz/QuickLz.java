@@ -17,12 +17,12 @@ public class QuickLz {
     public final int QLZ_VERSION_MINOR = 4;
     public final int QLZ_VERSION_REVISION = 0;
 
-    final private static int HASH_VALUES = 4096;
-    final private static int MINOFFSET = 2;
-    final private static int UNCONDITIONAL_MATCHLEN = 6;
-    final private static int UNCOMPRESSED_END = 4;
-    final private static int CWORD_LEN = 4;
-    final private static int DEFAULT_HEADERLEN = 9;
+    private final static int HASH_VALUES = 4096;
+    private final static int MINOFFSET = 2;
+    private final static int UNCONDITIONAL_MATCHLEN = 6;
+    private final static int UNCOMPRESSED_END = 4;
+    private final static int CWORD_LEN = 4;
+    private final static int DEFAULT_HEADERLEN = 9;
 
     static int headerLen(byte[] source) {
         return ((source[0] & 2) == 2) ? 9 : 3;
