@@ -1,7 +1,7 @@
 package com.jn.agileway.ssh.client.supports.command.executor;
 
 import com.jn.agileway.ssh.client.SshConnection;
-import com.jn.langx.commandline.DefaultCommandLineExecutor;
+import com.jn.agileway.cmd.DefaultCommandLineExecutor;
 import com.jn.langx.util.Objs;
 
 import java.io.File;

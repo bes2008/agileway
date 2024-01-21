@@ -125,6 +125,9 @@
         <spring.boot.version>2.7.12</spring.boot.version>
         <knife4j.version>3.0.3</knife4j.version>
         -->
+
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -201,6 +204,16 @@
             <dependency>
                 <groupId>io.github.bes2008.solution.agileway</groupId>
                 <artifactId>agileway-spring</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway</groupId>
+                <artifactId>agileway-cmd</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway</groupId>
+                <artifactId>agileway-cli</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -1,7 +1,7 @@
 package com.jn.agileway.ssh.client.supports.command.executor;
 
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
-import com.jn.langx.commandline.InstructionSequence;
+import com.jn.agileway.cmd.InstructionSequence;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Throwables;
 

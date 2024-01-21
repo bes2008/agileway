@@ -20,8 +20,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>io.github.bes2008.solution.langx</groupId>
-            <artifactId>langx-java-cmd</artifactId>
+            <groupId>io.github.bes2008.solution.agileway</groupId>
+            <artifactId>agileway-cmd</artifactId>
         </dependency>
 
     </dependencies>
