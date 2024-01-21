@@ -74,7 +74,7 @@ public class HttpConnectionContext {
     public String getUrl() {
         String url = null;
         if (Emptys.isNotEmpty(getNodes())) {
-            url = getNodes().size() > 1 ? configuration.getLoadbalancerHost() : (getNodes().get(0).getHost()+":"+getNodes().get(0).getPort());
+            url = getNodes().size() > 1 ? configuration.getLoadbalancerHost() : (getNodes().get(0).show(NetworkAddress.ShowStyle.URL));
         } else {
             url = "unknown";
         }
@@ -83,7 +83,10 @@ public class HttpConnectionContext {
         if (Strings.isBlank(urlPrefix)) {
             return url;
         }
-        return url + "/" + urlPrefix;
+        if(!urlPrefix.startsWith("/")){
+            urlPrefix="/" + urlPrefix;
+        }
+        return url + urlPrefix;
     }
 
 

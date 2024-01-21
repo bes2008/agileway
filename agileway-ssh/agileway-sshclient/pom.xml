@@ -5,7 +5,7 @@
     <parent>
         <groupId>io.github.bes2008.solution.agileway.ssh</groupId>
         <artifactId>agileway-ssh</artifactId>
-        <version>4.3.1</version>
+        <version>4.3.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -18,6 +18,10 @@
             <artifactId>slf4j-simple</artifactId>
             <version>${slf4j.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bes2008.solution.langx</groupId>
+            <artifactId>langx-java-cmd</artifactId>
         </dependency>
 
     </dependencies>
