@@ -34,11 +34,7 @@
         <module>agileway-cmd</module>
         <module>agileway-ssh</module>
         <module>agileway-syslog</module>
-        <module>agileway-cli</module>
         <module>agileway-audit</module>
-        <module>agileway-audit/agileway-audit-core</module>
-
-
     </modules>
 
     <description>
@@ -239,11 +235,6 @@
             <dependency>
                 <groupId>io.github.bes2008.solution.agileway</groupId>
                 <artifactId>agileway-cmd</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.bes2008.solution.agileway</groupId>
-                <artifactId>agileway-cli</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>agileway-audit-core</module>
         <module>agileway-audit-entityloader</module>
         <module>agileway-audit-springboot1_2-web</module>
         <module>agileway-audit-springboot3-web</module>
