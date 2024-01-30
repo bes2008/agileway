@@ -19,8 +19,8 @@
         <module>agileway-httpclient</module>
         <module>agileway-aop</module>
         <module>agileway-spring</module>
-        <module>agileway-spring1_2-web</module>
-        <module>agileway-spring3-web</module>
+        <module>agileway-springboot1_2-web</module>
+        <module>agileway-springboot3-web</module>
         <module>agileway-redis-springdata2</module>
         <module>agileway-shiro-redis-springdata2</module>
         <module>agileway-feign</module>

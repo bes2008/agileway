@@ -9,44 +9,47 @@
         <version>4.3.2</version>
     </parent>
 
-    <artifactId>agileway-spring1_2-web</artifactId>
+    <artifactId>agileway-springboot3-web</artifactId>
 
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <jakarta.servlet.version>5.0.0</jakarta.servlet.version>
+    </properties>
     <dependencies>
         <dependency>
-            <groupId>io.github.bes2008.solution.agileway</groupId>
-            <artifactId>agileway-spring</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.bes2008.solution.agileway</groupId>
-            <artifactId>agileway-web</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.0.1</version>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${jakarta.servlet.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>${spring_4_5.version}</version>
+            <version>${spring_6.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-            <version>${spring.boot_1_2.version}</version>
+            <version>${spring.boot_3.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
-            <version>${spring.boot_1_2.version}</version>
+            <version>${spring.boot_3.version}</version>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>io.github.bes2008.solution.agileway</groupId>
+            <artifactId>agileway-spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bes2008.solution.agileway</groupId>
+            <artifactId>agileway-httpcontainer-common</artifactId>
+        </dependency>
         <dependency>
             <groupId>io.github.bes2008.solution.easyjson</groupId>
             <artifactId>easyjson-core</artifactId>
