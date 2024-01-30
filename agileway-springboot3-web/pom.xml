@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>agileway-springboot3-web</artifactId>
-
+    <name>${project.groupId}:${project.artifactId}:${project.version}</name>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
