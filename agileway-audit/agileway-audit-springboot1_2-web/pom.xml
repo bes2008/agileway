@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.bes2008.solution.agileway.audit</groupId>
+        <artifactId>agileway-audit</artifactId>
+        <version>4.4.0</version>
+    </parent>
+
+    <artifactId>agileway-audit-springboot1_2-web</artifactId>
+    <name>${project.groupId}:${project.artifactId}:${project.version}</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.0</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bes2008.solution.agileway.audit</groupId>
+            <artifactId>agileway-audit-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bes2008.solution.agileway</groupId>
+            <artifactId>agileway-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bes2008.solution.agileway</groupId>
+            <artifactId>agileway-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring_4_5.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${spring_4_5.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bes2008.solution.agileway</groupId>
+            <artifactId>agileway-springboot1_2-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot</artifactId>
+            <version>${spring.boot_1_2.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>${spring.boot_1_2.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <version>${spring.boot_1_2.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <version>${spring.boot_1_2.version}</version>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+</project>

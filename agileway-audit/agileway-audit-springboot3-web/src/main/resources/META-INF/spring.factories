@@ -1,0 +1,6 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.jn.agileway.audit.spring.boot.autoconfigure.ResourceExtractAutoConfiguration,\
+  com.jn.agileway.audit.spring.boot.autoconfigure.OperationAutoConfiguration,\
+  com.jn.agileway.audit.spring.boot.autoconfigure.AuditAutoConfiguration,\
+  com.jn.agileway.audit.spring.boot.autoconfigure.AuditEntranceConfiguration,\
+  com.jn.agileway.audit.spring.boot.autoconfigure.WebappInterceptorRegisterConfiguration

@@ -35,6 +35,8 @@
         <module>agileway-ssh</module>
         <module>agileway-syslog</module>
         <module>agileway-cli</module>
+        <module>agileway-audit</module>
+        <module>agileway-audit/agileway-audit-core</module>
 
 
     </modules>
@@ -139,6 +141,26 @@
     </properties>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway.audit</groupId>
+                <artifactId>agileway-audit-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway.audit.entityloader</groupId>
+                <artifactId>agileway-audit-entityloader-esorm</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway.audit.entityloader</groupId>
+                <artifactId>agileway-audit-entityloader-mybatis</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway.audit.entityloader</groupId>
+                <artifactId>agileway-audit-entityloader-resttemplate</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>io.github.bes2008.solution.agileway</groupId>
                 <artifactId>agileway-jaxrs</artifactId>
@@ -271,6 +293,17 @@
             </dependency>
             <dependency>
                 <groupId>io.github.bes2008.solution.agileway</groupId>
+                <artifactId>agileway-springboot1_2-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway</groupId>
+                <artifactId>agileway-springboot3-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway</groupId>
                 <artifactId>agileway-zip</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -287,6 +320,11 @@
             <dependency>
                 <groupId>io.github.bes2008.solution.langx</groupId>
                 <artifactId>langx-java8</artifactId>
+                <version>${langx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.bes2008.solution.langx</groupId>
+                <artifactId>langx-java-reflect-aspectj</artifactId>
                 <version>${langx.version}</version>
             </dependency>
             <dependency>

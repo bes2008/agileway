@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <groupId>io.github.bes2008.solution.agileway.audit.entityloader</groupId>
+        <artifactId>agileway-audit-entityloader</artifactId>
+        <version>4.4.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>agileway-audit-entityloader-resttemplate</artifactId>
+    <name>${project.groupId}:${project.artifactId}:${project.version}</name>
+    <dependencies>
+        <dependency>
+            <groupId>io.github.bes2008.solution.agileway.audit</groupId>
+            <artifactId>agileway-audit-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring_4_5.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bes2008.solution.agileway</groupId>
+            <artifactId>agileway-spring</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
