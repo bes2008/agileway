@@ -11,10 +11,6 @@
 
     <artifactId>agileway-metrics-supports-jdk</artifactId>
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
-    <properties>
-        <maven.compiler.source>1.6</maven.compiler.source>
-        <maven.compiler.target>1.6</maven.compiler.target>
-    </properties>
 
     <dependencies>
         <dependency>

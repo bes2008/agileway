@@ -19,23 +19,26 @@
     <dependencies>
         <dependency>
             <groupId>io.github.bes2008.solution.agileway</groupId>
-            <artifactId>agileway-web</artifactId>
+            <artifactId>agileway-httpcontainer-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bes2008.solution.agileway</groupId>
+            <artifactId>agileway-httpclient</artifactId>
         </dependency>
         <dependency>
             <groupId>io.github.bes2008.solution.agileway</groupId>
             <artifactId>agileway-redis</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
-            <version>${spring.version}</version>
+            <version>${spring_4_5.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
+            <version>${spring_4_5.version}</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -44,42 +47,24 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>${spring.version}</version>
-            <scope>provided</scope>
-        </dependency>
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-            <version>${spring.boot.version}</version>
+            <version>${spring.boot_1_2.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
-            <version>${spring.boot.version}</version>
+            <version>${spring.boot_1_2.version}</version>
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.bes2008.solution.agileway</groupId>
-            <artifactId>agileway-httpclient</artifactId>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>io.github.bes2008.solution.agileway</groupId>
             <artifactId>agileway-vfs</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -91,17 +76,6 @@
             <artifactId>jcl-over-slf4j</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>io.github.bes2008.solution.easyjson</groupId>
-            <artifactId>easyjson-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.bes2008.solution.easyjson</groupId>
-            <artifactId>easyjson-jackson</artifactId>
-        </dependency>
-
     </dependencies>
 
 </project>

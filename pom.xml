@@ -19,6 +19,8 @@
         <module>agileway-httpclient</module>
         <module>agileway-aop</module>
         <module>agileway-spring</module>
+        <module>agileway-spring1_2-web</module>
+        <module>agileway-spring3-web</module>
         <module>agileway-redis-springdata2</module>
         <module>agileway-shiro-redis-springdata2</module>
         <module>agileway-feign</module>
@@ -33,6 +35,8 @@
         <module>agileway-ssh</module>
         <module>agileway-syslog</module>
         <module>agileway-cli</module>
+
+
     </modules>
 
     <description>
@@ -115,18 +119,22 @@
         <!--
 
         -->
-        <spring.boot.version>1.5.22.RELEASE</spring.boot.version>
-        <spring.version>4.3.25.RELEASE</spring.version>
+        <spring.boot_1_2.version>1.5.22.RELEASE</spring.boot_1_2.version>
+        <spring_4_5.version>4.3.25.RELEASE</spring_4_5.version>
         <knife4j.version>2.0.4</knife4j.version>
 
         <!-- spring boot 2.x 版本测试 -->
         <!--
-        <spring.version>5.3.27</spring.version>
-        <spring.boot.version>2.7.12</spring.boot.version>
+        <spring_4_5.version>5.3.27</spring_4_5.version>
+        <spring.boot_1_2.version>2.7.12</spring.boot_1_2.version>
         <knife4j.version>3.0.3</knife4j.version>
         -->
 
+        <spring_6.version>6.0.14</spring_6.version>
+        <spring.boot_3.version>3.1.6</spring.boot_3.version>
 
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencyManagement>
@@ -479,17 +487,6 @@
                 <version>3.1.0</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                    <encoding>UTF-8</encoding>
-                    <debug>true</debug>
                 </configuration>
             </plugin>
             <plugin>
