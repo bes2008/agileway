@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.bes2008.solution.agileway</groupId>
     <artifactId>agileway</artifactId>
-    <version>4.4.0</version>
+    <version>4.4.1</version>
     <packaging>pom</packaging>
 
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
@@ -35,6 +35,7 @@
         <module>agileway-ssh</module>
         <module>agileway-syslog</module>
         <module>agileway-audit</module>
+        <module>agileway-jwt</module>
     </modules>
 
     <description>
