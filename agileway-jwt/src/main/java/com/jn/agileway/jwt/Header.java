@@ -2,12 +2,12 @@ package com.jn.agileway.jwt;
 
 public interface Header extends ClaimSet{
 
-    public String getType();
+    String getType();
 
-    public void setType(String type);
+    void setType(String type);
 
-    public String getAlgorithm();
+    String getAlgorithm();
 
-    public void setAlgorithm(String algorithm);
+    void setAlgorithm(String algorithm);
 
 }
