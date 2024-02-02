@@ -1,8 +1,10 @@
 package com.jn.agileway.jwt.jose;
 
 import com.jn.agileway.jwt.spi.AbstractJWTService;
+import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.collection.Sets;
+import com.jn.langx.util.comparator.Comparators;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.reflect.Modifiers;
@@ -12,17 +14,19 @@ import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWSAlgorithm;
 
 import java.lang.reflect.Field;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 
 public class JoseJWTService extends AbstractJWTService {
-    private Holder<Set<String>> jwsAlgorithms=new Holder<Set<String>>();
-    private Holder<Set<String>> jweAlgorithms=new Holder<Set<String>>();
+    private Holder<List<String>> jwsAlgorithms=new Holder<List<String>>();
+    private Holder<List<String>> jweAlgorithms=new Holder<List<String>>();
 
 
     @Override
-    public Set<String> supportedJWSAlgorithms() {
+    public List<String> supportedJWSAlgorithms() {
         if(jwsAlgorithms.isNull()) {
-            Set<String> algorithms= Pipeline.of(Reflects.getAllDeclaredFields(JWSAlgorithm.class, true))
+            List<String> algorithms= Pipeline.of(Reflects.getAllDeclaredFields(JWSAlgorithm.class, true))
                     .filter(new Predicate<Field>() {
                         @Override
                         public boolean test(Field field) {
@@ -40,16 +44,18 @@ public class JoseJWTService extends AbstractJWTService {
                             JWSAlgorithm algorithm= Reflects.getFieldValue(field, JWSAlgorithm.class, true, true);
                             return algorithm.getName();
                         }
-                    }).asSet(true);
+                    })
+                    .sort(Comparators.STRING_COMPARATOR)
+                    .asList();
             jwsAlgorithms.set(algorithms);
         }
-        return Sets.immutableSet(jwsAlgorithms.get());
+        return Lists.immutableList(jwsAlgorithms.get());
     }
 
     @Override
-    public Set<String> supportedJWEAlgorithms() {
+    public List<String> supportedJWEAlgorithms() {
         if(jweAlgorithms.isNull()) {
-            Set<String> algorithms= Pipeline.of(Reflects.getAllDeclaredFields(JWEAlgorithm.class, true))
+            List<String> algorithms= Pipeline.of(Reflects.getAllDeclaredFields(JWEAlgorithm.class, true))
                     .filter(new Predicate<Field>() {
                         @Override
                         public boolean test(Field field) {
@@ -67,10 +73,12 @@ public class JoseJWTService extends AbstractJWTService {
                             JWEAlgorithm algorithm= Reflects.getFieldValue(field, JWEAlgorithm.class, true, true);
                             return algorithm.getName();
                         }
-                    }).asSet(true);
+                    })
+                    .sort(Comparators.STRING_COMPARATOR)
+                    .asList();
             jweAlgorithms.set(algorithms);
         }
-        return Sets.immutableSet(jweAlgorithms.get());
+        return Lists.immutableList(jweAlgorithms.get());
     }
 
 }

@@ -1,9 +1,10 @@
 package com.jn.agileway.jwt.spi;
 
-import java.util.Set;
+
+import java.util.List;
 
 public interface JWTService {
     AlgorithmType getAlgorithm(String algorithmName);
-    Set<String> supportedJWSAlgorithms();
-    Set<String> supportedJWEAlgorithms();
+    List<String> supportedJWSAlgorithms();
+    List<String> supportedJWEAlgorithms();
 }
