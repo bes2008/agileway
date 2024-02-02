@@ -1,6 +1,5 @@
 package com.jn.agileway.jwt;
 
-import java.util.List;
 
 public interface JWT {
     Header getHeader();
@@ -10,7 +9,7 @@ public interface JWT {
 
     void setPayload(Payload payload) ;
 
-    String getJWTString();
+    String toToken();
 
-    List<String> getParts();
+
 }

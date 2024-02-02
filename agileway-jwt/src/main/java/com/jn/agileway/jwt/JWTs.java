@@ -1,18 +1,31 @@
 package com.jn.agileway.jwt;
 
 
-import com.jn.agileway.jwt.spi.JWTService;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.spi.CommonServiceProvider;
 
 import java.security.PrivateKey;
 import java.util.Map;
 
+/**
+ * 生成 JWT string
+ * JWT => JsonTreeNode => byte[] => enc => Base64URL parts => sign => merge =>  String
+ *
+ * 解析 JWT string
+ * String => split  => verify_sign => Base64URL parts = dec  => byte[] => JsonTreeNode => JWT
+ *
+ */
 public class JWTs {
     public static JWTService getJWTService(){
         return Pipeline.<JWTService>of(new CommonServiceProvider<JWTService>().get(JWTService.class))
                 .findFirst();
     }
+
+
+    public static <T extends JWT> T newJWT(String algorithm){
+        return getJWTService().<T>getJWTFactory().get(algorithm);
+    }
+
     public static JWSToken newJWSToken(String signAlgorithm, Map<String,Object> payload, String secretKey){
         return null;
     }

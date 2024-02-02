@@ -28,4 +28,8 @@ public class JwtTests {
         });
 
     }
+
+    public void newBuilder(){
+
+    }
 }

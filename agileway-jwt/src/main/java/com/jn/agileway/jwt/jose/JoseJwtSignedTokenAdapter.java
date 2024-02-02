@@ -1,20 +1,15 @@
 package com.jn.agileway.jwt.jose;
 
 import com.jn.agileway.jwt.Header;
-import com.jn.agileway.jwt.JWT;
+import com.jn.agileway.jwt.JWSToken;
 import com.jn.agileway.jwt.Payload;
 
-import java.util.List;
-
-public class JoseJwtAdapter implements JWT {
-    com.nimbusds.jwt.JWT delegate;
-    public JoseJwtAdapter(){
-
+public class JoseJwtSignedTokenAdapter implements JWSToken {
+    @Override
+    public String getBase64UrlEncodedSignature() {
+        return null;
     }
 
-    JoseJwtAdapter(com.nimbusds.jwt.JWT delegate){
-        this.delegate=delegate;
-    }
     @Override
     public Header getHeader() {
         return null;

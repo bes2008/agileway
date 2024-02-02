@@ -1,9 +1,9 @@
 package com.jn.agileway.jwt.jose;
 
-import com.jn.agileway.jwt.spi.AbstractJWTService;
+import com.jn.agileway.jwt.AbstractJWTService;
+import com.jn.agileway.jwt.JWTFactory;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
-import com.jn.langx.util.collection.Sets;
 import com.jn.langx.util.comparator.Comparators;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Predicate;
@@ -14,11 +14,11 @@ import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWSAlgorithm;
 
 import java.lang.reflect.Field;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 public class JoseJWTService extends AbstractJWTService {
+
+    public static final JoseJWTService INSTANCE= new JoseJWTService();
     private Holder<List<String>> jwsAlgorithms=new Holder<List<String>>();
     private Holder<List<String>> jweAlgorithms=new Holder<List<String>>();
 
@@ -81,4 +81,9 @@ public class JoseJWTService extends AbstractJWTService {
         return Lists.immutableList(jweAlgorithms.get());
     }
 
+    private JoseJwtFactory factory;
+    @Override
+    public JWTFactory getJWTFactory() {
+        return factory;
+    }
 }

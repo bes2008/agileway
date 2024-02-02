@@ -1,4 +1,4 @@
-package com.jn.agileway.jwt.spi;
+package com.jn.agileway.jwt;
 
 public enum AlgorithmType {
     NONE,
