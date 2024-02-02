@@ -4,7 +4,7 @@ import com.jn.langx.util.Strings;
 
 public abstract class AbstractJWTService implements JWTService{
     @Override
-    public final AlgorithmType getAlgorithm(String algorithmName) {
+    public final AlgorithmType getAlgorithmType(String algorithmName) {
         if (Strings.isBlank(algorithmName) ||Strings.equalsAnyIgnoreCase("none", algorithmName)){
             return AlgorithmType.NONE;
         }
