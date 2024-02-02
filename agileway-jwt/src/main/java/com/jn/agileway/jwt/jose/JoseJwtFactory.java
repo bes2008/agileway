@@ -12,7 +12,7 @@ public class JoseJwtFactory<T extends JWT> implements JWTFactory<T> {
         AlgorithmType algorithmType = JoseJWTService.INSTANCE.getAlgorithmType(algorithm);
         switch (algorithmType){
             case NONE:
-                jwt= new JoseJwtAdapter();
+                jwt= new JoseJwtPlainTokenAdapter();
                 break;
             case JWS:
                 jwt = new JoseJwtSignedTokenAdapter();
