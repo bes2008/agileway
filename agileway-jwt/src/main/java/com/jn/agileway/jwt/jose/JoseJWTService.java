@@ -81,7 +81,7 @@ public class JoseJWTService extends AbstractJWTService {
         return Lists.immutableList(jweAlgorithms.get());
     }
 
-    private JoseJwtFactory factory;
+    private JoseJwtFactory factory = new JoseJwtFactory();
     @Override
     public JWTFactory getJWTFactory() {
         return factory;

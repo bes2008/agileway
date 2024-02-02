@@ -8,22 +8,22 @@ public class JoseJwtFactory<T extends JWT> implements JWTFactory<T> {
 
     @Override
     public T get(String algorithm) {
-        T jwt =null;
+        JWT jwt =null;
         AlgorithmType algorithmType = JoseJWTService.INSTANCE.getAlgorithmType(algorithm);
         switch (algorithmType){
             case NONE:
-                jwt=(T) new JoseJwtAdapter();
+                jwt= new JoseJwtAdapter();
                 break;
             case JWS:
-                jwt =(T) new JoseJwtSignedTokenAdapter();
+                jwt = new JoseJwtSignedTokenAdapter();
                 break;
             case JWE:
-                jwt =(T)new JoseJwtEncryptedTokenAdapter();
+                jwt =new JoseJwtEncryptedTokenAdapter();
                 break;
             case UNSUPPORTED:
-                break;
+                throw new RuntimeException("Unsupported JWT algorithm: "+algorithm);
         }
-        return jwt;
+        return (T)jwt;
     }
 
 }
