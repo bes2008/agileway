@@ -1,7 +1,18 @@
 package com.jn.agileway.jwt;
 
 
+import java.security.PrivateKey;
+import java.util.Map;
+
 public class JWTs {
+
+    public static JWSToken newJWSToken(String signAlgorithm, Map<String,Object> payload, String secretKey){
+        return null;
+    }
+
+    public static JWSToken newJWSToken(String signAlgorithm, Map<String,Object> payload, PrivateKey privateKey){
+        return null;
+    }
 
     public static class ClaimNames{
         public static class Header{
