@@ -5,13 +5,13 @@ import com.jn.agileway.jwt.JWEToken;
 import com.jn.agileway.jwt.Payload;
 import com.nimbusds.jwt.EncryptedJWT;
 
-public class JoseJwtEncryptedTokenAdapter implements JWEToken {
+public class JoseJwtEncryptedToken implements JWEToken {
     private EncryptedJWT delegate;
-    public JoseJwtEncryptedTokenAdapter(){
+    public JoseJwtEncryptedToken(){
 
     }
 
-    public JoseJwtEncryptedTokenAdapter(EncryptedJWT delegate){
+    public JoseJwtEncryptedToken(EncryptedJWT delegate){
         this.delegate = delegate;
     }
 
@@ -20,20 +20,12 @@ public class JoseJwtEncryptedTokenAdapter implements JWEToken {
         return null;
     }
 
-    @Override
-    public void setHeader(Header header) {
-
-    }
 
     @Override
     public Payload getPayload() {
         return null;
     }
 
-    @Override
-    public void setPayload(Payload payload) {
-
-    }
 
     @Override
     public String toToken() {

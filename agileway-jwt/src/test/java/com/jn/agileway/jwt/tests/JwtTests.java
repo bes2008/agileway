@@ -23,7 +23,7 @@ public class JwtTests {
         Pipeline.of(testsAlgorithms).forEach(new Consumer<String>() {
             @Override
             public void accept(String algorithm) {
-                System.out.println(StringTemplates.formatWithPlaceholder("algorithm `{}`,  type is: {}, jwt object create success: {}", algorithm, JWTs.getJWTService().getAlgorithmType(algorithm), JWTs.newJWT(algorithm))==null);
+                System.out.println(StringTemplates.formatWithPlaceholder("algorithm `{}`,  type is: {}, jwt object create success: {}", algorithm, JWTs.getJWTService().getAlgorithmType(algorithm)));
             }
         });
 

@@ -2,6 +2,7 @@ package com.jn.agileway.jwt.jose;
 
 import com.jn.agileway.jwt.JWT;
 import com.jn.agileway.jwt.JWTParser;
+import com.jn.agileway.jwt.JWTPlainToken;
 import com.jn.langx.text.StringTemplates;
 import com.nimbusds.jose.Algorithm;
 import com.nimbusds.jose.JWEAlgorithm;
@@ -17,12 +18,13 @@ public class JoseJwtParser implements JWTParser {
             com.nimbusds.jwt.JWT jwt = com.nimbusds.jwt.JWTParser.parse(jwtstring);
             Algorithm algorithm = jwt.getHeader().getAlgorithm();
             if (algorithm==Algorithm.NONE){
-                return new JoseJwtPlainTokenAdapter((PlainJWT) jwt);
+                PlainJWT plainJWT=(PlainJWT) jwt;
+                return new JWTPlainToken(plainJWT.getHeader().toJSONObject(), plainJWT.getPayload().toJSONObject());
             }
             else if (algorithm instanceof JWSAlgorithm){
-                return new JoseJwtSignedTokenAdapter((SignedJWT)jwt);
+                return new JoseJwtSignedToken((SignedJWT)jwt);
             }else if (algorithm instanceof JWEAlgorithm){
-                return new JoseJwtEncryptedTokenAdapter((EncryptedJWT) jwt);
+                return new JoseJwtEncryptedToken((EncryptedJWT) jwt);
             }
             else {
                 throw new RuntimeException(StringTemplates.formatWithPlaceholder("algorithm unsupported, algorithm: {}, jwt token: {}",algorithm,jwtstring));

@@ -1,7 +1,6 @@
 package com.jn.agileway.jwt.jose;
 
 import com.jn.agileway.jwt.AbstractJWTService;
-import com.jn.agileway.jwt.JWTFactory;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.comparator.Comparators;
@@ -79,11 +78,5 @@ public class JoseJWTService extends AbstractJWTService {
             jweAlgorithms.set(algorithms);
         }
         return Lists.immutableList(jweAlgorithms.get());
-    }
-
-    private JoseJwtFactory factory = new JoseJwtFactory();
-    @Override
-    public JWTFactory getJWTFactory() {
-        return factory;
     }
 }

@@ -5,13 +5,13 @@ import com.jn.agileway.jwt.JWSToken;
 import com.jn.agileway.jwt.Payload;
 import com.nimbusds.jwt.SignedJWT;
 
-public class JoseJwtSignedTokenAdapter implements JWSToken {
+public class JoseJwtSignedToken implements JWSToken {
     private SignedJWT delegate;
-    public JoseJwtSignedTokenAdapter(){
+    public JoseJwtSignedToken(){
 
     }
 
-    public JoseJwtSignedTokenAdapter(SignedJWT delegate){
+    public JoseJwtSignedToken(SignedJWT delegate){
         this.delegate= delegate;
     }
     @Override
@@ -24,20 +24,12 @@ public class JoseJwtSignedTokenAdapter implements JWSToken {
         return null;
     }
 
-    @Override
-    public void setHeader(Header header) {
-
-    }
 
     @Override
     public Payload getPayload() {
         return null;
     }
 
-    @Override
-    public void setPayload(Payload payload) {
-
-    }
 
     @Override
     public String toToken() {

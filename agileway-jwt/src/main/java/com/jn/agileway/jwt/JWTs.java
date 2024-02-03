@@ -22,9 +22,6 @@ public class JWTs {
     }
 
 
-    public static <T extends JWT> T newJWT(String algorithm){
-        return getJWTService().<T>getJWTFactory().get(algorithm);
-    }
 
     public static JWSToken newJWSToken(String signAlgorithm, Map<String,Object> payload, String secretKey){
         return null;
@@ -33,8 +30,10 @@ public class JWTs {
     public static JWSToken newJWSToken(String signAlgorithm, Map<String,Object> payload, PrivateKey privateKey){
         return null;
     }
+    public static final String JWT_ALGORITHM_PLAIN="none";
+    public static final String JWT_TYPE_DEFAULT="JWT";
 
-    public static class ClaimNames{
+    public static final class ClaimNames{
         public static class Header{
 
             ////////////////////////////////////////////////////////////////////////////////
