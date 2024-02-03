@@ -30,9 +30,4 @@ public class JoseJwtSignedToken implements JWSToken {
         return null;
     }
 
-
-    @Override
-    public String toToken() {
-        return null;
-    }
 }

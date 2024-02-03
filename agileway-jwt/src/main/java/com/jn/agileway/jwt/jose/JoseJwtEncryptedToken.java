@@ -26,9 +26,4 @@ public class JoseJwtEncryptedToken implements JWEToken {
         return null;
     }
 
-
-    @Override
-    public String toToken() {
-        return null;
-    }
 }
