@@ -1,5 +1,6 @@
 package com.jn.agileway.jwt.jose;
 
+import com.jn.agileway.jwt.JWSToken;
 import com.jn.agileway.jwt.JWT;
 import com.jn.agileway.jwt.JWTParser;
 import com.jn.agileway.jwt.JWTPlainToken;
@@ -18,11 +19,12 @@ public class JoseJwtParser implements JWTParser {
             com.nimbusds.jwt.JWT jwt = com.nimbusds.jwt.JWTParser.parse(jwtstring);
             Algorithm algorithm = jwt.getHeader().getAlgorithm();
             if (algorithm==Algorithm.NONE){
-                PlainJWT plainJWT=(PlainJWT) jwt;
-                return new JWTPlainToken(plainJWT.getHeader().toJSONObject(), plainJWT.getPayload().toJSONObject());
+                PlainJWT t=(PlainJWT) jwt;
+                return new JWTPlainToken(t.getHeader().toJSONObject(), t.getPayload().toJSONObject());
             }
             else if (algorithm instanceof JWSAlgorithm){
-                return new JoseJwtSignedToken((SignedJWT)jwt);
+                SignedJWT t= (SignedJWT)jwt;
+                return new JWSToken(t.getHeader().toJSONObject(), t.getPayload().toJSONObject());
             }else if (algorithm instanceof JWEAlgorithm){
                 return new JoseJwtEncryptedToken((EncryptedJWT) jwt);
             }

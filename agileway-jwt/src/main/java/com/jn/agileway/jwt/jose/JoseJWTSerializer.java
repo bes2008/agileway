@@ -27,4 +27,5 @@ public class JoseJWTSerializer implements JWTSerializer {
             throw new IllegalJWTException("Illegal jwt token, error:" + e.getMessage());
         }
     }
+
 }

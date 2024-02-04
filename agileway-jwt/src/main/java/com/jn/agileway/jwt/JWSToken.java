@@ -1,9 +1,13 @@
 package com.jn.agileway.jwt;
 
-public interface JWSToken extends JWT {
-    /**
-     *
-     * @return 获取签名 utf8 url 格式
-     */
-    String getBase64UrlEncodedSignature();
+import java.util.Map;
+
+public class JWSToken extends JWTPlainToken {
+    public JWSToken(Header header, Payload payload) {
+        super(header, payload);
+    }
+
+    public JWSToken(Map<String, Object> header, Map<String, Object> payload) {
+        super(header, payload);
+    }
 }
