@@ -4,31 +4,72 @@ import com.jn.agileway.jwt.IllegalJWTException;
 import com.jn.agileway.jwt.JWSToken;
 import com.jn.agileway.jwt.Signer;
 import com.jn.langx.codec.base64.Base64;
-import com.jn.langx.security.Securitys;
 import com.jn.langx.security.crypto.signature.Signatures;
 import com.jn.langx.text.StringTemplates;
-import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Maps;
+import com.jn.langx.util.function.Supplier;
 import com.jn.langx.util.io.Charsets;
 
 import java.security.PrivateKey;
 import java.security.Signature;
+import java.security.spec.AlgorithmParameterSpec;
+import java.security.spec.MGF1ParameterSpec;
+import java.security.spec.PSSParameterSpec;
 import java.util.List;
 import java.util.Map;
 
 public class PKISigner implements Signer {
 
-    private static Map<String,String> jwtAlgorithmToPKI;
+    private static Map<String,Supplier<PrivateKey, Signature>> jwtAlgorithmToPKI;
     static{
-        Map<String,String>  map  = Maps.newLinkedHashMap();
-        map.put("RS256","SHA256withRSA");
-        map.put("RS384","SHA384withRSA");
-        map.put("RS512","SHA512withRSA");
+        Map<String,Supplier<PrivateKey, Signature>>  map  = Maps.newLinkedHashMap();
+        map.put("RS256", new Supplier<PrivateKey, Signature>(){
+            @Override
+            public Signature get(PrivateKey privateKey) {
+                Signature signer= Signatures.createSignature("SHA256withRSA",null, privateKey,null);
+                return signer;
+            }
+        });
+        map.put("RS384", new Supplier<PrivateKey, Signature>(){
+            @Override
+            public Signature get(PrivateKey privateKey) {
+                Signature signer= Signatures.createSignature("SHA384withRSA",null, privateKey,null);
+                return signer;
+            }
+        });
+        map.put("RS512", new Supplier<PrivateKey, Signature>(){
+            @Override
+            public Signature get(PrivateKey privateKey) {
+                Signature signer= Signatures.createSignature("SHA512withRSA",null, privateKey,null);
+                return signer;
+            }
+        });
 
-        map.put("PS256","SHA256withRSAandMGF1");
-        map.put("PS384","SHA384withRSAandMGF1");
-        map.put("PS512","SHA512withRSAandMGF1");
+        map.put("PS256", new Supplier<PrivateKey, Signature>(){
+            @Override
+            public Signature get(PrivateKey privateKey) {
+                AlgorithmParameterSpec parameterSpec =new PSSParameterSpec("SHA-256", "MGF1", new MGF1ParameterSpec("SHA-256"), 32, 1);
+                Signature signer= Signatures.createSignature("RSASSA-PSS",null, privateKey,null, parameterSpec);
+                return signer;
+            }
+        });
+        map.put("PS384",new Supplier<PrivateKey, Signature>(){
+            @Override
+            public Signature get(PrivateKey privateKey) {
+                AlgorithmParameterSpec parameterSpec =new PSSParameterSpec("SHA-384", "MGF1", new MGF1ParameterSpec("SHA-384"), 48, 1);
+                Signature signer= Signatures.createSignature("RSASSA-PSS",null, privateKey,null, parameterSpec);
+                return signer;
+            }
+        });
+        map.put("PS512",new Supplier<PrivateKey, Signature>(){
+            @Override
+            public Signature get(PrivateKey privateKey) {
+                AlgorithmParameterSpec parameterSpec =new PSSParameterSpec("SHA-512", "MGF1", new MGF1ParameterSpec("SHA-512"), 64, 1);
+                Signature signer= Signatures.createSignature("RSASSA-PSS",null, privateKey,null, parameterSpec);
+                return signer;
+            }
+        });
         jwtAlgorithmToPKI=map;
     }
 
@@ -41,16 +82,14 @@ public class PKISigner implements Signer {
     @Override
     public void sign(JWSToken token) {
         String jwtSignAlgorithm = token.getHeader().getAlgorithm();
-        String pkiAlgorithm = jwtAlgorithmToPKI.get(jwtSignAlgorithm);
+        Supplier<PrivateKey, Signature> signerSupplier = jwtAlgorithmToPKI.get(jwtSignAlgorithm);
 
-        if(Strings.isEmpty(pkiAlgorithm)){
+        if(signerSupplier==null){
             throw new IllegalJWTException(StringTemplates.formatWithPlaceholder("invalid jwt sign token: unsupported algorithm: {}", jwtSignAlgorithm));
         }
 
         byte[] data=(token.getHeader().toBase64UrlEncoded()+"."+token.getPayload().toBase64UrlEncoded()).getBytes(Charsets.UTF_8);
-
-        Signature signer= Signatures.createSignature(pkiAlgorithm,null, privateKey, Securitys.getSecureRandom());
-        byte[] signature= Signatures.sign(signer, data);
+        byte[] signature= Signatures.sign(signerSupplier.get(privateKey), data);
 
         token.setSignature(Base64.encodeBase64URLSafeString(signature));
     }
