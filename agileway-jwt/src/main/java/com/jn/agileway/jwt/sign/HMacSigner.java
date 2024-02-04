@@ -1,5 +1,8 @@
-package com.jn.agileway.jwt;
+package com.jn.agileway.jwt.sign;
 
+import com.jn.agileway.jwt.IllegalJWTException;
+import com.jn.agileway.jwt.JWSToken;
+import com.jn.agileway.jwt.Signer;
 import com.jn.langx.codec.base64.Base64;
 import com.jn.langx.security.crypto.mac.HMacs;
 import com.jn.langx.text.StringTemplates;
@@ -8,10 +11,11 @@ import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Maps;
 import com.jn.langx.util.io.Charsets;
 
+import javax.crypto.SecretKey;
 import java.util.List;
 import java.util.Map;
 
-public class HMacSigner implements Signer{
+public class HMacSigner implements Signer {
     private static Map<String,String> jwtAlgorithmToHMac;
     static{
         Map<String,String>  map  = Maps.newLinkedHashMap();
@@ -21,7 +25,11 @@ public class HMacSigner implements Signer{
         jwtAlgorithmToHMac=map;
     }
 
-    private byte[] secretKey;
+    private SecretKey secretKey;
+
+    public HMacSigner(SecretKey secretKey){
+        this.secretKey = secretKey;
+    }
 
     @Override
     public void sign(JWSToken token) {
