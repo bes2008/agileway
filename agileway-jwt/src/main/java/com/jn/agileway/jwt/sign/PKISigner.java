@@ -104,6 +104,14 @@ public class PKISigner implements Signer {
                 return signer;
             }
         });
+
+        map.put("EdDSA", new Supplier<PrivateKey, Signature>() {
+            @Override
+            public Signature get(PrivateKey privateKey) {
+                Signature signer= Signatures.createSignature("ED25519","BC", privateKey, Securitys.getSecureRandom());
+                return signer;
+            }
+        });
         jwtAlgorithmToPKI=map;
     }
 
@@ -111,11 +119,14 @@ public class PKISigner implements Signer {
 
     public PKISigner(PrivateKey privateKey){
         String algorithm= privateKey.getAlgorithm();
-        if (privateKey instanceof RSAPrivateKey || Objs.equals("RSA",algorithm) ||privateKey instanceof ECPrivateKey ||Objs.equals("EC",algorithm)  ) {
+        if (privateKey instanceof RSAPrivateKey || Objs.equals("RSA",algorithm)
+                ||privateKey instanceof ECPrivateKey ||Objs.equals("EC",algorithm)
+                || Objs.equals("ED25519",algorithm)
+        ) {
             // Will also allow "RSASSA-PSS" alg RSAPrivateKey instances with MGF1ParameterSpec
             this.privateKey = privateKey;
         } else {
-            throw new IllegalArgumentException("The private key algorithm must be RSA");
+            throw new IllegalArgumentException("The private key algorithm must be RSA or ECDSA or ED25519");
         }
     }
 

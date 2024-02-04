@@ -38,6 +38,23 @@
             <artifactId>fusionauth-jwt</artifactId>
             <version>5.3.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.google.crypto.tink</groupId>
+            <artifactId>tink</artifactId>
+            <version>1.12.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.bes2008.solution.langx.security</groupId>
+            <artifactId>langx-java-security-gm-jca-bouncycastle</artifactId>
+            <version>${langx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.i2p.crypto</groupId>
+            <artifactId>eddsa</artifactId>
+            <version>0.3.0</version>
+        </dependency>
     </dependencies>
 
 </project>
