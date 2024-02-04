@@ -10,4 +10,14 @@ public class JWSToken extends JWTPlainToken {
     public JWSToken(Map<String, Object> header, Map<String, Object> payload) {
         super(header, payload);
     }
+
+    private String signature;
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
 }

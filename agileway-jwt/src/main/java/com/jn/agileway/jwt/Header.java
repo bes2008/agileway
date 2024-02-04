@@ -1,19 +1,15 @@
 package com.jn.agileway.jwt;
 
-import com.jn.langx.util.collection.MapAccessor;
-import com.jn.langx.util.collection.Maps;
+import com.jn.easyjson.core.util.JSONs;
+import com.jn.langx.codec.base64.Base64;
+import com.jn.langx.util.io.Charsets;
 
 import java.util.Map;
 import java.util.Set;
 
-public class Header extends MapAccessor implements ClaimSet {
-
+public class Header extends ClaimSet {
     public Header(Map<String, Object> claims){
-        super(claims == null ? Maps.newHashMap():claims);
-    }
-
-    public Map<String, Object> getAllClaims() {
-        return this.getTarget();
+       super(claims);
     }
 
     public String getType() {
@@ -32,5 +28,8 @@ public class Header extends MapAccessor implements ClaimSet {
         return (Set<String>) this.get(JWTs.ClaimNames.Header.CRITICAL);
     }
 
+    public String toBase64UrlEncoded(){
+        return Base64.encodeBase64URLSafeString(JSONs.toJson(getAllClaims()).getBytes(Charsets.UTF_8));
+    }
 
 }
