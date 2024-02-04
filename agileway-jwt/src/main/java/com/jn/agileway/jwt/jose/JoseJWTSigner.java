@@ -11,8 +11,6 @@ public class JoseJWTSigner implements Signer {
     @Override
     public void sign(JWSToken token) {
         String algorithm = token.getHeader().getAlgorithm();
-        algorithm=Strings.upperCase(algorithm);
-
     }
 
     @Override
