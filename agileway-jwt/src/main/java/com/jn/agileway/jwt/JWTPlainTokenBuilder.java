@@ -36,10 +36,10 @@ public class JWTPlainTokenBuilder implements JWTBuilder<JWTPlainToken,JWTPlainTo
     @Override
     public JWTPlainToken build() {
         if(Objs.isEmpty(header)){
-            throw new IllegalJWTException("header is empty");
+            throw new JWTException("header is empty");
         }
         if(Objs.isEmpty(payload)){
-            throw new IllegalJWTException("payload is empty");
+            throw new JWTException("payload is empty");
         }
 
         // header

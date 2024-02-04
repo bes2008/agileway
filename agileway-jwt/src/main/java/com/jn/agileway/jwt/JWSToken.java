@@ -31,7 +31,7 @@ public class JWSToken extends JWTPlainToken {
     @Override
     public String toUtf8UrlEncodedToken() {
         if(!isSigned()){
-            throw new IllegalJWTException("unsigned token");
+            throw new JWTException("unsigned token");
         }
         String token= StringTemplates.formatWithPlaceholder("{}.{}.{}", this.header.toBase64UrlEncoded(), this.payload.toBase64UrlEncoded(), this.signature);
         return token;

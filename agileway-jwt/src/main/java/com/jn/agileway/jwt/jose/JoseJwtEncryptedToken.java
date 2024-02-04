@@ -26,4 +26,8 @@ public class JoseJwtEncryptedToken implements JWEToken {
         return null;
     }
 
+    @Override
+    public String toUtf8UrlEncodedToken() {
+        return null;
+    }
 }
