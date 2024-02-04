@@ -1,5 +1,7 @@
 package com.jn.agileway.jwt;
 
+import com.jn.langx.text.StringTemplates;
+
 import java.util.Map;
 
 public class JWSToken extends JWTPlainToken {
@@ -19,5 +21,14 @@ public class JWSToken extends JWTPlainToken {
 
     public void setSignature(String signature) {
         this.signature = signature;
+    }
+
+    @Override
+    public String toUtf8UrlEncodedToken() {
+        if(signature==null){
+            throw new IllegalJWTException("unsigned token");
+        }
+        String token= StringTemplates.formatWithPlaceholder("{}.{}.{}", this.header.toBase64UrlEncoded(), this.payload.toBase64UrlEncoded(), this.signature);
+        return token;
     }
 }

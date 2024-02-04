@@ -6,4 +6,6 @@ public interface JWT {
 
     Payload getPayload();
 
+    String toUtf8UrlEncodedToken();
+
 }

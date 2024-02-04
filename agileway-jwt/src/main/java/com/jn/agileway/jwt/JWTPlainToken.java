@@ -1,5 +1,7 @@
 package com.jn.agileway.jwt;
 
+import com.jn.langx.text.StringTemplates;
+
 import java.util.Map;
 
 public class JWTPlainToken implements JWT{
@@ -23,5 +25,10 @@ public class JWTPlainToken implements JWT{
     @Override
     public Payload getPayload() {
         return this.payload;
+    }
+
+    @Override
+    public String toUtf8UrlEncodedToken() {
+        return StringTemplates.formatWithPlaceholder("{}.{}", this.header.toBase64UrlEncoded(), this.payload.toBase64UrlEncoded());
     }
 }
