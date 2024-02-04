@@ -13,4 +13,5 @@ public interface JWSTokenBuilder extends JWTBuilder<JWSToken,JWSTokenBuilder> {
 
     @Override
     public JWSToken build();
+
 }
