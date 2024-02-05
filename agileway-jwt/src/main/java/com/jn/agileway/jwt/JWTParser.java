@@ -2,7 +2,7 @@ package com.jn.agileway.jwt;
 
 import com.jn.langx.Parser;
 
-public interface JWTParser extends Parser<String, JWT> {
+public interface JWTParser<T extends JWT> extends Parser<String, T> {
     @Override
-    JWT parse(String jwtstring);
+    T parse(String jwtstring);
 }

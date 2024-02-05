@@ -1,10 +1,12 @@
 package com.jn.agileway.jwt;
 
+import com.jn.easyjson.core.util.JSONs;
+import com.jn.langx.codec.base64.Base64;
 import com.jn.langx.text.StringTemplates;
 
 import java.util.Map;
 
-public class JWTPlainToken implements JWT{
+class JWTPlainToken implements JWT{
     Header header;
     Payload payload;
 

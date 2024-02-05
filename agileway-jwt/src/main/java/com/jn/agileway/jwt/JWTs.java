@@ -1,11 +1,18 @@
 package com.jn.agileway.jwt;
 
 
+import com.jn.langx.util.collection.MapAccessor;
 import com.jn.langx.util.collection.Maps;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.spi.CommonServiceProvider;
+import com.nimbusds.jose.Algorithm;
+import com.nimbusds.jose.HeaderParameterNames;
+import com.nimbusds.jose.JWEAlgorithm;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.util.JSONObjectUtils;
 
 import java.security.PrivateKey;
+import java.text.ParseException;
 import java.util.Map;
 
 /**
@@ -33,7 +40,6 @@ public class JWTs {
     }
     public static final String JWT_ALGORITHM_PLAIN="none";
     public static final String JWT_TYPE_DEFAULT="JWT";
-
 
 
     public static final class ClaimNames{

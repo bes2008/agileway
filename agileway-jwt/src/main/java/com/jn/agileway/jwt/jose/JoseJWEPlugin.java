@@ -1,6 +1,8 @@
 package com.jn.agileway.jwt.jose;
 
-import com.jn.agileway.jwt.AbstractJWTService;
+import com.jn.agileway.jwt.JWEPlugin;
+import com.jn.agileway.jwt.JWEToken;
+import com.jn.agileway.jwt.JWTException;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.comparator.Comparators;
@@ -10,49 +12,19 @@ import com.jn.langx.util.reflect.Modifiers;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.struct.Holder;
 import com.nimbusds.jose.JWEAlgorithm;
-import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jwt.EncryptedJWT;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
-public class JoseJWTService extends AbstractJWTService {
+public class JoseJWEPlugin implements JWEPlugin {
 
-    public static final JoseJWTService INSTANCE= new JoseJWTService();
-    private Holder<List<String>> jwsAlgorithms=new Holder<List<String>>();
+
     private Holder<List<String>> jweAlgorithms=new Holder<List<String>>();
 
 
     @Override
-    public List<String> supportedJWSAlgorithms() {
-        if(jwsAlgorithms.isNull()) {
-            List<String> algorithms= Pipeline.of(Reflects.getAllDeclaredFields(JWSAlgorithm.class, true))
-                    .filter(new Predicate<Field>() {
-                        @Override
-                        public boolean test(Field field) {
-                            if(!Modifiers.isStatic(field)){
-                                return false;
-                            }
-                            if(field.getType()!= JWSAlgorithm.class){
-                                return false;
-                            }
-                            return true;
-                        }
-                    }).map(new Function<Field, String>() {
-                        @Override
-                        public String apply(Field field) {
-                            JWSAlgorithm algorithm= Reflects.getFieldValue(field, JWSAlgorithm.class, true, true);
-                            return algorithm.getName();
-                        }
-                    })
-                    .sort(Comparators.STRING_COMPARATOR)
-                    .asList();
-            jwsAlgorithms.set(algorithms);
-        }
-        return Lists.immutableList(jwsAlgorithms.get());
-    }
-
-    @Override
-    public List<String> supportedJWEAlgorithms() {
+    public List<String> getSupportedJWEAlgorithms() {
         if(jweAlgorithms.isNull()) {
             List<String> algorithms= Pipeline.of(Reflects.getAllDeclaredFields(JWEAlgorithm.class, true))
                     .filter(new Predicate<Field>() {
@@ -78,5 +50,15 @@ public class JoseJWTService extends AbstractJWTService {
             jweAlgorithms.set(algorithms);
         }
         return Lists.immutableList(jweAlgorithms.get());
+    }
+
+    @Override
+    public JWEToken parse(String jwtstring) {
+        try {
+            EncryptedJWT jwt = EncryptedJWT.parse(jwtstring);
+            return new JoseJwtEncryptedToken((EncryptedJWT) jwt);
+        }catch (Throwable e){
+            throw new JWTException("invalid jwt encrypted token, "+e.getMessage(),e);
+        }
     }
 }
