@@ -9,7 +9,7 @@ import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.io.Charsets;
-
+import com.jn.agileway.jwt.JWTs;
 import javax.crypto.SecretKey;
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class HMacSigner implements Signer {
     @Override
     public void sign(JWSToken token) {
         String jwtSignAlgorithm = token.getHeader().getAlgorithm();
-        String hmacAlgorithm= JWTHMacAlgorithms.jwtAlgorithmToHMac.get(jwtSignAlgorithm);
+        String hmacAlgorithm= Signs.JWT_TO_HMAC_ALGORITHMS.get(jwtSignAlgorithm);
         if(Strings.isEmpty(hmacAlgorithm)){
             throw new JWTException(StringTemplates.formatWithPlaceholder("invalid jwt sign token: unsupported algorithm: {}", jwtSignAlgorithm));
         }
@@ -35,7 +35,7 @@ public class HMacSigner implements Signer {
 
     @Override
     public List<String> supportedAlgorithms() {
-        return Lists.newArrayList(JWTHMacAlgorithms.jwtAlgorithmToHMac.keySet());
+        return Lists.newArrayList(Signs.JWT_TO_HMAC_ALGORITHMS.keySet());
     }
 }
 

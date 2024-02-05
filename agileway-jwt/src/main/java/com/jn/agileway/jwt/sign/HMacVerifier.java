@@ -23,7 +23,7 @@ public class HMacVerifier implements Verifier {
     @Override
     public boolean verify(JWSToken token, String expectedSignature) {
         String jwtSignAlgorithm = token.getHeader().getAlgorithm();
-        String hmacAlgorithm= JWTHMacAlgorithms.jwtAlgorithmToHMac.get(jwtSignAlgorithm);
+        String hmacAlgorithm= Signs.JWT_TO_HMAC_ALGORITHMS.get(jwtSignAlgorithm);
         if(Strings.isEmpty(hmacAlgorithm)){
             throw new JWTException(StringTemplates.formatWithPlaceholder("invalid jwt sign token: unsupported algorithm: {}", jwtSignAlgorithm));
         }

@@ -1,6 +1,7 @@
 package com.jn.agileway.jwt;
 
 
+import com.jn.langx.util.collection.Maps;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.spi.CommonServiceProvider;
 
@@ -32,6 +33,8 @@ public class JWTs {
     }
     public static final String JWT_ALGORITHM_PLAIN="none";
     public static final String JWT_TYPE_DEFAULT="JWT";
+
+
 
     public static final class ClaimNames{
         public static class Header{

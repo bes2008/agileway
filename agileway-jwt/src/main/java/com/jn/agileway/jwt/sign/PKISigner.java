@@ -30,90 +30,6 @@ import java.util.Map;
 
 public class PKISigner implements Signer {
     private static final Logger logger = Loggers.getLogger(PKISigner.class);
-    private static Map<String, Supplier<PrivateKey, Signature>> jwtAlgorithmToSignerSupplier;
-
-    static {
-        Map<String, Supplier<PrivateKey, Signature>> map = Maps.newLinkedHashMap();
-        // RSA 相关
-        map.put("RS256", new Supplier<PrivateKey, Signature>() {
-            @Override
-            public Signature get(PrivateKey privateKey) {
-                return Signatures.createSignature("SHA256withRSA", null, privateKey, null);
-            }
-        });
-        map.put("RS384", new Supplier<PrivateKey, Signature>() {
-            @Override
-            public Signature get(PrivateKey privateKey) {
-                return Signatures.createSignature("SHA384withRSA", null, privateKey, null);
-            }
-        });
-        map.put("RS512", new Supplier<PrivateKey, Signature>() {
-            @Override
-            public Signature get(PrivateKey privateKey) {
-                return Signatures.createSignature("SHA512withRSA", null, privateKey, null);
-            }
-        });
-
-        map.put("PS256", new Supplier<PrivateKey, Signature>() {
-            @Override
-            public Signature get(PrivateKey privateKey) {
-                AlgorithmParameterSpec parameterSpec = new PSSParameterSpec("SHA-256", "MGF1", new MGF1ParameterSpec("SHA-256"), 32, 1);
-                return Signatures.createSignature("RSASSA-PSS", null, privateKey, null, parameterSpec);
-            }
-        });
-        map.put("PS384", new Supplier<PrivateKey, Signature>() {
-            @Override
-            public Signature get(PrivateKey privateKey) {
-                AlgorithmParameterSpec parameterSpec = new PSSParameterSpec("SHA-384", "MGF1", new MGF1ParameterSpec("SHA-384"), 48, 1);
-                return Signatures.createSignature("RSASSA-PSS", null, privateKey, null, parameterSpec);
-            }
-        });
-        map.put("PS512", new Supplier<PrivateKey, Signature>() {
-            @Override
-            public Signature get(PrivateKey privateKey) {
-                AlgorithmParameterSpec parameterSpec = new PSSParameterSpec("SHA-512", "MGF1", new MGF1ParameterSpec("SHA-512"), 64, 1);
-                return Signatures.createSignature("RSASSA-PSS", null, privateKey, null, parameterSpec);
-            }
-        });
-        // EC 相关
-        map.put("ES256", new Supplier<PrivateKey, Signature>() {
-            @Override
-            public Signature get(PrivateKey privateKey) {
-                return Signatures.createSignature("SHA256withECDSA", null, privateKey, Securitys.getSecureRandom());
-            }
-        });
-        map.put("ES256K", new Supplier<PrivateKey, Signature>() {
-            @Override
-            public Signature get(PrivateKey privateKey) {
-                return Signatures.createSignature("SHA256withECDSA", null, privateKey, Securitys.getSecureRandom());
-            }
-        });
-        map.put("ES384", new Supplier<PrivateKey, Signature>() {
-            @Override
-            public Signature get(PrivateKey privateKey) {
-                return Signatures.createSignature("SHA384withECDSA", null, privateKey, Securitys.getSecureRandom());
-            }
-        });
-        map.put("ES512", new Supplier<PrivateKey, Signature>() {
-            @Override
-            public Signature get(PrivateKey privateKey) {
-                return Signatures.createSignature("SHA512withECDSA", null, privateKey, Securitys.getSecureRandom());
-            }
-        });
-
-        map.put("EdDSA", new Supplier<PrivateKey, Signature>() {
-            @Override
-            public Signature get(PrivateKey privateKey) {
-                Provider bc = Security.getProvider("BC");
-                if (bc == null) {
-                    bc = new BouncyCastleProvider();
-                    Securitys.addProvider(bc);
-                }
-                return Signatures.createSignature("ED25519", "BC", privateKey, Securitys.getSecureRandom());
-            }
-        });
-        jwtAlgorithmToSignerSupplier = map;
-    }
 
     private final PrivateKey privateKey;
 
@@ -133,7 +49,7 @@ public class PKISigner implements Signer {
     @Override
     public void sign(JWSToken token) {
         String jwtSignAlgorithm = token.getHeader().getAlgorithm();
-        Supplier<PrivateKey, Signature> signerSupplier = jwtAlgorithmToSignerSupplier.get(jwtSignAlgorithm);
+        Supplier<PrivateKey, Signature> signerSupplier = Signs.JWT_PKI_ALGORITHM_SIGNER_SUPPLIER.get(jwtSignAlgorithm);
 
         if (signerSupplier == null) {
             throw new JWTException(StringTemplates.formatWithPlaceholder("invalid jwt sign token: unsupported algorithm: {}", jwtSignAlgorithm));
@@ -147,6 +63,6 @@ public class PKISigner implements Signer {
 
     @Override
     public List<String> supportedAlgorithms() {
-        return Lists.newArrayList(PKISigner.jwtAlgorithmToSignerSupplier.keySet());
+        return Lists.newArrayList(Signs.JWT_PKI_ALGORITHM_SIGNER_SUPPLIER.keySet());
     }
 }
