@@ -1,5 +1,7 @@
 package com.jn.agileway.jwt;
 
+import com.jn.agileway.jwt.jwe.JWEPlugin;
+
 import java.util.List;
 
 public interface JWTService {

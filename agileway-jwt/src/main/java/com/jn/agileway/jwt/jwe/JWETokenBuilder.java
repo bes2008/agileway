@@ -1,4 +1,6 @@
-package com.jn.agileway.jwt;
+package com.jn.agileway.jwt.jwe;
+
+import com.jn.agileway.jwt.JWTBuilder;
 
 public interface JWETokenBuilder extends JWTBuilder<JWEToken,JWETokenBuilder> {
 

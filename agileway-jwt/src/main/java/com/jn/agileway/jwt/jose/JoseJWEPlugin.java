@@ -1,8 +1,9 @@
 package com.jn.agileway.jwt.jose;
 
-import com.jn.agileway.jwt.JWEPlugin;
-import com.jn.agileway.jwt.JWEToken;
+import com.jn.agileway.jwt.jwe.JWEPlugin;
+import com.jn.agileway.jwt.jwe.JWEToken;
 import com.jn.agileway.jwt.JWTException;
+import com.jn.agileway.jwt.jwe.JWETokenBuilder;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.comparator.Comparators;
@@ -22,6 +23,10 @@ public class JoseJWEPlugin implements JWEPlugin {
 
     private Holder<List<String>> jweAlgorithms=new Holder<List<String>>();
 
+    @Override
+    public JWETokenBuilder newJWEBuilder() {
+        return null;
+    }
 
     @Override
     public List<String> getSupportedJWEAlgorithms() {

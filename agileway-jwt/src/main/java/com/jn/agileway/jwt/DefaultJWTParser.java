@@ -1,16 +1,14 @@
 package com.jn.agileway.jwt;
 
+import com.jn.agileway.jwt.jwe.JWEToken;
 import com.jn.easyjson.core.util.JSONs;
 import com.jn.langx.codec.base64.Base64;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.MapAccessor;
-import com.nimbusds.jose.JOSEObject;
-import com.nimbusds.jose.util.Base64URL;
 
-import java.text.ParseException;
 import java.util.Map;
 
-public class DefaultJWTParser implements JWTParser{
+public class DefaultJWTParser implements JWTParser<JWT>{
     @Override
     public JWT parse(String jwtstring) {
         String s = jwtstring;
