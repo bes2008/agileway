@@ -11,13 +11,12 @@ import java.util.Map;
 public class DefaultJWTParser implements JWTParser<JWT>{
     @Override
     public JWT parse(String jwtstring) {
-        String s = jwtstring;
-        final int firstDotPos = s.indexOf(".");
+        final int firstDotPos = jwtstring.indexOf(".");
 
         if (firstDotPos == -1) {
             throw new JWTException("Invalid JWT serialization: Missing dot delimiter(s)");
         }
-        String headerBase64Url = s.substring(0, firstDotPos);
+        String headerBase64Url = jwtstring.substring(0, firstDotPos);
 
         MapAccessor headerAccessor = new MapAccessor( JSONs.<Map<String,Object>>parse(headerBase64Url,Map.class));
         String algorithm = headerAccessor.getString(JWTs.ClaimNames.Header.ALGORITHM);
