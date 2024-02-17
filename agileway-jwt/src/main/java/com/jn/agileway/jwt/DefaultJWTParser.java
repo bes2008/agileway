@@ -34,7 +34,7 @@ public class DefaultJWTParser implements JWTParser<JWT>{
         if(algorithmType==AlgorithmType.JWS){
             return parseJWSToken(jwtstring);
         }
-        return null;
+        return parseJWEToken(jwtstring);
     }
 
     private JWTPlainToken parsePlainToken(String jwtstring) {

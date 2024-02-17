@@ -213,7 +213,7 @@ public class Signs {
         JWT_PKI_ALGORITHM_VERIFIER_SUPPLIER = map;
     }
 
-    public static List<String> supportedJWTHmacAlgorithms(){
+    public static List<String> supportedJWTHMacAlgorithms(){
         return Lists.newArrayList(JWT_TO_HMAC_ALGORITHMS.keySet());
     }
 
@@ -222,7 +222,7 @@ public class Signs {
     }
 
     public static List<String> supportedJWTSignAlgorithms(){
-        return Pipeline.<String>of(supportedJWTHmacAlgorithms())
+        return Pipeline.<String>of(supportedJWTHMacAlgorithms())
                 .addAll(supportedJWTPKIAlgorithms())
                 .asList();
     }
