@@ -29,7 +29,14 @@ public class JWTs {
                 .findFirst();
     }
 
-
+    public static JWTPlainToken newJWTPlainToken(Map<String,Object> header,Map<String,Object> payload){
+        return new JWTPlainTokenBuilder()
+                .withHeader(header)
+                .withAlgorithm(JWT_ALGORITHM_PLAIN)
+                .withType(JWT_TYPE_DEFAULT)
+                .withPayload(payload)
+                .build();
+    }
 
     public static JWSToken newJWSToken(String signAlgorithm, Map<String,Object> payload, String secretKey){
         return null;

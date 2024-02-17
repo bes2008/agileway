@@ -8,7 +8,7 @@ import com.jn.langx.util.collection.MapAccessor;
 
 import java.util.Map;
 
-public class DefaultJWTParser implements JWTParser<JWT>{
+public class DefaultJWTParser implements JWTParser{
     @Override
     public JWT parse(String jwtstring) {
         final int firstDotPos = jwtstring.indexOf(".");
@@ -18,7 +18,8 @@ public class DefaultJWTParser implements JWTParser<JWT>{
         }
         String headerBase64Url = jwtstring.substring(0, firstDotPos);
 
-        MapAccessor headerAccessor = new MapAccessor( JSONs.<Map<String,Object>>parse(headerBase64Url,Map.class));
+        String headerJsonString=Base64.decodeBase64ToString(headerBase64Url);
+        MapAccessor headerAccessor = new MapAccessor( JSONs.<Map<String,Object>>parse(headerJsonString,Map.class));
         String algorithm = headerAccessor.getString(JWTs.Headers.ALGORITHM);
 
         if (Strings.isBlank(algorithm)){
@@ -38,7 +39,7 @@ public class DefaultJWTParser implements JWTParser<JWT>{
     }
 
     private JWTPlainToken parsePlainToken(String jwtstring) {
-        String[] parts = org.bouncycastle.util.Strings.split(jwtstring,'.');
+        String[] parts = Strings.split(jwtstring,".");
         if(parts.length!=2){
             throw new JWTException("Invalid jwt plain token, Unexpected number of Base64URL parts, must be 2");
         }

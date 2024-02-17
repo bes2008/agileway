@@ -30,4 +30,15 @@ public abstract class AbstractJWTService implements JWTService {
     public final List<String> supportedJWEAlgorithms() {
         return JWTs.getJWTService().getJWEPlugin().getSupportedJWEAlgorithms();
     }
+
+    public JWTPlainTokenBuilder newJWTPlainTokenBuilder(){
+        return new JWTPlainTokenBuilder();
+    }
+    public JWSTokenBuilder newJWSTokenBuilder(){
+        return null;
+    }
+
+    public JWTParser newParser(){
+        return new DefaultJWTParser();
+    }
 }

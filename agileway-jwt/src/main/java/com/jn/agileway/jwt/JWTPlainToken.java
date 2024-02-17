@@ -31,6 +31,6 @@ class JWTPlainToken implements JWT{
 
     @Override
     public String toUtf8UrlEncodedToken() {
-        return StringTemplates.formatWithPlaceholder("{}.{}", this.header.toBase64UrlEncoded(), this.payload.toBase64UrlEncoded());
+        return StringTemplates.formatWithPlaceholder("{}.{}.", this.header.toBase64UrlEncoded(), this.payload.toBase64UrlEncoded());
     }
 }
