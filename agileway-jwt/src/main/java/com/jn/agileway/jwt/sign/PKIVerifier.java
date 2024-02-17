@@ -4,20 +4,12 @@ import com.jn.agileway.jwt.JWSToken;
 import com.jn.agileway.jwt.JWTException;
 import com.jn.agileway.jwt.Verifier;
 import com.jn.langx.codec.base64.Base64;
-import com.jn.langx.security.Securitys;
-import com.jn.langx.security.crypto.cipher.AlgorithmParameterSupplier;
 import com.jn.langx.security.crypto.signature.Signatures;
 import com.jn.langx.text.StringTemplates;
-import com.jn.langx.util.collection.Maps;
 import com.jn.langx.util.function.Supplier;
 import com.jn.langx.util.io.Charsets;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.security.*;
-import java.security.spec.AlgorithmParameterSpec;
-import java.security.spec.MGF1ParameterSpec;
-import java.security.spec.PSSParameterSpec;
-import java.util.Map;
 
 public class PKIVerifier implements Verifier {
 

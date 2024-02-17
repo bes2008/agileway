@@ -9,7 +9,6 @@ import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.io.Charsets;
-import com.jn.agileway.jwt.JWTs;
 import javax.crypto.SecretKey;
 import java.util.List;
 

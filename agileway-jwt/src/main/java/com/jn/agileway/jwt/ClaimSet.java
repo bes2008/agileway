@@ -24,171 +24,171 @@ public class ClaimSet implements ValueGetter2<String> {
 
     @Override
     public Object get(String key) {
-        return null;
+        return claimsAccessor.get(key);
     }
 
     @Override
     public boolean isNull(String key) {
-        return false;
+        return  claimsAccessor.isNull(key);
     }
 
     @Override
     public boolean isEmpty(String key) {
-        return false;
+        return claimsAccessor.isEmpty(key);
     }
 
     @Override
     public boolean has(String key) {
-        return false;
-    }
-
-    @Override
-    public Object get(String key, Function<Object, Object> mapper) {
-        return null;
+        return claimsAccessor.has(key);
     }
 
     @Override
     public String getString(String key) {
-        return null;
+        return claimsAccessor.getString(key);
     }
 
     @Override
     public String getString(String key, String defaultValue) {
-        return null;
-    }
-
-    @Override
-    public String getString(String key, Function<Object, String> mapper) {
-        return null;
+        return claimsAccessor.getString(key,defaultValue);
     }
 
     @Override
     public Character getCharacter(String key) {
-        return null;
+        return claimsAccessor.getCharacter(key);
     }
 
     @Override
     public Character getCharacter(String key, Character defaultValue) {
-        return null;
-    }
-
-    @Override
-    public Character getCharacter(String key, Function<Object, Character> mapper) {
-        return null;
+        return claimsAccessor.getCharacter(key);
     }
 
     @Override
     public Byte getByte(String key) {
-        return null;
+        return claimsAccessor.getByte(key);
     }
 
     @Override
     public Byte getByte(String key, Byte defaultValue) {
-        return null;
-    }
-
-    @Override
-    public Byte getByte(String key, Function<Object, Byte> mapper) {
-        return null;
+        return claimsAccessor.getByte(key,defaultValue);
     }
 
     @Override
     public Short getShort(String key) {
-        return null;
+        return claimsAccessor.getShort(key);
     }
 
     @Override
     public Short getShort(String key, Short defaultValue) {
-        return null;
-    }
-
-    @Override
-    public Short getShort(String key, Function<Object, Short> mapper) {
-        return null;
+        return claimsAccessor.getShort(key,defaultValue);
     }
 
     @Override
     public Integer getInteger(String key) {
-        return null;
+        return claimsAccessor.getInteger(key);
     }
 
     @Override
     public Integer getInteger(String key, Integer defaultValue) {
-        return null;
-    }
-
-    @Override
-    public Integer getInteger(String key, Function<Object, Integer> mapper) {
-        return null;
+        return claimsAccessor.getInteger(key,defaultValue);
     }
 
     @Override
     public Double getDouble(String key) {
-        return null;
+        return claimsAccessor.getDouble(key);
     }
 
     @Override
     public Double getDouble(String key, Double defaultValue) {
-        return null;
-    }
-
-    @Override
-    public Double getDouble(String key, Function<Object, Double> mapper) {
-        return null;
+        return claimsAccessor.getDouble(key,defaultValue);
     }
 
     @Override
     public Float getFloat(String key) {
-        return null;
+        return claimsAccessor.getFloat(key);
     }
 
     @Override
     public Float getFloat(String key, Float defaultValue) {
-        return null;
-    }
-
-    @Override
-    public Float getFloat(String key, Function<Object, Float> mapper) {
-        return null;
+        return claimsAccessor.getFloat(key,defaultValue);
     }
 
     @Override
     public Long getLong(String key) {
-        return null;
+        return claimsAccessor.getLong(key);
     }
 
     @Override
     public Long getLong(String key, Long defaultValue) {
-        return null;
-    }
-
-    @Override
-    public Long getLong(String key, Function<Object, Long> mapper) {
-        return null;
+        return claimsAccessor.getLong(key,defaultValue);
     }
 
     @Override
     public Boolean getBoolean(String key) {
-        return null;
+        return claimsAccessor.getBoolean(key);
     }
 
     @Override
     public Boolean getBoolean(String key, Boolean defaultValue) {
-        return null;
+        return claimsAccessor.getBoolean(key,defaultValue);
+    }
+
+    @Override
+    public Object get(String key, Function<Object, Object> mapper) {
+        return claimsAccessor.get(key,mapper);
+    }
+
+    @Override
+    public String getString(String key, Function<Object, String> mapper) {
+        return claimsAccessor.getString(key,mapper);
+    }
+
+    @Override
+    public Character getCharacter(String key, Function<Object, Character> mapper) {
+        return claimsAccessor.getCharacter(key,mapper);
+    }
+
+    @Override
+    public Byte getByte(String key, Function<Object, Byte> mapper) {
+        return claimsAccessor.getByte(key,mapper);
+    }
+
+    @Override
+    public Short getShort(String key, Function<Object, Short> mapper) {
+        return claimsAccessor.getShort(key,mapper);
+    }
+
+    @Override
+    public Integer getInteger(String key, Function<Object, Integer> mapper) {
+        return claimsAccessor.getInteger(key,mapper);
+    }
+
+    @Override
+    public Double getDouble(String key, Function<Object, Double> mapper) {
+        return claimsAccessor.getDouble(key,mapper);
+    }
+
+    @Override
+    public Float getFloat(String key, Function<Object, Float> mapper) {
+        return claimsAccessor.getFloat(key,mapper);
+    }
+
+    @Override
+    public Long getLong(String key, Function<Object, Long> mapper) {
+        return claimsAccessor.getLong(key,mapper);
     }
 
     @Override
     public Boolean getBoolean(String key, Function<Object, Boolean> mapper) {
-        return null;
+        return claimsAccessor.getBoolean(key,mapper);
     }
 
     @Override
     public <E> E getAny(String... keys) {
-        return null;
+        return claimsAccessor.getAny(keys);
     }
 
     @Override
     public <E> E getAny(Predicate2<String, E> predicate, String... keys) {
-        return null;
+        return claimsAccessor.getAny(predicate, keys);
     }
 }

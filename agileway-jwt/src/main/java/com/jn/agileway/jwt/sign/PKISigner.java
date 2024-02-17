@@ -4,16 +4,13 @@ import com.jn.agileway.jwt.JWTException;
 import com.jn.agileway.jwt.JWSToken;
 import com.jn.agileway.jwt.Signer;
 import com.jn.langx.codec.base64.Base64;
-import com.jn.langx.security.Securitys;
 import com.jn.langx.security.crypto.signature.Signatures;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Lists;
-import com.jn.langx.util.collection.Maps;
 import com.jn.langx.util.function.Supplier;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.logging.Loggers;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 
 import java.security.PrivateKey;
