@@ -8,7 +8,7 @@ import com.jn.langx.util.collection.MapAccessor;
 
 import java.util.Map;
 
-public class DefaultJWTParser implements JWTParser{
+class DefaultJWTParser implements JWTParser{
     @Override
     public JWT parse(String jwtstring) {
         final int firstDotPos = jwtstring.indexOf(".");

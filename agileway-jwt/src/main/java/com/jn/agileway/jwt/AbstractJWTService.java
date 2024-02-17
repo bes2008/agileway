@@ -35,7 +35,7 @@ public abstract class AbstractJWTService implements JWTService {
         return new JWTPlainTokenBuilder();
     }
     public JWSTokenBuilder newJWSTokenBuilder(){
-        return null;
+        return new JWSTokenBuilder();
     }
 
     public JWTParser newParser(){

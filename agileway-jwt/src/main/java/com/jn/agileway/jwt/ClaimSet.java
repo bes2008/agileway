@@ -9,7 +9,7 @@ import com.jn.langx.util.valuegetter.ValueGetter2;
 
 import java.util.Map;
 
-public class ClaimSet implements ValueGetter2<String> {
+class ClaimSet implements ValueGetter2<String> {
     private MapAccessor claimsAccessor;
     public ClaimSet(Map<String, Object> map){
         if(map==null){
