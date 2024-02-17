@@ -11,13 +11,13 @@ public class JWTPlainTokenBuilder implements JWTBuilder<JWTPlainToken,JWTPlainTo
     Map<String,Object> payload= Maps.<String, Object>newHashMap();
 
     public JWTPlainTokenBuilder withType(String type) {
-        header.put(JWTs.ClaimNames.Header.TYPE, type);
+        header.put(JWTs.Headers.TYPE, type);
         return this;
     }
 
     @Override
     public JWTPlainTokenBuilder withAlgorithm(String algorithm) {
-        header.put(JWTs.ClaimNames.Header.ALGORITHM, algorithm);
+        header.put(JWTs.Headers.ALGORITHM, algorithm);
         return this;
     }
 
@@ -43,10 +43,10 @@ public class JWTPlainTokenBuilder implements JWTBuilder<JWTPlainToken,JWTPlainTo
         }
 
         // header
-        if (!header.containsKey(JWTs.ClaimNames.Header.TYPE)){
-            header.put(JWTs.ClaimNames.Header.TYPE,JWTs.JWT_TYPE_DEFAULT);
+        if (!header.containsKey(JWTs.Headers.TYPE)){
+            header.put(JWTs.Headers.TYPE,JWTs.JWT_TYPE_DEFAULT);
         }
-        header.put(JWTs.ClaimNames.Header.ALGORITHM, JWTs.JWT_ALGORITHM_PLAIN);
+        header.put(JWTs.Headers.ALGORITHM, JWTs.JWT_ALGORITHM_PLAIN);
 
         return new JWTPlainToken(header, payload);
     }

@@ -42,8 +42,7 @@ public class JWTs {
     public static final String JWT_TYPE_DEFAULT="JWT";
 
 
-    public static final class ClaimNames{
-        public static class Header{
+    public static final class Headers{
 
             ////////////////////////////////////////////////////////////////////////////////
             // Generic JWS and JWE Header Parameters
@@ -246,7 +245,6 @@ public class JWTs {
              */
             public static final String BASE64_URL_ENCODE_PAYLOAD = "b64";
 
-        }
     }
 
 }

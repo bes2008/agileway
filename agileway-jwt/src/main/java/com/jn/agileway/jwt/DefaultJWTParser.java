@@ -19,7 +19,7 @@ public class DefaultJWTParser implements JWTParser<JWT>{
         String headerBase64Url = jwtstring.substring(0, firstDotPos);
 
         MapAccessor headerAccessor = new MapAccessor( JSONs.<Map<String,Object>>parse(headerBase64Url,Map.class));
-        String algorithm = headerAccessor.getString(JWTs.ClaimNames.Header.ALGORITHM);
+        String algorithm = headerAccessor.getString(JWTs.Headers.ALGORITHM);
 
         if (Strings.isBlank(algorithm)){
             throw new JWTException("invalid jwt token: missing `alg` header");

@@ -13,19 +13,19 @@ public class Header extends ClaimSet {
     }
 
     public String getType() {
-        return this.getString(JWTs.ClaimNames.Header.TYPE);
+        return this.getString(JWTs.Headers.TYPE);
     }
 
     public String getAlgorithm() {
-        return this.getString(JWTs.ClaimNames.Header.ALGORITHM);
+        return this.getString(JWTs.Headers.ALGORITHM);
     }
 
     public String getContentType() {
-        return this.getString(JWTs.ClaimNames.Header.CONTENT_TYPE);
+        return this.getString(JWTs.Headers.CONTENT_TYPE);
     }
 
     public Set<String> getCritical() {
-        return (Set<String>) this.get(JWTs.ClaimNames.Header.CRITICAL);
+        return (Set<String>) this.get(JWTs.Headers.CRITICAL);
     }
 
     public String toBase64UrlEncoded(){
