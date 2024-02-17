@@ -1,8 +1,5 @@
-package com.jn.agileway.jwt.sign;
+package com.jn.agileway.jwt;
 
-import com.jn.agileway.jwt.JWSToken;
-import com.jn.agileway.jwt.JWTException;
-import com.jn.agileway.jwt.Verifier;
 import com.jn.langx.codec.base64.Base64;
 import com.jn.langx.security.crypto.signature.Signatures;
 import com.jn.langx.text.StringTemplates;

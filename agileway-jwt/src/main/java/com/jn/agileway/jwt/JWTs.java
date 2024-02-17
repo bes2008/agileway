@@ -1,18 +1,10 @@
 package com.jn.agileway.jwt;
 
 
-import com.jn.langx.util.collection.MapAccessor;
-import com.jn.langx.util.collection.Maps;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.spi.CommonServiceProvider;
-import com.nimbusds.jose.Algorithm;
-import com.nimbusds.jose.HeaderParameterNames;
-import com.nimbusds.jose.JWEAlgorithm;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.util.JSONObjectUtils;
 
 import java.security.PrivateKey;
-import java.text.ParseException;
 import java.util.Map;
 
 /**
@@ -29,13 +21,13 @@ public class JWTs {
                 .findFirst();
     }
 
-    public static JWTPlainToken newJWTPlainToken(Map<String,Object> header,Map<String,Object> payload){
-        return new JWTPlainTokenBuilder()
+    public static JWSToken newJWTPlainToken(Map<String,Object> header,Map<String,Object> payload){
+        return new JWSTokenBuilder()
                 .withHeader(header)
                 .withAlgorithm(JWT_ALGORITHM_PLAIN)
                 .withType(JWT_TYPE_DEFAULT)
                 .withPayload(payload)
-                .build();
+                .plain();
     }
 
     public static JWSToken newJWSToken(String signAlgorithm, Map<String,Object> payload, String secretKey){

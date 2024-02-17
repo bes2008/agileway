@@ -10,6 +10,5 @@ public interface JWTService {
     List<String> supportedJWEAlgorithms();
 
     JWEPlugin getJWEPlugin();
-    JWTPlainTokenBuilder newJWTPlainTokenBuilder();
     JWTParser newParser();
 }

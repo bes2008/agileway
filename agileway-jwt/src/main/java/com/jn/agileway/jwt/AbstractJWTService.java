@@ -1,6 +1,5 @@
 package com.jn.agileway.jwt;
 
-import com.jn.agileway.jwt.sign.Signs;
 import com.jn.langx.util.Strings;
 
 import java.util.List;
@@ -31,9 +30,6 @@ public abstract class AbstractJWTService implements JWTService {
         return JWTs.getJWTService().getJWEPlugin().getSupportedJWEAlgorithms();
     }
 
-    public JWTPlainTokenBuilder newJWTPlainTokenBuilder(){
-        return new JWTPlainTokenBuilder();
-    }
     public JWSTokenBuilder newJWSTokenBuilder(){
         return new JWSTokenBuilder();
     }

@@ -30,39 +30,23 @@ class DefaultJWTParser implements JWTParser{
             throw new JWTException("unsupported jwt algorithm: "+ algorithm);
         }
         if(algorithmType==AlgorithmType.NONE){
-            return parsePlainToken(jwtstring);
+            return parseJWSToken(jwtstring, true);
         }
         if(algorithmType==AlgorithmType.JWS){
-            return parseJWSToken(jwtstring);
+            return parseJWSToken(jwtstring, false);
         }
         return parseJWEToken(jwtstring);
     }
 
-    private JWTPlainToken parsePlainToken(String jwtstring) {
+
+    private JWSToken parseJWSToken(String jwtstring, boolean plainToken) {
         String[] parts = Strings.split(jwtstring,".");
-        if(parts.length!=2){
-            throw new JWTException("Invalid jwt plain token, Unexpected number of Base64URL parts, must be 2");
-        }
-        String headerBase64Url = parts[0];
-        String payloadBase64Url = parts[1];
-
-        String headerJson = Base64.decodeBase64ToString(headerBase64Url);
-        String payloadJson = Base64.decodeBase64ToString(payloadBase64Url);
-
-        Map<String,Object> header= JSONs.parse(headerJson,Map.class);
-        Map<String,Object> payload=JSONs.parse(payloadJson, Map.class);
-
-        return new JWTPlainToken(header, payload);
-    }
-
-    private JWSToken parseJWSToken(String jwtstring) {
-        String[] parts = Strings.split(jwtstring,".");
-        if(parts.length!=3){
+        if(parts.length!= (plainToken ? 2:3)){
             throw new JWTException("Invalid jwt signed token, Unexpected number of Base64URL parts, must be 3");
         }
         String headerBase64Url = parts[0];
         String payloadBase64Url = parts[1];
-        String signatureBase64Url = parts[2];
+
 
         String headerJson = Base64.decodeBase64ToString(headerBase64Url);
         String payloadJson = Base64.decodeBase64ToString(payloadBase64Url);
@@ -71,7 +55,10 @@ class DefaultJWTParser implements JWTParser{
         Map<String,Object> payload=JSONs.parse(payloadJson, Map.class);
 
         JWSToken token= new JWSToken(header, payload);
-        token.setSignature(signatureBase64Url);
+        if(!plainToken) {
+            String signatureBase64Url = parts[2];
+            token.setSignature(signatureBase64Url);
+        }
         return token;
     }
 

@@ -1,4 +1,4 @@
-package com.jn.agileway.jwt.sign;
+package com.jn.agileway.jwt;
 
 import com.jn.langx.security.Securitys;
 import com.jn.langx.security.crypto.cipher.AlgorithmParameterSupplier;
@@ -16,7 +16,7 @@ import java.security.spec.PSSParameterSpec;
 import java.util.List;
 import java.util.Map;
 
-public class Signs {
+class Signs {
     static Map<String,String> JWT_TO_HMAC_ALGORITHMS;
 
     static{

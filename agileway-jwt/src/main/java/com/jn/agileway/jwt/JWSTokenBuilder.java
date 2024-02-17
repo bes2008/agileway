@@ -5,6 +5,8 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Maps;
 import com.jn.langx.util.function.Consumer2;
 
+import javax.crypto.SecretKey;
+import java.security.PrivateKey;
 import java.util.Map;
 
 class JWSTokenBuilder implements JWTBuilder<JWSToken,JWSTokenBuilder> {
@@ -55,8 +57,30 @@ class JWSTokenBuilder implements JWTBuilder<JWSToken,JWSTokenBuilder> {
         return this;
     }
 
+    public JWSToken plain(){
+        JWSToken token = build(true);
+        new PlainSigner().sign(token);
+        return token;
+    }
+
+    public JWSToken sign(SecretKey secretKey){
+        JWSToken token = build();
+        new HMacSigner(secretKey).sign(token);
+        return token;
+    }
+
+    public JWSToken sign(PrivateKey privateKey){
+        JWSToken token = build();
+        new PKISigner(privateKey).sign(token);
+        return token;
+    }
+
     @Override
     public JWSToken build() {
+        return build(false);
+    }
+
+    private JWSToken build(boolean forcePlain) {
         if(Objs.isEmpty(header)){
             throw new JWTException("header is empty");
         }
@@ -67,6 +91,10 @@ class JWSTokenBuilder implements JWTBuilder<JWSToken,JWSTokenBuilder> {
         // header
         if (!header.containsKey(JWTs.Headers.TYPE)){
             header.put(JWTs.Headers.TYPE,JWTs.JWT_TYPE_DEFAULT);
+        }
+
+        if(forcePlain){
+            header.put(JWTs.Headers.ALGORITHM, JWTs.JWT_ALGORITHM_PLAIN);
         }
 
         return new JWSToken(header, payload);
