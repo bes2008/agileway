@@ -14,6 +14,9 @@ public class HMacVerifier implements Verifier {
     private SecretKey secretKey;
 
     public HMacVerifier(SecretKey secretKey){
+        if (secretKey.getEncoded() != null && secretKey.getEncoded().length < 256 / 8) {
+            throw new JWTException("The secret length must be at least 256 bits");
+        }
         this.secretKey = secretKey;
     }
 

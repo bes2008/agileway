@@ -6,7 +6,6 @@ import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.io.Charsets;
-import com.nimbusds.jose.KeyLengthException;
 
 import javax.crypto.SecretKey;
 import java.util.List;
