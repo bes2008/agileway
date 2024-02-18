@@ -302,8 +302,8 @@ public class JWTs {
     }
 
     public static JWSToken newJWTSignedToken(String signAlgorithm, Map<String, Object> header, Map<String, Object> payload, PrivateKey privateKey) {
-        if (Strings.isBlank(signAlgorithm) || !Signs.supportedJWTHMacAlgorithms().contains(signAlgorithm)) {
-            throw new JWTException("invalid jwt sign ( hmac sha ) algorithm: " + signAlgorithm);
+        if (Strings.isBlank(signAlgorithm) || !Signs.supportedJWTPKIAlgorithms().contains(signAlgorithm)) {
+            throw new JWTException("invalid jwt sign ( private key ) algorithm: " + signAlgorithm);
         }
         return getJWTService()
                 .newJWSTokenBuilder()
