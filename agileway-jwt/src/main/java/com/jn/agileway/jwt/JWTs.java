@@ -1,8 +1,10 @@
 package com.jn.agileway.jwt;
 
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.spi.CommonServiceProvider;
 
+import javax.crypto.SecretKey;
 import java.security.PrivateKey;
 import java.util.Map;
 
@@ -280,14 +282,35 @@ public class JWTs {
                 .plain();
     }
 
-    public static JWSToken newJWSToken(String signAlgorithm, Map<String,Object> payload, String secretKey){
-        return null;
+    /**
+     *
+     * @param signAlgorithm  @see JWTs.JWSAlgorithms
+     * @param payload the payload
+     * @param secretKey sign with a secret key
+     * @return a jws token
+     */
+    public static JWSToken newJWSToken(String signAlgorithm, Map<String,Object> header, Map<String,Object> payload, SecretKey secretKey){
+        if(Strings.isBlank(signAlgorithm) || !Signs.supportedJWTHMacAlgorithms().contains(signAlgorithm)){
+            throw new JWTException("invalid jwt sign ( hmac sha ) algorithm: "+signAlgorithm);
+        }
+        return new JWSTokenBuilder()
+                .withHeader(header)
+                .withAlgorithm(signAlgorithm)
+                .withType(JWT_TYPE_DEFAULT)
+                .withPayload(payload)
+                .sign(secretKey);
     }
 
-    public static JWSToken newJWSToken(String signAlgorithm, Map<String,Object> payload, PrivateKey privateKey){
-        return null;
+    public static JWSToken newJWSToken(String signAlgorithm, Map<String,Object> header, Map<String,Object> payload, PrivateKey privateKey){
+        if(Strings.isBlank(signAlgorithm) || !Signs.supportedJWTHMacAlgorithms().contains(signAlgorithm)){
+            throw new JWTException("invalid jwt sign ( hmac sha ) algorithm: "+signAlgorithm);
+        }
+        return new JWSTokenBuilder()
+                .withHeader(header)
+                .withAlgorithm(signAlgorithm)
+                .withType(JWT_TYPE_DEFAULT)
+                .withPayload(payload)
+                .sign(privateKey);
     }
-
-
 
 }

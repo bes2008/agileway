@@ -3,7 +3,7 @@ import com.jn.langx.util.collection.Collects;
 
 import java.util.List;
 
-public class PlainSigner implements Signer{
+public final class PlainSigner implements Signer{
 
     @Override
     public void sign(JWSToken token) {
