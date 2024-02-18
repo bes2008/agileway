@@ -253,17 +253,20 @@ public class JWTs {
         // EC 相关
 
         // SHA256withECDSA
+        // ECDSA using P-256 and SHA-256
         public static final String ES256 = "ES256";
 
         public static final String ES256K = "ES256K";
 
         // SHA384withECDSA
+        // ECDSA using P-384 and SHA-384
         public static final String ES384 = "ES384";
 
-        // SHA384withECDSA
+        // SHA512withECDSA
+        // ECDSA using P-521 and SHA-512
         public static final String ES512 = "ES512";
 
-        // SHA384withECDSA
+        // EdDSA
         public static final String EdDSA = "EdDSA";
     }
 
