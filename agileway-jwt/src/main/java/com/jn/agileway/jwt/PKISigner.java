@@ -46,9 +46,9 @@ public class PKISigner implements Signer {
         }
 
         byte[] data = (token.getHeader().toBase64UrlEncoded() + "." + token.getPayload().toBase64UrlEncoded()).getBytes(Charsets.UTF_8);
-        byte[] signature = Signatures.sign(signerSupplier.get(privateKey), data);
+        byte[] jcaSignature = Signatures.sign(signerSupplier.get(privateKey), data);
 
-        token.setSignature(Base64.encodeBase64URLSafeString(signature));
+        token.setSignature(Base64.encodeBase64URLSafeString(jcaSignature));
     }
 
     @Override

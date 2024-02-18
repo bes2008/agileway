@@ -9,6 +9,7 @@ import com.jn.langx.security.crypto.JCAEStandardName;
 import com.jn.langx.security.crypto.key.PKIs;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
+import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Lists;
@@ -288,6 +289,7 @@ public class JwtTests {
         System.out.println("=====================start to test ES"+bit+"=====================");
         // 创建 keyPair
         ECParameterSpec ecParameterSpec=ECurveParameterTable.get(Pipeline.of(ECurves.forJWSAlgorithm("ES"+bit)).findFirst());
+        Preconditions.checkNotEmpty(ecParameterSpec);
         KeyPair keyPair = PKIs.createKeyPair("EC",null,ecParameterSpec,Securitys.getSecureRandom());
 
         // 创建 plain token
