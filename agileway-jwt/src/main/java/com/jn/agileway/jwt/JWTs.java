@@ -313,4 +313,7 @@ public class JWTs {
                 .sign(privateKey);
     }
 
+    public static JWT parse(String token){
+        return getJWTService().newParser().parse(token);
+    }
 }
