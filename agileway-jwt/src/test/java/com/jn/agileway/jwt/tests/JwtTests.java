@@ -111,9 +111,16 @@ public class JwtTests {
     }
 
     @Test
-    public void testJWSToken_HS256() throws Exception{
+    public void testJWSToken_HS256_HS384_HS512() throws Exception{
+        testJWSToken_HMacSha(256);
+        testJWSToken_HMacSha(384);
+        testJWSToken_HMacSha(512);
+    }
+
+    private void testJWSToken_HMacSha(int bit) throws Exception{
+        System.out.println("=====================start to test HS"+bit+"=====================");
         // 创建 secret key
-        SecretKey secretKey = PKIs.createSecretKey(JCAEStandardName.AES.getName(),null,256, Securitys.getSecureRandom());
+        SecretKey secretKey = PKIs.createSecretKey(JCAEStandardName.AES.getName(),null,bit, Securitys.getSecureRandom());
 
         // 创建 plain token
         Map<String,Object> payload= Maps.newHashMap();
@@ -121,7 +128,7 @@ public class JwtTests {
         payload.put("abc",123);
 
 
-        final JWT token0 = JWTs.newJWTSignedToken(JWTs.JWSAlgorithms.HS256,null, payload, secretKey);
+        final JWSToken token0 = JWTs.newJWTSignedToken(JWTs.JWSAlgorithms.HS256,null, payload, secretKey);
 
         String tokenString=token0.toUtf8UrlEncodedToken();
 
@@ -129,7 +136,7 @@ public class JwtTests {
 
 
         // 使用agileway-jwt 的解析器进行解析
-        final JWT token1=JWTs.parse(tokenString);
+        final JWSToken token1=JWTs.parse(tokenString);
 
         // 使用jose 方式来解析
         final com.nimbusds.jwt.JWT token2=JWTParser.parse(tokenString);
@@ -178,10 +185,10 @@ public class JwtTests {
         });
 
         // 进行验证
-        System.out.println("token0 verify: "+new HMacVerifier(secretKey).verify((JWSToken) token0));
+        System.out.println("token0 verify: "+new HMacVerifier(secretKey).verify(token0));
         System.out.println("token1 verify: "+new HMacVerifier(secretKey).verify((JWSToken) token1));
 
         System.out.println("token2 verify: "+ ((SignedJWT)token2).verify(new MACVerifier(secretKey)) );
-
+        System.out.println("=====================end to test HS"+bit+"=====================");
     }
 }

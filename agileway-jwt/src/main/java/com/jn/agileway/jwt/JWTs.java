@@ -314,8 +314,8 @@ public class JWTs {
                 .sign(privateKey);
     }
 
-    public static JWT parse(String token) {
-        return getJWTService().newParser().parse(token);
+    public static <T extends JWT> T parse(String token) {
+        return (T)getJWTService().newParser().parse(token);
     }
 
     public static boolean isPlainToken(String algorithm) {
