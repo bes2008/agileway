@@ -101,4 +101,67 @@ public class JwtTests {
         });
 
     }
+
+    public void testJWSToken() throws Exception{
+        // 创建 plain token
+        Map<String,Object> payload= Maps.newHashMap();
+        payload.put("hello","world");
+        payload.put("abc",123);
+        final JWT token0 = JWTs.newJWTPlainToken(null, payload);
+
+        String tokenString=token0.toUtf8UrlEncodedToken();
+
+        System.out.println(tokenString);
+
+
+        // 使用agileway-jwt 的解析器进行解析
+        final JWT token1=JWTs.getJWTService().newParser().parse(tokenString);
+
+        // 使用jose 方式来解析
+        final com.nimbusds.jwt.JWT token2=JWTParser.parse(tokenString);
+
+        // 对header进行比较
+        Set<String> headerKeys=token2.getHeader().getIncludedParams();
+        Collects.forEach(headerKeys, new Consumer<String>() {
+            @Override
+            public void accept(String key) {
+                Object valueInToken2=token2.getHeader().getCustomParam(key);
+                Object valueInToken1=token1.getHeader().get(key);
+                Object valueInToken0=token0.getHeader().get(key);
+
+                String json0= JSONs.toJson(valueInToken0);
+                String json1= JSONs.toJson(valueInToken1);
+                String json2= JSONs.toJson(valueInToken2);
+
+                if(Objs.equals(key, JWTs.Headers.ALGORITHM ) || Objs.equals(key,JWTs.Headers.TYPE)){
+                    System.out.println(Objs.deepEquals(json0, json1) );
+                }else{
+                    System.out.println(Objs.deepEquals(json0, valueInToken1) && Objs.deepEquals(json0, json2));
+                }
+
+            }
+        });
+
+        // 对payload进行比较
+        Set<String> payloadKeys=token2.getJWTClaimsSet().getClaims().keySet();
+        Collects.forEach(payloadKeys, new Consumer<String>() {
+            @Override
+            public void accept(String key) {
+                Object valueInToken2= null;
+                try {
+                    valueInToken2 = token2.getJWTClaimsSet().getClaim(key);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+                Object valueInToken1=token1.getPayload().get(key);
+                Object valueInToken0=token0.getPayload().get(key);
+
+                String json0= JSONs.toJson(valueInToken0);
+                String json1= JSONs.toJson(valueInToken1);
+                String json2= JSONs.toJson(valueInToken2);
+                System.out.println(Objs.deepEquals(json0, json1) && Objs.deepEquals(json0, json2));
+            }
+        });
+
+    }
 }

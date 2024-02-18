@@ -1,6 +1,5 @@
 package com.jn.agileway.jwt;
 
-
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.spi.CommonServiceProvider;
 
@@ -10,33 +9,12 @@ import java.util.Map;
 /**
  * 生成 JWT string
  * JWT => JsonTreeNode => byte[] => enc => Base64URL parts => sign => merge =>  String
- *
  * 解析 JWT string
  * String => split  => verify_sign => Base64URL parts = dec  => byte[] => JsonTreeNode => JWT
  *
  */
 public class JWTs {
-    public static JWTService getJWTService(){
-        return Pipeline.<JWTService>of(new CommonServiceProvider<JWTService>().get(JWTService.class))
-                .findFirst();
-    }
 
-    public static JWSToken newJWTPlainToken(Map<String,Object> header,Map<String,Object> payload){
-        return new JWSTokenBuilder()
-                .withHeader(header)
-                .withAlgorithm(JWT_ALGORITHM_PLAIN)
-                .withType(JWT_TYPE_DEFAULT)
-                .withPayload(payload)
-                .plain();
-    }
-
-    public static JWSToken newJWSToken(String signAlgorithm, Map<String,Object> payload, String secretKey){
-        return null;
-    }
-
-    public static JWSToken newJWSToken(String signAlgorithm, Map<String,Object> payload, PrivateKey privateKey){
-        return null;
-    }
     public static final String JWT_ALGORITHM_PLAIN="none";
     public static final String JWT_TYPE_DEFAULT="JWT";
 
@@ -245,5 +223,71 @@ public class JWTs {
             public static final String BASE64_URL_ENCODE_PAYLOAD = "b64";
 
     }
+
+    public static class JWSAlgorithms{
+        // hmac 相关,使用的是 secret key
+        public static final String HS256="HS256";
+        public static final String HS384="HS384";
+        public static final String HS512="HS512";
+
+        // 下面的是一些 private key 进行签名的算法
+        // rsa 相关
+
+        // SHA256withRSA
+        public static final String RS256="RS256";
+        // SHA384withRSA
+        public static final String RS384="RS384";
+        // SHA512withRSA
+        public static final String RS512="RS512";
+
+        // RSASSA-PSS, SHA-256
+        public static final String PS256="PS256";
+
+        // RSASSA-PSS, SHA-384
+        public static final String PS384="PS384";
+
+        // RSASSA-PSS, SHA-512
+        public static final String PS512="PS512";
+
+        // EC 相关
+
+        // SHA256withECDSA
+        public static final String ES256="ES256";
+
+        public static final String ES256K="ES256K";
+
+        // SHA384withECDSA
+        public static final String ES384="ES384";
+
+        // SHA384withECDSA
+        public static final String ES512="ES512";
+
+        // SHA384withECDSA
+        public static final String EdDSA="EdDSA";
+    }
+
+    public static JWTService getJWTService(){
+        return Pipeline.<JWTService>of(new CommonServiceProvider<JWTService>().get(JWTService.class))
+                .findFirst();
+    }
+
+    public static JWSToken newJWTPlainToken(Map<String,Object> header,Map<String,Object> payload){
+        return new JWSTokenBuilder()
+                .withHeader(header)
+                .withAlgorithm(JWT_ALGORITHM_PLAIN)
+                .withType(JWT_TYPE_DEFAULT)
+                .withPayload(payload)
+                .plain();
+    }
+
+    public static JWSToken newJWSToken(String signAlgorithm, Map<String,Object> payload, String secretKey){
+        return null;
+    }
+
+    public static JWSToken newJWSToken(String signAlgorithm, Map<String,Object> payload, PrivateKey privateKey){
+        return null;
+    }
+
+
 
 }
