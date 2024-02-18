@@ -17,7 +17,7 @@ public class PKIVerifier implements Verifier {
     }
 
     @Override
-    public boolean verify(JWSToken token, String signature) {
+    public boolean verify(JWSToken token) {
         String jwtSignAlgorithm = token.getHeader().getAlgorithm();
         Supplier<PublicKey, Signature> verifierSupplier = Signs.JWT_PKI_ALGORITHM_VERIFIER_SUPPLIER.get(jwtSignAlgorithm);
 
@@ -26,6 +26,7 @@ public class PKIVerifier implements Verifier {
         }
 
         byte[] data = (token.getHeader().toBase64UrlEncoded() + "." + token.getPayload().toBase64UrlEncoded()).getBytes(Charsets.UTF_8);
+        String signature = token.getSignature();
         return Signatures.verify(verifierSupplier.get(this.publicKey), data, Base64.decodeBase64(signature));
     }
 }

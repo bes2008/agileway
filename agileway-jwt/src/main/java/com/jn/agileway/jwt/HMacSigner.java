@@ -6,6 +6,8 @@ import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.io.Charsets;
+import com.nimbusds.jose.KeyLengthException;
+
 import javax.crypto.SecretKey;
 import java.util.List;
 
@@ -14,6 +16,9 @@ public class HMacSigner implements Signer {
     private SecretKey secretKey;
 
     public HMacSigner(SecretKey secretKey){
+        if (secretKey.getEncoded() != null && secretKey.getEncoded().length < 256 / 8) {
+            throw new JWTException("The secret length must be at least 256 bits");
+        }
         this.secretKey = secretKey;
     }
 

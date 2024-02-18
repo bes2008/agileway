@@ -18,7 +18,7 @@ public class HMacVerifier implements Verifier {
     }
 
     @Override
-    public boolean verify(JWSToken token, String expectedSignature) {
+    public boolean verify(JWSToken token) {
         String jwtSignAlgorithm = token.getHeader().getAlgorithm();
         String hmacAlgorithm= Signs.JWT_TO_HMAC_ALGORITHMS.get(jwtSignAlgorithm);
         if(Strings.isEmpty(hmacAlgorithm)){
@@ -27,6 +27,7 @@ public class HMacVerifier implements Verifier {
         byte[] data=(token.getHeader().toBase64UrlEncoded()+"."+token.getPayload().toBase64UrlEncoded()).getBytes(Charsets.UTF_8);
         byte[] signature= HMacs.hmac(hmacAlgorithm, secretKey, data);
         String actualSignature =Base64.encodeBase64URLSafeString(signature);
+        String expectedSignature = token.getSignature();
         return Objs.equals(actualSignature, expectedSignature);
     }
 

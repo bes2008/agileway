@@ -1,8 +1,13 @@
 package com.jn.agileway.jwt.tests;
 
+import com.jn.agileway.jwt.HMacVerifier;
+import com.jn.agileway.jwt.JWSToken;
 import com.jn.agileway.jwt.JWT;
 import com.jn.agileway.jwt.JWTs;
 import com.jn.easyjson.core.util.JSONs;
+import com.jn.langx.security.Securitys;
+import com.jn.langx.security.crypto.JCAEStandardName;
+import com.jn.langx.security.crypto.key.PKIs;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
@@ -11,9 +16,12 @@ import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Maps;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTParser;
+import com.nimbusds.jwt.SignedJWT;
 import org.junit.Test;
 
+import javax.crypto.SecretKey;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +60,7 @@ public class JwtTests {
 
 
         // 使用agileway-jwt 的解析器进行解析
-        final JWT token1=JWTs.getJWTService().newParser().parse(tokenString);
+        final JWT token1=JWTs.parse(tokenString);
 
         // 使用jose 方式来解析
         final com.nimbusds.jwt.JWT token2=JWTParser.parse(tokenString);
@@ -102,12 +110,18 @@ public class JwtTests {
 
     }
 
-    public void testJWSToken() throws Exception{
+    @Test
+    public void testJWSToken_HS256() throws Exception{
+        // 创建 secret key
+        SecretKey secretKey = PKIs.createSecretKey(JCAEStandardName.AES.getName(),null,256, Securitys.getSecureRandom());
+
         // 创建 plain token
         Map<String,Object> payload= Maps.newHashMap();
         payload.put("hello","world");
         payload.put("abc",123);
-        final JWT token0 = JWTs.newJWTPlainToken(null, payload);
+
+
+        final JWT token0 = JWTs.newJWTSignedToken(JWTs.JWSAlgorithms.HS256,null, payload, secretKey);
 
         String tokenString=token0.toUtf8UrlEncodedToken();
 
@@ -115,7 +129,7 @@ public class JwtTests {
 
 
         // 使用agileway-jwt 的解析器进行解析
-        final JWT token1=JWTs.getJWTService().newParser().parse(tokenString);
+        final JWT token1=JWTs.parse(tokenString);
 
         // 使用jose 方式来解析
         final com.nimbusds.jwt.JWT token2=JWTParser.parse(tokenString);
@@ -162,6 +176,12 @@ public class JwtTests {
                 System.out.println(Objs.deepEquals(json0, json1) && Objs.deepEquals(json0, json2));
             }
         });
+
+        // 进行验证
+        System.out.println("token0 verify: "+new HMacVerifier(secretKey).verify((JWSToken) token0));
+        System.out.println("token1 verify: "+new HMacVerifier(secretKey).verify((JWSToken) token1));
+
+        System.out.println("token2 verify: "+ ((SignedJWT)token2).verify(new MACVerifier(secretKey)) );
 
     }
 }

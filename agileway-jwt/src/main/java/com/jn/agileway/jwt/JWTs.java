@@ -1,5 +1,6 @@
 package com.jn.agileway.jwt;
 
+import com.jn.agileway.jwt.jwe.JWEToken;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.spi.CommonServiceProvider;
@@ -274,7 +275,8 @@ public class JWTs {
     }
 
     public static JWSToken newJWTPlainToken(Map<String,Object> header,Map<String,Object> payload){
-        return new JWSTokenBuilder()
+        return getJWTService()
+                .newJWSTokenBuilder()
                 .withHeader(header)
                 .withAlgorithm(JWT_ALGORITHM_PLAIN)
                 .withType(JWT_TYPE_DEFAULT)
@@ -289,11 +291,12 @@ public class JWTs {
      * @param secretKey sign with a secret key
      * @return a jws token
      */
-    public static JWSToken newJWSToken(String signAlgorithm, Map<String,Object> header, Map<String,Object> payload, SecretKey secretKey){
+    public static JWSToken newJWTSignedToken(String signAlgorithm, Map<String,Object> header, Map<String,Object> payload, SecretKey secretKey){
         if(Strings.isBlank(signAlgorithm) || !Signs.supportedJWTHMacAlgorithms().contains(signAlgorithm)){
             throw new JWTException("invalid jwt sign ( hmac sha ) algorithm: "+signAlgorithm);
         }
-        return new JWSTokenBuilder()
+        return getJWTService()
+                .newJWSTokenBuilder()
                 .withHeader(header)
                 .withAlgorithm(signAlgorithm)
                 .withType(JWT_TYPE_DEFAULT)
@@ -301,11 +304,12 @@ public class JWTs {
                 .sign(secretKey);
     }
 
-    public static JWSToken newJWSToken(String signAlgorithm, Map<String,Object> header, Map<String,Object> payload, PrivateKey privateKey){
+    public static JWSToken newJWTSignedToken(String signAlgorithm, Map<String,Object> header, Map<String,Object> payload, PrivateKey privateKey){
         if(Strings.isBlank(signAlgorithm) || !Signs.supportedJWTHMacAlgorithms().contains(signAlgorithm)){
             throw new JWTException("invalid jwt sign ( hmac sha ) algorithm: "+signAlgorithm);
         }
-        return new JWSTokenBuilder()
+        return getJWTService()
+                .newJWSTokenBuilder()
                 .withHeader(header)
                 .withAlgorithm(signAlgorithm)
                 .withType(JWT_TYPE_DEFAULT)
@@ -316,4 +320,13 @@ public class JWTs {
     public static JWT parse(String token){
         return getJWTService().newParser().parse(token);
     }
+
+    public static boolean isPlainToken(String algorithm){
+        return getAlgorithmType(algorithm)==AlgorithmType.NONE;
+    }
+
+    public static AlgorithmType getAlgorithmType(String algorithm){
+        return getJWTService().getAlgorithmType(algorithm);
+    }
+
 }

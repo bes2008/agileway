@@ -66,4 +66,9 @@ public class JoseJWEPlugin implements JWEPlugin {
             throw new JWTException("invalid jwt encrypted token, "+e.getMessage(),e);
         }
     }
+
+    @Override
+    public boolean verify(JWEToken jwe) {
+        return false;
+    }
 }

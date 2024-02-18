@@ -11,4 +11,5 @@ public interface JWTService {
 
     JWEPlugin getJWEPlugin();
     JWTParser newParser();
+    JWSTokenBuilder newJWSTokenBuilder();
 }
