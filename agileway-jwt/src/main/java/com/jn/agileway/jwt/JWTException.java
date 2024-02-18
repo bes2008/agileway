@@ -1,6 +1,6 @@
 package com.jn.agileway.jwt;
 
-public class JWTException extends RuntimeException{
+public class JWTException extends RuntimeException {
     public JWTException() {
         super();
     }

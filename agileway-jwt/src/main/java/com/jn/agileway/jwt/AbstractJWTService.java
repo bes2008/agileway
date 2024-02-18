@@ -12,13 +12,13 @@ public abstract class AbstractJWTService implements JWTService {
 
     @Override
     public final AlgorithmType getAlgorithmType(String algorithmName) {
-        if (Strings.equals(JWTs.JWT_ALGORITHM_PLAIN, algorithmName)){
+        if (Strings.equals(JWTs.JWT_ALGORITHM_PLAIN, algorithmName)) {
             return AlgorithmType.NONE;
         }
-        if(supportedJWSAlgorithms().contains(algorithmName)){
+        if (supportedJWSAlgorithms().contains(algorithmName)) {
             return AlgorithmType.JWS;
         }
-        if(supportedJWEAlgorithms().contains(algorithmName)){
+        if (supportedJWEAlgorithms().contains(algorithmName)) {
             return AlgorithmType.JWE;
         }
         return AlgorithmType.UNSUPPORTED;
@@ -30,11 +30,11 @@ public abstract class AbstractJWTService implements JWTService {
         return JWTs.getJWTService().getJWEPlugin().getSupportedJWEAlgorithms();
     }
 
-    public JWSTokenBuilder newJWSTokenBuilder(){
+    public JWSTokenBuilder newJWSTokenBuilder() {
         return new JWSTokenBuilder();
     }
 
-    public JWTParser newParser(){
+    public JWTParser newParser() {
         return new DefaultJWTParser();
     }
 }

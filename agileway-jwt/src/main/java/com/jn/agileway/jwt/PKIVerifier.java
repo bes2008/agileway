@@ -12,7 +12,7 @@ public class PKIVerifier implements Verifier {
 
     private PublicKey publicKey;
 
-    public PKIVerifier(PublicKey publicKey){
+    public PKIVerifier(PublicKey publicKey) {
         this.publicKey = publicKey;
     }
 

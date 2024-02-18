@@ -21,7 +21,7 @@ import java.util.List;
 public class JoseJWEPlugin implements JWEPlugin {
 
 
-    private Holder<List<String>> jweAlgorithms=new Holder<List<String>>();
+    private Holder<List<String>> jweAlgorithms = new Holder<List<String>>();
 
     @Override
     public JWETokenBuilder newJWEBuilder() {
@@ -30,15 +30,15 @@ public class JoseJWEPlugin implements JWEPlugin {
 
     @Override
     public List<String> getSupportedJWEAlgorithms() {
-        if(jweAlgorithms.isNull()) {
-            List<String> algorithms= Pipeline.of(Reflects.getAllDeclaredFields(JWEAlgorithm.class, true))
+        if (jweAlgorithms.isNull()) {
+            List<String> algorithms = Pipeline.of(Reflects.getAllDeclaredFields(JWEAlgorithm.class, true))
                     .filter(new Predicate<Field>() {
                         @Override
                         public boolean test(Field field) {
-                            if(!Modifiers.isStatic(field)){
+                            if (!Modifiers.isStatic(field)) {
                                 return false;
                             }
-                            if(field.getType()!= JWEAlgorithm.class){
+                            if (field.getType() != JWEAlgorithm.class) {
                                 return false;
                             }
                             return true;
@@ -46,7 +46,7 @@ public class JoseJWEPlugin implements JWEPlugin {
                     }).map(new Function<Field, String>() {
                         @Override
                         public String apply(Field field) {
-                            JWEAlgorithm algorithm= Reflects.getFieldValue(field, JWEAlgorithm.class, true, true);
+                            JWEAlgorithm algorithm = Reflects.getFieldValue(field, JWEAlgorithm.class, true, true);
                             return algorithm.getName();
                         }
                     })
@@ -62,8 +62,8 @@ public class JoseJWEPlugin implements JWEPlugin {
         try {
             EncryptedJWT jwt = EncryptedJWT.parse(jwtstring);
             return new JoseJwtEncryptedToken((EncryptedJWT) jwt);
-        }catch (Throwable e){
-            throw new JWTException("invalid jwt encrypted token, "+e.getMessage(),e);
+        } catch (Throwable e) {
+            throw new JWTException("invalid jwt encrypted token, " + e.getMessage(), e);
         }
     }
 

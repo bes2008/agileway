@@ -9,10 +9,10 @@ import javax.crypto.SecretKey;
 import java.security.PrivateKey;
 import java.util.Map;
 
-class JWSTokenBuilder implements JWTBuilder<JWSToken,JWSTokenBuilder> {
+class JWSTokenBuilder implements JWTBuilder<JWSToken, JWSTokenBuilder> {
 
     Map<String, Object> header = Maps.<String, Object>newHashMap();
-    Map<String,Object> payload= Maps.<String, Object>newHashMap();
+    Map<String, Object> payload = Maps.<String, Object>newHashMap();
 
 
     public JWSTokenBuilder withType(String type) {
@@ -26,7 +26,7 @@ class JWSTokenBuilder implements JWTBuilder<JWSToken,JWSTokenBuilder> {
         return this;
     }
 
-    public JWSTokenBuilder withHeader(Map<String,Object> header){
+    public JWSTokenBuilder withHeader(Map<String, Object> header) {
         Collects.forEach(header, new Consumer2<String, Object>() {
             @Override
             public void accept(String key, Object value) {
@@ -38,10 +38,11 @@ class JWSTokenBuilder implements JWTBuilder<JWSToken,JWSTokenBuilder> {
 
     @Override
     public JWSTokenBuilder withHeaderClaim(String claimName, Object value) {
-        header.put(claimName,value);
+        header.put(claimName, value);
         return this;
     }
-    public JWSTokenBuilder withPayload(Map<String,Object> payload){
+
+    public JWSTokenBuilder withPayload(Map<String, Object> payload) {
         Collects.forEach(payload, new Consumer2<String, Object>() {
             @Override
             public void accept(String key, Object value) {
@@ -53,23 +54,23 @@ class JWSTokenBuilder implements JWTBuilder<JWSToken,JWSTokenBuilder> {
 
     @Override
     public JWSTokenBuilder withPayloadClaim(String claimName, Object value) {
-        payload.put(claimName,value);
+        payload.put(claimName, value);
         return this;
     }
 
-    public JWSToken plain(){
+    public JWSToken plain() {
         JWSToken token = build(true);
         new PlainSigner().sign(token);
         return token;
     }
 
-    public JWSToken sign(SecretKey secretKey){
+    public JWSToken sign(SecretKey secretKey) {
         JWSToken token = build();
         new HMacSigner(secretKey).sign(token);
         return token;
     }
 
-    public JWSToken sign(PrivateKey privateKey){
+    public JWSToken sign(PrivateKey privateKey) {
         JWSToken token = build();
         new PKISigner(privateKey).sign(token);
         return token;
@@ -81,19 +82,19 @@ class JWSTokenBuilder implements JWTBuilder<JWSToken,JWSTokenBuilder> {
     }
 
     private JWSToken build(boolean forcePlain) {
-        if(Objs.isEmpty(header)){
+        if (Objs.isEmpty(header)) {
             throw new JWTException("header is empty");
         }
-        if(Objs.isEmpty(payload)){
+        if (Objs.isEmpty(payload)) {
             throw new JWTException("payload is empty");
         }
 
         // header
-        if (!header.containsKey(JWTs.Headers.TYPE)){
-            header.put(JWTs.Headers.TYPE,JWTs.JWT_TYPE_DEFAULT);
+        if (!header.containsKey(JWTs.Headers.TYPE)) {
+            header.put(JWTs.Headers.TYPE, JWTs.JWT_TYPE_DEFAULT);
         }
 
-        if(forcePlain){
+        if (forcePlain) {
             header.put(JWTs.Headers.ALGORITHM, JWTs.JWT_ALGORITHM_PLAIN);
         }
 

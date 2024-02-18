@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class Header extends ClaimSet {
-    public Header(Map<String, Object> claims){
-       super(claims);
+    public Header(Map<String, Object> claims) {
+        super(claims);
     }
 
     public String getType() {
@@ -28,7 +28,7 @@ public class Header extends ClaimSet {
         return (Set<String>) this.get(JWTs.Headers.CRITICAL);
     }
 
-    public String toBase64UrlEncoded(){
+    public String toBase64UrlEncoded() {
         return Base64.encodeBase64URLSafeString(JSONs.toJson(getAllClaims()).getBytes(Charsets.UTF_8));
     }
 

@@ -8,7 +8,7 @@ import com.jn.langx.util.collection.MapAccessor;
 
 import java.util.Map;
 
-class DefaultJWTParser implements JWTParser{
+class DefaultJWTParser implements JWTParser {
     @Override
     public JWT parse(String jwtstring) {
         final int firstDotPos = jwtstring.indexOf(".");
@@ -18,21 +18,21 @@ class DefaultJWTParser implements JWTParser{
         }
         String headerBase64Url = jwtstring.substring(0, firstDotPos);
 
-        String headerJsonString=Base64.decodeBase64ToString(headerBase64Url);
-        MapAccessor headerAccessor = new MapAccessor( JSONs.<Map<String,Object>>parse(headerJsonString,Map.class));
+        String headerJsonString = Base64.decodeBase64ToString(headerBase64Url);
+        MapAccessor headerAccessor = new MapAccessor(JSONs.<Map<String, Object>>parse(headerJsonString, Map.class));
         String algorithm = headerAccessor.getString(JWTs.Headers.ALGORITHM);
 
-        if (Strings.isBlank(algorithm)){
+        if (Strings.isBlank(algorithm)) {
             throw new JWTException("invalid jwt token: missing `alg` header");
         }
         AlgorithmType algorithmType = JWTs.getJWTService().getAlgorithmType(algorithm);
-        if(algorithmType==AlgorithmType.UNSUPPORTED){
-            throw new JWTException("unsupported jwt algorithm: "+ algorithm);
+        if (algorithmType == AlgorithmType.UNSUPPORTED) {
+            throw new JWTException("unsupported jwt algorithm: " + algorithm);
         }
-        if(algorithmType==AlgorithmType.NONE){
+        if (algorithmType == AlgorithmType.NONE) {
             return parseJWSToken(jwtstring, true);
         }
-        if(algorithmType==AlgorithmType.JWS){
+        if (algorithmType == AlgorithmType.JWS) {
             return parseJWSToken(jwtstring, false);
         }
         return parseJWEToken(jwtstring);
@@ -40,8 +40,8 @@ class DefaultJWTParser implements JWTParser{
 
 
     private JWSToken parseJWSToken(String jwtstring, boolean plainToken) {
-        String[] parts = Strings.split(jwtstring,".");
-        if(parts.length!= (plainToken ? 2:3)){
+        String[] parts = Strings.split(jwtstring, ".");
+        if (parts.length != (plainToken ? 2 : 3)) {
             throw new JWTException("Invalid jwt signed token, Unexpected number of Base64URL parts, must be 3");
         }
         String headerBase64Url = parts[0];
@@ -51,20 +51,20 @@ class DefaultJWTParser implements JWTParser{
         String headerJson = Base64.decodeBase64ToString(headerBase64Url);
         String payloadJson = Base64.decodeBase64ToString(payloadBase64Url);
 
-        Map<String,Object> header= JSONs.parse(headerJson,Map.class);
-        Map<String,Object> payload=JSONs.parse(payloadJson, Map.class);
+        Map<String, Object> header = JSONs.parse(headerJson, Map.class);
+        Map<String, Object> payload = JSONs.parse(payloadJson, Map.class);
 
-        JWSToken token= new JWSToken(header, payload);
-        if(!plainToken) {
+        JWSToken token = new JWSToken(header, payload);
+        if (!plainToken) {
             String signatureBase64Url = parts[2];
             token.setSignature(signatureBase64Url);
         }
         return token;
     }
 
-    private JWEToken parseJWEToken(String jwtstring){
-        String[] parts = Strings.split(jwtstring,".");
-        if(parts.length!=5){
+    private JWEToken parseJWEToken(String jwtstring) {
+        String[] parts = Strings.split(jwtstring, ".");
+        if (parts.length != 5) {
             throw new JWTException("Invalid jwt encrypted token, Unexpected number of Base64URL parts, must be 5 ");
         }
         return JWTs.getJWTService().getJWEPlugin().parse(jwtstring);

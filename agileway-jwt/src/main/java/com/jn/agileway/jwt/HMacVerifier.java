@@ -13,7 +13,7 @@ public class HMacVerifier implements Verifier {
 
     private SecretKey secretKey;
 
-    public HMacVerifier(SecretKey secretKey){
+    public HMacVerifier(SecretKey secretKey) {
         if (secretKey.getEncoded() != null && secretKey.getEncoded().length < 256 / 8) {
             throw new JWTException("The secret length must be at least 256 bits");
         }
@@ -23,13 +23,13 @@ public class HMacVerifier implements Verifier {
     @Override
     public boolean verify(JWSToken token) {
         String jwtSignAlgorithm = token.getHeader().getAlgorithm();
-        String hmacAlgorithm= Signs.JWT_TO_HMAC_ALGORITHMS.get(jwtSignAlgorithm);
-        if(Strings.isEmpty(hmacAlgorithm)){
+        String hmacAlgorithm = Signs.JWT_TO_HMAC_ALGORITHMS.get(jwtSignAlgorithm);
+        if (Strings.isEmpty(hmacAlgorithm)) {
             throw new JWTException(StringTemplates.formatWithPlaceholder("invalid jwt sign token: unsupported algorithm: {}", jwtSignAlgorithm));
         }
-        byte[] data=(token.getHeader().toBase64UrlEncoded()+"."+token.getPayload().toBase64UrlEncoded()).getBytes(Charsets.UTF_8);
-        byte[] signature= HMacs.hmac(hmacAlgorithm, secretKey, data);
-        String actualSignature =Base64.encodeBase64URLSafeString(signature);
+        byte[] data = (token.getHeader().toBase64UrlEncoded() + "." + token.getPayload().toBase64UrlEncoded()).getBytes(Charsets.UTF_8);
+        byte[] signature = HMacs.hmac(hmacAlgorithm, secretKey, data);
+        String actualSignature = Base64.encodeBase64URLSafeString(signature);
         String expectedSignature = token.getSignature();
         return Objs.equals(actualSignature, expectedSignature);
     }

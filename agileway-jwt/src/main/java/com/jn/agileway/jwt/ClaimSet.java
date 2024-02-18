@@ -11,14 +11,15 @@ import java.util.Map;
 
 class ClaimSet implements ValueGetter2<String> {
     private MapAccessor claimsAccessor;
-    public ClaimSet(Map<String, Object> map){
-        if(map==null){
-            map= Maps.newHashMap();
+
+    public ClaimSet(Map<String, Object> map) {
+        if (map == null) {
+            map = Maps.newHashMap();
         }
-        this.claimsAccessor=new MapAccessor(map);
+        this.claimsAccessor = new MapAccessor(map);
     }
 
-    public final Map<String,Object> getAllClaims(){
+    public final Map<String, Object> getAllClaims() {
         return claimsAccessor.getTarget();
     }
 
@@ -29,7 +30,7 @@ class ClaimSet implements ValueGetter2<String> {
 
     @Override
     public boolean isNull(String key) {
-        return  claimsAccessor.isNull(key);
+        return claimsAccessor.isNull(key);
     }
 
     @Override
@@ -49,7 +50,7 @@ class ClaimSet implements ValueGetter2<String> {
 
     @Override
     public String getString(String key, String defaultValue) {
-        return claimsAccessor.getString(key,defaultValue);
+        return claimsAccessor.getString(key, defaultValue);
     }
 
     @Override
@@ -69,7 +70,7 @@ class ClaimSet implements ValueGetter2<String> {
 
     @Override
     public Byte getByte(String key, Byte defaultValue) {
-        return claimsAccessor.getByte(key,defaultValue);
+        return claimsAccessor.getByte(key, defaultValue);
     }
 
     @Override
@@ -79,7 +80,7 @@ class ClaimSet implements ValueGetter2<String> {
 
     @Override
     public Short getShort(String key, Short defaultValue) {
-        return claimsAccessor.getShort(key,defaultValue);
+        return claimsAccessor.getShort(key, defaultValue);
     }
 
     @Override
@@ -89,7 +90,7 @@ class ClaimSet implements ValueGetter2<String> {
 
     @Override
     public Integer getInteger(String key, Integer defaultValue) {
-        return claimsAccessor.getInteger(key,defaultValue);
+        return claimsAccessor.getInteger(key, defaultValue);
     }
 
     @Override
@@ -99,7 +100,7 @@ class ClaimSet implements ValueGetter2<String> {
 
     @Override
     public Double getDouble(String key, Double defaultValue) {
-        return claimsAccessor.getDouble(key,defaultValue);
+        return claimsAccessor.getDouble(key, defaultValue);
     }
 
     @Override
@@ -109,7 +110,7 @@ class ClaimSet implements ValueGetter2<String> {
 
     @Override
     public Float getFloat(String key, Float defaultValue) {
-        return claimsAccessor.getFloat(key,defaultValue);
+        return claimsAccessor.getFloat(key, defaultValue);
     }
 
     @Override
@@ -119,7 +120,7 @@ class ClaimSet implements ValueGetter2<String> {
 
     @Override
     public Long getLong(String key, Long defaultValue) {
-        return claimsAccessor.getLong(key,defaultValue);
+        return claimsAccessor.getLong(key, defaultValue);
     }
 
     @Override
@@ -129,57 +130,57 @@ class ClaimSet implements ValueGetter2<String> {
 
     @Override
     public Boolean getBoolean(String key, Boolean defaultValue) {
-        return claimsAccessor.getBoolean(key,defaultValue);
+        return claimsAccessor.getBoolean(key, defaultValue);
     }
 
     @Override
     public Object get(String key, Function<Object, Object> mapper) {
-        return claimsAccessor.get(key,mapper);
+        return claimsAccessor.get(key, mapper);
     }
 
     @Override
     public String getString(String key, Function<Object, String> mapper) {
-        return claimsAccessor.getString(key,mapper);
+        return claimsAccessor.getString(key, mapper);
     }
 
     @Override
     public Character getCharacter(String key, Function<Object, Character> mapper) {
-        return claimsAccessor.getCharacter(key,mapper);
+        return claimsAccessor.getCharacter(key, mapper);
     }
 
     @Override
     public Byte getByte(String key, Function<Object, Byte> mapper) {
-        return claimsAccessor.getByte(key,mapper);
+        return claimsAccessor.getByte(key, mapper);
     }
 
     @Override
     public Short getShort(String key, Function<Object, Short> mapper) {
-        return claimsAccessor.getShort(key,mapper);
+        return claimsAccessor.getShort(key, mapper);
     }
 
     @Override
     public Integer getInteger(String key, Function<Object, Integer> mapper) {
-        return claimsAccessor.getInteger(key,mapper);
+        return claimsAccessor.getInteger(key, mapper);
     }
 
     @Override
     public Double getDouble(String key, Function<Object, Double> mapper) {
-        return claimsAccessor.getDouble(key,mapper);
+        return claimsAccessor.getDouble(key, mapper);
     }
 
     @Override
     public Float getFloat(String key, Function<Object, Float> mapper) {
-        return claimsAccessor.getFloat(key,mapper);
+        return claimsAccessor.getFloat(key, mapper);
     }
 
     @Override
     public Long getLong(String key, Function<Object, Long> mapper) {
-        return claimsAccessor.getLong(key,mapper);
+        return claimsAccessor.getLong(key, mapper);
     }
 
     @Override
     public Boolean getBoolean(String key, Function<Object, Boolean> mapper) {
-        return claimsAccessor.getBoolean(key,mapper);
+        return claimsAccessor.getBoolean(key, mapper);
     }
 
     @Override

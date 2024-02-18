@@ -17,18 +17,19 @@ import java.util.List;
 import java.util.Map;
 
 class Signs {
-    static Map<String,String> JWT_TO_HMAC_ALGORITHMS;
+    static Map<String, String> JWT_TO_HMAC_ALGORITHMS;
 
-    static{
-        Map<String,String>  map  = Maps.newLinkedHashMap();
-        map.put(JWTs.JWSAlgorithms.HS256,"hmacsha256");
-        map.put(JWTs.JWSAlgorithms.HS384,"hmacsha384");
-        map.put(JWTs.JWSAlgorithms.HS512,"hmacsha512");
-        JWT_TO_HMAC_ALGORITHMS=map;
+    static {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put(JWTs.JWSAlgorithms.HS256, "hmacsha256");
+        map.put(JWTs.JWSAlgorithms.HS384, "hmacsha384");
+        map.put(JWTs.JWSAlgorithms.HS512, "hmacsha512");
+        JWT_TO_HMAC_ALGORITHMS = map;
     }
 
     static Map<String, Supplier<PrivateKey, Signature>> JWT_PKI_ALGORITHM_SIGNER_SUPPLIER;
     static Map<String, Supplier<PublicKey, Signature>> JWT_PKI_ALGORITHM_VERIFIER_SUPPLIER;
+
     static {
         Map<String, Supplier<PrivateKey, Signature>> map = Maps.newLinkedHashMap();
         // RSA 相关
@@ -113,8 +114,6 @@ class Signs {
     }
 
 
-
-
     static {
         Map<String, Supplier<PublicKey, Signature>> map = Maps.newLinkedHashMap();
         // RSA 相关
@@ -164,7 +163,7 @@ class Signs {
         map.put("PS512", new Supplier<PublicKey, Signature>() {
             @Override
             public Signature get(PublicKey publicKey) {
-                final    AlgorithmParameterSpec parameterSpec = new PSSParameterSpec("SHA-512", "MGF1", new MGF1ParameterSpec("SHA-512"), 64, 1);
+                final AlgorithmParameterSpec parameterSpec = new PSSParameterSpec("SHA-512", "MGF1", new MGF1ParameterSpec("SHA-512"), 64, 1);
                 return Signatures.createSignature("RSASSA-PSS", null, publicKey, new AlgorithmParameterSupplier() {
                     @Override
                     public Object get(Key key, String s, String s1, Provider provider, SecureRandom secureRandom) {
@@ -213,15 +212,15 @@ class Signs {
         JWT_PKI_ALGORITHM_VERIFIER_SUPPLIER = map;
     }
 
-    public static List<String> supportedJWTHMacAlgorithms(){
+    public static List<String> supportedJWTHMacAlgorithms() {
         return Lists.newArrayList(JWT_TO_HMAC_ALGORITHMS.keySet());
     }
 
-    public static List<String> supportedJWTPKIAlgorithms(){
+    public static List<String> supportedJWTPKIAlgorithms() {
         return Lists.newArrayList(JWT_PKI_ALGORITHM_SIGNER_SUPPLIER.keySet());
     }
 
-    public static List<String> supportedJWTSignAlgorithms(){
+    public static List<String> supportedJWTSignAlgorithms() {
         return Pipeline.<String>of(supportedJWTHMacAlgorithms())
                 .addAll(supportedJWTPKIAlgorithms())
                 .asList();

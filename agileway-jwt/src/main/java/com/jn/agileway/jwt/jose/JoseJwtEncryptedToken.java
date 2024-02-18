@@ -7,11 +7,12 @@ import com.nimbusds.jwt.EncryptedJWT;
 
 public class JoseJwtEncryptedToken implements JWEToken {
     private EncryptedJWT delegate;
-    public JoseJwtEncryptedToken(){
+
+    public JoseJwtEncryptedToken() {
 
     }
 
-    public JoseJwtEncryptedToken(EncryptedJWT delegate){
+    public JoseJwtEncryptedToken(EncryptedJWT delegate) {
         this.delegate = delegate;
     }
 
