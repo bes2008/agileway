@@ -17,14 +17,17 @@ import com.jn.langx.util.collection.Maps;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
 import com.nimbusds.jose.crypto.ECDSAVerifier;
+import com.nimbusds.jose.crypto.Ed25519Verifier;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.JWTParser;
 import com.nimbusds.jwt.SignedJWT;
 import org.junit.Test;
 
+import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.ECParameterSpec;
@@ -360,5 +363,83 @@ public class JwtTests {
 
         System.out.println("token2 verify: " + ((SignedJWT) token2).verify(new ECDSAVerifier((ECPublicKey) keyPair.getPublic())));
         System.out.println("=====================end to test ES" + bit + "=====================");
+    }
+
+
+    @Test
+    public void testJWSToken_EdDSA() throws Exception {
+        System.out.println("=====================start to test EdDSA=====================");
+        // 创建 keyPair
+        KeyPairGenerator keyGenerator= PKIs.getKeyPairGenerator("Ed25519", "BC");
+        KeyPair keyPair = keyGenerator.generateKeyPair();
+
+        // 创建 plain token
+        Map<String, Object> payload = Maps.newHashMap();
+        payload.put("hello", "world");
+        payload.put("abc", 123);
+
+
+        final JWSToken token0 = JWTs.newJWTSignedToken(JWTs.JWSAlgorithms.EdDSA, null, payload, keyPair.getPrivate());
+
+        String tokenString = token0.toUtf8UrlEncodedToken();
+
+        System.out.println(tokenString);
+
+
+        // 使用agileway-jwt 的解析器进行解析
+        final JWSToken token1 = JWTs.parse(tokenString);
+
+        // 使用jose 方式来解析
+        final com.nimbusds.jwt.JWT token2 = JWTParser.parse(tokenString);
+
+        // 对header进行比较
+        Set<String> headerKeys = token2.getHeader().getIncludedParams();
+        Collects.forEach(headerKeys, new Consumer<String>() {
+            @Override
+            public void accept(String key) {
+                Object valueInToken2 = token2.getHeader().getCustomParam(key);
+                Object valueInToken1 = token1.getHeader().get(key);
+                Object valueInToken0 = token0.getHeader().get(key);
+
+                String json0 = JSONs.toJson(valueInToken0);
+                String json1 = JSONs.toJson(valueInToken1);
+                String json2 = JSONs.toJson(valueInToken2);
+
+                if (Objs.equals(key, JWTs.Headers.ALGORITHM) || Objs.equals(key, JWTs.Headers.TYPE)) {
+                    System.out.println(Objs.deepEquals(json0, json1));
+                } else {
+                    System.out.println(Objs.deepEquals(json0, valueInToken1) && Objs.deepEquals(json0, json2));
+                }
+
+            }
+        });
+
+        // 对payload进行比较
+        Set<String> payloadKeys = token2.getJWTClaimsSet().getClaims().keySet();
+        Collects.forEach(payloadKeys, new Consumer<String>() {
+            @Override
+            public void accept(String key) {
+                Object valueInToken2 = null;
+                try {
+                    valueInToken2 = token2.getJWTClaimsSet().getClaim(key);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+                Object valueInToken1 = token1.getPayload().get(key);
+                Object valueInToken0 = token0.getPayload().get(key);
+
+                String json0 = JSONs.toJson(valueInToken0);
+                String json1 = JSONs.toJson(valueInToken1);
+                String json2 = JSONs.toJson(valueInToken2);
+                System.out.println(Objs.deepEquals(json0, json1) && Objs.deepEquals(json0, json2));
+            }
+        });
+
+        // 进行验证
+        System.out.println("token0 verify: " + new PKIVerifier(keyPair.getPublic()).verify(token0));
+        System.out.println("token1 verify: " + new PKIVerifier(keyPair.getPublic()).verify((JWSToken) token1));
+
+        //System.out.println("token2 verify: " + ((SignedJWT) token2).verify(new Ed25519Verifier((ECPublicKey) keyPair.getPublic())));
+        System.out.println("=====================end to test EdDSA=====================");
     }
 }
