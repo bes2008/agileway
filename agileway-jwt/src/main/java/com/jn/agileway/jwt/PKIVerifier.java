@@ -1,5 +1,6 @@
 package com.jn.agileway.jwt;
 
+import com.jn.agileway.jwt.ec.ECDSA;
 import com.jn.langx.codec.base64.Base64;
 import com.jn.langx.security.crypto.signature.Signatures;
 import com.jn.langx.text.StringTemplates;
@@ -25,8 +26,17 @@ public class PKIVerifier implements Verifier {
             throw new JWTException(StringTemplates.formatWithPlaceholder("invalid jwt sign token: unsupported algorithm: {}", jwtSignAlgorithm));
         }
 
-        byte[] data = (token.getHeader().toBase64UrlEncoded() + "." + token.getPayload().toBase64UrlEncoded()).getBytes(Charsets.UTF_8);
         String signature = token.getSignature();
-        return Signatures.verify(verifierSupplier.get(this.publicKey), data, Base64.decodeBase64(signature));
+        byte[] signatureBytes = Base64.decodeBase64(signature);
+        if(JWTs.JWSAlgorithms.isECDSA(jwtSignAlgorithm)){
+            try {
+                signatureBytes = ECDSA.transcodeSignatureToDER(signatureBytes);
+            } catch (JWTException e) {
+                return false;
+            }
+        }
+
+        byte[] data = (token.getHeader().toBase64UrlEncoded() + "." + token.getPayload().toBase64UrlEncoded()).getBytes(Charsets.UTF_8);
+        return Signatures.verify(verifierSupplier.get(this.publicKey), data, signatureBytes);
     }
 }

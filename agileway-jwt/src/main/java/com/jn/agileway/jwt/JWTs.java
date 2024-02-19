@@ -1,5 +1,6 @@
 package com.jn.agileway.jwt;
 
+import com.jn.agileway.jwt.ec.ECDSA;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.spi.CommonServiceProvider;
@@ -268,6 +269,12 @@ public class JWTs {
 
         // EdDSA
         public static final String EdDSA = "EdDSA";
+
+        public static boolean isECDSA(String algorithm){
+            return ECDSA.isECJWSAlgorithm(algorithm);
+        }
+
+
     }
 
     public static JWTService getJWTService() {

@@ -1,5 +1,6 @@
 package com.jn.agileway.jwt;
 
+import com.jn.agileway.jwt.ec.ECDSA;
 import com.jn.langx.codec.base64.Base64;
 import com.jn.langx.security.crypto.signature.Signatures;
 import com.jn.langx.text.StringTemplates;
@@ -46,9 +47,14 @@ public class PKISigner implements Signer {
         }
 
         byte[] data = (token.getHeader().toBase64UrlEncoded() + "." + token.getPayload().toBase64UrlEncoded()).getBytes(Charsets.UTF_8);
-        byte[] jcaSignature = Signatures.sign(signerSupplier.get(privateKey), data);
+        byte[] signature = Signatures.sign(signerSupplier.get(privateKey), data);
 
-        token.setSignature(Base64.encodeBase64URLSafeString(jcaSignature));
+        if(JWTs.JWSAlgorithms.isECDSA(jwtSignAlgorithm)){
+            final int resultByteArrayLength = ECDSA.getSignatureByteArrayLength(jwtSignAlgorithm);
+            signature = ECDSA.transcodeSignatureToConcat(signature, resultByteArrayLength);
+        }
+
+        token.setSignature(Base64.encodeBase64URLSafeString(signature));
     }
 
     @Override

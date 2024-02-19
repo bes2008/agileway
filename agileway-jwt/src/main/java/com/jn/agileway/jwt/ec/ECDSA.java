@@ -16,15 +16,21 @@ import java.util.Map;
 import java.util.Set;
 
 public class ECDSA {
-    private static Map<String,Integer> ECDSA_Algorithms_Signature_Bytes_Length_Map;
+    private static Map<String, Integer> ECDSA_Algorithms_Signature_Bytes_Length_Map;
+
     static {
         Map<String, Integer> map = Maps.newHashMap();
         map.put(JWTs.JWSAlgorithms.ES256, 64);
         map.put(JWTs.JWSAlgorithms.ES256K, 64);
         map.put(JWTs.JWSAlgorithms.ES384, 96);
         map.put(JWTs.JWSAlgorithms.ES512, 132);
-        ECDSA_Algorithms_Signature_Bytes_Length_Map=map;
-    };
+        ECDSA_Algorithms_Signature_Bytes_Length_Map = map;
+    }
+
+    public static boolean isECJWSAlgorithm(String jwsAlgorithm) {
+        return ECDSA_Algorithms_Signature_Bytes_Length_Map.containsKey(jwsAlgorithm);
+    }
+
 
     /**
      * Returns the expected signature byte array length (R + S parts) for
@@ -32,16 +38,13 @@ public class ECDSA {
      *
      * @param alg The ECDSA algorithm. Must be supported and not
      *            {@code null}.
-     *
      * @return The expected byte array length for the signature.
-     *
      * @throws JWTException If the algorithm is not supported.
      */
     public static int getSignatureByteArrayLength(final String alg) throws JWTException {
-        if(ECDSA_Algorithms_Signature_Bytes_Length_Map.containsKey(alg)){
+        if (isECJWSAlgorithm(alg)) {
             return ECDSA_Algorithms_Signature_Bytes_Length_Map.get(alg);
-        }
-         else {
+        } else {
             throw new JWTException("unsupported ec dsa algorithm");
         }
     }
@@ -53,13 +56,10 @@ public class ECDSA {
      *
      * @param derSignature The ASN1./DER-encoded. Must not be {@code null}.
      * @param outputLength The expected length of the ECDSA JWS signature.
-     *
      * @return The ECDSA JWS encoded signature.
-     *
      * @throws JWTException If the ASN.1/DER signature format is invalid.
      */
-    public static byte[] transcodeSignatureToConcat(final byte[] derSignature, final int outputLength)
-            throws JWTException {
+    public static byte[] transcodeSignatureToConcat(final byte[] derSignature, final int outputLength) throws JWTException {
 
         if (derSignature.length < 8 || derSignature[0] != 48) {
             throw new JWTException("Invalid ECDSA signature format");
@@ -107,7 +107,6 @@ public class ECDSA {
     }
 
 
-
     /**
      * Transcodes the ECDSA JWS signature into ASN.1/DER format for use by
      * the JCA verifier.
@@ -115,14 +114,11 @@ public class ECDSA {
      * @param jwsSignature The JWS signature, consisting of the
      *                     concatenated R and S values. Must not be
      *                     {@code null}.
-     *
      * @return The ASN.1/DER encoded signature.
-     *
      * @throws JWTException If the ECDSA JWS signature format is invalid
-     *                       or conversion failed unexpectedly.
+     *                      or conversion failed unexpectedly.
      */
-    public static byte[] transcodeSignatureToDER(final byte[] jwsSignature)
-            throws JWTException {
+    public static byte[] transcodeSignatureToDER(final byte[] jwsSignature) throws JWTException {
 
         // Adapted from org.apache.xml.security.algorithms.implementations.SignatureECDSA
         try {
@@ -189,11 +185,9 @@ public class ECDSA {
 
         } catch (Exception e) {
             // Watch for unchecked exceptions
-
             if (e instanceof JWTException) {
                 throw e;
             }
-
             throw new JWTException(e.getMessage(), e);
         }
     }
@@ -207,13 +201,10 @@ public class ECDSA {
      * @param jwsSignature The JWS signature. Must not be {@code null}.
      * @param jwsAlg       The ECDSA JWS algorithm. Must not be
      *                     {@code null}.
-     *
      * @throws JWTException If the signature is found to be illegal, or
-     *                       the JWS algorithm or curve are not supported.
+     *                      the JWS algorithm or curve are not supported.
      */
-    public static void ensureLegalSignature(final byte[] jwsSignature,
-                                            final String jwsAlg)
-            throws JWTException {
+    public static void ensureLegalSignature(final byte[] jwsSignature, final String jwsAlg) throws JWTException {
 
         if (ByteUtils.isZeroFilled(jwsSignature)) {
             // Quick check to make sure S and R are not both zero (CVE-2022-21449)

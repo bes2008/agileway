@@ -1,7 +1,9 @@
 package com.jn.agileway.jwt;
 
+import com.jn.agileway.jwt.jwe.JWEPlugin;
 import com.jn.langx.util.Strings;
 
+import java.util.Collections;
 import java.util.List;
 
 public abstract class AbstractJWTService implements JWTService {
@@ -27,7 +29,12 @@ public abstract class AbstractJWTService implements JWTService {
 
     @Override
     public final List<String> supportedJWEAlgorithms() {
-        return JWTs.getJWTService().getJWEPlugin().getSupportedJWEAlgorithms();
+        JWEPlugin jwePlugin= getJWEPlugin();
+        if(jwePlugin!=null){
+         return jwePlugin.getSupportedJWEAlgorithms();
+        }else{
+            return Collections.emptyList();
+        }
     }
 
     public JWSTokenBuilder newJWSTokenBuilder() {
