@@ -9,27 +9,21 @@
         <version>4.4.1</version>
     </parent>
 
+    <groupId>io.github.bes2008.solution.agileway.jwt</groupId>
     <artifactId>agileway-jwt</artifactId>
-    <packaging>pom</packaging>
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
+
+    <packaging>pom</packaging>
+
     <modules>
         <module>agileway-jwt-core</module>
         <module>agileway-jwt-plugin-nimbusds</module>
     </modules>
+
     <properties>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>io.github.bes2008.solution.agileway</groupId>
-                <artifactId>agileway-jwt-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <dependencies>
         <dependency>

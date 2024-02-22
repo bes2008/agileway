@@ -3,12 +3,6 @@ package com.jn.agileway.jwt.ec;
 import com.jn.agileway.jwt.JWTException;
 import com.jn.agileway.jwt.JWTs;
 import com.jn.langx.util.collection.Maps;
-import com.jn.langx.util.collection.Sets;
-import com.nimbusds.jose.crypto.impl.AlgorithmSupportMessage;
-import com.nimbusds.jose.crypto.impl.ECDSAProvider;
-import com.nimbusds.jose.jwk.Curve;
-import com.nimbusds.jose.jwk.ECParameterTable;
-import com.nimbusds.jose.util.ByteUtils;
 
 import java.math.BigInteger;
 import java.security.spec.ECParameterSpec;
@@ -206,7 +200,7 @@ public class ECDSA {
      */
     public static void ensureLegalSignature(final byte[] jwsSignature, final String jwsAlg) throws JWTException {
 
-        if (ByteUtils.isZeroFilled(jwsSignature)) {
+        if (isZeroFilled(jwsSignature)) {
             // Quick check to make sure S and R are not both zero (CVE-2022-21449)
             throw new JWTException("Blank signature");
         }
@@ -236,11 +230,11 @@ public class ECDSA {
         final int valueLength = signatureLength / 2;
 
         // Extract R
-        final byte[] rBytes = ByteUtils.subArray(jwsSignature, 0, valueLength);
+        final byte[] rBytes = subArray(jwsSignature, 0, valueLength);
         final BigInteger rValue = new BigInteger(1, rBytes);
 
         // Extract S
-        final byte[] sBytes = ByteUtils.subArray(jwsSignature, valueLength, valueLength);
+        final byte[] sBytes = subArray(jwsSignature, valueLength, valueLength);
         final BigInteger sValue = new BigInteger(1, sBytes);
 
         // Trivial zero check
@@ -261,6 +255,22 @@ public class ECDSA {
         }
 
         // Signature deemed legal, can proceed to DER transcoding and verification now
+    }
+
+    private static boolean isZeroFilled(final byte[] byteArray) {
+
+        for (final byte b : byteArray) {
+            if (b != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+    private static byte[] subArray(byte[] byteArray, int beginIndex, int length) {
+
+        byte[] subArray = new byte[length];
+        System.arraycopy(byteArray, beginIndex, subArray, 0, subArray.length);
+        return subArray;
     }
 
 }

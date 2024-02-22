@@ -139,6 +139,11 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>io.github.bes2008.solution.agileway.jwt</groupId>
+                <artifactId>agileway-jwt-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>io.github.bes2008.solution.agileway.audit</groupId>
                 <artifactId>agileway-audit-core</artifactId>
                 <version>${project.version}</version>
