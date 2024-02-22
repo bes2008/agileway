@@ -17,14 +17,12 @@ import com.jn.langx.util.collection.Maps;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
 import com.nimbusds.jose.crypto.ECDSAVerifier;
-import com.nimbusds.jose.crypto.Ed25519Verifier;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.JWTParser;
 import com.nimbusds.jwt.SignedJWT;
 import org.junit.Test;
 
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
