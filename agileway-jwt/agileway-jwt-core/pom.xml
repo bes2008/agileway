@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.bes2008.solution.agileway</groupId>
+        <artifactId>agileway-jwt</artifactId>
+        <version>4.4.1</version>
+    </parent>
+
+    <artifactId>agileway-jwt-core</artifactId>
+    <packaging>pom</packaging>
+    <name>${project.groupId}:${project.artifactId}:${project.version}</name>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <version>9.37</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>4.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.fusionauth</groupId>
+            <artifactId>fusionauth-jwt</artifactId>
+            <version>5.3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.crypto.tink</groupId>
+            <artifactId>tink</artifactId>
+            <version>1.12.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.bes2008.solution.langx.security</groupId>
+            <artifactId>langx-java-security-gm-jca-bouncycastle</artifactId>
+            <version>${langx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.i2p.crypto</groupId>
+            <artifactId>eddsa</artifactId>
+            <version>0.3.0</version>
+        </dependency>
+    </dependencies>
+
+</project>
