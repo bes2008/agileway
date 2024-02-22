@@ -1,4 +1,4 @@
-package com.jn.agileway.jwt.tests;
+package com.jn.agileway.jwt.tests.nimbusds;
 
 import com.jn.agileway.jwt.*;
 import com.jn.agileway.jwt.ec.ECurveParameterTable;

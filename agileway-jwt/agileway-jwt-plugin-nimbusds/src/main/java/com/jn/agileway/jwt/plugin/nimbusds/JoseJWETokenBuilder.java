@@ -1,4 +1,4 @@
-package com.jn.agileway.jwt.jose;
+package com.jn.agileway.jwt.plugin.nimbusds;
 
 import com.jn.agileway.jwt.jwe.JWEToken;
 import com.jn.agileway.jwt.jwe.JWETokenBuilder;

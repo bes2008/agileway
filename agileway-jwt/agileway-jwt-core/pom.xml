@@ -16,17 +16,23 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>nimbus-jose-jwt</artifactId>
-            <version>9.37</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
             <version>4.4.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.github.bes2008.solution.langx.security</groupId>
+            <artifactId>langx-java-security-gm-jca-bouncycastle</artifactId>
+            <version>${langx.version}</version>
+        </dependency>
+
+        <!--
+        <dependency>
+            <groupId>net.i2p.crypto</groupId>
+            <artifactId>eddsa</artifactId>
+            <version>0.3.0</version>
+        </dependency>
         <dependency>
             <groupId>io.fusionauth</groupId>
             <artifactId>fusionauth-jwt</artifactId>
@@ -38,17 +44,7 @@
             <artifactId>tink</artifactId>
             <version>1.12.0</version>
         </dependency>
-
-        <dependency>
-            <groupId>io.github.bes2008.solution.langx.security</groupId>
-            <artifactId>langx-java-security-gm-jca-bouncycastle</artifactId>
-            <version>${langx.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.i2p.crypto</groupId>
-            <artifactId>eddsa</artifactId>
-            <version>0.3.0</version>
-        </dependency>
+        -->
     </dependencies>
 
 </project>
