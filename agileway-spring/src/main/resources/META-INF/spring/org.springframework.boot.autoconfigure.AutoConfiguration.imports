@@ -1,0 +1,6 @@
+com.jn.agileway.springboot.appboot.SpringAppAutoConfiguration
+com.jn.agileway.springboot.json.JsonConfiguration
+com.jn.agileway.springboot.redis.RedisLuaScriptRepositoryAutoConfiguration
+com.jn.agileway.springboot.redis.RedisGlobalTemplateAutoConfiguration
+com.jn.agileway.springboot.httpclient.HttpClientAutoConfiguration
+com.jn.agileway.springboot.vfs.ArtifactRepositoryConfiguration
