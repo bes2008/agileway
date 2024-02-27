@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.github.bes2008.solution.agileway.audit</groupId>
         <artifactId>agileway-audit</artifactId>
-        <version>4.4.1</version>
+        <version>4.4.2</version>
     </parent>
     <artifactId>agileway-audit-springboot3-web</artifactId>
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
@@ -129,6 +129,8 @@
                         <configuration>
                             <useBaseVersion>true</useBaseVersion>
                             <shadedArtifactAttached>false</shadedArtifactAttached>
+                            <createSourcesJar>true</createSourcesJar>
+
                             <artifactSet>
                                 <includes>
                                     <include>io.github.bes2008.solution.agileway.audit:agileway-audit-springboot1_2-web</include>
