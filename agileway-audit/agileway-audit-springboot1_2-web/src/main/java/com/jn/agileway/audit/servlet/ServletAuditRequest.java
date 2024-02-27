@@ -5,7 +5,6 @@ import com.jn.langx.invocation.MethodInvocation;
 import com.jn.langx.text.StringTemplates;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Method;
 
 public class ServletAuditRequest extends AuditRequest<HttpServletRequest, MethodInvocation> {
 
