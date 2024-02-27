@@ -13,6 +13,7 @@
         <module>agileway-codec</module>
         <module>agileway-httpcontainer-common</module>
         <module>agileway-web-javaee</module>
+        <module>agileway-web-jakarta</module>
         <module>agileway-vfs</module>
         <module>agileway-redis</module>
         <module>agileway-shiro-redis</module>
@@ -36,7 +37,6 @@
         <module>agileway-syslog</module>
         <module>agileway-audit</module>
         <module>agileway-jwt</module>
-        <module>agileway-web-jakarta</module>
     </modules>
 
     <description>
