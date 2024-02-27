@@ -37,6 +37,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
+                <version>${maven-shade-plugin.version}</version>
                 <configuration>
                     <createDependencyReducedPom>true</createDependencyReducedPom>
                     <useDependencyReducedPomInJar>true</useDependencyReducedPomInJar>
@@ -69,6 +70,36 @@
                     </execution>
                 </executions>
             </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+
+                        <configuration>
+                            <failOnWarnings>false</failOnWarnings>
+                            <failOnError>false</failOnError>
+                            <charset>UTF-8</charset>
+                            <docencoding>UTF-8</docencoding>
+                            <doclint>none</doclint>
+                            <sourcepath>${basedir}/../agileway-web-javaee/src/main/java</sourcepath>
+                            <additionalOptions>
+                                -Xdoclint:none
+                            </additionalOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
+
 </project>
