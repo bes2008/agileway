@@ -169,6 +169,16 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>io.github.bes2008.solution.agileway.audit</groupId>
+                <artifactId>agileway-audit-springboot1_2-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway.audit</groupId>
+                <artifactId>agileway-audit-springboot3-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>io.github.bes2008.solution.agileway</groupId>
                 <artifactId>agileway-jaxrs</artifactId>
                 <version>${project.version}</version>
