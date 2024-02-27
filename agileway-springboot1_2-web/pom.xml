@@ -18,13 +18,13 @@
         </dependency>
         <dependency>
             <groupId>io.github.bes2008.solution.agileway</groupId>
-            <artifactId>agileway-web</artifactId>
+            <artifactId>agileway-web-javaee</artifactId>
         </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>3.0.1</version>
+            <version>${javax.servlet.version}</version>
             <scope>provided</scope>
         </dependency>
 
