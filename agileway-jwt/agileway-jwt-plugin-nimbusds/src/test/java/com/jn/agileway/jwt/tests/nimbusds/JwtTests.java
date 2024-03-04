@@ -4,6 +4,7 @@ import com.jn.agileway.jwt.*;
 import com.jn.agileway.jwt.ec.ECurveParameterTable;
 import com.jn.agileway.jwt.ec.ECurves;
 import com.jn.easyjson.core.util.JSONs;
+import com.jn.langx.codec.base64.Base64;
 import com.jn.langx.security.Securitys;
 import com.jn.langx.security.crypto.JCAEStandardName;
 import com.jn.langx.security.crypto.key.PKIs;
@@ -126,7 +127,10 @@ public class JwtTests {
         System.out.println("=====================start to test HS" + bit + "=====================");
         // 创建 secret key
         SecretKey secretKey = PKIs.createSecretKey(JCAEStandardName.AES.getName(), null, bit, Securitys.getSecureRandom());
-
+        if(bit==256){
+            String keyGeneratedByOpenssl = "cAbSh5EoQMUIoDPN5qWq7GPE0mKwKMJIAnT6E2O9uV0=";
+            secretKey = PKIs.createSecretKey(JCAEStandardName.AES.getName(), Base64.decodeBase64(keyGeneratedByOpenssl));
+        }
         // 创建 plain token
         Map<String, Object> payload = Maps.newHashMap();
         payload.put("hello", "world");

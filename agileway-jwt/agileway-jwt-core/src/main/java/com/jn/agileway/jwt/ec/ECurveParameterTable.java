@@ -17,28 +17,28 @@ public class ECurveParameterTable {
 
     /**
      * The parameter spec for a
-     * {@link com.nimbusds.jose.jwk.Curve#P_256} curve.
+     * {@link ECurves#P_256} curve.
      */
     private static final ECParameterSpec P_256_SPEC;
 
 
     /**
      * The parameter spec for a
-     * {@link com.nimbusds.jose.jwk.Curve#SECP256K1} curve.
+     * {@link ECurves#SECP256K1} curve.
      */
     private static final ECParameterSpec SECP256K1_SPEC;
 
 
     /**
      * The parameter spec for a
-     * {@link com.nimbusds.jose.jwk.Curve#P_384} curve.
+     * {@link ECurves#P_384} curve.
      */
     private static final ECParameterSpec P_384_SPEC;
 
 
     /**
      * The parameter spec for a
-     * {@link com.nimbusds.jose.jwk.Curve#P_521} curve.
+     * {@link ECurves#P_521} curve.
      */
     private static final ECParameterSpec P_521_SPEC;
 
