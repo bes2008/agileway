@@ -120,19 +120,19 @@ class Signs {
         map.put("RS256", new Supplier<PublicKey, Signature>() {
             @Override
             public Signature get(PublicKey publicKey) {
-                return Signatures.createSignature("SHA256withRSA", null, publicKey, null);
+                return Signatures.createSignature("SHA256withRSA", null, publicKey, (AlgorithmParameterSupplier) null);
             }
         });
         map.put("RS384", new Supplier<PublicKey, Signature>() {
             @Override
             public Signature get(PublicKey publicKey) {
-                return Signatures.createSignature("SHA384withRSA", null, publicKey, null);
+                return Signatures.createSignature("SHA384withRSA", null, publicKey, (AlgorithmParameterSupplier)null);
             }
         });
         map.put("RS512", new Supplier<PublicKey, Signature>() {
             @Override
             public Signature get(PublicKey publicKey) {
-                return Signatures.createSignature("SHA512withRSA", null, publicKey, null);
+                return Signatures.createSignature("SHA512withRSA", null, publicKey, (AlgorithmParameterSupplier)null);
             }
         });
 
