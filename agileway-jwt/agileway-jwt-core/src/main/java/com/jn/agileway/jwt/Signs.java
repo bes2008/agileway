@@ -3,6 +3,7 @@ package com.jn.agileway.jwt;
 import com.jn.langx.security.Securitys;
 import com.jn.langx.security.crypto.cipher.AlgorithmParameterSupplier;
 import com.jn.langx.security.crypto.signature.Signatures;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Maps;
 import com.jn.langx.util.collection.Pipeline;
@@ -224,6 +225,10 @@ class Signs {
         return Pipeline.<String>of(supportedJWTHMacAlgorithms())
                 .addAll(supportedJWTPKIAlgorithms())
                 .asList();
+    }
+
+    public static String getJcaHMacAlgorithm(String jwsHmacAlgorithm){
+        return JWT_TO_HMAC_ALGORITHMS.get(Strings.upperCase(jwsHmacAlgorithm));
     }
 
 }

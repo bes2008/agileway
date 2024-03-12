@@ -9,7 +9,7 @@ import javax.crypto.SecretKey;
 import java.security.PrivateKey;
 import java.util.Map;
 
-class JWSTokenBuilder implements JWTBuilder<JWSToken, JWSTokenBuilder> {
+public class JWSTokenBuilder implements JWTBuilder<JWSToken, JWSTokenBuilder> {
 
     Map<String, Object> header = Maps.<String, Object>newHashMap();
     Map<String, Object> payload = Maps.<String, Object>newHashMap();
