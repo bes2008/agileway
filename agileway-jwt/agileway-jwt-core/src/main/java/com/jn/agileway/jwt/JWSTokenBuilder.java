@@ -10,10 +10,16 @@ import java.security.PrivateKey;
 import java.util.Map;
 
 public class JWSTokenBuilder implements JWTBuilder<JWSToken, JWSTokenBuilder> {
+    private final boolean isCompletionEnabled;
 
     Map<String, Object> header = Maps.<String, Object>newHashMap();
     Map<String, Object> payload = Maps.<String, Object>newHashMap();
-
+    public JWSTokenBuilder(){
+        this(true);
+    }
+    public JWSTokenBuilder(boolean isCompletionEnabled){
+        this.isCompletionEnabled=isCompletionEnabled;
+    }
 
     public JWSTokenBuilder withType(String type) {
         header.put(JWTs.Headers.TYPE, type);
@@ -90,12 +96,15 @@ public class JWSTokenBuilder implements JWTBuilder<JWSToken, JWSTokenBuilder> {
         }
 
         // header
-        if (!header.containsKey(JWTs.Headers.TYPE)) {
-            header.put(JWTs.Headers.TYPE, JWTs.JWT_TYPE_DEFAULT);
-        }
+        if(isCompletionEnabled) {
+            if (!header.containsKey(JWTs.Headers.TYPE)) {
+                header.put(JWTs.Headers.TYPE, JWTs.JWT_TYPE_DEFAULT);
+            }
 
-        if (forcePlain) {
-            header.put(JWTs.Headers.ALGORITHM, JWTs.JWT_ALGORITHM_PLAIN);
+            if (forcePlain) {
+                header.put(JWTs.Headers.ALGORITHM, JWTs.JWT_ALGORITHM_PLAIN);
+            }
+
         }
 
         return new JWSToken(header, payload);

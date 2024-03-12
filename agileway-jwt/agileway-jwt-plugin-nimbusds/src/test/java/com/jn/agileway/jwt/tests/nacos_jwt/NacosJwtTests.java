@@ -14,7 +14,7 @@ public class NacosJwtTests {
 
     @Test
     public void generateJWTString(){
-        JWSTokenBuilder builder = JWTs.getJWTService().newJWSTokenBuilder();
+        JWSTokenBuilder builder = new JWSTokenBuilder(false);
 
         SecretKey secretKey= PKIs.createSecretKey(JWTs.getJcaHMacAlgorithm(JWTs.JWSAlgorithms.HS256),Base64.decodeBase64("cAbSh5EoQMUIoDPN5qWq7GPE0mKwKMJIAnT6E2O9uV0="));
 
