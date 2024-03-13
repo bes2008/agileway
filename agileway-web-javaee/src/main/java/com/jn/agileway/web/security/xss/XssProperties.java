@@ -13,7 +13,7 @@ public class XssProperties extends HttpRequestPredicateConfigItems {
      */
     private boolean enabled = false;
 
-    private String contentSecurityPolicy = "default-src 'self' 'unsafe-hashes' 'unsafe-inline' data: blob: https:";
+    private String contentSecurityPolicy = "default-src 'self' 'unsafe-eval' 'unsafe-inline' data: blob: https:";
 
     private boolean htmlEventHandlersEnabled = true;
     /**
