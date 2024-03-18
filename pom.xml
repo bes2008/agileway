@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.bes2008.solution.agileway</groupId>
     <artifactId>agileway</artifactId>
-    <version>4.4.3</version>
+    <version>4.4.4</version>
     <packaging>pom</packaging>
 
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
@@ -596,14 +596,6 @@
 
         <profile>
             <id>deploy</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-gpg-plugin</artifactId>
-                    <version>1.6</version>
-                </dependency>
-            </dependencies>
-
             <build>
                 <plugins>
                     <plugin>
