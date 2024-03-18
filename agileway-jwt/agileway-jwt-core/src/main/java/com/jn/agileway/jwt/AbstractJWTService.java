@@ -2,6 +2,7 @@ package com.jn.agileway.jwt;
 
 import com.jn.agileway.jwt.jwe.JWEPlugin;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.logging.Loggers;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,10 +30,11 @@ public abstract class AbstractJWTService implements JWTService {
 
     @Override
     public final List<String> supportedJWEAlgorithms() {
-        JWEPlugin jwePlugin= getJWEPlugin();
-        if(jwePlugin!=null){
-         return jwePlugin.getSupportedJWEAlgorithms();
-        }else{
+        JWEPlugin jwePlugin = getJWEPlugin();
+        if (jwePlugin != null) {
+            return jwePlugin.getSupportedJWEAlgorithms();
+        } else {
+            Loggers.getLogger(this.getClass()).warn("jwe plugin is not found");
             return Collections.emptyList();
         }
     }
