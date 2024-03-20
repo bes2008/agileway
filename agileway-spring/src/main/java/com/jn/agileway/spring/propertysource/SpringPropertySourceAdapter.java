@@ -1,24 +1,30 @@
 package com.jn.agileway.spring.propertysource;
 
 import com.jn.langx.Delegatable;
-import com.jn.langx.text.PropertySource;
+import com.jn.langx.propertyset.PropertySet;
 import com.jn.langx.util.Strings;
+import org.springframework.core.env.PropertySource;
 
-public class SpringPropertySourceAdapter implements PropertySource, Delegatable<org.springframework.core.env.PropertySource> {
-    private org.springframework.core.env.PropertySource delegate;
+public class SpringPropertySourceAdapter implements PropertySet, Delegatable<org.springframework.core.env.PropertySource> {
+    private PropertySource delegate;
     private String name;
 
-    public SpringPropertySourceAdapter(org.springframework.core.env.PropertySource propertySource) {
+    @Override
+    public Object getSource() {
+        return this.delegate;
+    }
+
+    public SpringPropertySourceAdapter(PropertySource propertySource) {
         this.setDelegate(propertySource);
     }
 
-    public void setDelegate(org.springframework.core.env.PropertySource delegate) {
+    public void setDelegate(PropertySource delegate) {
         this.delegate = delegate;
         setName(this.delegate.getName());
     }
 
     @Override
-    public org.springframework.core.env.PropertySource getDelegate() {
+    public PropertySource getDelegate() {
         return this.delegate;
     }
 
@@ -28,7 +34,7 @@ public class SpringPropertySourceAdapter implements PropertySource, Delegatable<
     }
 
     @Override
-    public String getProperty(String key) {
+    public Object getProperty(String key) {
         Object obj = this.delegate.getProperty(key);
         if (obj != null) {
             return obj.toString();
