@@ -1,5 +1,6 @@
 package com.jn.agileway.jwt;
 
+import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Maps;
@@ -28,6 +29,10 @@ public class JWSTokenBuilder implements JWTBuilder<JWSToken, JWSTokenBuilder> {
 
     @Override
     public JWSTokenBuilder withAlgorithm(String algorithm) {
+        AlgorithmType algorithmType = JWTs.getAlgorithmType(algorithm);
+        if(algorithmType!=AlgorithmType.NONE && algorithmType!=AlgorithmType.JWS){
+            throw new JWTException(StringTemplates.formatWithPlaceholder("invalid jws algorithm: {}", algorithm));
+        }
         header.put(JWTs.Headers.ALGORITHM, algorithm);
         return this;
     }
