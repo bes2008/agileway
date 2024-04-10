@@ -135,7 +135,7 @@
 
 
         <javax.servlet.version>3.0.1</javax.servlet.version>
-        <jakarta.servlet.version>5.0.0</jakarta.servlet.version>
+        <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
 
         <maven-shade-plugin.version>3.4.1</maven-shade-plugin.version>
         <maven-javadoc-plugin.version>3.4.0</maven-javadoc-plugin.version>
