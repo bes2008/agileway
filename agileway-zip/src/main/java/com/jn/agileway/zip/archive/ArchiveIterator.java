@@ -15,7 +15,7 @@ import java.io.EOFException;
 import java.io.InputStream;
 import java.util.Iterator;
 
-class ArchiveIterator implements Iterator<ArchiveIterator.ArchiveEntryWrapper> {
+public class ArchiveIterator implements Iterator<ArchiveIterator.ArchiveEntryWrapper> {
     private static Logger logger = Loggers.getLogger(ArchiveIterator.class);
 
     @NonNull
@@ -33,6 +33,9 @@ class ArchiveIterator implements Iterator<ArchiveIterator.ArchiveEntryWrapper> {
     };
 
     public ArchiveIterator(String format, InputStream in) {
+        if(in==null){
+            return;
+        }
         if (!(in instanceof BufferedInputStream)) {
             in = new BufferedInputStream(in);
         }
@@ -82,6 +85,9 @@ class ArchiveIterator implements Iterator<ArchiveIterator.ArchiveEntryWrapper> {
 
     @Override
     public boolean hasNext() {
+        if(archiveInputStream==null){
+            return false;
+        }
         if (next == null) {
             next = findNextReadableEntry();
         }

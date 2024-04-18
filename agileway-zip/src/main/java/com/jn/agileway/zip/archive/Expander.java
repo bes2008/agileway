@@ -1,6 +1,6 @@
 package com.jn.agileway.zip.archive;
 
-import com.jn.agileway.zip.format.ZipFormats;
+import com.jn.agileway.zip.CompressFormats;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.text.StringTemplates;
@@ -10,7 +10,6 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.io.file.Files;
-import com.jn.langx.util.logging.Level;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.struct.Entry;
 import org.apache.commons.compress.archivers.ArchiveEntry;
@@ -62,7 +61,7 @@ public class Expander implements Closeable {
     }
 
     public Expander(String filepath) throws IOException, ArchiveException {
-        this(ZipFormats.getFormat(filepath), new FileInputStream(filepath));
+        this(CompressFormats.getFormat(filepath), new FileInputStream(filepath));
         setFilepath(filepath);
     }
 

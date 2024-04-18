@@ -1,4 +1,4 @@
-package com.jn.agileway.zip.format;
+package com.jn.agileway.zip;
 
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.io.resource.Resources;
@@ -14,16 +14,16 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ZipFormats {
-    private static final Logger logger = Loggers.getLogger(ZipFormats.class);
+public class CompressFormats {
+    private static final Logger logger = Loggers.getLogger(CompressFormats.class);
 
-    private ZipFormats() {
+    private CompressFormats() {
     }
 
     /**
      * key: ZipFormat#getFormat()
      */
-    private static Map<String, ZipFormat> registry = new ConcurrentHashMap<String, ZipFormat>();
+    private static Map<String, CompressFormat> registry = new ConcurrentHashMap<String, CompressFormat>();
     private static Set<String> supportedFormats = new TreeSet<String>(new Comparator<String>() {
         @Override
         public int compare(String o1, String o2) {
@@ -47,7 +47,7 @@ public class ZipFormats {
     }
 
     private static void loadBuiltinZipFormats() {
-        Resource resource = Resources.loadClassPathResource("/zipformats.yml");
+        Resource resource = Resources.loadClassPathResource("/compressformats.yml");
         InputStream stream = null;
         try {
             stream = resource.getInputStream();
@@ -60,7 +60,7 @@ public class ZipFormats {
                             @Override
                             public void accept(Object o) {
                                 Map<String, String> map = (Map<String, String>) o;
-                                ZipFormat zipFormat = new ZipFormat();
+                                CompressFormat zipFormat = new CompressFormat();
                                 if (Strings.isNotEmpty(map.get("format"))) {
                                     zipFormat.setFormat(map.get("format"));
                                     zipFormat.setArchive(map.get("archive"));
@@ -81,13 +81,13 @@ public class ZipFormats {
     }
 
     private static void loadCustomizedZipFormats() {
-        Collects.forEach(ServiceLoader.load(ZipFormatFactory.class), new Consumer<ZipFormatFactory>() {
+        Collects.forEach(ServiceLoader.load(CompressFormatFactory.class), new Consumer<CompressFormatFactory>() {
             @Override
-            public void accept(ZipFormatFactory zipFormatFactory) {
-                List<ZipFormat> zfs = zipFormatFactory.get();
-                Collects.forEach(zfs, new Consumer<ZipFormat>() {
+            public void accept(CompressFormatFactory zipFormatFactory) {
+                List<CompressFormat> zfs = zipFormatFactory.get();
+                Collects.forEach(zfs, new Consumer<CompressFormat>() {
                     @Override
-                    public void accept(ZipFormat zipFormat) {
+                    public void accept(CompressFormat zipFormat) {
                         addZipFormat(zipFormat);
                     }
                 });
@@ -95,24 +95,24 @@ public class ZipFormats {
         });
     }
 
-    public static void addZipFormat(ZipFormat format) {
+    public static void addZipFormat(CompressFormat format) {
         if (format.isValid()) {
             registry.put(format.getFormat(), format);
             supportedFormats.add(format.getFormat());
         }
     }
 
-    public static ZipFormat getZipFormat(String format) {
+    public static CompressFormat getZipFormat(String format) {
         return registry.get(format);
     }
 
     public static boolean archiveEnabled(String format) {
-        ZipFormat zf = getZipFormat(format);
+        CompressFormat zf = getZipFormat(format);
         return zf != null && zf.archiveEnabled();
     }
 
     public static String getArchiveFormat(String format) {
-        ZipFormat zf = getZipFormat(format);
+        CompressFormat zf = getZipFormat(format);
         return zf != null ? zf.getArchive() : null;
     }
 

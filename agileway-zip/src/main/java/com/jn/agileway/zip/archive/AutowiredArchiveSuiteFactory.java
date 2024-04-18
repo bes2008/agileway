@@ -1,8 +1,8 @@
 package com.jn.agileway.zip.archive;
 
-import com.jn.agileway.zip.format.UnsupportedArchiveFormatException;
-import com.jn.agileway.zip.format.ZipFormat;
-import com.jn.agileway.zip.format.ZipFormats;
+import com.jn.agileway.zip.CompressFormat;
+import com.jn.agileway.zip.CompressFormats;
+import com.jn.agileway.zip.UnsupportedArchiveFormatException;
 import com.jn.langx.annotation.Singleton;
 import com.jn.langx.registry.Registry;
 import com.jn.langx.text.StringTemplates;
@@ -62,7 +62,7 @@ public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Regist
     @Override
     public SingleArchiveSuiteFactory get(String format) {
         SingleArchiveSuiteFactory factory = null;
-        String archive = ZipFormats.getArchiveFormat(format);
+        String archive = CompressFormats.getArchiveFormat(format);
         if (Strings.isNotEmpty(archive)) {
             factory = archiveFactoryMap.get(archive);
             if (factory == null) {
@@ -74,7 +74,7 @@ public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Regist
 
     @Override
     public Archiver get(String format, OutputStream outputStream) {
-        ZipFormat zipFormat = ZipFormats.getZipFormat(format);
+        CompressFormat zipFormat = CompressFormats.getZipFormat(format);
         Preconditions.checkNotNull(zipFormat);
         if (!zipFormat.isValid()) {
             throw new UnsupportedArchiveFormatException(StringTemplates.formatWithPlaceholder("unsupported archive format: {}", format));
@@ -97,7 +97,7 @@ public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Regist
 
     @Override
     public Expander get(String format, InputStream inputStream) {
-        ZipFormat zipFormat = ZipFormats.getZipFormat(format);
+        CompressFormat zipFormat = CompressFormats.getZipFormat(format);
         Preconditions.checkNotNull(zipFormat);
         if (!zipFormat.isValid()) {
             throw new UnsupportedArchiveFormatException(StringTemplates.formatWithPlaceholder("unsupported archive format: {}", format));
@@ -120,7 +120,7 @@ public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Regist
 
     public Archiver createArchiver(File outFile) {
         final String path = outFile.getPath();
-        String format = ZipFormats.getFormat(path);
+        String format = CompressFormats.getFormat(path);
         if (format == null) {
             throw new UnsupportedArchiveFormatException(StringTemplates.formatWithPlaceholder("Can't find a suite archive format for file: {}", path));
         }
@@ -143,7 +143,7 @@ public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Regist
 
     public Expander createExpander(File inFile) {
         final String path = inFile.getPath();
-        String format = ZipFormats.getFormat(path);
+        String format = CompressFormats.getFormat(path);
         if (format == null) {
             throw new UnsupportedArchiveFormatException(StringTemplates.formatWithPlaceholder("Can't find a suite archive format for file: {}", path));
         }

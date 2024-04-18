@@ -1,4 +1,4 @@
-package com.jn.agileway.zip.format;
+package com.jn.agileway.zip;
 
 public class UnsupportedArchiveFormatException extends RuntimeException {
     public UnsupportedArchiveFormatException() {

@@ -109,7 +109,7 @@
         <logback.version>1.2.9</logback.version>
         <jackson.version>2.13.1</jackson.version>
         <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
-        <commons.compress.version>1.21</commons.compress.version>
+        <commons.compress.version>1.26.1</commons.compress.version>
 
         <!--
             # spring boot 1.5.x 存在  application.yaml 去注入 string[] 失败的问题

@@ -1,8 +1,8 @@
-package com.jn.agileway.zip.format;
+package com.jn.agileway.zip;
 
 import com.jn.langx.util.Strings;
 
-public class ZipFormat {
+public class CompressFormat {
     /**
      * 原始格式，也通常是文件的后缀
      */
@@ -25,10 +25,10 @@ public class ZipFormat {
 
     private String desc;
 
-    public ZipFormat() {
+    public CompressFormat() {
     }
 
-    public ZipFormat(String format, String archiveFormat, String compressFormat) {
+    public CompressFormat(String format, String archiveFormat, String compressFormat) {
         this.format = format;
         this.archive = archiveFormat;
         this.compress = compressFormat;
