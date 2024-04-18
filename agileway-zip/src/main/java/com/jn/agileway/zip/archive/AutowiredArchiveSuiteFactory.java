@@ -74,25 +74,25 @@ public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Regist
 
     @Override
     public Archiver get(String format, OutputStream outputStream) {
-        CompressFormat zipFormat = CompressFormats.getZipFormat(format);
-        Preconditions.checkNotNull(zipFormat);
-        if (!zipFormat.isValid()) {
+        CompressFormat compressFormat = CompressFormats.getZipFormat(format);
+        Preconditions.checkNotNull(compressFormat);
+        if (!compressFormat.isValid()) {
             throw new UnsupportedArchiveFormatException(StringTemplates.formatWithPlaceholder("unsupported archive format: {}", format));
         }
-        if (zipFormat.compressEnabled()) {
+        if (compressFormat.compressEnabled()) {
             if (!(outputStream instanceof CompressorOutputStream)) {
                 try {
                     if (!(outputStream instanceof BufferedOutputStream)) {
                         outputStream = new BufferedOutputStream(outputStream);
                     }
-                    outputStream = new CompressorStreamFactory().createCompressorOutputStream(zipFormat.getCompress(), outputStream);
+                    outputStream = new CompressorStreamFactory().createCompressorOutputStream(compressFormat.getCompress(), outputStream);
                 } catch (Throwable ex) {
                     throw Throwables.wrapAsRuntimeException(ex);
                 }
             }
         }
         SingleArchiveSuiteFactory factory = get(format);
-        return factory.get(zipFormat.getArchive(), outputStream);
+        return factory.get(compressFormat.getArchive(), outputStream);
     }
 
     @Override

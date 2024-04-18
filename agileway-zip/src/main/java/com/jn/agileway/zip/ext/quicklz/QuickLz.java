@@ -1,4 +1,4 @@
-package com.jn.agileway.zip.compress.quicklz;
+package com.jn.agileway.zip.ext.quicklz;
 
 /**
  * migrate from com.facebook.jcommon:util:0.1.32
