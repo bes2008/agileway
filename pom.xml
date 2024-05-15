@@ -583,6 +583,10 @@
             <id>staticAnalyze</id>
             <properties>
                 <dependency-check-maven-plugin.version>9.1.0</dependency-check-maven-plugin.version>
+
+                <dependency-analyze-javascript.enabled>false</dependency-analyze-javascript.enabled>
+                <dependency-analyze-donet.enabled>false</dependency-analyze-donet.enabled>
+                <dependency-analyze-swift.enabled>false</dependency-analyze-swift.enabled>
             </properties>
 
             <build>
@@ -597,10 +601,41 @@
                                     <goal>check</goal>
                                 </goals>
                                 <configuration>
-                                    <formats>HTML,CSV</formats>
-                                    <skipDependencyManagement>false</skipDependencyManagement>
+                                    <!-- 压制配置 -->
+                                    <suppressionFile>.dependencycheck/publishedSuppressions.xml</suppressionFile>
+                                    <hostedSuppressionsEnabled>true</hostedSuppressionsEnabled>
+                                    <hostedSuppressionsEnabled>false</hostedSuppressionsEnabled>
 
-                                    <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
+                                    <!--Java 依赖分析配置-->
+                                    <skipDependencyManagement>true</skipDependencyManagement>
+                                    <skipSystemScope>true</skipSystemScope>
+                                    <skipArtifactType>false</skipArtifactType>
+                                    <skipProvidedScope>false</skipProvidedScope>
+                                    <skipRuntimeScope>false</skipRuntimeScope>
+                                    <skipTestScope>false</skipTestScope>
+
+                                    <!-- JavaScript 依赖分析配置-->
+                                    <nodeAuditAnalyzerEnabled>${dependency-analyze-javascript.enabled}</nodeAuditAnalyzerEnabled>
+                                    <pnpmAuditAnalyzerEnabled>${dependency-analyze-javascript.enabled}</pnpmAuditAnalyzerEnabled>
+                                    <nodeAuditSkipDevDependencies>true</nodeAuditSkipDevDependencies>
+                                    <nodeAuditAnalyzerUseCache>true</nodeAuditAnalyzerUseCache>
+                                    <nodeAnalyzerEnabled>${dependency-analyze-javascript.enabled}</nodeAnalyzerEnabled>
+                                    <nodePackageSkipDevDependencies>true</nodePackageSkipDevDependencies>
+                                    <retireJsAnalyzerEnabled>${dependency-analyze-javascript.enabled}</retireJsAnalyzerEnabled>
+                                    <retireJsForceUpdate>${dependency-analyze-javascript.enabled}</retireJsForceUpdate>
+
+                                    <!-- .Net 依赖分析配置 -->
+                                    <msbuildAnalyzerEnabled>${dependency-analyze-donet.enabled}</msbuildAnalyzerEnabled>
+                                    <assemblyAnalyzerEnabled>${dependency-analyze-donet.enabled}</assemblyAnalyzerEnabled>
+                                    <nuspecAnalyzerEnabled>${dependency-analyze-donet.enabled}</nuspecAnalyzerEnabled>
+                                    <nugetconfAnalyzerEnabled>${dependency-analyze-donet.enabled}</nugetconfAnalyzerEnabled>
+
+                                    <!-- swift 依赖分析配置 -->
+                                    <swiftPackageManagerAnalyzerEnabled>${dependency-analyze-swift.enabled}</swiftPackageManagerAnalyzerEnabled>
+                                    <swiftPackageResolvedAnalyzerEnabled>${dependency-analyze-swift.enabled}</swiftPackageResolvedAnalyzerEnabled>
+
+                                    <!-- 输出配置 -->
+                                    <formats>HTML,CSV</formats>
                                 </configuration>
                             </execution>
                         </executions>
