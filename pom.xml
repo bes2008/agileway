@@ -598,7 +598,7 @@
                         <executions>
                             <execution>
                                 <goals>
-                                    <goal>check</goal>
+                                    <goal>aggregate</goal>
                                 </goals>
                                 <configuration>
                                     <!-- 压制配置 -->
