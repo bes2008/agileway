@@ -607,7 +607,7 @@
                                     <hostedSuppressionsEnabled>false</hostedSuppressionsEnabled>
 
                                     <!--Java 依赖分析配置-->
-                                    <skipDependencyManagement>true</skipDependencyManagement>
+                                    <skipDependencyManagement>false</skipDependencyManagement>
                                     <skipSystemScope>true</skipSystemScope>
                                     <skipArtifactType>false</skipArtifactType>
                                     <skipProvidedScope>false</skipProvidedScope>
