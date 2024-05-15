@@ -165,11 +165,6 @@
             </dependency>
             <dependency>
                 <groupId>io.github.bes2008.solution.agileway.audit.entityloader</groupId>
-                <artifactId>agileway-audit-entityloader-esorm</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.bes2008.solution.agileway.audit.entityloader</groupId>
                 <artifactId>agileway-audit-entityloader-mybatis</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -241,11 +236,6 @@
             <dependency>
                 <groupId>io.github.bes2008.solution.agileway</groupId>
                 <artifactId>agileway-redis-springdata2</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.bes2008.solution.agileway</groupId>
-                <artifactId>agileway-retry</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -352,11 +342,6 @@
             <dependency>
                 <groupId>io.github.bes2008.solution.langx</groupId>
                 <artifactId>langx-java-reflect-aspectj</artifactId>
-                <version>${langx.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.bes2008.solution.langx</groupId>
-                <artifactId>langx-java-cmd</artifactId>
                 <version>${langx.version}</version>
             </dependency>
             <dependency>
@@ -592,6 +577,36 @@
                 可以这样配置在pom.xml文件中，也可以在执行mvn 命令时，加上-Dgpg.passphrase=YOUR_GPG_PASSPHRASE
                 -->
             </properties>
+        </profile>
+
+        <profile>
+            <id>staticAnalyze</id>
+            <properties>
+                <dependency-check-maven-plugin.version>9.1.0</dependency-check-maven-plugin.version>
+            </properties>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <version>${dependency-check-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <configuration>
+                                    <formats>HTML,CSV</formats>
+                                    <skipDependencyManagement>false</skipDependencyManagement>
+
+                                    <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
 
         <profile>
