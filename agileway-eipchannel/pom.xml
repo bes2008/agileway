@@ -22,7 +22,7 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>io.github.bes2008.solution.agileway</groupId>
+                <groupId>io.github.bes2008.solution.agileway.eipchannel</groupId>
                 <artifactId>agileway-eipchannel-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
