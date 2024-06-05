@@ -85,4 +85,9 @@ public class SimpleDistributedCounter implements DistributedCounter {
     public void setKey(String key) {
         this.key = key;
     }
+
+    @Override
+    public void reset() {
+        set(0L);
+    }
 }

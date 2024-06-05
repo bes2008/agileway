@@ -17,4 +17,7 @@ public interface DistributedCounter extends Counter<Long> {
     String getKey();
 
     void setKey(String key);
+
+    @Override
+    void reset();
 }
