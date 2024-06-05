@@ -23,7 +23,7 @@ public class RedisList<E> implements List<E> {
 
     @Override
     public int size() {
-        return Long.valueOf(ops.size()).intValue();
+        return (int)longSize();
     }
 
     public long longSize() {
@@ -176,12 +176,12 @@ public class RedisList<E> implements List<E> {
         int pageNo = 1;
         long maxPage = size % pageSize == 0 ? (size / pageSize + 1) : (size / pageSize);
         while (pageNo <= maxPage) {
-            long offset = (pageNo - 1) * pageSize;
+            long offset = (long) (pageNo - 1) * pageSize;
             List<E> partition = ops.range(offset, offset + pageSize - 1);
             if (Emptys.isNotEmpty(partition)) {
                 int index = partition.indexOf(o);
                 if (index >= 0) {
-                    return Long.valueOf(offset + index).intValue();
+                    return (int)(offset + index);
                 }
                 pageNo = pageNo + 1;
             }
@@ -279,6 +279,6 @@ public class RedisList<E> implements List<E> {
 
     @Override
     public List<E> subList(int fromIndex, int toIndex) {
-        return ops.range(fromIndex, toIndex - 1);
+        return ops.range(fromIndex, toIndex - 1L);
     }
 }

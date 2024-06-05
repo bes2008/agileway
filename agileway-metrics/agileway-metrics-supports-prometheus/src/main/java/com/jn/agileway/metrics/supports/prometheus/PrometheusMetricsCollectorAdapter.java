@@ -75,8 +75,7 @@ public class PrometheusMetricsCollectorAdapter extends Collector implements Coll
      */
     MetricFamilySamples fromCounter(Metric metricName, Counter counter) {
         String dropwizardName = metricName.getKey();
-        MetricFamilySamples.Sample sample = sampleBuilder.createSample(metricName, "", new ArrayList<String>(), new ArrayList<String>(),
-                new Long(counter.getCount()).doubleValue());
+        MetricFamilySamples.Sample sample = sampleBuilder.createSample(metricName, "", new ArrayList<String>(), new ArrayList<String>(),counter.getCount());
         return new MetricFamilySamples(sample.name, Type.GAUGE, getHelpMessage(dropwizardName, counter), Arrays.asList(sample));
     }
 

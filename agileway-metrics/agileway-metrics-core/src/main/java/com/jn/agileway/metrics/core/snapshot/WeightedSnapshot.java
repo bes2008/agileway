@@ -1,5 +1,7 @@
 package com.jn.agileway.metrics.core.snapshot;
 
+import com.jn.langx.util.Preconditions;
+
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -47,7 +49,9 @@ public class WeightedSnapshot extends AbstractSnapshot {
         for (WeightedSample sample : copy) {
             sumWeight += sample.weight;
         }
-
+        if(sumWeight<=0){
+            throw new IllegalStateException("illegal weight sum");
+        }
         for (int i = 0; i < copy.length; i++) {
             this.values[i] = copy[i].value;
             this.normWeights[i] = copy[i].weight / sumWeight;
