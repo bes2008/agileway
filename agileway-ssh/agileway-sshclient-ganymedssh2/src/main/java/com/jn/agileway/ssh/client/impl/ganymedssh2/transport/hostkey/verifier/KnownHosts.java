@@ -15,6 +15,7 @@ import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.io.IOs;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -391,7 +392,7 @@ public class KnownHosts {
         initialize(cw.toCharArray());
     }
 
-    private final boolean matchKeys(Object key1, Object key2) {
+    private boolean matchKeys(Object key1, Object key2) {
         if ((key1 instanceof RSAPublicKey) && (key2 instanceof RSAPublicKey)) {
             RSAPublicKey savedRSAKey = (RSAPublicKey) key1;
             RSAPublicKey remoteRSAKey = (RSAPublicKey) key2;
@@ -573,8 +574,7 @@ public class KnownHosts {
      * @param serverHostKey          as passed to the {@link ServerHostKeyVerifier}.
      * @throws IOException
      */
-    public final static void addHostkeyToFile(File knownHosts, String[] hostnames, String serverHostKeyAlgorithm,
-                                              byte[] serverHostKey) throws IOException {
+    public static final void addHostKeyToFile(File knownHosts, String[] hostnames, String serverHostKeyAlgorithm, byte[] serverHostKey) throws IOException {
         if ((hostnames == null) || (hostnames.length == 0)) {
             throw new IllegalArgumentException("Need at least one hostname specification");
         }
@@ -596,17 +596,22 @@ public class KnownHosts {
         writer.write("\n");
 
         char[] entry = writer.toCharArray();
-        RandomAccessFile raf = new RandomAccessFile(knownHosts, "rw");
-        long len = raf.length();
-        if (len > 0) {
-            raf.seek(len - 1);
-            int last = raf.read();
-            if (last != '\n') {
-                raf.write('\n');
+        RandomAccessFile raf = null;
+        try {
+            raf = new RandomAccessFile(knownHosts, "rw");
+            long len = raf.length();
+            if (len > 0) {
+                raf.seek(len - 1);
+                int last = raf.read();
+                if (last != '\n') {
+                    raf.write('\n');
+                }
             }
+            raf.write(new String(entry).getBytes());
+        }finally {
+            IOs.close(raf);
         }
-        raf.write(new String(entry).getBytes());
-        raf.close();
+
     }
 
     /**
@@ -617,7 +622,7 @@ public class KnownHosts {
      * @param hostkey the hostkey
      * @return the raw fingerprint
      */
-    static final private byte[] rawFingerPrint(String type, String keyType, byte[] hostkey) {
+    private static byte[] rawFingerPrint(String type, String keyType, byte[] hostkey) {
         Digest dig = null;
 
         if ("md5".equals(type)) {

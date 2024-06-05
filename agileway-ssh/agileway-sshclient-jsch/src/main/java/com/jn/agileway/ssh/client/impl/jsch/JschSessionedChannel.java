@@ -78,8 +78,10 @@ class JschSessionedChannel extends AbstarctSessionedChannel {
 
     @Override
     protected void internalExec(String command) throws SshException {
+        if(session==null || !session.isConnected()){
+            throw new IllegalStateException("the session is not connected");
+        }
         Preconditions.checkNotEmpty(command, "the command is illegal : {}", command);
-        Preconditions.checkState(session != null && session.isConnected(), "the session is not connected");
         this.type = JschChannelType.EXEC;
         try {
             ChannelExec channel = (ChannelExec) session.openChannel(type.getName());
@@ -108,7 +110,9 @@ class JschSessionedChannel extends AbstarctSessionedChannel {
 
     @Override
     protected void internalShell() throws SshException {
-        Preconditions.checkState(session != null && session.isConnected(), "the session is not connected");
+        if(session == null || !session.isConnected()){
+            throw new IllegalStateException("the session is not connected");
+        }
         try {
             this.type = JschChannelType.SHELL;
             this.channel = session.openChannel(type.getName());
@@ -213,7 +217,9 @@ class JschSessionedChannel extends AbstarctSessionedChannel {
 
     @Override
     public void signal(Signal signal) throws SshException {
-        Preconditions.checkState(channel != null && channel.isConnected());
+        if(channel == null || !channel.isConnected()){
+            throw new IllegalStateException("not connected");
+        }
         Preconditions.checkNotEmpty(signal, "the signal is null or empty");
         Preconditions.checkArgument(signal != Signal.UNKNOWN, "the signal is UNKNOWN");
         try {
