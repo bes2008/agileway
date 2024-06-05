@@ -15,6 +15,8 @@ import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.function.Function;
+import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.io.IOs;
 
 import java.io.*;
@@ -23,6 +25,7 @@ import java.net.UnknownHostException;
 import java.security.SecureRandom;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -250,54 +253,24 @@ public class KnownHosts {
         return result;
     }
 
-    private Vector getAllKeys(String hostname) {
-        Vector keys = new Vector();
-
+    private List<Object> getAllKeys(final String hostname) {
         synchronized (publicKeys) {
-            Iterator i = publicKeys.iterator();
-            while (i.hasNext()) {
-                KnownHostsEntry ke = (KnownHostsEntry) i.next();
-                if (!hostnameMatches(ke.patterns, hostname)) {
-                    continue;
-                }
-                keys.addElement(ke.key);
-            }
+            List<Object> keys = Pipeline.<KnownHostsEntry>of(publicKeys)
+                    .filter(new Predicate<KnownHostsEntry>() {
+                        @Override
+                        public boolean test(KnownHostsEntry ke) {
+                            return hostnameMatches(ke.patterns, hostname);
+                        }
+                    }).map(new Function<KnownHostsEntry,Object>() {
+                        @Override
+                        public Object apply(KnownHostsEntry ke) {
+                            return ke.key;
+                        }
+                    }).asList();
+            return keys;
         }
-
-        return keys;
     }
 
-    /**
-     * Try to find the preferred order of hostkey algorithms for the given hostname.
-     * Based on the type of hostkey that is present in the internal database
-     * (i.e., either <code>ssh-rsa</code> or <code>ssh-dss</code>)
-     * an ordered list of hostkey algorithms is returned which can be passed
-     * to <code>Connection.setServerHostKeyAlgorithms</code>.
-     *
-     * @param hostname
-     * @return <code>null</code> if no key for the given hostname is present or
-     * there are keys of multiple types present for the given hostname. Otherwise,
-     * an array with hostkey algorithms is returned (i.e., an array of length 2).
-     */
-    public String[] getPreferredServerHostkeyAlgorithmOrder(String hostname) {
-        String[] algos = recommendHostkeyAlgorithms(hostname);
-        if (algos != null) {
-            return algos;
-        }
-        InetAddress[] ipAdresses = null;
-        try {
-            ipAdresses = InetAddress.getAllByName(hostname);
-        } catch (UnknownHostException e) {
-            return null;
-        }
-        for (int i = 0; i < ipAdresses.length; i++) {
-            algos = recommendHostkeyAlgorithms(ipAdresses[i].getHostAddress());
-            if (algos != null) {
-                return algos;
-            }
-        }
-        return null;
-    }
 
     private final boolean hostnameMatches(String[] hostpatterns, String hostname) {
         boolean isMatch = false;
@@ -426,7 +399,7 @@ public class KnownHosts {
         return false;
     }
 
-    private final boolean pseudoRegex(char[] pattern, int i, char[] match, int j) {
+    private boolean pseudoRegex(char[] pattern, int i, char[] match, int j) {
         /* This matching logic is equivalent to the one present in OpenSSH 4.1 */
         while (true) {
             /* Are we at the end of the pattern? */
@@ -468,50 +441,6 @@ public class KnownHosts {
             i++;
             j++;
         }
-    }
-
-    private String[] recommendHostkeyAlgorithms(String hostname) {
-        String preferredAlgo = null;
-        Vector keys = getAllKeys(hostname);
-        for (int i = 0; i < keys.size(); i++) {
-            String thisAlgo = null;
-            if (keys.elementAt(i) instanceof RSAPublicKey) {
-                thisAlgo = "ssh-rsa";
-            } else if (keys.elementAt(i) instanceof DSAPublicKey) {
-                thisAlgo = "ssh-dss";
-            } else {
-                continue;
-            }
-            if (preferredAlgo != null) {
-                /* If we find different key types, then return null */
-                if (preferredAlgo.compareTo(thisAlgo) != 0) {
-                    return null;
-                }
-                /* OK, we found the same algo again, optimize */
-                continue;
-            }
-        }
-
-        /* If we did not find anything that we know of, return null */
-
-        if (preferredAlgo == null) {
-            return null;
-        }
-        /* Now put the preferred algo to the start of the array.
-         * You may ask yourself why we do it that way - basically, we could just
-         * return only the preferred algorithm: since we have a saved key of that
-         * type (sent earlier from the remote host), then that should work out.
-         * However, imagine that the server is (for whatever reasons) not offering
-         * that type of hostkey anymore (e.g., "ssh-rsa" was disabled and
-         * now "ssh-dss" is being used). If we then do not let the server send us
-         * a fresh key of the new type, then we shoot ourself into the foot:
-         * the connection cannot be established and hence the user cannot decide
-         * if he/she wants to accept the new key.
-         */
-        if (preferredAlgo.equals("ssh-rsa")) {
-            return new String[]{"ssh-rsa", "ssh-dss"};
-        }
-        return new String[]{"ssh-dss", "ssh-rsa"};
     }
 
     /**
@@ -675,7 +604,7 @@ public class KnownHosts {
      * @param raw raw fingerprint
      * @return the bubblebabble representation
      */
-    static final private String rawToBubblebabbleFingerprint(byte[] raw) {
+    private static String rawToBubblebabbleFingerprint(byte[] raw) {
         final char[] v = "aeiouy".toCharArray();
         final char[] c = "bcdfghklmnprstvzx".toCharArray();
 
@@ -693,7 +622,7 @@ public class KnownHosts {
                     sb.append(c[(((raw[(2 * i) + 1])) >> 4) & 15]);
                     sb.append('-');
                     sb.append(c[(((raw[(2 * i) + 1]))) & 15]);
-                    // As long as seed >= 0, seed will be >= 0 afterwards
+                    // As long as seed >= 0, seed will be >= 0 afterwords
                     seed = ((seed * 5) + (((raw[2 * i] & 0xff) * 7) + (raw[(2 * i) + 1] & 0xff))) % 36;
                 }
             } else {
@@ -718,7 +647,7 @@ public class KnownHosts {
      * @param publickey key blob
      * @return Hex fingerprint
      */
-    public final static String createHexFingerprint(String keytype, byte[] publickey) {
+    public static String createHexFingerprint(String keytype, byte[] publickey) {
         byte[] raw = rawFingerPrint("md5", keytype, publickey);
         return rawToHexFingerprint(raw);
     }
@@ -734,7 +663,7 @@ public class KnownHosts {
      * @param publickey key data
      * @return Bubblebabble fingerprint
      */
-    public final static String createBubblebabbleFingerprint(String keytype, byte[] publickey) {
+    public static String createBubblebabbleFingerprint(String keytype, byte[] publickey) {
         byte[] raw = rawFingerPrint("sha1", keytype, publickey);
         return rawToBubblebabbleFingerprint(raw);
     }
