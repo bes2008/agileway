@@ -61,10 +61,8 @@ public class GlobalRestResponseFilter extends OncePerRequestFilter {
             } finally {
                 //rest response body 是否已写过
                 Boolean responseBodyWritten = (Boolean) request.getAttribute(GlobalRestHandlers.GLOBAL_REST_RESPONSE_HAD_WRITTEN);
-                if ((responseBodyWritten == null || !responseBodyWritten) && !response.isCommitted()) {
-                    if (restResponseBodyHandler != null) {
-                        restRespBody = restResponseBodyHandler.handle(httpRequest, httpResponse, doFilterMethod, restRespBody);
-                    }
+                if (restResponseBodyHandler != null && ((responseBodyWritten == null || !responseBodyWritten) && !response.isCommitted())) {
+                    restRespBody = restResponseBodyHandler.handle(httpRequest, httpResponse, doFilterMethod, restRespBody);
                     if (restRespBody != null) {
                         Map<String, Object> finalBody = restResponseBodyHandler.toMap(httpRequest, httpResponse, doFilterMethod, restRespBody);
 

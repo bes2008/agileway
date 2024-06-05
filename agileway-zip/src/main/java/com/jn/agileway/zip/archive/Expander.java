@@ -137,7 +137,10 @@ public class Expander implements Closeable {
                 }
             }
             fileAttrCopier.accept(entry, f);
-            f.setLastModified(entry.getLastModifiedDate().getTime());
+            boolean actionResult = f.setLastModified(entry.getLastModifiedDate().getTime());
+            if(!actionResult){
+                Loggers.getLogger(Expander.class).warn("error when set last modified date, file: {}", f.getPath());
+            }
         }
 
         Collects.forEach(directorySet, new Consumer<Entry<ArchiveEntry, File>>() {
@@ -145,7 +148,10 @@ public class Expander implements Closeable {
             public void accept(Entry<ArchiveEntry, File> pair) {
                 File directory = pair.getValue();
                 ArchiveEntry entry = pair.getKey();
-                directory.setLastModified(entry.getLastModifiedDate().getTime());
+                boolean actionResult = directory.setLastModified(entry.getLastModifiedDate().getTime());
+                if(!actionResult){
+                    Loggers.getLogger(Expander.class).warn("error when set last modified date, directory: {}", directory.getPath());
+                }
             }
         });
 

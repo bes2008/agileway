@@ -35,6 +35,7 @@ import com.jn.agileway.web.security.AccessDeniedHandler;
 import com.jn.agileway.web.security.AccessDeniedHandlerImpl;
 import com.jn.agileway.web.security.csrf.*;
 import com.jn.agileway.web.servlet.Servlets;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.function.Predicate;
 
@@ -169,16 +170,13 @@ public final class CsrfFilter extends OncePerRequestFilter {
     /**
      * Constant time comparison to prevent against timing attacks.
      *
-     * @param expected
-     * @param actual
-     * @return
      */
     private static boolean equalsConstantTime(String expected, String actual) {
-        if (expected == actual) {
-            return true;
-        }
         if (expected == null || actual == null) {
             return false;
+        }
+        if(Objs.equals(expected, actual)){
+            return true;
         }
         // Encode after ensure that the string is not null
         byte[] expectedBytes = Charsets.encode(Charsets.UTF_8, expected);

@@ -67,8 +67,8 @@ public class QuickLz {
             if ((cword_val & 1) == 1) {
                 if (src > 3 * (source.length >> 2) && dst > src - (src >> 5)) {
                     d2 = new byte[source.length + DEFAULT_HEADERLEN];
-                    d2[0] = 2 | 0;
-                    fastwrite(d2, 1, source.length + headerlen, 4);
+                    d2[0] = 2|0;
+                    fastwrite(d2, 1, (long)(source.length + headerlen), 4);
                     fastwrite(d2, 5, source.length, 4);
                     System.arraycopy(source, 0, d2, headerlen, source.length);
                     return d2;

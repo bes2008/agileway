@@ -109,7 +109,7 @@ public class AccessLogFilter extends OncePerRequestFilter {
             HttpServletResponse resp = (HttpServletResponse) response;
             HttpServletRequest req = (HttpServletRequest) request;
             if (doLog) {
-                StringBuilder b = null;
+                StringBuilder b = new StringBuilder();
 
                 switch (config.getLevel()) {
                     case BASIC:

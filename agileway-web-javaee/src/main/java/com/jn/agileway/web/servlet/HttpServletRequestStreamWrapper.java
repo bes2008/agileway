@@ -45,7 +45,7 @@ public class HttpServletRequestStreamWrapper extends HttpServletRequestWrapper {
                 if (requestBody == null || !requestBody.hasRemaining()) {
                     return -1;
                 }
-                return requestBody.get();
+                return IOs.filterInputStreamRead(requestBody.get());
             }
         };
     }

@@ -196,9 +196,11 @@ public class Servlets extends HttpRRs {
             response.sendError(400, StringTemplates.formatWithPlaceholder("Invalid http request header: Range:{}-{}", offset, end));
             return;
         }
+        RandomAccessFile raf=null;
         FileChannel channel = null;
         try {
-            channel = new RandomAccessFile(file, FileIOMode.READ_ONLY.getIdentifier()).getChannel();
+            raf = new RandomAccessFile(file, FileIOMode.READ_ONLY.getIdentifier());
+            channel = raf.getChannel();
             long sizeOfWillRead = end - offset + 1;
             if (sizeOfWillRead > maxPacketSize) {
                 sizeOfWillRead = maxPacketSize;
@@ -233,6 +235,7 @@ public class Servlets extends HttpRRs {
             logger.error("Error occur when download file: {}", fileName);
             response.setStatus(500);
         } finally {
+            IOs.close(raf);
             IOs.close(channel);
         }
     }
@@ -263,7 +266,7 @@ public class Servlets extends HttpRRs {
         HttpHeaders httpHeaders = getRequestHeaders(request);
         List<HttpRange> ranges = httpHeaders.getRange();
         long offset = 0;
-        long end = bytes.length - 1;
+        long end = bytes.length - 1L;
         if (Emptys.isNotEmpty(ranges)) {
             HttpRange range = ranges.get(0);
             offset = range.getRangeStart(0);
@@ -287,7 +290,7 @@ public class Servlets extends HttpRRs {
             int size = Numbers.toInt(sizeOfWillRead);
             end = offset + size - 1;
             if (offset + size > bytes.length) {
-                end = bytes.length - 1;
+                end = bytes.length - 1L;
                 size = Numbers.toInt(bytes.length - offset);
             }
 
