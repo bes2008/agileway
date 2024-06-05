@@ -19,6 +19,7 @@ public class RedisLuaScriptResourceLoader extends ResourceConfigurationLoader<Re
         Location location = this.getResourceLocationProvider().get(configurationId);
         if (location == null) {
             logger.warn("Can't find the location for configuration : {}", configurationId);
+            return null;
         }
 
         RedisLuaScript configuration = null;

@@ -1,5 +1,6 @@
 package com.jn.agileway.spring.utils;
 
+import com.jn.langx.util.logging.Loggers;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -25,15 +26,20 @@ public class SpringContextHolder implements ApplicationContextAware {
     }
 
     public static ApplicationContext getApplicationContext() {
-        if (applicationContext != null) {
-            return applicationContext;
+        if (SpringContextHolder.applicationContext == null) {
+            try {
+                downLatch.await();
+                if(SpringContextHolder.applicationContext!=null) {
+                    return SpringContextHolder.applicationContext;
+                }else{
+                    throw new IllegalStateException("can't find the application context");
+                }
+            } catch (InterruptedException ex) {
+                Loggers.getLogger(SpringContextHolder.class).warn("application bootstrap failed ");
+                return getApplicationContext();
+            }
         }
-        try {
-            downLatch.await();
-            return applicationContext;
-        } catch (Throwable ex) {
-            throw new RuntimeException(ex);
-        }
+        return SpringContextHolder.applicationContext;
     }
 
     public static <T> T getBean(String name) {

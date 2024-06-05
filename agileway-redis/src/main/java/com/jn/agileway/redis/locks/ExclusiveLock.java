@@ -76,7 +76,7 @@ public class ExclusiveLock extends DistributedLock {
             return;
         }
         long start = System.currentTimeMillis();
-        long delta = 3 * 1000; // 3s
+        long delta = 3 * 1000L; // 3s
         long endTime = start + delta;
         boolean unlocked = false;
         while (!unlocked && System.currentTimeMillis() < endTime) {
