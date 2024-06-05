@@ -22,11 +22,12 @@ public class Ssh2ForwardingClient implements ForwardingClient {
     @Override
     public ForwardingChannelInfo startLocalForwarding(String bindToHost, int bindToPort, String destHost, int destPort) throws SshException {
         ForwardingChannelInfo channel = new ForwardingChannelInfo(ForwardingChannelInfo.LOCAL_FORWARDING_CHANNEL, bindToHost, bindToPort, destHost, destPort);
-        if (!localForwarderMap.containsKey(ForwardingChannelInfo.id(channel))) {
+        String channelId = ForwardingChannelInfo.id(channel);
+        if (!localForwarderMap.containsKey(channelId)) {
             Connection delegate = this.connection.getDelegate();
             try {
                 LocalPortForwarder localPortForwarder = delegate.createLocalPortForwarder(new InetSocketAddress(bindToHost, bindToPort), destHost, destPort);
-                localForwarderMap.put(ForwardingChannelInfo.id(channel), localPortForwarder);
+                localForwarderMap.put(channelId, localPortForwarder);
             } catch (Throwable ex) {
                 throw new SshException(ex);
             }

@@ -18,6 +18,7 @@ import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.logging.Loggers;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -192,7 +193,7 @@ public class KnownHosts {
         return dig;
     }
 
-    private final boolean checkHashed(String entry, String hostname) {
+    private boolean checkHashed(String entry, String hostname) {
         if (!entry.startsWith("|1|")) {
             return false;
         }
@@ -353,16 +354,24 @@ public class KnownHosts {
     private void initialize(File knownHosts) throws IOException {
         char[] buff = new char[512];
         CharArrayWriter cw = new CharArrayWriter();
-        knownHosts.createNewFile();
-        FileReader fr = new FileReader(knownHosts);
-        while (true) {
-            int len = fr.read(buff);
-            if (len < 0)
-                break;
-            cw.write(buff, 0, len);
+        boolean actionResult= knownHosts.createNewFile();
+        if(!actionResult){
+            Loggers.getLogger("create known_hosts failed");
         }
-        fr.close();
-        initialize(cw.toCharArray());
+        FileReader fr = null;
+        try {
+            fr = new FileReader(knownHosts);
+            while (true) {
+                int len = fr.read(buff);
+                if (len < 0) {
+                    break;
+                }
+                cw.write(buff, 0, len);
+            }
+            initialize(cw.toCharArray());
+        }finally {
+            IOs.close(fr);
+        }
     }
 
     private boolean matchKeys(Object key1, Object key2) {

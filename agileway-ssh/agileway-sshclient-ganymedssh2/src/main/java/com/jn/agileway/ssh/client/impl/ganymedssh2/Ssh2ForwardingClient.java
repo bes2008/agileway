@@ -21,12 +21,13 @@ public class Ssh2ForwardingClient implements ForwardingClient {
     @Override
     public ForwardingChannelInfo startLocalForwarding(String bindToHost, int bindToPort, String destHost, int destPort) throws SshException {
         ForwardingChannelInfo channel = new ForwardingChannelInfo(ForwardingChannelInfo.LOCAL_FORWARDING_CHANNEL, bindToHost, bindToPort, destHost, destPort);
-        LocalPortForwarder forwarder = localForwarderMap.get(channel);
+        String channelId = ForwardingChannelInfo.id(channel);
+        LocalPortForwarder forwarder = localForwarderMap.get(channelId);
         if (forwarder == null) {
             try {
                 ch.ethz.ssh2.Connection delegate = this.connection.getDelegate();
                 forwarder = delegate.createLocalPortForwarder(bindToPort, destHost, destPort);
-                localForwarderMap.put(ForwardingChannelInfo.id(channel), forwarder);
+                localForwarderMap.put(channelId, forwarder);
             } catch (Throwable ex) {
                 throw new SshException(ex);
             }
