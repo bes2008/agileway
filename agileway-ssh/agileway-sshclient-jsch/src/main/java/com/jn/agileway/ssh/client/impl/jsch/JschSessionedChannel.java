@@ -96,7 +96,9 @@ class JschSessionedChannel extends AbstarctSessionedChannel {
     @Override
     protected void internalSubsystem(String subsystem) throws SshException {
         Preconditions.checkNotEmpty(subsystem, "the subsystem is illegal : {}", subsystem);
-        Preconditions.checkState(session != null && session.isConnected(), "the session is not connected");
+        if(session==null || !session.isConnected()){
+            throw new IllegalStateException("the session is not connected");
+        }
         try {
             this.type = JschChannelType.SUBSYSTEM;
             ChannelSubsystem channel = (ChannelSubsystem) session.openChannel(type.getName());
@@ -237,7 +239,9 @@ class JschSessionedChannel extends AbstarctSessionedChannel {
             try {
                 int timeout = 10;
                 maxWait = maxWait - timeout;
-                wait(timeout);
+                synchronized (this) {
+                    wait(timeout);
+                }
             } catch (Throwable ex) {
                 // ignore it
             }

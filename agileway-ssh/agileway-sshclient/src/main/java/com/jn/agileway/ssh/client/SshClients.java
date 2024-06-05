@@ -29,20 +29,20 @@ public class SshClients {
     /**
      * 通过ssh 连接到远程机器上，cd到指定的workingDirectory下， 执行命令
      *
-     * @param connection
      * @param environmentVariables 环境变量
      * @param workingDirectory     工作目录
      * @param command              要执行的命令
      * @param encoding             输出内容的编码，默认为 UTF-8
-     * @return
-     * @throws SshException
      */
-    public static SshCommandResponse exec(@NonNull SshConnection connection, @Nullable Map<String, String> environmentVariables, @Nullable String workingDirectory, @NonNull String command, @Nullable String encoding) throws SshException{
+    public static SshCommandResponse exec(@NonNull SshConnection connection, @Nullable Map<String, String> environmentVariables, @Nullable String workingDirectory, @NonNull String command, @Nullable String encoding) throws SshException {
         return exec(connection, environmentVariables, null, workingDirectory, command, encoding);
     }
 
     public static SshCommandResponse exec(@NonNull SshConnection connection, @Nullable Map<String, String> environmentVariables, @Nullable Supplier<Map<String, String>, String> environmentSettingsSupplier, @Nullable String workingDirectory, @NonNull String command, @Nullable String encoding) throws SshException {
-        Preconditions.checkState(connection != null && connection.isConnected() && !connection.isClosed(), "connection status invalid");
+        if (connection == null || !connection.isConnected() || connection.isClosed()) {
+            throw new IllegalStateException("connection status invalid");
+        }
+
         Preconditions.checkNotEmpty(command, "the command is not supplied");
         Charset charset = Charsets.UTF_8;
         if (Strings.isNotEmpty(encoding)) {
@@ -53,36 +53,39 @@ public class SshClients {
             }
         }
 
-        final SessionedChannel channel = connection.openSession();
-
-
-        if (Strings.isNotEmpty(workingDirectory)) {
-            workingDirectory = workingDirectory.replace("\\", "/");
-            command = "cd " + workingDirectory + ";" + command;
-        }
-        if (Emptys.isNotEmpty(environmentVariables)) {
-            String envs = null;
-            if (environmentSettingsSupplier != null) {
-                envs = environmentSettingsSupplier.get(environmentVariables);
-            }
-            if (Strings.isNotEmpty(envs)) {
-                command = envs + command;
-            } else {
-                Collects.forEach(environmentVariables, new Consumer2<String, String>() {
-                    @Override
-                    public void accept(String variable, String value) {
-                        channel.env(variable, value);
-                    }
-                });
-            }
-        }
-
-        channel.exec(command);
-        int exitStatus = channel.getExitStatus();
-
-        SshCommandResponse response = new SshCommandResponse();
-        response.setExitStatus(exitStatus);
+        SessionedChannel channel = null;
+        SshCommandResponse response = null;
         try {
+            channel = connection.openSession();
+
+
+            if (Strings.isNotEmpty(workingDirectory)) {
+                workingDirectory = workingDirectory.replace("\\", "/");
+                command = "cd " + workingDirectory + ";" + command;
+            }
+            if (Emptys.isNotEmpty(environmentVariables)) {
+                String envs = null;
+                if (environmentSettingsSupplier != null) {
+                    envs = environmentSettingsSupplier.get(environmentVariables);
+                }
+                if (Strings.isNotEmpty(envs)) {
+                    command = envs + command;
+                } else {
+                    final SessionedChannel _channel = channel;
+                    Collects.forEach(environmentVariables, new Consumer2<String, String>() {
+                        @Override
+                        public void accept(String variable, String value) {
+                            _channel.env(variable, value);
+                        }
+                    });
+                }
+            }
+
+            channel.exec(command);
+            int exitStatus = channel.getExitStatus();
+
+            response = new SshCommandResponse();
+            response.setExitStatus(exitStatus);
             if (exitStatus != 0) {
                 InputStream errorInputStream = channel.getErrorInputStream();
                 byte[] errorContent = IOs.toByteArray(errorInputStream);
@@ -98,6 +101,8 @@ public class SshClients {
             }
         } catch (Throwable ex) {
             logger.error(ex.getMessage(), ex);
+        } finally {
+            IOs.close(channel);
         }
         return response;
     }

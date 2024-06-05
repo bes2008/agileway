@@ -162,7 +162,9 @@ class SshjSessionedChannel extends AbstarctSessionedChannel {
                 try {
                     int timeout = 10;
                     maxWait = maxWait - timeout;
-                    wait(timeout);
+                    synchronized (this) {
+                        wait(timeout);
+                    }
                 } catch (Throwable ex) {
                     // ignore it
                 }
@@ -178,7 +180,9 @@ class SshjSessionedChannel extends AbstarctSessionedChannel {
                 try {
                     int timeout = 10;
                     maxWait = maxWait - timeout;
-                    wait(timeout);
+                    synchronized (this) {
+                        wait(timeout);
+                    }
                 } catch (Throwable ex) {
                     // ignore it
                 }
