@@ -18,7 +18,7 @@ public class RedisMap<K, V> implements Map<K, V> {
 
     @Override
     public int size() {
-        return Long.valueOf(longSize()).intValue();
+        return (int)longSize();
     }
 
     public long longSize() {

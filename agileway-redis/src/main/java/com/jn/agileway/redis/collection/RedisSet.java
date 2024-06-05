@@ -21,7 +21,7 @@ public class RedisSet<E> implements Set<E> {
 
     @Override
     public int size() {
-        return Long.valueOf(longSize()).intValue();
+        return (int)longSize();
     }
 
     public long longSize() {

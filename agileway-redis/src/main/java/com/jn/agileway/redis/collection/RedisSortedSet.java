@@ -84,7 +84,7 @@ public class RedisSortedSet<E> implements SortedSet<ZSetOperations.TypedTuple<E>
 
     @Override
     public int size() {
-        return Long.valueOf(longSize()).intValue();
+        return (int)longSize();
     }
 
     public long longSize() {

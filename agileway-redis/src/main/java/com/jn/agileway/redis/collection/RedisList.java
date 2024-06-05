@@ -204,7 +204,7 @@ public class RedisList<E> implements List<E> {
             if (Emptys.isNotEmpty(partition)) {
                 int index = partition.lastIndexOf(o);
                 if (index >= 0) {
-                    return Long.valueOf(offset + index).intValue();
+                    return (int)offset + index;
                 }
                 pageNo = pageNo - 1;
             }
