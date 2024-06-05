@@ -25,45 +25,44 @@ public class AuditMethodInterceptor<REQUEST> implements MethodInterceptor {
     public Object intercept(MethodInvocation invocation) throws Throwable {
         REQUEST request = threadLocalFactory.get(invocation);
         // 存在审计请求时，则进行审计
-        if (request != null) {
-            Object ret = null;
+        if (request == null) {
+            // 不存在审计请求时，则直接进行原始调用
+            return invocation.proceed();
+        }
+        Object ret = null;
 
-            AuditRequest wrappedRequest = null;
+        AuditRequest wrappedRequest = null;
 
-            // start auditing
+        // start auditing
+        try {
+            wrappedRequest = auditor.startAudit(request, invocation);
+        } catch (Throwable ex) {
+            Auditor.removeByOriginalRequest(request);
+            logger.error("error when the auditing starting, error: {}, request: {}", ex.getMessage(), request, ex);
+        }
+
+        if (!lazyFinish) {
+            Throwable e = null;
             try {
-                wrappedRequest = auditor.startAudit(request, invocation);
+                ret = invocation.proceed();
+                return ret;
             } catch (Throwable ex) {
-                Auditor.removeByOriginalRequest(request);
-                logger.error("error when the auditing starting, error: {}, request: {}", ex.getMessage(), request, ex);
-            }
-
-            if (!lazyFinish) {
-                Throwable e = null;
-                try {
-                    ret = invocation.proceed();
-                } catch (Throwable ex) {
+                if(wrappedRequest!=null) {
                     wrappedRequest.setResult(OperationResult.FAIL);
-                    e = ex;
-                } finally {
-                    if(wrappedRequest!=null){
-                        try {
-                            auditor.finishAudit(wrappedRequest);
-                        } catch (Throwable ex) {
-                            logger.error("error when the auditing finished, error: {}, request: {}", ex.getMessage(), request, ex);
-                        }
-                    }
-                    if (e != null) {
-                        throw e;
-                    }
-                    return ret;
                 }
-            } else {
-                // 延迟完成时，不在该 interceptor 中进行finish操作
-                return invocation.proceed();
+                e = ex;
+                throw e;
+            } finally {
+                if(wrappedRequest!=null){
+                    try {
+                        auditor.finishAudit(wrappedRequest);
+                    } catch (Throwable ex) {
+                        logger.error("error when the auditing finished, error: {}, request: {}", ex.getMessage(), request, ex);
+                    }
+                }
             }
         } else {
-            // 不存在审计请求时，则直接进行原始调用
+            // 延迟完成时，不在该 interceptor 中进行finish操作
             return invocation.proceed();
         }
     }

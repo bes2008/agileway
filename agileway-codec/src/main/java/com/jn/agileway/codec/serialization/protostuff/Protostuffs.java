@@ -71,9 +71,13 @@ public class Protostuffs {
         }
 
         Schema<T> schema = getSchema(targetType);
-        T instance = schema.newMessage();
-        GraphIOUtil.mergeFrom(bytes, instance, schema);
-        return instance;
+        if(schema!=null) {
+            T instance = schema.newMessage();
+            GraphIOUtil.mergeFrom(bytes, instance, schema);
+            return instance;
+        }else{
+            return null;
+        }
     }
 
     public static <T> T deserializeWithSchema(byte[] bytes) {
@@ -82,11 +86,13 @@ public class Protostuffs {
         }
         try {
             SchemaedStruct wrappedStruct = deserialize(bytes, SchemaedStruct.class);
-
-            byte[] data = wrappedStruct.getValue();
-            String actualClass = wrappedStruct.getName();
-            Class<T> targetType = ClassLoaders.loadClass(actualClass);
-            return deserialize(data, targetType);
+            if(wrappedStruct!=null) {
+                byte[] data = wrappedStruct.getValue();
+                String actualClass = wrappedStruct.getName();
+                Class<T> targetType = ClassLoaders.loadClass(actualClass);
+                return deserialize(data, targetType);
+            }
+            return null;
         }catch (Throwable ex){
             throw new CodecException(ex);
         }

@@ -116,10 +116,14 @@ public class Fses {
         Pair<Fse, ByteArray> pair = fseFactory.get();
         Fse fse = pair.getKey();
         ByteArray buffer = pair.getValue();
-        try {
-            return deserialize(fse, buffer, bytes, targetClass);
-        }finally {
-            buffer.clear();
+        if(buffer!=null) {
+            try {
+                return deserialize(fse, buffer, bytes, targetClass);
+            } finally {
+                buffer.clear();
+            }
+        }else{
+            return null;
         }
     }
 

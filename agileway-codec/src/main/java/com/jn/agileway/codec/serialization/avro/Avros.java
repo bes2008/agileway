@@ -10,7 +10,6 @@ import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.concurrent.threadlocal.ThreadLocalFactory;
 import com.jn.langx.util.io.IOs;
-import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import org.apache.avro.Schema;
 import org.apache.avro.io.BinaryDecoder;
@@ -30,7 +29,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Avros {
 
-    private static final Logger logger = Loggers.getLogger(Avros.class);
 
     public static final ThreadLocalFactory<?, BinaryEncoder> encoderFactoryLocal = new ThreadLocalFactory<Object, BinaryEncoder>(new Factory<Object, BinaryEncoder>() {
         @Override
@@ -131,11 +129,14 @@ public class Avros {
         }
         try {
             SchemaedStruct wrappedStruct = deserialize(bytes, SchemaedStruct.class);
-
-            byte[] data = wrappedStruct.getValue();
-            String actualClass = wrappedStruct.getName();
-            Class<T> targetType = ClassLoaders.loadClass(actualClass);
-            return deserialize(data, targetType);
+            if(wrappedStruct!=null) {
+                byte[] data = wrappedStruct.getValue();
+                String actualClass = wrappedStruct.getName();
+                Class<T> targetType = ClassLoaders.loadClass(actualClass);
+                return deserialize(data, targetType);
+            }else {
+                return null;
+            }
         } catch (Throwable ex) {
             throw new CodecException(ex);
         }
