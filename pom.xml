@@ -139,10 +139,17 @@
 
         <maven-shade-plugin.version>3.4.1</maven-shade-plugin.version>
         <maven-javadoc-plugin.version>3.4.0</maven-javadoc-plugin.version>
+        <dependency-check-maven-plugin.version>9.1.0</dependency-check-maven-plugin.version>
 
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+
+
+        <dependency-analyze-javascript.enabled>false</dependency-analyze-javascript.enabled>
+        <dependency-analyze-donet.enabled>false</dependency-analyze-donet.enabled>
+        <dependency-analyze-swift.enabled>false</dependency-analyze-swift.enabled>
     </properties>
 
     <dependencyManagement>
@@ -498,6 +505,17 @@
             <artifactId>langx-java</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.sonatype.ossindex.maven</groupId>
+            <artifactId>ossindex-maven-plugin</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.owasp</groupId>
+            <artifactId>dependency-check-maven</artifactId>
+            <version>${dependency-check-maven-plugin.version}</version>
+        </dependency>
+
     </dependencies>
 
 
@@ -530,11 +548,86 @@
 
         </testResources>
 
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.12.4</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.owasp</groupId>
+                    <artifactId>dependency-check-maven</artifactId>
+                    <version>${dependency-check-maven-plugin.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>1.6.12</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-scm-plugin</artifactId>
+                    <version>1.10.0</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.5.3</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-scm-plugin</artifactId>
+                    <version>1.10.0</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>1.6</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.sonatype.ossindex.maven</groupId>
+                    <artifactId>ossindex-maven-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>3.1.0</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
                 </configuration>
@@ -542,7 +635,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.12.4</version>
                 <configuration>
                     <includes>
                         <include>**/*Test*.java</include>
@@ -582,15 +674,32 @@
         <profile>
             <id>staticAnalyze</id>
             <properties>
-                <dependency-check-maven-plugin.version>9.1.0</dependency-check-maven-plugin.version>
 
-                <dependency-analyze-javascript.enabled>false</dependency-analyze-javascript.enabled>
-                <dependency-analyze-donet.enabled>false</dependency-analyze-donet.enabled>
-                <dependency-analyze-swift.enabled>false</dependency-analyze-swift.enabled>
+
+
             </properties>
 
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.ossindex.maven</groupId>
+                        <artifactId>ossindex-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>audit-dependencies</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>audit-aggregate</goal>
+                                </goals>
+
+                                <configuration>
+                                    <fail>false</fail>
+                                    <reportFile>${project.build.outputDirectory}/ossindex-report.json</reportFile>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
                     <plugin>
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
@@ -601,9 +710,9 @@
                                     <goal>aggregate</goal>
                                 </goals>
                                 <configuration>
+                                    <autoUpdate>true</autoUpdate>
                                     <!-- 压制配置 -->
                                     <suppressionFile>.dependencycheck/publishedSuppressions.xml</suppressionFile>
-                                    <hostedSuppressionsEnabled>true</hostedSuppressionsEnabled>
                                     <hostedSuppressionsEnabled>false</hostedSuppressionsEnabled>
 
                                     <!--Java 依赖分析配置-->
@@ -634,6 +743,8 @@
                                     <swiftPackageManagerAnalyzerEnabled>${dependency-analyze-swift.enabled}</swiftPackageManagerAnalyzerEnabled>
                                     <swiftPackageResolvedAnalyzerEnabled>${dependency-analyze-swift.enabled}</swiftPackageResolvedAnalyzerEnabled>
 
+                                    <ossindexAnalyzerEnabled>true</ossindexAnalyzerEnabled>
+
                                     <!-- 输出配置 -->
                                     <formats>HTML,CSV</formats>
                                 </configuration>
@@ -651,7 +762,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-deploy-plugin</artifactId>
-                        <version>2.8.2</version>
                         <executions>
                             <execution>
                                 <id>deploy</id>
@@ -665,7 +775,6 @@
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.12</version>
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>sonatype_oss</serverId>
@@ -680,12 +789,10 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-scm-plugin</artifactId>
-                        <version>1.10.0</version>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-release-plugin</artifactId>
-                        <version>2.5.3</version>
                         <configuration>
                             <useReleaseProfile>false</useReleaseProfile>
                             <pushChanges>false</pushChanges>
@@ -704,7 +811,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.1.0</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -739,7 +845,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
