@@ -3,7 +3,6 @@ package com.jn.agileway.metrics.core.meter.impl;
 import com.jn.agileway.metrics.core.*;
 import com.jn.agileway.metrics.core.meter.Compass;
 import com.jn.agileway.metrics.core.snapshot.*;
-import com.jn.langx.util.concurrent.longaddr.LongAdder;
 import com.jn.langx.util.timing.clock.Clock;
 import com.jn.langx.util.timing.clock.Clocks;
 
@@ -13,6 +12,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.LongAdder;
 
 /**
  * @since 4.1.0

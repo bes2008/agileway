@@ -9,7 +9,6 @@ import com.jn.langx.util.collection.Arrs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.MapAccessor;
 import com.jn.langx.util.collection.Pipeline;
-import com.jn.langx.util.concurrent.completion.CompletableFuture;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.logging.Level;
 import org.slf4j.Logger;
@@ -17,6 +16,7 @@ import org.slf4j.Logger;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
 public abstract class AbstractEntityLoader<E> implements EntityLoader<E> {

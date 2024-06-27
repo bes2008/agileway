@@ -13,7 +13,6 @@ import com.jn.langx.util.ClassLoaders;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.concurrent.CommonTask;
-import com.jn.langx.util.concurrent.completion.CompletableFuture;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Function2;
 import com.jn.langx.util.logging.Loggers;
@@ -22,6 +21,7 @@ import com.jn.langx.util.struct.ThreadLocalHolder;
 import org.slf4j.Logger;
 
 import java.util.Stack;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializable, Destroyable, MessageTopicDispatcherAware {

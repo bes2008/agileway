@@ -1,13 +1,13 @@
 package com.jn.agileway.metrics.core.meter.impl;
 
 import com.jn.agileway.metrics.core.meter.FastCompass;
-import com.jn.langx.util.concurrent.longaddr.LongAdder;
 import com.jn.langx.util.timing.clock.Clock;
 import com.jn.langx.util.timing.clock.Clocks;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.LongAdder;
 
 /**
  * 通过1个LongAdder来同时完成count和rt的累加操作

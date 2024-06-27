@@ -1,7 +1,8 @@
 package com.jn.agileway.metrics.core.meter.impl;
 
 import com.jn.agileway.metrics.core.meter.Counter;
-import com.jn.langx.util.concurrent.longaddr.LongAdder;
+
+import java.util.concurrent.atomic.LongAdder;
 
 /**
  * An incrementing and decrementing counter metric.

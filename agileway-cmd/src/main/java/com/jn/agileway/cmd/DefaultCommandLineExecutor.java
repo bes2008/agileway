@@ -5,9 +5,6 @@ import com.jn.agileway.cmd.launcher.CommandLauncher;
 import com.jn.agileway.cmd.launcher.CommandLauncherFactory;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Throwables;
-import com.jn.langx.util.concurrent.completion.CompletableFuture;
-import com.jn.langx.util.function.Function;
-import com.jn.langx.util.function.Supplier0;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
@@ -17,7 +14,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 
 /**
@@ -214,7 +214,7 @@ public class DefaultCommandLineExecutor implements CommandLineExecutor {
         final ExecuteStreamHandler streamHandler = Objs.useValueIfNull(executeStreamHandler, this.streamHandler);
         final File workingDirectory = Objs.useValueIfNull(workingDir, this.getWorkingDirectory());
         final ExecuteResultHandler executeResultHandler = Objs.useValueIfNull(resultHandler, this.resultHandler);
-        Supplier0<Integer> task = new Supplier0<Integer>() {
+        Supplier<Integer> task = new Supplier<Integer>() {
             @Override
             public Integer get() {
                 return doExecute(command, environment, workingDirectory, streamHandler, executeResultHandler);

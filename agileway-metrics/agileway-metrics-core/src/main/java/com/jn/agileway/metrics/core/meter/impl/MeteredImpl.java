@@ -2,13 +2,13 @@ package com.jn.agileway.metrics.core.meter.impl;
 
 import com.jn.agileway.metrics.core.EWMA;
 import com.jn.agileway.metrics.core.meter.Metered;
-import com.jn.langx.util.concurrent.longaddr.LongAdder;
 import com.jn.langx.util.timing.clock.Clock;
 import com.jn.langx.util.timing.clock.Clocks;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.LongAdder;
 
 /**
  * A meter metric which measures mean throughput and one-, five-, and fifteen-minute

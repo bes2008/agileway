@@ -1,6 +1,7 @@
 package com.jn.agileway.metrics.core.meter.impl;
 
-import com.jn.langx.util.concurrent.longaddr.LongAdder;
+
+import java.util.concurrent.atomic.LongAdder;
 
 /**
  * The abstraction of a bucket for collecting statistics

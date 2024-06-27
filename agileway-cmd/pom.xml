@@ -11,6 +11,4 @@
 
     <artifactId>agileway-cmd</artifactId>
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
-
-
 </project>
