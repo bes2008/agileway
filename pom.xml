@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.bes2008.solution.agileway</groupId>
     <artifactId>agileway</artifactId>
-    <version>4.4.6</version>
+    <version>5.0.0</version>
     <packaging>pom</packaging>
 
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
