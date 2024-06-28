@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.github.bes2008.solution.agileway.audit</groupId>
         <artifactId>agileway-audit</artifactId>
-        <version>5.0.0</version>
+        <version>5.0.1</version>
     </parent>
     <artifactId>agileway-audit-springboot3-web</artifactId>
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>5.0.0</version>
+            <version>5.0.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
