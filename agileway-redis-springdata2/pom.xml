@@ -123,46 +123,4 @@
         </dependency>
     </dependencies>
 
-    <profiles>
-        <profile>
-            <id>generate_sources</id>
-            <activation>
-                <os>
-                    <family>windows</family>
-                </os>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <version>${exec-maven-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>clean_redis_springdata2</id>
-                                <phase>clean</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>${basedir}/build/clean.bat</executable>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>generate_source_for_redis_springdata2</id>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>${basedir}/build/prebuild.bat</executable>
-                                </configuration>
-                            </execution>
-
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

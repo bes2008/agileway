@@ -15,8 +15,6 @@
         <module>agileway-web-javaee</module>
         <module>agileway-web-jakarta</module>
         <module>agileway-vfs</module>
-        <module>agileway-redis</module>
-        <module>agileway-shiro-redis</module>
         <module>agileway-httpclient</module>
         <module>agileway-aop</module>
         <module>agileway-spring</module>
