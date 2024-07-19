@@ -1,9 +1,6 @@
 package com.jn.agileway.jwt.tests.nacos_jwt;
 
-import com.jn.agileway.jwt.JWSToken;
-import com.jn.agileway.jwt.JWSTokenBuilder;
-import com.jn.agileway.jwt.JWT;
-import com.jn.agileway.jwt.JWTs;
+import com.jn.agileway.jwt.*;
 import com.jn.langx.codec.base64.Base64;
 import org.junit.Test;
 
@@ -15,15 +12,22 @@ public class NacosJwtTests {
     public void generateJWTString(){
         JWSTokenBuilder builder = new JWSTokenBuilder(false);
 
+        String secret="cAbSh5EoQMUIoDPN5qWq7GPE0mKwKMJIAnT6E2O9uV0=";
+
         JWSToken token = builder.withHeaderClaim("alg",JWTs.JWSAlgorithms.HS256)
                 .withPayloadClaimSubject("nacos")
                 .withPayloadClaimExpiration(1800000000)
-                .signWithSecretKey("cAbSh5EoQMUIoDPN5qWq7GPE0mKwKMJIAnT6E2O9uV0=");
+                .signWithSecretKey(secret);
 
         String jwt = token.toUtf8UrlEncodedToken();
         System.out.println(jwt);
 
-        JWT t=JWTs.getJWTService().newParser().parse(jwt);
+        JWSToken t= JWTs.<JWSToken>parse(jwt);
+
+
+        HMacVerifier hMacVerifier = new HMacVerifier(JWTs.toJWSSecretKey(JWTs.JWSAlgorithms.HS256, secret));
+        boolean verified = hMacVerifier.verify(t);
+        System.out.println(verified);
         System.out.println(t);
 
     }
