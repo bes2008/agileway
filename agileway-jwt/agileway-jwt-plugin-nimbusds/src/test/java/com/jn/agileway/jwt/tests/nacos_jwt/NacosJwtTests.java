@@ -20,8 +20,8 @@ public class NacosJwtTests {
 
 
         JWSToken token = builder.withHeaderClaim("alg",JWTs.JWSAlgorithms.HS256)
-                .withPayloadClaim("sub","nacos")
-                .withPayloadClaim("exp","1800000000")
+                .withPayloadClaimSubject("nacos")
+                .withPayloadClaimExpiration(1800000000)
                 .sign(secretKey);
 
         String jwt = token.toUtf8UrlEncodedToken();

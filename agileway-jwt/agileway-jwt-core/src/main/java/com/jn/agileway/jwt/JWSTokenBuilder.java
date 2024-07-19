@@ -19,7 +19,7 @@ public class JWSTokenBuilder implements JWTBuilder<JWSToken, JWSTokenBuilder> {
         this(true);
     }
     public JWSTokenBuilder(boolean isCompletionEnabled){
-        this.isCompletionEnabled=isCompletionEnabled;
+        this.isCompletionEnabled = isCompletionEnabled;
     }
 
     public JWSTokenBuilder withType(String type) {
@@ -68,6 +68,35 @@ public class JWSTokenBuilder implements JWTBuilder<JWSToken, JWSTokenBuilder> {
         payload.put(claimName, value);
         return this;
     }
+
+    public JWSTokenBuilder withPayloadClaimIssuer(String issuer){
+        return withPayloadClaim(JWTs.ClaimKeys.ISSUER, issuer);
+    }
+
+    public JWSTokenBuilder withPayloadClaimSubject(String stringOrUrl){
+        return withPayloadClaim(JWTs.ClaimKeys.SUBJECT, stringOrUrl);
+    }
+
+    public JWSTokenBuilder withPayloadClaimAudience(String audience){
+        return withPayloadClaim(JWTs.ClaimKeys.AUDIENCE, audience);
+    }
+
+    public JWSTokenBuilder withPayloadClaimExpiration(long expirationTime){
+        return withPayloadClaim(JWTs.ClaimKeys.EXPIRATION, expirationTime);
+    }
+
+    public JWSTokenBuilder withPayloadClaimNotBefore(long notBeforeTime){
+        return withPayloadClaim(JWTs.ClaimKeys.NOT_BEFORE, notBeforeTime);
+    }
+
+    public JWSTokenBuilder withPayloadClaimIssuedAt(long issuedTime){
+        return withPayloadClaim(JWTs.ClaimKeys.ISSUED_AT, issuedTime);
+    }
+
+    public JWSTokenBuilder withPayloadClaimJwtId(String jwtId){
+        return withPayloadClaim(JWTs.ClaimKeys.JWT_ID, jwtId);
+    }
+
 
     public JWSToken plain() {
         JWSToken token = build(true);

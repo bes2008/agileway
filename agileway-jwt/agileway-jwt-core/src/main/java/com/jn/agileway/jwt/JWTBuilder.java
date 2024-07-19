@@ -18,6 +18,22 @@ public interface JWTBuilder<TOKEN extends JWT, BUILDER extends JWTBuilder<TOKEN,
 
     BUILDER withPayload(Map<String, Object> header);
 
+
+    BUILDER withPayloadClaimIssuer(String issuer);
+
+    BUILDER withPayloadClaimSubject(String stringOrUrl);
+
+    BUILDER withPayloadClaimAudience(String audience);
+
+    BUILDER withPayloadClaimExpiration(long expirationTimeInSeconds);
+
+    BUILDER withPayloadClaimNotBefore(long notBeforeTimeInSeconds);
+
+    BUILDER withPayloadClaimIssuedAt(long issuedTimeInSeconds);
+
+    BUILDER withPayloadClaimJwtId(String jwtId);
+
+
     @Override
     TOKEN build();
 }
