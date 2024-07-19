@@ -1,6 +1,7 @@
 package com.jn.agileway.jwt;
 
 import com.jn.agileway.jwt.ec.ECDSA;
+import com.jn.langx.codec.base64.Base64;
 import com.jn.langx.security.crypto.key.PKIs;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
@@ -427,9 +428,13 @@ public class JWTs {
     }
 
     public static SecretKey newJWSSecretKey(String jwsAlgorithm){
-        String jcaAlgorithm=getJcaHMacAlgorithm(jwsAlgorithm);
+        String jcaAlgorithm = getJcaHMacAlgorithm(jwsAlgorithm);
         Preconditions.checkNotEmpty(jcaAlgorithm,"illegal jws algorithm", jcaAlgorithm);
         return PKIs.createSecretKey(jcaAlgorithm);
+    }
+
+    public static SecretKey toJWSSecretKey(String jwsAlgorithm, String base64SecretKey){
+        return PKIs.createSecretKey(JWTs.getJcaHMacAlgorithm(jwsAlgorithm), Base64.decodeBase64(base64SecretKey));
     }
 
 }

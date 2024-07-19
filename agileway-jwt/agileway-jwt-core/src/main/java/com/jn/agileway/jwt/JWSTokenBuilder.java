@@ -3,6 +3,7 @@ package com.jn.agileway.jwt;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.collection.MapAccessor;
 import com.jn.langx.util.collection.Maps;
 import com.jn.langx.util.function.Consumer2;
 
@@ -102,6 +103,12 @@ public class JWSTokenBuilder implements JWTBuilder<JWSToken, JWSTokenBuilder> {
         JWSToken token = build(true);
         new PlainSigner().sign(token);
         return token;
+    }
+
+    public JWSToken signWithSecretKey(String base64SecretKey){
+        String algorithm = new MapAccessor(header).getString(JWTs.Headers.ALGORITHM);
+        SecretKey secretKey = JWTs.toJWSSecretKey(algorithm, base64SecretKey);
+        return sign(secretKey);
     }
 
     public JWSToken sign(SecretKey secretKey) {
