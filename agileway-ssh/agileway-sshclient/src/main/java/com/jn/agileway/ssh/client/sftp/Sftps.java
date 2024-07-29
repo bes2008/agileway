@@ -40,18 +40,17 @@ public class Sftps {
         SSH_CONNECTION_FACTORY_REGISTRY.init();
     }
 
+    private Sftps(){}
+
     /**
      * @return null 代表该路径不存在
      */
     public static FileType getFileType(SftpSession session, String filepath) throws SftpException {
-        SftpFile file = null;
         try {
             FileAttrs fileAttrs = session.stat(filepath);
             return fileAttrs.getFileMode().getType();
         } catch (NoSuchFileSftpException ex) {
             return FileType.UNKNOWN;
-        } finally {
-            IOs.close(file);
         }
     }
 
@@ -200,6 +199,41 @@ public class Sftps {
         });
     }
 
+    /**
+     * copy local file to remote dir
+     */
+    public static int copyFile(@NonNull SftpSession session, @NonNull InputStream file, @NotEmpty String remoteDir, @Nullable String newName) throws SftpException {
+        boolean remoteDirExist = Sftps.existDirectory(session, remoteDir);
+        if (!remoteDirExist) {
+            session.mkdir(remoteDir, null);
+        }
+
+        Preconditions.checkNotEmpty(newName, "newName is empty");
+        String filepath = remoteDir + "/" + newName;
+
+        InputStream inputStream = null;
+        SftpFile sftpFile = null;
+        int sum = 0;
+        try {
+            sftpFile = session.open(filepath, OpenMode.WRITE, null);
+            inputStream = file;
+            byte[] buffer = new byte[4096];
+            int readLength = 0;
+            while ((readLength = inputStream.read(buffer, 0, buffer.length)) != -1) {
+                sftpFile.write(sum, buffer, 0, readLength);
+                sum += readLength;
+            }
+
+        } catch (Throwable ex) {
+            throw new SftpException(ex);
+        } finally {
+            IOs.close(sftpFile);
+            IOs.close(inputStream);
+        }
+        return sum;
+    }
+
+
     public static void reverseCopy(final SftpSession session, final File localDirectory, final String path) throws IOException {
         FileType fileType = getFileType(session, path);
         if (fileType == FileType.REGULAR) {
@@ -238,7 +272,7 @@ public class Sftps {
         return sum;
     }
 
-    public static void reverseCopyDirectory(final SftpSession session, final File localDirectory, final String remoteDirectory) throws IOException {
+    public static void reverseCopyDirectory(final SftpSession session, final File localDirectory, final String remoteDirectory) {
         if (!existDirectory(session, remoteDirectory)) {
             logger.error("remote directory is not exist: {}", remoteDirectory);
             return;
@@ -262,7 +296,7 @@ public class Sftps {
     }
 
 
-    public static void chmod(final SftpSession session, String path, int permissions) throws IOException {
+    public static void chmod(final SftpSession session, String path, int permissions) {
         FileAttrs attrs = session.stat(path);
         FileType fileType = attrs.getFileMode().getType();
         FileAttrs attrs2 = new FileAttrs();
@@ -270,7 +304,7 @@ public class Sftps {
         session.setStat(path, attrs2);
     }
 
-    public static void chown(final SftpSession session, String path, int uid) throws IOException {
+    public static void chown(final SftpSession session, String path, int uid)  {
         FileAttrs attrs = session.stat(path);
         FileAttrs attrs2 = new FileAttrs();
         attrs2.setUid(uid);
@@ -278,7 +312,7 @@ public class Sftps {
         session.setStat(path, attrs2);
     }
 
-    public static void chgrp(final SftpSession session, String path, int gid) throws IOException {
+    public static void chgrp(final SftpSession session, String path, int gid) {
         FileAttrs attrs = session.stat(path);
         FileAttrs attrs2 = new FileAttrs();
         attrs2.setUid(attrs.getUid());
@@ -286,7 +320,7 @@ public class Sftps {
         session.setStat(path, attrs2);
     }
 
-    public static List<String> children(final SftpSession session, String directory) throws IOException {
+    public static List<String> children(final SftpSession session, String directory) {
         return Pipeline.of(session.listFiles(directory))
                 .map(new Function<SftpResourceInfo, String>() {
                     @Override
