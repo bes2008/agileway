@@ -11,7 +11,7 @@ public interface ShellExecutor {
      * @param maxAttempts 从stdout, stderr读取结果时，最大尝试次数
      * @param stdout 执行成功时的
      * @param stderr 执行失败时的错误内容
-     * @return 执行成功或者失败
+     * @return 执行是否执行成功
      */
     boolean execute(String statementBlock, String moreFlagLine, String more, long responseTime, int maxAttempts, Holder<String> stdout, Holder<String> stderr);
 }
