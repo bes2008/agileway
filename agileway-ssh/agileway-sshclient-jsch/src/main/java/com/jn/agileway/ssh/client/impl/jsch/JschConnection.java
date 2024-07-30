@@ -94,8 +94,9 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
                 PasswordUserInfo userInfo = new PasswordUserInfo();
                 userInfo.setPassword(password);
                 delegate.setUserInfo(userInfo);
-
-             //   delegate.connect();
+                delegate.setTimeout(60000);
+                delegate.setServerAliveInterval(5000);
+                delegate.setServerAliveCountMax(3);
                 delegate.connect(getConnectTimeout());
                 setStatus(SshConnectionStatus.CONNECTED);
                 return true;
