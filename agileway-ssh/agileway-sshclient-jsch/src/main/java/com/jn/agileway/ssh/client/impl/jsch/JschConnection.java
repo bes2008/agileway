@@ -129,6 +129,10 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
                     userInfo.setPassphrase(passphrase);
                     delegate.setUserInfo(userInfo);
                 }
+
+                delegate.setTimeout(60000);
+                delegate.setServerAliveInterval(5000);
+                delegate.setServerAliveCountMax(3);
                 delegate.connect(getConnectTimeout());
                 setStatus(SshConnectionStatus.CONNECTED);
                 return true;
@@ -176,7 +180,7 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
         }
     }
 
-    Session delegate() {
+    public Session getSession() {
         return delegate;
     }
 
