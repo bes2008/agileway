@@ -2,6 +2,7 @@ package com.jn.agileway.ssh.client.impl.sshj;
 
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.AbstarctSessionedChannel;
+import com.jn.agileway.ssh.client.channel.ShellExecutor;
 import com.jn.agileway.ssh.client.utils.PTYMode;
 import com.jn.agileway.ssh.client.utils.Signal;
 import com.jn.langx.annotation.NonNull;
@@ -103,10 +104,11 @@ class SshjSessionedChannel extends AbstarctSessionedChannel {
     }
 
     @Override
-    protected void internalShell() throws SshException {
+    protected ShellExecutor internalShell() throws SshException {
         try {
             this.shell = this.session.startShell();
             initStreams();
+            return null;
         } catch (Throwable ex) {
             throw new SshException(ex);
         }

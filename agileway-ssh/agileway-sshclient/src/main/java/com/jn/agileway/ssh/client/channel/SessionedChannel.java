@@ -69,7 +69,7 @@ public interface SessionedChannel extends Channel {
     /**
      * 发起 shell 请求，启动 shell 模式
      */
-    void shell() throws SshException;
+    ShellExecutor shell() throws SshException;
 
 
     void signal(Signal signal) throws SshException;

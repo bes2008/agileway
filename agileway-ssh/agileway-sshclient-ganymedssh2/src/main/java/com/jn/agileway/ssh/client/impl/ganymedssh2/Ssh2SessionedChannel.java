@@ -4,6 +4,7 @@ import ch.ethz.ssh2.ChannelCondition;
 import ch.ethz.ssh2.Session;
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.AbstarctSessionedChannel;
+import com.jn.agileway.ssh.client.channel.ShellExecutor;
 import com.jn.agileway.ssh.client.utils.PTYMode;
 import com.jn.agileway.ssh.client.utils.Signal;
 import com.jn.langx.annotation.NonNull;
@@ -77,9 +78,10 @@ class Ssh2SessionedChannel extends AbstarctSessionedChannel {
     }
 
     @Override
-    protected void internalShell() throws SshException {
+    protected ShellExecutor internalShell() throws SshException {
         try {
             this.session.startShell();
+            return null;
         } catch (Throwable ex) {
             throw new SshException(ex);
         }

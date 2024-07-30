@@ -3,7 +3,7 @@ package com.jn.agileway.ssh.client.impl.jsch;
 import com.jcraft.jsch.*;
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.AbstarctSessionedChannel;
-import com.jn.agileway.ssh.client.channel.ChannelType;
+import com.jn.agileway.ssh.client.channel.ShellExecutor;
 import com.jn.agileway.ssh.client.utils.PTYMode;
 import com.jn.agileway.ssh.client.utils.Signal;
 import com.jn.langx.util.Emptys;
@@ -112,7 +112,7 @@ class JschSessionedChannel extends AbstarctSessionedChannel {
     }
 
     @Override
-    protected void internalShell() throws SshException {
+    protected ShellExecutor internalShell() throws SshException {
         if(session == null || !session.isConnected()){
             throw new IllegalStateException("the session is not connected");
         }
@@ -120,6 +120,8 @@ class JschSessionedChannel extends AbstarctSessionedChannel {
             this.type = JschChannelType.SHELL;
             this.channel = session.openChannel(type.getName());
             startChannel();
+
+            return null;
         } catch (Throwable ex) {
             throw new SshException(ex);
         }
@@ -249,11 +251,6 @@ class JschSessionedChannel extends AbstarctSessionedChannel {
             exitStatus = channel.getExitStatus();
         }
         return exitStatus;
-    }
-
-    @Override
-    public ChannelType getType() {
-        return this.type.getName();
     }
 
     @Override

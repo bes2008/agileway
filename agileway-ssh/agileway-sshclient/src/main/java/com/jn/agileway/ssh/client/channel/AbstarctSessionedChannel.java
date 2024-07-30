@@ -50,10 +50,10 @@ public abstract class AbstarctSessionedChannel implements SessionedChannel {
     protected abstract void internalSubsystem(String subsystem) throws SshException;
 
     @Override
-    public final void shell() throws SshException {
+    public final ShellExecutor shell() throws SshException {
         try {
             beforeOpenShell();
-            internalShell();
+            return internalShell();
         } finally {
             this.channelType = ChannelType.SHELL;
         }
@@ -62,7 +62,7 @@ public abstract class AbstarctSessionedChannel implements SessionedChannel {
     protected void beforeOpenShell() {
     }
 
-    protected abstract void internalShell() throws SshException;
+    protected abstract ShellExecutor internalShell() throws SshException;
 
     @Override
     public ChannelType getType() {
