@@ -3,16 +3,19 @@ package com.jn.agileway.ssh.client.channel;
 import com.jn.agileway.ssh.client.SshException;
 
 public abstract class AbstarctSessionedChannel implements SessionedChannel {
-    private String channelType = TYPE_DEFAULT;
+    private ChannelType channelType;
 
     @Override
     public final void x11Forwarding(String hostname, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) throws SshException {
         try {
-            beforeAction();
+            beforeOpenX11();
             internalX11Forwarding(hostname, port, singleConnection, x11AuthenticationProtocol, x11AuthenticationCookie, x11ScreenNumber);
         } finally {
-            this.channelType = TYPE_X11;
+            this.channelType = ChannelType.X11;
         }
+    }
+
+    protected void beforeOpenX11() {
     }
 
     protected abstract void internalX11Forwarding(String hostname, int port, boolean singleConnection, String x11AuthenticationProtocol, String x11AuthenticationCookie, int x11ScreenNumber) throws SshException;
@@ -20,11 +23,13 @@ public abstract class AbstarctSessionedChannel implements SessionedChannel {
     @Override
     public final void exec(String command) throws SshException {
         try {
-            beforeAction();
+            beforeExec();
             internalExec(command);
         } finally {
-            this.channelType = TYPE_EXEC;
+            this.channelType = ChannelType.EXEC;
         }
+    }
+    protected void beforeExec() {
     }
 
     protected abstract void internalExec(String command) throws SshException;
@@ -32,11 +37,14 @@ public abstract class AbstarctSessionedChannel implements SessionedChannel {
     @Override
     public final void subsystem(String subsystem) throws SshException {
         try {
-            beforeAction();
+            beforeOpenSubsystem();
             internalSubsystem(subsystem);
         } finally {
-            this.channelType = TYPE_EXEC;
+            this.channelType = ChannelType.SUBSYSTEM;
         }
+    }
+
+    protected void beforeOpenSubsystem() {
     }
 
     protected abstract void internalSubsystem(String subsystem) throws SshException;
@@ -44,21 +52,20 @@ public abstract class AbstarctSessionedChannel implements SessionedChannel {
     @Override
     public final void shell() throws SshException {
         try {
-            beforeAction();
+            beforeOpenShell();
             internalShell();
         } finally {
-            this.channelType = TYPE_SHELL;
+            this.channelType = ChannelType.SHELL;
         }
+    }
+
+    protected void beforeOpenShell() {
     }
 
     protected abstract void internalShell() throws SshException;
 
-
-    protected void beforeAction() {
-    }
-
     @Override
-    public String getType() {
+    public ChannelType getType() {
         return channelType;
     }
 }

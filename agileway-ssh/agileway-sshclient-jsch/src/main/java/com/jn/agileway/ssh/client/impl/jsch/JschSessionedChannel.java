@@ -3,6 +3,7 @@ package com.jn.agileway.ssh.client.impl.jsch;
 import com.jcraft.jsch.*;
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.AbstarctSessionedChannel;
+import com.jn.agileway.ssh.client.channel.ChannelType;
 import com.jn.agileway.ssh.client.utils.PTYMode;
 import com.jn.agileway.ssh.client.utils.Signal;
 import com.jn.langx.util.Emptys;
@@ -251,7 +252,7 @@ class JschSessionedChannel extends AbstarctSessionedChannel {
     }
 
     @Override
-    public String getType() {
+    public ChannelType getType() {
         return this.type.getName();
     }
 

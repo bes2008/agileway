@@ -1,7 +1,8 @@
 package com.jn.agileway.ssh.client.channel;
 
-public enum SessionType {
+public enum ChannelType {
     EXEC,
     SHELL,
-    SUBSYSTEM;
+    SUBSYSTEM,
+    X11;
 }

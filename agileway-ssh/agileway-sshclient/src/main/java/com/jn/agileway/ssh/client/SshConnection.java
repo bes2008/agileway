@@ -1,7 +1,6 @@
 package com.jn.agileway.ssh.client;
 
-import com.jn.agileway.ssh.client.channel.Channel;
-import com.jn.agileway.ssh.client.channel.SessionType;
+import com.jn.agileway.ssh.client.channel.ChannelType;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
 import com.jn.agileway.ssh.client.channel.forwarding.ForwardingClient;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
@@ -156,8 +155,6 @@ public interface SshConnection<CONF extends SshConnectionConfig> extends Closeab
      * 参见：https://datatracker.ietf.org/doc/rfc4254/?include_text=1 第6.1节
      */
     SessionedChannel openSession() throws SshException;
-
-    SessionedChannel openSession(SessionType sessionType) throws SshException;
 
     ForwardingClient forwardingClient();
 

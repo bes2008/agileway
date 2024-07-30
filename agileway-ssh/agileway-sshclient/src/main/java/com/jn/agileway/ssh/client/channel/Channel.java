@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public interface Channel extends Closeable {
-    String getType();
+    ChannelType getType();
 
     /**
      * 远程机器输出的内容，会作为这里的标准输入
