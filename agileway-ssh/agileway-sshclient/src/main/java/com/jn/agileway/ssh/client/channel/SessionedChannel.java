@@ -72,7 +72,7 @@ public interface SessionedChannel extends Channel {
     void subsystem(String subsystem) throws SshException;
 
     /**
-     * 发起 shell 请求
+     * 发起 shell 请求，启动 shell 模式
      */
     void shell() throws SshException;
 
