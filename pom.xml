@@ -687,7 +687,7 @@
                         <executions>
                             <execution>
                                 <goals>
-                                    <goal>aggregate</goal>
+                                    <goal>check</goal>
                                 </goals>
                                 <configuration>
                                     <autoUpdate>true</autoUpdate>
@@ -736,6 +736,22 @@
                     </plugin>
                 </plugins>
             </build>
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <version>${dependency-check-maven-plugin.version}</version>
+                        <reportSets>
+                            <reportSet>
+                                <reports>
+                                    <report>aggregate</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
+                </plugins>
+            </reporting>
         </profile>
 
         <profile>
