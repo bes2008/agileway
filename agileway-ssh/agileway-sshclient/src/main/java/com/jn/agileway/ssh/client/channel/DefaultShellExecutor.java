@@ -11,6 +11,7 @@ import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.struct.Holder;
+import jdk.internal.util.xml.impl.Input;
 
 import java.io.*;
 
@@ -62,39 +63,44 @@ public class DefaultShellExecutor extends AbstractInitializable implements Shell
     private boolean readOutputs(Holder<String> stdout, Holder<String> stderr,String moreFlagLine, String more, long responseTimeInMills, int maxAttempts) throws IOException {
         byte[] buffer = new byte[IOs.DEFAULT_BUFFER_SIZE];
         OutputStream outputStream = getChannel().getOutputStream();
-        InputStream in = getChannel().getInputStream();
+        InputStream stdin = getChannel().getInputStream();
         InputStream errIn = channel.getErrorInputStream();
         ByteArrayOutputStream resultOutputStream = new ByteArrayOutputStream();
         boolean hasError = false;
         // 剩余的尝试次数
         int attempts = maxAttempts;
         while (true){
+            InputStream in = null;
             if (errIn.available()>0){
-                int length = errIn.read(buffer,0, buffer.length);
-                if(length<0){
-                    break;
-                }
-                String s = new String(buffer,0,length);
-                if(s.contains(moreFlagLine)){
-                    outputStream.write(more.getBytes(Charsets.UTF_8));
-                    outputStream.flush();
-                }
-                resultOutputStream.write(buffer,0,length);
-                attempts=maxAttempts;
-            } else if (in.available()>0) {
-                int length = in.read(buffer,0, buffer.length);
-                if(length<0){
-                    break;
-                }
-                String s = new String(buffer,0,length);
-                if(s.contains(moreFlagLine)){
-                    outputStream.write(more.getBytes(Charsets.UTF_8));
-                    outputStream.flush();
-                }
-                resultOutputStream.write(buffer,0,length);
-                attempts=maxAttempts;
+                in = errIn;
+            } else if (stdin.available()>0) {
+                in = stdin;
             }else{
                 attempts--;
+            }
+
+            if(in!=null){
+                // 先对buffer扩容
+                if(in.available()>buffer.length){
+                    int newBufferSize = (in.available() / buffer.length +1) *buffer.length;
+                    buffer=new byte[newBufferSize];
+                }
+                // 一次性全部读出
+                int length = in.read(buffer,0, buffer.length);
+                // EOF
+                if(length<0){
+                    break;
+                }
+
+                String s = new String(buffer, 0, length);
+                // TODO 找到最后一行，如果是moreFlagLine就移除
+                if (s.contains(moreFlagLine)) {
+                    outputStream.write(more.getBytes(Charsets.UTF_8));
+                    outputStream.flush();
+                }
+                // TODO 将 moreFlagLine就移除 移除后的内容加入到 resultOutputStream
+                resultOutputStream.write(buffer,0,length);
+                attempts=maxAttempts;
             }
 
             if(attempts<=0){
