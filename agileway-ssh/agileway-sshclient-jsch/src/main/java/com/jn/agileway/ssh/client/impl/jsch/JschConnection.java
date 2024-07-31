@@ -14,7 +14,6 @@ import com.jn.agileway.ssh.client.impl.jsch.sftp.JschSftpSession;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
-import com.jn.langx.util.collection.MapAccessor;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
@@ -66,24 +65,6 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
         connect(host, port);
     }
 
-    private int getConnectTimeout() {
-        MapAccessor mapAccessor = new MapAccessor(sshConfig.getProps());
-        int connectTimeout = mapAccessor.getInteger("ConnectTimeout", 0);
-        if (connectTimeout < 0) {
-            connectTimeout = 0;
-        }
-        return connectTimeout;
-    }
-
-    private int getSocketTimeout() {
-        MapAccessor mapAccessor = new MapAccessor(sshConfig.getProps());
-        int socketTimeout = mapAccessor.getInteger("SocketTimeout", 60000);
-        if (socketTimeout <= 0) {
-            socketTimeout = 60000;
-        }
-        return socketTimeout;
-    }
-
     @Override
     public boolean authenticateWithPassword(String user, String password) throws SshException {
         if (!isConnected()) {
@@ -106,10 +87,10 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
                 session.setTimeout(60000);
                 session.setServerAliveInterval(5000);
                 session.setServerAliveCountMax(3);
-                session.setTimeout(getSocketTimeout());
-                session.setConfig("server_host_key", JSch.getConfig("server_host_key")+"ssh-rsa,ssh-dss");
+                session.setTimeout(sshConfig.getSocketTimeout());
+                session.setConfig("server_host_key",sshConfig.getHostKeyAlgorithms());
 
-                session.connect(getConnectTimeout());
+                session.connect(sshConfig.getConnectTimeout());
                 setStatus(SshConnectionStatus.CONNECTED);
                 return true;
             } catch (Throwable ex) {
@@ -145,11 +126,11 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
                 session.setTimeout(60000);
                 session.setServerAliveInterval(5000);
                 session.setServerAliveCountMax(3);
-                session.setTimeout(getSocketTimeout());
-                session.setConfig("server_host_key", JSch.getConfig("server_host_key")+"ssh-rsa,ssh-dss");
+                session.setTimeout(sshConfig.getSocketTimeout());
+                session.setConfig("server_host_key", sshConfig.getHostKeyAlgorithms());
 
 
-                session.connect(getConnectTimeout());
+                session.connect(sshConfig.getConnectTimeout());
                 setStatus(SshConnectionStatus.CONNECTED);
                 return true;
             } catch (Throwable ex) {

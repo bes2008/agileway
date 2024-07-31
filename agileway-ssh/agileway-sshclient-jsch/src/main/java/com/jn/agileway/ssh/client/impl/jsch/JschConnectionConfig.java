@@ -1,8 +1,10 @@
 package com.jn.agileway.ssh.client.impl.jsch;
 
 import com.jcraft.jsch.ConfigRepository;
+import com.jcraft.jsch.JSch;
 import com.jn.agileway.ssh.client.AbstractSshConnectionConfig;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.MapAccessor;
 
 public class JschConnectionConfig extends AbstractSshConnectionConfig implements ConfigRepository.Config {
     @Override
@@ -28,5 +30,29 @@ public class JschConnectionConfig extends AbstractSshConnectionConfig implements
         } else {
             return null;
         }
+    }
+
+    public int getConnectTimeout() {
+        MapAccessor mapAccessor = new MapAccessor(this.getProps());
+        int connectTimeout = mapAccessor.getInteger("ConnectTimeout", 0);
+        if (connectTimeout < 0) {
+            connectTimeout = 0;
+        }
+        return connectTimeout;
+    }
+
+    public int getSocketTimeout() {
+        MapAccessor mapAccessor = new MapAccessor(this.getProps());
+        int socketTimeout = mapAccessor.getInteger("SocketTimeout", 60000);
+        if (socketTimeout <= 0) {
+            socketTimeout = 60000;
+        }
+        return socketTimeout;
+    }
+
+    public String getHostKeyAlgorithms(){
+        MapAccessor mapAccessor = new MapAccessor(this.getProps());
+        String append = mapAccessor.getString("ServerHostKey", ",ssh-rsa,ssh-dss");
+        return JSch.getConfig("server_host_key")+append;
     }
 }
