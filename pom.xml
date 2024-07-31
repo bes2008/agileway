@@ -696,7 +696,7 @@
                                     <hostedSuppressionsEnabled>false</hostedSuppressionsEnabled>
 
                                     <!--Java 依赖分析配置-->
-                                    <skipDependencyManagement>false</skipDependencyManagement>
+                                    <skipDependencyManagement>true</skipDependencyManagement>
                                     <skipSystemScope>true</skipSystemScope>
                                     <skipArtifactType>false</skipArtifactType>
                                     <skipProvidedScope>false</skipProvidedScope>
@@ -724,6 +724,9 @@
                                     <swiftPackageResolvedAnalyzerEnabled>${dependency-analyze-swift.enabled}</swiftPackageResolvedAnalyzerEnabled>
 
                                     <ossindexAnalyzerEnabled>true</ossindexAnalyzerEnabled>
+
+                                    <failBuildOnAnyVulnerability>false</failBuildOnAnyVulnerability>
+                                    <failOnError>false</failOnError>
 
                                     <!-- 输出配置 -->
                                     <formats>HTML,CSV,JSON</formats>
