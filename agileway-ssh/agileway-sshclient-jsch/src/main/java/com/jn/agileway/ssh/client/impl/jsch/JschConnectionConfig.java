@@ -3,6 +3,7 @@ package com.jn.agileway.ssh.client.impl.jsch;
 import com.jcraft.jsch.ConfigRepository;
 import com.jcraft.jsch.JSch;
 import com.jn.agileway.ssh.client.AbstractSshConnectionConfig;
+import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.MapAccessor;
 
@@ -28,7 +29,7 @@ public class JschConnectionConfig extends AbstractSshConnectionConfig implements
         if (Strings.isNotBlank(value)) {
             return Strings.split(value, ",");
         } else {
-            return null;
+            return Emptys.EMPTY_STRINGS;
         }
     }
 
