@@ -59,9 +59,9 @@
     </distributionManagement>
     <scm>
         <tag>${project.version}</tag>
-        <url>https://github.com/bes2008/agileway.git</url>
-        <connection>https://github.com/bes2008/agileway.git</connection>
-        <developerConnection>https://github.com/bes2008/agileway.git</developerConnection>
+        <url>scm:git:https://github.com/bes2008/agileway.git</url>
+        <connection>scm:git:https://github.com/bes2008/agileway.git</connection>
+        <developerConnection>scm:git:https://github.com/bes2008/agileway.git</developerConnection>
     </scm>
     <licenses>
         <license>
@@ -233,17 +233,7 @@
             </dependency>
             <dependency>
                 <groupId>io.github.bes2008.solution.agileway</groupId>
-                <artifactId>agileway-redis</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.bes2008.solution.agileway</groupId>
                 <artifactId>agileway-redis-springdata2</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.bes2008.solution.agileway</groupId>
-                <artifactId>agileway-shiro-redis</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -606,6 +596,18 @@
                     <artifactId>ossindex-maven-plugin</artifactId>
                     <version>3.1.0</version>
                 </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.12.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>3.5.0</version>
+                </plugin>
+
             </plugins>
         </pluginManagement>
 
@@ -690,7 +692,7 @@
                                     <goal>check</goal>
                                 </goals>
                                 <configuration>
-                                    <autoUpdate>true</autoUpdate>
+                                    <autoUpdate>false</autoUpdate>
                                     <!-- 压制配置 -->
                                     <suppressionFile>.dependencycheck/publishedSuppressions.xml</suppressionFile>
                                     <hostedSuppressionsEnabled>false</hostedSuppressionsEnabled>
@@ -742,6 +744,48 @@
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
                         <version>${dependency-check-maven-plugin.version}</version>
+                        <configuration>
+                            <autoUpdate>false</autoUpdate>
+                            <!-- 压制配置 -->
+                            <suppressionFile>.dependencycheck/publishedSuppressions.xml</suppressionFile>
+                            <hostedSuppressionsEnabled>false</hostedSuppressionsEnabled>
+
+                            <!--Java 依赖分析配置-->
+                            <skipDependencyManagement>true</skipDependencyManagement>
+                            <skipSystemScope>true</skipSystemScope>
+                            <skipArtifactType>false</skipArtifactType>
+                            <skipProvidedScope>false</skipProvidedScope>
+                            <skipRuntimeScope>false</skipRuntimeScope>
+                            <skipTestScope>false</skipTestScope>
+
+                            <!-- JavaScript 依赖分析配置-->
+                            <nodeAuditAnalyzerEnabled>${dependency-analyze-javascript.enabled}</nodeAuditAnalyzerEnabled>
+                            <pnpmAuditAnalyzerEnabled>${dependency-analyze-javascript.enabled}</pnpmAuditAnalyzerEnabled>
+                            <nodeAuditSkipDevDependencies>true</nodeAuditSkipDevDependencies>
+                            <nodeAuditAnalyzerUseCache>true</nodeAuditAnalyzerUseCache>
+                            <nodeAnalyzerEnabled>${dependency-analyze-javascript.enabled}</nodeAnalyzerEnabled>
+                            <nodePackageSkipDevDependencies>true</nodePackageSkipDevDependencies>
+                            <retireJsAnalyzerEnabled>${dependency-analyze-javascript.enabled}</retireJsAnalyzerEnabled>
+                            <retireJsForceUpdate>${dependency-analyze-javascript.enabled}</retireJsForceUpdate>
+
+                            <!-- .Net 依赖分析配置 -->
+                            <msbuildAnalyzerEnabled>${dependency-analyze-donet.enabled}</msbuildAnalyzerEnabled>
+                            <assemblyAnalyzerEnabled>${dependency-analyze-donet.enabled}</assemblyAnalyzerEnabled>
+                            <nuspecAnalyzerEnabled>${dependency-analyze-donet.enabled}</nuspecAnalyzerEnabled>
+                            <nugetconfAnalyzerEnabled>${dependency-analyze-donet.enabled}</nugetconfAnalyzerEnabled>
+
+                            <!-- swift 依赖分析配置 -->
+                            <swiftPackageManagerAnalyzerEnabled>${dependency-analyze-swift.enabled}</swiftPackageManagerAnalyzerEnabled>
+                            <swiftPackageResolvedAnalyzerEnabled>${dependency-analyze-swift.enabled}</swiftPackageResolvedAnalyzerEnabled>
+
+                            <ossindexAnalyzerEnabled>true</ossindexAnalyzerEnabled>
+
+                            <failBuildOnAnyVulnerability>false</failBuildOnAnyVulnerability>
+                            <failOnError>false</failOnError>
+
+                            <!-- 输出配置 -->
+                            <formats>HTML,CSV,JSON</formats>
+                        </configuration>
                         <reportSets>
                             <reportSet>
                                 <reports>
@@ -861,6 +905,7 @@
                 </plugins>
             </build>
         </profile>
+
 
     </profiles>
 </project>
