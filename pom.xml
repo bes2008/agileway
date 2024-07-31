@@ -726,7 +726,7 @@
                                     <ossindexAnalyzerEnabled>true</ossindexAnalyzerEnabled>
 
                                     <!-- 输出配置 -->
-                                    <formats>HTML,CSV</formats>
+                                    <formats>HTML,CSV,JSON</formats>
                                 </configuration>
                             </execution>
                         </executions>
