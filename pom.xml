@@ -754,6 +754,14 @@
                             </dependency>
                         </dependencies>
 
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>spotbugs</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                         <configuration>
                             <!--
                             <includeFilterFile>spotbugs-security-include.xml</includeFilterFile>
@@ -780,7 +788,6 @@
 
 
                             <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
-                            <outEncoding>${project.build.sourceEncoding}</outEncoding>
                             <timeout>100000000</timeout>
                             <skipEmptyReport>true</skipEmptyReport>
                         </configuration>
