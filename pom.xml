@@ -651,6 +651,11 @@
                     <version>3.5.0</version>
                 </plugin>
 
+                <plugin>
+                    <groupId>com.github.spotbugs</groupId>
+                    <artifactId>spotbugs-maven-plugin</artifactId>
+                    <version>4.8.6.0</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -737,6 +742,50 @@
                             </execution>
                         </executions>
                     </plugin>
+
+                    <plugin>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs-maven-plugin</artifactId>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.github.spotbugs</groupId>
+                                <artifactId>spotbugs</artifactId>
+                                <version>4.8.6</version>
+                            </dependency>
+                        </dependencies>
+
+                        <configuration>
+                            <!--
+                            <includeFilterFile>spotbugs-security-include.xml</includeFilterFile>
+                            <excludeFilterFile>spotbugs-security-exclude.xml</excludeFilterFile>
+                            -->
+                            <plugins>
+                                <plugin>
+                                    <groupId>com.h3xstream.findsecbugs</groupId>
+                                    <artifactId>findsecbugs-plugin</artifactId>
+                                    <version>1.12.0</version>
+                                </plugin>
+                            </plugins>
+
+                            <includeTests>false</includeTests>
+
+                            <htmlOutput>true</htmlOutput>
+                            <sarifOutput>true</sarifOutput>
+                            <xmlOutput>true</xmlOutput>
+
+                            <noClassOk>true</noClassOk>
+
+                            <failOnError>false</failOnError>
+
+
+
+                            <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+                            <outEncoding>${project.build.sourceEncoding}</outEncoding>
+                            <timeout>100000000</timeout>
+                            <skipEmptyReport>true</skipEmptyReport>
+                        </configuration>
+                    </plugin>
+
                 </plugins>
             </build>
             <reporting>
