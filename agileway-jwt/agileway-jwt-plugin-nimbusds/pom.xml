@@ -12,6 +12,10 @@
     <artifactId>agileway-jwt-plugin-nimbusds</artifactId>
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
 
+    <properties>
+        <nimbus-jose-jwt.version>9.40</nimbus-jose-jwt.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>io.github.bes2008.solution.agileway.jwt</groupId>
@@ -20,7 +24,7 @@
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
-            <version>9.37</version>
+            <version>${nimbus-jose-jwt.version}</version>
         </dependency>
 
     </dependencies>
