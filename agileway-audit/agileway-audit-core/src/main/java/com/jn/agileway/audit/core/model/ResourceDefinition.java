@@ -51,8 +51,8 @@ public class ResourceDefinition extends HashMap<String, Object> {
         setResourceName(accessor.getString(Resource.RESOURCE_NAME, Resource.RESOURCE_NAME_DEFAULT_KEY));
         setResourceType(accessor.getString(Resource.RESOURCE_TYPE, Resource.RESOURCE_TYPE_DEFAULT_KEY));
         setResource(accessor.getString("resource"));
-        setAnnotationEnabled(accessor.getBoolean(ANNOTATION_ENABLED, true));
-        setAnnotationFirst(accessor.getBoolean(ANNOTATION_FIRST, false));
+        setAnnotationEnabled(accessor.getBoolean(ANNOTATION_ENABLED, Boolean.TRUE));
+        setAnnotationFirst(accessor.getBoolean(ANNOTATION_FIRST, Boolean.FALSE));
     }
 
     public void setAnnotationFirst(boolean enabled) {
@@ -60,7 +60,7 @@ public class ResourceDefinition extends HashMap<String, Object> {
     }
 
     public boolean isAnnotationFirst() {
-        return accessor.getBoolean(ANNOTATION_FIRST, false);
+        return accessor.getBoolean(ANNOTATION_FIRST, Boolean.FALSE);
     }
 
     public void setAnnotationEnabled(boolean enabled) {
@@ -68,7 +68,7 @@ public class ResourceDefinition extends HashMap<String, Object> {
     }
 
     public boolean isAnnotationEnabled() {
-        return accessor.getBoolean(ANNOTATION_ENABLED, true);
+        return accessor.getBoolean(ANNOTATION_ENABLED, Boolean.TRUE);
     }
 
     public String getResource() {
