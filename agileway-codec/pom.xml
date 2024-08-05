@@ -39,12 +39,6 @@
                 <version>${avro.version}</version>
                 <optional>true</optional>
             </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-compress</artifactId>
-                <version>${commons.compress.version}</version>
-                <optional>true</optional>
-            </dependency>
 
             <dependency>
                 <groupId>io.activej</groupId>
