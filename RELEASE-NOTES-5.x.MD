@@ -11,6 +11,8 @@
   + 升级 guava: 20.0 -> 33.2.1-jre
   + 升级 jersey: 2.35 -> 2.44
   + 升级 nimbus-jose-jwt: 9.37 -> 9.40
+  + 升级 shiro: 1.11.0 -> 2.0.1
+  + 升级 zip4j: 2.9 -> 2.11.5
 + 模块管理：
   + 移除 agileway-eipchannel-kafka
 

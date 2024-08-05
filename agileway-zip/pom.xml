@@ -11,6 +11,11 @@
 
     <artifactId>agileway-zip</artifactId>
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
+
+    <properties>
+        <zip4j.version>2.11.5</zip4j.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -24,7 +29,7 @@
         <dependency>
             <groupId>net.lingala.zip4j</groupId>
             <artifactId>zip4j</artifactId>
-            <version>2.9.0</version>
+            <version>${zip4j.version}</version>
             <optional>true</optional>
         </dependency>
     </dependencies>
