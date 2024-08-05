@@ -50,7 +50,7 @@ public class YamlOperationDefinitionLoader implements OperationDefinitionLoader 
         }
         Map<String, OperationDefinition> definitionMap = Collects.<String, OperationDefinition>emptyHashMap();
 
-        Resource operationDefinitionResource = Resources.loadResource(definitionFilePath, YamlOperationDefinitionLoader.class.getClassLoader());
+        Resource operationDefinitionResource = Resources.loadResource(definitionFilePath, Thread.currentThread().getContextClassLoader());
 
         InputStream inputStream = null;
 

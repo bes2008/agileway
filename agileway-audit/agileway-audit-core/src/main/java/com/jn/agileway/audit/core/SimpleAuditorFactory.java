@@ -43,7 +43,7 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
             return factory.get(name);
         }
         try {
-            Class clazz = ClassLoaders.loadClass(name, SimpleAuditorFactory.class.getClassLoader());
+            Class clazz = ClassLoaders.loadClass(name, Thread.currentThread().getContextClassLoader());
             return Reflects.<WaitStrategy>newInstance(clazz);
         } catch (Throwable ex) {
             logger.warn("error when load a class or create instance: {}", name);
@@ -56,7 +56,7 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
             className = Reflects.getFQNClassName(DefaultMessageTranslator.class);
         }
         try {
-            Class clazz = ClassLoaders.loadClass(className, SimpleAuditorFactory.class.getClassLoader());
+            Class clazz = ClassLoaders.loadClass(className,  Thread.currentThread().getContextClassLoader());
             return Reflects.<MessageTranslator>newInstance(clazz);
         } catch (Throwable ex) {
             logger.warn("error when load a class or create instance: {}", className);
@@ -71,7 +71,7 @@ public class SimpleAuditorFactory<Settings extends AuditSettings> implements Aud
             className = Reflects.getFQNClassName(DefaultTopicAllocator.class);
         }
         try {
-            Class clazz = ClassLoaders.loadClass(className, SimpleAuditorFactory.class.getClassLoader());
+            Class clazz = ClassLoaders.loadClass(className,  Thread.currentThread().getContextClassLoader());
             TopicAllocator ac = Reflects.<TopicAllocator>newInstance(clazz);
             ac = Preconditions.checkNotNull(ac, new Supplier<Object[], String>() {
                 @Override
