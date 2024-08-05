@@ -656,6 +656,12 @@
                     <artifactId>spotbugs-maven-plugin</artifactId>
                     <version>4.8.6.0</version>
                 </plugin>
+
+                <plugin>
+                    <groupId>org.sonarsource.scanner.maven</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>3.11.0.3922</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -743,6 +749,7 @@
                         </executions>
                     </plugin>
 
+                    <!--
                     <plugin>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs-maven-plugin</artifactId>
@@ -763,10 +770,6 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <!--
-                            <includeFilterFile>spotbugs-security-include.xml</includeFilterFile>
-                            <excludeFilterFile>spotbugs-security-exclude.xml</excludeFilterFile>
-                            -->
                             <plugins>
                                 <plugin>
                                     <groupId>com.h3xstream.findsecbugs</groupId>
@@ -792,7 +795,21 @@
                             <skipEmptyReport>true</skipEmptyReport>
                         </configuration>
                     </plugin>
+                    -->
 
+                    <plugin>
+                        <groupId>org.sonarsource.scanner.maven</groupId>
+                        <artifactId>sonar-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sonar analyze</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>sonar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
                 </plugins>
             </build>
             <reporting>
