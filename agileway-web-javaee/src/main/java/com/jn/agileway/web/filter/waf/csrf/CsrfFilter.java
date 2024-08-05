@@ -110,8 +110,7 @@ public final class CsrfFilter extends OncePerRequestFilter {
         request.setAttribute(csrfToken.getParameterName(), csrfToken);
         if (!this.requireCsrfProtectionMatcher.test(request)) {
             if (this.logger.isTraceEnabled()) {
-                this.logger.trace("Did not protect against CSRF since request did not match "
-                        + this.requireCsrfProtectionMatcher);
+                this.logger.trace("Did not protect against CSRF since request did not match {}", this.requireCsrfProtectionMatcher);
             }
             filterChain.doFilter(request, response);
             return;

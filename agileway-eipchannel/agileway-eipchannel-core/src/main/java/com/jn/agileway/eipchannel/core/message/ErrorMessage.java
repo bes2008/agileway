@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public class ErrorMessage extends GenericMessage<Throwable> {
 
-    private static final long serialVersionUID = 6413675958959141186L;
+    private static final long serialVersionUID = 1L;
 
     public ErrorMessage(Throwable payload) {
         super(payload);

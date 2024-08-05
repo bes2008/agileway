@@ -59,8 +59,7 @@ public abstract class ScheduledReporter implements Reporter {
                 timeMetricLevelPredicate.beforeReport();
                 report();
             } catch (Throwable ex) {
-                LOG.error("Throwable RuntimeException thrown from {}#report. Exception was suppressed.",
-                        ScheduledReporter.this.getClass().getSimpleName(), ex);
+                LOG.error("Throwable RuntimeException thrown from {}#report. Exception was suppressed.", ScheduledReporter.this.getClass().getSimpleName(), ex);
             } finally {
                 timeMetricLevelPredicate.afterReport();
             }
@@ -179,7 +178,7 @@ public abstract class ScheduledReporter implements Reporter {
                 executor.shutdownNow(); // Cancel currently executing tasks
                 // Wait a while for tasks to respond to being cancelled
                 if (!executor.awaitTermination(schedulePeriod * 2, scheduleUnit)) {
-                    LOG.warn(getClass().getSimpleName() + ": ScheduledExecutorService did not terminate");
+                    LOG.warn("{}: ScheduledExecutorService did not terminate", getClass().getSimpleName());
                 }
             }
         } catch (InterruptedException ie) {

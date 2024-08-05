@@ -38,7 +38,7 @@ public abstract class AbstractMessagePubSubEndpoint<T> extends AbstractInitializ
                 this.doStart();
                 this.running = true;
                 if (logger.isInfoEnabled()) {
-                    logger.info("started " + this);
+                    logger.info("started {}", this);
                 }
             }
         } finally {
@@ -53,7 +53,7 @@ public abstract class AbstractMessagePubSubEndpoint<T> extends AbstractInitializ
                 this.doStop();
                 this.running = false;
                 if (logger.isInfoEnabled()) {
-                    logger.info("stopped " + this);
+                    logger.info("stopped {}", this);
                 }
             }
         } finally {
