@@ -8,6 +8,7 @@
   + 升级 bcprov-jdk15on:1.70 -> bcprov-jdk18on:1.78.1
   + 升级 commons-text:1.8 -> 1.12.0
   + 升级 commons-configuration:1.8 -> commons-configuration2:2.11.0
+  + 升级 guava: 20.0 -> 33.2.1-jre
 
 ## 5.0.2
 1. 增强 jwt，支持规范中指定的 内置的claim names
