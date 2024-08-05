@@ -16,7 +16,6 @@
 
     <modules>
         <module>agileway-eipchannel-core</module>
-        <module>agileway-eipchannel-kafka</module>
     </modules>
 
     <dependencyManagement>
