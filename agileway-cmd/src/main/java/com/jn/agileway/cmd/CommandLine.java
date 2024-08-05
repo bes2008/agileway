@@ -3,6 +3,7 @@ package com.jn.agileway.cmd;
 import com.jn.langx.text.StrTokenizer;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
+import com.jn.langx.util.collection.Maps;
 import com.jn.langx.util.io.file.Files;
 
 import java.io.File;
@@ -104,7 +105,7 @@ public class CommandLine {
         this.arguments.addAll(other.arguments);
 
         if (other.getSubstitutionMap() != null) {
-            final Map<String, Object> omap = new HashMap<String, Object>();
+            final Map<String, Object> omap = Maps.<String, Object>newHashMap(other.substitutionMap.size());
             this.substitutionMap = omap;
             for (String key : other.substitutionMap.keySet()) {
                 omap.put(key, other.getSubstitutionMap().get(key));

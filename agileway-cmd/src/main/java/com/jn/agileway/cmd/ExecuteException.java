@@ -10,7 +10,7 @@ public class ExecuteException extends IOException {
     /**
      * Comment for {@code serialVersionUID}.
      */
-    private static final long serialVersionUID = 3256443620654331699L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * The underlying cause of this exception.
