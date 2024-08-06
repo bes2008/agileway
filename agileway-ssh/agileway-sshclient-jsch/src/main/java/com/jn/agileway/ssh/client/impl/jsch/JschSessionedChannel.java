@@ -56,7 +56,7 @@ class JschSessionedChannel extends AbstarctSessionedChannel {
 
     @Override
     public void pty(String term) throws SshException {
-        pty(term, 0, 0, 0, 0, null);
+        pty(term, 80, 24, 0, 0, null);
     }
 
     @Override
