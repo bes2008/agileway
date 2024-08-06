@@ -105,22 +105,32 @@
         <comomons-text.version>1.12.0</comomons-text.version>
         <commons-configuration2.version>2.11.0</commons-configuration2.version>
 
-        <tomcat.version>8.5.59</tomcat.version>
-
+        <!-- JSON, YAML -->
         <easyjson.version>4.1.5</easyjson.version>
-        <httpclient.version>4.5.13</httpclient.version>
-        <httpasyncclient.version>4.1.5</httpasyncclient.version>
-        <javassist.version>3.21.0-GA</javassist.version>
-
-        <slf4j.version>1.7.22</slf4j.version>
+        <jackson.version>2.13.5</jackson.version>
         <snakeyaml.version>1.29</snakeyaml.version>
 
-        <junit.version>4.13.1</junit.version>
+        <!-- WebServer-->
+        <tomcat.version>8.5.59</tomcat.version>
+
+        <!-- HttpClient-->
+        <httpclient.version>4.5.13</httpclient.version>
+        <httpasyncclient.version>4.1.5</httpasyncclient.version>
+
+        <!-- Logging-->
+        <slf4j.version>1.7.22</slf4j.version>
         <logback.version>1.2.9</logback.version>
-        <jackson.version>2.13.1</jackson.version>
+
+        <!--ByteCode Utils-->
+        <javassist.version>3.21.0-GA</javassist.version>
 
 
+        <!-- JavaEE, JakartaEE-->
+        <javax.servlet.version>3.0.1</javax.servlet.version>
+        <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
 
+        <!-- Tests -->
+        <junit.version>4.13.1</junit.version>
 
 
         <!-- Security-->
@@ -149,16 +159,12 @@
         <spring.boot_3.version>3.1.6</spring.boot_3.version>
 
 
-        <javax.servlet.version>3.0.1</javax.servlet.version>
-        <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
-
-
+        <!-- Maven Plugins-->
         <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
         <maven-shade-plugin.version>3.4.1</maven-shade-plugin.version>
         <maven-javadoc-plugin.version>3.4.0</maven-javadoc-plugin.version>
         <dependency-check-maven-plugin.version>9.1.0</dependency-check-maven-plugin.version>
         <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
-
 
 
         <dependency-analyze-javascript.enabled>false</dependency-analyze-javascript.enabled>
@@ -483,20 +489,74 @@
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
                 <version>${jackson.version}</version>
-                <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
                 <version>${jackson.version}</version>
-                <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
                 <version>${jackson.version}</version>
-                <optional>true</optional>
             </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-cbor</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-yaml</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-guava</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jdk8</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-joda</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                <artifactId>jackson-jaxrs-base</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                <artifactId>jackson-jaxrs-json-provider</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-afterburner</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-jaxb-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-parameter-names</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>

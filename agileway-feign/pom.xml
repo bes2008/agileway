@@ -15,9 +15,9 @@
 
     <description>Provide a simple method to use feign</description>
     <properties>
-        <openfeign.version>9.7.0</openfeign.version>
-        <openfeign.form.version>3.4.1</openfeign.form.version>
-        <ribbon.version>2.1.5</ribbon.version>
+        <openfeign.version>13.3</openfeign.version>
+        <openfeign.form.version>3.8.0</openfeign.form.version>
+        <ribbon.version>2.7.18</ribbon.version>
     </properties>
 
     <dependencies>
@@ -107,6 +107,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

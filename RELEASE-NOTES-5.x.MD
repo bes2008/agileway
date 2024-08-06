@@ -13,6 +13,7 @@
   + 升级 nimbus-jose-jwt: 9.37 -> 9.40
   + 升级 shiro: 1.11.0 -> 2.0.1
   + 升级 zip4j: 2.9 -> 2.11.5
+  + 升级 jackson: 2.13.1 -> 2.13.5
 + 模块管理：
   + 移除 agileway-eipchannel-kafka
 
