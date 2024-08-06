@@ -141,23 +141,13 @@
             # spring boot 1.5.x 存在  application.yaml 去注入 string[] 失败的问题
         -->
 
-        <!-- spring boot 1.x 版本测试 -->
-        <!--
-
-        -->
-        <spring.boot_1_2.version>1.5.22.RELEASE</spring.boot_1_2.version>
-        <spring_4_5.version>4.3.25.RELEASE</spring_4_5.version>
-        <knife4j.version>2.0.4</knife4j.version>
-
         <!-- spring boot 2.x 版本测试 -->
-        <!--
-        <spring_4_5.version>5.3.27</spring_4_5.version>
-        <spring.boot_1_2.version>2.7.12</spring.boot_1_2.version>
+        <spring5.version>5.3.27</spring5.version>
+        <spring.boot2.version>2.7.12</spring.boot2.version>
         <knife4j.version>3.0.3</knife4j.version>
-        -->
 
-        <spring_6.version>6.0.14</spring_6.version>
-        <spring.boot_3.version>3.1.6</spring.boot_3.version>
+        <spring6.version>6.0.14</spring6.version>
+        <spring.boot3.version>3.1.6</spring.boot3.version>
 
 
         <!-- Maven Plugins-->

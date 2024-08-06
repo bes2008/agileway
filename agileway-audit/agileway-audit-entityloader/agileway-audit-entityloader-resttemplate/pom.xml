@@ -20,7 +20,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>${spring_4_5.version}</version>
+            <version>${spring5.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

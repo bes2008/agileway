@@ -13,9 +13,6 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-
-        <spring.version>6.0.16</spring.version>
-        <spring.boot.version>3.1.6</spring.boot.version>
     </properties>
 
     <dependencies>
@@ -36,12 +33,12 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>${spring.version}</version>
+            <version>${spring6.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
-            <version>${spring.version}</version>
+            <version>${spring6.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.bes2008.solution.agileway</groupId>
@@ -91,22 +88,22 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot</artifactId>
-            <version>${spring.boot_3.version}</version>
+            <version>${spring.boot3.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-            <version>${spring.boot_3.version}</version>
+            <version>${spring.boot3.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
-            <version>${spring.boot_3.version}</version>
+            <version>${spring.boot3.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
-            <version>${spring.boot_3.version}</version>
+            <version>${spring.boot3.version}</version>
         </dependency>
     </dependencies>
 

@@ -32,13 +32,13 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
-            <version>${spring_4_5.version}</version>
+            <version>${spring5.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>${spring_4_5.version}</version>
+            <version>${spring5.version}</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -52,13 +52,13 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-            <version>${spring.boot_1_2.version}</version>
+            <version>${spring.boot2.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
-            <version>${spring.boot_1_2.version}</version>
+            <version>${spring.boot2.version}</version>
             <scope>provided</scope>
         </dependency>
 

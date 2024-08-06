@@ -35,12 +35,12 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>${spring_4_5.version}</version>
+            <version>${spring5.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
-            <version>${spring_4_5.version}</version>
+            <version>${spring5.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.bes2008.solution.agileway</groupId>
@@ -50,25 +50,25 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot</artifactId>
-            <version>${spring.boot_1_2.version}</version>
+            <version>${spring.boot2.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-            <version>${spring.boot_1_2.version}</version>
+            <version>${spring.boot2.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
-            <version>${spring.boot_1_2.version}</version>
+            <version>${spring.boot2.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
-            <version>${spring.boot_1_2.version}</version>
+            <version>${spring.boot2.version}</version>
             <optional>true</optional>
         </dependency>
     </dependencies>
