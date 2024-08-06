@@ -14,6 +14,9 @@
   + 升级 shiro: 1.11.0 -> 2.0.1
   + 升级 zip4j: 2.9 -> 2.11.5
   + 升级 jackson: 2.13.1 -> 2.13.5
+  + 升级 spring5: 5.3.27 -> 5.3.37
+  + 升级 spring-boot2: 2.7.12 -> 2.17.18
+  + 升级 sqlhelper: 5.0.0 -> 5.0.1
 + 模块管理：
   + 移除 agileway-eipchannel-kafka
 
