@@ -7,7 +7,7 @@
   + 升级 sshj：0.32.0 -> 0.38.0
   + 升级 bcprov-jdk15on:1.70 -> bcprov-jdk18on:1.78.1
   + 升级 commons-text:1.8 -> 1.12.0
-  + 升级 commons-configuration:1.8 -> commons-configuration2:2.11.0
+  + 升级 commons-configuration:1.8 -> 1.10
   + 升级 guava: 20.0 -> 33.2.1-jre
   + 升级 jersey: 2.35 -> 2.44
   + 升级 nimbus-jose-jwt: 9.37 -> 9.40
