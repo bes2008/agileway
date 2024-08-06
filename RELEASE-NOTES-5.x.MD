@@ -17,6 +17,7 @@
   + 升级 spring5: 5.3.27 -> 5.3.37
   + 升级 spring-boot2: 2.7.12 -> 2.17.18
   + 升级 sqlhelper: 5.0.0 -> 5.0.1
+  + 升级 langx: 5.4.0 -> 5.4.1
 + 模块管理：
   + 移除 agileway-eipchannel-kafka
 

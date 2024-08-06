@@ -99,7 +99,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!--commons utils-->
-        <langx.version>5.4.0</langx.version>
+        <langx.version>5.4.1</langx.version>
         <guava.version>33.2.1-jre</guava.version>
         <commons-compress.version>1.26.1</commons-compress.version>
         <comomons-text.version>1.12.0</comomons-text.version>
@@ -604,7 +604,7 @@
         </dependency>
         <dependency>
             <groupId>io.github.bes2008.solution.langx</groupId>
-            <artifactId>langx-java</artifactId>
+            <artifactId>langx-java8</artifactId>
         </dependency>
 
 
