@@ -68,6 +68,9 @@ public interface SessionedChannel extends Channel {
 
     /**
      * 发起 shell 请求，启动 shell 模式
+     * <pre>
+     * 建议直接使用 {@link com.jn.agileway.ssh.client.channel.ShellExecutor} API
+     * </pre>
      */
     void shell() throws SshException;
 

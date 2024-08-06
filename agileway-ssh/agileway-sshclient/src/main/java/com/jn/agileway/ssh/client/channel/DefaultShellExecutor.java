@@ -1,12 +1,15 @@
 package com.jn.agileway.ssh.client.channel;
 
+import com.jn.agileway.ssh.client.SshConnection;
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.langx.io.stream.ByteArrayOutputStream;
 import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.Maths;
 import com.jn.langx.util.Objs;
+import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.function.Supplier;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.logging.Loggers;
@@ -16,7 +19,21 @@ import java.io.*;
 
 public class DefaultShellExecutor extends AbstractInitializable implements ShellExecutor {
     private SessionedChannel channel;
+
+    public DefaultShellExecutor(final SshConnection connection){
+        this(new Supplier<SshConnection, SessionedChannel>() {
+            @Override
+            public SessionedChannel get(SshConnection conn) {
+                SessionedChannel channel = connection.openSession();
+                channel.pty("vt100");
+                channel.shell();
+                return channel;
+            }
+        }.get(connection));
+    }
+    
     public DefaultShellExecutor(SessionedChannel channel){
+        Preconditions.checkArgument(channel.getType()==ChannelType.SHELL);
         this.channel = channel;
     }
 
@@ -44,6 +61,9 @@ public class DefaultShellExecutor extends AbstractInitializable implements Shell
 
     @Override
     public boolean execute(String statementBlock, String moreFlagLine, String more, long responseTimeInMills, int maxAttempts, Holder<String> stdout, Holder<String> stderr) {
+        if(!inited){
+            init();
+        }
         stderr.reset();
         stdout.reset();
         try {
