@@ -83,11 +83,10 @@ class SynergySessionedChannel extends AbstarctSessionedChannel {
     }
 
     @Override
-    protected ShellExecutor internalShell() throws SshException {
+    protected void internalShell() throws SshException {
         try {
             RequestFuture future = channel.startShell();
             future.waitForever();
-            return null;
         } catch (Throwable ex) {
             throw new SshException(ex);
         }

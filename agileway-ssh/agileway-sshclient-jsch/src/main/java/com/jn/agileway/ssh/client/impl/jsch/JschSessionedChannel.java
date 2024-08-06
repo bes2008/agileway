@@ -112,7 +112,7 @@ class JschSessionedChannel extends AbstarctSessionedChannel {
     }
 
     @Override
-    protected ShellExecutor internalShell() throws SshException {
+    protected void internalShell() throws SshException {
         if(session == null || !session.isConnected()){
             throw new IllegalStateException("the session is not connected");
         }
@@ -120,8 +120,6 @@ class JschSessionedChannel extends AbstarctSessionedChannel {
             this.type = JschChannelType.SHELL;
             this.channel = session.openChannel(type.getName());
             startChannel();
-
-            return null;
         } catch (Throwable ex) {
             throw new SshException(ex);
         }

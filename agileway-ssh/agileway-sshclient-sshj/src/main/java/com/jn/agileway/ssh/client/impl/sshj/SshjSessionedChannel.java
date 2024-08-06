@@ -104,11 +104,10 @@ class SshjSessionedChannel extends AbstarctSessionedChannel {
     }
 
     @Override
-    protected ShellExecutor internalShell() throws SshException {
+    protected void internalShell() throws SshException {
         try {
             this.shell = this.session.startShell();
             initStreams();
-            return null;
         } catch (Throwable ex) {
             throw new SshException(ex);
         }

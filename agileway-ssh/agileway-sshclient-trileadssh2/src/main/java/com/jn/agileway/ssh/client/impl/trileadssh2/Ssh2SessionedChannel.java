@@ -79,10 +79,9 @@ class Ssh2SessionedChannel extends AbstarctSessionedChannel {
     }
 
     @Override
-    protected ShellExecutor internalShell() throws SshException {
+    protected void internalShell() throws SshException {
         try {
             this.session.startShell();
-            return null;
         } catch (Throwable ex) {
             throw new SshException(ex);
         }

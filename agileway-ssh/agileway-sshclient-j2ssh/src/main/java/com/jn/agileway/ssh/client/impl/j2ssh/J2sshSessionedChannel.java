@@ -76,10 +76,9 @@ class J2sshSessionedChannel extends AbstarctSessionedChannel {
     }
 
     @Override
-    protected ShellExecutor internalShell() throws SshException {
+    protected void internalShell() throws SshException {
         try {
             sessionChannelClient.startShell();
-            return null;
         } catch (Throwable ex) {
             throw new SshException(ex);
         }
