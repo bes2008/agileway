@@ -231,8 +231,10 @@ public class GlobalRestHandlersConfiguration {
         return globalRestExceptionHandler;
     }
 
-    @Bean
-    public EasyjsonHttpMessageConverter easyjsonHttpMessageConverter(JSONFactory jsonFactory) {
+    /**
+     * 不采用自动注入的方式，避免将它排到了第一位
+     */
+    private EasyjsonHttpMessageConverter easyjsonHttpMessageConverter(JSONFactory jsonFactory) {
         EasyjsonHttpMessageConverter converter = new EasyjsonHttpMessageConverter();
         converter.setJsonFactory(jsonFactory);
         return converter;
@@ -243,14 +245,11 @@ public class GlobalRestHandlersConfiguration {
     public AgilewaySpringWebMvcConfigurer agilewaySpringWebMvcConfigurer(
             @Autowired
                     GlobalSpringRestExceptionHandler globalSpringRestExceptionHandler,
-            @Autowired(required = false)
-                    EasyjsonHttpMessageConverter httpMessageConverter
+            @Autowired JSONFactory jsonFactory
     ) {
         AgilewaySpringWebMvcConfigurer webMvcConfigurer = new AgilewaySpringWebMvcConfigurer();
         webMvcConfigurer.setGlobalHandlerExceptionResolver(globalSpringRestExceptionHandler);
-        if (httpMessageConverter != null) {
-            webMvcConfigurer.setHttpMessageConverter(httpMessageConverter);
-        }
+        webMvcConfigurer.setHttpMessageConverter(easyjsonHttpMessageConverter(jsonFactory));
         return webMvcConfigurer;
     }
 
