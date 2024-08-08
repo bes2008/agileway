@@ -11,7 +11,6 @@
 + 依赖：
   + 升级 avro：1.11.0 -> 1.11.3
   + 升级 sshj：0.32.0 -> 0.38.0
-  + 升级 sshj：0.32.0 -> 0.38.0
   + 升级 bcprov-jdk15on:1.70 -> bcprov-jdk18on:1.78.1
   + 升级 commons-text:1.8 -> 1.12.0
   + 升级 commons-configuration:1.8 -> 1.10
