@@ -17,6 +17,7 @@ import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
+import com.jn.langx.util.spi.CommonServiceProvider;
 import com.jn.langx.util.struct.Entry;
 import com.jn.langx.util.struct.Pair;
 import org.slf4j.Logger;
@@ -25,7 +26,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
-import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Fses {
@@ -154,8 +154,7 @@ public class Fses {
     }
 
     static {
-        ServiceLoader<FseCustomizer> loader = ServiceLoader.load(FseCustomizer.class);
-        Pipeline.of(loader).forEach(new Consumer<FseCustomizer>() {
+        Pipeline.of(CommonServiceProvider.loadService(FseCustomizer.class)).forEach(new Consumer<FseCustomizer>() {
             @Override
             public void accept(FseCustomizer fstCustomizer) {
                 fseCustomizerRegistry.put(fstCustomizer.getName(), fstCustomizer);

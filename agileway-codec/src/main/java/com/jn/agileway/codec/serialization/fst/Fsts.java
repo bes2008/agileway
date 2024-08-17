@@ -12,6 +12,7 @@ import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Consumer2;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.logging.Loggers;
+import com.jn.langx.util.spi.CommonServiceProvider;
 import org.nustaq.serialization.FSTConfiguration;
 import org.nustaq.serialization.FSTObjectInput;
 import org.nustaq.serialization.FSTObjectOutput;
@@ -21,7 +22,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
-import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Fsts {
@@ -140,8 +140,7 @@ public class Fsts {
     }
 
     static {
-        ServiceLoader<FstCustomizer> loader = ServiceLoader.load(FstCustomizer.class);
-        Pipeline.of(loader).forEach(new Consumer<FstCustomizer>() {
+        Pipeline.of(CommonServiceProvider.loadService(FstCustomizer.class)).forEach(new Consumer<FstCustomizer>() {
             @Override
             public void accept(FstCustomizer fstCustomizer) {
                 fstCustomizerRegistry.put(fstCustomizer.getName(), fstCustomizer);

@@ -7,6 +7,7 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.logging.Loggers;
+import com.jn.langx.util.spi.CommonServiceProvider;
 import org.slf4j.Logger;
 import org.yaml.snakeyaml.Yaml;
 
@@ -81,7 +82,7 @@ public class CompressFormats {
     }
 
     private static void loadCustomizedZipFormats() {
-        Collects.forEach(ServiceLoader.load(CompressFormatFactory.class), new Consumer<CompressFormatFactory>() {
+        Collects.forEach(CommonServiceProvider.loadService(CompressFormatFactory.class), new Consumer<CompressFormatFactory>() {
             @Override
             public void accept(CompressFormatFactory zipFormatFactory) {
                 List<CompressFormat> zfs = zipFormatFactory.get();

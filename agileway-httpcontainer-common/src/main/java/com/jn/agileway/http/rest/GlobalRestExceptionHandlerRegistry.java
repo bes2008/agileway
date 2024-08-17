@@ -14,6 +14,7 @@ import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
+import com.jn.langx.util.spi.CommonServiceProvider;
 import org.slf4j.Logger;
 
 import java.util.*;
@@ -53,8 +54,7 @@ public class GlobalRestExceptionHandlerRegistry implements Registry<String, Rest
         if (!inited) {
             inited = true;
             logger.info("Initial global rest exception handler registry");
-            ServiceLoader<RestActionExceptionHandler> serviceLoader = ServiceLoader.load(RestActionExceptionHandler.class);
-            Collects.forEach(serviceLoader, new Consumer<RestActionExceptionHandler>() {
+            Collects.forEach(CommonServiceProvider.loadService(RestActionExceptionHandler.class), new Consumer<RestActionExceptionHandler>() {
                 @Override
                 public void accept(final RestActionExceptionHandler exceptionHandler) {
                     register(exceptionHandler);

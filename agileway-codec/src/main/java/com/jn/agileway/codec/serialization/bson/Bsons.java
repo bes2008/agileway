@@ -10,6 +10,7 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
+import com.jn.langx.util.spi.CommonServiceProvider;
 import org.bson.BsonBinaryReader;
 import org.bson.BsonBinaryWriter;
 import org.bson.codecs.Codec;
@@ -27,13 +28,12 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ServiceLoader;
 
 public class Bsons {
     private static final CodecRegistry codecRegistry;
 
     static {
-        Iterator<CodecProvider> providerIterator = ServiceLoader.load(CodecProvider.class).iterator();
+        Iterator<CodecProvider> providerIterator = CommonServiceProvider.loadService(CodecProvider.class).iterator();
         List<CodecProvider> providers = Collects.newArrayList();
         while (providerIterator.hasNext()) {
             try {
