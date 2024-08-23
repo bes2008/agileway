@@ -139,7 +139,7 @@
 
         <maven-shade-plugin.version>3.4.1</maven-shade-plugin.version>
         <maven-javadoc-plugin.version>3.4.0</maven-javadoc-plugin.version>
-        <dependency-check-maven-plugin.version>9.1.0</dependency-check-maven-plugin.version>
+        <dependency-check-maven-plugin.version>9.2.0</dependency-check-maven-plugin.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
