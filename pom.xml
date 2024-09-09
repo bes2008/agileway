@@ -96,13 +96,13 @@
 
     <properties>
         <tomcat.version>8.5.59</tomcat.version>
-        <langx.version>5.4.0</langx.version>
+        <langx.version>5.4.3</langx.version>
         <easyjson.version>4.1.5</easyjson.version>
-        <httpclient.version>4.5.13</httpclient.version>
+        <httpclient.version>4.5.14</httpclient.version>
         <httpasyncclient.version>4.1.5</httpasyncclient.version>
         <javassist.version>3.21.0-GA</javassist.version>
         <guava.version>20.0</guava.version>
-        <slf4j.version>1.7.22</slf4j.version>
+        <slf4j.version>1.7.36</slf4j.version>
         <snakeyaml.version>1.29</snakeyaml.version>
         <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
         <junit.version>4.13.1</junit.version>
@@ -120,7 +120,7 @@
 
         -->
         <spring.boot_1_2.version>1.5.22.RELEASE</spring.boot_1_2.version>
-        <spring_4_5.version>4.3.25.RELEASE</spring_4_5.version>
+        <spring_4_5.version>4.3.30.RELEASE</spring_4_5.version>
         <knife4j.version>2.0.4</knife4j.version>
 
         <!-- spring boot 2.x 版本测试 -->
@@ -139,7 +139,7 @@
 
         <maven-shade-plugin.version>3.4.1</maven-shade-plugin.version>
         <maven-javadoc-plugin.version>3.4.0</maven-javadoc-plugin.version>
-        <dependency-check-maven-plugin.version>9.1.0</dependency-check-maven-plugin.version>
+        <dependency-check-maven-plugin.version>9.2.0</dependency-check-maven-plugin.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -511,7 +511,7 @@
         <dependency>
             <groupId>org.sonatype.ossindex.maven</groupId>
             <artifactId>ossindex-maven-plugin</artifactId>
-            <version>3.1.0</version>
+            <version>3.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.owasp</groupId>
