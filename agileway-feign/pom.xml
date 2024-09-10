@@ -16,8 +16,8 @@
     <description>Provide a simple method to use feign</description>
     <properties>
         <openfeign.version>9.7.0</openfeign.version>
-        <openfeign.form.version>3.4.1</openfeign.form.version>
-        <ribbon.version>2.1.5</ribbon.version>
+        <openfeign.form.version>3.8.0</openfeign.form.version>
+        <ribbon.version>2.7.18</ribbon.version>
     </properties>
 
     <dependencies>
@@ -100,7 +100,7 @@
         <dependency>
             <groupId>commons-configuration</groupId>
             <artifactId>commons-configuration</artifactId>
-            <version>1.8</version>
+            <version>1.10</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-logging</groupId>
