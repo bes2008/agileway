@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <shiro.version>1.11.0</shiro.version>
+        <shiro.version>1.13.0</shiro.version>
     </properties>
 
     <artifactId>agileway-shiro-redis-springdata2</artifactId>
