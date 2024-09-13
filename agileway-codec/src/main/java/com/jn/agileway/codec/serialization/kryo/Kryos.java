@@ -20,6 +20,7 @@ import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.type.Primitives;
+import com.jn.langx.util.spi.CommonServiceProvider;
 import org.slf4j.Logger;
 
 import java.io.ByteArrayInputStream;
@@ -27,7 +28,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
-import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Kryos {
@@ -213,8 +213,7 @@ public class Kryos {
     }
 
     static {
-        ServiceLoader<KryoCustomizer> loader = ServiceLoader.load(KryoCustomizer.class);
-        Pipeline.of(loader).forEach(new Consumer<KryoCustomizer>() {
+        Pipeline.of(CommonServiceProvider.loadService(KryoCustomizer.class)).forEach(new Consumer<KryoCustomizer>() {
             @Override
             public void accept(KryoCustomizer kryoCustomizer) {
                 kryoCustomizerRegistry.put(kryoCustomizer.getName(), kryoCustomizer);

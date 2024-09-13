@@ -7,12 +7,12 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.annotation.OnClassesConditions;
+import com.jn.langx.util.spi.CommonServiceProvider;
 import org.slf4j.Logger;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.ServiceLoader;
 
 public class SshConnectionFactoryRegistry extends GenericRegistry<SshConnectionFactory> {
     private static final Logger logger = Loggers.getLogger(SshConnectionFactoryRegistry.class);
@@ -20,7 +20,7 @@ public class SshConnectionFactoryRegistry extends GenericRegistry<SshConnectionF
 
     static {
 
-        Iterator<SshConnectionFactory> iterator = ServiceLoader.load(SshConnectionFactory.class).iterator();
+        Iterator<SshConnectionFactory> iterator = CommonServiceProvider.loadService(SshConnectionFactory.class).iterator();
 
         while (iterator.hasNext()) {
             try {

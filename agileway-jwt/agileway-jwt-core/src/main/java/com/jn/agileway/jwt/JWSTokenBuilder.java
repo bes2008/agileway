@@ -3,6 +3,7 @@ package com.jn.agileway.jwt;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.collection.MapAccessor;
 import com.jn.langx.util.collection.Maps;
 import com.jn.langx.util.function.Consumer2;
 
@@ -19,7 +20,7 @@ public class JWSTokenBuilder implements JWTBuilder<JWSToken, JWSTokenBuilder> {
         this(true);
     }
     public JWSTokenBuilder(boolean isCompletionEnabled){
-        this.isCompletionEnabled=isCompletionEnabled;
+        this.isCompletionEnabled = isCompletionEnabled;
     }
 
     public JWSTokenBuilder withType(String type) {
@@ -69,10 +70,45 @@ public class JWSTokenBuilder implements JWTBuilder<JWSToken, JWSTokenBuilder> {
         return this;
     }
 
+    public JWSTokenBuilder withPayloadClaimIssuer(String issuer){
+        return withPayloadClaim(JWTs.ClaimKeys.ISSUER, issuer);
+    }
+
+    public JWSTokenBuilder withPayloadClaimSubject(String stringOrUrl){
+        return withPayloadClaim(JWTs.ClaimKeys.SUBJECT, stringOrUrl);
+    }
+
+    public JWSTokenBuilder withPayloadClaimAudience(String audience){
+        return withPayloadClaim(JWTs.ClaimKeys.AUDIENCE, audience);
+    }
+
+    public JWSTokenBuilder withPayloadClaimExpiration(long expirationTime){
+        return withPayloadClaim(JWTs.ClaimKeys.EXPIRATION, expirationTime);
+    }
+
+    public JWSTokenBuilder withPayloadClaimNotBefore(long notBeforeTime){
+        return withPayloadClaim(JWTs.ClaimKeys.NOT_BEFORE, notBeforeTime);
+    }
+
+    public JWSTokenBuilder withPayloadClaimIssuedAt(long issuedTime){
+        return withPayloadClaim(JWTs.ClaimKeys.ISSUED_AT, issuedTime);
+    }
+
+    public JWSTokenBuilder withPayloadClaimJwtId(String jwtId){
+        return withPayloadClaim(JWTs.ClaimKeys.JWT_ID, jwtId);
+    }
+
+
     public JWSToken plain() {
         JWSToken token = build(true);
         new PlainSigner().sign(token);
         return token;
+    }
+
+    public JWSToken signWithSecretKey(String base64SecretKey){
+        String algorithm = new MapAccessor(header).getString(JWTs.Headers.ALGORITHM);
+        SecretKey secretKey = JWTs.toJWSSecretKey(algorithm, base64SecretKey);
+        return sign(secretKey);
     }
 
     public JWSToken sign(SecretKey secretKey) {

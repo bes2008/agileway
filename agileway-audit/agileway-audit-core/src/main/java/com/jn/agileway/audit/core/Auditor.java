@@ -86,7 +86,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
     public boolean isAsyncAudit(AuditedRequest request) {
         if (asyncAudit && executor != null && request != null) {
             try {
-                Class httpServletRequest = ClassLoaders.loadClass("javax.servlet.http.HttpServletRequest", request.getClass().getClassLoader());
+                Class httpServletRequest = ClassLoaders.loadClass("javax.servlet.http.HttpServletRequest", Thread.currentThread().getContextClassLoader());
                 if (httpServletRequest != null) {
                     if (Reflects.isSubClassOrEquals(httpServletRequest, request.getClass())) {
                         return false;

@@ -8,6 +8,8 @@ import com.jn.easyjson.core.factory.JsonScope;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.jar.JarNotFoundException;
+import com.jn.langx.util.reflect.Reflects;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
@@ -23,6 +25,23 @@ import java.nio.charset.Charset;
 public class EasyjsonHttpMessageConverter extends AbstractGenericHttpMessageConverter<Object> {
     private JSONFactory jsonFactory;
 
+    @Override
+    protected boolean supports(Class<?> clazz) {
+        if(byte[].class == clazz){
+            // 使用内置的 ByteArrayHttpMessageConverter
+            return false;
+        }
+        if(String.class==clazz){
+            // 使用内置的 StringHttpMessageConverter
+            return false;
+        }
+        if(Reflects.isSubClassOrEquals(Resource.class, clazz)){
+            // 使用内置的 ResourceHttpMessageConverter
+            return false;
+        }
+
+        return true;
+    }
 
     public JSONFactory getJsonFactory() {
         if (jsonFactory == null) {
@@ -51,6 +70,7 @@ public class EasyjsonHttpMessageConverter extends AbstractGenericHttpMessageConv
         if (j == null) {
             throw new JarNotFoundException("the jar not found: easyjson-gson.jar or easyjson-fastjson.jar or easyjson-jackson.jar");
         }
+
         String json = j.toJson(o);
         if (json != null) {
             OutputStream out = outputMessage.getBody();

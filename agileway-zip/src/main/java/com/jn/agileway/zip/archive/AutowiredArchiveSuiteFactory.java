@@ -11,13 +11,13 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.spi.CommonServiceProvider;
 import org.apache.commons.compress.compressors.CompressorInputStream;
 import org.apache.commons.compress.compressors.CompressorOutputStream;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 
 import java.io.*;
 import java.util.Map;
-import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
@@ -25,7 +25,7 @@ public class AutowiredArchiveSuiteFactory implements ArchiveSuiteFactory, Regist
     private Map<String, SingleArchiveSuiteFactory> archiveFactoryMap = new ConcurrentHashMap<String, SingleArchiveSuiteFactory>();
 
     private AutowiredArchiveSuiteFactory() {
-        Collects.forEach(ServiceLoader.load(SingleArchiveSuiteFactory.class), new Consumer<SingleArchiveSuiteFactory>() {
+        Collects.forEach(CommonServiceProvider.loadService(SingleArchiveSuiteFactory.class), new Consumer<SingleArchiveSuiteFactory>() {
             @Override
             public void accept(SingleArchiveSuiteFactory archiverFactory) {
                 archiveFactoryMap.put(archiverFactory.getArchiveFormat(), archiverFactory);

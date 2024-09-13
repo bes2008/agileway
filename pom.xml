@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.bes2008.solution.agileway</groupId>
     <artifactId>agileway</artifactId>
-    <version>5.0.0</version>
+    <version>5.0.4</version>
     <packaging>pom</packaging>
 
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
@@ -15,8 +15,6 @@
         <module>agileway-web-javaee</module>
         <module>agileway-web-jakarta</module>
         <module>agileway-vfs</module>
-        <module>agileway-redis</module>
-        <module>agileway-shiro-redis</module>
         <module>agileway-httpclient</module>
         <module>agileway-aop</module>
         <module>agileway-spring</module>
@@ -61,9 +59,9 @@
     </distributionManagement>
     <scm>
         <tag>${project.version}</tag>
-        <url>https://github.com/bes2008/agileway.git</url>
-        <connection>https://github.com/bes2008/agileway.git</connection>
-        <developerConnection>https://github.com/bes2008/agileway.git</developerConnection>
+        <url>scm:git:https://github.com/bes2008/agileway.git</url>
+        <connection>scm:git:https://github.com/bes2008/agileway.git</connection>
+        <developerConnection>scm:git:https://github.com/bes2008/agileway.git</developerConnection>
     </scm>
     <licenses>
         <license>
@@ -95,55 +93,70 @@
     </repositories>
 
     <properties>
-        <tomcat.version>8.5.59</tomcat.version>
-        <langx.version>5.4.0</langx.version>
+        <!--project metadata-->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!--commons utils-->
+        <langx.version>5.4.4</langx.version>
+        <guava.version>33.2.1-jre</guava.version>
+        <commons-compress.version>1.26.1</commons-compress.version>
+        <comomons-text.version>1.12.0</comomons-text.version>
+        <commons-configuration.version>1.10</commons-configuration.version>
+        <commons-configuration2.version>2.11.0</commons-configuration2.version>
+
+        <!-- JSON, YAML -->
         <easyjson.version>4.1.5</easyjson.version>
-        <httpclient.version>4.5.13</httpclient.version>
+        <jackson.version>2.13.5</jackson.version>
+        <snakeyaml.version>1.33</snakeyaml.version>
+
+        <!-- WebServer-->
+        <tomcat.version>8.5.59</tomcat.version>
+
+        <!-- HttpClient-->
+        <httpclient.version>4.5.14</httpclient.version>
         <httpasyncclient.version>4.1.5</httpasyncclient.version>
+
+        <!-- Logging-->
+        <slf4j.version>1.7.36</slf4j.version>
+        <logback.version>1.5.0</logback.version>
+
+        <!--ByteCode Utils-->
         <javassist.version>3.21.0-GA</javassist.version>
-        <guava.version>20.0</guava.version>
-        <slf4j.version>1.7.22</slf4j.version>
-        <snakeyaml.version>1.29</snakeyaml.version>
-        <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
+
+
+        <!-- JavaEE, JakartaEE-->
+        <javax.servlet.version>3.0.1</javax.servlet.version>
+        <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
+
+        <!-- Tests -->
         <junit.version>4.13.1</junit.version>
-        <logback.version>1.2.9</logback.version>
-        <jackson.version>2.13.1</jackson.version>
-        <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
-        <commons.compress.version>1.26.1</commons.compress.version>
+
+
+        <!-- Security-->
+        <bouncycastle-jdk18on.version>1.78.1</bouncycastle-jdk18on.version>
 
         <!--
             # spring boot 1.5.x 存在  application.yaml 去注入 string[] 失败的问题
         -->
 
-        <!-- spring boot 1.x 版本测试 -->
-        <!--
-
-        -->
-        <spring.boot_1_2.version>1.5.22.RELEASE</spring.boot_1_2.version>
-        <spring_4_5.version>4.3.25.RELEASE</spring_4_5.version>
-        <knife4j.version>2.0.4</knife4j.version>
-
         <!-- spring boot 2.x 版本测试 -->
-        <!--
-        <spring_4_5.version>5.3.27</spring_4_5.version>
-        <spring.boot_1_2.version>2.7.12</spring.boot_1_2.version>
+        <spring5.version>5.3.37</spring5.version>
+        <spring.boot2.version>2.7.18</spring.boot2.version>
         <knife4j.version>3.0.3</knife4j.version>
-        -->
 
-        <spring_6.version>6.0.14</spring_6.version>
-        <spring.boot_3.version>3.1.6</spring.boot_3.version>
+        <spring6.version>6.0.14</spring6.version>
+        <spring.boot3.version>3.1.6</spring.boot3.version>
 
 
-        <javax.servlet.version>3.0.1</javax.servlet.version>
-        <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
-
+        <!-- Maven Plugins-->
+        <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
         <maven-shade-plugin.version>3.4.1</maven-shade-plugin.version>
         <maven-javadoc-plugin.version>3.4.0</maven-javadoc-plugin.version>
         <dependency-check-maven-plugin.version>9.1.0</dependency-check-maven-plugin.version>
+        <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
 
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <dependency-analyze-javascript.enabled>false</dependency-analyze-javascript.enabled>
         <dependency-analyze-donet.enabled>false</dependency-analyze-donet.enabled>
@@ -152,12 +165,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>${maven-shade-plugin.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>io.github.bes2008.solution.agileway.jwt</groupId>
                 <artifactId>agileway-jwt-core</artifactId>
@@ -235,17 +242,7 @@
             </dependency>
             <dependency>
                 <groupId>io.github.bes2008.solution.agileway</groupId>
-                <artifactId>agileway-redis</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.bes2008.solution.agileway</groupId>
                 <artifactId>agileway-redis-springdata2</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.bes2008.solution.agileway</groupId>
-                <artifactId>agileway-shiro-redis</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -360,6 +357,19 @@
                 <version>${langx.version}</version>
             </dependency>
             <dependency>
+                <groupId>io.github.bes2008.solution.langx.security</groupId>
+                <artifactId>langx-java-security-gm-jca-bouncycastle</artifactId>
+                <version>${langx.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.bouncycastle</groupId>
+                        <artifactId>bcprov-jdk15on</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+
+            <dependency>
                 <groupId>io.github.bes2008.solution.easyjson</groupId>
                 <artifactId>easyjson-core</artifactId>
                 <version>${easyjson.version}</version>
@@ -369,6 +379,30 @@
                 <artifactId>easyjson-jackson</artifactId>
                 <version>${easyjson.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>${comomons-text.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>${commons-compress.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-configuration</groupId>
+                <artifactId>commons-configuration</artifactId>
+                <version>${commons-configuration.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
@@ -464,30 +498,95 @@
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
                 <version>${jackson.version}</version>
-                <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
                 <version>${jackson.version}</version>
-                <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
                 <version>${jackson.version}</version>
-                <optional>true</optional>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-cbor</artifactId>
+                <version>${jackson.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-compress</artifactId>
-                <version>${commons.compress.version}</version>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-yaml</artifactId>
+                <version>${jackson.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-guava</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jdk8</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-joda</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                <artifactId>jackson-jaxrs-base</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                <artifactId>jackson-jaxrs-json-provider</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-afterburner</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-jaxb-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-parameter-names</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-spring-boot-starter</artifactId>
                 <version>${knife4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk18on</artifactId>
+                <version>${bouncycastle-jdk18on.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcpkix-jdk18on</artifactId>
+                <version>${bouncycastle-jdk18on.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcutil-jdk18on</artifactId>
+                <version>${bouncycastle-jdk18on.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -505,24 +604,15 @@
         </dependency>
         <dependency>
             <groupId>io.github.bes2008.solution.langx</groupId>
-            <artifactId>langx-java</artifactId>
+            <artifactId>langx-java8</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.sonatype.ossindex.maven</groupId>
-            <artifactId>ossindex-maven-plugin</artifactId>
-            <version>3.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.owasp</groupId>
-            <artifactId>dependency-check-maven</artifactId>
-            <version>${dependency-check-maven-plugin.version}</version>
-        </dependency>
 
     </dependencies>
 
 
     <build>
+
         <resources>
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
@@ -553,6 +643,13 @@
 
         <pluginManagement>
             <plugins>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>${maven-shade-plugin.version}</version>
+                </plugin>
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
@@ -569,6 +666,49 @@
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
                     <version>${dependency-check-maven-plugin.version}</version>
+
+                    <configuration>
+                        <autoUpdate>false</autoUpdate>
+                        <!-- 压制配置 -->
+                        <suppressionFile>.dependencycheck/publishedSuppressions.xml</suppressionFile>
+                        <hostedSuppressionsEnabled>false</hostedSuppressionsEnabled>
+
+                        <!--Java 依赖分析配置-->
+                        <skipDependencyManagement>true</skipDependencyManagement>
+                        <skipSystemScope>true</skipSystemScope>
+                        <skipArtifactType>false</skipArtifactType>
+                        <skipProvidedScope>false</skipProvidedScope>
+                        <skipRuntimeScope>false</skipRuntimeScope>
+                        <skipTestScope>false</skipTestScope>
+
+                        <!-- JavaScript 依赖分析配置-->
+                        <nodeAuditAnalyzerEnabled>${dependency-analyze-javascript.enabled}</nodeAuditAnalyzerEnabled>
+                        <pnpmAuditAnalyzerEnabled>${dependency-analyze-javascript.enabled}</pnpmAuditAnalyzerEnabled>
+                        <nodeAuditSkipDevDependencies>true</nodeAuditSkipDevDependencies>
+                        <nodeAuditAnalyzerUseCache>true</nodeAuditAnalyzerUseCache>
+                        <nodeAnalyzerEnabled>${dependency-analyze-javascript.enabled}</nodeAnalyzerEnabled>
+                        <nodePackageSkipDevDependencies>true</nodePackageSkipDevDependencies>
+                        <retireJsAnalyzerEnabled>${dependency-analyze-javascript.enabled}</retireJsAnalyzerEnabled>
+                        <retireJsForceUpdate>${dependency-analyze-javascript.enabled}</retireJsForceUpdate>
+
+                        <!-- .Net 依赖分析配置 -->
+                        <msbuildAnalyzerEnabled>${dependency-analyze-donet.enabled}</msbuildAnalyzerEnabled>
+                        <assemblyAnalyzerEnabled>${dependency-analyze-donet.enabled}</assemblyAnalyzerEnabled>
+                        <nuspecAnalyzerEnabled>${dependency-analyze-donet.enabled}</nuspecAnalyzerEnabled>
+                        <nugetconfAnalyzerEnabled>${dependency-analyze-donet.enabled}</nugetconfAnalyzerEnabled>
+
+                        <!-- swift 依赖分析配置 -->
+                        <swiftPackageManagerAnalyzerEnabled>${dependency-analyze-swift.enabled}</swiftPackageManagerAnalyzerEnabled>
+                        <swiftPackageResolvedAnalyzerEnabled>${dependency-analyze-swift.enabled}</swiftPackageResolvedAnalyzerEnabled>
+
+                        <ossindexAnalyzerEnabled>true</ossindexAnalyzerEnabled>
+
+                        <failBuildOnAnyVulnerability>false</failBuildOnAnyVulnerability>
+                        <failOnError>false</failOnError>
+
+                        <!-- 输出配置 -->
+                        <formats>HTML,CSV,JSON</formats>
+                    </configuration>
                 </plugin>
 
                 <plugin>
@@ -580,13 +720,7 @@
                 <plugin>
                     <groupId>org.sonatype.plugins</groupId>
                     <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>1.6.12</version>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-scm-plugin</artifactId>
-                    <version>1.10.0</version>
+                    <version>1.6.14</version>
                 </plugin>
 
                 <plugin>
@@ -622,7 +756,30 @@
                 <plugin>
                     <groupId>org.sonatype.ossindex.maven</groupId>
                     <artifactId>ossindex-maven-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.2.0</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.12.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>3.5.0</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>com.github.spotbugs</groupId>
+                    <artifactId>spotbugs-maven-plugin</artifactId>
+                    <version>4.8.6.0</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.sonarsource.scanner.maven</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>3.11.0.3922</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -676,11 +833,6 @@
 
         <profile>
             <id>staticAnalyze</id>
-            <properties>
-
-
-
-            </properties>
 
             <build>
                 <plugins>
@@ -706,56 +858,94 @@
                     <plugin>
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
-                        <version>${dependency-check-maven-plugin.version}</version>
                         <executions>
                             <execution>
+                                <phase>package</phase>
                                 <goals>
                                     <goal>aggregate</goal>
                                 </goals>
-                                <configuration>
-                                    <autoUpdate>true</autoUpdate>
-                                    <!-- 压制配置 -->
-                                    <suppressionFile>.dependencycheck/publishedSuppressions.xml</suppressionFile>
-                                    <hostedSuppressionsEnabled>false</hostedSuppressionsEnabled>
+                            </execution>
+                        </executions>
+                    </plugin>
 
-                                    <!--Java 依赖分析配置-->
-                                    <skipDependencyManagement>false</skipDependencyManagement>
-                                    <skipSystemScope>true</skipSystemScope>
-                                    <skipArtifactType>false</skipArtifactType>
-                                    <skipProvidedScope>false</skipProvidedScope>
-                                    <skipRuntimeScope>false</skipRuntimeScope>
-                                    <skipTestScope>false</skipTestScope>
+                    <!--
+                    <plugin>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs-maven-plugin</artifactId>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.github.spotbugs</groupId>
+                                <artifactId>spotbugs</artifactId>
+                                <version>4.8.6</version>
+                            </dependency>
+                        </dependencies>
 
-                                    <!-- JavaScript 依赖分析配置-->
-                                    <nodeAuditAnalyzerEnabled>${dependency-analyze-javascript.enabled}</nodeAuditAnalyzerEnabled>
-                                    <pnpmAuditAnalyzerEnabled>${dependency-analyze-javascript.enabled}</pnpmAuditAnalyzerEnabled>
-                                    <nodeAuditSkipDevDependencies>true</nodeAuditSkipDevDependencies>
-                                    <nodeAuditAnalyzerUseCache>true</nodeAuditAnalyzerUseCache>
-                                    <nodeAnalyzerEnabled>${dependency-analyze-javascript.enabled}</nodeAnalyzerEnabled>
-                                    <nodePackageSkipDevDependencies>true</nodePackageSkipDevDependencies>
-                                    <retireJsAnalyzerEnabled>${dependency-analyze-javascript.enabled}</retireJsAnalyzerEnabled>
-                                    <retireJsForceUpdate>${dependency-analyze-javascript.enabled}</retireJsForceUpdate>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>spotbugs</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <plugins>
+                                <plugin>
+                                    <groupId>com.h3xstream.findsecbugs</groupId>
+                                    <artifactId>findsecbugs-plugin</artifactId>
+                                    <version>1.12.0</version>
+                                </plugin>
+                            </plugins>
 
-                                    <!-- .Net 依赖分析配置 -->
-                                    <msbuildAnalyzerEnabled>${dependency-analyze-donet.enabled}</msbuildAnalyzerEnabled>
-                                    <assemblyAnalyzerEnabled>${dependency-analyze-donet.enabled}</assemblyAnalyzerEnabled>
-                                    <nuspecAnalyzerEnabled>${dependency-analyze-donet.enabled}</nuspecAnalyzerEnabled>
-                                    <nugetconfAnalyzerEnabled>${dependency-analyze-donet.enabled}</nugetconfAnalyzerEnabled>
+                            <includeTests>false</includeTests>
 
-                                    <!-- swift 依赖分析配置 -->
-                                    <swiftPackageManagerAnalyzerEnabled>${dependency-analyze-swift.enabled}</swiftPackageManagerAnalyzerEnabled>
-                                    <swiftPackageResolvedAnalyzerEnabled>${dependency-analyze-swift.enabled}</swiftPackageResolvedAnalyzerEnabled>
+                            <htmlOutput>true</htmlOutput>
+                            <sarifOutput>true</sarifOutput>
+                            <xmlOutput>true</xmlOutput>
 
-                                    <ossindexAnalyzerEnabled>true</ossindexAnalyzerEnabled>
+                            <noClassOk>true</noClassOk>
 
-                                    <!-- 输出配置 -->
-                                    <formats>HTML,CSV</formats>
-                                </configuration>
+                            <failOnError>false</failOnError>
+
+
+
+                            <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+                            <timeout>100000000</timeout>
+                            <skipEmptyReport>true</skipEmptyReport>
+                        </configuration>
+                    </plugin>
+                    -->
+
+                    <plugin>
+                        <groupId>org.sonarsource.scanner.maven</groupId>
+                        <artifactId>sonar-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sonar analyze</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>sonar</goal>
+                                </goals>
                             </execution>
                         </executions>
                     </plugin>
                 </plugins>
             </build>
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <reportSets>
+                            <reportSet>
+                                <reports>
+                                    <report>aggregate</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
+                </plugins>
+            </reporting>
         </profile>
 
         <profile>
@@ -783,7 +973,11 @@
                             <serverId>sonatype_oss</serverId>
                             <nexusUrl>https://s01.oss.sonatype.org</nexusUrl>
                             <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                            <autoDropAfterRelease>true</autoDropAfterRelease>
+                            <keepStagingRepositoryOnFailure>false</keepStagingRepositoryOnFailure>
+                            <keepStagingRepositoryOnCloseRuleFailure>false</keepStagingRepositoryOnCloseRuleFailure>
                             <sslAllowAll>true</sslAllowAll>
+                            <sslInsecure>false</sslInsecure>
                             <stagingProgressPauseDurationSeconds>120</stagingProgressPauseDurationSeconds>
                             <stagingProgressTimeoutMinutes>40</stagingProgressTimeoutMinutes>
                             <detectBuildFailures>false</detectBuildFailures>
@@ -861,6 +1055,7 @@
                 </plugins>
             </build>
         </profile>
+
 
     </profiles>
 </project>

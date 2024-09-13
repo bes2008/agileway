@@ -15,14 +15,9 @@ import java.util.Map;
  * 在执行exec, subsystem, shell 方法之前，env 方法可以执行多次
  */
 public interface SessionedChannel extends Channel {
-    public static final String TYPE_DEFAULT = "session";
-    public static final String TYPE_EXEC = "exec";
-    public static final String TYPE_SUBSYSTEM = "subsystem";
-    public static final String TYPE_SHELL = "shell";
-    public static final String TYPE_X11 = "x11";
 
     /**
-     * pseudo-terminal 请求。 要在 {@link #exec(String)}, {@link #env(String, String)}, {@link #subsystem(String)} 请求之前。
+     * pseudo-terminal 请求。 要在 {@link #exec(String)}, {@link #env(String, String)}, {@link #shell()}, {@link #subsystem(String)} 请求之前。
      * <p>
      * equality: pty(term, 0, 0, 0, 0, null)
      */
@@ -60,7 +55,7 @@ public interface SessionedChannel extends Channel {
     void env(String variableName, String variableValue) throws SshException;
 
     /**
-     * 发起 exec 请求，执行指定的命令
+     * 发起 exec 请求，执行指定的命令，执行完毕后，应当关闭 session
      *
      * @param command
      */
@@ -72,7 +67,10 @@ public interface SessionedChannel extends Channel {
     void subsystem(String subsystem) throws SshException;
 
     /**
-     * 发起 shell 请求
+     * 发起 shell 请求，启动 shell 模式
+     * <pre>
+     * 建议直接使用 {@link com.jn.agileway.ssh.client.channel.ShellExecutor} API
+     * </pre>
      */
     void shell() throws SshException;
 

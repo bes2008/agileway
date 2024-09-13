@@ -27,13 +27,7 @@ public class OperationDefinitionRepository extends AbstractConfigurationReposito
      */
     private Map<String, OperationDefinition> definitionMap = new ConcurrentHashMap<String, OperationDefinition>();
 
-    private static final OperationDefinitionRepository instance = new OperationDefinitionRepository();
-
     public OperationDefinitionRepository() {
-    }
-
-    public static OperationDefinitionRepository getInstance() {
-        return instance;
     }
 
     public void registerImportance(OperationImportance importance) {

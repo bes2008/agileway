@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.github.bes2008.solution.agileway.audit.entityloader</groupId>
         <artifactId>agileway-audit-entityloader</artifactId>
-        <version>5.0.0</version>
+        <version>5.0.4</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>${spring_4_5.version}</version>
+            <version>${spring5.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

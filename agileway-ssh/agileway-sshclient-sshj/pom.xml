@@ -5,15 +5,15 @@
     <parent>
         <artifactId>agileway-ssh</artifactId>
         <groupId>io.github.bes2008.solution.agileway.ssh</groupId>
-        <version>5.0.0</version>
+        <version>5.0.4</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>agileway-sshclient-sshj</artifactId>
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
     <properties>
-        <bouncycastle.version>1.70</bouncycastle.version>
         <i2p.crypto.version>0.3.0</i2p.crypto.version>
+        <sshj.version>0.38.0</sshj.version>
     </properties>
 
     <dependencies>
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>com.hierynomus</groupId>
             <artifactId>sshj</artifactId>
-            <version>0.32.0</version>
+            <version>${sshj.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.bouncycastle</groupId>
@@ -41,21 +41,17 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!--使用 sshj 时，需要接下来的4个依赖-->
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15on</artifactId>
-            <version>${bouncycastle.version}</version>
+            <artifactId>bcprov-jdk18on</artifactId>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpkix-jdk15on</artifactId>
-            <version>${bouncycastle.version}</version>
+            <artifactId>bcpkix-jdk18on</artifactId>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcutil-jdk15on</artifactId>
-            <version>${bouncycastle.version}</version>
+            <artifactId>bcutil-jdk18on</artifactId>
         </dependency>
         <dependency>
             <groupId>net.i2p.crypto</groupId>

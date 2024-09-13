@@ -5,7 +5,7 @@
     <parent>
         <groupId>io.github.bes2008.solution.agileway</groupId>
         <artifactId>agileway</artifactId>
-        <version>5.0.0</version>
+        <version>5.0.4</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -27,18 +27,18 @@
         </dependency>
         <dependency>
             <groupId>io.github.bes2008.solution.agileway</groupId>
-            <artifactId>agileway-redis</artifactId>
+            <artifactId>agileway-redis-springdata2</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
-            <version>${spring_4_5.version}</version>
+            <version>${spring5.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>${spring_4_5.version}</version>
+            <version>${spring5.version}</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -52,13 +52,13 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-            <version>${spring.boot_1_2.version}</version>
+            <version>${spring.boot2.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
-            <version>${spring.boot_1_2.version}</version>
+            <version>${spring.boot2.version}</version>
             <scope>provided</scope>
         </dependency>
 

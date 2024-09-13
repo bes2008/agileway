@@ -5,12 +5,12 @@
     <parent>
         <groupId>io.github.bes2008.solution.agileway</groupId>
         <artifactId>agileway</artifactId>
-        <version>5.0.0</version>
+        <version>5.0.4</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <shiro.version>1.11.0</shiro.version>
+        <shiro.version>2.0.1</shiro.version>
     </properties>
 
     <artifactId>agileway-shiro-redis-springdata2</artifactId>
@@ -33,51 +33,5 @@
             <version>${shiro.version}</version>
         </dependency>
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>generate_sources</id>
-            <activation>
-                <os>
-                    <family>windows</family>
-                </os>
-            </activation>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <version>${exec-maven-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>clean_shiro_redis_springdata2</id>
-                                <phase>clean</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>${basedir}/build/clean.bat</executable>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>generate_source_for_shiro_redis_springdata2</id>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>${basedir}/build/prebuild.bat</executable>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-
-            </build>
-
-
-        </profile>
-    </profiles>
 
 </project>

@@ -5,7 +5,7 @@
     <parent>
         <groupId>io.github.bes2008.solution.agileway</groupId>
         <artifactId>agileway</artifactId>
-        <version>5.0.0</version>
+        <version>5.0.4</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,7 +16,6 @@
 
     <modules>
         <module>agileway-eipchannel-core</module>
-        <module>agileway-eipchannel-kafka</module>
     </modules>
 
     <dependencyManagement>

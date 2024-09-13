@@ -189,8 +189,7 @@ public class SimpleShiroSession implements ValidatingSession, Serializable {
             return lastAccessTime.before(expireTime);
         } else {
             if (logger.isTraceEnabled()) {
-                logger.trace("No timeout for session with id [" + getId() +
-                        "].  Session is not considered expired.");
+                logger.trace("No timeout for session with id [{}].  Session is not considered expired.", getId());
             }
         }
 

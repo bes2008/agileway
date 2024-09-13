@@ -132,7 +132,7 @@ public final class MessageHeaders extends LinkedHashMap<String, Object> implemen
         }
         for (String key : keysToRemove) {
             if (logger.isInfoEnabled()) {
-                logger.info("removing non-serializable header: " + key);
+                logger.info("removing non-serializable header: {}", key);
             }
             this.remove(key);
         }

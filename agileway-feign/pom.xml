@@ -5,7 +5,7 @@
     <parent>
         <groupId>io.github.bes2008.solution.agileway</groupId>
         <artifactId>agileway</artifactId>
-        <version>5.0.0</version>
+        <version>5.0.4</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,9 +15,9 @@
 
     <description>Provide a simple method to use feign</description>
     <properties>
-        <openfeign.version>9.7.0</openfeign.version>
-        <openfeign.form.version>3.4.1</openfeign.form.version>
-        <ribbon.version>2.1.5</ribbon.version>
+        <openfeign.version>13.3</openfeign.version>
+        <openfeign.form.version>3.8.0</openfeign.form.version>
+        <ribbon.version>2.7.18</ribbon.version>
     </properties>
 
     <dependencies>
@@ -100,13 +100,6 @@
         <dependency>
             <groupId>commons-configuration</groupId>
             <artifactId>commons-configuration</artifactId>
-            <version>1.8</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

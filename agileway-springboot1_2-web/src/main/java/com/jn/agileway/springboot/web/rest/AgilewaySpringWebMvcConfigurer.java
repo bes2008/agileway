@@ -3,7 +3,10 @@ package com.jn.agileway.springboot.web.rest;
 import com.jn.agileway.spring.converter.CommonEnumByNameConverterFactory;
 import com.jn.agileway.spring.web.rest.EasyjsonHttpMessageConverter;
 import com.jn.agileway.spring.web.rest.GlobalSpringRestExceptionHandler;
+import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.function.Predicate2;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.validation.MessageCodesResolver;
 import org.springframework.validation.Validator;
@@ -98,7 +101,17 @@ public class AgilewaySpringWebMvcConfigurer implements WebMvcConfigurer {
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         if (httpMessageConverter != null) {
-            converters.add(httpMessageConverter);
+            // 参考 FormHttpConverters,
+            int index =Collects.firstOccurrence(converters, new Predicate2<Integer, HttpMessageConverter<?>>() {
+                public boolean test(Integer index, HttpMessageConverter<?> converter) {
+                    return converter instanceof FormHttpMessageConverter;
+                }
+            });
+            if(index<=0) {
+                converters.add(httpMessageConverter);
+            }else{
+                converters.add(index, httpMessageConverter);
+            }
         }
     }
 

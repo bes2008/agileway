@@ -14,7 +14,6 @@ import com.jn.agileway.ssh.client.impl.jsch.sftp.JschSftpSession;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
-import com.jn.langx.util.collection.MapAccessor;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
@@ -27,7 +26,7 @@ import java.net.InetAddress;
 public class JschConnection extends AbstractSshConnection<JschConnectionConfig> {
     private Logger logger = Loggers.getLogger(JschConnection.class);
     private JSch jsch;
-    private Session delegate;
+    private Session session;
 
     public JschConnection() {
     }
@@ -66,44 +65,39 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
         connect(host, port);
     }
 
-    private int getConnectTimeout() {
-        MapAccessor mapAccessor = new MapAccessor(sshConfig.getProps());
-        int connectTimeout = mapAccessor.getInteger("ConnectTimeout", 0);
-        if (connectTimeout < 0) {
-            connectTimeout = 0;
-        }
-        return connectTimeout;
-    }
-
     @Override
     public boolean authenticateWithPassword(String user, String password) throws SshException {
         if (!isConnected()) {
             sshConfig.setUser(user);
             sshConfig.setPassword(password);
-            if (delegate != null) {
-                delegate.disconnect();
-                delegate = null;
+            if (session != null) {
+                session.disconnect();
+                session = null;
             }
 
             try {
                 // 设置认证方式的顺序，让密码方式认证优先执行
                 JSch.setConfig("PreferredAuthentications", "password,publickey,gssapi-with-mic,keyboard-interactive");
-                delegate = jsch.getSession(user, getHost(), getPort());
-                delegate.setPassword(password);
+                session = jsch.getSession(user, getHost(), getPort());
+                session.setPassword(password);
 
                 PasswordUserInfo userInfo = new PasswordUserInfo();
                 userInfo.setPassword(password);
-                delegate.setUserInfo(userInfo);
+                session.setUserInfo(userInfo);
+                session.setTimeout(60000);
+                session.setServerAliveInterval(5000);
+                session.setServerAliveCountMax(3);
+                session.setTimeout(sshConfig.getSocketTimeout());
+                session.setConfig("server_host_key",sshConfig.getHostKeyAlgorithms());
 
-             //   delegate.connect();
-                delegate.connect(getConnectTimeout());
+                session.connect(sshConfig.getConnectTimeout());
                 setStatus(SshConnectionStatus.CONNECTED);
                 return true;
             } catch (Throwable ex) {
                 logger.error(ex.getMessage(), ex);
-                if (delegate != null) {
-                    delegate.disconnect();
-                    delegate = null;
+                if (session != null) {
+                    session.disconnect();
+                    session = null;
                 }
             }
         }
@@ -116,25 +110,33 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
         if (!isConnected()) {
             sshConfig.setUser(user);
 
-            if (delegate != null) {
-                delegate.disconnect();
-                delegate = null;
+            if (session != null) {
+                session.disconnect();
+                session = null;
             }
             try {
-                delegate = jsch.getSession(user, getHost(), getPort());
+                session = jsch.getSession(user, getHost(), getPort());
 
                 if (Strings.isNotBlank(passphrase)) {
                     PasswordUserInfo userInfo = new PasswordUserInfo();
                     userInfo.setPassphrase(passphrase);
-                    delegate.setUserInfo(userInfo);
+                    session.setUserInfo(userInfo);
                 }
-                delegate.connect(getConnectTimeout());
+
+                session.setTimeout(60000);
+                session.setServerAliveInterval(5000);
+                session.setServerAliveCountMax(3);
+                session.setTimeout(sshConfig.getSocketTimeout());
+                session.setConfig("server_host_key", sshConfig.getHostKeyAlgorithms());
+
+
+                session.connect(sshConfig.getConnectTimeout());
                 setStatus(SshConnectionStatus.CONNECTED);
                 return true;
             } catch (Throwable ex) {
-                if (delegate != null) {
-                    delegate.disconnect();
-                    delegate = null;
+                if (session != null) {
+                    session.disconnect();
+                    session = null;
                 }
                 return false;
             }
@@ -146,8 +148,8 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
     @Override
     public SessionedChannel openSession() throws SshException {
         Preconditions.checkState(getStatus() == SshConnectionStatus.CONNECTED, "ssh not connected");
-        Preconditions.checkNotNull(delegate != null && delegate.isConnected());
-        return new JschSessionedChannel(delegate);
+        Preconditions.checkNotNull(session != null && session.isConnected());
+        return new JschSessionedChannel(session);
     }
 
     @Override
@@ -157,15 +159,15 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
 
     @Override
     protected void doClose() throws IOException {
-        if (delegate != null) {
-            delegate.disconnect();
+        if (session != null) {
+            session.disconnect();
         }
     }
 
     @Override
     public SftpSession openSftpSession() throws SshException {
         try {
-            ChannelSftp channel = (ChannelSftp) this.delegate.openChannel("sftp");
+            ChannelSftp channel = (ChannelSftp) this.session.openChannel("sftp");
             channel.connect();
             JschSftpSession session = new JschSftpSession(channel);
             session.setSshConnection(this);
@@ -175,8 +177,8 @@ public class JschConnection extends AbstractSshConnection<JschConnectionConfig> 
         }
     }
 
-    Session delegate() {
-        return delegate;
+    public Session getSession() {
+        return session;
     }
 
 }

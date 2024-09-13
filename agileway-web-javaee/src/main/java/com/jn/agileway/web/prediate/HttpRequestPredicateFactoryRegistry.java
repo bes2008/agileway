@@ -8,9 +8,9 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
+import com.jn.langx.util.spi.CommonServiceProvider;
 import org.slf4j.Logger;
 
-import java.util.ServiceLoader;
 
 @Singleton
 public class HttpRequestPredicateFactoryRegistry extends GenericRegistry<HttpRequestPredicateFactory> {
@@ -25,7 +25,7 @@ public class HttpRequestPredicateFactoryRegistry extends GenericRegistry<HttpReq
         INSTANCE = new HttpRequestPredicateFactoryRegistry();
         INSTANCE.init();
 
-        Collects.forEach(ServiceLoader.load(HttpRequestPredicateFactory.class), new Consumer<HttpRequestPredicateFactory>() {
+        Collects.forEach(CommonServiceProvider.loadService(HttpRequestPredicateFactory.class), new Consumer<HttpRequestPredicateFactory>() {
             @Override
             public void accept(HttpRequestPredicateFactory factory) {
                 INSTANCE.register(factory);

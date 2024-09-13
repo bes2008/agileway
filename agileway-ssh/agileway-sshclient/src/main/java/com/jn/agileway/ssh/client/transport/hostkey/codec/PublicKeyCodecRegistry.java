@@ -6,9 +6,9 @@ import com.jn.langx.annotation.Singleton;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.registry.GenericRegistry;
 import com.jn.langx.util.logging.Loggers;
+import com.jn.langx.util.spi.CommonServiceProvider;
 
 import java.util.Iterator;
-import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
@@ -21,7 +21,7 @@ public class PublicKeyCodecRegistry extends GenericRegistry<PublicKeyCodec> {
 
     @Override
     protected void doInit() throws InitializationException {
-        Iterator<PublicKeyCodec> loader = ServiceLoader.load(PublicKeyCodec.class).iterator();
+        Iterator<PublicKeyCodec> loader = CommonServiceProvider.loadService(PublicKeyCodec.class).iterator();
         while (loader.hasNext()) {
             try {
                 PublicKeyCodec codec = loader.next();

@@ -11,7 +11,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 
 public class JdkProxySerializer extends Serializer<Object> {
-    private static Logger logger = Loggers.getLogger(JdkProxySerializer.class);
+    private static final Logger logger = Loggers.getLogger(JdkProxySerializer.class);
 
     @Override
     public Object read(final Kryo kryo, final Input input, final Class<? extends Object> type) {
@@ -21,10 +21,8 @@ public class JdkProxySerializer extends Serializer<Object> {
         try {
             return Proxy.newProxyInstance(classLoader, interfaces, invocationHandler);
         } catch (final RuntimeException e) {
-            logger.error(getClass().getName() + ".read:\n" +
-                    "Could not create proxy using classLoader " + classLoader + "," +
-                    " have invocationhandler.classloader: " + invocationHandler.getClass().getClassLoader() +
-                    " have contextclassloader: " + Thread.currentThread().getContextClassLoader());
+            logger.error("{}#read: Could not create proxy using classLoader {},  have InvocationHandler.classloader: {},  have context classloader: {}",
+                    getClass().getName() , classLoader , invocationHandler.getClass().getClassLoader() ,Thread.currentThread().getContextClassLoader());
             throw e;
         }
     }

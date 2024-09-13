@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.github.bes2008.solution.agileway.jwt</groupId>
         <artifactId>agileway-jwt</artifactId>
-        <version>5.0.0</version>
+        <version>5.0.4</version>
     </parent>
 
     <artifactId>agileway-jwt-core</artifactId>
@@ -17,6 +17,11 @@
             <groupId>io.github.bes2008.solution.langx.security</groupId>
             <artifactId>langx-java-security-gm-jca-bouncycastle</artifactId>
             <version>${langx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk18on</artifactId>
+            <version>${bouncycastle-jdk18on.version}</version>
         </dependency>
 
         <!--

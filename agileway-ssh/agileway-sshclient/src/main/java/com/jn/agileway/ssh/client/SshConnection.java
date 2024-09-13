@@ -1,6 +1,5 @@
 package com.jn.agileway.ssh.client;
 
-import com.jn.agileway.ssh.client.channel.Channel;
 import com.jn.agileway.ssh.client.channel.SessionedChannel;
 import com.jn.agileway.ssh.client.channel.forwarding.ForwardingClient;
 import com.jn.agileway.ssh.client.sftp.SftpSession;

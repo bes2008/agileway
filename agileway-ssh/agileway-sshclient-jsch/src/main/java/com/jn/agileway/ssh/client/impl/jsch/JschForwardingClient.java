@@ -15,7 +15,7 @@ public class JschForwardingClient implements ForwardingClient {
 
     @Override
     public ForwardingChannelInfo startLocalForwarding(String bindToHost, int bindToPort, String destHost, int destPort) throws SshException {
-        Session session = this.connection.delegate();
+        Session session = this.connection.getSession();
         try {
             session.setPortForwardingL(bindToHost, bindToPort, destHost, destPort);
         } catch (Throwable ex) {
@@ -26,7 +26,7 @@ public class JschForwardingClient implements ForwardingClient {
 
     @Override
     public void stopLocalForwarding(ForwardingChannelInfo channel) throws SshException {
-        Session session = this.connection.delegate();
+        Session session = this.connection.getSession();
         try {
             session.delPortForwardingL(channel.getBindingHost(), channel.getBindingPort());
         } catch (Throwable ex) {
@@ -36,7 +36,7 @@ public class JschForwardingClient implements ForwardingClient {
 
     @Override
     public ForwardingChannelInfo startRemoteForwarding(String bindToHost, int bindToPort, String destHost, int destPort) throws SshException {
-        Session session = this.connection.delegate();
+        Session session = this.connection.getSession();
         try {
             session.setPortForwardingR(bindToHost, bindToPort, destHost, destPort);
         } catch (Throwable ex) {
@@ -47,7 +47,7 @@ public class JschForwardingClient implements ForwardingClient {
 
     @Override
     public void stopRemoteForwarding(ForwardingChannelInfo channel) throws SshException {
-        Session session = this.connection.delegate();
+        Session session = this.connection.getSession();
         try {
             session.delPortForwardingR(channel.getBindingHost(), channel.getBindingPort());
         } catch (Throwable ex) {

@@ -1,5 +1,6 @@
 package com.jn.agileway.codec.tests;
 
+import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.hash.HashCodeBuilder;
@@ -168,11 +169,8 @@ public class Pojo implements Serializable {
             Date lastAccessTime = getLastAccessTime();
 
             if (lastAccessTime == null) {
-                String msg = "session.lastAccessTime for session with id [" +
-                        getId() + "] is null.  This value must be set at " +
-                        "least once, preferably at least upon instantiation.  Please check the " +
-                        getClass().getName() + " implementation and ensure " +
-                        "this value will be set (perhaps in the constructor?)";
+
+                String msg = StringTemplates.formatWithPlaceholder("session.lastAccessTime for session with id [{}] is null.  This value must be set at least once, preferably at least upon instantiation.  Please check the {}  implementation and ensure this value will be set (perhaps in the constructor?)", getId(),getClass().getName());
                 throw new IllegalStateException(msg);
             }
 

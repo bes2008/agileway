@@ -2,6 +2,7 @@ package com.jn.agileway.ssh.client.impl.synergy;
 
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.AbstarctSessionedChannel;
+import com.jn.agileway.ssh.client.channel.ShellExecutor;
 import com.jn.agileway.ssh.client.utils.PTYMode;
 import com.jn.agileway.ssh.client.utils.Signal;
 import com.jn.langx.util.collection.Collects;
@@ -136,7 +137,4 @@ class SynergySessionedChannel extends AbstarctSessionedChannel {
         channel.close();
     }
 
-    @Override
-    protected void beforeAction() {
-    }
 }

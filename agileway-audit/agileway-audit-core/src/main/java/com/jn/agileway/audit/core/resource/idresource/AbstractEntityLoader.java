@@ -2,6 +2,7 @@ package com.jn.agileway.audit.core.resource.idresource;
 
 import com.jn.agileway.audit.core.AuditRequest;
 import com.jn.agileway.audit.core.model.ResourceDefinition;
+import com.jn.langx.lifecycle.Destroyable;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.Throwables;
@@ -19,7 +20,7 @@ import java.util.Vector;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
-public abstract class AbstractEntityLoader<E> implements EntityLoader<E> {
+public abstract class AbstractEntityLoader<E> implements EntityLoader<E>, Destroyable {
     private ExecutorService executor;
 
     public void setExecutor(ExecutorService executor) {
@@ -104,5 +105,8 @@ public abstract class AbstractEntityLoader<E> implements EntityLoader<E> {
      */
     protected abstract List<E> loadInternal(AuditRequest request, ResourceDefinition resourceDefinition, List<Serializable> partitionIds);
 
-
+    @Override
+    public void destroy() {
+        this.executor.shutdown();
+    }
 }

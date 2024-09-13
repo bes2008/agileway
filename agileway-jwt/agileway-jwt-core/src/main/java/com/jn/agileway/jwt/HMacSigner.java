@@ -24,7 +24,7 @@ public class HMacSigner implements Signer {
     @Override
     public void sign(JWSToken token) {
         String jwtSignAlgorithm = token.getHeader().getAlgorithm();
-        String hmacAlgorithm = Signs.JWT_TO_HMAC_ALGORITHMS.get(jwtSignAlgorithm);
+        String hmacAlgorithm = Signs.getJcaHMacAlgorithm(jwtSignAlgorithm);
         if (Strings.isEmpty(hmacAlgorithm)) {
             throw new JWTException(StringTemplates.formatWithPlaceholder("invalid jwt sign token: unsupported algorithm: {}", jwtSignAlgorithm));
         }
