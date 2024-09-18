@@ -100,8 +100,8 @@
 
         <!--commons utils-->
         <langx.version>5.4.4</langx.version>
-        <guava.version>33.2.1-jre</guava.version>
-        <commons-compress.version>1.26.1</commons-compress.version>
+        <guava.version>33.3.0-jre</guava.version>
+        <commons-compress.version>1.27.1</commons-compress.version>
         <comomons-text.version>1.12.0</comomons-text.version>
         <commons-configuration.version>1.10</commons-configuration.version>
         <commons-configuration2.version>2.11.0</commons-configuration2.version>
@@ -142,7 +142,7 @@
         -->
 
         <!-- spring boot 2.x 版本测试 -->
-        <spring5.version>5.3.37</spring5.version>
+        <spring5.version>5.3.39</spring5.version>
         <spring.boot2.version>2.7.18</spring.boot2.version>
         <knife4j.version>3.0.3</knife4j.version>
 
