@@ -1,4 +1,4 @@
-package com.jn.agileway.shell.command.def;
+package com.jn.agileway.shell.command;
 
 import org.apache.commons.cli.Options;
 
@@ -6,6 +6,8 @@ import java.lang.reflect.Method;
 
 
 public class Command {
+    private String group;
+
     private String name;
 
     private Options options;
@@ -36,4 +38,11 @@ public class Command {
         this.method = method;
     }
 
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
 }

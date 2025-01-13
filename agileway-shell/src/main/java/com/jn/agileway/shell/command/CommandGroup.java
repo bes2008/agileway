@@ -1,4 +1,4 @@
-package com.jn.agileway.shell.command.def;
+package com.jn.agileway.shell.command;
 
 import com.jn.langx.util.collection.Collects;
 
@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CommandGroup {
+    static final String DEFAULT_GROUP="DEFAULT";
     private String name;
     private final Map<String, Command> definitionMap = new LinkedHashMap<>();
 

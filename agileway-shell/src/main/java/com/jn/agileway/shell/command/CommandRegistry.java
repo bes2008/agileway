@@ -1,4 +1,4 @@
-package com.jn.agileway.shell.command.def;
+package com.jn.agileway.shell.command;
 
 import com.jn.langx.util.collection.Maps;
 import com.jn.langx.util.function.Supplier0;
@@ -11,7 +11,7 @@ public class CommandRegistry {
 
 
     public Command getCommand(String command){
-        return getCommand("DEFAULT", command);
+        return getCommand(CommandGroup.DEFAULT_GROUP, command);
     }
 
     public CommandGroup getCommandGroup(String group){
@@ -37,7 +37,16 @@ public class CommandRegistry {
     }
 
     public void addCommand(String group, Command command){
+        command.setGroup(group);
         getOrCreateCommandGroup(group).addCommand(command);
+    }
+
+    public void addCommand(Command command){
+        String group = command.getGroup();
+        if(group==null){
+            group=CommandGroup.DEFAULT_GROUP;
+        }
+        addCommand(group, command);
     }
 
 }
