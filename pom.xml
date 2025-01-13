@@ -35,6 +35,7 @@
         <module>agileway-syslog</module>
         <module>agileway-audit</module>
         <module>agileway-jwt</module>
+        <module>agileway-shell</module>
     </modules>
 
     <description>
