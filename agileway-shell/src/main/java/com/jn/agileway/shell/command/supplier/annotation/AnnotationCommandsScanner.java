@@ -5,7 +5,7 @@ import com.jn.agileway.shell.command.CommandsSupplier;
 
 import java.util.List;
 
-public class CommandScanner implements CommandsSupplier {
+public class AnnotationCommandsScanner implements CommandsSupplier {
     @Override
     public List<Command> get() {
         return null;
