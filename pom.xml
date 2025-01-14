@@ -36,7 +36,7 @@
         <module>agileway-audit</module>
         <module>agileway-jwt</module>
         <module>agileway-shell</module>
-        <module>agileway-class-scanner</module>
+        <module>agileway-resources-scanner</module>
     </modules>
 
     <description>
