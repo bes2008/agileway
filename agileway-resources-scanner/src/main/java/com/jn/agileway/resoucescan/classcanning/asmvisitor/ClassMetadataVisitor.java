@@ -1,4 +1,4 @@
-package com.jn.agileway.classcan.asmvisitor;
+package com.jn.agileway.resoucescan.classcanning.asmvisitor;
 
 import org.objectweb.asm.ClassVisitor;
 
