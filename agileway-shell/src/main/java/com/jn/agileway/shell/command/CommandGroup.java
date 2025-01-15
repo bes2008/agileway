@@ -9,6 +9,7 @@ import java.util.Map;
 public class CommandGroup {
     static final String DEFAULT_GROUP="DEFAULT";
     private String name;
+    private String desc;
     private final Map<String, Command> definitionMap = new LinkedHashMap<>();
 
     public void addCommand(Command command){
@@ -29,6 +30,14 @@ public class CommandGroup {
 
     public Command getCommand(String commandName){
         return definitionMap.get(commandName);
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
 }

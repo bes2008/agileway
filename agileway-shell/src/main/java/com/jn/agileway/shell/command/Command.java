@@ -3,12 +3,15 @@ package com.jn.agileway.shell.command;
 import org.apache.commons.cli.Options;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 
 public class Command {
     private String group;
 
     private String name;
+
+    private List<String> alias;
 
     private Options options;
 
@@ -44,5 +47,13 @@ public class Command {
 
     public void setGroup(String group) {
         this.group = group;
+    }
+
+    public List<String> getAlias() {
+        return alias;
+    }
+
+    public void setAlias(List<String> alias) {
+        this.alias = alias;
     }
 }
