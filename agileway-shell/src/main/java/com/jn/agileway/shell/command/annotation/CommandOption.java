@@ -1,4 +1,69 @@
 package com.jn.agileway.shell.command.annotation;
 
+import org.apache.commons.cli.Converter;
+
+/**
+ * example:
+ * <pre>
+ * ant [options] [target [target2 [target3] ...]]
+ * Options:
+ * -help  print this message
+ * -projecthelp  print project help information
+ * -version  print the version information and exit
+ * -quiet be extra quiet
+ * -verbose be extra verbose
+ * -debug print debugging information
+ * -emacs produce logging information without adornments
+ * -logfile file use given file for log output
+ * -logger classname the class that is to perform logging
+ * -listener classname add an instance of class as a project listener
+ * -buildfile file use specified buildfile
+ * -find file search for buildfile towards the root of the filesystem and use the first one found
+ * -Dproperty=value set property to value
+ * </pre>
+ */
 public @interface CommandOption {
+    /**
+     * 选项长名称
+     * @return string
+     */
+    String name();
+
+    /**
+     * 选项的短名
+     */
+    char shortName() default 0;
+
+    /**
+     * 选项是否必须出现在命令行上
+     */
+    boolean required() default true;
+
+    /**
+     * 选项是否有参数的
+     */
+    boolean hasArg() default false;
+
+    boolean argOptional() default false;
+
+    /**
+     * 选项值的数据类型
+     */
+    Class type() default String.class;
+
+    /**
+     * 值的类型
+     */
+    Class converter() default Converter.class;
+
+    /**
+     * 默认值
+     */
+    String defaultValue() default "";
+
+    /**
+     *
+     */
+    char valueSeparator() default ',';
+
 }
