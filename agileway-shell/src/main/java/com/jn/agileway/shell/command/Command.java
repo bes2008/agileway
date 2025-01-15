@@ -5,7 +5,6 @@ import org.apache.commons.cli.Options;
 import java.lang.reflect.Method;
 import java.util.List;
 
-
 public class Command {
     private String group;
 

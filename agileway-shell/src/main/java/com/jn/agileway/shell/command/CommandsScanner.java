@@ -1,6 +1,5 @@
 package com.jn.agileway.shell.command;
 
-import com.jn.agileway.shell.command.annotation.CommandOption;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Strings;
@@ -42,7 +41,7 @@ public class CommandsScanner  {
 
         for (int i = 0; i < commandClassInfoList.size(); i++) {
             ClassInfo classInfo = commandClassInfoList.get(i);
-
+            CommandGroup commandGroup = resolveCommandClass(classInfo);
         }
 
         return null;
@@ -59,7 +58,8 @@ public class CommandsScanner  {
             if(!methodInfo.hasAnnotation(com.jn.agileway.shell.command.annotation.Command.class)){
                 continue;
             }
-
+            Command command = createCommand(methodInfo);
+            commandGroup.addCommand(command);
         }
         return commandGroup;
     }
@@ -125,8 +125,8 @@ public class CommandsScanner  {
         return command;
     }
 
-    private Option createOption(MethodParameterInfo methodParameterInfo, Method method, int parameterIndex){
-        AnnotationInfo annotationInfo = methodParameterInfo.getAnnotationInfo(CommandOption.class);
+    private CommandOption createOption(MethodParameterInfo methodParameterInfo, Method method, int parameterIndex){
+        AnnotationInfo annotationInfo = methodParameterInfo.getAnnotationInfo(com.jn.agileway.shell.command.annotation.CommandOption.class);
 
         @Nullable
         String optionName=null;
@@ -151,10 +151,8 @@ public class CommandsScanner  {
 
         }
 
-
-
         try {
-            Option option = new Option(optionName, longOptionName, hasArg, desc);
+            CommandOption option = new CommandOption(optionName, longOptionName, hasArg, desc);
             option.setOptionalArg(argOptional);
             option.setArgName(argName);
             option.setRequired(required);
