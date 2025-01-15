@@ -27,12 +27,12 @@ public @interface CommandOption {
      * 选项长名称
      * @return string
      */
-    String name();
+    String name() default "";
 
     /**
      * 选项的短名
      */
-    char shortName() default 0;
+    String longName() default "";
 
     /**
      * 选项是否必须出现在命令行上
@@ -40,9 +40,14 @@ public @interface CommandOption {
     boolean required() default true;
 
     /**
-     * 选项是否有参数的
+     * 选项是否有一个参数的
      */
-    boolean hasArg() default false;
+    boolean hasArg() default true;
+
+    boolean multiple() default false;
+
+    String argName() default "";
+
 
     boolean argOptional() default false;
 
@@ -61,9 +66,13 @@ public @interface CommandOption {
      */
     String defaultValue() default "";
 
+    String[] defaultValues() default {};
+
     /**
      *
      */
     char valueSeparator() default ',';
+
+    String desc() default "";
 
 }

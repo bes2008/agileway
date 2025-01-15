@@ -15,6 +15,9 @@ public class Command {
 
     private Options options;
 
+    private String desc;
+
+
     private Method method;
 
     public String getName() {
@@ -55,5 +58,13 @@ public class Command {
 
     public void setAlias(List<String> alias) {
         this.alias = alias;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }
