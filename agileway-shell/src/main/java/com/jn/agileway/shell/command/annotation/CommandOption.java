@@ -1,7 +1,7 @@
 package com.jn.agileway.shell.command.annotation;
 
+import com.jn.agileway.shell.command.DefaultConverter;
 import com.jn.langx.annotation.Nullable;
-import org.apache.commons.cli.Converter;
 
 /**
  * example:
@@ -64,7 +64,7 @@ public @interface CommandOption {
     /**
      * 值的类型
      */
-    Class converter() default Converter.class;
+    Class converter() default DefaultConverter.class;
 
     /**
      * 默认值

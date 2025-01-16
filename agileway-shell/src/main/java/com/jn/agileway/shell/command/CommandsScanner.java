@@ -5,12 +5,18 @@ import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Lists;
+import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.function.Function;
+import com.jn.langx.util.reflect.Reflects;
 import io.github.classgraph.*;
 import org.apache.commons.cli.Converter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.lang.reflect.ParameterizedType;
+import java.util.Collection;
 import java.util.List;
 
 public class CommandsScanner  {
@@ -138,12 +144,9 @@ public class CommandsScanner  {
         @Nullable
         String argName = null;
         boolean argOptional = false;
-        Class type = String.class;
-        Class converterClass= Converter.class;
-        // arg1 的 默认值
-        String defaultValue = "";
-        // argN 时的默认值
-        String[] defaultValues = new String[0];
+        Class elementType = String.class;
+        Class converterClass = DefaultConverter.class;
+        String defaultValueString = "";
         char valueSeparator = ',';
         @NonNull
         String desc = "";
@@ -160,12 +163,58 @@ public class CommandsScanner  {
             hasArgN=(boolean)parameterValueList.getValue("hasArgs");
             argName=(String)parameterValueList.getValue("argName");
             argOptional=(boolean)parameterValueList.getValue("argOptional");
-            type=(Class)parameterValueList.getValue("type");
+            elementType=(Class)parameterValueList.getValue("type");
             converterClass = (Class) parameterValueList.getValue("converter");
-            defaultValue=(String) parameterValueList.getValue("defaultValue");
+            defaultValueString=(String) parameterValueList.getValue("defaultValue");
+            valueSeparator = (char)parameterValueList.getValue("valueSeparator");
             desc = (String)parameterValueList.getValue("desc");
         }else{
+            optionName = methodParameterInfo.getName();
+            if(methodParameterInfo.getAnnotationInfo(Nullable.class)==null){
+                required = false;
+                argOptional=true;
+            }
+            Parameter parameter = method.getParameters()[parameterIndex];
+            Class parameterClass = parameter.getType();
+            if(parameterClass.isArray() || Reflects.isSubClassOrEquals(Collection.class, parameterClass)){
+                hasArgN=true;
+                if(parameterClass.isArray()){
+                    elementType = parameterClass.getComponentType();
+                }else{
+                    ParameterizedType parameterizedType =(ParameterizedType)parameter.getParameterizedType();
+                    elementType = (Class)parameterizedType.getActualTypeArguments()[0];
+                }
+            }else {
+                elementType = parameterClass;
+            }
+            argName = parameter.getName();
+        }
 
+        final Converter converter = converterClass==null? new DefaultConverter(elementType) : Reflects.<Converter>newInstance(converterClass);
+        List<Object> defaultValues = null;
+        if(hasArgN){
+            if(defaultValueString!=null){
+
+                    String[] values = Strings.split(defaultValueString, valueSeparator + "");
+                    defaultValues = Pipeline.of(values).map(new Function<String, Object>() {
+                        @Override
+                        public Object apply(String value) {
+                            try {
+                                return converter.apply(value);
+                            }catch (Throwable e){
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }).asList();
+
+            }
+        }else  if(hasArg1 && defaultValueString!=null){
+            try {
+                Object defaultValue = converter.apply(defaultValueString);
+                defaultValues=Lists.newArrayList(defaultValue);
+            }catch (Throwable e){
+                throw new RuntimeException(e);
+            }
         }
 
         try {
@@ -173,12 +222,15 @@ public class CommandsScanner  {
             option.setOptionalArg(argOptional);
             option.setArgName(argName);
             option.setRequired(required);
-            option.setArgs(hasArgN?Option.UNLIMITED_VALUES:(hasArg1?1:0));
-            option.setType(type);
-
-            if(hasArgN){
-
+            if(hasArgN) {
+                option.setArgs( Option.UNLIMITED_VALUES );
             }
+            option.setType(elementType);
+            option.setConverter(converter);
+            if(hasArgN || hasArg1){
+                option.setDefaultValues(defaultValues);
+            }
+            option.setDefaultValue(valueSeparator);
             return option;
         }catch (Throwable e){
             throw new RuntimeException(e);
