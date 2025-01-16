@@ -22,7 +22,7 @@ import java.util.List;
 public class CommandsScanner  {
 
     public List<CommandGroup> scan(CommandsScanConfig scanConfig) {
-        ScanResult scanResult=new ClassGraph()
+        ScanResult scanResult = new ClassGraph()
                 .enableClassInfo()
                 .enableMethodInfo()
                 .enableAnnotationInfo()
@@ -146,7 +146,7 @@ public class CommandsScanner  {
         @Nullable
         String argName = null;
         boolean argOptional = false;
-        Class elementType = String.class;
+        Class elementType;
         Class converterClass = DefaultConverter.class;
         String defaultValueString = "";
         char valueSeparator = ',';
