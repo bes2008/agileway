@@ -1,9 +1,12 @@
 package com.jn.agileway.shell.command;
 
+import com.jn.langx.util.collection.Lists;
 import org.apache.commons.cli.Option;
 
+import java.util.List;
+
 public class CommandOption extends Option {
-    private Object defaultValue;
+    private List<Object> defaultValues;
 
     public CommandOption(String option, String longOption, boolean hasArg, String description) throws IllegalArgumentException {
         super(option, longOption, hasArg, description);
@@ -15,11 +18,20 @@ public class CommandOption extends Option {
         return result;
     }
 
-    public Object getDefaultValue() {
-        return defaultValue;
+
+    public void setDefaultValue(Object defaultValue){
+        setDefaultValues(Lists.newArrayList(defaultValue));
     }
 
-    public void setDefaultValue(Object defaultValue) {
-        this.defaultValue = defaultValue;
+    public Object getDefaultValue(){
+        return defaultValues==null? null: defaultValues.get(0);
+    }
+
+    public List<Object> getDefaultValues() {
+        return defaultValues;
+    }
+
+    public void setDefaultValues(List<Object> defaultValues) {
+        this.defaultValues = defaultValues;
     }
 }

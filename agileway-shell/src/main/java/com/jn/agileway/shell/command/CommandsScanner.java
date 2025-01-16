@@ -131,35 +131,52 @@ public class CommandsScanner  {
         @Nullable
         String optionName=null;
         String longOptionName=null;
+
         boolean required = true;
-        boolean hasArg = true;
-        boolean hasArgs = false;
+        boolean hasArg1 = true;
+        boolean hasArgN = false;
         @Nullable
         String argName = null;
         boolean argOptional = false;
         Class type = String.class;
         Class converterClass= Converter.class;
+        // arg1 的 默认值
         String defaultValue = "";
+        // argN 时的默认值
         String[] defaultValues = new String[0];
         char valueSeparator = ',';
         @NonNull
         String desc = "";
 
-        if(annotationInfo!=null){
-
+        AnnotationParameterValueList parameterValueList = null;
+        if(annotationInfo!=null) {
+            parameterValueList = annotationInfo.getParameterValues(true);
+        }
+        if(parameterValueList != null){
+            optionName = (String)parameterValueList.getValue("name");
+            longOptionName = (String) parameterValueList.getValue("longName");
+            required = (boolean)parameterValueList.getValue("required");
+            hasArg1 = (boolean)parameterValueList.getValue("hasArg");
+            hasArgN=(boolean)parameterValueList.getValue("hasArgs");
+            argName=(String)parameterValueList.getValue("argName");
+            argOptional=(boolean)parameterValueList.getValue("argOptional");
+            type=(Class)parameterValueList.getValue("type");
+            converterClass = (Class) parameterValueList.getValue("converter");
+            defaultValue=(String) parameterValueList.getValue("defaultValue");
+            desc = (String)parameterValueList.getValue("desc");
         }else{
 
         }
 
         try {
-            CommandOption option = new CommandOption(optionName, longOptionName, hasArg, desc);
+            CommandOption option = new CommandOption(optionName, longOptionName, hasArg1, desc);
             option.setOptionalArg(argOptional);
             option.setArgName(argName);
             option.setRequired(required);
-            option.setArgs(hasArgs?Option.UNLIMITED_VALUES:(hasArg?1:0));
+            option.setArgs(hasArgN?Option.UNLIMITED_VALUES:(hasArg1?1:0));
             option.setType(type);
 
-            if(hasArgs){
+            if(hasArgN){
 
             }
             return option;

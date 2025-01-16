@@ -1,5 +1,6 @@
 package com.jn.agileway.shell.command.annotation;
 
+import com.jn.langx.annotation.Nullable;
 import org.apache.commons.cli.Converter;
 
 /**
@@ -44,8 +45,12 @@ public @interface CommandOption {
      */
     boolean hasArg() default true;
 
-    boolean multiple() default false;
+    /**
+     * 选项是否支持多个参数，或者可理解为该选项在命令行字符串上是否可以出现多次。
+     */
+    boolean hasArgs() default false;
 
+    @Nullable
     String argName() default "";
 
 
@@ -65,8 +70,6 @@ public @interface CommandOption {
      * 默认值
      */
     String defaultValue() default "";
-
-    String[] defaultValues() default {};
 
     /**
      *
