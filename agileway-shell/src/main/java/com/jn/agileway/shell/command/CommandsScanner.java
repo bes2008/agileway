@@ -21,7 +21,7 @@ import java.util.List;
 
 public class CommandsScanner  {
 
-    public List<Command> scan(CommandsScanConfig scanConfig) {
+    public List<CommandGroup> scan(CommandsScanConfig scanConfig) {
         ScanResult scanResult=new ClassGraph()
                 .enableClassInfo()
                 .enableMethodInfo()
@@ -45,12 +45,14 @@ public class CommandsScanner  {
             }
         });
 
+        List<CommandGroup> commandGroups = Lists.newArrayList();
         for (int i = 0; i < commandClassInfoList.size(); i++) {
             ClassInfo classInfo = commandClassInfoList.get(i);
             CommandGroup commandGroup = resolveCommandClass(classInfo);
+            commandGroups.add(commandGroup);
         }
 
-        return null;
+        return commandGroups;
     }
 
     private CommandGroup resolveCommandClass(ClassInfo classInfo){
@@ -135,7 +137,7 @@ public class CommandsScanner  {
         AnnotationInfo annotationInfo = methodParameterInfo.getAnnotationInfo(com.jn.agileway.shell.command.annotation.CommandOption.class);
 
         @Nullable
-        String optionName=null;
+        String optionName;
         String longOptionName=null;
 
         boolean required = true;
