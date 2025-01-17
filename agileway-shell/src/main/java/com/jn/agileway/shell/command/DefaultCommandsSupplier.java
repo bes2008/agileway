@@ -157,7 +157,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         String[] alias=null;
         String desc =null;
         if (parameterValueList!=null){
-            name = (String)parameterValueList.getValue("name");
+            name = (String)parameterValueList.getValue("value");
             alias = (String[]) parameterValueList.getValue("alias");
             desc = (String)parameterValueList.getValue("desc");
         }

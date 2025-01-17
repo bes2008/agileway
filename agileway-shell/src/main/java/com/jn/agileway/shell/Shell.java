@@ -65,6 +65,10 @@ public class Shell extends AbstractLifecycle {
     public void start(String[] args){
         this.args = new ApplicationArgs(args);
         startup();
+        run();
+    }
+    private void run(){
+        System.out.println(this.args.getRaw());
     }
 
     @Override
