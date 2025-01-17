@@ -1,4 +1,4 @@
-package com.jn.agileway.shell.exec;
+package com.jn.agileway.shell;
 
 import com.jn.agileway.shell.command.CommandRegistry;
 import com.jn.agileway.shell.factory.CommandComponentFactory;
