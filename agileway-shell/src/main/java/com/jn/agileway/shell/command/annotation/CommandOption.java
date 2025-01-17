@@ -25,13 +25,13 @@ import com.jn.langx.annotation.Nullable;
  */
 public @interface CommandOption {
     /**
-     * 选项长名称
+     * 选项短名称
      * @return string
      */
     String value() default "";
 
     /**
-     * 选项的短名
+     * 选项的长名
      */
     String longName() default "";
 
