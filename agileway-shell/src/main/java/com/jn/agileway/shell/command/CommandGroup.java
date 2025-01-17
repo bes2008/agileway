@@ -3,6 +3,7 @@ package com.jn.agileway.shell.command;
 
 public class CommandGroup {
     public static final String DEFAULT_GROUP="DEFAULT";
+    public static final String DEFAULT_GROUP_DESC="agile shell builtin commands";
     private String name;
     private String desc;
 

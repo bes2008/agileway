@@ -72,7 +72,7 @@ public @interface CommandOption {
     String defaultValue() default "";
 
     /**
-     *
+     * 值分隔符
      */
     char valueSeparator() default ',';
 

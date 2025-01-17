@@ -99,6 +99,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
     }
 
     private Pair<CommandGroup, List<Command>> resolveCommandClass(ClassInfo classInfo){
+        classInfo.getPackageInfo();
         CommandGroup commandGroup = createCommandGroup(classInfo);
         MethodInfoList methodInfoList = classInfo.getDeclaredMethodInfo();
         List<Command> commands = Lists.newArrayList();
@@ -118,11 +119,19 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         return result;
     }
 
+    /**
+     * 创建 commandGroup, 优先使用 class上的 @ComponentGroup，如果没有就使用 package上的 @ComponentGroup
+     * @param classInfo class info
+     * @return command group
+     */
     private CommandGroup createCommandGroup(ClassInfo classInfo){
         CommandGroup group = new CommandGroup();
         AnnotationInfo annotationInfo = classInfo.getAnnotationInfo(com.jn.agileway.shell.command.annotation.CommandGroup.class);
         String groupName= null;
         String desc = "";
+        if(annotationInfo==null){
+            annotationInfo = classInfo.getPackageInfo().getAnnotationInfo(com.jn.agileway.shell.command.annotation.CommandGroup.class);
+        }
         if(annotationInfo!=null){
             AnnotationParameterValueList parameterValueList = annotationInfo.getParameterValues(true);
             groupName= (String) parameterValueList.getValue("value");
