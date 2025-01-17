@@ -1,6 +1,8 @@
 package com.jn.agileway.shell;
 
 import com.jn.agileway.shell.command.CommandRegistry;
+import com.jn.agileway.shell.command.CommandsSupplier;
+import com.jn.agileway.shell.command.DefaultCommandsSupplier;
 import com.jn.agileway.shell.factory.CommandComponentFactory;
 import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
 import com.jn.agileway.shell.factory.ReflectiveCommandComponentFactory;
@@ -27,6 +29,8 @@ public class ShellBuilder implements Builder<Shell> {
 
     private List<PropertySet> propertySets = Lists.<PropertySet>newArrayList();
 
+    private final List<CommandsSupplier> commandsSuppliers = Lists.newArrayList(new DefaultCommandsSupplier());
+
     public ShellBuilder with(CommandComponentFactory factory){
         if(factory!=null) {
             commandComponentFactories.add(factory);
@@ -42,6 +46,13 @@ public class ShellBuilder implements Builder<Shell> {
     public ShellBuilder withPropertySet(PropertySet propertySet){
         if(propertySet!=null){
             propertySets.add(propertySet);
+        }
+        return this;
+    }
+
+    public ShellBuilder withCommandsSupplier(CommandsSupplier commandsSupplier){
+        if(commandsSupplier!=null){
+            this.commandsSuppliers.add(commandsSupplier);
         }
         return this;
     }
@@ -73,6 +84,7 @@ public class ShellBuilder implements Builder<Shell> {
         invokerFactories.add(new ReflectiveCommandComponentFactory());
         shell.componentFactory = new CompoundCommandComponentFactory(invokerFactories);
 
+        shell.commandsSuppliers = commandsSuppliers;
 
         return shell;
     }
