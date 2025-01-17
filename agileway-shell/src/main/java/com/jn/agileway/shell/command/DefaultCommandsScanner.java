@@ -8,6 +8,7 @@ import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.reflect.Reflects;
+import com.jn.langx.util.struct.Pair;
 import io.github.classgraph.*;
 import org.apache.commons.cli.Converter;
 import org.apache.commons.cli.Option;
@@ -17,11 +18,22 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class CommandsScanner  {
+public class DefaultCommandsScanner implements CommandSupplier {
+    private CommandsScanConfig scanConfig;
+    public DefaultCommandsScanner(CommandsScanConfig commandsScanConfig){
+        this.scanConfig =commandsScanConfig;
+    }
 
-    public List<CommandGroup> scan(CommandsScanConfig scanConfig) {
+    @Override
+    public Map<CommandGroup, List<Command>> get() {
+        return scan();
+    }
+
+    private Map<CommandGroup, List<Command>> scan() {
         ScanResult scanResult = new ClassGraph()
                 .enableClassInfo()
                 .enableMethodInfo()
@@ -45,19 +57,22 @@ public class CommandsScanner  {
             }
         });
 
-        List<CommandGroup> commandGroups = Lists.newArrayList();
+        Map<CommandGroup, List<Command>> result = new HashMap<>();
         for (int i = 0; i < commandClassInfoList.size(); i++) {
             ClassInfo classInfo = commandClassInfoList.get(i);
-            CommandGroup commandGroup = resolveCommandClass(classInfo);
-            commandGroups.add(commandGroup);
+            Pair<CommandGroup, List<Command>> groupCommandsEntry = resolveCommandClass(classInfo);
+            result.put(groupCommandsEntry.getKey(), groupCommandsEntry.getValue());
         }
 
-        return commandGroups;
+        return result;
     }
 
-    private CommandGroup resolveCommandClass(ClassInfo classInfo){
+    private Pair<CommandGroup, List<Command>> resolveCommandClass(ClassInfo classInfo){
         CommandGroup commandGroup = createCommandGroup(classInfo);
         MethodInfoList methodInfoList = classInfo.getDeclaredMethodInfo();
+        List<Command> commands = Lists.newArrayList();
+
+        Pair<CommandGroup, List<Command>> result = new Pair<>(commandGroup, commands);
         for (int i = 0; i < methodInfoList.size(); i++) {
             MethodInfo methodInfo = methodInfoList.get(i);
             if(!methodInfo.isPublic() || methodInfo.isAbstract() || methodInfo.isConstructor() || methodInfo.isNative() || methodInfo.isStatic()){
@@ -67,9 +82,9 @@ public class CommandsScanner  {
                 continue;
             }
             Command command = createCommand(methodInfo);
-            commandGroup.addCommand(command);
+            commands.add(command);
         }
-        return commandGroup;
+        return result;
     }
 
     private CommandGroup createCommandGroup(ClassInfo classInfo){
