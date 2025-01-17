@@ -2,6 +2,8 @@ package com.jn.agileway.shell.command;
 
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.environment.Environment;
+import com.jn.langx.util.Booleans;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Lists;
@@ -22,18 +24,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DefaultCommandsScanner implements CommandSupplier {
-    private CommandsScanConfig scanConfig;
-    public DefaultCommandsScanner(CommandsScanConfig commandsScanConfig){
-        this.scanConfig =commandsScanConfig;
+public class DefaultCommandsSupplier implements CommandsSupplier {
+    private static final String SCANNER_ENABLED_PROP = "agileway.shell.scanner.default.enabled";
+    private static final String SCANNER_PACKAGES_PROP = "agileway.shell.scanner.default.packages";
+    public CommandsScanConfig buildScanConfig(Environment env) {
+        boolean defaultScannerEnabled = Booleans.truth( env.getProperty(SCANNER_ENABLED_PROP, "true"));
+        String scanPackages = env.getProperty(SCANNER_PACKAGES_PROP);
+        CommandsScanConfig commandsScanConfig = new CommandsScanConfig();
+        commandsScanConfig.setEnabled(defaultScannerEnabled);
+        commandsScanConfig.setPackages(Pipeline.of(Strings.split(scanPackages,",")).asList());
+        return commandsScanConfig;
     }
-
     @Override
-    public Map<CommandGroup, List<Command>> get() {
-        return scan();
+    public Map<CommandGroup, List<Command>> get(Environment env) {
+        return scan(buildScanConfig(env));
     }
 
-    private Map<CommandGroup, List<Command>> scan() {
+    private Map<CommandGroup, List<Command>> scan(CommandsScanConfig scanConfig) {
         ScanResult scanResult = new ClassGraph()
                 .enableClassInfo()
                 .enableMethodInfo()

@@ -1,7 +1,7 @@
 package com.jn.agileway.shell;
 
 import com.jn.agileway.shell.command.CommandRegistry;
-import com.jn.agileway.shell.command.CommandSupplier;
+import com.jn.agileway.shell.command.CommandsSupplier;
 import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
 import com.jn.langx.environment.Environment;
 import org.apache.commons.cli.CommandLineParser;
@@ -13,7 +13,7 @@ public class Shell {
     protected CompoundCommandComponentFactory componentFactory;
     protected CommandLineParser commandLineParser;
 
-    protected List<CommandSupplier> commandSuppliers;
+    protected List<CommandsSupplier> commandSuppliers;
     protected Environment environment;
 
     Shell(){
