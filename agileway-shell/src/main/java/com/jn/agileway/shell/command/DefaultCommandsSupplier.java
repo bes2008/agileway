@@ -4,11 +4,14 @@ import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.environment.Environment;
 import com.jn.langx.util.Booleans;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
+import com.jn.langx.util.function.Predicate2;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.struct.Pair;
 import io.github.classgraph.*;
@@ -25,14 +28,29 @@ import java.util.List;
 import java.util.Map;
 
 public class DefaultCommandsSupplier implements CommandsSupplier {
-    private static final String SCANNER_ENABLED_PROP = "agileway.shell.scanner.default.enabled";
-    private static final String SCANNER_PACKAGES_PROP = "agileway.shell.scanner.default.packages";
+    private static final String SCAN_ENABLED_PROP = "agileway.shell.scan.default.enabled";
+    private static final String SCAN_PACKAGES_PROP = "agileway.shell.scan.default.packages";
+
+    private static final String SCAN_BUILTIN_PACKAGES = "agileway.shell.scan.default.builtin.enabled";
+
     public CommandsScanConfig buildScanConfig(Environment env) {
-        boolean defaultScannerEnabled = Booleans.truth( env.getProperty(SCANNER_ENABLED_PROP, "true"));
-        String scanPackages = env.getProperty(SCANNER_PACKAGES_PROP);
+        boolean defaultScannerEnabled = Booleans.truth( env.getProperty(SCAN_ENABLED_PROP, "true"));
+        String scanPackages = env.getProperty(SCAN_PACKAGES_PROP);
+        boolean scanBuiltinPackage = Booleans.truth(env.getProperty(SCAN_BUILTIN_PACKAGES, "true"));
         CommandsScanConfig commandsScanConfig = new CommandsScanConfig();
         commandsScanConfig.setEnabled(defaultScannerEnabled);
-        commandsScanConfig.setPackages(Pipeline.of(Strings.split(scanPackages,",")).asList());
+        commandsScanConfig.setBuiltinPackagesEnabled(scanBuiltinPackage);
+        List<String> scanPackageList = Pipeline.of(Strings.split(scanPackages,",")).addIf("com.jn.agileway.shell.builtincmd", new Predicate2<Collection<String>, String>() {
+            @Override
+            public boolean test(Collection<String> packages, String string) {
+                return scanBuiltinPackage;
+            }
+        }).distinct().asList();
+
+        if(defaultScannerEnabled && Objs.isEmpty(scanPackageList)){
+            Loggers.getLogger(DefaultCommandsSupplier.class).warn("property is empty: {}", SCAN_PACKAGES_PROP);
+        }
+        commandsScanConfig.setPackages(scanPackageList);
         return commandsScanConfig;
     }
     @Override
@@ -41,13 +59,19 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
     }
 
     private Map<CommandGroup, List<Command>> scan(CommandsScanConfig scanConfig) {
+        Map<CommandGroup, List<Command>> result = new HashMap<>();
+
+        if(!scanConfig.isEnabled() || Objs.isEmpty(scanConfig.getPackages())){
+            return result;
+        }
+
         ScanResult scanResult = new ClassGraph()
                 .enableClassInfo()
                 .enableMethodInfo()
                 .enableAnnotationInfo()
                 .addClassLoader(this.getClass().getClassLoader())
                 .acceptPackages(Collects.toArray(scanConfig.getPackages(), String[].class)).scan();
-        ClassInfoList commandClassInfoList = scanResult.getClassesWithAnnotation(com.jn.agileway.shell.command.annotation.Command.class);
+        ClassInfoList commandClassInfoList = scanResult.getClassesWithAnnotation(com.jn.agileway.shell.command.annotation.CommandComponent.class);
         commandClassInfoList = commandClassInfoList.filter(new ClassInfoList.ClassInfoFilter() {
             @Override
             public boolean accept(ClassInfo classInfo) {
@@ -56,7 +80,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
                         || classInfo.isPrivate() || classInfo.isProtected()
                         || classInfo.isInnerClass()
                         || classInfo.isStatic()
-                        || classInfo.isStandardClass()
+                        || !classInfo.isStandardClass()
                 ) {
                     return false;
                 }
@@ -64,7 +88,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             }
         });
 
-        Map<CommandGroup, List<Command>> result = new HashMap<>();
+
         for (int i = 0; i < commandClassInfoList.size(); i++) {
             ClassInfo classInfo = commandClassInfoList.get(i);
             Pair<CommandGroup, List<Command>> groupCommandsEntry = resolveCommandClass(classInfo);
@@ -180,15 +204,15 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             parameterValueList = annotationInfo.getParameterValues(true);
         }
         if(parameterValueList != null){
-            optionName = (String)parameterValueList.getValue("name");
+            optionName = (String)parameterValueList.getValue("value");
             longOptionName = (String) parameterValueList.getValue("longName");
             required = (boolean)parameterValueList.getValue("required");
             hasArg1 = (boolean)parameterValueList.getValue("hasArg");
             hasArgN=(boolean)parameterValueList.getValue("hasArgs");
             argName=(String)parameterValueList.getValue("argName");
             argOptional=(boolean)parameterValueList.getValue("argOptional");
-            elementType=(Class)parameterValueList.getValue("type");
-            converterClass = (Class) parameterValueList.getValue("converter");
+            elementType=((AnnotationClassRef)parameterValueList.getValue("type")).loadClass();
+            converterClass = ((AnnotationClassRef)parameterValueList.getValue("converter")).loadClass();
             defaultValueString=(String) parameterValueList.getValue("defaultValue");
             valueSeparator = (char)parameterValueList.getValue("valueSeparator");
             desc = (String)parameterValueList.getValue("desc");
@@ -214,7 +238,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             argName = parameter.getName();
         }
 
-        final Converter converter = converterClass==null? new DefaultConverter(elementType) : Reflects.<Converter>newInstance(converterClass);
+        final Converter converter = (converterClass==null || converterClass==DefaultConverter.class )? new DefaultConverter(elementType) : Reflects.<Converter>newInstance(converterClass);
         List<Object> defaultValues = null;
         if(hasArgN){
             if(defaultValueString!=null){
@@ -239,6 +263,10 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             }catch (Throwable e){
                 throw new RuntimeException(e);
             }
+        }
+
+        if(Strings.isBlank(desc)){
+            desc = Objs.useValueIfEmpty(longOptionName, optionName);
         }
 
         try {

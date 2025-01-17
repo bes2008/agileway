@@ -46,7 +46,8 @@ public class DefaultConverter<T> implements Converter<T, IllegalArgumentExceptio
     public DefaultConverter(Class targetType){
         Preconditions.checkNotEmpty(targetType);
         this.targetType = targetType;
-        if(null==converterService.findConverter(String.class,targetType)){
+
+        if(targetType!=String.class && null==converterService.findConverter(String.class,targetType)){
             throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("illegal type: {}", targetType));
         }
     }
@@ -54,6 +55,9 @@ public class DefaultConverter<T> implements Converter<T, IllegalArgumentExceptio
     @Override
     public T apply(String string) throws IllegalArgumentException {
         Preconditions.checkArgument(string != null);
+        if(this.targetType==String.class){
+            return (T)string;
+        }
         com.jn.langx.Converter langxConverter = converterService.findConverter(String.class,targetType);
         try {
             return (T)langxConverter.apply(string);

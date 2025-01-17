@@ -1,16 +1,15 @@
 package com.jn.agileway.shell.builtincmd;
 
 import com.jn.agileway.shell.command.annotation.Command;
-import com.jn.agileway.shell.command.annotation.CommandGroup;
+import com.jn.agileway.shell.command.annotation.CommandComponent;
 import com.jn.agileway.shell.command.annotation.CommandOption;
 import com.jn.langx.util.Strings;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.jn.agileway.shell.command.CommandGroup.DEFAULT_GROUP;
+@CommandComponent
 
-@CommandGroup(DEFAULT_GROUP)
 public class EnvCommand {
     @Command("env-variables")
     public Map<String, String> environmentVariables(
