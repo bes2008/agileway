@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CommandGroup {
-    static final String DEFAULT_GROUP="DEFAULT";
+    public static final String DEFAULT_GROUP="DEFAULT";
     private String name;
     private String desc;
     private final Map<String, Command> definitionMap = new LinkedHashMap<>();

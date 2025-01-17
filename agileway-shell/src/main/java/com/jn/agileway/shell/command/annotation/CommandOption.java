@@ -28,7 +28,7 @@ public @interface CommandOption {
      * 选项长名称
      * @return string
      */
-    String name() default "";
+    String value() default "";
 
     /**
      * 选项的短名
