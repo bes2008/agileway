@@ -1,32 +1,35 @@
 package com.jn.agileway.shell.exec;
 
 import com.jn.agileway.shell.command.CommandRegistry;
-import com.jn.agileway.shell.factory.CommandInvokerFactory;
+import com.jn.agileway.shell.factory.CommandComponentFactory;
+import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
+import com.jn.agileway.shell.factory.ReflectiveCommandComponentFactory;
 import com.jn.langx.Builder;
 import com.jn.langx.annotation.Nullable;
-import com.jn.langx.environment.Environment;
 import com.jn.langx.environment.MultiplePropertySetEnvironment;
 import com.jn.langx.propertyset.EnvironmentVariablesPropertySource;
 import com.jn.langx.propertyset.PropertySet;
 import com.jn.langx.propertyset.SystemPropertiesPropertySource;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Lists;
-import com.jn.langx.util.function.Supplier;
+import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.function.Predicate;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 
 import java.util.List;
 
 public class ShellBuilder implements Builder<Shell> {
-    private List<CommandInvokerFactory> commandInvokerFactories = Lists.newArrayList();
+    private List<CommandComponentFactory> commandComponentFactories = Lists.newArrayList();
     @Nullable
     private CommandLineParser commandLineParser;
 
     private List<PropertySet> propertySets = Lists.<PropertySet>newArrayList();
 
-    public ShellBuilder with(CommandInvokerFactory factory){
+    public ShellBuilder with(CommandComponentFactory factory){
         if(factory!=null) {
-            commandInvokerFactories.add(factory);
+            commandComponentFactories.add(factory);
         }
         return this;
     }
@@ -54,6 +57,23 @@ public class ShellBuilder implements Builder<Shell> {
         propertySets.add(new EnvironmentVariablesPropertySource());
         shell.environment = new MultiplePropertySetEnvironment("agileway-shell", propertySets);
 
-        return null;
+
+        final List<CommandComponentFactory> invokerFactories = Lists.newArrayList();
+        Pipeline.of(commandComponentFactories).forEach(new Predicate<CommandComponentFactory>() {
+            @Override
+            public boolean test(CommandComponentFactory factory) {
+                return factory instanceof ReflectiveCommandComponentFactory;
+            }
+        }, new Consumer<CommandComponentFactory>() {
+            @Override
+            public void accept(CommandComponentFactory factory) {
+                invokerFactories.add(factory);
+            }
+        });
+        invokerFactories.add(new ReflectiveCommandComponentFactory());
+        shell.componentFactory = new CompoundCommandComponentFactory(invokerFactories);
+
+
+        return shell;
     }
 }

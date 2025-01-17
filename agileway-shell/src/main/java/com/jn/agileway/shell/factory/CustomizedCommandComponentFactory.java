@@ -6,7 +6,7 @@ import com.jn.langx.util.reflect.Reflects;
 
 import java.util.Map;
 
-public class CustomizedCommandInvokerFactory implements CommandInvokerFactory{
+public class CustomizedCommandComponentFactory implements CommandComponentFactory {
     private Map<Class, Object> invokers = Maps.<Class, Object>newHashMap();
 
     public void addInvoker(Object invoker){
