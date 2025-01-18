@@ -1,11 +1,10 @@
 package com.jn.agileway.shell;
 
-import com.jn.agileway.shell.command.Command;
-import com.jn.agileway.shell.command.CommandGroup;
-import com.jn.agileway.shell.command.CommandRegistry;
-import com.jn.agileway.shell.command.CommandsSupplier;
+import com.jn.agileway.shell.command.*;
 import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.agileway.shell.exception.NotFoundCommandException;
+import com.jn.agileway.shell.exec.CmdExecContext;
+import com.jn.agileway.shell.exec.DefaultCommandLineExecutor;
 import com.jn.agileway.shell.result.CmdExecResult;
 import com.jn.agileway.shell.exec.Cmdline;
 import com.jn.agileway.shell.exec.CommandLineExecutor;
@@ -17,6 +16,7 @@ import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.converter.ConverterService;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate2;
 import org.apache.commons.cli.CommandLine;
@@ -47,20 +47,21 @@ public class Shell extends AbstractLifecycle {
      */
     protected boolean stopParseAtNonDefinedOption = true;
 
+
     /**
      * 命令执行相关
      */
     @NonNull
-    protected CompoundCommandComponentFactory componentFactory;
-
-    protected CommandLineExecutor commandlineExecutor;
+    protected CompoundCommandComponentFactory commandComponentFactory;
+    private CmdExecContext cmdExecContext;
+    protected final CommandLineExecutor commandlineExecutor = new DefaultCommandLineExecutor();
 
     @NonNull
     protected Environment environment;
 
     private ApplicationArgs args;
 
-    Shell(){
+    Shell() {
 
     }
 
@@ -70,20 +71,25 @@ public class Shell extends AbstractLifecycle {
             @Override
             public void accept(CommandsSupplier commandsSupplier) {
                 Map<CommandGroup, List<Command>> groupCommandsMap = commandsSupplier.get(environment);
-                if(groupCommandsMap==null){
+                if (groupCommandsMap == null) {
                     return;
                 }
-                for (Map.Entry<CommandGroup, List<Command>> entry: groupCommandsMap.entrySet()){
+                for (Map.Entry<CommandGroup, List<Command>> entry : groupCommandsMap.entrySet()) {
                     CommandGroup commandGroup = entry.getKey();
                     commandRegistry.addCommandGroup(commandGroup);
                     List<Command> commands = entry.getValue();
-                    for (Command command : commands){
+                    for (Command command : commands) {
                         command.setGroup(commandGroup.getName());
                         commandRegistry.addCommand(command);
                     }
                 }
             }
         });
+
+        CmdExecContext cmdExecContext = new CmdExecContext();
+        cmdExecContext.setEnv(environment);
+        cmdExecContext.setComponentFactory(commandComponentFactory);
+        cmdExecContext.setConverterService(new ConverterService());
     }
 
     @Override
@@ -91,48 +97,48 @@ public class Shell extends AbstractLifecycle {
         super.doStart();
     }
 
-    public void start(String[] args){
+    public void start(String[] args) {
         this.args = new ApplicationArgs(args);
         startup();
         run(this.args.getArgs());
     }
 
-    private void run(String[] cmdlineStrings){
+    private void run(String[] cmdlineStrings) {
         Command commandDef = findCommand(cmdlineStrings);
-        if(commandDef==null){
+        if (commandDef == null) {
             throw new NotFoundCommandException(Strings.join(" ", cmdlineStrings));
         }
         Cmdline cmdline = null;
         try {
             CommandLine parsedCommandLine = commandlineParser.parse(commandDef.getOptions(), cmdlineStrings, stopParseAtNonDefinedOption);
             cmdline = new Cmdline(commandDef, parsedCommandLine);
-        }catch (ParseException e){
+        } catch (ParseException e) {
             throw new MalformedCommandException(e);
         }
         CmdExecResult execResult = this.commandlineExecutor.exec(cmdline);
         System.out.println(this.args.getRaw());
     }
 
-    private Command findCommand(String[] cmdline){
-        int index = Collects.<String,List>firstOccurrence(Collects.asList(cmdline), new Predicate2<Integer, String>() {
+    private Command findCommand(String[] cmdline) {
+        int index = Collects.<String, List>firstOccurrence(Collects.asList(cmdline), new Predicate2<Integer, String>() {
             @Override
             public boolean test(Integer integer, String s) {
-                return Strings.startsWith(s,"-");
+                return Strings.startsWith(s, "-");
             }
         });
         String commandKey = null;
-        if(index<0){
+        if (index < 0) {
             commandKey = Strings.join(" ", cmdline);
-        }else if(index>0){
+        } else if (index > 0) {
             commandKey = Strings.join(" ", cmdline, 0, index);
         }
         commandKey = Strings.trimToNull(commandKey);
         Command command = null;
-        if(Strings.isNotEmpty(commandKey)){
+        if (Strings.isNotEmpty(commandKey)) {
             command = commandRegistry.getCommand(commandKey);
             index--;
-            while(command==null && index>=1){
-                String newCommandKey = Strings.join(" ", cmdline, 0,index);
+            while (command == null && index >= 1) {
+                String newCommandKey = Strings.join(" ", cmdline, 0, index);
                 command = commandRegistry.getCommand(newCommandKey);
                 index--;
             }

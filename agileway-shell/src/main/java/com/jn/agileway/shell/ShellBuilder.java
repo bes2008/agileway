@@ -91,9 +91,7 @@ public class ShellBuilder implements Builder<Shell> {
             }
         });
         componentFactories.add(new ReflectiveCommandComponentFactory());
-        shell.componentFactory = new CompoundCommandComponentFactory(componentFactories);
-
-        shell.commandlineExecutor = new DefaultCommandLineExecutor(shell.environment);
+        shell.commandComponentFactory = new CompoundCommandComponentFactory(componentFactories);
 
         return shell;
     }
