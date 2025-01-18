@@ -27,33 +27,38 @@ public class ShellBuilder implements Builder<Shell> {
 
 
     private List<PropertySet> propertySets = Lists.<PropertySet>newArrayList();
+    private boolean stopParseAtNonDefinedOption = true;
 
     private final List<CommandsSupplier> commandsSuppliers = Lists.newArrayList(new DefaultCommandsSupplier());
 
-    public ShellBuilder with(CommandComponentFactory factory){
-        if(factory!=null) {
+    public ShellBuilder componentFactory(CommandComponentFactory factory) {
+        if (factory != null) {
             commandComponentFactories.add(factory);
         }
         return this;
     }
 
-    public ShellBuilder with(CommandLineParser parser){
-        if(parser!=null) {
+    public ShellBuilder commandlineParser(CommandLineParser parser) {
+        if (parser != null) {
             this.commandlineParser = parser;
         }
         return this;
     }
 
-    public ShellBuilder with(PropertySet propertySet){
-        if(propertySet!=null){
+    public ShellBuilder propertySet(PropertySet propertySet) {
+        if (propertySet != null) {
             propertySets.add(propertySet);
         }
         return this;
     }
 
+    public ShellBuilder stopParseAtNonDefinedOption(boolean stop){
+        this.stopParseAtNonDefinedOption = stop;
+        return this;
+    }
 
-    public ShellBuilder with(CommandsSupplier commandsSupplier){
-        if(commandsSupplier!=null){
+    public ShellBuilder commandsSupplier(CommandsSupplier commandsSupplier) {
+        if (commandsSupplier != null) {
             this.commandsSuppliers.add(commandsSupplier);
         }
         return this;
@@ -71,8 +76,9 @@ public class ShellBuilder implements Builder<Shell> {
         shell.environment = new MultiplePropertySetEnvironment("agileway-shell", propertySets);
 
         shell.commandlineParser = this.commandlineParser;
+        shell.stopParseAtNonDefinedOption = this.stopParseAtNonDefinedOption;
 
-        final List<CommandComponentFactory> invokerFactories = Lists.newArrayList();
+        final List<CommandComponentFactory> componentFactories = Lists.newArrayList();
         Pipeline.of(commandComponentFactories).forEach(new Predicate<CommandComponentFactory>() {
             @Override
             public boolean test(CommandComponentFactory factory) {
@@ -81,11 +87,11 @@ public class ShellBuilder implements Builder<Shell> {
         }, new Consumer<CommandComponentFactory>() {
             @Override
             public void accept(CommandComponentFactory factory) {
-                invokerFactories.add(factory);
+                componentFactories.add(factory);
             }
         });
-        invokerFactories.add(new ReflectiveCommandComponentFactory());
-        shell.componentFactory = new CompoundCommandComponentFactory(invokerFactories);
+        componentFactories.add(new ReflectiveCommandComponentFactory());
+        shell.componentFactory = new CompoundCommandComponentFactory(componentFactories);
 
         shell.commandlineExecutor = new DefaultCommandLineExecutor(shell.environment);
 

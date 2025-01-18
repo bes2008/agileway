@@ -1,10 +1,10 @@
-package com.jn.agileway.shell.exec;
+package com.jn.agileway.shell.result;
 
 public class CmdExecResult {
-    private int errorCode;
+    private int exitCode;
     private String errorMessage;
     private Throwable exception;
-    private Object data;
+    private String cmdResult;
 
     public Throwable getException() {
         return exception;
@@ -14,12 +14,12 @@ public class CmdExecResult {
         this.exception = exception;
     }
 
-    public int getErrorCode() {
-        return errorCode;
+    public int getExitCode() {
+        return exitCode;
     }
 
-    public void setErrorCode(int errorCode) {
-        this.errorCode = errorCode;
+    public void setExitCode(int exitCode) {
+        this.exitCode = exitCode;
     }
 
     public String getErrorMessage() {
@@ -30,11 +30,11 @@ public class CmdExecResult {
         this.errorMessage = errorMessage;
     }
 
-    public Object getData() {
-        return data;
+    public String getCmdResult() {
+        return cmdResult;
     }
 
-    public void setData(Object data) {
-        this.data = data;
+    public void setCmdResult(String cmdResult) {
+        this.cmdResult = cmdResult;
     }
 }

@@ -6,7 +6,7 @@ import com.jn.agileway.shell.command.CommandRegistry;
 import com.jn.agileway.shell.command.CommandsSupplier;
 import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.agileway.shell.exception.NotFoundCommandException;
-import com.jn.agileway.shell.exec.CmdExecResult;
+import com.jn.agileway.shell.result.CmdExecResult;
 import com.jn.agileway.shell.exec.Cmdline;
 import com.jn.agileway.shell.exec.CommandLineExecutor;
 import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
@@ -40,6 +40,12 @@ public class Shell extends AbstractLifecycle {
      */
     @NonNull
     protected CommandLineParser commandlineParser;
+    /**
+     * 解析命令行时，遇到了一个option时，如果选项是未知的，是否停止解析。
+     * 如果停止解析，那么后续的字符串都将作为args
+     * 如果不停止，就会抛出UnrecognizedOptionException
+     */
+    protected boolean stopParseAtNonDefinedOption = true;
 
     /**
      * 命令执行相关
@@ -98,7 +104,7 @@ public class Shell extends AbstractLifecycle {
         }
         Cmdline cmdline = null;
         try {
-            CommandLine parsedCommandLine = commandlineParser.parse(commandDef.getOptions(), cmdlineStrings, false);
+            CommandLine parsedCommandLine = commandlineParser.parse(commandDef.getOptions(), cmdlineStrings, stopParseAtNonDefinedOption);
             cmdline = new Cmdline(commandDef, parsedCommandLine);
         }catch (ParseException e){
             throw new MalformedCommandException(e);

@@ -19,6 +19,6 @@ public class CommandsScanTests {
     public void testEnvVariables(){
         shell.start(Strings.split("env-variables"," "));
         shell.start(Strings.split("system-props"," "));
-        shell.start(Strings.split("system props -a"," "));
+        shell.start(Strings.split("system-props -a"," "));
     }
 }
