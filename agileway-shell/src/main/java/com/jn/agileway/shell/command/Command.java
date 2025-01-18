@@ -1,6 +1,8 @@
 package com.jn.agileway.shell.command;
 
 import com.jn.langx.text.StringTemplates;
+import com.jn.langx.util.collection.Lists;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
 import java.lang.reflect.Method;
@@ -13,6 +15,7 @@ public class Command {
 
     private List<String> alias;
 
+    private List<String> optionKeys= Lists.newArrayList();
     private Options options;
 
     private String desc;
@@ -27,8 +30,16 @@ public class Command {
         this.name = name;
     }
 
-    public void setOptions(Options options) {
+    public void setOptions(List<Option> optionList) {
+        Options options = new Options();
+        for (Option option : optionList){
+            optionKeys.add(option.getKey());
+        }
         this.options = options;
+    }
+
+    public List<String> getOptionKeys() {
+        return optionKeys;
     }
 
     public Options getOptions() {

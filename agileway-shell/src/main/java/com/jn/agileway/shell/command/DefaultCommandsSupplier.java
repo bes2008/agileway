@@ -17,7 +17,6 @@ import com.jn.langx.util.struct.Pair;
 import io.github.classgraph.*;
 import org.apache.commons.cli.Converter;
 import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -176,12 +175,13 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         command.setMethod(method);
         command.setDesc(desc);
 
-        Options options = new Options();
+
         MethodParameterInfo[] methodParameterInfoList = methodInfo.getParameterInfo();
+        List<Option> options = Lists.newArrayListWithCapacity(methodParameterInfoList.length);
         for (int i = 0; i < methodParameterInfoList.length ; i++) {
             MethodParameterInfo methodParameterInfo = methodParameterInfoList[i];
             Option option = createOption(methodParameterInfo, method, i);
-            options.addOption(option);
+            options.add(option);
         }
 
         command.setOptions(options);

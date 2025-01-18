@@ -4,7 +4,11 @@ import com.jn.agileway.shell.command.Command;
 import com.jn.agileway.shell.command.CommandGroup;
 import com.jn.agileway.shell.command.CommandRegistry;
 import com.jn.agileway.shell.command.CommandsSupplier;
+import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.agileway.shell.exception.NotFoundCommandException;
+import com.jn.agileway.shell.exec.CmdExecResult;
+import com.jn.agileway.shell.exec.Cmdline;
+import com.jn.agileway.shell.exec.CommandLineExecutor;
 import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.environment.Environment;
@@ -15,21 +19,36 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate2;
+import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.ParseException;
 
 import java.util.List;
 import java.util.Map;
 
 public class Shell extends AbstractLifecycle {
+    /**
+     * 命令定义相关
+     */
     @NonNull
     protected CommandRegistry commandRegistry;
     @NonNull
-    protected CompoundCommandComponentFactory componentFactory;
-    @NonNull
-    protected CommandLineParser commandLineParser;
-
-    @NonNull
     protected List<CommandsSupplier> commandsSuppliers;
+
+    /**
+     * 命令解析
+     */
+    @NonNull
+    protected CommandLineParser commandlineParser;
+
+    /**
+     * 命令执行相关
+     */
+    @NonNull
+    protected CompoundCommandComponentFactory componentFactory;
+
+    protected CommandLineExecutor commandlineExecutor;
+
     @NonNull
     protected Environment environment;
 
@@ -72,13 +91,19 @@ public class Shell extends AbstractLifecycle {
         run(this.args.getArgs());
     }
 
-    private void run(String[] cmdline){
-        Command command = findCommand(cmdline);
-        if(command==null){
-            throw new NotFoundCommandException(Strings.join(" ", cmdline));
-        }else {
-            System.out.println(command);
+    private void run(String[] cmdlineStrings){
+        Command commandDef = findCommand(cmdlineStrings);
+        if(commandDef==null){
+            throw new NotFoundCommandException(Strings.join(" ", cmdlineStrings));
         }
+        Cmdline cmdline = null;
+        try {
+            CommandLine parsedCommandLine = commandlineParser.parse(commandDef.getOptions(), cmdlineStrings, false);
+            cmdline = new Cmdline(commandDef, parsedCommandLine);
+        }catch (ParseException e){
+            throw new MalformedCommandException(e);
+        }
+        CmdExecResult execResult = this.commandlineExecutor.exec(cmdline);
         System.out.println(this.args.getRaw());
     }
 

@@ -1,24 +1,24 @@
 package com.jn.agileway.shell.exception;
 
-public class NotFoundCommandException extends RuntimeException {
+public class MalformedCommandException extends RuntimeException {
 
-    public NotFoundCommandException() {
+    public MalformedCommandException() {
         super();
     }
 
-    public NotFoundCommandException(String message) {
+    public MalformedCommandException(String message) {
         super(message);
     }
 
-    public NotFoundCommandException(String message, Throwable cause) {
+    public MalformedCommandException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public NotFoundCommandException(Throwable cause) {
+    public MalformedCommandException(Throwable cause) {
         super(cause);
     }
 
-    public NotFoundCommandException(String message, Throwable cause,
+    public MalformedCommandException(String message, Throwable cause,
                                        boolean enableSuppression,
                                        boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);

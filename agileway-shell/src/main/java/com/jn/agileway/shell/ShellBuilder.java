@@ -3,6 +3,7 @@ package com.jn.agileway.shell;
 import com.jn.agileway.shell.command.CommandRegistry;
 import com.jn.agileway.shell.command.CommandsSupplier;
 import com.jn.agileway.shell.command.DefaultCommandsSupplier;
+import com.jn.agileway.shell.exec.CommandLineExecutor;
 import com.jn.agileway.shell.factory.CommandComponentFactory;
 import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
 import com.jn.agileway.shell.factory.ReflectiveCommandComponentFactory;
@@ -24,8 +25,10 @@ import java.util.List;
 
 public class ShellBuilder implements Builder<Shell> {
     private List<CommandComponentFactory> commandComponentFactories = Lists.newArrayList();
-    @Nullable
-    private CommandLineParser commandLineParser;
+    private CommandLineParser commandlineParser = new DefaultParser();
+
+    private CommandLineExecutor commandlineExecutor = new CommandLineExecutor();
+
 
     private List<PropertySet> propertySets = Lists.<PropertySet>newArrayList();
 
@@ -38,19 +41,28 @@ public class ShellBuilder implements Builder<Shell> {
         return this;
     }
 
-    public ShellBuilder withCommandLineParser(CommandLineParser parser){
-        this.commandLineParser = parser;
+    public ShellBuilder with(CommandLineParser parser){
+        if(parser!=null) {
+            this.commandlineParser = parser;
+        }
         return this;
     }
 
-    public ShellBuilder withPropertySet(PropertySet propertySet){
+    public ShellBuilder with(PropertySet propertySet){
         if(propertySet!=null){
             propertySets.add(propertySet);
         }
         return this;
     }
 
-    public ShellBuilder withCommandsSupplier(CommandsSupplier commandsSupplier){
+    public ShellBuilder with(CommandLineExecutor commandlineExecutor){
+        if(commandlineExecutor!=null){
+            this.commandlineExecutor = commandlineExecutor;
+        }
+        return this;
+    }
+
+    public ShellBuilder with(CommandsSupplier commandsSupplier){
         if(commandsSupplier!=null){
             this.commandsSuppliers.add(commandsSupplier);
         }
@@ -61,13 +73,14 @@ public class ShellBuilder implements Builder<Shell> {
     public Shell build() {
 
         Shell shell = new Shell();
-        shell.commandLineParser = Objs.useValueIfEmpty(this.commandLineParser, new DefaultParser());
-        shell.commandRegistry = new CommandRegistry();
 
+        shell.commandRegistry = new CommandRegistry();
+        shell.commandsSuppliers = commandsSuppliers;
         propertySets.add(new SystemPropertiesPropertySource());
         propertySets.add(new EnvironmentVariablesPropertySource());
         shell.environment = new MultiplePropertySetEnvironment("agileway-shell", propertySets);
 
+        shell.commandlineParser = this.commandlineParser;
 
         final List<CommandComponentFactory> invokerFactories = Lists.newArrayList();
         Pipeline.of(commandComponentFactories).forEach(new Predicate<CommandComponentFactory>() {
@@ -84,7 +97,7 @@ public class ShellBuilder implements Builder<Shell> {
         invokerFactories.add(new ReflectiveCommandComponentFactory());
         shell.componentFactory = new CompoundCommandComponentFactory(invokerFactories);
 
-        shell.commandsSuppliers = commandsSuppliers;
+        shell.commandlineExecutor = this.commandlineExecutor;
 
         return shell;
     }
