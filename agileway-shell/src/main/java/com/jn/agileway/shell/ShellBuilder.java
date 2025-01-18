@@ -3,18 +3,15 @@ package com.jn.agileway.shell;
 import com.jn.agileway.shell.command.CommandRegistry;
 import com.jn.agileway.shell.command.CommandsSupplier;
 import com.jn.agileway.shell.command.DefaultCommandsSupplier;
-import com.jn.agileway.shell.exec.CommandLineExecutor;
 import com.jn.agileway.shell.exec.DefaultCommandLineExecutor;
 import com.jn.agileway.shell.factory.CommandComponentFactory;
 import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
 import com.jn.agileway.shell.factory.ReflectiveCommandComponentFactory;
 import com.jn.langx.Builder;
-import com.jn.langx.annotation.Nullable;
 import com.jn.langx.environment.MultiplePropertySetEnvironment;
 import com.jn.langx.propertyset.EnvironmentVariablesPropertySource;
 import com.jn.langx.propertyset.PropertySet;
 import com.jn.langx.propertyset.SystemPropertiesPropertySource;
-import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
@@ -54,12 +51,6 @@ public class ShellBuilder implements Builder<Shell> {
         return this;
     }
 
-    public ShellBuilder with(CommandLineExecutor commandlineExecutor){
-        if(commandlineExecutor!=null){
-            this.commandlineExecutor = commandlineExecutor;
-        }
-        return this;
-    }
 
     public ShellBuilder with(CommandsSupplier commandsSupplier){
         if(commandsSupplier!=null){
