@@ -41,10 +41,7 @@ public class DefaultCommandLineExecutor implements CommandLineExecutor {
         Object component = getCmdExecContext().getComponentFactory().get(method.getDeclaringClass());
         Object methodResult = Reflects.invokeMethod(method, component, methodArgs);
 
-        if(methodResult!=null){
-            String cmdResult = getCmdExecContext().getMethodInvocationResultTransformer().transform(methodResult);
-            cmdExecResult.setCmdResult(cmdResult);
-        }
+
         return null;
     }
 
