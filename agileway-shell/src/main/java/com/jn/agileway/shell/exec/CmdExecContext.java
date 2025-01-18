@@ -1,7 +1,6 @@
 package com.jn.agileway.shell.exec;
 
 import com.jn.agileway.shell.factory.CommandComponentFactory;
-import com.jn.agileway.shell.result.CmdMethodInvocationResultTransformer;
 import com.jn.langx.environment.Environment;
 import com.jn.langx.util.converter.ConverterService;
 
@@ -9,7 +8,6 @@ public class CmdExecContext {
     private Environment env;
     private ConverterService converterService;
     private CommandComponentFactory componentFactory;
-    private CmdMethodInvocationResultTransformer methodInvocationResultTransformer;
 
     public Environment getEnv() {
         return env;
@@ -33,13 +31,5 @@ public class CmdExecContext {
 
     public void setComponentFactory(CommandComponentFactory componentFactory) {
         this.componentFactory = componentFactory;
-    }
-
-    public CmdMethodInvocationResultTransformer getMethodInvocationResultTransformer() {
-        return methodInvocationResultTransformer;
-    }
-
-    public void setMethodInvocationResultTransformer(CmdMethodInvocationResultTransformer methodInvocationResultTransformer) {
-        this.methodInvocationResultTransformer = methodInvocationResultTransformer;
     }
 }

@@ -25,20 +25,26 @@ public class DefaultCommandLineExecutor implements CommandLineExecutor {
     public DefaultCommandLineExecutor() {
     }
 
-    public void setShellContext(CmdExecContext shellContext) {
+    public void setCmdExecContext(CmdExecContext shellContext) {
         this.shellContext = shellContext;
     }
 
     @Override
-    public CmdExecContext getShellContext() {
+    public CmdExecContext getCmdExecContext() {
         return shellContext;
     }
 
     public CmdExecResult exec(Cmdline cmdline) {
+        CmdExecResult cmdExecResult = new CmdExecResult();
         Method method = cmdline.getCommandDefinition().getMethod();
         Object[] methodArgs = prepareMethodArgs(cmdline);
-        Object component = getShellContext().getComponentFactory().get(method.getDeclaringClass());
+        Object component = getCmdExecContext().getComponentFactory().get(method.getDeclaringClass());
         Object methodResult = Reflects.invokeMethod(method, component, methodArgs);
+
+        if(methodResult!=null){
+            String cmdResult = getCmdExecContext().getMethodInvocationResultTransformer().transform(methodResult);
+            cmdExecResult.setCmdResult(cmdResult);
+        }
         return null;
     }
 
