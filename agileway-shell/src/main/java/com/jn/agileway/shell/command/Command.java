@@ -1,5 +1,6 @@
 package com.jn.agileway.shell.command;
 
+import com.jn.langx.text.StringTemplates;
 import org.apache.commons.cli.Options;
 
 import java.lang.reflect.Method;
@@ -15,7 +16,6 @@ public class Command {
     private Options options;
 
     private String desc;
-
 
     private Method method;
 
@@ -65,5 +65,10 @@ public class Command {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    @Override
+    public String toString() {
+        return StringTemplates.formatWithPlaceholder( "name: {}, group: {}, alias: {}, desc: {}, options: {}", name, group, alias, desc, options);
     }
 }

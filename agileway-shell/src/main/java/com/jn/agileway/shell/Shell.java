@@ -14,6 +14,7 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.function.Predicate2;
 import org.apache.commons.cli.CommandLineParser;
 
 import java.util.List;
@@ -68,26 +69,31 @@ public class Shell extends AbstractLifecycle {
     public void start(String[] args){
         this.args = new ApplicationArgs(args);
         startup();
-        run(this.args.getRaw());
+        run(this.args.getArgs());
     }
 
-    private void run(String cmdline){
+    private void run(String[] cmdline){
         Command command = findCommand(cmdline);
         if(command==null){
-            throw new NotFoundCommandException(cmdline);
+            throw new NotFoundCommandException(Strings.join(" ", cmdline));
         }else {
             System.out.println(command);
         }
         System.out.println(this.args.getRaw());
     }
 
-    private Command findCommand(String cmdline){
-        int index = Strings.indexOf(cmdline,'-');
+    private Command findCommand(String[] cmd){
+        int index = Collects.<String,List>firstOccurrence(Collects.asList(cmd), new Predicate2<Integer, String>() {
+            @Override
+            public boolean test(Integer integer, String s) {
+                return Strings.startsWith(s,"-");
+            }
+        });
         String commandKey = null;
         if(index<0){
-            commandKey = cmdline;
+            commandKey = Strings.join(" ", cmd);
         }else if(index>0){
-            commandKey = Strings.substring(cmdline, 0, index);
+            commandKey = Strings.join(" ", cmd, 0, index);
         }
         commandKey = Strings.trimToNull(commandKey);
         Command command = null;
