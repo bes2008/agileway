@@ -82,8 +82,8 @@ public class Shell extends AbstractLifecycle {
         System.out.println(this.args.getRaw());
     }
 
-    private Command findCommand(String[] cmd){
-        int index = Collects.<String,List>firstOccurrence(Collects.asList(cmd), new Predicate2<Integer, String>() {
+    private Command findCommand(String[] cmdline){
+        int index = Collects.<String,List>firstOccurrence(Collects.asList(cmdline), new Predicate2<Integer, String>() {
             @Override
             public boolean test(Integer integer, String s) {
                 return Strings.startsWith(s,"-");
@@ -91,20 +91,19 @@ public class Shell extends AbstractLifecycle {
         });
         String commandKey = null;
         if(index<0){
-            commandKey = Strings.join(" ", cmd);
+            commandKey = Strings.join(" ", cmdline);
         }else if(index>0){
-            commandKey = Strings.join(" ", cmd, 0, index);
+            commandKey = Strings.join(" ", cmdline, 0, index);
         }
         commandKey = Strings.trimToNull(commandKey);
         Command command = null;
         if(Strings.isNotEmpty(commandKey)){
             command = commandRegistry.getCommand(commandKey);
-            if(command==null && Strings.containsAny(commandKey, Collects.toArray(Strings.WHITESPACE_CHAR, String[].class))){
-                String[] segments = Strings.splitRegexp(commandKey,"\\s+");
-                for (int newCmdKeyLength = segments.length-1; command==null && newCmdKeyLength >0 ; newCmdKeyLength--) {
-                    String newCommandKey = Strings.join(" ", segments, 0,newCmdKeyLength);
-                    command = commandRegistry.getCommand(newCommandKey);
-                }
+            index--;
+            while(command==null && index>=1){
+                String newCommandKey = Strings.join(" ", cmdline, 0,index);
+                command = commandRegistry.getCommand(newCommandKey);
+                index--;
             }
         }
         return command;
