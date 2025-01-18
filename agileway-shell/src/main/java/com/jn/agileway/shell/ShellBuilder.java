@@ -4,6 +4,7 @@ import com.jn.agileway.shell.command.CommandRegistry;
 import com.jn.agileway.shell.command.CommandsSupplier;
 import com.jn.agileway.shell.command.DefaultCommandsSupplier;
 import com.jn.agileway.shell.exec.CommandLineExecutor;
+import com.jn.agileway.shell.exec.DefaultCommandLineExecutor;
 import com.jn.agileway.shell.factory.CommandComponentFactory;
 import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
 import com.jn.agileway.shell.factory.ReflectiveCommandComponentFactory;
@@ -26,8 +27,6 @@ import java.util.List;
 public class ShellBuilder implements Builder<Shell> {
     private List<CommandComponentFactory> commandComponentFactories = Lists.newArrayList();
     private CommandLineParser commandlineParser = new DefaultParser();
-
-    private CommandLineExecutor commandlineExecutor = new CommandLineExecutor();
 
 
     private List<PropertySet> propertySets = Lists.<PropertySet>newArrayList();
@@ -97,7 +96,7 @@ public class ShellBuilder implements Builder<Shell> {
         invokerFactories.add(new ReflectiveCommandComponentFactory());
         shell.componentFactory = new CompoundCommandComponentFactory(invokerFactories);
 
-        shell.commandlineExecutor = this.commandlineExecutor;
+        shell.commandlineExecutor = new DefaultCommandLineExecutor(shell.environment);
 
         return shell;
     }
