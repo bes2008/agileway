@@ -5,16 +5,13 @@ import com.jn.agileway.shell.command.annotation.CommandComponent;
 import com.jn.agileway.shell.command.annotation.CommandOption;
 import com.jn.langx.text.properties.Props;
 import com.jn.langx.util.Strings;
-import com.jn.langx.util.SystemPropertys;
-import com.jn.langx.util.collection.Collects;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 @CommandComponent
 
-public class EnvCommand {
+public class EnvCommands {
     @Command("env-variables")
     public Map<String, String> environmentVariables(
             @CommandOption(value = "s", longName = "search", required = false)

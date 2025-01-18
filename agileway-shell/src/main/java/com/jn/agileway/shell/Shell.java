@@ -4,11 +4,14 @@ import com.jn.agileway.shell.command.Command;
 import com.jn.agileway.shell.command.CommandGroup;
 import com.jn.agileway.shell.command.CommandRegistry;
 import com.jn.agileway.shell.command.CommandsSupplier;
+import com.jn.agileway.shell.exception.NotFoundCommandException;
 import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.environment.Environment;
 import com.jn.langx.lifecycle.AbstractLifecycle;
 import com.jn.langx.lifecycle.InitializationException;
+import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
 import org.apache.commons.cli.CommandLineParser;
@@ -65,10 +68,40 @@ public class Shell extends AbstractLifecycle {
     public void start(String[] args){
         this.args = new ApplicationArgs(args);
         startup();
-        run();
+        run(this.args.getRaw());
     }
-    private void run(){
+
+    private void run(String cmdline){
+        Command command = findCommand(cmdline);
+        if(command==null){
+            throw new NotFoundCommandException(cmdline);
+        }else {
+            System.out.println(command);
+        }
         System.out.println(this.args.getRaw());
+    }
+
+    private Command findCommand(String cmdline){
+        int index = Strings.indexOf(cmdline,'-');
+        String commandKey = null;
+        if(index<0){
+            commandKey = cmdline;
+        }else if(index>0){
+            commandKey = Strings.substring(cmdline, 0, index);
+        }
+        commandKey = Strings.trimToNull(commandKey);
+        Command command = null;
+        if(Strings.isNotEmpty(commandKey)){
+            command = commandRegistry.getCommand(commandKey);
+            if(command==null && Strings.containsAny(commandKey, Collects.toArray(Strings.WHITESPACE_CHAR, String[].class))){
+                String[] segments = Strings.splitRegexp(commandKey,"\\s+");
+                for (int newCmdKeyLength = segments.length-1; command==null && newCmdKeyLength >0 ; newCmdKeyLength--) {
+                    String newCommandKey = Strings.join(" ", segments, 0,newCmdKeyLength);
+                    command = commandRegistry.getCommand(newCommandKey);
+                }
+            }
+        }
+        return command;
     }
 
     @Override
