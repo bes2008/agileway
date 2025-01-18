@@ -20,18 +20,18 @@ import java.lang.reflect.Method;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class DefaultCommandLineExecutor implements CommandLineExecutor {
-    private CmdExecContext shellContext;
+    private CmdExecContext cmdExecContext;
 
     public DefaultCommandLineExecutor() {
     }
 
-    public void setCmdExecContext(CmdExecContext shellContext) {
-        this.shellContext = shellContext;
+    public void setCmdExecContext(CmdExecContext cmdExecContext) {
+        this.cmdExecContext = cmdExecContext;
     }
 
     @Override
     public CmdExecContext getCmdExecContext() {
-        return shellContext;
+        return cmdExecContext;
     }
 
     public CmdExecResult exec(Cmdline cmdline) {
