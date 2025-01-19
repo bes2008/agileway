@@ -7,7 +7,7 @@ import com.jn.agileway.shell.exec.CmdExecContext;
 import com.jn.agileway.shell.exec.DefaultCommandLineExecutor;
 import com.jn.agileway.shell.parse.CmdlineParser;
 import com.jn.agileway.shell.result.CmdExecResult;
-import com.jn.agileway.shell.exec.Cmdline;
+import com.jn.agileway.shell.parse.Cmdline;
 import com.jn.agileway.shell.exec.CommandLineExecutor;
 import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
 import com.jn.agileway.shell.result.CmdExecResultHandler;

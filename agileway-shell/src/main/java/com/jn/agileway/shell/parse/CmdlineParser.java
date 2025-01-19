@@ -1,7 +1,6 @@
 package com.jn.agileway.shell.parse;
 
 import com.jn.agileway.shell.command.Command;
-import com.jn.agileway.shell.exec.Cmdline;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import org.apache.commons.cli.CommandLine;

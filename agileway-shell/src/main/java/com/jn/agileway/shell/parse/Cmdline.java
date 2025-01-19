@@ -1,4 +1,4 @@
-package com.jn.agileway.shell.exec;
+package com.jn.agileway.shell.parse;
 
 import com.jn.agileway.shell.command.Command;
 import org.apache.commons.cli.CommandLine;
