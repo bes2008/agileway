@@ -45,35 +45,35 @@ public class DefaultCommandLineExecutor implements CommandLineExecutor {
     }
 
     private Object[] prepareMethodArgs(Cmdline cmdline) {
-        Options options = cmdline.getCommandDefinition().getOptions();
         List<String> optionKeys = cmdline.getCommandDefinition().getOptionKeys();
         Object[] methodArgs = new Object[optionKeys.size()];
         Method method = cmdline.getCommandDefinition().getMethod();
         Parameter[] parameters = method.getParameters();
+        Options optionsDef = cmdline.getCommandDefinition().getOptions();
         for (int parameterIndex = 0; parameterIndex < optionKeys.size(); parameterIndex++) {
             String optionKey = optionKeys.get(parameterIndex);
-            Option option = options.getOption(optionKey);
             Parameter parameter = parameters[parameterIndex];
+            Option optionDef = optionsDef.getOption(optionKey);
             if (parameter.getType().isArray()) {
-                List<String> stringValues = option.getValuesList();
-                Object array = Arrs.createArray((Class) option.getType(), stringValues.size());
-                for (int i = 0; i < stringValues.size(); i++) {
-                    String stringValue = stringValues.get(i);
-                    Object value = convertStringToTarget(stringValue, (Class) option.getType(), option);
+                String[] stringValues = cmdline.getCommandLine().getOptionValues(optionKey);
+                Object array = Arrs.createArray((Class) optionDef.getType(), stringValues.length);
+                for (int i = 0; i < stringValues.length; i++) {
+                    String stringValue = stringValues[i];
+                    Object value = convertStringToTarget(stringValue, (Class) optionDef.getType(), optionDef);
                     Array.set(array, i, value);
                 }
                 methodArgs[parameterIndex] = array;
             } else if (Reflects.isSubClassOrEquals(Collection.class, parameter.getType())) {
-                List<String> stringValues = option.getValuesList();
+                String[] stringValues = cmdline.getCommandLine().getOptionValues(optionKey);
                 Collection collection = newCollection(parameter.getType());
                 for (String stringValue : stringValues) {
-                    Object value = convertStringToTarget(stringValue, (Class) option.getType(), option);
+                    Object value = convertStringToTarget(stringValue, (Class) optionDef.getType(), optionDef);
                     collection.add(value);
                 }
                 methodArgs[parameterIndex] = collection;
             } else {
-                String stringValue = option.getValue();
-                Object value = convertStringToTarget(stringValue, (Class) option.getType(), option);
+                String stringValue = cmdline.getCommandLine().getOptionValue(optionKey);
+                Object value = convertStringToTarget(stringValue, (Class) optionDef.getType(), optionDef);
                 methodArgs[parameterIndex] = value;
             }
         }
@@ -100,14 +100,14 @@ public class DefaultCommandLineExecutor implements CommandLineExecutor {
         }
     }
 
-    private Object convertStringToTarget(String stringValue, Class type, Option option) {
+    private Object convertStringToTarget(String stringValue, Class type, Option optionDef) {
         if (type.isEnum()) {
             return Enums.inferEnum(type, stringValue);
         } else if (type == String.class) {
             return stringValue;
         } else {
             try {
-                Object value = option.getConverter().apply(stringValue);
+                Object value = optionDef.getConverter().apply(stringValue);
                 return value;
             } catch (Throwable ex) {
                 throw new MalformedOptionValueException(ex);

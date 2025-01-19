@@ -3,10 +3,10 @@ package com.jn.agileway.shell;
 import com.jn.agileway.shell.command.CommandRegistry;
 import com.jn.agileway.shell.command.CommandsSupplier;
 import com.jn.agileway.shell.command.DefaultCommandsSupplier;
-import com.jn.agileway.shell.exec.DefaultCommandLineExecutor;
 import com.jn.agileway.shell.factory.CommandComponentFactory;
 import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
 import com.jn.agileway.shell.factory.ReflectiveCommandComponentFactory;
+import com.jn.agileway.shell.parse.CmdlineParser;
 import com.jn.langx.Builder;
 import com.jn.langx.environment.MultiplePropertySetEnvironment;
 import com.jn.langx.propertyset.EnvironmentVariablesPropertySource;
@@ -16,14 +16,11 @@ import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
 
 import java.util.List;
 
 public class ShellBuilder implements Builder<Shell> {
     private List<CommandComponentFactory> commandComponentFactories = Lists.newArrayList();
-    private CommandLineParser commandlineParser = new DefaultParser();
 
 
     private List<PropertySet> propertySets = Lists.<PropertySet>newArrayList();
@@ -34,13 +31,6 @@ public class ShellBuilder implements Builder<Shell> {
     public ShellBuilder componentFactory(CommandComponentFactory factory) {
         if (factory != null) {
             commandComponentFactories.add(factory);
-        }
-        return this;
-    }
-
-    public ShellBuilder commandlineParser(CommandLineParser parser) {
-        if (parser != null) {
-            this.commandlineParser = parser;
         }
         return this;
     }
@@ -75,8 +65,8 @@ public class ShellBuilder implements Builder<Shell> {
         propertySets.add(new EnvironmentVariablesPropertySource());
         shell.environment = new MultiplePropertySetEnvironment("agileway-shell", propertySets);
 
-        shell.commandlineParser = this.commandlineParser;
-        shell.stopParseAtNonDefinedOption = this.stopParseAtNonDefinedOption;
+
+        shell.commandlineParser = new CmdlineParser(this.stopParseAtNonDefinedOption);
 
         final List<CommandComponentFactory> componentFactories = Lists.newArrayList();
         Pipeline.of(commandComponentFactories).forEach(new Predicate<CommandComponentFactory>() {

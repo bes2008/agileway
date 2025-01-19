@@ -5,6 +5,7 @@ import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.agileway.shell.exception.NotFoundCommandException;
 import com.jn.agileway.shell.exec.CmdExecContext;
 import com.jn.agileway.shell.exec.DefaultCommandLineExecutor;
+import com.jn.agileway.shell.parse.CmdlineParser;
 import com.jn.agileway.shell.result.CmdExecResult;
 import com.jn.agileway.shell.exec.Cmdline;
 import com.jn.agileway.shell.exec.CommandLineExecutor;
@@ -23,8 +24,6 @@ import com.jn.langx.util.converter.ConverterService;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate2;
 import com.jn.langx.util.logging.Loggers;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.ParseException;
 
 import java.util.List;
@@ -43,13 +42,7 @@ public class Shell extends AbstractLifecycle {
      * 命令解析
      */
     @NonNull
-    protected CommandLineParser commandlineParser;
-    /**
-     * 解析命令行时，遇到了一个option时，如果选项是未知的，是否停止解析。
-     * 如果停止解析，那么后续的字符串都将作为args
-     * 如果不停止，就会抛出UnrecognizedOptionException
-     */
-    protected boolean stopParseAtNonDefinedOption = true;
+    protected CmdlineParser commandlineParser;
 
 
     /**
@@ -127,8 +120,7 @@ public class Shell extends AbstractLifecycle {
         }
         Cmdline parsedCmdline = null;
         try {
-            CommandLine parsedCommandLine = commandlineParser.parse(commandDef.getOptions(), cmdline, stopParseAtNonDefinedOption);
-            parsedCmdline = new Cmdline(commandDef, parsedCommandLine);
+           parsedCmdline = this.commandlineParser.parse(commandDef, cmdline);
         } catch (ParseException e) {
             execResult.setErr(new MalformedCommandException(e));
         }
