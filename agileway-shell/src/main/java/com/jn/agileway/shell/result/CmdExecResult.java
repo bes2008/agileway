@@ -23,12 +23,11 @@ public class CmdExecResult {
     /**
      * 命令从解析到执行，整个过程中发发生的异常
      */
-    private Throwable err;
+    private transient Throwable err;
     /**
      * 命令从解析到执行，整个过程中发发生的异常，转换为stderr。
-     * 调试时输出 err即可。
      */
-    private transient String stderr;
+    private String stderr;
 
     /**
      * 要作为stdout输出的原始数据，对应的是cmd method的执行结果
