@@ -17,6 +17,7 @@ public class CommandsScanTests {
 
     @Test
     public void testEnvVariables(){
+        shell.start(Strings.split("env variables -s JAVA"," "));
         shell.start(Strings.split("env-variables -s JAVA"," "));
         shell.start(Strings.split("env-variables"," "));
         shell.start(Strings.split("system-props -s user"," "));

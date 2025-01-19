@@ -107,7 +107,7 @@ public class Shell extends AbstractLifecycle {
         CmdExecResult execResult = evaluate(args.getArgs());
         execResultHandler.handle(execResult);
         if(debugModeEnabled){
-            Loggers.getLogger(Shell.class).info("the command exec result: \n{}", JSONs.toJson(execResult, true, true));
+            Loggers.getLogger(Shell.class).info("echo command [{}], execute result: \n{}", args.getRaw(), JSONs.toJson(execResult, true, true));
         }
     }
 
