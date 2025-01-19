@@ -107,13 +107,15 @@ public class Shell extends AbstractLifecycle {
     public void start(String[] args) {
         this.args = new ApplicationArgs(args);
         startup();
-        run(this.args.getArgs());
+        evaluate(this.args.getArgs());
     }
 
-    private void run(String[] cmdlineStrings) {
+    private CmdExecResult evaluate(String[] cmdlineStrings) {
+        CmdExecResult execResult = new CmdExecResult();
         Command commandDef = findCommand(cmdlineStrings);
         if (commandDef == null) {
-            throw new NotFoundCommandException(Strings.join(" ", cmdlineStrings));
+            execResult.setErr(new NotFoundCommandException(Strings.join(" ", cmdlineStrings)));
+            return execResult;
         }
         Cmdline cmdline = null;
         try {
@@ -122,11 +124,12 @@ public class Shell extends AbstractLifecycle {
         } catch (ParseException e) {
             throw new MalformedCommandException(e);
         }
-        CmdExecResult execResult = this.commandlineExecutor.exec(cmdline);
+        execResult = this.commandlineExecutor.exec(cmdline);
         if(debugModeEnabled){
             Loggers.getLogger(Shell.class).info("the command exec result: {}", execResult);
         }
         System.out.println(this.args.getRaw());
+        return execResult;
     }
 
     private Command findCommand(String[] cmdline) {
