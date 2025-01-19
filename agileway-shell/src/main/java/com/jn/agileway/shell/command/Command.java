@@ -83,4 +83,19 @@ public class Command {
     public String toString() {
         return StringTemplates.formatWithPlaceholder( "name: {}, group: {}, alias: {}, desc: {}, options: {}", name, group, alias, desc, options);
     }
+
+    public List<Command> newCommandsForAlias(){
+        List<Command> commands = Lists.newArrayList();
+        for(String alias : alias) {
+            Command command = new Command();
+            command.setName(alias);
+            command.setDesc(this.desc);
+            command.setGroup(this.group);
+            command.setMethod(this.method);
+            command.optionKeys= this.optionKeys;
+            command.options = options;
+            commands.add(command);
+        }
+        return commands;
+    }
 }

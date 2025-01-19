@@ -1,7 +1,10 @@
 package com.jn.agileway.shell.command;
 
 
+import com.jn.langx.util.Objs;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CommandRegistry {
@@ -21,6 +24,12 @@ public class CommandRegistry {
             return;
         }
         this.commandMap.put(command.getName(), command);
+        if(Objs.isNotEmpty(command.getAlias())){
+            List<Command> aliasCommands = command.newCommandsForAlias();
+            for (Command aliasCommand : aliasCommands) {
+                this.commandMap.put(aliasCommand.getName(), aliasCommand);
+            }
+        }
     }
 
     public void addCommandGroup(CommandGroup commandGroup){
