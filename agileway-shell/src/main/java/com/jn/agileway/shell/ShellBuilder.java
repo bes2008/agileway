@@ -23,7 +23,7 @@ public class ShellBuilder implements Builder<Shell> {
     private List<CommandComponentFactory> commandComponentFactories = Lists.newArrayList();
     private List<PropertySet> propertySets = Lists.<PropertySet>newArrayList();
     private boolean stopParseAtNonDefinedOption = true;
-    private InteractionMode defaultInteractionMode = InteractionMode.INTERACTIVE;
+    private RunMode defaultRunMode = RunMode.INTERACTIVE;
 
     private final List<CommandsSupplier> commandsSuppliers = Lists.newArrayList(new DefaultCommandsSupplier());
 
@@ -53,9 +53,9 @@ public class ShellBuilder implements Builder<Shell> {
         return this;
     }
 
-    public ShellBuilder withInteractionMode(InteractionMode defaultInteractionMode){
-        if(defaultInteractionMode!=null){
-            this.defaultInteractionMode= defaultInteractionMode;
+    public ShellBuilder withRunMode(RunMode defaultRunMode){
+        if(defaultRunMode!=null){
+            this.defaultRunMode= defaultRunMode;
         }
         return this;
     }
@@ -89,7 +89,7 @@ public class ShellBuilder implements Builder<Shell> {
         componentFactories.add(new ReflectiveCommandComponentFactory());
         shell.commandComponentFactory = new CompoundCommandComponentFactory(componentFactories);
 
-        shell.defaultInteractionMode = this.defaultInteractionMode;
+        shell.defaultRunMode = this.defaultRunMode;
         return shell;
     }
 }

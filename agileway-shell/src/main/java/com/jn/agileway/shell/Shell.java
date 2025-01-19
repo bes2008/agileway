@@ -66,8 +66,8 @@ public class Shell extends AbstractLifecycle {
     /**
      * 当应用命令行是一个命令时，指定命令运行后，以哪种方式处理。该值可以是 AD-HOC 也可以是 INTERACTIVE
      */
-    protected InteractionMode defaultInteractionMode = InteractionMode.INTERACTIVE;
-    private InteractionMode interactionMode;
+    protected RunMode defaultRunMode = RunMode.INTERACTIVE;
+    private RunMode runMode;
     private ApplicationArgs appArgs = new ApplicationArgs(new String[0]);
 
     Shell() {
@@ -102,10 +102,10 @@ public class Shell extends AbstractLifecycle {
         this.commandlineExecutor.setCmdExecContext(cmdExecContext);
 
         this.debugModeEnabled = Booleans.truth(environment.getProperty("agileway.shell.debug.enabled", "false"));
-        if (this.defaultInteractionMode == null || this.defaultInteractionMode == InteractionMode.SCRIPT) {
-            this.defaultInteractionMode = InteractionMode.INTERACTIVE;
+        if (this.defaultRunMode == null || this.defaultRunMode == RunMode.SCRIPT) {
+            this.defaultRunMode = RunMode.INTERACTIVE;
         }
-        this.interactionMode = this.autoRegonizeInteractionMode(this.appArgs);
+        this.runMode = this.autoRegonizeInteractionMode(this.appArgs);
     }
 
     @Override
@@ -128,9 +128,9 @@ public class Shell extends AbstractLifecycle {
         }
     }
 
-    private InteractionMode autoRegonizeInteractionMode(ApplicationArgs appArgs) {
+    private RunMode autoRegonizeInteractionMode(ApplicationArgs appArgs) {
         if (appArgs.isEmpty()) {
-            return this.defaultInteractionMode;
+            return this.defaultRunMode;
         }
 
         String[] cmdline = appArgs.getArgs();
@@ -151,19 +151,19 @@ public class Shell extends AbstractLifecycle {
                     if (Strings.startsWith(nonOptionArg, "@") && Objs.length(nonOptionArg) > 1) {
                         Resource scriptResource = Resources.loadResource(nonOptionArg);
                         if (scriptResource != null && scriptResource.isReadable()) {
-                            return InteractionMode.SCRIPT;
+                            return RunMode.SCRIPT;
                         }
                     }
                 }
             }
 
-            return this.defaultInteractionMode;
+            return this.defaultRunMode;
         } else {
             // 命令中指定了要以 ad-hoc 方式运行时
             if (Collects.contains(cmdline, "--adhoc")) {
-                return InteractionMode.ADHOC;
+                return RunMode.ADHOC;
             } else {
-                return this.defaultInteractionMode;
+                return this.defaultRunMode;
             }
         }
     }

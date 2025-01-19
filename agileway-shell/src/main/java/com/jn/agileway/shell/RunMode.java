@@ -1,6 +1,6 @@
 package com.jn.agileway.shell;
 
-public enum InteractionMode {
+public enum RunMode {
     /**
      * 一次性执行模式
      */
