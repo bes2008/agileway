@@ -40,9 +40,8 @@ public class DefaultCommandLineExecutor implements CommandLineExecutor {
         Object[] methodArgs = prepareMethodArgs(cmdline);
         Object component = getCmdExecContext().getComponentFactory().get(method.getDeclaringClass());
         Object methodResult = Reflects.invokeMethod(method, component, methodArgs);
-
-
-        return null;
+        cmdExecResult.setStdoutData(methodResult);
+        return cmdExecResult;
     }
 
     private Object[] prepareMethodArgs(Cmdline cmdline) {

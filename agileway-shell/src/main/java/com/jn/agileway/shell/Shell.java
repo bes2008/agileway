@@ -13,15 +13,18 @@ import com.jn.langx.annotation.NonNull;
 import com.jn.langx.environment.Environment;
 import com.jn.langx.lifecycle.AbstractLifecycle;
 import com.jn.langx.lifecycle.InitializationException;
+import com.jn.langx.util.Booleans;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.converter.ConverterService;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate2;
+import com.jn.langx.util.logging.Loggers;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.ParseException;
+import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.Map;
@@ -53,11 +56,12 @@ public class Shell extends AbstractLifecycle {
      */
     @NonNull
     protected CompoundCommandComponentFactory commandComponentFactory;
-    private CmdExecContext cmdExecContext;
     protected final CommandLineExecutor commandlineExecutor = new DefaultCommandLineExecutor();
 
     @NonNull
     protected Environment environment;
+
+    private boolean debugModeEnabled = false;
 
     private ApplicationArgs args;
 
@@ -90,6 +94,9 @@ public class Shell extends AbstractLifecycle {
         cmdExecContext.setEnv(environment);
         cmdExecContext.setComponentFactory(commandComponentFactory);
         cmdExecContext.setConverterService(new ConverterService());
+        this.commandlineExecutor.setCmdExecContext(cmdExecContext);
+
+        this.debugModeEnabled = Booleans.truth(environment.getProperty("agileway.shell.debug.enabled", "false"));
     }
 
     @Override
@@ -116,6 +123,9 @@ public class Shell extends AbstractLifecycle {
             throw new MalformedCommandException(e);
         }
         CmdExecResult execResult = this.commandlineExecutor.exec(cmdline);
+        if(debugModeEnabled){
+            Loggers.getLogger(Shell.class).info("the command exec result: {}", execResult);
+        }
         System.out.println(this.args.getRaw());
     }
 

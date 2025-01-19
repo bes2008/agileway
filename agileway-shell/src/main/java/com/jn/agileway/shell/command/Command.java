@@ -34,6 +34,7 @@ public class Command {
         Options options = new Options();
         for (Option option : optionList){
             optionKeys.add(option.getKey());
+            options.addOption(option);
         }
         this.options = options;
     }

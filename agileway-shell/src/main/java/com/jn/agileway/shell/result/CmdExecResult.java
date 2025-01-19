@@ -4,7 +4,7 @@ public class CmdExecResult {
     private int exitCode;
     private String errorMessage;
     private Throwable exception;
-    private Object methodInvocationResult;
+    private Object stdoutData;
 
     public Throwable getException() {
         return exception;
@@ -30,11 +30,11 @@ public class CmdExecResult {
         this.errorMessage = errorMessage;
     }
 
-    public Object getMethodInvocationResult() {
-        return methodInvocationResult;
+    public Object getStdoutData() {
+        return stdoutData;
     }
 
-    public void setMethodInvocationResult(Object methodInvocationResult) {
-        this.methodInvocationResult = methodInvocationResult;
+    public void setStdoutData(Object stdoutData) {
+        this.stdoutData = stdoutData;
     }
 }
