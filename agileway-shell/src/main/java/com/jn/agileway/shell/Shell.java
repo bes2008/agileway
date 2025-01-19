@@ -47,7 +47,6 @@ public class Shell extends AbstractLifecycle {
     @NonNull
     protected CmdlineParser commandlineParser;
 
-
     /**
      * 命令执行相关
      */
@@ -117,13 +116,13 @@ public class Shell extends AbstractLifecycle {
     }
 
     private void run() {
-        Object loopResult = null;
-        while (!(loopResult instanceof ShellInterruptedException)) {
+        Object iterResult = null;
+        while (!(iterResult instanceof ShellInterruptedException)) {
             String[] cmdline = null;
             try {
                 cmdline = this.cmdlineProvider.get();
             } catch (ShellInterruptedException sie) {
-                loopResult = sie;
+                iterResult = sie;
                 continue;
             }
             if (cmdline == null) {
@@ -131,7 +130,7 @@ public class Shell extends AbstractLifecycle {
             }
             CmdExecResult execResult = evaluate(cmdline);
             execResultHandler.handle(execResult);
-            loopResult = execResult;
+            iterResult = execResult;
 
             if (runMode == RunMode.ADHOC) {
                 break;
