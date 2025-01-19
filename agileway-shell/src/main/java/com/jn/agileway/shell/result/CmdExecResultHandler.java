@@ -5,10 +5,24 @@ import com.jn.agileway.shell.exception.MalformedOptionValueException;
 import com.jn.agileway.shell.exception.NotFoundCommandException;
 import com.jn.langx.text.StringTemplates;
 
+import java.io.PrintWriter;
+
 public final class CmdExecResultHandler {
     private CmdOutputTransformer stdoutTransformer = new JsonStyleOutputTransformer();
 
     public void handle(CmdExecResult execResult) {
+        preOutput(execResult);
+        output(execResult);
+    }
+
+    private void output(CmdExecResult execResult){
+        PrintWriter writer= new PrintWriter(System.out);
+        writer.println(execResult.getExitCode()==0? execResult.getStdout(): execResult.getStderr());
+        writer.flush();
+    }
+
+
+    private void preOutput(CmdExecResult execResult) {
         if (execResult.getExitCode() >= 0) {
             return;
         }
