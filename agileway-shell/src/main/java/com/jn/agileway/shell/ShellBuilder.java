@@ -21,10 +21,9 @@ import java.util.List;
 
 public class ShellBuilder implements Builder<Shell> {
     private List<CommandComponentFactory> commandComponentFactories = Lists.newArrayList();
-
-
     private List<PropertySet> propertySets = Lists.<PropertySet>newArrayList();
     private boolean stopParseAtNonDefinedOption = true;
+    private InteractionMode defaultInteractionMode = InteractionMode.INTERACTIVE;
 
     private final List<CommandsSupplier> commandsSuppliers = Lists.newArrayList(new DefaultCommandsSupplier());
 
@@ -50,6 +49,13 @@ public class ShellBuilder implements Builder<Shell> {
     public ShellBuilder commandsSupplier(CommandsSupplier commandsSupplier) {
         if (commandsSupplier != null) {
             this.commandsSuppliers.add(commandsSupplier);
+        }
+        return this;
+    }
+
+    public ShellBuilder withInteractionMode(InteractionMode defaultInteractionMode){
+        if(defaultInteractionMode!=null){
+            this.defaultInteractionMode= defaultInteractionMode;
         }
         return this;
     }
@@ -83,6 +89,7 @@ public class ShellBuilder implements Builder<Shell> {
         componentFactories.add(new ReflectiveCommandComponentFactory());
         shell.commandComponentFactory = new CompoundCommandComponentFactory(componentFactories);
 
+        shell.defaultInteractionMode = this.defaultInteractionMode;
         return shell;
     }
 }

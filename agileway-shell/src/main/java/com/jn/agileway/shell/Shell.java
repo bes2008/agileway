@@ -14,9 +14,12 @@ import com.jn.agileway.shell.result.CmdExecResultHandler;
 import com.jn.easyjson.core.util.JSONs;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.environment.Environment;
+import com.jn.langx.io.resource.Resource;
+import com.jn.langx.io.resource.Resources;
 import com.jn.langx.lifecycle.AbstractLifecycle;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.Booleans;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
@@ -24,6 +27,10 @@ import com.jn.langx.util.converter.ConverterService;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate2;
 import com.jn.langx.util.logging.Loggers;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
 import java.util.List;
 import java.util.Map;
@@ -54,9 +61,14 @@ public class Shell extends AbstractLifecycle {
     protected Environment environment;
     protected CmdExecResultHandler execResultHandler = new CmdExecResultHandler();
 
-    private boolean debugModeEnabled = false;
+    private boolean debugModeEnabled;
 
-    protected InteractionMode interactionMode;
+    /**
+     * 当应用命令行是一个命令时，指定命令运行后，以哪种方式处理。该值可以是 AD-HOC 也可以是 INTERACTIVE
+     */
+    protected InteractionMode defaultInteractionMode = InteractionMode.INTERACTIVE;
+    private InteractionMode interactionMode;
+    private ApplicationArgs appArgs = new ApplicationArgs(new String[0]);
 
     Shell() {
 
@@ -90,6 +102,10 @@ public class Shell extends AbstractLifecycle {
         this.commandlineExecutor.setCmdExecContext(cmdExecContext);
 
         this.debugModeEnabled = Booleans.truth(environment.getProperty("agileway.shell.debug.enabled", "false"));
+        if (this.defaultInteractionMode == null || this.defaultInteractionMode == InteractionMode.SCRIPT) {
+            this.defaultInteractionMode = InteractionMode.INTERACTIVE;
+        }
+        this.interactionMode = this.autoRegonizeInteractionMode(this.appArgs);
     }
 
     @Override
@@ -97,18 +113,58 @@ public class Shell extends AbstractLifecycle {
         super.doStart();
     }
 
-    public void start(String[] args) {
-        ApplicationArgs appArgs = new ApplicationArgs(args);
+    public void start(String[] appArgs) {
+        this.appArgs = new ApplicationArgs(appArgs);
         startup();
         run(appArgs);
     }
 
-    private void run(ApplicationArgs args){
-        CmdExecResult execResult = evaluate(args.getArgs());
+    private void run(String[] cmdline) {
+        CmdExecResult execResult = evaluate(cmdline);
 
         execResultHandler.handle(execResult);
-        if(debugModeEnabled){
-            Loggers.getLogger(Shell.class).info("echo command [{}], execute result: \n{}", args.getRaw(), JSONs.toJson(execResult, true, true));
+        if (debugModeEnabled) {
+            Loggers.getLogger(Shell.class).info("echo command [{}], execute result: \n{}", Strings.join(" ", cmdline), JSONs.toJson(execResult, true, true));
+        }
+    }
+
+    private InteractionMode autoRegonizeInteractionMode(ApplicationArgs appArgs) {
+        if (appArgs.isEmpty()) {
+            return this.defaultInteractionMode;
+        }
+
+        String[] cmdline = appArgs.getArgs();
+
+        // 先判断是不是个命令
+        Command commandDef = findCommand(cmdline);
+        if (commandDef == null) {
+            // 判断 是否是以脚本方式运行
+            CommandLine commandLine = null;
+            try {
+                commandLine = new DefaultParser().parse(new Options(), cmdline, true);
+            } catch (ParseException e) {
+                // ignore it
+            }
+            if (commandLine != null) {
+                List<String> nonOptionsArgs = commandLine.getArgList();
+                for (String nonOptionArg : nonOptionsArgs) {
+                    if (Strings.startsWith(nonOptionArg, "@") && Objs.length(nonOptionArg) > 1) {
+                        Resource scriptResource = Resources.loadResource(nonOptionArg);
+                        if (scriptResource != null && scriptResource.isReadable()) {
+                            return InteractionMode.SCRIPT;
+                        }
+                    }
+                }
+            }
+
+            return this.defaultInteractionMode;
+        } else {
+            // 命令中指定了要以 ad-hoc 方式运行时
+            if (Collects.contains(cmdline, "--adhoc")) {
+                return InteractionMode.ADHOC;
+            } else {
+                return this.defaultInteractionMode;
+            }
         }
     }
 
