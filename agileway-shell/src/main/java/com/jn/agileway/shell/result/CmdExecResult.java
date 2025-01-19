@@ -2,6 +2,8 @@ package com.jn.agileway.shell.result;
 
 public class CmdExecResult {
     /**
+     *
+     * <pre>
      * <0： 代表未设置
      * 0： 正常退出
      * 1： 通用错误
@@ -12,6 +14,7 @@ public class CmdExecResult {
      * 130：通过 Ctrl+C 或 SIGINT 终止（终止代码 2 或键盘中断）
      * 143：通过 SIGTERM 终止（默认终止）
      * 255/*： 退出码超过了 0-255 的范围，因此重新计算（LCTT 译注：超过 255 后，用退出码对 256 取模）
+     * </pre>
      */
     private int exitCode=-1;
 

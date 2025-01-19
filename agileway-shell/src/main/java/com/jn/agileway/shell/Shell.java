@@ -9,6 +9,7 @@ import com.jn.agileway.shell.result.CmdExecResult;
 import com.jn.agileway.shell.exec.Cmdline;
 import com.jn.agileway.shell.exec.CommandLineExecutor;
 import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
+import com.jn.agileway.shell.result.CmdExecResultHandler;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.environment.Environment;
 import com.jn.langx.lifecycle.AbstractLifecycle;
@@ -56,13 +57,12 @@ public class Shell extends AbstractLifecycle {
     @NonNull
     protected CompoundCommandComponentFactory commandComponentFactory;
     protected final CommandLineExecutor commandlineExecutor = new DefaultCommandLineExecutor();
-
     @NonNull
     protected Environment environment;
+    protected CmdExecResultHandler execResultHandler = new CmdExecResultHandler();
 
     private boolean debugModeEnabled = false;
 
-    private ApplicationArgs args;
 
     Shell() {
 
@@ -104,26 +104,32 @@ public class Shell extends AbstractLifecycle {
     }
 
     public void start(String[] args) {
-        this.args = new ApplicationArgs(args);
+        ApplicationArgs appArgs = new ApplicationArgs(args);
         startup();
-        evaluate(this.args.getArgs());
+        run(appArgs);
     }
 
-    private CmdExecResult evaluate(String[] cmdlineStrings) {
+    private void run(ApplicationArgs args){
+        CmdExecResult execResult = evaluate(args.getArgs());
+        execResultHandler.handle(execResult);
+
+    }
+
+    private CmdExecResult evaluate(String[] cmdline) {
         CmdExecResult execResult = new CmdExecResult();
-        Command commandDef = findCommand(cmdlineStrings);
+        Command commandDef = findCommand(cmdline);
         if (commandDef == null) {
-            execResult.setErr(new NotFoundCommandException(Strings.join(" ", cmdlineStrings)));
+            execResult.setErr(new NotFoundCommandException(Strings.join(" ", cmdline)));
             return execResult;
         }
-        Cmdline cmdline = null;
+        Cmdline parsedCmdline = null;
         try {
-            CommandLine parsedCommandLine = commandlineParser.parse(commandDef.getOptions(), cmdlineStrings, stopParseAtNonDefinedOption);
-            cmdline = new Cmdline(commandDef, parsedCommandLine);
+            CommandLine parsedCommandLine = commandlineParser.parse(commandDef.getOptions(), cmdline, stopParseAtNonDefinedOption);
+            parsedCmdline = new Cmdline(commandDef, parsedCommandLine);
         } catch (ParseException e) {
             execResult.setErr(new MalformedCommandException(e));
         }
-        execResult = this.commandlineExecutor.exec(cmdline);
+        execResult = this.commandlineExecutor.exec(parsedCmdline);
         if(debugModeEnabled){
             Loggers.getLogger(Shell.class).info("the command exec result: {}", execResult);
         }

@@ -5,10 +5,6 @@ package com.jn.agileway.shell.exception;
  */
 public class MalformedCommandException extends RuntimeException {
 
-    public MalformedCommandException() {
-        super();
-    }
-
     public MalformedCommandException(String message) {
         super(message);
     }
