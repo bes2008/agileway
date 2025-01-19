@@ -118,7 +118,7 @@ public class Shell extends AbstractLifecycle {
 
     private void run() {
         Object loopResult = null;
-        while(!(loopResult instanceof ShellInterruptedException)) {
+        while (!(loopResult instanceof ShellInterruptedException)) {
             String[] cmdline = null;
             try {
                 cmdline = this.cmdlineProvider.get();
@@ -126,11 +126,17 @@ public class Shell extends AbstractLifecycle {
                 loopResult = sie;
                 continue;
             }
-            if(cmdline==null){
+            if (cmdline == null) {
                 break;
             }
             CmdExecResult execResult = evaluate(cmdline);
             execResultHandler.handle(execResult);
+            loopResult = execResult;
+
+            if (runMode == RunMode.ADHOC) {
+                break;
+            }
+
             if (debugModeEnabled) {
                 Loggers.getLogger(Shell.class).info("echo command [{}], execute result: \n{}", Strings.join(" ", cmdline), JSONs.toJson(execResult, true, true));
             }
