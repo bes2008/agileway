@@ -8,6 +8,9 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.ParseException;
 
+/**
+ * 用于解析命令option部分
+ */
 public class CmdlineParser{
     /**
      * 解析命令行时，遇到了一个option时，如果选项是未知的，是否停止解析。
