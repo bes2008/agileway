@@ -5,6 +5,6 @@ import com.jn.easyjson.core.util.JSONs;
 public class JsonStyleOutputTransformer implements CmdOutputTransformer{
     @Override
     public String transform(Object methodResult) {
-        return JSONs.toJson(methodResult);
+        return JSONs.toJson(methodResult,true,true);
     }
 }

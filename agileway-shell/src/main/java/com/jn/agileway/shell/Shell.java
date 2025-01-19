@@ -10,6 +10,7 @@ import com.jn.agileway.shell.exec.Cmdline;
 import com.jn.agileway.shell.exec.CommandLineExecutor;
 import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
 import com.jn.agileway.shell.result.CmdExecResultHandler;
+import com.jn.easyjson.core.util.JSONs;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.environment.Environment;
 import com.jn.langx.lifecycle.AbstractLifecycle;
@@ -112,7 +113,9 @@ public class Shell extends AbstractLifecycle {
     private void run(ApplicationArgs args){
         CmdExecResult execResult = evaluate(args.getArgs());
         execResultHandler.handle(execResult);
-
+        if(debugModeEnabled){
+            Loggers.getLogger(Shell.class).info("the command exec result: \n{}", JSONs.toJson(execResult, true, true));
+        }
     }
 
     private CmdExecResult evaluate(String[] cmdline) {
@@ -130,9 +133,6 @@ public class Shell extends AbstractLifecycle {
             execResult.setErr(new MalformedCommandException(e));
         }
         execResult = this.commandlineExecutor.exec(parsedCmdline);
-        if(debugModeEnabled){
-            Loggers.getLogger(Shell.class).info("the command exec result: {}", execResult);
-        }
         return execResult;
     }
 

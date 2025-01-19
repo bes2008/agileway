@@ -1,5 +1,7 @@
 package com.jn.agileway.shell.result;
 
+import com.jn.langx.text.StringTemplates;
+
 public class CmdExecResult {
     /**
      *
@@ -21,7 +23,7 @@ public class CmdExecResult {
     /**
      * 命令从解析到执行，整个过程中发发生的异常
      */
-    private Throwable err;
+    private transient Throwable err;
     /**
      * 命令从解析到执行，整个过程中发发生的异常，转换为stderr
      */
@@ -30,7 +32,7 @@ public class CmdExecResult {
     /**
      * 要作为stdout输出的原始数据，对应的是cmd method的执行结果
      */
-    private Object stdoutData;
+    private transient Object stdoutData;
     /**
      * 最终要放到stdout的内容
      */
@@ -74,5 +76,13 @@ public class CmdExecResult {
 
     public void setStdoutData(Object stdoutData) {
         this.stdoutData = stdoutData;
+    }
+
+    /**
+     * 只用于调试
+     */
+    @Override
+    public String toString() {
+        return StringTemplates.formatWithPlaceholder("\texitCode: {}\n\tstdout: {}\n\tstderr: {}", exitCode, stdout, stderr);
     }
 }
