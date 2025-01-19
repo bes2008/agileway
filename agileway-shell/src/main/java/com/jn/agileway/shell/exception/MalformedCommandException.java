@@ -1,5 +1,8 @@
 package com.jn.agileway.shell.exception;
 
+/**
+ * 当命令的选项解析出错时抛出
+ */
 public class MalformedCommandException extends RuntimeException {
 
     public MalformedCommandException() {

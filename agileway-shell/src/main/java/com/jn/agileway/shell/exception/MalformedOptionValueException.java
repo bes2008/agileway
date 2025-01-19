@@ -1,5 +1,8 @@
 package com.jn.agileway.shell.exception;
 
+/**
+ * 当命令的选项值不对时
+ */
 public class MalformedOptionValueException extends RuntimeException{
     public MalformedOptionValueException() {
         super();
