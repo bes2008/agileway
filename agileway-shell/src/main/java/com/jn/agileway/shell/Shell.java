@@ -1,14 +1,11 @@
 package com.jn.agileway.shell;
 
+import com.jn.agileway.shell.cmdline.*;
 import com.jn.agileway.shell.command.*;
 import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.agileway.shell.exception.NotFoundCommandException;
-import com.jn.agileway.shell.cmdline.CmdExecContext;
-import com.jn.agileway.shell.cmdline.DefaultCommandLineExecutor;
-import com.jn.agileway.shell.cmdline.CmdlineParser;
+import com.jn.agileway.shell.exception.ShellInterruptedException;
 import com.jn.agileway.shell.result.CmdExecResult;
-import com.jn.agileway.shell.cmdline.Cmdline;
-import com.jn.agileway.shell.cmdline.CommandLineExecutor;
 import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
 import com.jn.agileway.shell.result.CmdExecResultHandler;
 import com.jn.easyjson.core.util.JSONs;
@@ -56,11 +53,11 @@ public class Shell extends AbstractLifecycle {
      */
     @NonNull
     protected CompoundCommandComponentFactory commandComponentFactory;
-    protected final CommandLineExecutor commandlineExecutor = new DefaultCommandLineExecutor();
+    protected final CmdlineExecutor commandlineExecutor = new DefaultCmdlineExecutor();
     @NonNull
     protected Environment environment;
     protected CmdExecResultHandler execResultHandler = new CmdExecResultHandler();
-
+    protected CmdlineProvider cmdlineProvider;
     private boolean debugModeEnabled;
 
     /**
@@ -116,15 +113,27 @@ public class Shell extends AbstractLifecycle {
     public void start(String[] appArgs) {
         this.appArgs = new ApplicationArgs(appArgs);
         startup();
-        run(appArgs);
+        run();
     }
 
-    private void run(String[] cmdline) {
-        CmdExecResult execResult = evaluate(cmdline);
-
-        execResultHandler.handle(execResult);
-        if (debugModeEnabled) {
-            Loggers.getLogger(Shell.class).info("echo command [{}], execute result: \n{}", Strings.join(" ", cmdline), JSONs.toJson(execResult, true, true));
+    private void run() {
+        Object loopResult = null;
+        while(!(loopResult instanceof ShellInterruptedException)) {
+            String[] cmdline = null;
+            try {
+                cmdline = this.cmdlineProvider.get();
+            } catch (ShellInterruptedException sie) {
+                loopResult = sie;
+                continue;
+            }
+            if(cmdline==null){
+                break;
+            }
+            CmdExecResult execResult = evaluate(cmdline);
+            execResultHandler.handle(execResult);
+            if (debugModeEnabled) {
+                Loggers.getLogger(Shell.class).info("echo command [{}], execute result: \n{}", Strings.join(" ", cmdline), JSONs.toJson(execResult, true, true));
+            }
         }
     }
 
