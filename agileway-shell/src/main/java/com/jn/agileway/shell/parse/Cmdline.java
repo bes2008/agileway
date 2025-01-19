@@ -4,20 +4,20 @@ import com.jn.agileway.shell.command.Command;
 import org.apache.commons.cli.CommandLine;
 
 public class Cmdline {
-    private CommandLine commandLine;
+    private CommandLine parsed;
     private Command commandDefinition;
 
-    public Cmdline(Command commandDefinition, CommandLine commandLine) {
+    public Cmdline(Command commandDefinition, CommandLine parsed) {
         this.commandDefinition = commandDefinition;
-        this.commandLine = commandLine;
+        this.parsed = parsed;
     }
 
-    public CommandLine getCommandLine() {
-        return commandLine;
+    public CommandLine getParsed() {
+        return parsed;
     }
 
-    public void setCommandLine(CommandLine commandLine) {
-        this.commandLine = commandLine;
+    public void setParsed(CommandLine parsed) {
+        this.parsed = parsed;
     }
 
     public Command getCommandDefinition() {

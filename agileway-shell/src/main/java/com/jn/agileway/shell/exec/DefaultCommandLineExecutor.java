@@ -56,7 +56,7 @@ public class DefaultCommandLineExecutor implements CommandLineExecutor {
             Parameter parameter = parameters[parameterIndex];
             Option optionDef = optionsDef.getOption(optionKey);
             if (parameter.getType().isArray()) {
-                String[] stringValues = cmdline.getCommandLine().getOptionValues(optionKey);
+                String[] stringValues = cmdline.getParsed().getOptionValues(optionKey);
                 Object array = Arrs.createArray((Class) optionDef.getType(), stringValues.length);
                 for (int i = 0; i < stringValues.length; i++) {
                     String stringValue = stringValues[i];
@@ -65,7 +65,7 @@ public class DefaultCommandLineExecutor implements CommandLineExecutor {
                 }
                 methodArgs[parameterIndex] = array;
             } else if (Reflects.isSubClassOrEquals(Collection.class, parameter.getType())) {
-                String[] stringValues = cmdline.getCommandLine().getOptionValues(optionKey);
+                String[] stringValues = cmdline.getParsed().getOptionValues(optionKey);
                 Collection collection = newCollection(parameter.getType());
                 for (String stringValue : stringValues) {
                     Object value = convertStringToTarget(stringValue, (Class) optionDef.getType(), optionDef);
@@ -73,7 +73,7 @@ public class DefaultCommandLineExecutor implements CommandLineExecutor {
                 }
                 methodArgs[parameterIndex] = collection;
             } else {
-                String stringValue = cmdline.getCommandLine().getOptionValue(optionKey);
+                String stringValue = cmdline.getParsed().getOptionValue(optionKey);
                 Object value = convertStringToTarget(stringValue, (Class) optionDef.getType(), optionDef);
                 methodArgs[parameterIndex] = value;
             }
