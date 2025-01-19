@@ -1,4 +1,4 @@
-package com.jn.agileway.shell.parse;
+package com.jn.agileway.shell.cmdline;
 
 import com.jn.agileway.shell.command.Command;
 import com.jn.agileway.shell.exception.MalformedCommandException;

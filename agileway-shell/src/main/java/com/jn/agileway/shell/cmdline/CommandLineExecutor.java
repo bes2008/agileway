@@ -1,6 +1,5 @@
-package com.jn.agileway.shell.exec;
+package com.jn.agileway.shell.cmdline;
 
-import com.jn.agileway.shell.parse.Cmdline;
 import com.jn.agileway.shell.result.CmdExecResult;
 
 public interface CommandLineExecutor {

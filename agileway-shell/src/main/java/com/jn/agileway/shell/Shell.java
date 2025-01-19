@@ -3,12 +3,12 @@ package com.jn.agileway.shell;
 import com.jn.agileway.shell.command.*;
 import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.agileway.shell.exception.NotFoundCommandException;
-import com.jn.agileway.shell.exec.CmdExecContext;
-import com.jn.agileway.shell.exec.DefaultCommandLineExecutor;
-import com.jn.agileway.shell.parse.CmdlineParser;
+import com.jn.agileway.shell.cmdline.CmdExecContext;
+import com.jn.agileway.shell.cmdline.DefaultCommandLineExecutor;
+import com.jn.agileway.shell.cmdline.CmdlineParser;
 import com.jn.agileway.shell.result.CmdExecResult;
-import com.jn.agileway.shell.parse.Cmdline;
-import com.jn.agileway.shell.exec.CommandLineExecutor;
+import com.jn.agileway.shell.cmdline.Cmdline;
+import com.jn.agileway.shell.cmdline.CommandLineExecutor;
 import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
 import com.jn.agileway.shell.result.CmdExecResultHandler;
 import com.jn.easyjson.core.util.JSONs;
@@ -24,7 +24,6 @@ import com.jn.langx.util.converter.ConverterService;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate2;
 import com.jn.langx.util.logging.Loggers;
-import org.apache.commons.cli.ParseException;
 
 import java.util.List;
 import java.util.Map;
@@ -57,6 +56,7 @@ public class Shell extends AbstractLifecycle {
 
     private boolean debugModeEnabled = false;
 
+    protected InteractionMode interactionMode;
 
     Shell() {
 
@@ -105,6 +105,7 @@ public class Shell extends AbstractLifecycle {
 
     private void run(ApplicationArgs args){
         CmdExecResult execResult = evaluate(args.getArgs());
+
         execResultHandler.handle(execResult);
         if(debugModeEnabled){
             Loggers.getLogger(Shell.class).info("echo command [{}], execute result: \n{}", args.getRaw(), JSONs.toJson(execResult, true, true));

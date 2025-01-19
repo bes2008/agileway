@@ -6,7 +6,7 @@ import com.jn.agileway.shell.command.DefaultCommandsSupplier;
 import com.jn.agileway.shell.factory.CommandComponentFactory;
 import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
 import com.jn.agileway.shell.factory.ReflectiveCommandComponentFactory;
-import com.jn.agileway.shell.parse.CmdlineParser;
+import com.jn.agileway.shell.cmdline.CmdlineParser;
 import com.jn.langx.Builder;
 import com.jn.langx.environment.MultiplePropertySetEnvironment;
 import com.jn.langx.propertyset.EnvironmentVariablesPropertySource;
