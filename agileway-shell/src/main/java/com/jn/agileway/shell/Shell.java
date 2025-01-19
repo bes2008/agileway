@@ -120,9 +120,9 @@ public class Shell extends AbstractLifecycle {
         }
         Cmdline parsedCmdline = null;
         try {
-           parsedCmdline = this.commandlineParser.parse(commandDef, cmdline);
-        } catch (ParseException e) {
-            execResult.setErr(new MalformedCommandException(e));
+            parsedCmdline = this.commandlineParser.parse(commandDef, cmdline);
+        } catch (MalformedCommandException e) {
+            execResult.setErr(e);
         }
         execResult = this.commandlineExecutor.exec(parsedCmdline);
         return execResult;

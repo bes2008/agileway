@@ -1,6 +1,7 @@
 package com.jn.agileway.shell.parse;
 
 import com.jn.agileway.shell.command.Command;
+import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import org.apache.commons.cli.CommandLine;
@@ -19,11 +20,15 @@ public class CmdlineParser{
         this.stopParseAtNonDefinedOption = stopParseAtNonDefinedOption;
     }
 
-    public Cmdline parse(Command commandDef, String[] cmdline) throws ParseException {
-        int cmdArgsOffset= Strings.splitRegexp(commandDef.getName(),"\\s+").length;
-        String[] cmdArgs = Collects.<String>skip(cmdline, cmdArgsOffset);
-        CommandLine parsedCommandLine = new DefaultParser().parse(commandDef.getOptions(), cmdArgs, stopParseAtNonDefinedOption);
-        Cmdline parsedCmdline = new Cmdline(commandDef, parsedCommandLine);
-        return parsedCmdline;
+    public Cmdline parse(Command commandDef, String[] cmdline) throws MalformedCommandException {
+        try {
+            int cmdArgsOffset = Strings.splitRegexp(commandDef.getName(), "\\s+").length;
+            String[] cmdArgs = Collects.<String>skip(cmdline, cmdArgsOffset);
+            CommandLine parsedCommandLine = new DefaultParser().parse(commandDef.getOptions(), cmdArgs, stopParseAtNonDefinedOption);
+            Cmdline parsedCmdline = new Cmdline(commandDef, parsedCommandLine);
+            return parsedCmdline;
+        }catch (ParseException e){
+            throw new MalformedCommandException(e);
+        }
     }
 }
