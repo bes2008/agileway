@@ -30,6 +30,14 @@ public class InteractiveModeCmdlineProvider implements CmdlineProvider{
         try {
             line = this.stdin.readLine();
             line = line.trim();
+
+            if(Strings.startsWith(line, "//")){
+                // this is a comment line, ignore it
+                line = "";
+            }
+            if(Strings.startsWith(line, "/")){
+                line = Strings.substring(line, 1);
+            }
             if(line.isEmpty()){
                 return Emptys.EMPTY_STRINGS;
             }
@@ -42,11 +50,23 @@ public class InteractiveModeCmdlineProvider implements CmdlineProvider{
 
             line = this.stdin.readLine();
             while (!lineEnd(line)){
-                buffer.append(" " +line);
+                buffer.append(" ").append(line);
+                line = this.stdin.readLine();
+                if(Strings.startsWith(line, "//")){
+                    // this is a comment line
+                    line="";
+                    break;
+                }
             }
             buffer.append(line);
-        }catch (IOException ioe){
+            String rawLine = buffer.toString();
+            if(Strings.endsWith(rawLine, "\\")){
+                System.out.println("cmd error");
+                return Emptys.EMPTY_STRINGS;
+            }
             return Collects.toArray(cmdlineTokenizer.tokenize(), String[].class);
+        }catch (IOException ioe){
+
         }
         return null;
     }
