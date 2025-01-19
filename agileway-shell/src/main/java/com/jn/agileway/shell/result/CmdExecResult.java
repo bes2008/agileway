@@ -1,7 +1,19 @@
 package com.jn.agileway.shell.result;
 
 public class CmdExecResult {
-    private int exitCode;
+    /**
+     * <0： 代表未设置
+     * 0： 正常退出
+     * 1： 通用错误
+     * 2： 命令或参数使用不当
+     * 126：权限被拒绝或无法执行
+     * 127：未找到命令
+     * 128+n: 命令被信号从外部终止，或遇到致命错误
+     * 130：通过 Ctrl+C 或 SIGINT 终止（终止代码 2 或键盘中断）
+     * 143：通过 SIGTERM 终止（默认终止）
+     * 255/*： 退出码超过了 0-255 的范围，因此重新计算（LCTT 译注：超过 255 后，用退出码对 256 取模）
+     */
+    private int exitCode=-1;
 
     /**
      * 命令从解析到执行，整个过程中发发生的异常

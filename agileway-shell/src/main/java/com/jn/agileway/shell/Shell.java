@@ -24,7 +24,6 @@ import com.jn.langx.util.logging.Loggers;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.ParseException;
-import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.Map;
@@ -128,7 +127,6 @@ public class Shell extends AbstractLifecycle {
         if(debugModeEnabled){
             Loggers.getLogger(Shell.class).info("the command exec result: {}", execResult);
         }
-        System.out.println(this.args.getRaw());
         return execResult;
     }
 
