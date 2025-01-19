@@ -5,7 +5,7 @@ import com.jn.langx.text.tokenizer.TokenFactory;
 import com.jn.langx.util.Strings;
 
 public class ShellLineTokenizer extends CommonTokenizer<String> implements CmdlineTokenizer{
-
+    private char leftQuote=0;
     public ShellLineTokenizer(String cmdline) {
         super(cmdline, false);
 
@@ -22,6 +22,9 @@ public class ShellLineTokenizer extends CommonTokenizer<String> implements Cmdli
 
     @Override
     protected String getIfDelimiterStart(long position, char ch) {
+        if(ch == '"' && leftQuote==0){
+            // 进入 " "引号区域
+        }
         if(ch==' '){
             if(position==0){
                 return ch+"";
