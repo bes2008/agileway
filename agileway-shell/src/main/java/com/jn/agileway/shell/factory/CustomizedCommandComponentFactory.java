@@ -7,16 +7,16 @@ import com.jn.langx.util.reflect.Reflects;
 import java.util.Map;
 
 public class CustomizedCommandComponentFactory implements CommandComponentFactory {
-    private Map<Class, Object> invokers = Maps.<Class, Object>newHashMap();
+    private Map<Class, Object> components = Maps.<Class, Object>newHashMap();
 
-    public void addInvoker(Object invoker){
-        if(Reflects.hasAnnotation(invoker.getClass(), Command.class)) {
-            invokers.put(invoker.getClass(), invoker);
+    public void addComponent(Object component){
+        if(Reflects.hasAnnotation(component.getClass(), Command.class)) {
+            components.put(component.getClass(), component);
         }
     }
 
     @Override
     public Object get(Class type) {
-        return invokers.get(type);
+        return components.get(type);
     }
 }

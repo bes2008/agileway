@@ -6,7 +6,7 @@ import com.jn.agileway.shell.exception.NotFoundCommandException;
 import com.jn.langx.text.StringTemplates;
 
 public final class CmdExecResultHandler {
-    private CmdOutputTransformer stdoutTransformer;
+    private CmdOutputTransformer stdoutTransformer = new JsonStyleOutputTransformer();
 
     public void handle(CmdExecResult execResult) {
         if (execResult.getExitCode() >= 0) {
