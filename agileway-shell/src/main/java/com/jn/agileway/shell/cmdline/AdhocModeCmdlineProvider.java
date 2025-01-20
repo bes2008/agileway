@@ -2,11 +2,11 @@ package com.jn.agileway.shell.cmdline;
 
 import com.jn.agileway.shell.ApplicationArgs;
 
-public class AdHocCmdlineProvider implements CmdlineProvider {
+public class AdhocModeCmdlineProvider implements CmdlineProvider {
     private ApplicationArgs args;
     private boolean appArgsUsed = false;
 
-    public AdHocCmdlineProvider(ApplicationArgs args) {
+    public AdhocModeCmdlineProvider(ApplicationArgs args) {
         this.args = args;
     }
 

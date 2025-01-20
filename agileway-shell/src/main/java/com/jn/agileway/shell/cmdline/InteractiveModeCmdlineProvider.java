@@ -1,9 +1,9 @@
 package com.jn.agileway.shell.cmdline;
 
 import com.jn.agileway.shell.ApplicationArgs;
+import com.jn.agileway.shell.ShellLines;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Strings;
-import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.io.Charsets;
 
 import java.io.BufferedReader;
@@ -14,7 +14,7 @@ public class InteractiveModeCmdlineProvider implements CmdlineProvider{
     private ApplicationArgs appArgs;
     private boolean appArgsUsed = false;
     private BufferedReader stdin;
-    private CmdlineTokenizer cmdlineTokenizer;
+
     public InteractiveModeCmdlineProvider(ApplicationArgs appArgs){
         this.appArgs = appArgs;
         this.stdin = new BufferedReader(new InputStreamReader(System.in, Charsets.getDefault()));
@@ -39,18 +39,18 @@ public class InteractiveModeCmdlineProvider implements CmdlineProvider{
                 line = Strings.substring(line, 1);
             }
             if(line.isEmpty()){
-                return Emptys.EMPTY_STRINGS;
+                return ShellLines.cmdlineToArgs(line);
             }
             if( line.endsWith(";") || !Strings.endsWith(line,"\\")){
-                return Collects.toArray(cmdlineTokenizer.tokenize(), String[].class);
+                return ShellLines.cmdlineToArgs(line);
             }
             // 多行模式下
             StringBuilder buffer= new StringBuilder(255);
-            buffer.append(line);
+            buffer.append(Strings.substring(line,0, line.length()-1)).append(Strings.SPACE);
 
             line = this.stdin.readLine();
             while (!lineEnd(line)){
-                buffer.append(" ").append(line);
+                buffer.append(Strings.substring(line,0, line.length()-1)).append(Strings.SPACE);
                 line = this.stdin.readLine();
                 if(Strings.startsWith(line, "//")){
                     // this is a comment line
@@ -64,11 +64,10 @@ public class InteractiveModeCmdlineProvider implements CmdlineProvider{
                 System.out.println("cmd error");
                 return Emptys.EMPTY_STRINGS;
             }
-            return Collects.toArray(cmdlineTokenizer.tokenize(), String[].class);
+            return ShellLines.cmdlineToArgs(line);
         }catch (IOException ioe){
-
+            return null;
         }
-        return null;
     }
 
     private boolean lineEnd(String lineFragment){

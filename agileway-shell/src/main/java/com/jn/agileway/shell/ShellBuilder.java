@@ -53,7 +53,7 @@ public class ShellBuilder implements Builder<Shell> {
         return this;
     }
 
-    public ShellBuilder withRunMode(RunMode defaultRunMode){
+    public ShellBuilder defaultRunMode(RunMode defaultRunMode){
         if(defaultRunMode!=null){
             this.defaultRunMode= defaultRunMode;
         }

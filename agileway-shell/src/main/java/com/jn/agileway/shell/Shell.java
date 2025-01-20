@@ -102,7 +102,12 @@ public class Shell extends AbstractLifecycle {
             this.defaultRunMode = RunMode.INTERACTIVE;
         }
         this.runMode = this.autoRegonizeInteractionMode(this.appArgs);
+
+        this.cmdlineProvider = this.runMode == RunMode.SCRIPT ? new ScriptModeCmdlineProvider(this.appArgs) : (
+                this.runMode == RunMode.ADHOC ? new AdhocModeCmdlineProvider(this.appArgs) : new InteractiveModeCmdlineProvider(this.appArgs)
+        );
     }
+
 
     @Override
     protected void doStart() {
