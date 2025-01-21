@@ -1,5 +1,6 @@
 package com.jn.agileway.shell;
 
+import com.jn.agileway.shell.builtin.BuiltinCommandsComponentFactory;
 import com.jn.agileway.shell.command.CommandRegistry;
 import com.jn.agileway.shell.command.CommandsSupplier;
 import com.jn.agileway.shell.command.DefaultCommandsSupplier;
@@ -92,6 +93,7 @@ public class ShellBuilder implements Builder<Shell> {
                 componentFactories.add(factory);
             }
         });
+        componentFactories.add(new BuiltinCommandsComponentFactory(shell.commandRegistry ));
         componentFactories.add(new ReflectiveCommandComponentFactory());
         shell.commandComponentFactory = new CompoundCommandComponentFactory(componentFactories);
 

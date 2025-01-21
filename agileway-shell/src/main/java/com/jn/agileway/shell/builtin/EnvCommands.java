@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @CommandComponent
-
 public class EnvCommands {
+
     @Command("env-variables")
     public Map<String, String> environmentVariables(
             @CommandOption(value = "s", longName = "search", required = false)

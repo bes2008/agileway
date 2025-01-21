@@ -1,5 +1,7 @@
 package com.jn.agileway.shell.command;
 
+import com.jn.agileway.shell.result.CmdOutputTransformer;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.collection.Lists;
 import org.apache.commons.cli.Option;
@@ -22,12 +24,23 @@ public class Command {
 
     private Method method;
 
+    @Nullable
+    private CmdOutputTransformer outputTransformer;
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public CmdOutputTransformer getOutputTransformer() {
+        return outputTransformer;
+    }
+
+    public void setOutputTransformer(CmdOutputTransformer outputTransformer) {
+        this.outputTransformer = outputTransformer;
     }
 
     public void setOptions(List<Option> optionList) {

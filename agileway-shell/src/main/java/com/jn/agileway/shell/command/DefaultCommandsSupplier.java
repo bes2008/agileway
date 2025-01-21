@@ -1,5 +1,8 @@
 package com.jn.agileway.shell.command;
 
+import com.jn.agileway.shell.exception.MalformedCommandException;
+import com.jn.agileway.shell.result.CmdOutputTransformer;
+import com.jn.agileway.shell.result.RawTextOutputTransformer;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.environment.Environment;
@@ -31,6 +34,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
     private static final String SCAN_PACKAGES_PROP = "agileway.shell.scan.default.packages";
 
     private static final String SCAN_BUILTIN_PACKAGES = "agileway.shell.scan.default.builtin.enabled";
+    private static final String BUILTIN_PACKAGE="com.jn.agileway.shell.builtin";
 
     public CommandsScanConfig buildScanConfig(Environment env) {
         boolean defaultScannerEnabled = Booleans.truth( env.getProperty(SCAN_ENABLED_PROP, "true"));
@@ -39,7 +43,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         CommandsScanConfig commandsScanConfig = new CommandsScanConfig();
         commandsScanConfig.setEnabled(defaultScannerEnabled);
         commandsScanConfig.setBuiltinPackagesEnabled(scanBuiltinPackage);
-        List<String> scanPackageList = Pipeline.of(Strings.split(scanPackages,",")).addIf("com.jn.agileway.shell.builtin", new Predicate2<Collection<String>, String>() {
+        List<String> scanPackageList = Pipeline.of(Strings.split(scanPackages,",")).addIf(BUILTIN_PACKAGE, new Predicate2<Collection<String>, String>() {
             @Override
             public boolean test(Collection<String> packages, String string) {
                 return scanBuiltinPackage;
@@ -113,6 +117,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
                 continue;
             }
             Command command = createCommand(methodInfo);
+            command.setGroup(commandGroup.getName());
             commands.add(command);
         }
         return result;
@@ -123,27 +128,46 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
      * @param classInfo class info
      * @return command group
      */
-    private CommandGroup createCommandGroup(ClassInfo classInfo){
+    private CommandGroup createCommandGroup(ClassInfo classInfo) {
         CommandGroup group = new CommandGroup();
         AnnotationInfo annotationInfo = classInfo.getAnnotationInfo(com.jn.agileway.shell.command.annotation.CommandGroup.class);
-        String groupName= null;
+        String groupName = null;
         String desc = "";
-        if(annotationInfo==null){
+        Class outputTransformerClass = null;
+        boolean packageAnnotationed = false;
+        if (annotationInfo == null) {
             annotationInfo = classInfo.getPackageInfo().getAnnotationInfo(com.jn.agileway.shell.command.annotation.CommandGroup.class);
+            packageAnnotationed = true;
         }
-        if(annotationInfo!=null){
+        if (annotationInfo != null) {
             AnnotationParameterValueList parameterValueList = annotationInfo.getParameterValues(true);
-            groupName= (String) parameterValueList.getValue("value");
+            groupName = (String) parameterValueList.getValue("value");
             desc = (String) parameterValueList.getValue("desc");
+            AnnotationClassRef outputTransformerClassRef = ((AnnotationClassRef) parameterValueList.getValue("outputTransformer"));
+            if (outputTransformerClassRef != null) {
+                outputTransformerClass = outputTransformerClassRef.loadClass();
+            }
         }
-        if(Strings.isBlank(groupName)){
-            groupName= classInfo.getSimpleName();
+
+        if(outputTransformerClass==null && packageAnnotationed){
+            outputTransformerClass = RawTextOutputTransformer.class;
         }
-        if(desc==null){
+        if (Strings.isBlank(groupName)) {
+            groupName = classInfo.getSimpleName();
+        }
+        if (Objs.equals(groupName, CommandGroup.BUILTIN_GROUP) && !Strings.equals(classInfo.getPackageInfo().getName(), BUILTIN_PACKAGE)) {
+            throw new MalformedCommandException("customized command use the 'builtin' command group");
+        }
+        if (desc == null) {
             desc = "";
         }
         group.setDesc(desc);
         group.setName(groupName);
+
+        if (outputTransformerClass != null){
+            CmdOutputTransformer transformer = Reflects.<CmdOutputTransformer>newInstance(outputTransformerClass);
+            group.setOutputTransformer(transformer);
+        }
 
         return group;
     }
@@ -155,10 +179,15 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         String name = null;
         String[] alias=null;
         String desc =null;
+        Class outputTransformerClass = null;
         if (parameterValueList!=null){
             name = (String)parameterValueList.getValue("value");
             alias = (String[]) parameterValueList.getValue("alias");
             desc = (String)parameterValueList.getValue("desc");
+            AnnotationClassRef outputTransformerClassRef = ((AnnotationClassRef) parameterValueList.getValue("outputTransformer"));
+            if (outputTransformerClassRef != null) {
+                outputTransformerClass = outputTransformerClassRef.loadClass();
+            }
         }
 
         if(Strings.isBlank(name)){
@@ -174,7 +203,11 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         Method method = methodInfo.loadClassAndGetMethod();
         command.setMethod(method);
         command.setDesc(desc);
-
+        CmdOutputTransformer transformer=null;
+        if (outputTransformerClass != null){
+            transformer = Reflects.<CmdOutputTransformer>newInstance(outputTransformerClass);
+        }
+        command.setOutputTransformer(transformer);
 
         MethodParameterInfo[] methodParameterInfoList = methodInfo.getParameterInfo();
         List<Option> options = Lists.newArrayListWithCapacity(methodParameterInfoList.length);

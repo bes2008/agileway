@@ -6,7 +6,6 @@ import com.jn.agileway.shell.cmdline.ShellCmdlines;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.io.Charsets;
-import org.fusesource.jansi.AnsiConsole;
 
 import java.io.BufferedReader;
 import java.io.IOException;

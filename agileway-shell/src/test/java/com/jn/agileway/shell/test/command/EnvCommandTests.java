@@ -17,9 +17,14 @@ public class EnvCommandTests {
     public void testEnvVariables(){
         newAdhocShell().start(ShellCmdlines.cmdlineToArgs("env-variables -s JAVA"));
         newAdhocShell().start(ShellCmdlines.cmdlineToArgs("env-variables"));
+
+        newAdhocShell().start(ShellCmdlines.cmdlineToArgs("env variables -s JAVA"));
+    }
+
+    @Test
+    public void testSystemProperties(){
         newAdhocShell().start(ShellCmdlines.cmdlineToArgs("system-props -s user"));
         newAdhocShell().start(ShellCmdlines.cmdlineToArgs("system-props -a"));
         newAdhocShell().start(ShellCmdlines.cmdlineToArgs("system-props"));
-        newAdhocShell().start(ShellCmdlines.cmdlineToArgs("env variables -s JAVA"));
     }
 }

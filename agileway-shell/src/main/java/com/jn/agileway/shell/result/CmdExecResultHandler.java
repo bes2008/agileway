@@ -1,16 +1,15 @@
 package com.jn.agileway.shell.result;
 
 import com.jn.agileway.shell.cmdline.AnsiFontText;
+import com.jn.agileway.shell.cmdline.Cmdline;
 import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.agileway.shell.exception.MalformedOptionValueException;
 import com.jn.agileway.shell.exception.NotFoundCommandException;
 import com.jn.langx.text.StringTemplates;
-import org.fusesource.jansi.Ansi;
 
-import java.io.PrintWriter;
 
 public final class CmdExecResultHandler {
-    private CmdOutputTransformer stdoutTransformer = new JsonStyleOutputTransformer();
+    private CmdOutputTransformer stdoutTransformer = new RawTextOutputTransformer();
 
     public void handle(CmdExecResult execResult) {
         preOutput(execResult);
@@ -18,16 +17,26 @@ public final class CmdExecResultHandler {
     }
 
     private void output(CmdExecResult execResult) {
-        PrintWriter writer = new PrintWriter(System.out);
-        writer.println(execResult.getExitCode() == 0 ? execResult.getStdout() :
-                new AnsiFontText(execResult.getStderr())
-                        .bold(true)
-                        .fontColor(Ansi.Color.RED)
 
-        );
-        writer.flush();
+        String out = execResult.getExitCode() == 0 ? execResult.getStdout() :
+                AnsiFontText.ofErrorMessage(execResult.getStderr())
+                        .bold(true).toString();
+        if(out!=null) {
+            System.out.println(out);
+        }
+
     }
 
+    private CmdOutputTransformer getCmdOutputTransformer(Cmdline cmdline){
+        if(cmdline==null){
+            return this.stdoutTransformer;
+        }
+        CmdOutputTransformer transformer = cmdline.getCommandDefinition().getOutputTransformer();
+        if(transformer==null){
+            transformer = this.stdoutTransformer;
+        }
+        return transformer;
+    }
 
     private void preOutput(CmdExecResult execResult) {
         if (execResult.getExitCode() >= 0) {
@@ -36,7 +45,7 @@ public final class CmdExecResultHandler {
         Throwable err = execResult.getErr();
         if (err == null) {
             execResult.setExitCode(0);
-            String stdout = stdoutTransformer.transform(execResult.getStdoutData());
+            String stdout = getCmdOutputTransformer(execResult.getCmdline()).transform(execResult.getStdoutData());
             execResult.setStdout(stdout);
             return;
         }

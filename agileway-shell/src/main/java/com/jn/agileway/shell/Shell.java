@@ -230,6 +230,7 @@ public class Shell extends AbstractLifecycle {
             execResult.setErr(e);
         }
         execResult = this.commandlineExecutor.exec(parsedCmdline);
+        execResult.setCmdline(parsedCmdline);
         return execResult;
     }
 

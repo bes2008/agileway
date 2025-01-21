@@ -1,5 +1,6 @@
 package com.jn.agileway.shell.result;
 
+import com.jn.agileway.shell.cmdline.Cmdline;
 import com.jn.langx.text.StringTemplates;
 
 public class CmdExecResult {
@@ -33,6 +34,16 @@ public class CmdExecResult {
      * 要作为stdout输出的原始数据，对应的是cmd method的执行结果
      */
     private Object stdoutData;
+
+    private transient Cmdline cmdline;
+
+    public Cmdline getCmdline() {
+        return cmdline;
+    }
+
+    public void setCmdline(Cmdline cmdline) {
+        this.cmdline = cmdline;
+    }
 
     /**
      * 最终要放到stdout的内容

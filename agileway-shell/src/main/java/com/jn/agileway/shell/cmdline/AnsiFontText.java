@@ -104,4 +104,8 @@ public class AnsiFontText {
     }
 
     public static final AnsiFontText NEWLINE = new AnsiFontText("\n");
+
+    public static AnsiFontText ofErrorMessage(String msg){
+        return new AnsiFontText(msg).fontColor(Ansi.Color.RED);
+    }
 }
