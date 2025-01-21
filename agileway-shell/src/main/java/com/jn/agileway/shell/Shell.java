@@ -22,15 +22,18 @@ import com.jn.langx.util.Booleans;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
+import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.converter.ConverterService;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.function.Predicate2;
 import com.jn.langx.util.logging.Loggers;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.util.List;
 import java.util.Map;
@@ -61,6 +64,7 @@ public class Shell extends AbstractLifecycle {
     protected CmdExecResultHandler execResultHandler = new CmdExecResultHandler();
     protected CmdlineProvider cmdlineProvider;
     private boolean debugModeEnabled;
+    protected boolean ansiConsoleEnabled;
 
     /**
      * 当应用命令行是一个命令时，指定命令运行后，以哪种方式处理。该值可以是 AD-HOC 也可以是 INTERACTIVE
@@ -106,11 +110,33 @@ public class Shell extends AbstractLifecycle {
         }
         this.runMode = this.autoRegonizeInteractionMode(this.appArgs);
 
+        enableAnsiConsole();
+
         this.cmdlineProvider = this.runMode == RunMode.SCRIPT ? new ScriptModeCmdlineProvider(this.appArgs) : (
                 this.runMode == RunMode.ADHOC ? new AdhocModeCmdlineProvider(this.appArgs) : new InteractiveModeCmdlineProvider(this.appArgs)
         );
+
+
+
     }
 
+    /**
+     * 启用 ansi console，该方法要在 cmdlineProvider 之前调用
+     */
+    private void enableAnsiConsole() {
+        if (ansiConsoleEnabled) {
+            String mode = this.environment.getProperty(AnsiConsole.JANSI_MODE, AnsiConsole.JANSI_MODE_FORCE);
+            mode = Strings.lowerCase(mode);
+            mode = Objs.useValueIfNotMatch(mode, new Predicate<String>() {
+                @Override
+                public boolean test(String m) {
+                    return Lists.newArrayList(AnsiConsole.JANSI_MODE_DEFAULT, AnsiConsole.JANSI_MODE_FORCE, AnsiConsole.JANSI_MODE_STRIP).contains(m);
+                }
+            }, AnsiConsole.JANSI_MODE_STRIP);
+            System.setProperty(AnsiConsole.JANSI_MODE, mode);
+            AnsiConsole.systemInstall();
+        }
+    }
 
     @Override
     protected void doStart() {

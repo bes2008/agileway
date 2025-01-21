@@ -20,8 +20,6 @@ public class InteractiveModeCmdlineProvider implements CmdlineProvider {
 
     public InteractiveModeCmdlineProvider(ApplicationArgs appArgs){
         this.appArgs = appArgs;
-        System.setProperty("jansi.mode", "force");
-        AnsiConsole.systemInstall();
         this.stdin = new BufferedReader(new InputStreamReader(System.in, Charsets.getDefault()));
     }
 

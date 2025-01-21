@@ -26,6 +26,7 @@ public class ShellBuilder implements Builder<Shell> {
     private RunMode defaultRunMode = RunMode.INTERACTIVE;
 
     private final List<CommandsSupplier> commandsSuppliers = Lists.newArrayList(new DefaultCommandsSupplier());
+    private boolean ansiConsoleEnabled = true;
 
     public ShellBuilder componentFactory(CommandComponentFactory factory) {
         if (factory != null) {
@@ -60,6 +61,11 @@ public class ShellBuilder implements Builder<Shell> {
         return this;
     }
 
+    public ShellBuilder ansiConsoleEnabled(boolean enabled){
+        this.ansiConsoleEnabled = enabled;
+        return this;
+    }
+
     @Override
     public Shell build() {
 
@@ -90,6 +96,7 @@ public class ShellBuilder implements Builder<Shell> {
         shell.commandComponentFactory = new CompoundCommandComponentFactory(componentFactories);
 
         shell.defaultRunMode = this.defaultRunMode;
+        shell.ansiConsoleEnabled = this.ansiConsoleEnabled;
         return shell;
     }
 }
