@@ -74,9 +74,9 @@
 
     <repositories>
         <repository>
-            <id>aliyun</id>
-            <url>https://maven.aliyun.com/repository/central</url>
-            <name>aliyun</name>
+            <id>huawei</id>
+            <url>https://mirrors.huaweicloud.com/repository/maven/</url>
+            <name>huawei</name>
             <layout>default</layout>
             <releases>
                 <enabled>true</enabled>

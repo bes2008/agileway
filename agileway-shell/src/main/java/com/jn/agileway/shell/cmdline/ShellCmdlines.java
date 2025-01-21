@@ -1,12 +1,11 @@
-package com.jn.agileway.shell;
+package com.jn.agileway.shell.cmdline;
 
-import com.jn.agileway.shell.cmdline.ShellLineTokenizer;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Strings;
 
 import java.util.List;
 
-public class ShellLines {
+public class ShellCmdlines {
     public static String[] cmdlineToArgs(String cmdline){
         if(cmdline==null){
             return null;

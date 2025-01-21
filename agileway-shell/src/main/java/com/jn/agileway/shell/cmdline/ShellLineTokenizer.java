@@ -2,13 +2,12 @@ package com.jn.agileway.shell.cmdline;
 
 import com.jn.langx.text.tokenizer.CommonTokenizer;
 import com.jn.langx.text.tokenizer.TokenFactory;
-import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
 
 import java.util.List;
 
-public class ShellLineTokenizer extends CommonTokenizer<String> implements CmdlineTokenizer{
+public class ShellLineTokenizer extends CommonTokenizer<String> implements CmdlineTokenizer {
     private List<Character> quoteStack = Lists.newArrayListWithCapacity(10);
     public ShellLineTokenizer(String cmdline) {
         super(removeSemicolon(cmdline), false);

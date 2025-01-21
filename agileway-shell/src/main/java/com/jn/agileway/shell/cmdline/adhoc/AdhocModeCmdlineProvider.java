@@ -1,6 +1,7 @@
-package com.jn.agileway.shell.cmdline;
+package com.jn.agileway.shell.cmdline.adhoc;
 
 import com.jn.agileway.shell.ApplicationArgs;
+import com.jn.agileway.shell.cmdline.CmdlineProvider;
 
 public class AdhocModeCmdlineProvider implements CmdlineProvider {
     private ApplicationArgs args;

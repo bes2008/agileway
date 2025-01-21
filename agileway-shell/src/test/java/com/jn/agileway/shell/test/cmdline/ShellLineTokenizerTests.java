@@ -1,4 +1,4 @@
-package com.jn.agileway.shell.test.command;
+package com.jn.agileway.shell.test.cmdline;
 
 import com.jn.agileway.shell.cmdline.ShellLineTokenizer;
 import org.junit.Test;

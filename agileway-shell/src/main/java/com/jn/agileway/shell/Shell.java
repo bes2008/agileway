@@ -1,6 +1,9 @@
 package com.jn.agileway.shell;
 
 import com.jn.agileway.shell.cmdline.*;
+import com.jn.agileway.shell.cmdline.adhoc.AdhocModeCmdlineProvider;
+import com.jn.agileway.shell.cmdline.interactive.InteractiveModeCmdlineProvider;
+import com.jn.agileway.shell.cmdline.script.ScriptModeCmdlineProvider;
 import com.jn.agileway.shell.command.*;
 import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.agileway.shell.exception.NotFoundCommandException;

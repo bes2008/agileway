@@ -1,4 +1,4 @@
-package com.jn.agileway.shell.builtincmd;
+package com.jn.agileway.shell.builtin;
 
 import com.jn.agileway.shell.command.annotation.CommandComponent;
 

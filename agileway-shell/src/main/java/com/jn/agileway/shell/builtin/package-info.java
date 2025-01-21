@@ -1,5 +1,5 @@
 @CommandGroup(value = DEFAULT_GROUP, desc = DEFAULT_GROUP_DESC)
-package com.jn.agileway.shell.builtincmd;
+package com.jn.agileway.shell.builtin;
 
 import com.jn.agileway.shell.command.annotation.CommandGroup;
 

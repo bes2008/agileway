@@ -39,7 +39,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         CommandsScanConfig commandsScanConfig = new CommandsScanConfig();
         commandsScanConfig.setEnabled(defaultScannerEnabled);
         commandsScanConfig.setBuiltinPackagesEnabled(scanBuiltinPackage);
-        List<String> scanPackageList = Pipeline.of(Strings.split(scanPackages,",")).addIf("com.jn.agileway.shell.builtincmd", new Predicate2<Collection<String>, String>() {
+        List<String> scanPackageList = Pipeline.of(Strings.split(scanPackages,",")).addIf("com.jn.agileway.shell.builtin", new Predicate2<Collection<String>, String>() {
             @Override
             public boolean test(Collection<String> packages, String string) {
                 return scanBuiltinPackage;

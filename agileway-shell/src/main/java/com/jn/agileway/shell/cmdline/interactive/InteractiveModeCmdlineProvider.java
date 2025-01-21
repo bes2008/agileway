@@ -1,22 +1,27 @@
-package com.jn.agileway.shell.cmdline;
+package com.jn.agileway.shell.cmdline.interactive;
 
 import com.jn.agileway.shell.ApplicationArgs;
-import com.jn.agileway.shell.ShellLines;
+import com.jn.agileway.shell.cmdline.CmdlineProvider;
+import com.jn.agileway.shell.cmdline.ShellCmdlines;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.io.Charsets;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class InteractiveModeCmdlineProvider implements CmdlineProvider{
+public class InteractiveModeCmdlineProvider implements CmdlineProvider {
     private ApplicationArgs appArgs;
     private boolean appArgsUsed = false;
     private BufferedReader stdin;
 
+
     public InteractiveModeCmdlineProvider(ApplicationArgs appArgs){
         this.appArgs = appArgs;
+        System.setProperty("jansi.mode", "force");
+        AnsiConsole.systemInstall();
         this.stdin = new BufferedReader(new InputStreamReader(System.in, Charsets.getDefault()));
     }
 
@@ -39,10 +44,10 @@ public class InteractiveModeCmdlineProvider implements CmdlineProvider{
                 line = Strings.substring(line, 1);
             }
             if(line.isEmpty()){
-                return ShellLines.cmdlineToArgs(line);
+                return ShellCmdlines.cmdlineToArgs(line);
             }
             if( line.endsWith(";") || !Strings.endsWith(line,"\\")){
-                return ShellLines.cmdlineToArgs(line);
+                return ShellCmdlines.cmdlineToArgs(line);
             }
             // 多行模式下
             StringBuilder buffer= new StringBuilder(255);
@@ -64,7 +69,7 @@ public class InteractiveModeCmdlineProvider implements CmdlineProvider{
                 System.out.println("cmd error");
                 return Emptys.EMPTY_STRINGS;
             }
-            return ShellLines.cmdlineToArgs(line);
+            return ShellCmdlines.cmdlineToArgs(line);
         }catch (IOException ioe){
             return null;
         }
