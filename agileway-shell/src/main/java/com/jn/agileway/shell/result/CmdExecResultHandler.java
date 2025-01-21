@@ -1,10 +1,11 @@
 package com.jn.agileway.shell.result;
 
-import com.jn.agileway.shell.cmdline.interactive.AnsiFontText;
+import com.jn.agileway.shell.cmdline.AnsiFontText;
 import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.agileway.shell.exception.MalformedOptionValueException;
 import com.jn.agileway.shell.exception.NotFoundCommandException;
 import com.jn.langx.text.StringTemplates;
+import org.fusesource.jansi.Ansi;
 
 import java.io.PrintWriter;
 
@@ -18,7 +19,12 @@ public final class CmdExecResultHandler {
 
     private void output(CmdExecResult execResult) {
         PrintWriter writer = new PrintWriter(System.out);
-        writer.println(execResult.getExitCode() == 0 ? execResult.getStdout() : new AnsiFontText(execResult.getStderr()).bold(true));
+        writer.println(execResult.getExitCode() == 0 ? execResult.getStdout() :
+                new AnsiFontText(execResult.getStderr())
+                        .bold(true)
+                        .fontColor(Ansi.Color.RED)
+
+        );
         writer.flush();
     }
 

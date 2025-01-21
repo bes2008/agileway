@@ -1,6 +1,6 @@
 package com.jn.agileway.shell.test.jansi;
 
-import com.jn.agileway.shell.cmdline.interactive.AnsiFontText;
+import com.jn.agileway.shell.cmdline.AnsiFontText;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
