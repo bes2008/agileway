@@ -1,6 +1,7 @@
 package com.jn.agileway.shell.cmdline.interactive;
 
 import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 
 public class AnsiFontText {
 
@@ -73,28 +74,33 @@ public class AnsiFontText {
 
     @Override
     public String toString() {
-        Ansi ansi = Ansi.ansi();
-        if(fontColor!=null){
-            ansi.fg(fontColor);
+        String text = this.text == null ? "" : this.text;
+        if(AnsiConsole.isInstalled()) {
+            Ansi ansi = Ansi.ansi();
+            if (fontColor != null) {
+                ansi.fg(fontColor);
+            }
+            if (backgroundColor != null) {
+                ansi.bg(backgroundColor);
+            }
+            if (bold) {
+                ansi.bold();
+            }
+            if (italic) {
+                ansi.a(Ansi.Attribute.ITALIC);
+            }
+            if (underline != null) {
+                ansi.a(underline == Underline.UNDERLINE ? Ansi.Attribute.UNDERLINE : Ansi.Attribute.UNDERLINE_DOUBLE);
+            }
+            if (strikethrough) {
+                ansi.a(Ansi.Attribute.STRIKETHROUGH_ON);
+            }
+            ansi.a(text);
+            ansi.reset();
+            return ansi.toString();
+        }else{
+            return text;
         }
-        if(backgroundColor!=null){
-            ansi.bg(backgroundColor);
-        }
-        if(bold){
-            ansi.bold();
-        }
-        if( italic){
-            ansi.a(Ansi.Attribute.ITALIC);
-        }
-        if(underline!=null){
-            ansi.a(underline==Underline.UNDERLINE?Ansi.Attribute.UNDERLINE:Ansi.Attribute.UNDERLINE_DOUBLE);
-        }
-        if(strikethrough){
-            ansi.a(Ansi.Attribute.STRIKETHROUGH_ON);
-        }
-        ansi.a(text==null?"":text);
-        ansi.reset();
-        return ansi.toString();
     }
 
     public static final AnsiFontText NEWLINE = new AnsiFontText("\n");
