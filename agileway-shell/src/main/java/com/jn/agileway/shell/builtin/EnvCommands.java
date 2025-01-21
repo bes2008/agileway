@@ -12,7 +12,7 @@ import java.util.Map;
 @CommandComponent
 public class EnvCommands {
 
-    @Command("env-variables")
+    @Command(value = "env-variables", desc = "search or list all environment variables ")
     public Map<String, String> environmentVariables(
             @CommandOption(value = "s", longName = "search", required = false)
             String search) {
@@ -32,7 +32,7 @@ public class EnvCommands {
         return result;
     }
 
-    @Command("system-props")
+    @Command(value = "system-props", desc = "search or list all system properties")
     public Map<String, String> systemProperties(
             @CommandOption(value = "s", longName = "search", required = false)
             String search ){

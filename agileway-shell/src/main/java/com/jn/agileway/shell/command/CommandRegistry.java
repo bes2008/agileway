@@ -8,6 +8,7 @@ import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Predicate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,8 +24,16 @@ public class CommandRegistry {
         this.commandGroupMap.put(commandGroup.getName(), commandGroup);
     }
 
-    public List<CommandGroup> getCommandGroups(){
-        return Lists.newArrayList(commandGroupMap.values());
+    public List<CommandGroup> getCommandGroups(String... groupNames){
+        if(Objs.isEmpty(groupNames)) {
+            return Lists.newArrayList(commandGroupMap.values());
+        }
+        List<CommandGroup> groups = new ArrayList<>();
+        for (String groupName : groupNames){
+            CommandGroup group = this.commandGroupMap.get(groupName);
+            groups.add(group);
+        }
+        return groups;
     }
 
     public CommandGroup getCommandGroup(String group){

@@ -56,19 +56,24 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
             Option optionDef = optionsDef.getOption(optionKey);
             if (parameter.getType().isArray()) {
                 String[] stringValues = cmdline.getParsed().getOptionValues(optionKey);
-                Object array = Arrs.createArray((Class) optionDef.getType(), stringValues.length);
-                for (int i = 0; i < stringValues.length; i++) {
-                    String stringValue = stringValues[i];
-                    Object value = convertStringToTarget(stringValue, (Class) optionDef.getType(), optionDef);
-                    Array.set(array, i, value);
+
+                Object array = Arrs.createArray((Class) optionDef.getType(),stringValues==null?0: stringValues.length);
+                if(stringValues!=null) {
+                    for (int i = 0; i < stringValues.length; i++) {
+                        String stringValue = stringValues[i];
+                        Object value = convertStringToTarget(stringValue, (Class) optionDef.getType(), optionDef);
+                        Array.set(array, i, value);
+                    }
                 }
                 methodArgs[parameterIndex] = array;
             } else if (Reflects.isSubClassOrEquals(Collection.class, parameter.getType())) {
                 String[] stringValues = cmdline.getParsed().getOptionValues(optionKey);
                 Collection collection = newCollection(parameter.getType());
-                for (String stringValue : stringValues) {
-                    Object value = convertStringToTarget(stringValue, (Class) optionDef.getType(), optionDef);
-                    collection.add(value);
+                if(stringValues!=null) {
+                    for (String stringValue : stringValues) {
+                        Object value = convertStringToTarget(stringValue, (Class) optionDef.getType(), optionDef);
+                        collection.add(value);
+                    }
                 }
                 methodArgs[parameterIndex] = collection;
             } else {
