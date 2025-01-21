@@ -1,10 +1,13 @@
 package com.jn.agileway.shell.cmdline;
 
+import com.jn.agileway.shell.command.CommandArgument;
+import com.jn.agileway.shell.exception.MalformedCommandArgumentsException;
 import com.jn.agileway.shell.exception.MalformedOptionValueException;
 import com.jn.agileway.shell.exception.UnsupportedCollectionException;
 import com.jn.agileway.shell.result.CmdExecResult;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.collection.Arrs;
+import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Sets;
 import com.jn.langx.util.collection.stack.SimpleStack;
@@ -46,11 +49,14 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
 
     private Object[] prepareMethodArgs(Cmdline cmdline) {
         List<String> optionKeys = cmdline.getCommandDefinition().getOptionKeys();
-        Object[] methodArgs = new Object[optionKeys.size()];
+        Object[] methodArgs = new Object[cmdline.getCommandDefinition().getMethod().getParameters().length];
         Method method = cmdline.getCommandDefinition().getMethod();
         Parameter[] parameters = method.getParameters();
+
+        int parameterIndex = 0;
+        // 处理 options
         Options optionsDef = cmdline.getCommandDefinition().getOptions();
-        for (int parameterIndex = 0; parameterIndex < optionKeys.size(); parameterIndex++) {
+        for (; parameterIndex < optionKeys.size(); parameterIndex++) {
             String optionKey = optionKeys.get(parameterIndex);
             Parameter parameter = parameters[parameterIndex];
             Option optionDef = optionsDef.getOption(optionKey);
@@ -81,6 +87,34 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
                 Object value = convertStringToTarget(stringValue, (Class) optionDef.getType(), optionDef);
                 methodArgs[parameterIndex] = value;
             }
+        }
+
+        List<CommandArgument> argumentsDef = cmdline.getCommandDefinition().getArguments();
+        if(!argumentsDef.isEmpty()) {
+            List<String> argumentValues = cmdline.getParsed().getArgList();
+            int i = 0;
+            for (; i < argumentsDef.size()-1; i++) {
+                methodArgs[parameterIndex] = argumentValues.get(i);
+                parameterIndex++;
+            }
+
+            List<String> lastArgumentValues = argumentValues.subList(i, argumentValues.size());
+            Parameter lastParameter = parameters[parameterIndex];
+            if(lastParameter.getType().isArray()){
+                methodArgs[parameterIndex] = Collects.toArray(lastArgumentValues,String[].class);
+            }else{
+                if(lastArgumentValues.size()>1){
+                    throw new MalformedCommandArgumentsException(argumentsDef.get(argumentsDef.size()-1).getName());
+                }else if(lastArgumentValues.size()==1){
+                    methodArgs[parameterIndex]=lastArgumentValues.get(0);
+                }else{
+                    methodArgs[parameterIndex]=null;
+                }
+            }
+            parameterIndex++;
+        }
+        if(parameterIndex!=parameters.length){
+            throw new MalformedCommandArgumentsException("argument missing or too many");
         }
         return methodArgs;
     }

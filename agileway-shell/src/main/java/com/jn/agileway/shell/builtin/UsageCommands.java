@@ -6,6 +6,7 @@ import com.jn.agileway.shell.command.CommandRegistry;
 import com.jn.agileway.shell.command.annotation.Command;
 import com.jn.agileway.shell.command.annotation.CommandComponent;
 import com.jn.agileway.shell.command.annotation.CommandOption;
+import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Strings;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class UsageCommands {
     @Command(value = "commands", desc = "List commands in some or all groups")
     public String listCommands(
             @CommandOption(value = "g", longName = "groups", required = false)
-            String[] groupNames) {
+            String... groupNames) {
         StringBuilder builder = new StringBuilder(255);
         List<CommandGroup> commandGroups = commandRegistry.getCommandGroups(groupNames);
         for (CommandGroup commandGroup : commandGroups) {
@@ -43,4 +44,26 @@ public class UsageCommands {
         }
         return builder.toString();
     }
+
+    @Command(value = "help", desc = "Display the summary")
+    public String help(String commandKey){
+        if(Strings.isEmpty(commandKey)){
+            return listCommands();
+        }
+        com.jn.agileway.shell.command.Command command = commandRegistry.getCommand(commandKey);
+        if(command==null){
+            throw new RuntimeException(StringTemplates.formatWithPlaceholder("command '' not found", commandKey));
+        }
+        return "";
+    }
+
+    private void appHelpInfoTo(StringBuilder builder, com.jn.agileway.shell.command.Command command){
+        if(builder==null || command==null){
+            return;
+        }
+        // Usage: <command-name> [Options]
+        // builder.append()
+
+    }
+
 }

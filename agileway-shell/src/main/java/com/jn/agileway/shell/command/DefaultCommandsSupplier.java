@@ -6,6 +6,7 @@ import com.jn.agileway.shell.result.RawTextOutputTransformer;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.environment.Environment;
+import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Booleans;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
@@ -13,6 +14,7 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
+import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.function.Predicate2;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
@@ -212,14 +214,81 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
 
         MethodParameterInfo[] methodParameterInfoList = methodInfo.getParameterInfo();
         List<Option> options = Lists.newArrayListWithCapacity(methodParameterInfoList.length);
+
+        int firstCommandArgumentIndex = Collects.<MethodParameterInfo,Collection<MethodParameterInfo>>firstOccurrence(Collects.<MethodParameterInfo>asList(methodParameterInfoList), new Predicate2<Integer, MethodParameterInfo>(){
+            @Override
+            public boolean test(Integer idx, MethodParameterInfo methodParameterInfo) {
+                AnnotationInfo commandArgumentAnnotationInfo = methodParameterInfo.getAnnotationInfo(com.jn.agileway.shell.command.annotation.CommandArgument.class);
+                return commandArgumentAnnotationInfo!=null;
+            }
+        });
+        List<CommandArgument> arguments = Lists.newArrayList();
         for (int i = 0; i < methodParameterInfoList.length; i++) {
             MethodParameterInfo methodParameterInfo = methodParameterInfoList[i];
-            Option option = createOption(methodParameterInfo, method, i);
-            options.add(option);
+            if(firstCommandArgumentIndex<0 || i<firstCommandArgumentIndex) {
+                Option option = createOption(methodParameterInfo, method, i);
+                options.add(option);
+            }else{
+                CommandArgument commandArgument = createCommandArgument(methodParameterInfo, method, i);
+                arguments.add(commandArgument);
+            }
         }
 
         command.setOptions(options);
+
+        // 对参数进行校验
+        int lastRequiredIndex = Collects.lastIndexOf(arguments, new Predicate<CommandArgument>() {
+            @Override
+            public boolean test(CommandArgument commandArgument) {
+                return commandArgument.isRequired();
+            }
+        });
+        // 判定 在 lastRequiredIndex 之前的 argument 都是 required
+        for (int i = 0; i < lastRequiredIndex; i++) {
+            if(!arguments.get(i).isRequired()){
+                throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("@CommandArgument required() in [{}th, {}th] should be true for method {}", options.size(),lastRequiredIndex,Reflects.getFQNClassName(method.getDeclaringClass())+"#"+method.getName()));
+            }
+        }
+        command.setArguments(arguments);
+
         return command;
+    }
+
+    private CommandArgument createCommandArgument(MethodParameterInfo methodParameterInfo, Method method, int parameterIndex){
+        AnnotationInfo annotationInfo = methodParameterInfo.getAnnotationInfo(com.jn.agileway.shell.command.annotation.CommandArgument.class);
+        if(annotationInfo==null){
+            throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("@CommandArgument at the {}th parameter is required for method {}", parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass())+"#"+method.getName()));
+        }
+
+        Class parameterType= method.getParameters()[parameterIndex].getType();
+        if(parameterIndex<method.getParameters().length-1){
+            if(parameterType!= String.class){
+                throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("parameter type should be java.lang.String at {}th for method {}",parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass())+"#"+method.getName()));
+            }
+        }else if(parameterIndex == method.getParameters().length-1){
+            if(parameterType== String.class || (parameterType.isArray() && parameterType.getComponentType()==String.class) ){
+                // matching
+            }else{
+                throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("parameter type should be java.lang.String or java.lang.String[] at {}th for method {}",parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass())+"#"+method.getName()));
+            }
+        }
+
+
+        AnnotationParameterValueList parameterValueList = annotationInfo.getParameterValues(true);
+        String name = (String) parameterValueList.getValue("value");
+        String desc = (String) parameterValueList.getValue("desc");
+        boolean required = (boolean) parameterValueList.getValue("required");
+
+        if(Strings.isBlank(name)){
+            throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("@CommandArgument value() at the {}th parameter is required for method {}", parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass())+"#"+method.getName()));
+        }
+        desc = Objs.useValueIfEmpty(desc,name);
+
+        CommandArgument argument = new CommandArgument();
+        argument.setRequired(required);
+        argument.setName(name);
+        argument.setDesc(desc);
+        return argument;
     }
 
     private CommandOption createOption(MethodParameterInfo methodParameterInfo, Method method, int parameterIndex) {

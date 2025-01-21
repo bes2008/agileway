@@ -1,9 +1,13 @@
 package com.jn.agileway.shell.command;
 
+import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.agileway.shell.result.CmdOutputTransformer;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.text.StringTemplates;
+import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Lists;
+import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.function.Predicate;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
@@ -20,6 +24,7 @@ public class Command {
     private List<String> optionKeys= Lists.newArrayList();
     private Options options;
 
+    private List<CommandArgument> arguments = Lists.newArrayList();
     private String desc;
 
     private Method method;
@@ -92,6 +97,16 @@ public class Command {
         this.desc = desc;
     }
 
+    public List<CommandArgument> getArguments() {
+        return arguments;
+    }
+
+    public void setArguments(List<CommandArgument> arguments) {
+        if(arguments!=null){
+            Pipeline.of(arguments).clearNulls().addTo(this.arguments);
+        }
+    }
+
     @Override
     public String toString() {
         return StringTemplates.formatWithPlaceholder( "name: {}, group: {}, alias: {}, desc: {}, options: {}", name, group, alias, desc, options);
@@ -111,4 +126,5 @@ public class Command {
         }
         return commands;
     }
+
 }

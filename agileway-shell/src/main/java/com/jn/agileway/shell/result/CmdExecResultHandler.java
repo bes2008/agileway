@@ -2,6 +2,7 @@ package com.jn.agileway.shell.result;
 
 import com.jn.agileway.shell.cmdline.AnsiFontText;
 import com.jn.agileway.shell.cmdline.Cmdline;
+import com.jn.agileway.shell.exception.MalformedCommandArgumentsException;
 import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.agileway.shell.exception.MalformedOptionValueException;
 import com.jn.agileway.shell.exception.NotFoundCommandException;
@@ -64,7 +65,13 @@ public final class CmdExecResultHandler {
 
         if (err instanceof MalformedOptionValueException) {
             execResult.setExitCode(2);
-            execResult.setStderr(StringTemplates.formatWithPlaceholder("malformed option value: {}", err.getMessage()));
+            execResult.setStderr(StringTemplates.formatWithPlaceholder("malformed command option value: {}", err.getMessage()));
+            return;
+        }
+
+        if (err instanceof MalformedCommandArgumentsException) {
+            execResult.setExitCode(2);
+            execResult.setStderr(StringTemplates.formatWithPlaceholder("malformed command argument value: {}", err.getMessage()));
             return;
         }
 
