@@ -14,6 +14,6 @@ public class UsageCommandTests {
     }
     @Test
     public void testCommands(){
-        newAdhocShell().start(ShellCmdlines.cmdlineToArgs("commands"));
+        newAdhocShell().start(ShellCmdlines.cmdlineToArgs("commands -g builtin2"));
     }
 }

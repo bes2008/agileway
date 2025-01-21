@@ -7,7 +7,6 @@ import com.jn.agileway.shell.command.annotation.Command;
 import com.jn.agileway.shell.command.annotation.CommandComponent;
 import com.jn.agileway.shell.command.annotation.CommandOption;
 import com.jn.langx.util.Strings;
-import com.jn.langx.util.collection.Collects;
 
 import java.util.List;
 @CommandComponent
