@@ -34,28 +34,29 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
     private static final String SCAN_PACKAGES_PROP = "agileway.shell.scan.default.packages";
 
     private static final String SCAN_BUILTIN_PACKAGES = "agileway.shell.scan.default.builtin.enabled";
-    private static final String BUILTIN_PACKAGE="com.jn.agileway.shell.builtin";
+    private static final String BUILTIN_PACKAGE = "com.jn.agileway.shell.builtin";
 
     public CommandsScanConfig buildScanConfig(Environment env) {
-        boolean defaultScannerEnabled = Booleans.truth( env.getProperty(SCAN_ENABLED_PROP, "true"));
+        boolean defaultScannerEnabled = Booleans.truth(env.getProperty(SCAN_ENABLED_PROP, "true"));
         String scanPackages = env.getProperty(SCAN_PACKAGES_PROP);
         boolean scanBuiltinPackage = Booleans.truth(env.getProperty(SCAN_BUILTIN_PACKAGES, "true"));
         CommandsScanConfig commandsScanConfig = new CommandsScanConfig();
         commandsScanConfig.setEnabled(defaultScannerEnabled);
         commandsScanConfig.setBuiltinPackagesEnabled(scanBuiltinPackage);
-        List<String> scanPackageList = Pipeline.of(Strings.split(scanPackages,",")).addIf(BUILTIN_PACKAGE, new Predicate2<Collection<String>, String>() {
+        List<String> scanPackageList = Pipeline.of(Strings.split(scanPackages, ",")).addIf(BUILTIN_PACKAGE, new Predicate2<Collection<String>, String>() {
             @Override
             public boolean test(Collection<String> packages, String string) {
                 return scanBuiltinPackage;
             }
         }).distinct().asList();
 
-        if(defaultScannerEnabled && Objs.isEmpty(scanPackageList)){
+        if (defaultScannerEnabled && Objs.isEmpty(scanPackageList)) {
             Loggers.getLogger(DefaultCommandsSupplier.class).warn("property is empty: {}", SCAN_PACKAGES_PROP);
         }
         commandsScanConfig.setPackages(scanPackageList);
         return commandsScanConfig;
     }
+
     @Override
     public Map<CommandGroup, List<Command>> get(Environment env) {
         return scan(buildScanConfig(env));
@@ -64,7 +65,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
     private Map<CommandGroup, List<Command>> scan(CommandsScanConfig scanConfig) {
         Map<CommandGroup, List<Command>> result = new HashMap<>();
 
-        if(!scanConfig.isEnabled() || Objs.isEmpty(scanConfig.getPackages())){
+        if (!scanConfig.isEnabled() || Objs.isEmpty(scanConfig.getPackages())) {
             return result;
         }
 
@@ -78,7 +79,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         commandClassInfoList = commandClassInfoList.filter(new ClassInfoList.ClassInfoFilter() {
             @Override
             public boolean accept(ClassInfo classInfo) {
-                if(classInfo.isAnnotation() || classInfo.isInterface()
+                if (classInfo.isAnnotation() || classInfo.isInterface()
                         || classInfo.isArrayClass() || classInfo.isEnum() || classInfo.isRecord()
                         || classInfo.isPrivate() || classInfo.isProtected()
                         || classInfo.isInnerClass()
@@ -101,7 +102,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         return result;
     }
 
-    private Pair<CommandGroup, List<Command>> resolveCommandClass(ClassInfo classInfo){
+    private Pair<CommandGroup, List<Command>> resolveCommandClass(ClassInfo classInfo) {
         classInfo.getPackageInfo();
         CommandGroup commandGroup = createCommandGroup(classInfo);
         MethodInfoList methodInfoList = classInfo.getDeclaredMethodInfo();
@@ -110,10 +111,10 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         Pair<CommandGroup, List<Command>> result = new Pair<>(commandGroup, commands);
         for (int i = 0; i < methodInfoList.size(); i++) {
             MethodInfo methodInfo = methodInfoList.get(i);
-            if(!methodInfo.isPublic() || methodInfo.isAbstract() || methodInfo.isConstructor() || methodInfo.isNative() || methodInfo.isStatic()){
+            if (!methodInfo.isPublic() || methodInfo.isAbstract() || methodInfo.isConstructor() || methodInfo.isNative() || methodInfo.isStatic()) {
                 continue;
             }
-            if(!methodInfo.hasAnnotation(com.jn.agileway.shell.command.annotation.Command.class)){
+            if (!methodInfo.hasAnnotation(com.jn.agileway.shell.command.annotation.Command.class)) {
                 continue;
             }
             Command command = createCommand(methodInfo);
@@ -125,6 +126,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
 
     /**
      * 创建 commandGroup, 优先使用 class上的 @ComponentGroup，如果没有就使用 package上的 @ComponentGroup
+     *
      * @param classInfo class info
      * @return command group
      */
@@ -149,7 +151,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             }
         }
 
-        if(outputTransformerClass==null && packageAnnotationed){
+        if (outputTransformerClass == null && packageAnnotationed) {
             outputTransformerClass = RawTextOutputTransformer.class;
         }
         if (Strings.isBlank(groupName)) {
@@ -164,7 +166,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         group.setDesc(desc);
         group.setName(groupName);
 
-        if (outputTransformerClass != null){
+        if (outputTransformerClass != null) {
             CmdOutputTransformer transformer = Reflects.<CmdOutputTransformer>newInstance(outputTransformerClass);
             group.setOutputTransformer(transformer);
         }
@@ -172,46 +174,45 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         return group;
     }
 
-    private Command createCommand(MethodInfo methodInfo){
+    private Command createCommand(MethodInfo methodInfo) {
         AnnotationInfo annotationInfo = methodInfo.getAnnotationInfo(com.jn.agileway.shell.command.annotation.Command.class);
         AnnotationParameterValueList parameterValueList = annotationInfo.getParameterValues(true);
 
         String name = null;
-        String[] alias=null;
-        String desc =null;
+        String[] alias = null;
+        String desc = null;
         Class outputTransformerClass = null;
-        if (parameterValueList!=null){
-            name = (String)parameterValueList.getValue("value");
+        if (parameterValueList != null) {
+            name = (String) parameterValueList.getValue("value");
             alias = (String[]) parameterValueList.getValue("alias");
-            desc = (String)parameterValueList.getValue("desc");
+            desc = (String) parameterValueList.getValue("desc");
             AnnotationClassRef outputTransformerClassRef = ((AnnotationClassRef) parameterValueList.getValue("outputTransformer"));
             if (outputTransformerClassRef != null) {
                 outputTransformerClass = outputTransformerClassRef.loadClass();
             }
         }
 
-        if(Strings.isBlank(name)){
-            name =  methodInfo.getName();
+        if (Strings.isBlank(name)) {
+            name = methodInfo.getName();
         }
 
-        if(desc==null){
-            desc = "";
-        }
+        desc = Objs.useValueIfEmpty(desc, name);
+
         Command command = new Command();
         command.setAlias(Lists.newArrayList(alias));
         command.setName(name);
         Method method = methodInfo.loadClassAndGetMethod();
         command.setMethod(method);
         command.setDesc(desc);
-        CmdOutputTransformer transformer=null;
-        if (outputTransformerClass != null){
+        CmdOutputTransformer transformer = null;
+        if (outputTransformerClass != null) {
             transformer = Reflects.<CmdOutputTransformer>newInstance(outputTransformerClass);
         }
         command.setOutputTransformer(transformer);
 
         MethodParameterInfo[] methodParameterInfoList = methodInfo.getParameterInfo();
         List<Option> options = Lists.newArrayListWithCapacity(methodParameterInfoList.length);
-        for (int i = 0; i < methodParameterInfoList.length ; i++) {
+        for (int i = 0; i < methodParameterInfoList.length; i++) {
             MethodParameterInfo methodParameterInfo = methodParameterInfoList[i];
             Option option = createOption(methodParameterInfo, method, i);
             options.add(option);
@@ -221,12 +222,12 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         return command;
     }
 
-    private CommandOption createOption(MethodParameterInfo methodParameterInfo, Method method, int parameterIndex){
+    private CommandOption createOption(MethodParameterInfo methodParameterInfo, Method method, int parameterIndex) {
         AnnotationInfo annotationInfo = methodParameterInfo.getAnnotationInfo(com.jn.agileway.shell.command.annotation.CommandOption.class);
 
         @Nullable
         String optionName;
-        String longOptionName=null;
+        String longOptionName = null;
 
         boolean required = true;
         boolean hasArg1 = true;
@@ -242,72 +243,72 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         String desc = "";
 
         AnnotationParameterValueList parameterValueList = null;
-        if(annotationInfo!=null) {
+        if (annotationInfo != null) {
             parameterValueList = annotationInfo.getParameterValues(true);
         }
-        if(parameterValueList != null){
-            optionName = (String)parameterValueList.getValue("value");
+        if (parameterValueList != null) {
+            optionName = (String) parameterValueList.getValue("value");
             longOptionName = (String) parameterValueList.getValue("longName");
-            required = (boolean)parameterValueList.getValue("required");
-            hasArg1 = (boolean)parameterValueList.getValue("hasArg");
-            hasArgN=(boolean)parameterValueList.getValue("hasArgs");
-            argName=(String)parameterValueList.getValue("argName");
-            argOptional=(boolean)parameterValueList.getValue("argOptional");
-            elementType=((AnnotationClassRef)parameterValueList.getValue("type")).loadClass();
-            converterClass = ((AnnotationClassRef)parameterValueList.getValue("converter")).loadClass();
-            defaultValueString=(String) parameterValueList.getValue("defaultValue");
-            valueSeparator = (char)parameterValueList.getValue("valueSeparator");
-            desc = (String)parameterValueList.getValue("desc");
-        }else{
+            required = (boolean) parameterValueList.getValue("required");
+            hasArg1 = (boolean) parameterValueList.getValue("hasArg");
+            hasArgN = (boolean) parameterValueList.getValue("hasArgs");
+            argName = (String) parameterValueList.getValue("argName");
+            argOptional = (boolean) parameterValueList.getValue("argOptional");
+            elementType = ((AnnotationClassRef) parameterValueList.getValue("type")).loadClass();
+            converterClass = ((AnnotationClassRef) parameterValueList.getValue("converter")).loadClass();
+            defaultValueString = (String) parameterValueList.getValue("defaultValue");
+            valueSeparator = (char) parameterValueList.getValue("valueSeparator");
+            desc = (String) parameterValueList.getValue("desc");
+        } else {
             optionName = methodParameterInfo.getName();
-            if(methodParameterInfo.getAnnotationInfo(Nullable.class)==null){
+            if (methodParameterInfo.getAnnotationInfo(Nullable.class) == null) {
                 required = false;
-                argOptional=true;
+                argOptional = true;
             }
             Parameter parameter = method.getParameters()[parameterIndex];
             Class parameterClass = parameter.getType();
-            if(parameterClass.isArray() || Reflects.isSubClassOrEquals(Collection.class, parameterClass)){
-                hasArgN=true;
-                if(parameterClass.isArray()){
+            if (parameterClass.isArray() || Reflects.isSubClassOrEquals(Collection.class, parameterClass)) {
+                hasArgN = true;
+                if (parameterClass.isArray()) {
                     elementType = parameterClass.getComponentType();
-                }else{
-                    ParameterizedType parameterizedType =(ParameterizedType)parameter.getParameterizedType();
-                    elementType = (Class)parameterizedType.getActualTypeArguments()[0];
+                } else {
+                    ParameterizedType parameterizedType = (ParameterizedType) parameter.getParameterizedType();
+                    elementType = (Class) parameterizedType.getActualTypeArguments()[0];
                 }
-            }else {
+            } else {
                 elementType = parameterClass;
             }
             argName = parameter.getName();
         }
 
-        final Converter converter = (converterClass==null || converterClass==DefaultConverter.class )? new DefaultConverter(elementType) : Reflects.<Converter>newInstance(converterClass);
+        final Converter converter = (converterClass == null || converterClass == DefaultConverter.class) ? new DefaultConverter(elementType) : Reflects.<Converter>newInstance(converterClass);
         List<Object> defaultValues = null;
-        if(hasArgN){
-            if(defaultValueString!=null){
+        if (hasArgN) {
+            if (defaultValueString != null) {
 
-                    String[] values = Strings.split(defaultValueString, valueSeparator + "");
-                    defaultValues = Pipeline.of(values).map(new Function<String, Object>() {
-                        @Override
-                        public Object apply(String value) {
-                            try {
-                                return converter.apply(value);
-                            }catch (Throwable e){
-                                throw new RuntimeException(e);
-                            }
+                String[] values = Strings.split(defaultValueString, valueSeparator + "");
+                defaultValues = Pipeline.of(values).map(new Function<String, Object>() {
+                    @Override
+                    public Object apply(String value) {
+                        try {
+                            return converter.apply(value);
+                        } catch (Throwable e) {
+                            throw new RuntimeException(e);
                         }
-                    }).asList();
+                    }
+                }).asList();
 
             }
-        }else  if(hasArg1 && defaultValueString!=null){
+        } else if (hasArg1 && defaultValueString != null) {
             try {
                 Object defaultValue = converter.apply(defaultValueString);
-                defaultValues=Lists.newArrayList(defaultValue);
-            }catch (Throwable e){
+                defaultValues = Lists.newArrayList(defaultValue);
+            } catch (Throwable e) {
                 throw new RuntimeException(e);
             }
         }
 
-        if(Strings.isBlank(desc)){
+        if (Strings.isBlank(desc)) {
             desc = Objs.useValueIfEmpty(longOptionName, optionName);
         }
 
@@ -316,17 +317,17 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             option.setOptionalArg(argOptional);
             option.setArgName(argName);
             option.setRequired(required);
-            if(hasArgN) {
-                option.setArgs( Option.UNLIMITED_VALUES );
+            if (hasArgN) {
+                option.setArgs(Option.UNLIMITED_VALUES);
             }
             option.setType(elementType);
             option.setConverter(converter);
-            if(hasArgN || hasArg1){
+            if (hasArgN || hasArg1) {
                 option.setDefaultValues(defaultValues);
             }
             option.setDefaultValue(valueSeparator);
             return option;
-        }catch (Throwable e){
+        } catch (Throwable e) {
             throw new RuntimeException(e);
         }
     }

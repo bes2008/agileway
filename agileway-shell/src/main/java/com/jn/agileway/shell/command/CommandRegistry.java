@@ -3,7 +3,10 @@ package com.jn.agileway.shell.command;
 
 import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.langx.util.Objs;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
+import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.function.Predicate;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,8 +16,11 @@ public class CommandRegistry {
     private Map<String, CommandGroup> commandGroupMap = new HashMap<>();
     private Map<String,Command> commandMap=new HashMap<String,Command>();
 
-    public Command getCommand(String command){
-        return commandMap.get(command);
+    public void addCommandGroup(CommandGroup commandGroup){
+        if(commandGroup==null){
+            return;
+        }
+        this.commandGroupMap.put(commandGroup.getName(), commandGroup);
     }
 
     public List<CommandGroup> getCommandGroups(){
@@ -48,10 +54,21 @@ public class CommandRegistry {
         }
     }
 
-    public void addCommandGroup(CommandGroup commandGroup){
-        if(commandGroup==null){
-            return;
-        }
-        this.commandGroupMap.put(commandGroup.getName(), commandGroup);
+    public Command getCommand(String command){
+        return commandMap.get(command);
     }
+
+    public List<Command> getGroupCommands(String group){
+        if(!this.commandGroupMap.containsKey(group)){
+            return Lists.immutableList();
+        }
+        return Pipeline.of(this.commandMap.values())
+                .filter(new Predicate<Command>() {
+                    @Override
+                    public boolean test(Command command) {
+                        return Objs.equals(command.getGroup(), group);
+                    }
+                }).asList();
+    }
+
 }

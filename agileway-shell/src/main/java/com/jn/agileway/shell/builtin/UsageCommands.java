@@ -1,5 +1,6 @@
 package com.jn.agileway.shell.builtin;
 
+import com.jn.agileway.shell.cmdline.AnsiFontText;
 import com.jn.agileway.shell.command.CommandGroup;
 import com.jn.agileway.shell.command.CommandRegistry;
 import com.jn.agileway.shell.command.annotation.Command;
@@ -21,7 +22,13 @@ public class UsageCommands {
         StringBuilder builder = new StringBuilder(255);
         List<CommandGroup> commandGroups = commandRegistry.getCommandGroups();
         for (CommandGroup commandGroup: commandGroups){
-            builder.append(commandGroup.getName()).append("\t-\t").append(commandGroup.getDesc()).append(Strings.CRLF);
+            String groupName= commandGroup.getName();
+            builder.append(new AnsiFontText(groupName).bold(true)).append("\t-\t").append(commandGroup.getDesc()).append(Strings.CRLF);
+            List< com.jn.agileway.shell.command.Command> cmds = this.commandRegistry.getGroupCommands(groupName);
+            for (com.jn.agileway.shell.command.Command cmd:cmds){
+                builder.append("\t").append(new AnsiFontText(cmd.getName()).bold(true)).append("\t-\t").append( cmd.getDesc()).append(Strings.CRLF);
+            }
+            builder.append(Strings.CRLF).append(Strings.CRLF);
         }
         return builder.toString();
     }
