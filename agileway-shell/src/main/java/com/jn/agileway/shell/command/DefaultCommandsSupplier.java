@@ -259,6 +259,14 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             defaultValueString = (String) parameterValueList.getValue("defaultValue");
             valueSeparator = (char) parameterValueList.getValue("valueSeparator");
             desc = (String) parameterValueList.getValue("desc");
+
+            if(!hasArgN){
+                Parameter parameter = method.getParameters()[parameterIndex];
+                Class parameterClass = parameter.getType();
+                if (parameterClass.isArray() || Reflects.isSubClassOrEquals(Collection.class, parameterClass)) {
+                    hasArgN = true;
+                }
+            }
         } else {
             optionName = methodParameterInfo.getName();
             if (methodParameterInfo.getAnnotationInfo(Nullable.class) == null) {
@@ -325,7 +333,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             if (hasArgN || hasArg1) {
                 option.setDefaultValues(defaultValues);
             }
-            option.setDefaultValue(valueSeparator);
+            option.setValueSeparator(valueSeparator);
             return option;
         } catch (Throwable e) {
             throw new RuntimeException(e);

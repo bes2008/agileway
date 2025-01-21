@@ -7,13 +7,23 @@ import com.jn.agileway.shell.cmdline.ShellCmdlines;
 import org.junit.Test;
 
 public class UsageCommandTests {
-    private Shell newAdhocShell(){
+    private Shell newAdhocShell() {
         return new ShellBuilder()
                 .defaultRunMode(RunMode.ADHOC)
                 .build();
     }
+
     @Test
-    public void testCommands(){
-        newAdhocShell().start(ShellCmdlines.cmdlineToArgs("commands -g builtin2"));
+    public void testCommands() {
+        //adhocTest("commands -g builtin");
+        //adhocTest("commands -g builtin2");
+        //adhocTest("commands --groups builtin3");
+        adhocTest("commands --groups builtin,builtin2");
+        //adhocTest("commands");
+    }
+
+    private void adhocTest(String cmdline) {
+        System.out.println("cmdline: " + cmdline + "\t\t ===>");
+        newAdhocShell().start(ShellCmdlines.cmdlineToArgs(cmdline));
     }
 }
