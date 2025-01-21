@@ -6,7 +6,7 @@ import com.jn.langx.annotation.Nullable;
 
 public class CommandGroup {
     public static final String BUILTIN_GROUP ="builtin";
-    public static final String BUILTIN_GROUP_DESC ="agileway shell builtin commands";
+    public static final String BUILTIN_GROUP_DESC ="The builtin commands in agileway shell";
     private String name;
     private String desc;
     @Nullable
