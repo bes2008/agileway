@@ -28,17 +28,18 @@ public class CommandRegistry {
     }
 
     public List<CommandGroup> getCommandGroups(boolean getAllIfGroupsIsEmpty, String... groupNames) {
-        if (Objs.isEmpty(groupNames)) {
-            return Lists.newArrayList(commandGroupMap.values());
-        }
         List<CommandGroup> groups = new ArrayList<>();
-        if(getAllIfGroupsIsEmpty) {
+
+        if(Objs.isNotEmpty(groupNames)) {
             for (String groupName : groupNames) {
                 CommandGroup group = this.commandGroupMap.get(groupName);
                 if (group != null) {
                     groups.add(group);
                 }
             }
+        }
+        if(groups.isEmpty() && getAllIfGroupsIsEmpty){
+            groups= Lists.newArrayList(this.commandGroupMap.values());
         }
         return groups;
 
