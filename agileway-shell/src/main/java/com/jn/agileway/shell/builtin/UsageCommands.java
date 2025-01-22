@@ -10,6 +10,7 @@ import com.jn.agileway.shell.command.annotation.CommandOption;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
+import org.apache.commons.cli.Option;
 
 import java.util.List;
 
@@ -58,8 +59,9 @@ public class UsageCommands {
         if(command==null){
             throw new RuntimeException(StringTemplates.formatWithPlaceholder("command '' not found", commandName));
         }
-
-        return "";
+        StringBuilder builder = new StringBuilder(255);
+        appHelpInfoTo(builder, command);
+        return builder.toString();
     }
 
     private void appHelpInfoTo(StringBuilder builder, com.jn.agileway.shell.command.Command command){
@@ -86,7 +88,45 @@ public class UsageCommands {
         if(!Objs.isEmpty(command.getOptionKeys())){
             builder.append("Options:").append(Strings.CRLF);
             List<String> optionKeys = command.getOptionKeys();
+            for(String optionKey : optionKeys){
+                Option option = command.getOptions().getOption(optionKey);
+                builder.append("  ");
+                String shortName = option.getOpt();
+                int outOptionNameCount=0;
 
+                if(Objs.isNotEmpty(shortName)){
+                    outOptionNameCount++;
+                    builder.append("-").append(shortName);
+                    if(option.hasArgName()){
+                        builder.append(" ");
+                        if(option.hasOptionalArg()){
+                            builder.append("[").append(option.getArgName()).append("]");
+                        }else{
+                            builder.append(option.getArgName());
+                        }
+                    }
+                }
+                String longName = option.getLongOpt();
+                if(Objs.isNotEmpty(longName)){
+                    if(outOptionNameCount>0){
+                        builder.append(", ");
+                    }
+                    builder.append("--").append(longName);
+
+                    if(option.hasArgName()){
+                        builder.append(" ");
+                        if(option.hasOptionalArg()){
+                            builder.append("[").append(option.getArgName()).append("]");
+                        }else{
+                            builder.append(option.getArgName());
+                        }
+                    }
+                }
+
+                builder.append("\t\t");
+                builder.append(option.getDescription());
+                builder.append(Strings.CRLF);
+            }
         }
 
     }

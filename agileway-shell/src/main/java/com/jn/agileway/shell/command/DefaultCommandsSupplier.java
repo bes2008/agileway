@@ -335,22 +335,35 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
 
         } else {
             optionName.set(methodParameterInfo.getName());
-            argName = null;
         }
 
-        final Converter converter = (converterClass == null || converterClass == DefaultConverter.class) ? new DefaultConverter(elementType) : Reflects.<Converter>newInstance(converterClass);
+        if(!optionName.isEmpty() && Objs.length(optionName.get())>1){
+            throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("Illegal option shortName for option {} in command {}, short name should be only one letter", optionName.get(), commandKey));
+        }
+
+
         String defaultValue = null;
         String[] defaultValues = null;
-
+        Holder<Converter> converterHolder = new Holder<>();
         if(isFlag){
             hasArg1 = false;
             hasArgN = false;
             elementType = parameterClass;
             required = false;
+            argName = null;
+            converterHolder.set(new DefaultConverter(boolean.class));
+            defaultValue = Strings.isEmpty(defaultValueString) || Objs.equals(com.jn.agileway.shell.command.annotation.CommandOption.NULL, defaultValueString) ? "false": defaultValueString ;
+            try {
+                defaultValue = converterHolder.get().apply(defaultValue).toString();
+            }catch (Throwable e){
+                defaultValue = "false";
+            }
         }else{
             hasArgN = parameterClass.isArray() || Reflects.isSubClassOrEquals(Collection.class, parameterClass);
             hasArg1 = !hasArgN;
-
+            if(argName == null){
+                argName = longOptionName;
+            }
             if (hasArgN) {
                 if (parameterClass.isArray()) {
                     elementType = parameterClass.getComponentType();
@@ -362,11 +375,16 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
                 elementType = parameterClass;
             }
 
+            Converter converter= (converterClass == null || converterClass == DefaultConverter.class) ? new DefaultConverter(elementType) : Reflects.<Converter>newInstance(converterClass);
+            converterHolder.set(converter);
             // 默认值为 null
             if(Objs.equals(com.jn.agileway.shell.command.annotation.CommandOption.NULL, defaultValueString)){
                 required = Reflects.hasAnnotation(parameter, NonNull.class);
+                argOptional = !required;
             } else {
                 required = false;
+                argOptional = true;
+
                 if (hasArgN) {
                     String[] values = Strings.split(defaultValueString, valueSeparator + "");
                     // 这个过程如果没有异常，那么可以直接将 values作为 defaultValues使用
@@ -374,9 +392,9 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
                         @Override
                         public Object apply(String value) {
                             try {
-                                return converter.apply(value);
+                                return converterHolder.get().apply(value);
                             } catch (Throwable e) {
-                                throw new RuntimeException(StringTemplates.formatWithPlaceholder("Illegal defaultValues for option {} in command {}", optionName.get(), commandKey));
+                                throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("Illegal defaultValues for option {} in command {}", optionName.get(), commandKey));
                             }
                         }
                     }).asList();
@@ -384,9 +402,9 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
                 } else {
                     // 这个过程如果没有异常，那么可以直接将 defaultValueString 作为 defaultValue使用
                     try {
-                        converter.apply(defaultValueString);
+                        converterHolder.get().apply(defaultValueString);
                     } catch (Throwable e) {
-                        throw new RuntimeException(StringTemplates.formatWithPlaceholder("Illegal defaultValue for option {} in command {}", optionName.get(), commandKey));
+                        throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("Illegal defaultValue for option {} in command {}", optionName.get(), commandKey));
                     }
                     defaultValue = defaultValueString;
                 }
@@ -406,7 +424,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
                 option.setArgs(Option.UNLIMITED_VALUES);
             }
             option.setType(elementType);
-            option.setConverter(converter);
+            option.setConverter(converterHolder.get());
             if(!isFlag){
                 if (hasArgN) {
                     option.setDefaultValues(defaultValues);
@@ -414,11 +432,13 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
                 } else {
                     option.setDefaultValue(defaultValue);
                 }
+            }else{
+                option.setDefaultValue(defaultValue);
             }
-            // 对于 flag 的选项，不设置默认值
+
             return option;
         } catch (Throwable e) {
-            throw new RuntimeException(e);
+            throw new MalformedCommandException(e);
         }
     }
 
