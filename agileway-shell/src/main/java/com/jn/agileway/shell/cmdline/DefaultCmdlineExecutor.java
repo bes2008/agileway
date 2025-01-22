@@ -153,6 +153,10 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
 
     private String getOptionValue(Cmdline cmdline, String optionKey){
         Option optionDef = cmdline.getCommandDefinition().getOptions().getOption(optionKey);
+        if(optionDef.getArgs()<0){
+            // is flag
+            return cmdline.getParsed().hasOption(optionKey)? "true":"false";
+        }
         if(!cmdline.getParsed().hasOption(optionKey)){
             CommandOption commandOption = (CommandOption)optionDef;
             return commandOption.getDefaultValue();

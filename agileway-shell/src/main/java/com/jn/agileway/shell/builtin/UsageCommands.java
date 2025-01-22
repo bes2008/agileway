@@ -23,7 +23,7 @@ public class UsageCommands {
 
     @Command(value = "commands", desc = "List commands in some or all groups")
     public String listCommands(
-            @CommandOption(value = "a", longName = "all", required = false, type = boolean.class, defaultValue = "false", desc = "whether list all groups when argument <groups> is empty")
+            @CommandOption(value = "a", longName = "all", required = false, type = boolean.class, defaultValue = "false", isFlag = true, desc = "whether list all groups when argument <groups> is empty")
             boolean getAllIfGroupsIsEmpty,
             @CommandArgument(value = "groups", required = false, desc = "the command groups")
             String... groupNames) {

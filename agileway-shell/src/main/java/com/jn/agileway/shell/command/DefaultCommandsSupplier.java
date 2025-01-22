@@ -18,6 +18,7 @@ import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.function.Predicate2;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
+import com.jn.langx.util.reflect.type.Primitives;
 import com.jn.langx.util.struct.Holder;
 import com.jn.langx.util.struct.Pair;
 import io.github.classgraph.*;
@@ -216,20 +217,20 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         MethodParameterInfo[] methodParameterInfoList = methodInfo.getParameterInfo();
         List<Option> options = Lists.newArrayListWithCapacity(methodParameterInfoList.length);
 
-        int firstCommandArgumentIndex = Collects.<MethodParameterInfo,Collection<MethodParameterInfo>>firstOccurrence(Collects.<MethodParameterInfo>asList(methodParameterInfoList), new Predicate2<Integer, MethodParameterInfo>(){
+        int firstCommandArgumentIndex = Collects.<MethodParameterInfo, Collection<MethodParameterInfo>>firstOccurrence(Collects.<MethodParameterInfo>asList(methodParameterInfoList), new Predicate2<Integer, MethodParameterInfo>() {
             @Override
             public boolean test(Integer idx, MethodParameterInfo methodParameterInfo) {
                 AnnotationInfo commandArgumentAnnotationInfo = methodParameterInfo.getAnnotationInfo(com.jn.agileway.shell.command.annotation.CommandArgument.class);
-                return commandArgumentAnnotationInfo!=null;
+                return commandArgumentAnnotationInfo != null;
             }
         });
         List<CommandArgument> arguments = Lists.newArrayList();
         for (int i = 0; i < methodParameterInfoList.length; i++) {
             MethodParameterInfo methodParameterInfo = methodParameterInfoList[i];
-            if(firstCommandArgumentIndex<0 || i<firstCommandArgumentIndex) {
+            if (firstCommandArgumentIndex < 0 || i < firstCommandArgumentIndex) {
                 Option option = createOption(command.getName(), methodParameterInfo, method, i);
                 options.add(option);
-            }else{
+            } else {
                 CommandArgument commandArgument = createCommandArgument(methodParameterInfo, method, i);
                 arguments.add(commandArgument);
             }
@@ -246,8 +247,8 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         });
         // 判定 在 lastRequiredIndex 之前的 argument 都是 required
         for (int i = 0; i < lastRequiredIndex; i++) {
-            if(!arguments.get(i).isRequired()){
-                throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("@CommandArgument required() in [{}th, {}th] should be true for method {}", options.size(),lastRequiredIndex,Reflects.getFQNClassName(method.getDeclaringClass())+"#"+method.getName()));
+            if (!arguments.get(i).isRequired()) {
+                throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("@CommandArgument required() in [{}th, {}th] should be true for method {}", options.size(), lastRequiredIndex, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
             }
         }
         command.setArguments(arguments);
@@ -255,22 +256,22 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         return command;
     }
 
-    private CommandArgument createCommandArgument(MethodParameterInfo methodParameterInfo, Method method, int parameterIndex){
+    private CommandArgument createCommandArgument(MethodParameterInfo methodParameterInfo, Method method, int parameterIndex) {
         AnnotationInfo annotationInfo = methodParameterInfo.getAnnotationInfo(com.jn.agileway.shell.command.annotation.CommandArgument.class);
-        if(annotationInfo==null){
-            throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("@CommandArgument at the {}th parameter is required for method {}", parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass())+"#"+method.getName()));
+        if (annotationInfo == null) {
+            throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("@CommandArgument at the {}th parameter is required for method {}", parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
         }
 
-        Class parameterType= method.getParameters()[parameterIndex].getType();
-        if(parameterIndex<method.getParameters().length-1){
-            if(parameterType!= String.class){
-                throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("parameter type should be java.lang.String at {}th for method {}",parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass())+"#"+method.getName()));
+        Class parameterType = method.getParameters()[parameterIndex].getType();
+        if (parameterIndex < method.getParameters().length - 1) {
+            if (parameterType != String.class) {
+                throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("parameter type should be java.lang.String at {}th for method {}", parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
             }
-        }else if(parameterIndex == method.getParameters().length-1){
-            if(parameterType== String.class || (parameterType.isArray() && parameterType.getComponentType()==String.class) ){
+        } else if (parameterIndex == method.getParameters().length - 1) {
+            if (parameterType == String.class || (parameterType.isArray() && parameterType.getComponentType() == String.class)) {
                 // matching
-            }else{
-                throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("parameter type should be java.lang.String or java.lang.String[] at {}th for method {}",parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass())+"#"+method.getName()));
+            } else {
+                throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("parameter type should be java.lang.String or java.lang.String[] at {}th for method {}", parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
             }
         }
 
@@ -280,10 +281,10 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         String desc = (String) parameterValueList.getValue("desc");
         boolean required = (boolean) parameterValueList.getValue("required");
 
-        if(Strings.isBlank(name)){
-            throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("@CommandArgument value() at the {}th parameter is required for method {}", parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass())+"#"+method.getName()));
+        if (Strings.isBlank(name)) {
+            throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("@CommandArgument value() at the {}th parameter is required for method {}", parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
         }
-        desc = Objs.useValueIfEmpty(desc,name);
+        desc = Objs.useValueIfEmpty(desc, name);
 
         CommandArgument argument = new CommandArgument();
         argument.setRequired(required);
@@ -295,13 +296,16 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
     private CommandOption createOption(final String commandKey, MethodParameterInfo methodParameterInfo, Method method, int parameterIndex) {
         AnnotationInfo annotationInfo = methodParameterInfo.getAnnotationInfo(com.jn.agileway.shell.command.annotation.CommandOption.class);
 
-        @Nullable
-        final Holder<String> optionName = new Holder<String>();
+        Parameter parameter = method.getParameters()[parameterIndex];
+        Class parameterClass = parameter.getType();
+
+        @Nullable final Holder<String> optionName = new Holder<String>();
         String longOptionName = null;
 
         boolean required = true;
-        boolean hasArg1 = true;
-        boolean hasArgN = false;
+        boolean isFlag = Primitives.isBoolean(parameterClass);
+        boolean hasArgN;
+        boolean hasArg1;
         @Nullable
         String argName = null;
         boolean argOptional = false;
@@ -320,33 +324,22 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             optionName.set((String) parameterValueList.getValue("value"));
             longOptionName = (String) parameterValueList.getValue("longName");
             required = (boolean) parameterValueList.getValue("required");
-            hasArg1 = (boolean) parameterValueList.getValue("hasArg");
-            hasArgN = (boolean) parameterValueList.getValue("hasArgs");
-            argName = (String) parameterValueList.getValue("argName");
-            argOptional = (boolean) parameterValueList.getValue("argOptional");
+            argName = Strings.trimToNull((String) parameterValueList.getValue("argName"));
+            isFlag = (boolean) parameterValueList.getValue("isFlag");
             elementType = ((AnnotationClassRef) parameterValueList.getValue("type")).loadClass();
             converterClass = ((AnnotationClassRef) parameterValueList.getValue("converter")).loadClass();
             defaultValueString = (String) parameterValueList.getValue("defaultValue");
             valueSeparator = (char) parameterValueList.getValue("valueSeparator");
             desc = (String) parameterValueList.getValue("desc");
 
-            if(!hasArgN){
-                Parameter parameter = method.getParameters()[parameterIndex];
-                Class parameterClass = parameter.getType();
-                if (parameterClass.isArray() || Reflects.isSubClassOrEquals(Collection.class, parameterClass)) {
-                    hasArgN = true;
-                }
-            }
         } else {
             optionName.set(methodParameterInfo.getName());
             if (methodParameterInfo.getAnnotationInfo(Nullable.class) == null) {
                 required = false;
                 argOptional = true;
             }
-            Parameter parameter = method.getParameters()[parameterIndex];
-            Class parameterClass = parameter.getType();
+
             if (parameterClass.isArray() || Reflects.isSubClassOrEquals(Collection.class, parameterClass)) {
-                hasArgN = true;
                 if (parameterClass.isArray()) {
                     elementType = parameterClass.getComponentType();
                 } else {
@@ -356,11 +349,19 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             } else {
                 elementType = parameterClass;
             }
-            argName = parameter.getName();
+            argName = null;
+        }
+
+        if(isFlag){
+            hasArg1 = false;
+            hasArgN = false;
+        }else{
+            hasArgN = parameterClass.isArray() || Reflects.isSubClassOrEquals(Collection.class, parameterClass);
+            hasArg1= !hasArgN;
         }
 
         final Converter converter = (converterClass == null || converterClass == DefaultConverter.class) ? new DefaultConverter(elementType) : Reflects.<Converter>newInstance(converterClass);
-        String defaultValue=null;
+        String defaultValue = null;
         String[] defaultValues = null;
         if (hasArgN) {
             if (defaultValueString != null) {
@@ -373,7 +374,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
                         try {
                             return converter.apply(value);
                         } catch (Throwable e) {
-                            throw new RuntimeException(StringTemplates.formatWithPlaceholder("Illegal defaultValues for option {} in command {}", optionName.get(), commandKey ));
+                            throw new RuntimeException(StringTemplates.formatWithPlaceholder("Illegal defaultValues for option {} in command {}", optionName.get(), commandKey));
                         }
                     }
                 }).asList();
@@ -382,9 +383,9 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         } else if (hasArg1 && defaultValueString != null) {
             try {
                 Object theDefaultValue = converter.apply(defaultValueString);
-                defaultValue= defaultValueString;
+                defaultValue = defaultValueString;
             } catch (Throwable e) {
-                throw new RuntimeException(StringTemplates.formatWithPlaceholder("Illegal defaultValue for option {} in command {}", optionName.get(), commandKey ));
+                throw new RuntimeException(StringTemplates.formatWithPlaceholder("Illegal defaultValue for option {} in command {}", optionName.get(), commandKey));
             }
         }
 
@@ -402,13 +403,15 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             }
             option.setType(elementType);
             option.setConverter(converter);
-            if(hasArg1){
+            if(isFlag){
+                // 对于 flag 的选项，不设置默认值
+                // option.setDefaultValue(defaultValueString);
+            }else if (hasArgN) {
+                option.setDefaultValues(defaultValues);
+                option.setValueSeparator(valueSeparator);
+            } else if (hasArg1) {
                 option.setDefaultValue(defaultValue);
             }
-            if (hasArgN) {
-                option.setDefaultValues(defaultValues);
-            }
-            option.setValueSeparator(valueSeparator);
             return option;
         } catch (Throwable e) {
             throw new RuntimeException(e);

@@ -40,21 +40,13 @@ public @interface CommandOption {
      */
     boolean required() default true;
 
-    /**
-     * 选项是否有一个参数的
-     */
-    boolean hasArg() default true;
-
-    /**
-     * 选项是否支持多个参数，或者可理解为该选项在命令行字符串上是否可以出现多次。
-     */
-    boolean hasArgs() default false;
-
-    @Nullable
     String argName() default "";
 
-
-    boolean argOptional() default false;
+    /**
+     * 只针对 boolean 、Boolean 类型的数据有用
+     * @return
+     */
+    boolean isFlag() default false;
 
     /**
      * 选项值的数据类型

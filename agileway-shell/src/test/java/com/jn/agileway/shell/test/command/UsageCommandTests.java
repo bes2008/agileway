@@ -20,6 +20,7 @@ public class UsageCommandTests {
         adhocTest("commands --groups builtin3");
         adhocTest("commands builtin builtin2");
         adhocTest("commands");
+        adhocTest("commands -a builtin2");
     }
 
     private void adhocTest(String cmdline) {
