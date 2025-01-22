@@ -18,7 +18,7 @@ public class UsageCommandTests {
         //adhocTest("commands -g builtin");
         //adhocTest("commands -g builtin2");
         //adhocTest("commands --groups builtin3");
-        adhocTest("commands --groups builtin,builtin2");
+        adhocTest("commands builtin builtin2");
         //adhocTest("commands");
     }
 

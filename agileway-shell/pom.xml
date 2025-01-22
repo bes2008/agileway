@@ -43,11 +43,18 @@
         <dependency>
             <groupId>io.github.bes2008.solution.easyjson</groupId>
             <artifactId>easyjson-jackson</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
         </dependency>
 
         <dependency>

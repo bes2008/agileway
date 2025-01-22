@@ -3,7 +3,7 @@ package com.jn.agileway.shell.builtin;
 import com.jn.agileway.shell.command.annotation.Command;
 import com.jn.agileway.shell.command.annotation.CommandArgument;
 import com.jn.agileway.shell.command.annotation.CommandComponent;
-import com.jn.agileway.shell.result.JsonStyleOutputTransformer;
+import com.jn.agileway.shell.result.YamlStyleOutputTransformer;
 import com.jn.langx.text.properties.Props;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
@@ -15,7 +15,7 @@ import java.util.Map;
 @CommandComponent
 public class EnvCommands {
 
-    @Command(value = "env-variables", desc = "Search or list all environment variables ", outputTransformer = JsonStyleOutputTransformer.class)
+    @Command(value = "env-variables", desc = "Search or list all environment variables ", outputTransformer = YamlStyleOutputTransformer.class)
     public Map<String, String> environmentVariables(
             @CommandArgument(value = "search_text", required = false, desc = "the search text")
             String... search) {
@@ -35,7 +35,7 @@ public class EnvCommands {
         return result;
     }
 
-    @Command(value = "system-props", desc = "Search or list all system properties", outputTransformer = JsonStyleOutputTransformer.class)
+    @Command(value = "system-props", desc = "Search or list all system properties", outputTransformer = YamlStyleOutputTransformer.class)
     public Map<String, String> systemProperties(
             @CommandArgument(value = "search_text",required = false,desc = "the search text")
             String... search ){

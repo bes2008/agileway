@@ -4,6 +4,7 @@ import com.jn.agileway.shell.cmdline.AnsiFontText;
 import com.jn.agileway.shell.command.CommandGroup;
 import com.jn.agileway.shell.command.CommandRegistry;
 import com.jn.agileway.shell.command.annotation.Command;
+import com.jn.agileway.shell.command.annotation.CommandArgument;
 import com.jn.agileway.shell.command.annotation.CommandComponent;
 import com.jn.agileway.shell.command.annotation.CommandOption;
 import com.jn.langx.text.StringTemplates;
@@ -22,7 +23,7 @@ public class UsageCommands {
 
     @Command(value = "commands", desc = "List commands in some or all groups")
     public String listCommands(
-            @CommandOption(value = "g", longName = "groups", required = false)
+            @CommandArgument(value = "groups", required = false, desc = "the command groups")
             String... groupNames) {
         StringBuilder builder = new StringBuilder(255);
         List<CommandGroup> commandGroups = commandRegistry.getCommandGroups(groupNames);
