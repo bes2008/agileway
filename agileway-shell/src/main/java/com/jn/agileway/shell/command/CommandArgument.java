@@ -4,6 +4,7 @@ public class CommandArgument {
     private String name;
     private boolean required;
     private String desc;
+    private boolean multipleValue;
 
     public String getName() {
         return name;
@@ -27,5 +28,13 @@ public class CommandArgument {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public boolean isMultipleValue() {
+        return multipleValue;
+    }
+
+    public void setMultipleValue(boolean multipleValue) {
+        this.multipleValue = multipleValue;
     }
 }

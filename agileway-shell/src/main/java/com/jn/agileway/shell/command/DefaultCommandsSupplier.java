@@ -263,15 +263,19 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("@CommandArgument at the {}th parameter is required for method {}", parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
         }
 
+        boolean isMultipleValue = false;
         Class parameterType = method.getParameters()[parameterIndex].getType();
+
         if (parameterIndex < method.getParameters().length - 1) {
+            // 非最后一个参数，类型只能是 String
             if (parameterType != String.class) {
                 throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("parameter type should be java.lang.String at {}th for method {}", parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
             }
         } else if (parameterIndex == method.getParameters().length - 1) {
-            if (parameterType == String.class || (parameterType.isArray() && parameterType.getComponentType() == String.class)) {
-                // matching
-            } else {
+            // 最后一个参数，类型可以是 String 或者 String[]
+            if (parameterType.isArray() && parameterType.getComponentType() == String.class) {
+                isMultipleValue = true;
+            }else if (parameterType!= String.class){
                 throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("parameter type should be java.lang.String or java.lang.String[] at {}th for method {}", parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
             }
         }
@@ -291,6 +295,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         argument.setRequired(required);
         argument.setName(name);
         argument.setDesc(desc);
+        argument.setMultipleValue(isMultipleValue);
         return argument;
     }
 
