@@ -40,11 +40,6 @@ public @interface CommandOption {
      */
     boolean isFlag() default false;
 
-    /**
-     * 选项是否必须出现在命令行上。 如果 isFlag()==true，那么required强制设置为 false
-     */
-    boolean required() default true;
-
     String argName() default "";
 
     /**
@@ -53,9 +48,15 @@ public @interface CommandOption {
     Class converter() default DefaultConverter.class;
 
     /**
+     * Used to indicate that the default value is the value {@literal null}, which is different from the fact that
+     * there is no default value.
+     */
+    String NULL = "__NULL__";
+
+    /**
      * 默认值
      */
-    String defaultValue() default "";
+    String defaultValue() default NULL;
 
     /**
      * 值分隔符
