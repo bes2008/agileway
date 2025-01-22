@@ -47,7 +47,7 @@ public class DefaultConverter<T> implements Converter<T, IllegalArgumentExceptio
         Preconditions.checkNotEmpty(targetType);
         this.targetType = targetType;
 
-        if(targetType!=String.class && null==converterService.findConverter(String.class,targetType)){
+        if(targetType!=String.class && null == converterService.findConverter(String.class,targetType)){
             throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("illegal type: {}", targetType));
         }
     }

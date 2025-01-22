@@ -6,7 +6,8 @@ import org.apache.commons.cli.Option;
 import java.util.List;
 
 public class CommandOption extends Option {
-    private List<Object> defaultValues;
+    private String defaultValue;
+    private String[] defaultValues;
 
     public CommandOption(String option, String longOption, boolean hasArg, String description) throws IllegalArgumentException {
         super(option, longOption, hasArg, description);
@@ -18,20 +19,19 @@ public class CommandOption extends Option {
         return result;
     }
 
-
-    public void setDefaultValue(Object defaultValue){
-        setDefaultValues(Lists.newArrayList(defaultValue));
+    public String getDefaultValue() {
+        return defaultValue;
     }
 
-    public Object getDefaultValue(){
-        return defaultValues==null? null: defaultValues.get(0);
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
     }
 
-    public List<Object> getDefaultValues() {
+    public String[] getDefaultValues() {
         return defaultValues;
     }
 
-    public void setDefaultValues(List<Object> defaultValues) {
+    public void setDefaultValues(String[] defaultValues) {
         this.defaultValues = defaultValues;
     }
 }

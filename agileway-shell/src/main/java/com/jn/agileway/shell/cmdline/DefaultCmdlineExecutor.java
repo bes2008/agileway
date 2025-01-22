@@ -1,6 +1,7 @@
 package com.jn.agileway.shell.cmdline;
 
 import com.jn.agileway.shell.command.CommandArgument;
+import com.jn.agileway.shell.command.CommandOption;
 import com.jn.agileway.shell.exception.MalformedCommandArgumentsException;
 import com.jn.agileway.shell.exception.MalformedOptionValueException;
 import com.jn.agileway.shell.exception.UnsupportedCollectionException;
@@ -60,8 +61,9 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
             String optionKey = optionKeys.get(parameterIndex);
             Parameter parameter = parameters[parameterIndex];
             Option optionDef = optionsDef.getOption(optionKey);
+
             if (parameter.getType().isArray()) {
-                String[] stringValues = cmdline.getParsed().getOptionValues(optionKey);
+                String[] stringValues = getOptionValues(cmdline, optionKey);
 
                 Object array = Arrs.createArray((Class) optionDef.getType(),stringValues==null?0: stringValues.length);
                 if(stringValues!=null) {
@@ -73,7 +75,7 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
                 }
                 methodArgs[parameterIndex] = array;
             } else if (Reflects.isSubClassOrEquals(Collection.class, parameter.getType())) {
-                String[] stringValues = cmdline.getParsed().getOptionValues(optionKey);
+                String[] stringValues = getOptionValues(cmdline, optionKey);
                 Collection collection = newCollection(parameter.getType());
                 if(stringValues!=null) {
                     for (String stringValue : stringValues) {
@@ -83,7 +85,7 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
                 }
                 methodArgs[parameterIndex] = collection;
             } else {
-                String stringValue = cmdline.getParsed().getOptionValue(optionKey);
+                String stringValue = getOptionValue(cmdline, optionKey);
                 Object value = convertStringToTarget(stringValue, (Class) optionDef.getType(), optionDef);
                 methodArgs[parameterIndex] = value;
             }
@@ -138,6 +140,27 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
             return (Collection) Reflects.newInstance(collectionClass);
         }
     }
+
+    private String[] getOptionValues(Cmdline cmdline, String optionKey){
+        Option optionDef = cmdline.getCommandDefinition().getOptions().getOption(optionKey);
+        if(!cmdline.getParsed().hasOption(optionKey)){
+            CommandOption commandOption = (CommandOption)optionDef;
+            return commandOption.getDefaultValues();
+        }else{
+            return cmdline.getParsed().getOptionValues(optionKey);
+        }
+    }
+
+    private String getOptionValue(Cmdline cmdline, String optionKey){
+        Option optionDef = cmdline.getCommandDefinition().getOptions().getOption(optionKey);
+        if(!cmdline.getParsed().hasOption(optionKey)){
+            CommandOption commandOption = (CommandOption)optionDef;
+            return commandOption.getDefaultValue();
+        }else{
+            return cmdline.getParsed().getOptionValue(optionKey);
+        }
+    }
+
 
     private Object convertStringToTarget(String stringValue, Class type, Option optionDef) {
         if (type.isEnum()) {

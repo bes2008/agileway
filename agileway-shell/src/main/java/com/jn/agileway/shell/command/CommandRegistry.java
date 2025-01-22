@@ -23,18 +23,25 @@ public class CommandRegistry {
         this.commandGroupMap.put(commandGroup.getName(), commandGroup);
     }
 
-    public List<CommandGroup> getCommandGroups(String... groupNames) {
+    public List<CommandGroup> getCommandGroups( String... groupNames){
+        return getCommandGroups(false, groupNames);
+    }
+
+    public List<CommandGroup> getCommandGroups(boolean getAllIfGroupsIsEmpty, String... groupNames) {
         if (Objs.isEmpty(groupNames)) {
             return Lists.newArrayList(commandGroupMap.values());
         }
         List<CommandGroup> groups = new ArrayList<>();
-        for (String groupName : groupNames) {
-            CommandGroup group = this.commandGroupMap.get(groupName);
-            if (group != null) {
-                groups.add(group);
+        if(getAllIfGroupsIsEmpty) {
+            for (String groupName : groupNames) {
+                CommandGroup group = this.commandGroupMap.get(groupName);
+                if (group != null) {
+                    groups.add(group);
+                }
             }
         }
         return groups;
+
     }
 
     public CommandGroup getCommandGroup(String group) {

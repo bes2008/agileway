@@ -15,11 +15,11 @@ public class UsageCommandTests {
 
     @Test
     public void testCommands() {
-        //adhocTest("commands -g builtin");
-        //adhocTest("commands -g builtin2");
-        //adhocTest("commands --groups builtin3");
+        adhocTest("commands -g builtin");
+        adhocTest("commands -g builtin2");
+        adhocTest("commands --groups builtin3");
         adhocTest("commands builtin builtin2");
-        //adhocTest("commands");
+        adhocTest("commands");
     }
 
     private void adhocTest(String cmdline) {

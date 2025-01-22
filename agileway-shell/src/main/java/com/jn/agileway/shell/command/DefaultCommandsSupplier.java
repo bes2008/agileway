@@ -18,6 +18,7 @@ import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.function.Predicate2;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
+import com.jn.langx.util.struct.Holder;
 import com.jn.langx.util.struct.Pair;
 import io.github.classgraph.*;
 import org.apache.commons.cli.Converter;
@@ -226,7 +227,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         for (int i = 0; i < methodParameterInfoList.length; i++) {
             MethodParameterInfo methodParameterInfo = methodParameterInfoList[i];
             if(firstCommandArgumentIndex<0 || i<firstCommandArgumentIndex) {
-                Option option = createOption(methodParameterInfo, method, i);
+                Option option = createOption(command.getName(), methodParameterInfo, method, i);
                 options.add(option);
             }else{
                 CommandArgument commandArgument = createCommandArgument(methodParameterInfo, method, i);
@@ -291,11 +292,11 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         return argument;
     }
 
-    private CommandOption createOption(MethodParameterInfo methodParameterInfo, Method method, int parameterIndex) {
+    private CommandOption createOption(final String commandKey, MethodParameterInfo methodParameterInfo, Method method, int parameterIndex) {
         AnnotationInfo annotationInfo = methodParameterInfo.getAnnotationInfo(com.jn.agileway.shell.command.annotation.CommandOption.class);
 
         @Nullable
-        String optionName;
+        final Holder<String> optionName = new Holder<String>();
         String longOptionName = null;
 
         boolean required = true;
@@ -316,7 +317,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             parameterValueList = annotationInfo.getParameterValues(true);
         }
         if (parameterValueList != null) {
-            optionName = (String) parameterValueList.getValue("value");
+            optionName.set((String) parameterValueList.getValue("value"));
             longOptionName = (String) parameterValueList.getValue("longName");
             required = (boolean) parameterValueList.getValue("required");
             hasArg1 = (boolean) parameterValueList.getValue("hasArg");
@@ -337,7 +338,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
                 }
             }
         } else {
-            optionName = methodParameterInfo.getName();
+            optionName.set(methodParameterInfo.getName());
             if (methodParameterInfo.getAnnotationInfo(Nullable.class) == null) {
                 required = false;
                 argOptional = true;
@@ -359,38 +360,40 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         }
 
         final Converter converter = (converterClass == null || converterClass == DefaultConverter.class) ? new DefaultConverter(elementType) : Reflects.<Converter>newInstance(converterClass);
-        List<Object> defaultValues = null;
+        String defaultValue=null;
+        String[] defaultValues = null;
         if (hasArgN) {
             if (defaultValueString != null) {
 
                 String[] values = Strings.split(defaultValueString, valueSeparator + "");
-                defaultValues = Pipeline.of(values).map(new Function<String, Object>() {
+                // 这个过程如果没有异常，那么可以直接将 values作为 defaultValues使用
+                Pipeline.of(values).map(new Function<String, Object>() {
                     @Override
                     public Object apply(String value) {
                         try {
                             return converter.apply(value);
                         } catch (Throwable e) {
-                            throw new RuntimeException(e);
+                            throw new RuntimeException(StringTemplates.formatWithPlaceholder("Illegal defaultValues for option {} in command {}", optionName.get(), commandKey ));
                         }
                     }
                 }).asList();
-
+                defaultValues = values;
             }
         } else if (hasArg1 && defaultValueString != null) {
             try {
-                Object defaultValue = converter.apply(defaultValueString);
-                defaultValues = Lists.newArrayList(defaultValue);
+                Object theDefaultValue = converter.apply(defaultValueString);
+                defaultValue= defaultValueString;
             } catch (Throwable e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException(StringTemplates.formatWithPlaceholder("Illegal defaultValue for option {} in command {}", optionName.get(), commandKey ));
             }
         }
 
         if (Strings.isBlank(desc)) {
-            desc = Objs.useValueIfEmpty(longOptionName, optionName);
+            desc = Objs.useValueIfEmpty(longOptionName, optionName.get());
         }
 
         try {
-            CommandOption option = new CommandOption(optionName, longOptionName, hasArg1, desc);
+            CommandOption option = new CommandOption(optionName.get(), longOptionName, hasArg1, desc);
             option.setOptionalArg(argOptional);
             option.setArgName(argName);
             option.setRequired(required);
@@ -399,7 +402,10 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             }
             option.setType(elementType);
             option.setConverter(converter);
-            if (hasArgN || hasArg1) {
+            if(hasArg1){
+                option.setDefaultValue(defaultValue);
+            }
+            if (hasArgN) {
                 option.setDefaultValues(defaultValues);
             }
             option.setValueSeparator(valueSeparator);

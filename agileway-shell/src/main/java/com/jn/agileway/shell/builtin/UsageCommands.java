@@ -23,10 +23,12 @@ public class UsageCommands {
 
     @Command(value = "commands", desc = "List commands in some or all groups")
     public String listCommands(
+            @CommandOption(value = "a", longName = "all", required = false, type = boolean.class, defaultValue = "false", desc = "whether list all groups when argument <groups> is empty")
+            boolean getAllIfGroupsIsEmpty,
             @CommandArgument(value = "groups", required = false, desc = "the command groups")
             String... groupNames) {
         StringBuilder builder = new StringBuilder(255);
-        List<CommandGroup> commandGroups = commandRegistry.getCommandGroups(groupNames);
+        List<CommandGroup> commandGroups = commandRegistry.getCommandGroups(getAllIfGroupsIsEmpty, groupNames);
         for (CommandGroup commandGroup : commandGroups) {
             String groupName = commandGroup.getName();
             builder.append(new AnsiFontText(Strings.completingLength(groupName, 16, Strings.SP, false)).bold(true))
@@ -49,7 +51,8 @@ public class UsageCommands {
     @Command(value = "help", desc = "Display the summary")
     public String help(String commandKey){
         if(Strings.isEmpty(commandKey)){
-            return listCommands();
+            // return listCommands();
+            return "";
         }
         com.jn.agileway.shell.command.Command command = commandRegistry.getCommand(commandKey);
         if(command==null){
