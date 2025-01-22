@@ -65,8 +65,8 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
             if (parameter.getType().isArray()) {
                 String[] stringValues = getOptionValues(cmdline, optionKey);
 
-                Object array = Arrs.createArray((Class) optionDef.getType(),stringValues==null?0: stringValues.length);
-                if(stringValues!=null) {
+                Object array = Arrs.createArray((Class) optionDef.getType(), stringValues == null ? 0 : stringValues.length);
+                if (stringValues != null) {
                     for (int i = 0; i < stringValues.length; i++) {
                         String stringValue = stringValues[i];
                         Object value = convertStringToTarget(stringValue, (Class) optionDef.getType(), optionDef);
@@ -77,7 +77,7 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
             } else if (Reflects.isSubClassOrEquals(Collection.class, parameter.getType())) {
                 String[] stringValues = getOptionValues(cmdline, optionKey);
                 Collection collection = newCollection(parameter.getType());
-                if(stringValues!=null) {
+                if (stringValues != null) {
                     for (String stringValue : stringValues) {
                         Object value = convertStringToTarget(stringValue, (Class) optionDef.getType(), optionDef);
                         collection.add(value);
@@ -92,30 +92,30 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
         }
 
         List<CommandArgument> argumentsDef = cmdline.getCommandDefinition().getArguments();
-        if(!argumentsDef.isEmpty()) {
+        if (!argumentsDef.isEmpty()) {
             List<String> argumentValues = cmdline.getParsed().getArgList();
             int i = 0;
-            for (; i < argumentsDef.size()-1; i++) {
+            for (; i < argumentsDef.size() - 1; i++) {
                 methodArgs[parameterIndex] = argumentValues.get(i);
                 parameterIndex++;
             }
 
             List<String> lastArgumentValues = argumentValues.subList(i, argumentValues.size());
             Parameter lastParameter = parameters[parameterIndex];
-            if(lastParameter.getType().isArray()){
-                methodArgs[parameterIndex] = Collects.toArray(lastArgumentValues,String[].class);
-            }else{
-                if(lastArgumentValues.size()>1){
-                    throw new MalformedCommandArgumentsException(argumentsDef.get(argumentsDef.size()-1).getName());
-                }else if(lastArgumentValues.size()==1){
-                    methodArgs[parameterIndex]=lastArgumentValues.get(0);
-                }else{
-                    methodArgs[parameterIndex]=null;
+            if (lastParameter.getType().isArray()) {
+                methodArgs[parameterIndex] = Collects.toArray(lastArgumentValues, String[].class);
+            } else {
+                if (lastArgumentValues.size() > 1) {
+                    throw new MalformedCommandArgumentsException(argumentsDef.get(argumentsDef.size() - 1).getName());
+                } else if (lastArgumentValues.size() == 1) {
+                    methodArgs[parameterIndex] = lastArgumentValues.get(0);
+                } else {
+                    methodArgs[parameterIndex] = null;
                 }
             }
             parameterIndex++;
         }
-        if(parameterIndex!=parameters.length){
+        if (parameterIndex != parameters.length) {
             throw new MalformedCommandArgumentsException("argument missing or too many");
         }
         return methodArgs;
@@ -141,33 +141,26 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
         }
     }
 
-    private String[] getOptionValues(Cmdline cmdline, String optionKey){
+    private String[] getOptionValues(Cmdline cmdline, String optionKey) {
         Option optionDef = cmdline.getCommandDefinition().getOptions().getOption(optionKey);
-        if(!cmdline.getParsed().hasOption(optionKey)){
-            CommandOption commandOption = (CommandOption)optionDef;
+        if (!cmdline.getParsed().hasOption(optionKey)) {
+            CommandOption commandOption = (CommandOption) optionDef;
             return commandOption.getDefaultValues();
-        }else{
+        } else {
             return cmdline.getParsed().getOptionValues(optionKey);
         }
     }
 
-    private String getOptionValue(Cmdline cmdline, String optionKey){
+    private String getOptionValue(Cmdline cmdline, String optionKey) {
         Option optionDef = cmdline.getCommandDefinition().getOptions().getOption(optionKey);
-        if(optionDef.getArgs()<0){
+        if (optionDef.getArgs() < 0) {
             // is flag
-            CommandOption commandOption = (CommandOption)optionDef;
-            Boolean defaultValue = Boolean.valueOf( commandOption.getDefaultValue());
-            Boolean theValue = defaultValue;
-            if(!cmdline.getParsed().hasOption(optionKey)){
-                theValue = !defaultValue;
-            }
-
-            return theValue.toString();
+            return cmdline.getParsed().hasOption(optionKey) ? "true" : "false";
         }
-        if(!cmdline.getParsed().hasOption(optionKey)){
-            CommandOption commandOption = (CommandOption)optionDef;
+        if (!cmdline.getParsed().hasOption(optionKey)) {
+            CommandOption commandOption = (CommandOption) optionDef;
             return commandOption.getDefaultValue();
-        }else{
+        } else {
             return cmdline.getParsed().getOptionValue(optionKey);
         }
     }

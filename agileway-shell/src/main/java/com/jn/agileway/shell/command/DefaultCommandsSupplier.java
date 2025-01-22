@@ -310,7 +310,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         @Nullable
         String argName = null;
         boolean argOptional = false;
-        Class elementType=null;
+        Class elementType = null;
         Class converterClass = DefaultConverter.class;
         String defaultValueString = "";
         char valueSeparator = ',';
@@ -325,7 +325,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             optionName.set((String) parameterValueList.getValue("value"));
             longOptionName = (String) parameterValueList.getValue("longName");
             argName = Strings.trimToNull((String) parameterValueList.getValue("argName"));
-            if(isFlag) {
+            if (isFlag) {
                 isFlag = (boolean) parameterValueList.getValue("isFlag");
             }
             converterClass = ((AnnotationClassRef) parameterValueList.getValue("converter")).loadClass();
@@ -337,7 +337,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             optionName.set(methodParameterInfo.getName());
         }
 
-        if(!optionName.isEmpty() && Objs.length(optionName.get())>1){
+        if (!optionName.isEmpty() && Objs.length(optionName.get()) > 1) {
             throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("Illegal option shortName for option {} in command {}, short name should be only one letter", optionName.get(), commandKey));
         }
 
@@ -345,23 +345,18 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         String defaultValue = null;
         String[] defaultValues = null;
         Holder<Converter> converterHolder = new Holder<>();
-        if(isFlag){
+        if (isFlag) {
             hasArg1 = false;
             hasArgN = false;
             elementType = parameterClass;
             required = false;
             argName = null;
             converterHolder.set(new DefaultConverter(boolean.class));
-            defaultValue = Strings.isEmpty(defaultValueString) || Objs.equals(com.jn.agileway.shell.command.annotation.CommandOption.NULL, defaultValueString) ? "false": defaultValueString ;
-            try {
-                defaultValue = converterHolder.get().apply(defaultValue).toString();
-            }catch (Throwable e){
-                defaultValue = "false";
-            }
-        }else{
+            defaultValue = "false";
+        } else {
             hasArgN = parameterClass.isArray() || Reflects.isSubClassOrEquals(Collection.class, parameterClass);
             hasArg1 = !hasArgN;
-            if(argName == null){
+            if (argName == null) {
                 argName = longOptionName;
             }
             if (hasArgN) {
@@ -375,10 +370,10 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
                 elementType = parameterClass;
             }
 
-            Converter converter= (converterClass == null || converterClass == DefaultConverter.class) ? new DefaultConverter(elementType) : Reflects.<Converter>newInstance(converterClass);
+            Converter converter = (converterClass == null || converterClass == DefaultConverter.class) ? new DefaultConverter(elementType) : Reflects.<Converter>newInstance(converterClass);
             converterHolder.set(converter);
             // 默认值为 null
-            if(Objs.equals(com.jn.agileway.shell.command.annotation.CommandOption.NULL, defaultValueString)){
+            if (Objs.equals(com.jn.agileway.shell.command.annotation.CommandOption.NULL, defaultValueString)) {
                 required = Reflects.hasAnnotation(parameter, NonNull.class);
                 argOptional = !required;
             } else {
@@ -425,16 +420,15 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             }
             option.setType(elementType);
             option.setConverter(converterHolder.get());
-            if(!isFlag){
+            if (!isFlag) {
                 if (hasArgN) {
                     option.setDefaultValues(defaultValues);
                     option.setValueSeparator(valueSeparator);
                 } else {
                     option.setDefaultValue(defaultValue);
                 }
-            }else{
-                option.setDefaultValue(defaultValue);
             }
+            // flag 不需要设置default value
 
             return option;
         } catch (Throwable e) {
