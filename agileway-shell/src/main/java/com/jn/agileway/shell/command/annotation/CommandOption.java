@@ -34,14 +34,6 @@ public @interface CommandOption {
      * 选项的长名
      */
     String longName() default "";
-
-    /**
-     * 选项是否必须出现在命令行上
-     */
-    boolean required() default true;
-
-    String argName() default "";
-
     /**
      * 只针对 boolean 、Boolean 类型的数据有用
      * @return
@@ -49,9 +41,11 @@ public @interface CommandOption {
     boolean isFlag() default false;
 
     /**
-     * 选项值的数据类型
+     * 选项是否必须出现在命令行上。 如果 isFlag()==true，那么required强制设置为 false
      */
-    Class type() default String.class;
+    boolean required() default true;
+
+    String argName() default "";
 
     /**
      * 值的类型

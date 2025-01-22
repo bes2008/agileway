@@ -309,7 +309,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         @Nullable
         String argName = null;
         boolean argOptional = false;
-        Class elementType;
+        Class elementType=null;
         Class converterClass = DefaultConverter.class;
         String defaultValueString = "";
         char valueSeparator = ',';
@@ -326,7 +326,6 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             required = (boolean) parameterValueList.getValue("required");
             argName = Strings.trimToNull((String) parameterValueList.getValue("argName"));
             isFlag = (boolean) parameterValueList.getValue("isFlag");
-            elementType = ((AnnotationClassRef) parameterValueList.getValue("type")).loadClass();
             converterClass = ((AnnotationClassRef) parameterValueList.getValue("converter")).loadClass();
             defaultValueString = (String) parameterValueList.getValue("defaultValue");
             valueSeparator = (char) parameterValueList.getValue("valueSeparator");
@@ -338,8 +337,18 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
                 required = false;
                 argOptional = true;
             }
+            argName = null;
+        }
 
-            if (parameterClass.isArray() || Reflects.isSubClassOrEquals(Collection.class, parameterClass)) {
+        if(isFlag){
+            hasArg1 = false;
+            hasArgN = false;
+            elementType = boolean.class;
+        }else{
+            hasArgN = parameterClass.isArray() || Reflects.isSubClassOrEquals(Collection.class, parameterClass);
+            hasArg1 = !hasArgN;
+
+            if (hasArgN) {
                 if (parameterClass.isArray()) {
                     elementType = parameterClass.getComponentType();
                 } else {
@@ -349,15 +358,6 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             } else {
                 elementType = parameterClass;
             }
-            argName = null;
-        }
-
-        if(isFlag){
-            hasArg1 = false;
-            hasArgN = false;
-        }else{
-            hasArgN = parameterClass.isArray() || Reflects.isSubClassOrEquals(Collection.class, parameterClass);
-            hasArg1= !hasArgN;
         }
 
         final Converter converter = (converterClass == null || converterClass == DefaultConverter.class) ? new DefaultConverter(elementType) : Reflects.<Converter>newInstance(converterClass);
@@ -397,7 +397,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             CommandOption option = new CommandOption(optionName.get(), longOptionName, hasArg1, desc);
             option.setOptionalArg(argOptional);
             option.setArgName(argName);
-            option.setRequired(required);
+            option.setRequired( isFlag ? false : required);
             if (hasArgN) {
                 option.setArgs(Option.UNLIMITED_VALUES);
             }
