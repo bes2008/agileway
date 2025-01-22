@@ -345,7 +345,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         if(isFlag){
             hasArg1 = false;
             hasArgN = false;
-            elementType = boolean.class;
+            elementType = parameterClass;
             required = false;
         }else{
             hasArgN = parameterClass.isArray() || Reflects.isSubClassOrEquals(Collection.class, parameterClass);
