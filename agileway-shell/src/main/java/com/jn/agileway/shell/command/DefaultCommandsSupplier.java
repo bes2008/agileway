@@ -325,7 +325,9 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             optionName.set((String) parameterValueList.getValue("value"));
             longOptionName = (String) parameterValueList.getValue("longName");
             argName = Strings.trimToNull((String) parameterValueList.getValue("argName"));
-            isFlag = (boolean) parameterValueList.getValue("isFlag");
+            if(isFlag) {
+                isFlag = (boolean) parameterValueList.getValue("isFlag");
+            }
             converterClass = ((AnnotationClassRef) parameterValueList.getValue("converter")).loadClass();
             defaultValueString = (String) parameterValueList.getValue("defaultValue");
             valueSeparator = (char) parameterValueList.getValue("valueSeparator");
