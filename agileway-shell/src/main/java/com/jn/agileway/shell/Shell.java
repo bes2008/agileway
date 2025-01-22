@@ -244,6 +244,7 @@ public class Shell extends AbstractLifecycle {
         });
         String commandKey = null;
         if (index < 0) {
+            index = cmdline.length;
             commandKey = Strings.join(" ", cmdline);
         } else if (index > 0) {
             commandKey = Strings.join(" ", cmdline, 0, index);
