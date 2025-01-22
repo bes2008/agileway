@@ -8,6 +8,7 @@ import com.jn.agileway.shell.command.annotation.CommandArgument;
 import com.jn.agileway.shell.command.annotation.CommandComponent;
 import com.jn.agileway.shell.command.annotation.CommandOption;
 import com.jn.langx.text.StringTemplates;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 
 import java.util.List;
@@ -49,15 +50,15 @@ public class UsageCommands {
     }
 
     @Command(value = "help", desc = "Display the summary")
-    public String help(String commandKey){
-        if(Strings.isEmpty(commandKey)){
-            // return listCommands();
-            return "";
+    public String help(@CommandArgument(value = "commandName", desc = "the command name, if command name has space, quote it") String commandName){
+        if(Strings.isEmpty(commandName)){
+            return listCommands(true);
         }
-        com.jn.agileway.shell.command.Command command = commandRegistry.getCommand(commandKey);
+        com.jn.agileway.shell.command.Command command = commandRegistry.getCommand(commandName);
         if(command==null){
-            throw new RuntimeException(StringTemplates.formatWithPlaceholder("command '' not found", commandKey));
+            throw new RuntimeException(StringTemplates.formatWithPlaceholder("command '' not found", commandName));
         }
+
         return "";
     }
 
@@ -65,8 +66,28 @@ public class UsageCommands {
         if(builder==null || command==null){
             return;
         }
-        // Usage: <command-name> [Options]
-        // builder.append()
+        // Usage: <command-name> [Options] [Arguments]
+        builder.append("Usage:").append(command.getName());
+        if(!Objs.isEmpty(command.getOptionKeys())){
+            builder.append(" [<Options>]");
+        }
+        if(Objs.isNotEmpty(command.getArguments())){
+            for (com.jn.agileway.shell.command.CommandArgument argument: command.getArguments()){
+                if(argument.isRequired()){
+                    builder.append(" <").append(argument.getName()).append(">");
+                }else{
+                    builder.append(" [<").append(argument.getName()).append(">]");
+                }
+            }
+        }
+        builder.append(Strings.CRLF);
+
+        // Options:
+        if(!Objs.isEmpty(command.getOptionKeys())){
+            builder.append("Options:").append(Strings.CRLF);
+            List<String> optionKeys = command.getOptionKeys();
+
+        }
 
     }
 
