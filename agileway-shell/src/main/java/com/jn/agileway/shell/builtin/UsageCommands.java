@@ -69,16 +69,22 @@ public class UsageCommands {
             return;
         }
         // Usage: <command-name> [Options] [Arguments]
-        builder.append("Usage:").append(command.getName());
+        builder.append("Usage:").append(Strings.CRLF).append("\t").append(command.getName());
         if(!Objs.isEmpty(command.getOptionKeys())){
             builder.append(" [<Options>]");
         }
         if(Objs.isNotEmpty(command.getArguments())){
             for (com.jn.agileway.shell.command.CommandArgument argument: command.getArguments()){
-                if(argument.isRequired()){
-                    builder.append(" <").append(argument.getName()).append(">");
-                }else{
-                    builder.append(" [<").append(argument.getName()).append(">]");
+                builder.append(" ");
+                if(!argument.isRequired()){
+                    builder.append("[");
+                }
+                builder.append("<").append(argument.getName()).append(">");
+                if(argument.isMultipleValue()){
+                    builder.append("...");
+                }
+                if(!argument.isRequired()){
+                    builder.append("]");
                 }
             }
         }
@@ -90,7 +96,7 @@ public class UsageCommands {
             List<String> optionKeys = command.getOptionKeys();
             for(String optionKey : optionKeys){
                 Option option = command.getOptions().getOption(optionKey);
-                builder.append("  ");
+                builder.append("\t");
                 String shortName = option.getOpt();
                 int outOptionNameCount=0;
 

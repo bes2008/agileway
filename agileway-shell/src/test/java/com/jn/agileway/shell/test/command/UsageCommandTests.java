@@ -17,4 +17,9 @@ public class UsageCommandTests {
         adhocTest("commands -a builtin2");
         adhocTest("commands -a");
     }
+
+    @Test
+    public void testHelp(){
+        adhocTest("help system-props");
+    }
 }

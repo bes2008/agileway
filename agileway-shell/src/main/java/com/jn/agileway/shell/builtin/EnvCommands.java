@@ -18,10 +18,10 @@ public class EnvCommands {
 
     @Command(value = "env-variables", desc = "Search or list all environment variables ", outputTransformer = YamlStyleOutputTransformer.class)
     public Map<String, String> environmentVariables(
-            @CommandOption(value = "i", longName = "ignoreCase", isFlag = true)
+            @CommandOption(value = "i", longName = "ignoreCase", isFlag = true, desc = "search string with ignore case")
             boolean ignoreCase,
-            @CommandOption(value = "v", longName = "checkValue", isFlag = true)
-            boolean checkValue,
+            @CommandOption(value = "v", longName = "searchValue", isFlag = true, desc = "search variable value also")
+            boolean searchValue,
             @CommandArgument(value = "search_text", required = false, desc = "the search text")
             String... search) {
 
@@ -36,7 +36,7 @@ public class EnvCommands {
             if (Strings.containsAny(envName, ignoreCase, searchTexts)) {
                 result.put(envName, envValue);
             }
-            if (checkValue && Strings.containsAny(envValue, ignoreCase, searchTexts)) {
+            if (searchValue && Strings.containsAny(envValue, ignoreCase, searchTexts)) {
                 result.put(envName, envValue);
             }
         }
@@ -45,10 +45,10 @@ public class EnvCommands {
 
     @Command(value = "system-props", desc = "Search or list all system properties", outputTransformer = YamlStyleOutputTransformer.class)
     public Map<String, String> systemProperties(
-            @CommandOption(value = "i", longName = "ignoreCase", isFlag = true)
+            @CommandOption(value = "i", longName = "ignoreCase", isFlag = true, desc = "search string with ignore case")
             boolean ignoreCase,
-            @CommandOption(value = "v", longName = "checkValue", isFlag = true, defaultValue = "true")
-            boolean checkValue,
+            @CommandOption(value = "v", longName = "searchValue", isFlag = true, defaultValue = "true", desc = "search property value also")
+            boolean searchValue,
             @CommandArgument(value = "search_text", required = false, desc = "the search text")
             String... search) {
         String[] searchTexts = Pipeline.of(search).clearEmptys().toArray(String[].class);
@@ -65,7 +65,7 @@ public class EnvCommands {
             if (Strings.containsAny(envName, ignoreCase, searchTexts)) {
                 result.put(envName, envValue);
             }
-            if (checkValue && Strings.containsAny(envValue, ignoreCase, searchTexts)) {
+            if (searchValue && Strings.containsAny(envValue, ignoreCase, searchTexts)) {
                 result.put(envName, envValue);
             }
         }
