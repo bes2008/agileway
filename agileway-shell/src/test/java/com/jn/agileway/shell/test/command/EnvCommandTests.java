@@ -23,9 +23,16 @@ public class EnvCommandTests {
 
     @Test
     public void testSystemProperties(){
-        adhocTest("system-props user");
         adhocTest("system-props         ");
         adhocTest("system-props");
+        adhocTest("system-props -i");
+        adhocTest("system-props -iv");
+
+        adhocTest("system-props Jav");
+        adhocTest("system-props -i Jav");
+        adhocTest("system-props -v Jav");
+        adhocTest("system-props -i -v Jav");
+        adhocTest("system-props -iv Jav");
     }
 
     private void adhocTest(String cmdline) {
