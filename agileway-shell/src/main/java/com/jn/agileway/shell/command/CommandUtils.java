@@ -1,5 +1,6 @@
 package com.jn.agileway.shell.command;
 
+import com.jn.agileway.shell.cmdline.AnsiText;
 import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.text.StringTemplates;
@@ -12,6 +13,7 @@ import com.jn.langx.util.function.Function;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.type.Primitives;
 import org.apache.commons.cli.Converter;
+import org.apache.commons.cli.Option;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -110,5 +112,111 @@ public final class CommandUtils {
 
     public static boolean isNullDefaultValue(String defaultValueString){
         return Objs.equals(defaultValueString, NULL);
+    }
+
+    public static String commandHelp(Command command){
+        StringBuilder builder = new StringBuilder(255);
+        appHelpInfoTo(builder, command);
+        return builder.toString();
+    }
+
+    private static void appHelpInfoTo(StringBuilder builder, Command command){
+        if(builder==null || command==null){
+            return;
+        }
+        // Usage: <command-name> [Options] [Arguments]
+        builder.append("Usage:").append(Strings.CRLF).append("\t").append(AnsiText.ofBoldText( command.getName() ));
+        if(!Objs.isEmpty(command.getOptionKeys())){
+            builder.append(" [<Options>]");
+        }
+        if(Objs.isNotEmpty(command.getArguments())){
+            for (com.jn.agileway.shell.command.CommandArgument argument: command.getArguments()){
+                builder.append(" ");
+                if(!argument.isRequired()){
+                    builder.append("[");
+                }
+                builder.append("<").append(argument.getName()).append(">");
+                if(argument.isMultipleValue()){
+                    builder.append("...");
+                }
+                if(!argument.isRequired()){
+                    builder.append("]");
+                }
+            }
+        }
+        builder.append(Strings.CRLF);
+        builder.append(Strings.CRLF);
+
+        // Desc:
+        builder.append(command.getDesc()).append(Strings.CRLF);
+        builder.append(Strings.CRLF);
+
+        // Options:
+        if(!Objs.isEmpty(command.getOptionKeys())){
+
+            builder.append("Options:").append(Strings.CRLF);
+            List<String> optionKeys = command.getOptionKeys();
+            for(String optionKey : optionKeys){
+                Option option = command.getOptions().getOption(optionKey);
+                builder.append("\t");
+                String shortName = option.getOpt();
+                int outOptionNameCount=0;
+
+                if(Objs.isNotEmpty(shortName)){
+                    outOptionNameCount++;
+                    builder.append(AnsiText.ofBoldText("-"+shortName));
+                    if(option.hasArgName()){
+                        builder.append(" ");
+                        if(option.hasOptionalArg()){
+                            builder.append("[").append(option.getArgName()).append("]");
+                        }else{
+                            builder.append(option.getArgName());
+                        }
+                    }
+                }
+                String longName = option.getLongOpt();
+                if(Objs.isNotEmpty(longName)){
+                    if(outOptionNameCount>0){
+                        builder.append(", ");
+                    }
+                    builder.append(AnsiText.ofBoldText("--"+longName));
+
+                    if(option.hasArgName()){
+                        builder.append(" ");
+                        if(option.hasOptionalArg()){
+                            builder.append("[").append(option.getArgName()).append("]");
+                        }else{
+                            builder.append(option.getArgName());
+                        }
+                    }
+                }
+
+                builder.append("\t\t");
+                builder.append(option.getDescription());
+                builder.append(Strings.CRLF);
+            }
+            builder.append(Strings.CRLF);
+        }
+
+        // Arguments
+        if(Objs.isNotEmpty(command.getArguments())){
+            builder.append("Args:").append(Strings.CRLF);
+
+            List<com.jn.agileway.shell.command.CommandArgument> arguments = command.getArguments();
+            for(com.jn.agileway.shell.command.CommandArgument argument:arguments){
+                builder.append("\t");
+                builder.append(AnsiText.ofBoldText(argument.getName()));
+                builder.append("\t\t");
+                builder.append(argument.getDesc());
+                builder.append("; ");
+                builder.append(AnsiText.ofBoldText(argument.isRequired()? "Required": "Optional"));
+                builder.append("; ");
+                if(!argument.isRequired()){
+                    builder.append("defaultValue: ").append(argument.isMultipleValue()?Strings.join(" ", argument.getDefaultValues()): argument.getDefaultValue());
+                }
+                builder.append(Strings.CRLF);
+            }
+            builder.append(Strings.CRLF);
+        }
     }
 }

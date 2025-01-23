@@ -120,8 +120,6 @@ public class Shell extends AbstractLifecycle {
         this.cmdlineProvider = this.runMode == RunMode.SCRIPT ? new ScriptModeCmdlineProvider(this.appArgs) : (
                 this.runMode == RunMode.ADHOC ? new AdhocModeCmdlineProvider(this.appArgs) : new InteractiveModeCmdlineProvider(this.appArgs, promptSupplier)
         );
-
-
     }
 
     /**
@@ -234,15 +232,25 @@ public class Shell extends AbstractLifecycle {
             execResult.setErr(new NotFoundCommandException(Strings.join(" ", cmdline)));
             return execResult;
         }
+
+
         Cmdline parsedCmdline = null;
-        try {
-            parsedCmdline = this.commandlineParser.parse(commandDef, cmdline);
-        } catch (MalformedCommandException e) {
-            execResult.setErr(e);
-            return execResult;
+
+        if(Collects.contains(cmdline, "--help")){
+            String commandUsage = CommandUtils.commandHelp(commandDef);
+            parsedCmdline = new Cmdline(commandDef,null);
+            execResult.setCmdline(parsedCmdline);
+            execResult.setStdout(commandUsage);
+        }else {
+            try {
+                parsedCmdline = this.commandlineParser.parse(commandDef, cmdline);
+            } catch (MalformedCommandException e) {
+                execResult.setErr(e);
+                return execResult;
+            }
+            execResult = this.commandlineExecutor.exec(parsedCmdline);
+            execResult.setCmdline(parsedCmdline);
         }
-        execResult = this.commandlineExecutor.exec(parsedCmdline);
-        execResult.setCmdline(parsedCmdline);
         return execResult;
     }
 
