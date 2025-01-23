@@ -3,6 +3,7 @@ package com.jn.agileway.shell;
 import com.jn.agileway.shell.cmdline.*;
 import com.jn.agileway.shell.cmdline.adhoc.AdhocModeCmdlineProvider;
 import com.jn.agileway.shell.cmdline.interactive.InteractiveModeCmdlineProvider;
+import com.jn.agileway.shell.cmdline.interactive.PromptSupplier;
 import com.jn.agileway.shell.cmdline.script.ScriptModeCmdlineProvider;
 import com.jn.agileway.shell.command.*;
 import com.jn.agileway.shell.exception.MalformedCommandException;
@@ -73,6 +74,9 @@ public class Shell extends AbstractLifecycle {
     protected RunMode defaultRunMode = RunMode.INTERACTIVE;
     private RunMode runMode;
     private ApplicationArgs appArgs = new ApplicationArgs(new String[0]);
+    protected String name;
+
+    protected PromptSupplier promptSupplier;
 
     Shell() {
 
@@ -114,7 +118,7 @@ public class Shell extends AbstractLifecycle {
         enableAnsiConsole();
 
         this.cmdlineProvider = this.runMode == RunMode.SCRIPT ? new ScriptModeCmdlineProvider(this.appArgs) : (
-                this.runMode == RunMode.ADHOC ? new AdhocModeCmdlineProvider(this.appArgs) : new InteractiveModeCmdlineProvider(this.appArgs)
+                this.runMode == RunMode.ADHOC ? new AdhocModeCmdlineProvider(this.appArgs) : new InteractiveModeCmdlineProvider(this.appArgs, promptSupplier)
         );
 
 

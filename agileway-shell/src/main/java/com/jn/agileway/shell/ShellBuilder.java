@@ -1,6 +1,8 @@
 package com.jn.agileway.shell;
 
 import com.jn.agileway.shell.builtin.BuiltinCommandsComponentFactory;
+import com.jn.agileway.shell.cmdline.interactive.DefaultPromptSupplier;
+import com.jn.agileway.shell.cmdline.interactive.PromptSupplier;
 import com.jn.agileway.shell.command.CommandRegistry;
 import com.jn.agileway.shell.command.CommandsSupplier;
 import com.jn.agileway.shell.command.DefaultCommandsSupplier;
@@ -14,6 +16,7 @@ import com.jn.langx.environment.MultiplePropertySetEnvironment;
 import com.jn.langx.propertyset.EnvironmentVariablesPropertySource;
 import com.jn.langx.propertyset.PropertySet;
 import com.jn.langx.propertyset.SystemPropertiesPropertySource;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
@@ -26,9 +29,12 @@ public class ShellBuilder implements Builder<Shell> {
     private List<PropertySet> propertySets = Lists.<PropertySet>newArrayList();
     private boolean stopParseAtNonDefinedOption = true;
     private RunMode defaultRunMode = RunMode.INTERACTIVE;
-
     private final List<CommandsSupplier> commandsSuppliers = Lists.newArrayList(new DefaultCommandsSupplier());
     private boolean ansiConsoleEnabled = true;
+
+    private String shellName = "agileway-shell";
+
+    private PromptSupplier promptSupplier;
 
     public ShellBuilder componentFactory(CommandComponentFactory factory) {
         if (factory != null) {
@@ -44,7 +50,7 @@ public class ShellBuilder implements Builder<Shell> {
         return this;
     }
 
-    public ShellBuilder stopParseAtNonDefinedOption(boolean stop){
+    public ShellBuilder stopParseAtNonDefinedOption(boolean stop) {
         this.stopParseAtNonDefinedOption = stop;
         return this;
     }
@@ -56,17 +62,31 @@ public class ShellBuilder implements Builder<Shell> {
         return this;
     }
 
-    public ShellBuilder defaultRunMode(RunMode defaultRunMode){
-        if(defaultRunMode!=null){
-            this.defaultRunMode= defaultRunMode;
+    public ShellBuilder defaultRunMode(RunMode defaultRunMode) {
+        if (defaultRunMode != null) {
+            this.defaultRunMode = defaultRunMode;
         }
         return this;
     }
 
-    public ShellBuilder ansiConsoleEnabled(boolean enabled){
+    public ShellBuilder ansiConsoleEnabled(boolean enabled) {
         this.ansiConsoleEnabled = enabled;
         return this;
     }
+
+    public ShellBuilder name(String name) {
+        name = Strings.trimToNull(name);
+        if (name != null) {
+            this.shellName = name;
+        }
+        return this;
+    }
+
+    public ShellBuilder promptSupplier(PromptSupplier promptSupplier) {
+        this.promptSupplier = promptSupplier;
+        return this;
+    }
+
 
     @Override
     public Shell build() {
@@ -106,6 +126,9 @@ public class ShellBuilder implements Builder<Shell> {
         componentFactories.add(builtinCommandsComponentFactory);
         componentFactories.add(new ReflectiveCommandComponentFactory());
         shell.commandComponentFactory = new CompoundCommandComponentFactory(componentFactories);
+
+        shell.name = shellName;
+        shell.promptSupplier = this.promptSupplier == null ? new DefaultPromptSupplier(this.shellName) : promptSupplier;
         return shell;
     }
 }

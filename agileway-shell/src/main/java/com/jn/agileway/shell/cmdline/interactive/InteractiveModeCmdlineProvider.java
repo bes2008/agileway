@@ -16,10 +16,12 @@ public class InteractiveModeCmdlineProvider implements CmdlineProvider {
     private boolean appArgsUsed = false;
     private BufferedReader stdin;
 
+    private String prompt;
 
-    public InteractiveModeCmdlineProvider(ApplicationArgs appArgs){
+    public InteractiveModeCmdlineProvider(ApplicationArgs appArgs, PromptSupplier promptSupplier){
         this.appArgs = appArgs;
         this.stdin = new BufferedReader(new InputStreamReader(System.in, Charsets.getDefault()));
+        this.prompt = promptSupplier.get();
     }
 
     @Override
@@ -29,6 +31,7 @@ public class InteractiveModeCmdlineProvider implements CmdlineProvider {
             return this.appArgs.getArgs();
         }
         String line = null;
+        System.out.println("");
         try {
             line = this.stdin.readLine();
             line = line.trim();

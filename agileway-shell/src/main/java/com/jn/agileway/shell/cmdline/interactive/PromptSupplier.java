@@ -1,4 +1,7 @@
 package com.jn.agileway.shell.cmdline.interactive;
 
-public interface PromptSupplier {
+import com.jn.langx.util.function.Supplier0;
+
+public interface PromptSupplier extends Supplier0<String> {
+    String get();
 }
