@@ -1,9 +1,9 @@
 package com.jn.agileway.shell.cmdline;
 
-import com.jn.agileway.shell.result.CmdExecResult;
+import com.jn.agileway.shell.result.CmdlineExecResult;
 
 public interface CmdlineExecutor {
     CmdExecContext getCmdExecContext();
     void setCmdExecContext(CmdExecContext cmdExecContext);
-    CmdExecResult exec(Cmdline cmdline);
+    CmdlineExecResult exec(Cmdline cmdline);
 }

@@ -8,6 +8,7 @@ import com.jn.agileway.shell.factory.CommandComponentFactory;
 import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
 import com.jn.agileway.shell.factory.ReflectiveCommandComponentFactory;
 import com.jn.agileway.shell.cmdline.CmdlineParser;
+import com.jn.agileway.shell.result.CmdlineExecResultHandler;
 import com.jn.langx.Builder;
 import com.jn.langx.environment.MultiplePropertySetEnvironment;
 import com.jn.langx.propertyset.EnvironmentVariablesPropertySource;
@@ -78,8 +79,14 @@ public class ShellBuilder implements Builder<Shell> {
         propertySets.add(new EnvironmentVariablesPropertySource());
         shell.environment = new MultiplePropertySetEnvironment("agileway-shell", propertySets);
 
+        shell.execResultHandler = new CmdlineExecResultHandler();
 
         shell.commandlineParser = new CmdlineParser(this.stopParseAtNonDefinedOption);
+
+
+        shell.defaultRunMode = this.defaultRunMode;
+        shell.ansiConsoleEnabled = this.ansiConsoleEnabled;
+
 
         final List<CommandComponentFactory> componentFactories = Lists.newArrayList();
         Pipeline.of(commandComponentFactories).forEach(new Predicate<CommandComponentFactory>() {
@@ -93,12 +100,12 @@ public class ShellBuilder implements Builder<Shell> {
                 componentFactories.add(factory);
             }
         });
-        componentFactories.add(new BuiltinCommandsComponentFactory(shell.commandRegistry ));
+        BuiltinCommandsComponentFactory builtinCommandsComponentFactory = new BuiltinCommandsComponentFactory();
+        builtinCommandsComponentFactory.setCommandRegistry(shell.commandRegistry);
+        builtinCommandsComponentFactory.setCmdExecResultHandler(shell.execResultHandler);
+        componentFactories.add(builtinCommandsComponentFactory);
         componentFactories.add(new ReflectiveCommandComponentFactory());
         shell.commandComponentFactory = new CompoundCommandComponentFactory(componentFactories);
-
-        shell.defaultRunMode = this.defaultRunMode;
-        shell.ansiConsoleEnabled = this.ansiConsoleEnabled;
         return shell;
     }
 }

@@ -3,7 +3,7 @@ package com.jn.agileway.shell.result;
 import com.jn.agileway.shell.cmdline.Cmdline;
 import com.jn.langx.text.StringTemplates;
 
-public class CmdExecResult {
+public class CmdlineExecResult {
     /**
      *
      * <pre>

@@ -10,15 +10,15 @@ import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Throwables;
 
 
-public final class CmdExecResultHandler {
+public final class CmdlineExecResultHandler {
     private CmdOutputTransformer stdoutTransformer = new RawTextOutputTransformer();
 
-    public void handle(CmdExecResult execResult) {
+    public void handle(CmdlineExecResult execResult) {
         preOutput(execResult);
         output(execResult);
     }
 
-    private void output(CmdExecResult execResult) {
+    private void output(CmdlineExecResult execResult) {
 
         String out = execResult.getExitCode() == 0 ? execResult.getStdout() :
                 AnsiFontText.ofErrorMessage(execResult.getStderr())
@@ -40,7 +40,7 @@ public final class CmdExecResultHandler {
         return transformer;
     }
 
-    private void preOutput(CmdExecResult execResult) {
+    private void preOutput(CmdlineExecResult execResult) {
         if (execResult.getExitCode() >= 0) {
             return;
         }

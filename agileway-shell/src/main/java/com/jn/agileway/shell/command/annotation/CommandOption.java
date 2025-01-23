@@ -43,7 +43,7 @@ public @interface CommandOption {
     String argName() default "";
 
     /**
-     * 值的类型
+     * 值转换器
      */
     Class converter() default DefaultConverter.class;
 

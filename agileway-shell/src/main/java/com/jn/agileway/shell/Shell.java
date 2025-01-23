@@ -8,9 +8,9 @@ import com.jn.agileway.shell.command.*;
 import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.agileway.shell.exception.NotFoundCommandException;
 import com.jn.agileway.shell.exception.ShellInterruptedException;
-import com.jn.agileway.shell.result.CmdExecResult;
+import com.jn.agileway.shell.result.CmdlineExecResult;
 import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
-import com.jn.agileway.shell.result.CmdExecResultHandler;
+import com.jn.agileway.shell.result.CmdlineExecResultHandler;
 import com.jn.easyjson.core.util.JSONs;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.environment.Environment;
@@ -61,7 +61,7 @@ public class Shell extends AbstractLifecycle {
     protected final CmdlineExecutor commandlineExecutor = new DefaultCmdlineExecutor();
     @NonNull
     protected Environment environment;
-    protected CmdExecResultHandler execResultHandler = new CmdExecResultHandler();
+    protected CmdlineExecResultHandler execResultHandler;
     protected CmdlineProvider cmdlineProvider;
     private boolean debugModeEnabled;
     protected boolean ansiConsoleEnabled;
@@ -162,7 +162,7 @@ public class Shell extends AbstractLifecycle {
             if (cmdline == null) {
                 break;
             }
-            CmdExecResult execResult = evaluate(cmdline);
+            CmdlineExecResult execResult = evaluate(cmdline);
             execResultHandler.handle(execResult);
             iterResult = execResult;
 
@@ -216,8 +216,8 @@ public class Shell extends AbstractLifecycle {
         }
     }
 
-    private CmdExecResult evaluate(String[] cmdline) {
-        CmdExecResult execResult = new CmdExecResult();
+    private CmdlineExecResult evaluate(String[] cmdline) {
+        CmdlineExecResult execResult = new CmdlineExecResult();
         Command commandDef = findCommand(cmdline);
         if (commandDef == null) {
             execResult.setErr(new NotFoundCommandException(Strings.join(" ", cmdline)));

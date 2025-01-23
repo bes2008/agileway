@@ -5,7 +5,7 @@ import com.jn.agileway.shell.command.CommandOption;
 import com.jn.agileway.shell.exception.MalformedCommandArgumentsException;
 import com.jn.agileway.shell.exception.MalformedOptionValueException;
 import com.jn.agileway.shell.exception.UnsupportedCollectionException;
-import com.jn.agileway.shell.result.CmdExecResult;
+import com.jn.agileway.shell.result.CmdlineExecResult;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.collection.Arrs;
 import com.jn.langx.util.collection.Collects;
@@ -18,7 +18,6 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
 import java.util.*;
 import java.lang.reflect.Method;
@@ -39,8 +38,8 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
         return cmdExecContext;
     }
 
-    public CmdExecResult exec(Cmdline cmdline) {
-        CmdExecResult cmdExecResult = new CmdExecResult();
+    public CmdlineExecResult exec(Cmdline cmdline) {
+        CmdlineExecResult cmdExecResult = new CmdlineExecResult();
         Method method = cmdline.getCommandDefinition().getMethod();
         Object[] methodArgs = prepareMethodArgs(cmdline);
         Object component = getCmdExecContext().getComponentFactory().get(method.getDeclaringClass());
