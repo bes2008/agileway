@@ -108,4 +108,7 @@ public class AnsiFontText {
     public static AnsiFontText ofErrorMessage(String msg){
         return new AnsiFontText(msg).fontColor(Ansi.Color.RED);
     }
+    public static AnsiFontText ofBoldText(String text){
+        return  new AnsiFontText(text).bold(true);
+    }
 }

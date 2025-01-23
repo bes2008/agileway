@@ -7,7 +7,6 @@ import com.jn.agileway.shell.command.annotation.Command;
 import com.jn.agileway.shell.command.annotation.CommandArgument;
 import com.jn.agileway.shell.command.annotation.CommandComponent;
 import com.jn.agileway.shell.command.annotation.CommandOption;
-import com.jn.langx.annotation.NonNull;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
@@ -74,7 +73,7 @@ public class UsageCommands {
             return;
         }
         // Usage: <command-name> [Options] [Arguments]
-        builder.append("Usage:").append(Strings.CRLF).append("\t").append(command.getName());
+        builder.append("Usage:").append(Strings.CRLF).append("\t").append(AnsiFontText.ofBoldText( command.getName() ));
         if(!Objs.isEmpty(command.getOptionKeys())){
             builder.append(" [<Options>]");
         }
@@ -113,7 +112,7 @@ public class UsageCommands {
 
                 if(Objs.isNotEmpty(shortName)){
                     outOptionNameCount++;
-                    builder.append("-").append(shortName);
+                    builder.append(AnsiFontText.ofBoldText("-"+shortName));
                     if(option.hasArgName()){
                         builder.append(" ");
                         if(option.hasOptionalArg()){
@@ -128,7 +127,7 @@ public class UsageCommands {
                     if(outOptionNameCount>0){
                         builder.append(", ");
                     }
-                    builder.append("--").append(longName);
+                    builder.append(AnsiFontText.ofBoldText("--"+longName));
 
                     if(option.hasArgName()){
                         builder.append(" ");
@@ -149,16 +148,16 @@ public class UsageCommands {
 
         // Arguments
         if(Objs.isNotEmpty(command.getArguments())){
-            builder.append("Arguments:").append(Strings.CRLF);
+            builder.append("Args:").append(Strings.CRLF);
 
             List<com.jn.agileway.shell.command.CommandArgument> arguments = command.getArguments();
             for(com.jn.agileway.shell.command.CommandArgument argument:arguments){
                 builder.append("\t");
-                builder.append(argument.getName());
+                builder.append(AnsiFontText.ofBoldText(argument.getName()));
                 builder.append("\t\t");
                 builder.append(argument.getDesc());
                 builder.append("; ");
-                builder.append(argument.isRequired()? "Required": "Optional");
+                builder.append(AnsiFontText.ofBoldText(argument.isRequired()? "Required": "Optional"));
                 builder.append("; ");
                 if(!argument.isRequired()){
                     builder.append("defaultValue: ").append(argument.isMultipleValue()?Strings.join(" ", argument.getDefaultValues()): argument.getDefaultValue());
