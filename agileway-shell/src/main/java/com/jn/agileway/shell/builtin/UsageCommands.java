@@ -7,6 +7,7 @@ import com.jn.agileway.shell.command.annotation.Command;
 import com.jn.agileway.shell.command.annotation.CommandArgument;
 import com.jn.agileway.shell.command.annotation.CommandComponent;
 import com.jn.agileway.shell.command.annotation.CommandOption;
+import com.jn.langx.annotation.NonNull;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
@@ -25,8 +26,10 @@ public class UsageCommands {
 
     @Command(value = "commands", desc = "List commands in some or all groups")
     public String listCommands(
-            @CommandOption(value = "a", longName = "all", defaultValue = "false", isFlag = true, desc = "whether list all groups when argument <groups> is empty")
+            @CommandOption(value = "a", longName = "all",  isFlag = true, desc = "whether list all groups when argument <groups> is empty")
             boolean getAllIfGroupsIsEmpty,
+            @CommandOption(value = "s", longName = "sort", isFlag = true, desc = "sort the commands")
+            boolean sort,
             @CommandArgument(value = "groups", desc = "the command groups")
             String... groupNames) {
         StringBuilder builder = new StringBuilder(255);
@@ -37,7 +40,7 @@ public class UsageCommands {
                     .append("\t\t")
                     .append(commandGroup.getDesc())
                     .append(Strings.CRLF);
-            List<com.jn.agileway.shell.command.Command> cmds = this.commandRegistry.getGroupCommands(groupName);
+            List<com.jn.agileway.shell.command.Command> cmds = this.commandRegistry.getGroupCommands(groupName, sort);
             for (com.jn.agileway.shell.command.Command cmd : cmds) {
                 builder.append("\t")
                         .append(new AnsiFontText(Strings.completingLength(cmd.getName(), 12, Strings.SP, false)).bold(true))
@@ -51,9 +54,11 @@ public class UsageCommands {
     }
 
     @Command(value = "help", desc = "Display the summary")
-    public String help(@CommandArgument(value = "commandName", desc = "the command name, if command name has space, quote it") String commandName){
+    public String help(
+            @CommandArgument(value = "commandName", desc = "the command name, if command name has space, quote it", defaultValue = "")
+            String commandName){
         if(Strings.isEmpty(commandName)){
-            return listCommands(true);
+            return listCommands(true,true);
         }
         com.jn.agileway.shell.command.Command command = commandRegistry.getCommand(commandName);
         if(command==null){
@@ -89,9 +94,15 @@ public class UsageCommands {
             }
         }
         builder.append(Strings.CRLF);
+        builder.append(Strings.CRLF);
+
+        // Desc:
+        builder.append(command.getDesc()).append(Strings.CRLF);
+        builder.append(Strings.CRLF);
 
         // Options:
         if(!Objs.isEmpty(command.getOptionKeys())){
+
             builder.append("Options:").append(Strings.CRLF);
             List<String> optionKeys = command.getOptionKeys();
             for(String optionKey : optionKeys){
@@ -133,8 +144,29 @@ public class UsageCommands {
                 builder.append(option.getDescription());
                 builder.append(Strings.CRLF);
             }
+            builder.append(Strings.CRLF);
         }
 
+        // Arguments
+        if(Objs.isNotEmpty(command.getArguments())){
+            builder.append("Arguments:").append(Strings.CRLF);
+
+            List<com.jn.agileway.shell.command.CommandArgument> arguments = command.getArguments();
+            for(com.jn.agileway.shell.command.CommandArgument argument:arguments){
+                builder.append("\t");
+                builder.append(argument.getName());
+                builder.append("\t\t");
+                builder.append(argument.getDesc());
+                builder.append("; ");
+                builder.append(argument.isRequired()? "Required": "Optional");
+                builder.append("; ");
+                if(!argument.isRequired()){
+                    builder.append("defaultValue: ").append(argument.isMultipleValue()?Strings.join(" ", argument.getDefaultValues()): argument.getDefaultValue());
+                }
+                builder.append(Strings.CRLF);
+            }
+            builder.append(Strings.CRLF);
+        }
     }
 
 }

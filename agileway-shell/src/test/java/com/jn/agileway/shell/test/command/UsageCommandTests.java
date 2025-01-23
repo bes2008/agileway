@@ -13,14 +13,17 @@ public class UsageCommandTests {
         adhocTest("commands --groups builtin3");
         adhocTest("commands builtin builtin2");
         adhocTest("commands");
-        adhocTest("commands -a builtin");
-        adhocTest("commands -a builtin2");
+        adhocTest("commands -as builtin");
+        adhocTest("commands -as builtin2");
         adhocTest("commands -a");
     }
 
     @Test
     public void testHelp(){
         adhocTest("help system-props");
+        adhocTest("help env-variables");
+
+        adhocTest("help");
 
         // test command not found
         adhocTest("help system-props2");

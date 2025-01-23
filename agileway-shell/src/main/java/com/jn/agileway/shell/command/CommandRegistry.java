@@ -5,12 +5,14 @@ import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.comparator.Comparators;
+import com.jn.langx.util.comparator.DelegatableComparator;
+import com.jn.langx.util.comparator.MappingComparator;
+import com.jn.langx.util.comparator.OrderedComparator;
+import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Predicate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CommandRegistry {
     private Map<String, CommandGroup> commandGroupMap = new HashMap<>();
@@ -76,17 +78,26 @@ public class CommandRegistry {
         return commandMap.get(command);
     }
 
-    public List<Command> getGroupCommands(String group) {
+    public List<Command> getGroupCommands(String group, boolean sort) {
         if (!this.commandGroupMap.containsKey(group)) {
             return Lists.immutableList();
         }
-        return Pipeline.of(this.commandMap.values())
+        Pipeline<Command> pipeline = Pipeline.of(this.commandMap.values())
                 .filter(new Predicate<Command>() {
                     @Override
                     public boolean test(Command command) {
                         return Objs.equals(command.getGroup(), group);
                     }
-                }).asList();
+                });
+        if(sort){
+            pipeline = pipeline.sorted(new MappingComparator<Command, String>(Comparators.STRING_COMPARATOR_IGNORE_CASE, new Function<Command, String>() {
+                @Override
+                public String apply(Command command) {
+                    return command.getName();
+                }
+            }));
+        }
+        return pipeline.asList();
     }
 
 }

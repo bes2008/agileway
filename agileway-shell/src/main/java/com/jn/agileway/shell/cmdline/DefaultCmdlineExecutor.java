@@ -98,24 +98,43 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
         List<CommandArgument> argumentsDef = cmdline.getCommandDefinition().getArguments();
         if (!argumentsDef.isEmpty()) {
             List<String> argumentValues = cmdline.getParsed().getArgList();
+            if(argumentValues.size() < argumentsDef.size()-1){
+                throw new MalformedCommandArgumentsException("Insufficient command arguments");
+            }
+            if(argumentValues.size() == argumentsDef.size()-1  && argumentsDef.get(argumentsDef.size()-1).isRequired()){
+                throw new MalformedCommandArgumentsException("Insufficient command arguments");
+            }
+            if(argumentValues.size()> argumentsDef.size() && !argumentsDef.get(argumentsDef.size()-1).isMultipleValue()){
+                throw new MalformedCommandArgumentsException("Too many command arguments");
+            }
             int i = 0;
             for (; i < argumentsDef.size() - 1; i++) {
-                methodArgs[parameterIndex] = argumentValues.get(i);
+                CommandArgument commandArgument = argumentsDef.get(i);
+                methodArgs[parameterIndex] = convertStringToTarget(argumentValues.get(i), commandArgument.getType(), commandArgument);
                 parameterIndex++;
             }
 
+            // 最后一个参数
             List<String> lastArgumentValues = argumentValues.subList(i, argumentValues.size());
             Parameter lastParameter = parameters[parameterIndex];
+            CommandArgument lastCommandArgument = argumentsDef.get(i);
             if (lastParameter.getType().isArray()) {
-                methodArgs[parameterIndex] = Collects.toArray(lastArgumentValues, String[].class);
-            } else {
-                if (lastArgumentValues.size() > 1) {
-                    throw new MalformedCommandArgumentsException(argumentsDef.get(argumentsDef.size() - 1).getName());
-                } else if (lastArgumentValues.size() == 1) {
-                    methodArgs[parameterIndex] = lastArgumentValues.get(0);
-                } else {
+                String[] stringValues = lastArgumentValues.isEmpty()?lastCommandArgument.getDefaultValues(): Collects.toArray(lastArgumentValues, String[].class);
+                if(stringValues==null){
                     methodArgs[parameterIndex] = null;
+                }else {
+                    Class elementType = lastCommandArgument.getType();
+                    Object array = Arrs.createArray(elementType, stringValues.length);
+                    for (int j = 0; j < stringValues.length; j++) {
+                        String stringValue = stringValues[j];
+                        Object value = convertStringToTarget(stringValue, elementType, lastCommandArgument);
+                        Array.set(array, j, value);
+                    }
+                    methodArgs[parameterIndex] = array;
                 }
+            } else {
+                String value = lastArgumentValues.isEmpty() ? lastCommandArgument.getDefaultValue():lastArgumentValues.get(0);
+                methodArgs[parameterIndex] = convertStringToTarget(value, lastCommandArgument.getType(), lastCommandArgument);
             }
             parameterIndex++;
         }
@@ -184,4 +203,20 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
             }
         }
     }
+
+    private Object convertStringToTarget(String stringValue, Class type, CommandArgument commandArgument) {
+        if (type.isEnum()) {
+            return Enums.inferEnum(type, stringValue);
+        } else if (type == String.class) {
+            return stringValue;
+        } else {
+            try {
+                Object value = commandArgument.getConverter().apply(stringValue);
+                return value;
+            } catch (Throwable ex) {
+                throw new MalformedOptionValueException(ex);
+            }
+        }
+    }
+
 }

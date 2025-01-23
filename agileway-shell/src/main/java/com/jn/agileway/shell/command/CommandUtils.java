@@ -80,7 +80,7 @@ public final class CommandUtils {
         boolean required = true;
         Parameter parameter = method.getParameters()[parameterIndex];
         if(parameterIndex == method.getParameterCount()-1){
-            required = Reflects.hasAnnotation(parameter, NonNull.class) &&  Objs.equals(defaultValueString, NULL);
+            required = Reflects.hasAnnotation(parameter, NonNull.class) && isNullDefaultValue(defaultValueString);
         }
         return required;
     }

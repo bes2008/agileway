@@ -312,7 +312,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         argument.setName(name);
         argument.setDesc(desc);
         argument.setMultipleValue(isMultipleValue);
-        argument.setParameterType(parameterType);
+        argument.setType(elementType);
         argument.setConverter(converter);
         argument.setDefaultValue(defaultValue);
         argument.setDefaultValues(defaultValues);

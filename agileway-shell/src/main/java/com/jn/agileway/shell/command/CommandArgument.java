@@ -8,7 +8,13 @@ public class CommandArgument {
     private String desc;
     private boolean multipleValue;
 
-    private Class parameterType;
+    /**
+     * <pre>
+     * 如果方法参数是数组，则应该是数组的componentType，也就是数组中的元素的数据类型。
+     * 如果方法参数不是数组，就是参数类型。
+     * </pre>
+     */
+    private Class type;
 
     private Converter converter;
 
@@ -20,18 +26,18 @@ public class CommandArgument {
         this.converter = converter;
     }
 
-    public Class getParameterType() {
-        return parameterType;
-    }
-
     /**
      * 只有方法的最后一个参数有默认值
      */
     private String defaultValue;
     private String[] defaultValues;
 
-    public void setParameterType(Class parameterType) {
-        this.parameterType = parameterType;
+    public Class getType() {
+        return type;
+    }
+
+    public void setType(Class type) {
+        this.type = type;
     }
 
     public String getDefaultValue() {
