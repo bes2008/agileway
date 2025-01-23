@@ -31,7 +31,7 @@ public class InteractiveModeCmdlineProvider implements CmdlineProvider {
             return this.appArgs.getArgs();
         }
         String line = null;
-        System.out.println("");
+        System.out.print(this.prompt);
         try {
             line = this.stdin.readLine();
             line = line.trim();
