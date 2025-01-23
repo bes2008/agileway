@@ -16,4 +16,12 @@ public class TestUtils {
         System.out.println("cmdline: " + cmdline + "\t\t ===>");
         newAdhocShell().start(ShellCmdlines.cmdlineToArgs(cmdline));
     }
+
+    public static Shell newInteractiveShell(){
+        return new ShellBuilder()
+                .defaultRunMode(RunMode.INTERACTIVE)
+                .build();
+    }
+
+
 }

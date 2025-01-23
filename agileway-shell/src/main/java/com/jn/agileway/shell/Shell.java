@@ -118,7 +118,6 @@ public class Shell extends AbstractLifecycle {
         );
 
 
-
     }
 
     /**
@@ -142,12 +141,12 @@ public class Shell extends AbstractLifecycle {
     @Override
     protected void doStart() {
         super.doStart();
+        run();
     }
 
     public void start(String[] appArgs) {
         this.appArgs = new ApplicationArgs(appArgs);
         startup();
-        run();
     }
 
     private void run() {
@@ -162,6 +161,11 @@ public class Shell extends AbstractLifecycle {
             }
             if (cmdline == null) {
                 break;
+            }
+            if (cmdline.length == 0) {
+                if (runMode != RunMode.ADHOC) {
+                    continue;
+                }
             }
             CmdlineExecResult execResult = evaluate(cmdline);
             execResultHandler.handle(execResult);
