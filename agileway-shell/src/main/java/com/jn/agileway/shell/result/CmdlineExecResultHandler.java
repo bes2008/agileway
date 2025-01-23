@@ -59,27 +59,29 @@ public final class CmdlineExecResultHandler {
             return;
         }
 
-        recordStacktrace(err);
-
         if (err instanceof NotFoundCommandException) {
+            recordStacktrace(err, false);
             execResult.setExitCode(127);
             execResult.setStderr(StringTemplates.formatWithPlaceholder("not found command: {}", err.getMessage()));
             return;
         }
 
         if (err instanceof MalformedCommandException) {
+            recordStacktrace(err, false);
             execResult.setExitCode(2);
             execResult.setStderr(StringTemplates.formatWithPlaceholder("malformed command: {}", err.getMessage()));
             return;
         }
 
         if (err instanceof MalformedOptionValueException) {
+            recordStacktrace(err, false);
             execResult.setExitCode(2);
             execResult.setStderr(StringTemplates.formatWithPlaceholder("malformed command option value: {}", err.getMessage()));
             return;
         }
 
         if (err instanceof MalformedCommandArgumentsException) {
+            recordStacktrace(err, false);
             execResult.setExitCode(2);
             execResult.setStderr(StringTemplates.formatWithPlaceholder("malformed command argument value: {}", err.getMessage()));
             return;
@@ -88,14 +90,15 @@ public final class CmdlineExecResultHandler {
         // TODO 126：权限被拒绝或无法执行
 
         // TODO 1: 通用错误
+        recordStacktrace(err, true);
         execResult.setExitCode(1);
         execResult.setStderr(StringTemplates.formatWithPlaceholder("error: {}", Throwables.getRootCause(err).getMessage()));
     }
 
-    private void recordStacktrace(Throwable throwable){
+    private void recordStacktrace(Throwable throwable, boolean recordRoot){
         StringBuilderWriter stringBuilderWriter = new StringBuilderWriter();
         PrintWriter printWriter = new PrintWriter(stringBuilderWriter);
-        throwable.printStackTrace(printWriter);
+        (recordRoot?Throwables.getRootCause(throwable):throwable).printStackTrace(printWriter);
         printWriter.flush();
         printWriter.close();
 

@@ -41,9 +41,10 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
     public CmdlineExecResult exec(Cmdline cmdline) {
         CmdlineExecResult cmdExecResult = new CmdlineExecResult();
         Method method = cmdline.getCommandDefinition().getMethod();
-        Object[] methodArgs = prepareMethodArgs(cmdline);
-        Object component = getCmdExecContext().getComponentFactory().get(method.getDeclaringClass());
         try {
+            Object[] methodArgs = prepareMethodArgs(cmdline);
+            Object component = getCmdExecContext().getComponentFactory().get(method.getDeclaringClass());
+
             Object methodResult = Reflects.invokeMethod(method, component, methodArgs);
             cmdExecResult.setStdoutData(methodResult);
         }catch (Throwable e){

@@ -14,7 +14,7 @@ public class DiagnosisCommands {
 
     @Command(value = "stacktrace", desc = "Print stacktrace for diagnosis")
     public String stacktrace(
-            @CommandArgument(value = "index", defaultValue = "-1", desc="Print <N>th stacktrace, valid N value is [-10, 9] ")
+            @CommandArgument(value = "index", defaultValue = "9", desc="Print <N>th stacktrace, valid N value is [-10, 9] ")
             int index){
         return cmdlineExecResultHandler.getStacktrace(index);
     }
