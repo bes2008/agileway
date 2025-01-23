@@ -21,5 +21,8 @@ public class UsageCommandTests {
     @Test
     public void testHelp(){
         adhocTest("help system-props");
+
+        // test command not found
+        adhocTest("help system-props2");
     }
 }

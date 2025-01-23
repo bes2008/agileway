@@ -7,6 +7,7 @@ import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.agileway.shell.exception.MalformedOptionValueException;
 import com.jn.agileway.shell.exception.NotFoundCommandException;
 import com.jn.langx.text.StringTemplates;
+import com.jn.langx.util.Throwables;
 
 
 public final class CmdExecResultHandler {
@@ -79,6 +80,8 @@ public final class CmdExecResultHandler {
 
         // TODO 1: 通用错误
         execResult.setExitCode(1);
-        execResult.setStderr(StringTemplates.formatWithPlaceholder("error: {}", err.getMessage()));
+        execResult.setStderr(StringTemplates.formatWithPlaceholder("error: {}", Throwables.getRootCause(err).getMessage()));
     }
+
+
 }

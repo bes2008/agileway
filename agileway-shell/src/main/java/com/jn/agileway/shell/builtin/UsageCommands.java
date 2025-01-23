@@ -57,7 +57,7 @@ public class UsageCommands {
         }
         com.jn.agileway.shell.command.Command command = commandRegistry.getCommand(commandName);
         if(command==null){
-            throw new RuntimeException(StringTemplates.formatWithPlaceholder("command '' not found", commandName));
+            throw new RuntimeException(StringTemplates.formatWithPlaceholder("command '{}' not found", commandName));
         }
         StringBuilder builder = new StringBuilder(255);
         appHelpInfoTo(builder, command);

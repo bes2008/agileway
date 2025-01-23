@@ -18,6 +18,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
 import java.util.*;
 import java.lang.reflect.Method;
@@ -43,8 +44,12 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
         Method method = cmdline.getCommandDefinition().getMethod();
         Object[] methodArgs = prepareMethodArgs(cmdline);
         Object component = getCmdExecContext().getComponentFactory().get(method.getDeclaringClass());
-        Object methodResult = Reflects.invokeMethod(method, component, methodArgs);
-        cmdExecResult.setStdoutData(methodResult);
+        try {
+            Object methodResult = Reflects.invokeMethod(method, component, methodArgs);
+            cmdExecResult.setStdoutData(methodResult);
+        }catch (Throwable e){
+            cmdExecResult.setErr(e);
+        }
         return cmdExecResult;
     }
 
