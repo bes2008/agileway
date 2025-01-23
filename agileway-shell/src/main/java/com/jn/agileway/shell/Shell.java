@@ -153,14 +153,17 @@ public class Shell extends AbstractLifecycle {
         startup();
     }
 
+
     private void run() {
-        Object iterResult = null;
-        while (!(iterResult instanceof ShellInterruptedException)) {
+        CmdlineExecResult execResult = null;
+        while (execResult==null || !(execResult.getErr() instanceof ShellInterruptedException)) {
             String[] cmdline = null;
             try {
                 cmdline = this.cmdlineProvider.get();
             } catch (ShellInterruptedException sie) {
-                iterResult = sie;
+                execResult = new CmdlineExecResult();
+                execResult.setErr(sie);
+                execResultHandler.handle(execResult);
                 continue;
             }
             if (cmdline == null) {
@@ -171,9 +174,8 @@ public class Shell extends AbstractLifecycle {
                     continue;
                 }
             }
-            CmdlineExecResult execResult = evaluate(cmdline);
+            execResult = evaluate(cmdline);
             execResultHandler.handle(execResult);
-            iterResult = execResult;
 
             if (runMode == RunMode.ADHOC) {
                 break;

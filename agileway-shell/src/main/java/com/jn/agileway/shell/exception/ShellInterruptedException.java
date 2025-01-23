@@ -5,25 +5,18 @@ package com.jn.agileway.shell.exception;
  */
 public class ShellInterruptedException extends RuntimeException {
 
-    public ShellInterruptedException() {
-        super();
+    private int exitCode;
+
+    public ShellInterruptedException(String msg, int exitCode) {
+       this(msg,exitCode,null);
+    }
+    public ShellInterruptedException(String msg, int exitCode, Throwable cause) {
+        super(msg,cause);
+        this.exitCode = exitCode;
     }
 
-    public ShellInterruptedException(String cmdKey) {
-        super(cmdKey);
+    public int getExitCode() {
+        return exitCode;
     }
 
-    public ShellInterruptedException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public ShellInterruptedException(Throwable cause) {
-        super(cause);
-    }
-
-    public ShellInterruptedException(String message, Throwable cause,
-                                    boolean enableSuppression,
-                                    boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
 }

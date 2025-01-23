@@ -14,6 +14,8 @@ public interface CmdlineProvider extends Supplier0<String[]> {
      * 2. 返回 空数组 代表输入了空行，没有命令
      * 3. 非空，则按照命令去处理
      * </pre>
+     *
+     * 输入过程出现 异常，需要转换为 ShellInterruptedException 异常
      */
     @Override
     String[] get();

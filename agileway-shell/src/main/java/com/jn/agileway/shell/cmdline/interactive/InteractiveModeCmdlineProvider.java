@@ -3,6 +3,7 @@ package com.jn.agileway.shell.cmdline.interactive;
 import com.jn.agileway.shell.ApplicationArgs;
 import com.jn.agileway.shell.cmdline.CmdlineProvider;
 import com.jn.agileway.shell.cmdline.ShellCmdlines;
+import com.jn.agileway.shell.exception.ShellInterruptedException;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.io.Charsets;
@@ -71,7 +72,7 @@ public class InteractiveModeCmdlineProvider implements CmdlineProvider {
             }
             return ShellCmdlines.cmdlineToArgs(line);
         }catch (IOException ioe){
-            return null;
+            throw new ShellInterruptedException(ioe.getMessage(), 128+20);
         }
     }
 

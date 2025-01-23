@@ -5,7 +5,6 @@ import com.jn.langx.text.StringTemplates;
 
 public class CmdlineExecResult {
     /**
-     *
      * <pre>
      * <0： 代表未设置
      * 0： 正常退出
@@ -19,7 +18,7 @@ public class CmdlineExecResult {
      * 255/*： 退出码超过了 0-255 的范围，因此重新计算（LCTT 译注：超过 255 后，用退出码对 256 取模）
      * </pre>
      */
-    private int exitCode=-1;
+    private int exitCode = -1;
 
     /**
      * 命令从解析到执行，整个过程中发发生的异常
