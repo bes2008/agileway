@@ -8,5 +8,7 @@ public class DiagnosisCommandTests {
     @Test
     public void testStacktrace(){
         adhocTest("stacktrace");
+
+        adhocTest("stacktrace --help");
     }
 }

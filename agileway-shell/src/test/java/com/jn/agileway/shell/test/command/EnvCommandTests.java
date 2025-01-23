@@ -12,6 +12,8 @@ public class EnvCommandTests {
         adhocTest("env-variables");
 
         adhocTest("env variables JAVA");
+
+        adhocTest("env-variables --help");
     }
 
     @Test
@@ -26,5 +28,7 @@ public class EnvCommandTests {
         adhocTest("system-props -v Jav");
         adhocTest("system-props -i -v Jav");
         adhocTest("system-props -iv Jav");
+
+        adhocTest("system-props --help");
     }
 }
