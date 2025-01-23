@@ -3,9 +3,9 @@ package com.jn.agileway.shell.cmdline;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
-public class AnsiFontText {
+public class AnsiText {
 
-    public static enum Underline{
+    public static enum Underline {
         UNDERLINE,
         UNDERLINE_DOUBLE;
     }
@@ -38,44 +38,44 @@ public class AnsiFontText {
      */
     private String text;
 
-    public AnsiFontText(String text){
-       this.text = text;
+    public AnsiText(String text) {
+        this.text = text;
     }
 
-    public AnsiFontText fontColor(Ansi.Color color){
-        this.fontColor= color;
+    public AnsiText fontColor(Ansi.Color color) {
+        this.fontColor = color;
         return this;
     }
 
-    public AnsiFontText backgroundColor(Ansi.Color color){
-        this.backgroundColor= color;
+    public AnsiText backgroundColor(Ansi.Color color) {
+        this.backgroundColor = color;
         return this;
     }
 
-    public AnsiFontText bold(boolean bold){
-        this.bold=bold;
+    public AnsiText bold(boolean bold) {
+        this.bold = bold;
         return this;
     }
 
-    public AnsiFontText italic(boolean italic){
-        this.italic=italic;
+    public AnsiText italic(boolean italic) {
+        this.italic = italic;
         return this;
     }
 
-    public AnsiFontText underline(Underline underline){
-        this.underline=underline;
+    public AnsiText underline(Underline underline) {
+        this.underline = underline;
         return this;
     }
 
-    public AnsiFontText strikethrough(boolean strikethrough ){
-        this.strikethrough=strikethrough;
+    public AnsiText strikethrough(boolean strikethrough) {
+        this.strikethrough = strikethrough;
         return this;
     }
 
     @Override
     public String toString() {
         String text = this.text == null ? "" : this.text;
-        if(AnsiConsole.isInstalled()) {
+        if (AnsiConsole.isInstalled()) {
             Ansi ansi = Ansi.ansi();
             if (fontColor != null) {
                 ansi.fg(fontColor);
@@ -98,17 +98,18 @@ public class AnsiFontText {
             ansi.a(text);
             ansi.reset();
             return ansi.toString();
-        }else{
+        } else {
             return text;
         }
     }
 
-    public static final AnsiFontText NEWLINE = new AnsiFontText("\n");
+    public static final AnsiText NEWLINE = new AnsiText("\n");
 
-    public static AnsiFontText ofErrorMessage(String msg){
-        return new AnsiFontText(msg).fontColor(Ansi.Color.RED);
+    public static AnsiText ofErrorMessage(String msg) {
+        return new AnsiText(msg).fontColor(Ansi.Color.RED);
     }
-    public static AnsiFontText ofBoldText(String text){
-        return  new AnsiFontText(text).bold(true);
+
+    public static AnsiText ofBoldText(String text) {
+        return new AnsiText(text).bold(true);
     }
 }

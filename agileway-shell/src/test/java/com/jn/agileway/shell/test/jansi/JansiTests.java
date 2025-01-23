@@ -1,6 +1,6 @@
 package com.jn.agileway.shell.test.jansi;
 
-import com.jn.agileway.shell.cmdline.AnsiFontText;
+import com.jn.agileway.shell.cmdline.AnsiText;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
@@ -11,10 +11,10 @@ public class JansiTests {
         System.out.println(AnsiConsole.isInstalled());
 
         System.out.print(new StringBuilder()
-                .append(new AnsiFontText("hello").strikethrough(true))
+                .append(new AnsiText("hello").strikethrough(true))
                 .append(" ")
-                .append(new AnsiFontText("world").underline(AnsiFontText.Underline.UNDERLINE_DOUBLE))
-                .append(AnsiFontText.NEWLINE)
+                .append(new AnsiText("world").underline(AnsiText.Underline.UNDERLINE_DOUBLE))
+                .append(AnsiText.NEWLINE)
                 .toString()
         );
         System.out.println(Ansi.ansi().fg(Ansi.Color.RED).a("Hello2").fg(Ansi.Color.GREEN).a(" World2").reset());

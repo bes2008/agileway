@@ -1,6 +1,6 @@
 package com.jn.agileway.shell.result;
 
-import com.jn.agileway.shell.cmdline.AnsiFontText;
+import com.jn.agileway.shell.cmdline.AnsiText;
 import com.jn.agileway.shell.cmdline.Cmdline;
 import com.jn.agileway.shell.exception.*;
 import com.jn.langx.io.stream.StringBuilderWriter;
@@ -27,7 +27,7 @@ public final class CmdlineExecResultHandler {
     private void output(CmdlineExecResult execResult) {
 
         String out = execResult.getExitCode() == 0 ? execResult.getStdout() :
-                AnsiFontText.ofErrorMessage(execResult.getStderr())
+                AnsiText.ofErrorMessage(execResult.getStderr())
                         .bold(true).toString();
         if (out != null) {
             System.out.println(out);

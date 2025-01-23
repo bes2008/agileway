@@ -1,6 +1,6 @@
 package com.jn.agileway.shell.builtin;
 
-import com.jn.agileway.shell.cmdline.AnsiFontText;
+import com.jn.agileway.shell.cmdline.AnsiText;
 import com.jn.agileway.shell.command.CommandGroup;
 import com.jn.agileway.shell.command.CommandRegistry;
 import com.jn.agileway.shell.command.annotation.Command;
@@ -35,14 +35,14 @@ public class UsageCommands {
         List<CommandGroup> commandGroups = commandRegistry.getCommandGroups(getAllIfGroupsIsEmpty, groupNames);
         for (CommandGroup commandGroup : commandGroups) {
             String groupName = commandGroup.getName();
-            builder.append(new AnsiFontText(Strings.completingLength(groupName, 16, Strings.SP, false)).bold(true))
+            builder.append(new AnsiText(Strings.completingLength(groupName, 16, Strings.SP, false)).bold(true))
                     .append("\t\t")
                     .append(commandGroup.getDesc())
                     .append(Strings.CRLF);
             List<com.jn.agileway.shell.command.Command> cmds = this.commandRegistry.getGroupCommands(groupName, sort);
             for (com.jn.agileway.shell.command.Command cmd : cmds) {
                 builder.append("\t")
-                        .append(new AnsiFontText(Strings.completingLength(cmd.getName(), 12, Strings.SP, false)).bold(true))
+                        .append(new AnsiText(Strings.completingLength(cmd.getName(), 12, Strings.SP, false)).bold(true))
                         .append("\t\t")
                         .append(cmd.getDesc())
                         .append(Strings.CRLF);
@@ -73,7 +73,7 @@ public class UsageCommands {
             return;
         }
         // Usage: <command-name> [Options] [Arguments]
-        builder.append("Usage:").append(Strings.CRLF).append("\t").append(AnsiFontText.ofBoldText( command.getName() ));
+        builder.append("Usage:").append(Strings.CRLF).append("\t").append(AnsiText.ofBoldText( command.getName() ));
         if(!Objs.isEmpty(command.getOptionKeys())){
             builder.append(" [<Options>]");
         }
@@ -112,7 +112,7 @@ public class UsageCommands {
 
                 if(Objs.isNotEmpty(shortName)){
                     outOptionNameCount++;
-                    builder.append(AnsiFontText.ofBoldText("-"+shortName));
+                    builder.append(AnsiText.ofBoldText("-"+shortName));
                     if(option.hasArgName()){
                         builder.append(" ");
                         if(option.hasOptionalArg()){
@@ -127,7 +127,7 @@ public class UsageCommands {
                     if(outOptionNameCount>0){
                         builder.append(", ");
                     }
-                    builder.append(AnsiFontText.ofBoldText("--"+longName));
+                    builder.append(AnsiText.ofBoldText("--"+longName));
 
                     if(option.hasArgName()){
                         builder.append(" ");
@@ -153,11 +153,11 @@ public class UsageCommands {
             List<com.jn.agileway.shell.command.CommandArgument> arguments = command.getArguments();
             for(com.jn.agileway.shell.command.CommandArgument argument:arguments){
                 builder.append("\t");
-                builder.append(AnsiFontText.ofBoldText(argument.getName()));
+                builder.append(AnsiText.ofBoldText(argument.getName()));
                 builder.append("\t\t");
                 builder.append(argument.getDesc());
                 builder.append("; ");
-                builder.append(AnsiFontText.ofBoldText(argument.isRequired()? "Required": "Optional"));
+                builder.append(AnsiText.ofBoldText(argument.isRequired()? "Required": "Optional"));
                 builder.append("; ");
                 if(!argument.isRequired()){
                     builder.append("defaultValue: ").append(argument.isMultipleValue()?Strings.join(" ", argument.getDefaultValues()): argument.getDefaultValue());
