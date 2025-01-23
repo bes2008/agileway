@@ -12,10 +12,8 @@ import com.jn.agileway.shell.exception.ShellInterruptedException;
 import com.jn.agileway.shell.result.CmdlineExecResult;
 import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
 import com.jn.agileway.shell.result.CmdlineExecResultHandler;
-import com.jn.easyjson.core.util.JSONs;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.environment.CompoundEnvironment;
-import com.jn.langx.environment.Environment;
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.io.resource.Resources;
 import com.jn.langx.lifecycle.AbstractLifecycle;
@@ -30,7 +28,6 @@ import com.jn.langx.util.converter.ConverterService;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.function.Predicate2;
-import com.jn.langx.util.logging.Loggers;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
@@ -65,7 +62,6 @@ public class Shell extends AbstractLifecycle {
     protected CompoundEnvironment environment;
     protected CmdlineExecResultHandler execResultHandler;
     protected CmdlineProvider cmdlineProvider;
-    private boolean debugModeEnabled;
     protected boolean ansiConsoleEnabled;
 
     /**
@@ -109,7 +105,6 @@ public class Shell extends AbstractLifecycle {
         cmdExecContext.setConverterService(new ConverterService());
         this.commandlineExecutor.setCmdExecContext(cmdExecContext);
 
-        this.debugModeEnabled = Booleans.truth(environment.getProperty("agileway.shell.debug.enabled", "false"));
         if (this.defaultRunMode == null || this.defaultRunMode == RunMode.SCRIPT) {
             this.defaultRunMode = RunMode.INTERACTIVE;
         }
@@ -177,10 +172,6 @@ public class Shell extends AbstractLifecycle {
 
             if (runMode == RunMode.ADHOC) {
                 break;
-            }
-
-            if (debugModeEnabled) {
-                Loggers.getLogger(Shell.class).info("echo command [{}], execute result: \n{}", Strings.join(" ", cmdline), JSONs.toJson(execResult, true, true));
             }
         }
     }
