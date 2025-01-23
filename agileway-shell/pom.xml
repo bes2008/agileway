@@ -9,9 +9,8 @@
         <version>5.0.4</version>
     </parent>
 
-    <groupId>org.example</groupId>
     <artifactId>agileway-shell</artifactId>
-
+    <name>${project.groupId}:${project.artifactId}:${project.version}</name>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
