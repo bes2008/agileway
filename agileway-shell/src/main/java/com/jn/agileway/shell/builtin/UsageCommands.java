@@ -27,7 +27,7 @@ public class UsageCommands {
     public String listCommands(
             @CommandOption(value = "a", longName = "all", defaultValue = "false", isFlag = true, desc = "whether list all groups when argument <groups> is empty")
             boolean getAllIfGroupsIsEmpty,
-            @CommandArgument(value = "groups", required = false, desc = "the command groups")
+            @CommandArgument(value = "groups", desc = "the command groups")
             String... groupNames) {
         StringBuilder builder = new StringBuilder(255);
         List<CommandGroup> commandGroups = commandRegistry.getCommandGroups(getAllIfGroupsIsEmpty, groupNames);

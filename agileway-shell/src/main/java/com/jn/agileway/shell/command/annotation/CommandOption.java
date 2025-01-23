@@ -1,7 +1,7 @@
 package com.jn.agileway.shell.command.annotation;
 
+import com.jn.agileway.shell.command.CommandUtils;
 import com.jn.agileway.shell.command.DefaultConverter;
-import com.jn.langx.annotation.Nullable;
 
 /**
  * example:
@@ -47,16 +47,11 @@ public @interface CommandOption {
      */
     Class converter() default DefaultConverter.class;
 
-    /**
-     * Used to indicate that the default value is the value {@literal null}, which is different from the fact that
-     * there is no default value.
-     */
-    String NULL = "__NULL__";
 
     /**
      * 默认值
      */
-    String defaultValue() default NULL;
+    String defaultValue() default CommandUtils.NULL;
 
     /**
      * 值分隔符

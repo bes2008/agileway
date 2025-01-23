@@ -13,6 +13,7 @@ import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
 import com.jn.agileway.shell.result.CmdlineExecResultHandler;
 import com.jn.easyjson.core.util.JSONs;
 import com.jn.langx.annotation.NonNull;
+import com.jn.langx.environment.CompoundEnvironment;
 import com.jn.langx.environment.Environment;
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.io.resource.Resources;
@@ -60,7 +61,7 @@ public class Shell extends AbstractLifecycle {
     protected CompoundCommandComponentFactory commandComponentFactory;
     protected final CmdlineExecutor commandlineExecutor = new DefaultCmdlineExecutor();
     @NonNull
-    protected Environment environment;
+    protected CompoundEnvironment environment;
     protected CmdlineExecResultHandler execResultHandler;
     protected CmdlineProvider cmdlineProvider;
     private boolean debugModeEnabled;

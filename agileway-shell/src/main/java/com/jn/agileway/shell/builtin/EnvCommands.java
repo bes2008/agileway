@@ -22,7 +22,7 @@ public class EnvCommands {
             boolean ignoreCase,
             @CommandOption(value = "v", longName = "searchValue", isFlag = true, desc = "search variable value also")
             boolean searchValue,
-            @CommandArgument(value = "search_text", required = false, desc = "the search text")
+            @CommandArgument(value = "search_text", desc = "the search text")
             String... search) {
 
         String[] searchTexts = Pipeline.of(search).clearEmptys().toArray(String[].class);
@@ -49,7 +49,7 @@ public class EnvCommands {
             boolean ignoreCase,
             @CommandOption(value = "v", longName = "searchValue", isFlag = true, defaultValue = "true", desc = "search property value also")
             boolean searchValue,
-            @CommandArgument(value = "search_text", required = false, desc = "the search text")
+            @CommandArgument(value = "search_text", desc = "the search text")
             String... search) {
         String[] searchTexts = Pipeline.of(search).clearEmptys().toArray(String[].class);
         Map<String, String> properties = Props.toStringMap(System.getProperties());

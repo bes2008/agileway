@@ -14,13 +14,11 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
-import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.function.Predicate2;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.type.Primitives;
-import com.jn.langx.util.struct.Holder;
 import com.jn.langx.util.struct.Pair;
 import io.github.classgraph.*;
 import org.apache.commons.cli.Converter;
@@ -28,11 +26,11 @@ import org.apache.commons.cli.Option;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 public class DefaultCommandsSupplier implements CommandsSupplier {
     private static final String SCAN_ENABLED_PROP = "agileway.shell.scan.default.enabled";
@@ -229,10 +227,10 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         for (int i = 0; i < methodParameterInfoList.length; i++) {
             MethodParameterInfo methodParameterInfo = methodParameterInfoList[i];
             if (firstCommandArgumentIndex < 0 || i < firstCommandArgumentIndex) {
-                Option option = createOption(command.getName(), methodParameterInfo, method, i);
+                Option option = createCommandOption(command.getName(), methodParameterInfo, method, i);
                 options.add(option);
             } else {
-                CommandArgument commandArgument = createCommandArgument(methodParameterInfo, method, i);
+                CommandArgument commandArgument = createCommandArgument(command.getName(), methodParameterInfo, method, i);
                 arguments.add(commandArgument);
             }
         }
@@ -257,55 +255,77 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         return command;
     }
 
-    private CommandArgument createCommandArgument(MethodParameterInfo methodParameterInfo, Method method, int parameterIndex) {
+    private CommandArgument createCommandArgument(String commandKey, MethodParameterInfo methodParameterInfo, Method method, int parameterIndex) {
         AnnotationInfo annotationInfo = methodParameterInfo.getAnnotationInfo(com.jn.agileway.shell.command.annotation.CommandArgument.class);
         if (annotationInfo == null) {
             throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("@CommandArgument at the {}th parameter is required for method {}", parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
         }
 
         boolean isMultipleValue = false;
-        Class parameterType = method.getParameters()[parameterIndex].getType();
+        Parameter parameter =method.getParameters()[parameterIndex];
+        Class parameterType = parameter.getType();
 
         if (parameterIndex < method.getParameters().length - 1) {
             // 非最后一个参数，类型只能是 String
-            if (parameterType != String.class) {
-                throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("parameter type should be java.lang.String at {}th for method {}", parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
+            if (!CommandUtils.isSupportedBasicTypes(parameterType)) {
+                throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("parameter type should be basic types ({}) at {}th for method {}", CommandUtils.getSupportedBaseTypesString(), parameterIndex+1, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
             }
         } else if (parameterIndex == method.getParameters().length - 1) {
             // 最后一个参数，类型可以是 String 或者 String[]
-            if (parameterType.isArray() && parameterType.getComponentType() == String.class) {
+            if (parameterType.isArray() && CommandUtils.isSupportedBasicTypes(parameterType.getComponentType())) {
                 isMultipleValue = true;
-            }else if (parameterType!= String.class){
-                throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("parameter type should be java.lang.String or java.lang.String[] at {}th for method {}", parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
+            }else if (!CommandUtils.isSupportedBasicTypes(parameterType)){
+                throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("parameter type should be basic types ({}) or base types array at {}th for method {}", CommandUtils.getSupportedBaseTypesString(), parameterIndex+1, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
             }
         }
-
-
         AnnotationParameterValueList parameterValueList = annotationInfo.getParameterValues(true);
         String name = (String) parameterValueList.getValue("value");
         String desc = (String) parameterValueList.getValue("desc");
-        boolean required = (boolean) parameterValueList.getValue("required");
+        Class converterClass = ((AnnotationClassRef) parameterValueList.getValue("converter")).loadClass();
+        String defaultValueString = (String) parameterValueList.getValue("defaultValue").toString();
 
         if (Strings.isBlank(name)) {
-            throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("@CommandArgument value() at the {}th parameter is required for method {}", parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
+            throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("@CommandArgument value() at the {}th parameter is required for method {}", parameterIndex+1, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
         }
         desc = Objs.useValueIfEmpty(desc, name);
 
+        Class elementType = CommandUtils.getConverterTargetClass(parameter, false);
+        Converter converter = CommandUtils.newConverter(converterClass, elementType);
+
+
+        boolean required = CommandUtils.isRequiredCommandArgument(method, parameterIndex, defaultValueString);
+
+        String defaultValue = null;
+        String[] defaultValues = null;
+        if(!CommandUtils.isNullDefaultValue(defaultValueString) && parameterIndex == method.getParameterCount()-1){
+            if(parameterType.isArray()){
+                String[] values= Strings.split(defaultValueString," ");
+                CommandUtils.checkOptionOrArgumentDefaultValues(values, converter, name, commandKey);
+                defaultValues = values;
+            }else{
+                CommandUtils.checkOptionOrArgumentDefaultValue(defaultValueString, converter, name, commandKey);
+                defaultValue = defaultValueString;
+            }
+        }
         CommandArgument argument = new CommandArgument();
         argument.setRequired(required);
         argument.setName(name);
         argument.setDesc(desc);
         argument.setMultipleValue(isMultipleValue);
+        argument.setParameterType(parameterType);
+        argument.setConverter(converter);
+        argument.setDefaultValue(defaultValue);
+        argument.setDefaultValues(defaultValues);
         return argument;
     }
 
-    private CommandOption createOption(final String commandKey, MethodParameterInfo methodParameterInfo, Method method, int parameterIndex) {
+    private CommandOption createCommandOption(final String commandKey, MethodParameterInfo methodParameterInfo, Method method, int parameterIndex) {
         AnnotationInfo annotationInfo = methodParameterInfo.getAnnotationInfo(com.jn.agileway.shell.command.annotation.CommandOption.class);
 
         Parameter parameter = method.getParameters()[parameterIndex];
         Class parameterClass = parameter.getType();
 
-        @Nullable final Holder<String> optionName = new Holder<String>();
+        String shortName = null;
         String longOptionName = null;
 
         boolean required;
@@ -315,7 +335,6 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         @Nullable
         String argName = null;
         boolean argOptional = false;
-        Class elementType = null;
         Class converterClass = DefaultConverter.class;
         String defaultValueString = "";
         char valueSeparator = ',';
@@ -327,36 +346,35 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             parameterValueList = annotationInfo.getParameterValues(true);
         }
         if (parameterValueList != null) {
-            optionName.set((String) parameterValueList.getValue("value"));
+            shortName = (String) parameterValueList.getValue("value");
             longOptionName = (String) parameterValueList.getValue("longName");
             argName = Strings.trimToNull((String) parameterValueList.getValue("argName"));
             if (isFlag) {
                 isFlag = (boolean) parameterValueList.getValue("isFlag");
             }
             converterClass = ((AnnotationClassRef) parameterValueList.getValue("converter")).loadClass();
-            defaultValueString = (String) parameterValueList.getValue("defaultValue");
+            defaultValueString = ((String) parameterValueList.getValue("defaultValue")).trim();
             valueSeparator = (char) parameterValueList.getValue("valueSeparator");
             desc = (String) parameterValueList.getValue("desc");
-
-        } else {
-            optionName.set(methodParameterInfo.getName());
+        }else{
+            longOptionName = methodParameterInfo.getName();
         }
 
-        if (!optionName.isEmpty() && Objs.length(optionName.get()) > 1) {
-            throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("Illegal option shortName for option {} in command {}, short name should be only one letter", optionName.get(), commandKey));
+        if (Objs.length(shortName) > 1) {
+            throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("Illegal option shortName for option {} in command {}, short name should be only one letter", shortName, commandKey));
         }
 
+        String optionName = Objs.useValueIfEmpty(shortName, longOptionName);
 
         String defaultValue = null;
         String[] defaultValues = null;
-        Holder<Converter> converterHolder = new Holder<>();
+        Class elementType = CommandUtils.getConverterTargetClass(parameter, true);
+        Converter converter = CommandUtils.newConverter(converterClass, elementType);
         if (isFlag) {
             hasArg1 = false;
             hasArgN = false;
-            elementType = parameterClass;
             required = false;
             argName = null;
-            converterHolder.set(new DefaultConverter(boolean.class));
             defaultValue = "false";
         } else {
             hasArgN = parameterClass.isArray() || Reflects.isSubClassOrEquals(Collection.class, parameterClass);
@@ -364,21 +382,8 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             if (argName == null) {
                 argName = longOptionName;
             }
-            if (hasArgN) {
-                if (parameterClass.isArray()) {
-                    elementType = parameterClass.getComponentType();
-                } else {
-                    ParameterizedType parameterizedType = (ParameterizedType) parameter.getParameterizedType();
-                    elementType = (Class) parameterizedType.getActualTypeArguments()[0];
-                }
-            } else {
-                elementType = parameterClass;
-            }
-
-            Converter converter = (converterClass == null || converterClass == DefaultConverter.class) ? new DefaultConverter(elementType) : Reflects.<Converter>newInstance(converterClass);
-            converterHolder.set(converter);
             // 默认值为 null
-            if (Objs.equals(com.jn.agileway.shell.command.annotation.CommandOption.NULL, defaultValueString)) {
+            if (CommandUtils.isNullDefaultValue(defaultValueString)) {
                 required = Reflects.hasAnnotation(parameter, NonNull.class);
                 argOptional = !required;
             } else {
@@ -388,35 +393,22 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
                 if (hasArgN) {
                     String[] values = Strings.split(defaultValueString, valueSeparator + "");
                     // 这个过程如果没有异常，那么可以直接将 values作为 defaultValues使用
-                    Pipeline.of(values).map(new Function<String, Object>() {
-                        @Override
-                        public Object apply(String value) {
-                            try {
-                                return converterHolder.get().apply(value);
-                            } catch (Throwable e) {
-                                throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("Illegal defaultValues for option {} in command {}", optionName.get(), commandKey));
-                            }
-                        }
-                    }).asList();
+                    CommandUtils.checkOptionOrArgumentDefaultValues(values, converter, optionName, commandKey);
                     defaultValues = values;
                 } else {
                     // 这个过程如果没有异常，那么可以直接将 defaultValueString 作为 defaultValue使用
-                    try {
-                        converterHolder.get().apply(defaultValueString);
-                    } catch (Throwable e) {
-                        throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("Illegal defaultValue for option {} in command {}", optionName.get(), commandKey));
-                    }
+                    CommandUtils.checkOptionOrArgumentDefaultValue(defaultValueString, converter, optionName, commandKey);
                     defaultValue = defaultValueString;
                 }
             }
         }
 
         if (Strings.isBlank(desc)) {
-            desc = Objs.useValueIfEmpty(longOptionName, optionName.get());
+            desc = Objs.useValueIfEmpty(longOptionName, optionName);
         }
 
         try {
-            CommandOption option = new CommandOption(optionName.get(), longOptionName, hasArg1, desc);
+            CommandOption option = new CommandOption(shortName, longOptionName, hasArg1, desc);
             option.setOptionalArg(argOptional);
             option.setArgName(argName);
             option.setRequired(required);
@@ -424,7 +416,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
                 option.setArgs(Option.UNLIMITED_VALUES);
             }
             option.setType(elementType);
-            option.setConverter(converterHolder.get());
+            option.setConverter(converter);
             if (!isFlag) {
                 if (hasArgN) {
                     option.setDefaultValues(defaultValues);
