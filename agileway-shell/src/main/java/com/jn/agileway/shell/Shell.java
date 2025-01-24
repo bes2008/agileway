@@ -125,7 +125,7 @@ public class Shell extends AbstractLifecycle {
                 this.cmdlineProvider = new AdhocModeCmdlineProvider(this.appArgs);
                 break;
             case INTERACTIVE:
-                this.cmdlineProvider = new InteractiveModeCmdlineProvider(this.appArgs, promptSupplier);
+                this.cmdlineProvider = new InteractiveModeCmdlineProvider(this.appArgs, promptSupplier, bannerSupplier);
                 break;
             case SCRIPT:
             default:

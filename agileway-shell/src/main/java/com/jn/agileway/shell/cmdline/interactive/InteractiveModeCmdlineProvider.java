@@ -22,79 +22,93 @@ public class InteractiveModeCmdlineProvider implements CmdlineProvider {
 
     private String prompt;
 
-    public InteractiveModeCmdlineProvider(ApplicationArgs appArgs, PromptSupplier promptSupplier){
+    private String banner;
+    private boolean bannerUsed = false;
+
+    public InteractiveModeCmdlineProvider(ApplicationArgs appArgs, PromptSupplier promptSupplier, BannerSupplier bannerSupplier) {
         this.appArgs = appArgs;
         this.stdin = new BufferedReader(new InputStreamReader(System.in, Charsets.getDefault()));
-        this.prompt = Strings.trimToEmpty( promptSupplier.get())+ getGuidChar() +" ";
+        this.prompt = Strings.trimToEmpty(promptSupplier.get()) + getGuidChar() + " ";
+        String b = bannerSupplier.get();
+        if(Strings.isBlank(b)){
+            b = Strings.EMPTY;
+        }
+        this.banner = b;
     }
 
-    private char getGuidChar(){
+    private char getGuidChar() {
         String osUserName = SystemPropertys.getUserName();
         boolean isSupperUser = false;
-        if(OS.isFamilyLinux() || OS.isFamilyMac() || OS.isFamilyAIX() || OS.isFamilyHP_UX()){
-            if(Objs.equals("root", osUserName)){
+        if (OS.isFamilyLinux() || OS.isFamilyMac() || OS.isFamilyAIX() || OS.isFamilyHP_UX()) {
+            if (Objs.equals("root", osUserName)) {
                 isSupperUser = true;
             }
-        }else if(OS.isFamilyWindows()){
-            if(Strings.equalsIgnoreCase("administrator", osUserName)){
+        } else if (OS.isFamilyWindows()) {
+            if (Strings.equalsIgnoreCase("administrator", osUserName)) {
                 isSupperUser = true;
             }
         }
-        return isSupperUser?'#':'>';
+        return isSupperUser ? '#' : '>';
     }
 
     @Override
     public String[] get() {
-        if(!appArgsUsed && this.appArgs!=null) {
+        if (!appArgsUsed && this.appArgs != null) {
             this.appArgsUsed = true;
             return this.appArgs.getArgs();
         }
+
+        if (!this.bannerUsed && Strings.isNotEmpty(banner)) {
+            this.bannerUsed = true;
+            System.out.println(this.banner);
+        }
+
         String line = null;
         System.out.print(this.prompt);
         try {
             line = this.stdin.readLine();
             line = line.trim();
 
-            if(Strings.startsWith(line, "//")){
+            if (Strings.startsWith(line, "//")) {
                 // this is a comment line, ignore it
                 line = "";
             }
-            if(Strings.startsWith(line, "/")){
+            if (Strings.startsWith(line, "/")) {
                 line = Strings.substring(line, 1);
             }
-            if(line.isEmpty()){
+            if (line.isEmpty()) {
                 return ShellCmdlines.cmdlineToArgs(line);
             }
-            if( line.endsWith(";") || !Strings.endsWith(line,"\\")){
+            if (line.endsWith(";") || !Strings.endsWith(line, "\\")) {
                 return ShellCmdlines.cmdlineToArgs(line);
             }
             // 多行模式下
-            StringBuilder buffer= new StringBuilder(255);
-            buffer.append(Strings.substring(line,0, line.length()-1)).append(Strings.SPACE);
+            StringBuilder buffer = new StringBuilder(255);
+            buffer.append(Strings.substring(line, 0, line.length() - 1)).append(Strings.SPACE);
 
             line = this.stdin.readLine();
-            while (!lineEnd(line)){
-                buffer.append(Strings.substring(line,0, line.length()-1)).append(Strings.SPACE);
+            while (!lineEnd(line)) {
+                buffer.append(Strings.substring(line, 0, line.length() - 1)).append(Strings.SPACE);
                 line = this.stdin.readLine();
-                if(Strings.startsWith(line, "//")){
+                if (Strings.startsWith(line, "//")) {
                     // this is a comment line
-                    line="";
+                    line = "";
                     break;
                 }
             }
             buffer.append(line);
             String rawLine = buffer.toString();
-            if(Strings.endsWith(rawLine, "\\")){
+            if (Strings.endsWith(rawLine, "\\")) {
                 System.out.println("cmd error");
                 return Emptys.EMPTY_STRINGS;
             }
             return ShellCmdlines.cmdlineToArgs(line);
-        }catch (IOException ioe){
-            throw new ShellInterruptedException(ioe.getMessage(), 128+20);
+        } catch (IOException ioe) {
+            throw new ShellInterruptedException(ioe.getMessage(), 128 + 20);
         }
     }
 
-    private boolean lineEnd(String lineFragment){
-        return lineFragment.isEmpty() || lineFragment.endsWith(";") || !Strings.endsWith(lineFragment,"\\");
+    private boolean lineEnd(String lineFragment) {
+        return lineFragment.isEmpty() || lineFragment.endsWith(";") || !Strings.endsWith(lineFragment, "\\");
     }
 }
