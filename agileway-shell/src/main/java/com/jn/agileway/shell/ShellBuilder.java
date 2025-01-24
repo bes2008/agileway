@@ -12,6 +12,7 @@ import com.jn.agileway.shell.factory.CommandComponentFactory;
 import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
 import com.jn.agileway.shell.factory.ReflectiveCommandComponentFactory;
 import com.jn.agileway.shell.cmdline.CmdlineParser;
+import com.jn.agileway.shell.history.HistoryHandler;
 import com.jn.agileway.shell.result.CmdlineExecResultHandler;
 import com.jn.langx.Builder;
 import com.jn.langx.environment.MultiplePropertySetEnvironment;
@@ -19,11 +20,13 @@ import com.jn.langx.propertyset.EnvironmentVariablesPropertySource;
 import com.jn.langx.propertyset.PropertySet;
 import com.jn.langx.propertyset.SystemPropertiesPropertySource;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.SystemPropertys;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
 
+import java.io.File;
 import java.util.List;
 
 public class ShellBuilder implements Builder<Shell> {
@@ -38,7 +41,7 @@ public class ShellBuilder implements Builder<Shell> {
 
     private PromptSupplier promptSupplier;
     private BannerSupplier bannerSupplier = new DefaultBannerSupplier();
-
+    private HistoryHandler historyHandler;
 
     public ShellBuilder componentFactory(CommandComponentFactory factory) {
         if (factory != null) {
@@ -91,8 +94,8 @@ public class ShellBuilder implements Builder<Shell> {
         return this;
     }
 
-    public ShellBuilder bannerSupplier(BannerSupplier bannerSupplier){
-        if(bannerSupplier!=null) {
+    public ShellBuilder bannerSupplier(BannerSupplier bannerSupplier) {
+        if (bannerSupplier != null) {
             this.bannerSupplier = bannerSupplier;
         }
         return this;
@@ -118,6 +121,15 @@ public class ShellBuilder implements Builder<Shell> {
         shell.defaultRunMode = this.defaultRunMode;
         shell.ansiConsoleEnabled = this.ansiConsoleEnabled;
 
+        shell.name = shellName;
+        shell.promptSupplier = this.promptSupplier == null ? new DefaultPromptSupplier(this.shellName) : promptSupplier;
+        shell.bannerSupplier = this.bannerSupplier;
+
+        if (historyHandler == null) {
+            historyHandler = new HistoryHandler(new File(SystemPropertys.getUserWorkDir() + "/.agileway-shell.history"));
+        }
+        shell.historyHandler = historyHandler;
+
 
         final List<CommandComponentFactory> componentFactories = Lists.newArrayList();
         Pipeline.of(commandComponentFactories).forEach(new Predicate<CommandComponentFactory>() {
@@ -134,13 +146,10 @@ public class ShellBuilder implements Builder<Shell> {
         BuiltinCommandsComponentFactory builtinCommandsComponentFactory = new BuiltinCommandsComponentFactory();
         builtinCommandsComponentFactory.setCommandRegistry(shell.commandRegistry);
         builtinCommandsComponentFactory.setCmdExecResultHandler(shell.execResultHandler);
+        builtinCommandsComponentFactory.setHistoryHandler(historyHandler);
         componentFactories.add(builtinCommandsComponentFactory);
         componentFactories.add(new ReflectiveCommandComponentFactory());
         shell.commandComponentFactory = new CompoundCommandComponentFactory(componentFactories);
-
-        shell.name = shellName;
-        shell.promptSupplier = this.promptSupplier == null ? new DefaultPromptSupplier(this.shellName) : promptSupplier;
-        shell.bannerSupplier = this.bannerSupplier;
         return shell;
     }
 }

@@ -1,7 +1,7 @@
 package com.jn.agileway.shell.result;
 
 import com.jn.agileway.shell.cmdline.AnsiText;
-import com.jn.agileway.shell.cmdline.Cmdline;
+import com.jn.agileway.shell.command.Command;
 import com.jn.agileway.shell.exception.*;
 import com.jn.langx.io.stream.StringBuilderWriter;
 import com.jn.langx.text.StringTemplates;
@@ -35,11 +35,11 @@ public final class CmdlineExecResultHandler {
 
     }
 
-    private CmdOutputTransformer getCmdOutputTransformer(Cmdline cmdline) {
-        if (cmdline == null) {
+    private CmdOutputTransformer getCmdOutputTransformer(Command command) {
+        if (command == null) {
             return this.stdoutTransformer;
         }
-        CmdOutputTransformer transformer = cmdline.getCommandDefinition().getOutputTransformer();
+        CmdOutputTransformer transformer = command.getOutputTransformer();
         if (transformer == null) {
             transformer = this.stdoutTransformer;
         }
@@ -53,7 +53,7 @@ public final class CmdlineExecResultHandler {
         Throwable err = execResult.getErr();
         if (err == null) {
             execResult.setExitCode(0);
-            String stdout = getCmdOutputTransformer(execResult.getCmdline()).transform(execResult.getStdoutData());
+            String stdout = getCmdOutputTransformer(execResult.getCommand()).transform(execResult.getStdoutData());
             execResult.setStdout(stdout);
             return;
         }
@@ -113,9 +113,9 @@ public final class CmdlineExecResultHandler {
             execResult.setExitCode(Maths.abs(sie.getExitCode()) % 256);
             execResult.setErr(sie);
             if (execResult.getExitCode() != 0) {
-                execResult.setStderr(getCmdOutputTransformer(execResult.getCmdline()).transform(sie.getMessage()));
+                execResult.setStderr(getCmdOutputTransformer(execResult.getCommand()).transform(sie.getMessage()));
             } else {
-                execResult.setStdout(getCmdOutputTransformer(execResult.getCmdline()).transform(sie.getMessage()));
+                execResult.setStdout(getCmdOutputTransformer(execResult.getCommand()).transform(sie.getMessage()));
             }
         }
 

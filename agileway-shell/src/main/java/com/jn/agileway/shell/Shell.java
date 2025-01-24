@@ -10,6 +10,7 @@ import com.jn.agileway.shell.command.*;
 import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.agileway.shell.exception.NotFoundCommandException;
 import com.jn.agileway.shell.exception.ShellInterruptedException;
+import com.jn.agileway.shell.history.HistoryHandler;
 import com.jn.agileway.shell.result.CmdlineExecResult;
 import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
 import com.jn.agileway.shell.result.CmdlineExecResultHandler;
@@ -34,6 +35,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.fusesource.jansi.AnsiConsole;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -82,6 +84,8 @@ public class Shell extends AbstractLifecycle {
 
     protected BannerSupplier bannerSupplier;
 
+    protected HistoryHandler historyHandler;
+
     Shell() {
 
     }
@@ -120,7 +124,7 @@ public class Shell extends AbstractLifecycle {
 
         enableAnsiConsole();
 
-        switch (this.runMode){
+        switch (this.runMode) {
             case ADHOC:
                 this.cmdlineProvider = new AdhocModeCmdlineProvider(this.appArgs);
                 break;
@@ -166,12 +170,12 @@ public class Shell extends AbstractLifecycle {
 
     private void run() {
         CmdlineExecResult execResult = null;
-        while (execResult==null || !(execResult.getErr() instanceof ShellInterruptedException)) {
+        while (execResult == null || !(execResult.getErr() instanceof ShellInterruptedException)) {
             String[] cmdline = null;
             try {
                 cmdline = this.cmdlineProvider.get();
             } catch (ShellInterruptedException sie) {
-                execResult = new CmdlineExecResult();
+                execResult = new CmdlineExecResult(cmdline);
                 execResult.setErr(sie);
                 execResultHandler.handle(execResult);
                 continue;
@@ -234,29 +238,33 @@ public class Shell extends AbstractLifecycle {
     }
 
     private CmdlineExecResult evaluate(String[] cmdline) {
-        CmdlineExecResult execResult = new CmdlineExecResult();
+        CmdlineExecResult execResult = new CmdlineExecResult(cmdline);
         Command commandDef = findCommand(cmdline);
         if (commandDef == null) {
             execResult.setErr(new NotFoundCommandException(Strings.join(" ", cmdline)));
             return execResult;
         }
+        execResult.setCommand(commandDef);
+        try {
+            historyHandler.append(cmdline);
+        } catch (IOException e) {
+            execResult.setErr(new ShellInterruptedException(e.getMessage(), 255));
+            return execResult;
+        }
 
-
-        Cmdline parsedCmdline = null;
-
-        if(Collects.contains(cmdline, "--help")){
-            execResult.setCmdline(null);
+        if (Collects.contains(cmdline, "--help")) {
+            execResult.setCommand(null); // 故意设置为null，为的是避免以 其它输出格式输出。
             String commandUsage = CommandUtils.commandHelp(commandDef, true);
             execResult.setStdoutData(commandUsage);
-        }else {
+        } else {
+            Cmdline parsedCmdline = null;
             try {
                 parsedCmdline = this.commandlineParser.parse(commandDef, cmdline);
             } catch (MalformedCommandException e) {
                 execResult.setErr(e);
                 return execResult;
             }
-            execResult = this.commandlineExecutor.exec(parsedCmdline);
-            execResult.setCmdline(parsedCmdline);
+            this.commandlineExecutor.exec(parsedCmdline, execResult);
         }
         return execResult;
     }

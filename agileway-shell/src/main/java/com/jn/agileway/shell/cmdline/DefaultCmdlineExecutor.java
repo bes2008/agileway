@@ -38,8 +38,7 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
         return cmdExecContext;
     }
 
-    public CmdlineExecResult exec(Cmdline cmdline) {
-        CmdlineExecResult cmdExecResult = new CmdlineExecResult();
+    public void exec(Cmdline cmdline, CmdlineExecResult cmdExecResult) {
         Method method = cmdline.getCommandDefinition().getMethod();
         try {
             Object[] methodArgs = prepareMethodArgs(cmdline);
@@ -50,7 +49,6 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
         }catch (Throwable e){
             cmdExecResult.setErr(e);
         }
-        return cmdExecResult;
     }
 
     private Object[] prepareMethodArgs(Cmdline cmdline) {

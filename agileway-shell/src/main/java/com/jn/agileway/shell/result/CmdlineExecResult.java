@@ -1,6 +1,7 @@
 package com.jn.agileway.shell.result;
 
-import com.jn.agileway.shell.cmdline.Cmdline;
+import com.jn.agileway.shell.command.Command;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.text.StringTemplates;
 
 public class CmdlineExecResult {
@@ -34,21 +35,35 @@ public class CmdlineExecResult {
      */
     private Object stdoutData;
 
-    private transient Cmdline cmdline;
-
-    public Cmdline getCmdline() {
-        return cmdline;
-    }
-
-    public void setCmdline(Cmdline cmdline) {
-        this.cmdline = cmdline;
-    }
-
     /**
      * 最终要放到stdout的内容
      * 调试时输出 stdoutData即可。
      */
     private transient String stdout;
+
+    /**
+     * 只有在读取命令行的过程失败了，cmdline 才会是 null，其它情况下 cmdline 肯定不能是null
+     */
+    @Nullable
+    private transient String[] cmdline;
+    /**
+     * 只有关联到存在的命令定义时，才不会 是 null
+     */
+    @Nullable
+    private transient Command command;
+
+    public CmdlineExecResult(String[] cmdline) {
+        this.cmdline = cmdline;
+    }
+
+    public void setCommand(Command command) {
+        this.command = command;
+    }
+
+    public Command getCommand() {
+        return command;
+    }
+
 
     public Throwable getErr() {
         return err;
