@@ -1,7 +1,7 @@
 package com.jn.agileway.shell.cmdline.interactive;
 
 public class DefaultBannerSupplier implements BannerSupplier{
-    String str = "               _  _                              \n" +
+    private String text = "               _  _                              \n" +
             "  __ _   __ _ (_)| |  ___ __      __ __ _  _   _ \n" +
             " / _` | / _` || || | / _ \\\\ \\ /\\ / // _` || | | |\n" +
             "| (_| || (_| || || ||  __/ \\ V  V /| (_| || |_| |\n" +
@@ -11,6 +11,6 @@ public class DefaultBannerSupplier implements BannerSupplier{
             " Welcome to use agileway shell. Have fun.\n\n";
     @Override
     public String get() {
-        return str;
+        return text;
     }
 }
