@@ -43,6 +43,8 @@ public class ShellCmdlines {
             String arg = cmdline[i];
             if(Strings.containsAny(arg, Strings.TAB, Strings.SP)){
                 builder.append('"').append(arg).append('"');
+            }else{
+                builder.append(arg);
             }
         }
         return builder.toString();

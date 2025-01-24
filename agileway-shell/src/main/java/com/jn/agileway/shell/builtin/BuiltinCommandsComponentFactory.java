@@ -30,6 +30,9 @@ public class BuiltinCommandsComponentFactory implements CommandComponentFactory 
         if(type == Diagnosis.class){
             return new Diagnosis(this.cmdExecResultHandler);
         }
+        if(type == History.class){
+            return new History(this.historyHandler);
+        }
         return null;
     }
 }

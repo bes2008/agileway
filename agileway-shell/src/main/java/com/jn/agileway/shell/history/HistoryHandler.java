@@ -14,7 +14,6 @@ import com.jn.langx.util.logging.Loggers;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,19 +22,23 @@ import java.util.List;
 public final class HistoryHandler extends AbstractInitializable {
 
     private File file;
-
-    private final BoundedQueue<Record> records = new BoundedQueue<Record>(1000, true, true);
+    private final BoundedQueue<Record> records;
 
     public HistoryHandler(File file) {
+        this(file,1000);
+    }
+
+    public HistoryHandler(File file, int maxRecords) {
         Preconditions.checkNotNull(file);
         this.file = file;
+        this.records = new BoundedQueue<Record>(maxRecords, true, true);
     }
 
     @Override
     protected void doInit() throws InitializationException {
         try {
             List<String> lines = Files.lines(file, Charsets.UTF_8);
-            int offset = lines.size() > 1000 ? (lines.size() - 1000) : 0;
+            int offset = lines.size() > records.maxSize() ? (lines.size() - records.maxSize()) : 0;
             for (int i = offset; i < lines.size(); i++) {
                 String line = lines.get(i);
                 records.add(Record.of(line));

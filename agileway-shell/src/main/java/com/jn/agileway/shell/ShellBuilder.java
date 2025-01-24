@@ -126,7 +126,7 @@ public class ShellBuilder implements Builder<Shell> {
         shell.bannerSupplier = this.bannerSupplier;
 
         if (historyHandler == null) {
-            historyHandler = new HistoryHandler(new File(SystemPropertys.getUserWorkDir() + "/.agileway-shell.history"));
+            historyHandler = new HistoryHandler(new File(SystemPropertys.getUserWorkDir() + "/.agileway-shell-history.log"), 10);
         }
         shell.historyHandler = historyHandler;
 

@@ -4,3 +4,4 @@ target/
 *.iml
 .idea/
 dependency-reduced-pom.xml
+*-history.log
