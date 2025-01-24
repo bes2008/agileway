@@ -1,6 +1,8 @@
 package com.jn.agileway.shell;
 
 import com.jn.agileway.shell.builtin.BuiltinCommandsComponentFactory;
+import com.jn.agileway.shell.cmdline.interactive.BannerSupplier;
+import com.jn.agileway.shell.cmdline.interactive.DefaultBannerSupplier;
 import com.jn.agileway.shell.cmdline.interactive.DefaultPromptSupplier;
 import com.jn.agileway.shell.cmdline.interactive.PromptSupplier;
 import com.jn.agileway.shell.command.CommandRegistry;
@@ -35,6 +37,8 @@ public class ShellBuilder implements Builder<Shell> {
     private String shellName = "agileway-shell";
 
     private PromptSupplier promptSupplier;
+    private BannerSupplier bannerSupplier = new DefaultBannerSupplier();
+
 
     public ShellBuilder componentFactory(CommandComponentFactory factory) {
         if (factory != null) {
@@ -87,6 +91,13 @@ public class ShellBuilder implements Builder<Shell> {
         return this;
     }
 
+    public ShellBuilder bannerSupplier(BannerSupplier bannerSupplier){
+        if(bannerSupplier!=null) {
+            this.bannerSupplier = bannerSupplier;
+        }
+        return this;
+    }
+
 
     @Override
     public Shell build() {
@@ -129,6 +140,7 @@ public class ShellBuilder implements Builder<Shell> {
 
         shell.name = shellName;
         shell.promptSupplier = this.promptSupplier == null ? new DefaultPromptSupplier(this.shellName) : promptSupplier;
+        shell.bannerSupplier = this.bannerSupplier;
         return shell;
     }
 }

@@ -2,6 +2,7 @@ package com.jn.agileway.shell;
 
 import com.jn.agileway.shell.cmdline.*;
 import com.jn.agileway.shell.cmdline.adhoc.AdhocModeCmdlineProvider;
+import com.jn.agileway.shell.cmdline.interactive.BannerSupplier;
 import com.jn.agileway.shell.cmdline.interactive.InteractiveModeCmdlineProvider;
 import com.jn.agileway.shell.cmdline.interactive.PromptSupplier;
 import com.jn.agileway.shell.cmdline.script.ScriptModeCmdlineProvider;
@@ -18,7 +19,6 @@ import com.jn.langx.io.resource.Resource;
 import com.jn.langx.io.resource.Resources;
 import com.jn.langx.lifecycle.AbstractLifecycle;
 import com.jn.langx.lifecycle.InitializationException;
-import com.jn.langx.util.Booleans;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
@@ -62,6 +62,7 @@ public class Shell extends AbstractLifecycle {
     protected CompoundEnvironment environment;
     protected CmdlineExecResultHandler execResultHandler;
     protected CmdlineProvider cmdlineProvider;
+    // 执行结果输出时，是否启用ansi 输出能力
     protected boolean ansiConsoleEnabled;
 
     /**
@@ -72,7 +73,14 @@ public class Shell extends AbstractLifecycle {
     private ApplicationArgs appArgs = new ApplicationArgs(new String[0]);
     protected String name;
 
+    // 下面是交互模式下特有的功能：
+
+    /**
+     * 命令行提示符
+     */
     protected PromptSupplier promptSupplier;
+
+    protected BannerSupplier bannerSupplier;
 
     Shell() {
 
@@ -112,9 +120,18 @@ public class Shell extends AbstractLifecycle {
 
         enableAnsiConsole();
 
-        this.cmdlineProvider = this.runMode == RunMode.SCRIPT ? new ScriptModeCmdlineProvider(this.appArgs) : (
-                this.runMode == RunMode.ADHOC ? new AdhocModeCmdlineProvider(this.appArgs) : new InteractiveModeCmdlineProvider(this.appArgs, promptSupplier)
-        );
+        switch (this.runMode){
+            case ADHOC:
+                this.cmdlineProvider = new AdhocModeCmdlineProvider(this.appArgs);
+                break;
+            case INTERACTIVE:
+                this.cmdlineProvider = new InteractiveModeCmdlineProvider(this.appArgs, promptSupplier);
+                break;
+            case SCRIPT:
+            default:
+                this.cmdlineProvider = new ScriptModeCmdlineProvider(this.appArgs);
+                break;
+        }
     }
 
     /**

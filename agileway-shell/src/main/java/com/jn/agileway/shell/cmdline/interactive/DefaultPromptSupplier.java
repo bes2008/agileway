@@ -9,6 +9,6 @@ public class DefaultPromptSupplier implements PromptSupplier {
 
     @Override
     public String get() {
-        return shellName + " > ";
+        return shellName;
     }
 }

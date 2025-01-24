@@ -5,8 +5,11 @@ import com.jn.agileway.shell.cmdline.CmdlineProvider;
 import com.jn.agileway.shell.cmdline.ShellCmdlines;
 import com.jn.agileway.shell.exception.ShellInterruptedException;
 import com.jn.langx.util.Emptys;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.SystemPropertys;
 import com.jn.langx.util.io.Charsets;
+import com.jn.langx.util.os.OS;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,7 +25,22 @@ public class InteractiveModeCmdlineProvider implements CmdlineProvider {
     public InteractiveModeCmdlineProvider(ApplicationArgs appArgs, PromptSupplier promptSupplier){
         this.appArgs = appArgs;
         this.stdin = new BufferedReader(new InputStreamReader(System.in, Charsets.getDefault()));
-        this.prompt = promptSupplier.get();
+        this.prompt = Strings.trimToEmpty( promptSupplier.get())+ getGuidChar() +" ";
+    }
+
+    private char getGuidChar(){
+        String osUserName = SystemPropertys.getUserName();
+        boolean isSupperUser = false;
+        if(OS.isFamilyLinux() || OS.isFamilyMac() || OS.isFamilyAIX() || OS.isFamilyHP_UX()){
+            if(Objs.equals("root", osUserName)){
+                isSupperUser = true;
+            }
+        }else if(OS.isFamilyWindows()){
+            if(Strings.equalsIgnoreCase("administrator", osUserName)){
+                isSupperUser = true;
+            }
+        }
+        return isSupperUser?'#':'>';
     }
 
     @Override
