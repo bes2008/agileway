@@ -136,6 +136,8 @@ public class Shell extends AbstractLifecycle {
                 this.cmdlineProvider = new ScriptModeCmdlineProvider(this.appArgs);
                 break;
         }
+
+        historyHandler.init();
     }
 
     /**

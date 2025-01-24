@@ -37,6 +37,10 @@ public final class HistoryHandler extends AbstractInitializable {
     @Override
     protected void doInit() throws InitializationException {
         try {
+            if(!file.exists()){
+                Files.makeDirs(file.getParent());
+                Files.makeFile(file);
+            }
             List<String> lines = Files.lines(file, Charsets.UTF_8);
             int offset = lines.size() > records.maxSize() ? (lines.size() - records.maxSize()) : 0;
             for (int i = offset; i < lines.size(); i++) {
