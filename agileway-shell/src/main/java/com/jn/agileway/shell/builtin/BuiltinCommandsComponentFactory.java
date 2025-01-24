@@ -2,11 +2,17 @@ package com.jn.agileway.shell.builtin;
 
 import com.jn.agileway.shell.command.CommandRegistry;
 import com.jn.agileway.shell.factory.CommandComponentFactory;
+import com.jn.agileway.shell.history.HistoryHandler;
 import com.jn.agileway.shell.result.CmdlineExecResultHandler;
 
 public class BuiltinCommandsComponentFactory implements CommandComponentFactory {
     private CommandRegistry commandRegistry;
     private CmdlineExecResultHandler cmdExecResultHandler;
+    private HistoryHandler historyHandler;
+
+    public void setHistoryHandler(HistoryHandler historyHandler) {
+        this.historyHandler = historyHandler;
+    }
 
     public void setCommandRegistry(CommandRegistry commandRegistry) {
         this.commandRegistry = commandRegistry;
