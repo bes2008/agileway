@@ -28,7 +28,7 @@ public class Usage {
             boolean getAllIfGroupsIsEmpty,
             @CommandOption(value = "s", longName = "sort", isFlag = true, desc = "sort the commands")
             boolean sort,
-            @CommandArgument(value = "groups", desc = "the command groups")
+            @CommandArgument(value = "groups", desc = "the command groups" ,defaultValue = "builtin")
             String... groupNames) {
         StringBuilder builder = new StringBuilder(255);
         List<CommandGroup> commandGroups = commandRegistry.getCommandGroups(getAllIfGroupsIsEmpty, groupNames);

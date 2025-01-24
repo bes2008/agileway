@@ -2,6 +2,7 @@ package com.jn.agileway.shell.builtin;
 
 import com.jn.agileway.shell.command.annotation.Command;
 import com.jn.agileway.shell.command.annotation.CommandArgument;
+import com.jn.agileway.shell.command.annotation.CommandComponent;
 import com.jn.agileway.shell.command.annotation.CommandOption;
 import com.jn.agileway.shell.exception.ShellInterruptedException;
 import com.jn.agileway.shell.result.YamlStyleOutputTransformer;
@@ -15,6 +16,7 @@ import org.fusesource.jansi.AnsiConsole;
 import java.util.HashMap;
 import java.util.Map;
 
+@CommandComponent
 public class Sh {
     @Command(value = "clear", alias = {"cls","clean"}, desc = "clear screen")
     public void clear(){
