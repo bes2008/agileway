@@ -258,7 +258,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
     private CommandArgument createCommandArgument(String commandKey, MethodParameterInfo methodParameterInfo, Method method, int parameterIndex) {
         AnnotationInfo annotationInfo = methodParameterInfo.getAnnotationInfo(com.jn.agileway.shell.command.annotation.CommandArgument.class);
         if (annotationInfo == null) {
-            throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("@CommandArgument at the {}th parameter is required for method {}", parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
+            throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("Missing @CommandArgument at the {}th parameter for method {}", parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
         }
 
         boolean isMultipleValue = false;
@@ -321,7 +321,9 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
 
     private CommandOption createCommandOption(final String commandKey, MethodParameterInfo methodParameterInfo, Method method, int parameterIndex) {
         AnnotationInfo annotationInfo = methodParameterInfo.getAnnotationInfo(com.jn.agileway.shell.command.annotation.CommandOption.class);
-
+        if(annotationInfo==null){
+            throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("Missing @CommandOption at the {}th parameter for method {}", parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
+        }
         Parameter parameter = method.getParameters()[parameterIndex];
         Class parameterClass = parameter.getType();
 
@@ -341,10 +343,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         @NonNull
         String desc = "";
 
-        AnnotationParameterValueList parameterValueList = null;
-        if (annotationInfo != null) {
-            parameterValueList = annotationInfo.getParameterValues(true);
-        }
+        AnnotationParameterValueList parameterValueList = annotationInfo.getParameterValues(true);
         if (parameterValueList != null) {
             shortName = (String) parameterValueList.getValue("value");
             longOptionName = (String) parameterValueList.getValue("longName");
@@ -356,8 +355,6 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
             defaultValueString = ((String) parameterValueList.getValue("defaultValue")).trim();
             valueSeparator = (char) parameterValueList.getValue("valueSeparator");
             desc = (String) parameterValueList.getValue("desc");
-        }else{
-            longOptionName = methodParameterInfo.getName();
         }
 
         if (Objs.length(shortName) > 1) {
