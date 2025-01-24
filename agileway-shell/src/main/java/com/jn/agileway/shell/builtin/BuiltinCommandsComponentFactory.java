@@ -21,7 +21,7 @@ public class BuiltinCommandsComponentFactory implements CommandComponentFactory 
         if(type == Usage.class){
             return new Usage(this.commandRegistry);
         }
-        if(type== Diagnosis.class){
+        if(type == Diagnosis.class){
             return new Diagnosis(this.cmdExecResultHandler);
         }
         return null;
