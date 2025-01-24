@@ -1,13 +1,10 @@
 package com.jn.agileway.shell.command;
 
-import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.agileway.shell.result.CmdOutputTransformer;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.text.StringTemplates;
-import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
-import com.jn.langx.util.function.Predicate;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 

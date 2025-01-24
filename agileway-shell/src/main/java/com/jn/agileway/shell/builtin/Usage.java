@@ -62,7 +62,7 @@ public class Usage {
         if(command==null){
             throw new RuntimeException(StringTemplates.formatWithPlaceholder("command '{}' not found", commandName));
         }
-        return CommandUtils.commandHelp(command);
+        return CommandUtils.commandHelp(command, true);
     }
 
 }

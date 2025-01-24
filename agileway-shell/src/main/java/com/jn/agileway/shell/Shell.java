@@ -228,8 +228,8 @@ public class Shell extends AbstractLifecycle {
         Cmdline parsedCmdline = null;
 
         if(Collects.contains(cmdline, "--help")){
-            String commandUsage = CommandUtils.commandHelp(commandDef);
             execResult.setCmdline(null);
+            String commandUsage = CommandUtils.commandHelp(commandDef, true);
             execResult.setStdoutData(commandUsage);
         }else {
             try {
