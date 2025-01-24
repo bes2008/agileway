@@ -6,9 +6,9 @@ import com.jn.agileway.shell.command.annotation.CommandComponent;
 import com.jn.agileway.shell.result.CmdlineExecResultHandler;
 
 @CommandComponent
-public class DiagnosisCommands {
+public class Diagnosis {
     private CmdlineExecResultHandler cmdlineExecResultHandler;
-    public DiagnosisCommands(CmdlineExecResultHandler cmdlineExecResultHandler){
+    public Diagnosis(CmdlineExecResultHandler cmdlineExecResultHandler){
         this.cmdlineExecResultHandler = cmdlineExecResultHandler;
     }
 

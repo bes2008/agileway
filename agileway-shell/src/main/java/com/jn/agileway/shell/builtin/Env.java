@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @CommandComponent
-public class EnvCommands {
+public class Env {
 
     @Command(value = "env-variables", desc = "Search or list all environment variables ", outputTransformer = YamlStyleOutputTransformer.class)
     public Map<String, String> environmentVariables(

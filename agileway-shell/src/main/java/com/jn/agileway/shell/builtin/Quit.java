@@ -5,7 +5,7 @@ import com.jn.agileway.shell.command.annotation.CommandComponent;
 import com.jn.agileway.shell.exception.ShellInterruptedException;
 
 @CommandComponent
-public class QuitCommands {
+public class Quit {
     @Command(value = "quit", alias = {"exit"})
     public void quit(){
         throw new ShellInterruptedException("quit", 0);

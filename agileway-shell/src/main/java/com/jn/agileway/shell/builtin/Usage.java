@@ -14,11 +14,11 @@ import com.jn.langx.util.Strings;
 import java.util.List;
 
 @CommandComponent
-public class UsageCommands {
+public class Usage {
 
     private CommandRegistry commandRegistry;
 
-    public UsageCommands(CommandRegistry commandRegistry) {
+    public Usage(CommandRegistry commandRegistry) {
         this.commandRegistry = commandRegistry;
     }
 

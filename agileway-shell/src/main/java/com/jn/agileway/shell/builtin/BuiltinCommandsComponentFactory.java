@@ -18,11 +18,11 @@ public class BuiltinCommandsComponentFactory implements CommandComponentFactory 
 
     @Override
     public Object get(Class type) {
-        if(type == UsageCommands.class){
-            return new UsageCommands(this.commandRegistry);
+        if(type == Usage.class){
+            return new Usage(this.commandRegistry);
         }
-        if(type== DiagnosisCommands.class){
-            return new DiagnosisCommands(this.cmdExecResultHandler);
+        if(type== Diagnosis.class){
+            return new Diagnosis(this.cmdExecResultHandler);
         }
         return null;
     }
