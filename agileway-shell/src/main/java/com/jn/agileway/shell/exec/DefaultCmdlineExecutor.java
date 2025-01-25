@@ -1,15 +1,11 @@
 package com.jn.agileway.shell.exec;
 
-import com.jn.agileway.shell.command.Command;
 import com.jn.agileway.shell.command.CommandArgument;
 import com.jn.agileway.shell.command.CommandOption;
 import com.jn.agileway.shell.exception.MalformedCommandArgumentsException;
-import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.agileway.shell.exception.MalformedOptionValueException;
 import com.jn.agileway.shell.exception.UnsupportedCollectionException;
 import com.jn.agileway.shell.result.CmdlineExecResult;
-import com.jn.langx.annotation.NonNull;
-import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.collection.Arrs;
 import com.jn.langx.util.collection.Collects;
@@ -28,52 +24,17 @@ import java.util.*;
 import java.lang.reflect.Method;
 import java.util.concurrent.LinkedBlockingDeque;
 
-public class DefaultCmdlineExecutor implements CmdlineExecutor {
-    private CmdExecContext cmdExecContext;
-    private CmdlineParser<CommandLine> cmdlineParser;
-    private CommandComponentFactory factory;
+public class DefaultCmdlineExecutor extends AbstractCmdlineExecutor<CommandLine> {
 
     public DefaultCmdlineExecutor() {
         this(true);
     }
 
     public DefaultCmdlineExecutor(boolean stopParseAtNonDefinedOption) {
-        this.cmdlineParser = new DefaultCmdlineParser(stopParseAtNonDefinedOption);
+        this.setCmdlineParser(new DefaultCmdlineParser(stopParseAtNonDefinedOption));
     }
 
-    public void setCmdExecContext(CmdExecContext cmdExecContext) {
-        this.cmdExecContext = cmdExecContext;
-    }
-
-    @Override
-    public CommandComponentFactory getCommandComponentFactory() {
-        return this.factory;
-    }
-
-    @Override
-    public void setCommandComponentFactory(CommandComponentFactory factory) {
-        this.factory = factory;
-    }
-
-    @Override
-    public CmdExecContext getCmdExecContext() {
-        return cmdExecContext;
-    }
-    public CmdlineExecResult exec(@NotEmpty String[] cmdline, @NonNull Command command) {
-        CmdlineExecResult execResult = new CmdlineExecResult(cmdline);
-        execResult.setCommand(command);
-        Cmdline<CommandLine> parsedCmdline = null;
-        try {
-            parsedCmdline = this.cmdlineParser.parse(command, cmdline);
-        } catch (MalformedCommandException e) {
-            execResult.setErr(e);
-            return execResult;
-        }
-        internalExecute(parsedCmdline, execResult);
-        return execResult;
-    }
-
-    private void internalExecute(Cmdline<CommandLine> cmdline, CmdlineExecResult cmdExecResult) {
+    protected void internalExecute(Cmdline<CommandLine> cmdline, CmdlineExecResult cmdExecResult) {
         Method method = cmdline.getCommand().getMethod();
         try {
             Object[] methodArgs = prepareMethodArgs(cmdline);
