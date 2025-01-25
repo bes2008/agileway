@@ -12,10 +12,9 @@ import com.jn.agileway.shell.exception.NotFoundCommandException;
 import com.jn.agileway.shell.exception.ShellInterruptedException;
 import com.jn.agileway.shell.history.HistoryHandler;
 import com.jn.agileway.shell.result.CmdlineExecResult;
-import com.jn.agileway.shell.exec.CompoundCommandComponentFactory;
 import com.jn.agileway.shell.result.CmdlineExecResultHandler;
 import com.jn.langx.annotation.NonNull;
-import com.jn.langx.environment.CompoundEnvironment;
+import com.jn.langx.environment.Environment;
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.io.resource.Resources;
 import com.jn.langx.lifecycle.AbstractLifecycle;
@@ -25,7 +24,6 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
-import com.jn.langx.util.converter.ConverterService;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.function.Predicate2;
@@ -40,6 +38,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Shell extends AbstractLifecycle {
+    Environment environment;
+
     /**
      * 命令定义相关
      */
@@ -51,11 +51,9 @@ public class Shell extends AbstractLifecycle {
     /**
      * 命令执行相关
      */
+
     @NonNull
-    protected CompoundCommandComponentFactory commandComponentFactory;
-    protected final CmdlineExecutor commandlineExecutor = new DefaultCmdlineExecutor();
-    @NonNull
-    protected CompoundEnvironment environment;
+    protected final List<CmdlineExecutor> commandlineExecutors = Lists.newArrayList();
     protected CmdlineExecResultHandler execResultHandler;
     protected CmdlineProvider cmdlineProvider;
     // 执行结果输出时，是否启用ansi 输出能力
@@ -229,12 +227,12 @@ public class Shell extends AbstractLifecycle {
 
     private CmdlineExecResult evaluate(String[] cmdline) {
         CmdlineExecResult execResult = new CmdlineExecResult(cmdline);
-        Command commandDef = findCommand(cmdline);
-        if (commandDef == null) {
+        final Command command = findCommand(cmdline);
+        if (command == null) {
             execResult.setErr(new NotFoundCommandException(Strings.join(" ", cmdline)));
             return execResult;
         }
-        execResult.setCommand(commandDef);
+        execResult.setCommand(command);
         try {
             historyHandler.append(cmdline);
         } catch (IOException e) {
@@ -244,10 +242,18 @@ public class Shell extends AbstractLifecycle {
 
         if (Collects.contains(cmdline, "--help")) {
             execResult.setCommand(null); // 故意设置为null，为的是避免以 其它输出格式输出。
-            String commandUsage = Commands.commandHelp(commandDef, true);
+            String commandUsage = Commands.commandHelp(command, true);
             execResult.setStdoutData(commandUsage);
         } else {
-            execResult = this.commandlineExecutor.exec(cmdline, commandDef);
+
+            CmdlineExecutor cmdlineExecutor = Pipeline.of(this.commandlineExecutors).findFirst(new Predicate<CmdlineExecutor>() {
+                @Override
+                public boolean test(CmdlineExecutor cmdlineExecutor) {
+                    return cmdlineExecutor.isExecutable(command);
+                }
+            });
+
+            execResult = cmdlineExecutor.exec(cmdline, command);
         }
         return execResult;
     }

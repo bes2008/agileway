@@ -1,5 +1,6 @@
 package com.jn.agileway.shell.exec;
 
+import com.jn.agileway.shell.command.Command;
 import com.jn.agileway.shell.command.CommandArgument;
 import com.jn.agileway.shell.command.CommandOption;
 import com.jn.agileway.shell.exception.MalformedCommandArgumentsException;
@@ -24,7 +25,7 @@ import java.util.*;
 import java.lang.reflect.Method;
 import java.util.concurrent.LinkedBlockingDeque;
 
-public class DefaultCmdlineExecutor extends AbstractCmdlineExecutor<CommandLine> {
+public final class DefaultCmdlineExecutor extends AbstractCmdlineExecutor<CommandLine> {
 
     public DefaultCmdlineExecutor() {
         this(true);
@@ -34,11 +35,16 @@ public class DefaultCmdlineExecutor extends AbstractCmdlineExecutor<CommandLine>
         this.setCmdlineParser(new DefaultCmdlineParser(stopParseAtNonDefinedOption));
     }
 
+    @Override
+    public boolean isExecutable(Command command) {
+        return true;
+    }
+
     protected void internalExecute(Cmdline<CommandLine> cmdline, CmdlineExecResult cmdExecResult) {
         Method method = cmdline.getCommand().getMethod();
         try {
             Object[] methodArgs = prepareMethodArgs(cmdline);
-            Object component = getCmdExecContext().getComponentFactory().get(method.getDeclaringClass());
+            Object component = getComponentFactory().get(method.getDeclaringClass());
 
             Object methodResult = Reflects.invokeMethod(method, component, methodArgs);
             cmdExecResult.setStdoutData(methodResult);

@@ -28,7 +28,7 @@ import java.io.File;
 import java.util.List;
 
 public class ShellBuilder implements Builder<Shell> {
-    private List<CommandComponentFactory> commandComponentFactories = Lists.newArrayList();
+
     private List<PropertySet> propertySets = Lists.<PropertySet>newArrayList();
     private RunMode defaultRunMode = RunMode.INTERACTIVE;
     private final List<CommandSupplier> commandsSuppliers = Lists.newArrayList(new DefaultCommandSupplier());
@@ -40,7 +40,9 @@ public class ShellBuilder implements Builder<Shell> {
     private BannerSupplier bannerSupplier = new DefaultBannerSupplier();
     private HistoryHandler historyHandler;
 
-    private CmdlineExecutor cmdlineExecutor;
+    private List<CmdlineExecutor> cmdlineExecutors = Lists.newArrayList(new DefaultCmdlineExecutor());
+
+    private List<CommandComponentFactory> commandComponentFactories = Lists.newArrayList();
 
     public ShellBuilder propertySet(PropertySet propertySet) {
         if (propertySet != null) {
@@ -89,6 +91,13 @@ public class ShellBuilder implements Builder<Shell> {
         return this;
     }
 
+    public ShellBuilder componentFactory(CommandComponentFactory factory){
+        if(factory != null) {
+            commandComponentFactories.add(factory);
+        }
+        return this;
+    }
+
 
     @Override
     public Shell build() {
@@ -101,6 +110,7 @@ public class ShellBuilder implements Builder<Shell> {
         propertySets.add(new EnvironmentVariablesPropertySource());
         MultiplePropertySetEnvironment environment = new MultiplePropertySetEnvironment("agileway-shell", propertySets);
 
+        shell.environment = environment;
         shell.execResultHandler = new CmdlineExecResultHandler();
 
         shell.defaultRunMode = this.defaultRunMode;
@@ -115,6 +125,13 @@ public class ShellBuilder implements Builder<Shell> {
         }
         shell.historyHandler = historyHandler;
 
+        for (CmdlineExecutor<?> executor : this.cmdlineExecutors) {
+            if(!(executor instanceof DefaultCmdlineExecutor)){
+                shell.commandlineExecutors.add(executor);
+            }
+        }
+
+        // 添加默认 executor
 
         final List<CommandComponentFactory> componentFactories = Lists.newArrayList();
         Pipeline.of(commandComponentFactories).forEach(new Predicate<CommandComponentFactory>() {
@@ -136,14 +153,14 @@ public class ShellBuilder implements Builder<Shell> {
         componentFactories.add(new ReflectiveCommandComponentFactory());
         CompoundCommandComponentFactory commandComponentFactory = new CompoundCommandComponentFactory(componentFactories);
 
-        CmdExecContext cmdExecContext = new CmdExecContext();
-        cmdExecContext.setEnv(environment);
-        cmdExecContext.setComponentFactory(commandComponentFactory);
-        cmdExecContext.setConverterService(new ConverterService());
+        DefaultCmdlineExecutor defaultCmdlineExecutor = new DefaultCmdlineExecutor(true);
+        defaultCmdlineExecutor.setConverterService(new ConverterService());
+        defaultCmdlineExecutor.setEnv(environment);
+        defaultCmdlineExecutor.setComponentFactory(commandComponentFactory);
+        shell.commandlineExecutors.add(defaultCmdlineExecutor);
 
-        DefaultCmdlineExecutor defaultCmdlineExecutor = new DefaultCmdlineExecutor();
-        defaultCmdlineExecutor.setCmdExecContext(cmdExecContext);
 
         return shell;
     }
+
 }
