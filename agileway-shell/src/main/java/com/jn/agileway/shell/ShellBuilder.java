@@ -34,7 +34,7 @@ public class ShellBuilder implements Builder<Shell> {
     /**
      * 环境相关配置
      */
-    private List<PropertySet> propertySets = Lists.<PropertySet>newArrayList();
+    private final List<PropertySet> propertySets = Lists.<PropertySet>newArrayList();
 
     /**
      * 命令定义
@@ -46,9 +46,9 @@ public class ShellBuilder implements Builder<Shell> {
     private PromptSupplier promptSupplier;
     private BannerSupplier bannerSupplier = new DefaultBannerSupplier();
     // 自定义的命令执行器
-    private List<CmdlineExecutor<?>> cmdlineExecutors = Lists.newArrayList(new DefaultCmdlineExecutor());
+    private final List<CmdlineExecutor<?>> cmdlineExecutors = Lists.newArrayList();
     // 为默认的命令执行器提供的 component
-    private List<CommandComponentFactory> componentFactoriesForDefaultExecutor = Lists.newArrayList();
+    private final List<CommandComponentFactory> componentFactoriesForDefaultExecutor = Lists.newArrayList();
 
     // 是否启用 ANSI 输出
     private boolean ansiConsoleEnabled = true;

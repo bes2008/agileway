@@ -53,7 +53,7 @@ public class Shell extends AbstractLifecycle {
     //////////////////////////////////////////////////////////////////////////
 
     @NonNull
-    protected final List<CmdlineExecutor> commandlineExecutors = Lists.newArrayList();
+    protected final List<CmdlineExecutor<?>> commandlineExecutors = Lists.newArrayList();
     protected CmdlineExecResultHandler execResultHandler;
     protected CmdlineProvider cmdlineProvider;
     // 执行结果输出时，是否启用ansi 输出能力
@@ -246,9 +246,9 @@ public class Shell extends AbstractLifecycle {
             execResult.setStdoutData(commandUsage);
         } else {
 
-            CmdlineExecutor cmdlineExecutor = Pipeline.of(this.commandlineExecutors).findFirst(new Predicate<CmdlineExecutor>() {
+            CmdlineExecutor<?> cmdlineExecutor = Pipeline.of(this.commandlineExecutors).findFirst(new Predicate<CmdlineExecutor<?>>() {
                 @Override
-                public boolean test(CmdlineExecutor cmdlineExecutor) {
+                public boolean test(CmdlineExecutor<?> cmdlineExecutor) {
                     return cmdlineExecutor.isExecutable(command);
                 }
             });
