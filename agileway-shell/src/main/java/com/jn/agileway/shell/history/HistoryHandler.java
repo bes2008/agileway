@@ -8,6 +8,7 @@ import com.jn.langx.util.Objs;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.collection.queue.BoundedQueue;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.file.Files;
 import com.jn.langx.util.logging.Loggers;
