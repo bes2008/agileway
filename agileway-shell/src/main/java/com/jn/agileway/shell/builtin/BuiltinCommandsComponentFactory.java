@@ -1,7 +1,7 @@
 package com.jn.agileway.shell.builtin;
 
 import com.jn.agileway.shell.command.CommandRegistry;
-import com.jn.agileway.shell.factory.CommandComponentFactory;
+import com.jn.agileway.shell.exec.CommandComponentFactory;
 import com.jn.agileway.shell.history.HistoryHandler;
 import com.jn.agileway.shell.result.CmdlineExecResultHandler;
 

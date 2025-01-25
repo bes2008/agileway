@@ -1,6 +1,6 @@
 package com.jn.agileway.shell.command;
 
-import com.jn.agileway.shell.cmdline.AnsiText;
+import com.jn.agileway.shell.util.AnsiText;
 import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.text.StringTemplates;

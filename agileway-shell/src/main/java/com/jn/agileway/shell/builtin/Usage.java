@@ -1,6 +1,6 @@
 package com.jn.agileway.shell.builtin;
 
-import com.jn.agileway.shell.cmdline.AnsiText;
+import com.jn.agileway.shell.util.AnsiText;
 import com.jn.agileway.shell.command.CommandGroup;
 import com.jn.agileway.shell.command.CommandRegistry;
 import com.jn.agileway.shell.command.Commands;

@@ -1,4 +1,4 @@
-package com.jn.agileway.shell.cmdline;
+package com.jn.agileway.shell.util;
 
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;

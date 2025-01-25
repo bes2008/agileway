@@ -1,6 +1,5 @@
-package com.jn.agileway.shell.cmdline;
+package com.jn.agileway.shell.exec;
 
-import com.jn.agileway.shell.factory.CommandComponentFactory;
 import com.jn.langx.environment.Environment;
 import com.jn.langx.util.converter.ConverterService;
 
