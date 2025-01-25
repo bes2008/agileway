@@ -6,8 +6,8 @@ import com.jn.agileway.shell.cmdline.interactive.DefaultBannerSupplier;
 import com.jn.agileway.shell.cmdline.interactive.DefaultPromptSupplier;
 import com.jn.agileway.shell.cmdline.interactive.PromptSupplier;
 import com.jn.agileway.shell.command.CommandRegistry;
-import com.jn.agileway.shell.command.CommandsSupplier;
-import com.jn.agileway.shell.command.DefaultCommandsSupplier;
+import com.jn.agileway.shell.command.CommandSupplier;
+import com.jn.agileway.shell.command.DefaultCommandSupplier;
 import com.jn.agileway.shell.factory.CommandComponentFactory;
 import com.jn.agileway.shell.factory.CompoundCommandComponentFactory;
 import com.jn.agileway.shell.factory.ReflectiveCommandComponentFactory;
@@ -34,7 +34,7 @@ public class ShellBuilder implements Builder<Shell> {
     private List<PropertySet> propertySets = Lists.<PropertySet>newArrayList();
     private boolean stopParseAtNonDefinedOption = true;
     private RunMode defaultRunMode = RunMode.INTERACTIVE;
-    private final List<CommandsSupplier> commandsSuppliers = Lists.newArrayList(new DefaultCommandsSupplier());
+    private final List<CommandSupplier> commandsSuppliers = Lists.newArrayList(new DefaultCommandSupplier());
     private boolean ansiConsoleEnabled = true;
 
     private String shellName = "agileway-shell";
@@ -62,7 +62,7 @@ public class ShellBuilder implements Builder<Shell> {
         return this;
     }
 
-    public ShellBuilder commandsSupplier(CommandsSupplier commandsSupplier) {
+    public ShellBuilder commandsSupplier(CommandSupplier commandsSupplier) {
         if (commandsSupplier != null) {
             this.commandsSuppliers.add(commandsSupplier);
         }

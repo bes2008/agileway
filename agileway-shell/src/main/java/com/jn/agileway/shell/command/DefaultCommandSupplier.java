@@ -32,18 +32,18 @@ import java.util.List;
 import java.util.Map;
 
 
-public class DefaultCommandsSupplier implements CommandsSupplier {
+public class DefaultCommandSupplier implements CommandSupplier {
     private static final String SCAN_ENABLED_PROP = "agileway.shell.scan.default.enabled";
     private static final String SCAN_PACKAGES_PROP = "agileway.shell.scan.default.packages";
 
     private static final String SCAN_BUILTIN_PACKAGES = "agileway.shell.scan.default.builtin.enabled";
     private static final String BUILTIN_PACKAGE = "com.jn.agileway.shell.builtin";
 
-    public CommandsScanConfig buildScanConfig(Environment env) {
+    public CommandScanConfig buildScanConfig(Environment env) {
         boolean defaultScannerEnabled = Booleans.truth(env.getProperty(SCAN_ENABLED_PROP, "true"));
         String scanPackages = env.getProperty(SCAN_PACKAGES_PROP);
         boolean scanBuiltinPackage = Booleans.truth(env.getProperty(SCAN_BUILTIN_PACKAGES, "true"));
-        CommandsScanConfig commandsScanConfig = new CommandsScanConfig();
+        CommandScanConfig commandsScanConfig = new CommandScanConfig();
         commandsScanConfig.setEnabled(defaultScannerEnabled);
         commandsScanConfig.setBuiltinPackagesEnabled(scanBuiltinPackage);
         List<String> scanPackageList = Pipeline.of(Strings.split(scanPackages, ",")).addIf(BUILTIN_PACKAGE, new Predicate2<Collection<String>, String>() {
@@ -54,7 +54,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         }).distinct().asList();
 
         if (defaultScannerEnabled && Objs.isEmpty(scanPackageList)) {
-            Loggers.getLogger(DefaultCommandsSupplier.class).warn("property is empty: {}", SCAN_PACKAGES_PROP);
+            Loggers.getLogger(DefaultCommandSupplier.class).warn("property is empty: {}", SCAN_PACKAGES_PROP);
         }
         commandsScanConfig.setPackages(scanPackageList);
         return commandsScanConfig;
@@ -65,7 +65,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         return scan(buildScanConfig(env));
     }
 
-    private Map<CommandGroup, List<Command>> scan(CommandsScanConfig scanConfig) {
+    private Map<CommandGroup, List<Command>> scan(CommandScanConfig scanConfig) {
         Map<CommandGroup, List<Command>> result = new HashMap<>();
 
         if (!scanConfig.isEnabled() || Objs.isEmpty(scanConfig.getPackages())) {
@@ -267,15 +267,15 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
 
         if (parameterIndex < method.getParameters().length - 1) {
             // 非最后一个参数，类型只能是 String
-            if (!CommandUtils.isSupportedBasicTypes(parameterType)) {
-                throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("parameter type should be basic types ({}) at {}th for method {}", CommandUtils.getSupportedBaseTypesString(), parameterIndex+1, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
+            if (!Commands.isSupportedBasicTypes(parameterType)) {
+                throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("parameter type should be basic types ({}) at {}th for method {}", Commands.getSupportedBaseTypesString(), parameterIndex+1, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
             }
         } else if (parameterIndex == method.getParameters().length - 1) {
             // 最后一个参数，类型可以是 String 或者 String[]
-            if (parameterType.isArray() && CommandUtils.isSupportedBasicTypes(parameterType.getComponentType())) {
+            if (parameterType.isArray() && Commands.isSupportedBasicTypes(parameterType.getComponentType())) {
                 isMultipleValue = true;
-            }else if (!CommandUtils.isSupportedBasicTypes(parameterType)){
-                throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("parameter type should be basic types ({}) or base types array at {}th for method {}", CommandUtils.getSupportedBaseTypesString(), parameterIndex+1, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
+            }else if (!Commands.isSupportedBasicTypes(parameterType)){
+                throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("parameter type should be basic types ({}) or base types array at {}th for method {}", Commands.getSupportedBaseTypesString(), parameterIndex+1, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
             }
         }
         AnnotationParameterValueList parameterValueList = annotationInfo.getParameterValues(true);
@@ -289,21 +289,21 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
         }
         desc = Objs.useValueIfEmpty(desc, name);
 
-        Class elementType = CommandUtils.getConverterTargetClass(parameter, false);
-        Converter converter = CommandUtils.newConverter(converterClass, elementType);
+        Class elementType = Commands.getConverterTargetClass(parameter, false);
+        Converter converter = Commands.newConverter(converterClass, elementType);
 
 
-        boolean required = CommandUtils.isRequiredCommandArgument(method, parameterIndex, defaultValueString);
+        boolean required = Commands.isRequiredCommandArgument(method, parameterIndex, defaultValueString);
 
         String defaultValue = null;
         String[] defaultValues = null;
-        if(!CommandUtils.isNullDefaultValue(defaultValueString) && parameterIndex == method.getParameterCount()-1){
+        if(!Commands.isNullDefaultValue(defaultValueString) && parameterIndex == method.getParameterCount()-1){
             if(parameterType.isArray()){
                 String[] values= Strings.split(defaultValueString," ");
-                CommandUtils.checkOptionOrArgumentDefaultValues(values, converter, name, commandKey);
+                Commands.checkOptionOrArgumentDefaultValues(values, converter, name, commandKey);
                 defaultValues = values;
             }else{
-                CommandUtils.checkOptionOrArgumentDefaultValue(defaultValueString, converter, name, commandKey);
+                Commands.checkOptionOrArgumentDefaultValue(defaultValueString, converter, name, commandKey);
                 defaultValue = defaultValueString;
             }
         }
@@ -365,8 +365,8 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
 
         String defaultValue = null;
         String[] defaultValues = null;
-        Class elementType = CommandUtils.getConverterTargetClass(parameter, true);
-        Converter converter = CommandUtils.newConverter(converterClass, elementType);
+        Class elementType = Commands.getConverterTargetClass(parameter, true);
+        Converter converter = Commands.newConverter(converterClass, elementType);
         if (isFlag) {
             hasArg1 = false;
             hasArgN = false;
@@ -380,7 +380,7 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
                 argName = longOptionName;
             }
             // 默认值为 null
-            if (CommandUtils.isNullDefaultValue(defaultValueString)) {
+            if (Commands.isNullDefaultValue(defaultValueString)) {
                 required = Reflects.hasAnnotation(parameter, NonNull.class);
                 argOptional = !required;
             } else {
@@ -390,11 +390,11 @@ public class DefaultCommandsSupplier implements CommandsSupplier {
                 if (hasArgN) {
                     String[] values = Strings.split(defaultValueString, valueSeparator + "");
                     // 这个过程如果没有异常，那么可以直接将 values作为 defaultValues使用
-                    CommandUtils.checkOptionOrArgumentDefaultValues(values, converter, optionName, commandKey);
+                    Commands.checkOptionOrArgumentDefaultValues(values, converter, optionName, commandKey);
                     defaultValues = values;
                 } else {
                     // 这个过程如果没有异常，那么可以直接将 defaultValueString 作为 defaultValue使用
-                    CommandUtils.checkOptionOrArgumentDefaultValue(defaultValueString, converter, optionName, commandKey);
+                    Commands.checkOptionOrArgumentDefaultValue(defaultValueString, converter, optionName, commandKey);
                     defaultValue = defaultValueString;
                 }
             }

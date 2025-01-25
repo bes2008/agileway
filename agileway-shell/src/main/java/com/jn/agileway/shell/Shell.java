@@ -46,7 +46,7 @@ public class Shell extends AbstractLifecycle {
     @NonNull
     protected CommandRegistry commandRegistry;
     @NonNull
-    protected List<CommandsSupplier> commandsSuppliers;
+    protected List<CommandSupplier> commandsSuppliers;
 
     /**
      * 命令解析
@@ -92,9 +92,9 @@ public class Shell extends AbstractLifecycle {
 
     @Override
     protected void doInit() throws InitializationException {
-        Pipeline.of(commandsSuppliers).forEach(new Consumer<CommandsSupplier>() {
+        Pipeline.of(commandsSuppliers).forEach(new Consumer<CommandSupplier>() {
             @Override
-            public void accept(CommandsSupplier commandsSupplier) {
+            public void accept(CommandSupplier commandsSupplier) {
                 Map<CommandGroup, List<Command>> groupCommandsMap = commandsSupplier.get(environment);
                 if (groupCommandsMap == null) {
                     return;
@@ -256,7 +256,7 @@ public class Shell extends AbstractLifecycle {
 
         if (Collects.contains(cmdline, "--help")) {
             execResult.setCommand(null); // 故意设置为null，为的是避免以 其它输出格式输出。
-            String commandUsage = CommandUtils.commandHelp(commandDef, true);
+            String commandUsage = Commands.commandHelp(commandDef, true);
             execResult.setStdoutData(commandUsage);
         } else {
             Cmdline parsedCmdline = null;

@@ -2,7 +2,7 @@ package com.jn.agileway.shell.command;
 
 import java.util.List;
 
-public class CommandsScanConfig {
+public class CommandScanConfig {
     private boolean enabled;
     private List<String> packages;
 

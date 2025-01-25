@@ -6,6 +6,6 @@ import com.jn.langx.util.function.Supplier;
 import java.util.List;
 import java.util.Map;
 
-public interface CommandsSupplier extends Supplier<Environment, Map<CommandGroup, List<Command>>> {
+public interface CommandSupplier extends Supplier<Environment, Map<CommandGroup, List<Command>>> {
     Map<CommandGroup, List<Command>> get(Environment environment);
 }

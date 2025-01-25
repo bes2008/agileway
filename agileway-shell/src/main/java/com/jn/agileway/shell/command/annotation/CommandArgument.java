@@ -1,6 +1,6 @@
 package com.jn.agileway.shell.command.annotation;
 
-import com.jn.agileway.shell.command.CommandUtils;
+import com.jn.agileway.shell.command.Commands;
 import com.jn.agileway.shell.command.DefaultConverter;
 
 /**
@@ -30,7 +30,7 @@ public @interface CommandArgument {
     /**
      * 多值的情况下，使用空格分隔。
      */
-    String defaultValue() default CommandUtils.NULL;
+    String defaultValue() default Commands.NULL;
 
 
     String desc() default "";

@@ -1,6 +1,6 @@
 package com.jn.agileway.shell.command.annotation;
 
-import com.jn.agileway.shell.command.CommandUtils;
+import com.jn.agileway.shell.command.Commands;
 import com.jn.agileway.shell.command.DefaultConverter;
 
 /**
@@ -51,7 +51,7 @@ public @interface CommandOption {
     /**
      * 默认值
      */
-    String defaultValue() default CommandUtils.NULL;
+    String defaultValue() default Commands.NULL;
 
     /**
      * 值分隔符

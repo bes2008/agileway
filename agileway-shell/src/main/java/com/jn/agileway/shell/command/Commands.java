@@ -25,7 +25,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class CommandUtils {
+public abstract class Commands {
     private final static List<Class<?>> supportedBaseTypes;
 
     static {

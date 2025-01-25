@@ -3,7 +3,7 @@ package com.jn.agileway.shell.builtin;
 import com.jn.agileway.shell.cmdline.AnsiText;
 import com.jn.agileway.shell.command.CommandGroup;
 import com.jn.agileway.shell.command.CommandRegistry;
-import com.jn.agileway.shell.command.CommandUtils;
+import com.jn.agileway.shell.command.Commands;
 import com.jn.agileway.shell.command.annotation.Command;
 import com.jn.agileway.shell.command.annotation.CommandArgument;
 import com.jn.agileway.shell.command.annotation.CommandComponent;
@@ -62,7 +62,7 @@ public class Usage {
         if(command==null){
             throw new RuntimeException(StringTemplates.formatWithPlaceholder("command '{}' not found", commandName));
         }
-        return CommandUtils.commandHelp(command, true);
+        return Commands.commandHelp(command, true);
     }
 
 }
