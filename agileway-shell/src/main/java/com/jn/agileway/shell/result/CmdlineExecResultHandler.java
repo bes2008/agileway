@@ -90,6 +90,13 @@ public final class CmdlineExecResultHandler {
             return;
         }
 
+        if (err instanceof MalformedCommandLineException) {
+            recordStacktrace(err, false);
+            execResult.setExitCode(2);
+            execResult.setStderr(StringTemplates.formatWithPlaceholder("malformed commandline: {}", err.getMessage()));
+            return;
+        }
+
         // TODO 126：权限被拒绝或无法执行
 
         // TODO 1: 通用错误

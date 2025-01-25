@@ -2,6 +2,7 @@ package com.jn.agileway.shell.exec;
 
 import com.jn.agileway.shell.command.Command;
 import com.jn.agileway.shell.exception.MalformedCommandException;
+import com.jn.agileway.shell.exception.MalformedCommandLineException;
 import com.jn.agileway.shell.result.CmdlineExecResult;
 import com.jn.langx.environment.Environment;
 import com.jn.langx.util.converter.ConverterService;
@@ -51,7 +52,7 @@ public abstract class CmdlineExecutor<C>{
         Cmdline<C> parsedCmdline = null;
         try {
             parsedCmdline = getCmdlineParser().parse(command, cmdline);
-        } catch (MalformedCommandException e) {
+        } catch (MalformedCommandLineException e) {
             execResult.setErr(e);
             return execResult;
         }
