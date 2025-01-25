@@ -1,30 +1,26 @@
 package com.jn.agileway.shell.exec;
 
 import com.jn.agileway.shell.command.Command;
-import org.apache.commons.cli.CommandLine;
 
-public class Cmdline {
-    private CommandLine parsed;
+public class Cmdline <C> {
+    private C parsed;
     private Command command;
 
-    public Cmdline(Command commandDefinition, CommandLine parsed) {
-        this.command = commandDefinition;
+    public Cmdline(Command command, C parsed){
+        this.command = command;
         this.parsed = parsed;
     }
 
-    public CommandLine getParsed() {
+    public C getParsed() {
         return parsed;
     }
 
-    public void setParsed(CommandLine parsed) {
-        this.parsed = parsed;
+    public void setCommand(Command command) {
+        this.command = command;
     }
 
     public Command getCommand() {
         return command;
     }
 
-    public void setCommand(Command command) {
-        this.command = command;
-    }
 }

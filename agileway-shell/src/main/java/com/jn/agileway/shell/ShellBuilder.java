@@ -8,6 +8,7 @@ import com.jn.agileway.shell.cmdline.interactive.PromptSupplier;
 import com.jn.agileway.shell.command.CommandRegistry;
 import com.jn.agileway.shell.command.CommandSupplier;
 import com.jn.agileway.shell.command.DefaultCommandSupplier;
+import com.jn.agileway.shell.exec.CmdlineExecutor;
 import com.jn.agileway.shell.exec.CommandComponentFactory;
 import com.jn.agileway.shell.exec.CompoundCommandComponentFactory;
 import com.jn.agileway.shell.exec.ReflectiveCommandComponentFactory;
@@ -41,12 +42,7 @@ public class ShellBuilder implements Builder<Shell> {
     private BannerSupplier bannerSupplier = new DefaultBannerSupplier();
     private HistoryHandler historyHandler;
 
-    public ShellBuilder componentFactory(CommandComponentFactory factory) {
-        if (factory != null) {
-            commandComponentFactories.add(factory);
-        }
-        return this;
-    }
+    private CmdlineExecutor executor;
 
     public ShellBuilder propertySet(PropertySet propertySet) {
         if (propertySet != null) {
@@ -141,6 +137,8 @@ public class ShellBuilder implements Builder<Shell> {
         componentFactories.add(builtinCommandsComponentFactory);
         componentFactories.add(new ReflectiveCommandComponentFactory());
         shell.commandComponentFactory = new CompoundCommandComponentFactory(componentFactories);
+
+
         return shell;
     }
 }

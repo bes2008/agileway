@@ -1,6 +1,6 @@
 package com.jn.agileway.shell.exec;
 
-import com.jn.agileway.shell.command.annotation.Command;
+import com.jn.agileway.shell.command.annotation.CommandComponent;
 import com.jn.langx.util.collection.Maps;
 import com.jn.langx.util.reflect.Reflects;
 
@@ -10,7 +10,7 @@ public class CustomizedCommandComponentFactory implements CommandComponentFactor
     private Map<Class, Object> components = Maps.<Class, Object>newHashMap();
 
     public void addComponent(Object component){
-        if(Reflects.hasAnnotation(component.getClass(), Command.class)) {
+        if(Reflects.hasAnnotation(component.getClass(), CommandComponent.class)) {
             components.put(component.getClass(), component);
         }
     }

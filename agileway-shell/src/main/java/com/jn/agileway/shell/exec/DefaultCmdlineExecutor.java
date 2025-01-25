@@ -18,6 +18,7 @@ import com.jn.langx.util.collection.Sets;
 import com.jn.langx.util.collection.stack.SimpleStack;
 import com.jn.langx.util.enums.Enums;
 import com.jn.langx.util.reflect.Reflects;
+import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
@@ -29,15 +30,30 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 public class DefaultCmdlineExecutor implements CmdlineExecutor {
     private CmdExecContext cmdExecContext;
-    private CmdlineParser cmdlineParser;
+    private CmdlineParser<CommandLine> cmdlineParser;
+    private CommandComponentFactory factory;
 
     public DefaultCmdlineExecutor() {
-        this.cmdlineParser = new CmdlineParser(true);
+        this(true);
     }
+
+    public DefaultCmdlineExecutor(boolean stopParseAtNonDefinedOption) {
+        this.cmdlineParser = new DefaultCmdlineParser(stopParseAtNonDefinedOption);
+    }
+
     public void setCmdExecContext(CmdExecContext cmdExecContext) {
         this.cmdExecContext = cmdExecContext;
     }
 
+    @Override
+    public CommandComponentFactory getCommandComponentFactory() {
+        return this.factory;
+    }
+
+    @Override
+    public void setCommandComponentFactory(CommandComponentFactory factory) {
+        this.factory = factory;
+    }
 
     @Override
     public CmdExecContext getCmdExecContext() {
@@ -46,7 +62,7 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
     public CmdlineExecResult exec(@NotEmpty String[] cmdline, @NonNull Command command) {
         CmdlineExecResult execResult = new CmdlineExecResult(cmdline);
         execResult.setCommand(command);
-        Cmdline parsedCmdline = null;
+        Cmdline<CommandLine> parsedCmdline = null;
         try {
             parsedCmdline = this.cmdlineParser.parse(command, cmdline);
         } catch (MalformedCommandException e) {
@@ -57,7 +73,7 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
         return execResult;
     }
 
-    private void internalExecute(Cmdline cmdline, CmdlineExecResult cmdExecResult) {
+    private void internalExecute(Cmdline<CommandLine> cmdline, CmdlineExecResult cmdExecResult) {
         Method method = cmdline.getCommand().getMethod();
         try {
             Object[] methodArgs = prepareMethodArgs(cmdline);
@@ -70,7 +86,7 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
         }
     }
 
-    private Object[] prepareMethodArgs(Cmdline cmdline) {
+    private Object[] prepareMethodArgs(Cmdline<CommandLine> cmdline) {
         List<String> optionKeys = cmdline.getCommand().getOptionKeys();
         Object[] methodArgs = new Object[cmdline.getCommand().getMethod().getParameters().length];
         Method method = cmdline.getCommand().getMethod();
@@ -182,7 +198,7 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
         }
     }
 
-    private String[] getOptionValues(Cmdline cmdline, String optionKey) {
+    private String[] getOptionValues(Cmdline<CommandLine> cmdline, String optionKey) {
         Option optionDef = cmdline.getCommand().getOptions().getOption(optionKey);
         if (!cmdline.getParsed().hasOption(optionKey)) {
             CommandOption commandOption = (CommandOption) optionDef;
@@ -192,7 +208,7 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
         }
     }
 
-    private String getOptionValue(Cmdline cmdline, String optionKey) {
+    private String getOptionValue(Cmdline<CommandLine> cmdline, String optionKey) {
         Option optionDef = cmdline.getCommand().getOptions().getOption(optionKey);
         if (optionDef.getArgs() < 0) {
             // is flag
