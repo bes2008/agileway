@@ -5,6 +5,12 @@ import com.jn.agileway.shell.result.CmdlineExecResult;
 
 public interface CmdlineExecutor {
     CmdExecContext getCmdExecContext();
+
     void setCmdExecContext(CmdExecContext cmdExecContext);
+
+    CommandComponentFactory getCommandComponentFactory();
+
+    void setCommandComponentFactory(CommandComponentFactory factory);
+
     CmdlineExecResult exec(String[] cmdline, Command command);
 }

@@ -58,7 +58,7 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
     }
 
     private void internalExecute(Cmdline cmdline, CmdlineExecResult cmdExecResult) {
-        Method method = cmdline.getCommandDefinition().getMethod();
+        Method method = cmdline.getCommand().getMethod();
         try {
             Object[] methodArgs = prepareMethodArgs(cmdline);
             Object component = getCmdExecContext().getComponentFactory().get(method.getDeclaringClass());
@@ -71,14 +71,14 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
     }
 
     private Object[] prepareMethodArgs(Cmdline cmdline) {
-        List<String> optionKeys = cmdline.getCommandDefinition().getOptionKeys();
-        Object[] methodArgs = new Object[cmdline.getCommandDefinition().getMethod().getParameters().length];
-        Method method = cmdline.getCommandDefinition().getMethod();
+        List<String> optionKeys = cmdline.getCommand().getOptionKeys();
+        Object[] methodArgs = new Object[cmdline.getCommand().getMethod().getParameters().length];
+        Method method = cmdline.getCommand().getMethod();
         Parameter[] parameters = method.getParameters();
 
         int parameterIndex = 0;
         // 处理 options
-        Options optionsDef = cmdline.getCommandDefinition().getOptions();
+        Options optionsDef = cmdline.getCommand().getOptions();
         for (; parameterIndex < optionKeys.size(); parameterIndex++) {
             String optionKey = optionKeys.get(parameterIndex);
             Parameter parameter = parameters[parameterIndex];
@@ -113,7 +113,7 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
             }
         }
 
-        List<CommandArgument> argumentsDef = cmdline.getCommandDefinition().getArguments();
+        List<CommandArgument> argumentsDef = cmdline.getCommand().getArguments();
         if (!argumentsDef.isEmpty()) {
             List<String> argumentValues = cmdline.getParsed().getArgList();
             if(argumentValues.size() < argumentsDef.size()-1){
@@ -183,7 +183,7 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
     }
 
     private String[] getOptionValues(Cmdline cmdline, String optionKey) {
-        Option optionDef = cmdline.getCommandDefinition().getOptions().getOption(optionKey);
+        Option optionDef = cmdline.getCommand().getOptions().getOption(optionKey);
         if (!cmdline.getParsed().hasOption(optionKey)) {
             CommandOption commandOption = (CommandOption) optionDef;
             return commandOption.getDefaultValues();
@@ -193,7 +193,7 @@ public class DefaultCmdlineExecutor implements CmdlineExecutor {
     }
 
     private String getOptionValue(Cmdline cmdline, String optionKey) {
-        Option optionDef = cmdline.getCommandDefinition().getOptions().getOption(optionKey);
+        Option optionDef = cmdline.getCommand().getOptions().getOption(optionKey);
         if (optionDef.getArgs() < 0) {
             // is flag
             return cmdline.getParsed().hasOption(optionKey) ? "true" : "false";

@@ -5,10 +5,10 @@ import org.apache.commons.cli.CommandLine;
 
 public class Cmdline {
     private CommandLine parsed;
-    private Command commandDefinition;
+    private Command command;
 
     public Cmdline(Command commandDefinition, CommandLine parsed) {
-        this.commandDefinition = commandDefinition;
+        this.command = commandDefinition;
         this.parsed = parsed;
     }
 
@@ -20,11 +20,11 @@ public class Cmdline {
         this.parsed = parsed;
     }
 
-    public Command getCommandDefinition() {
-        return commandDefinition;
+    public Command getCommand() {
+        return command;
     }
 
-    public void setCommandDefinition(Command commandDefinition) {
-        this.commandDefinition = commandDefinition;
+    public void setCommand(Command command) {
+        this.command = command;
     }
 }
