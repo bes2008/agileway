@@ -49,12 +49,6 @@ public class Shell extends AbstractLifecycle {
     protected List<CommandSupplier> commandsSuppliers;
 
     /**
-     * 命令解析
-     */
-    @NonNull
-    protected CmdlineParser commandlineParser;
-
-    /**
      * 命令执行相关
      */
     @NonNull
@@ -259,14 +253,7 @@ public class Shell extends AbstractLifecycle {
             String commandUsage = Commands.commandHelp(commandDef, true);
             execResult.setStdoutData(commandUsage);
         } else {
-            Cmdline parsedCmdline = null;
-            try {
-                parsedCmdline = this.commandlineParser.parse(commandDef, cmdline);
-            } catch (MalformedCommandException e) {
-                execResult.setErr(e);
-                return execResult;
-            }
-            this.commandlineExecutor.exec(parsedCmdline, execResult);
+            execResult = this.commandlineExecutor.exec(cmdline, commandDef);
         }
         return execResult;
     }

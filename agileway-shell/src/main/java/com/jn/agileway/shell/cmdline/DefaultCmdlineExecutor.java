@@ -1,11 +1,15 @@
 package com.jn.agileway.shell.cmdline;
 
+import com.jn.agileway.shell.command.Command;
 import com.jn.agileway.shell.command.CommandArgument;
 import com.jn.agileway.shell.command.CommandOption;
 import com.jn.agileway.shell.exception.MalformedCommandArgumentsException;
+import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.agileway.shell.exception.MalformedOptionValueException;
 import com.jn.agileway.shell.exception.UnsupportedCollectionException;
 import com.jn.agileway.shell.result.CmdlineExecResult;
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.collection.Arrs;
 import com.jn.langx.util.collection.Collects;
@@ -25,20 +29,35 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 public class DefaultCmdlineExecutor implements CmdlineExecutor {
     private CmdExecContext cmdExecContext;
+    private CmdlineParser cmdlineParser;
 
     public DefaultCmdlineExecutor() {
+        this.cmdlineParser = new CmdlineParser(true);
     }
-
     public void setCmdExecContext(CmdExecContext cmdExecContext) {
         this.cmdExecContext = cmdExecContext;
     }
+
 
     @Override
     public CmdExecContext getCmdExecContext() {
         return cmdExecContext;
     }
+    public CmdlineExecResult exec(@NotEmpty String[] cmdline, @NonNull Command command) {
+        CmdlineExecResult execResult = new CmdlineExecResult(cmdline);
+        execResult.setCommand(command);
+        Cmdline parsedCmdline = null;
+        try {
+            parsedCmdline = this.cmdlineParser.parse(command, cmdline);
+        } catch (MalformedCommandException e) {
+            execResult.setErr(e);
+            return execResult;
+        }
+        internalExecute(parsedCmdline, execResult);
+        return execResult;
+    }
 
-    public void exec(Cmdline cmdline, CmdlineExecResult cmdExecResult) {
+    private void internalExecute(Cmdline cmdline, CmdlineExecResult cmdExecResult) {
         Method method = cmdline.getCommandDefinition().getMethod();
         try {
             Object[] methodArgs = prepareMethodArgs(cmdline);

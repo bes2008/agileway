@@ -32,7 +32,6 @@ import java.util.List;
 public class ShellBuilder implements Builder<Shell> {
     private List<CommandComponentFactory> commandComponentFactories = Lists.newArrayList();
     private List<PropertySet> propertySets = Lists.<PropertySet>newArrayList();
-    private boolean stopParseAtNonDefinedOption = true;
     private RunMode defaultRunMode = RunMode.INTERACTIVE;
     private final List<CommandSupplier> commandsSuppliers = Lists.newArrayList(new DefaultCommandSupplier());
     private boolean ansiConsoleEnabled = true;
@@ -57,10 +56,6 @@ public class ShellBuilder implements Builder<Shell> {
         return this;
     }
 
-    public ShellBuilder stopParseAtNonDefinedOption(boolean stop) {
-        this.stopParseAtNonDefinedOption = stop;
-        return this;
-    }
 
     public ShellBuilder commandsSupplier(CommandSupplier commandsSupplier) {
         if (commandsSupplier != null) {
@@ -114,9 +109,6 @@ public class ShellBuilder implements Builder<Shell> {
         shell.environment = new MultiplePropertySetEnvironment("agileway-shell", propertySets);
 
         shell.execResultHandler = new CmdlineExecResultHandler();
-
-        shell.commandlineParser = new CmdlineParser(this.stopParseAtNonDefinedOption);
-
 
         shell.defaultRunMode = this.defaultRunMode;
         shell.ansiConsoleEnabled = this.ansiConsoleEnabled;
