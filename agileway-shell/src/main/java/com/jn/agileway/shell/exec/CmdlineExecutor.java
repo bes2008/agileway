@@ -1,30 +1,70 @@
 package com.jn.agileway.shell.exec;
 
 import com.jn.agileway.shell.command.Command;
+import com.jn.agileway.shell.exception.MalformedCommandException;
 import com.jn.agileway.shell.result.CmdlineExecResult;
 import com.jn.langx.environment.Environment;
 import com.jn.langx.util.converter.ConverterService;
 
-public interface CmdlineExecutor<C> {
+public abstract class CmdlineExecutor<C>{
+    private CmdlineParser<C> cmdlineParser;
+    private Environment env;
+    private ConverterService converterService;
+    private CommandComponentFactory componentFactory;
 
-    Environment getEnv();
 
-    void setEnv(Environment env);
+    public Environment getEnv() {
+        return env;
+    }
 
-    ConverterService getConverterService();
+    public void setEnv(Environment env) {
+        this.env = env;
+    }
 
-    void setConverterService(ConverterService converterService);
+    public ConverterService getConverterService() {
+        return converterService;
+    }
 
-    CommandComponentFactory getComponentFactory();
+    public void setConverterService(ConverterService converterService) {
+        this.converterService = converterService;
+    }
 
-    void setComponentFactory(CommandComponentFactory componentFactory);
+    public CommandComponentFactory getComponentFactory() {
+        return componentFactory;
+    }
 
-    void setCmdlineParser(CmdlineParser<C> cmdlineParser);
+    public void setComponentFactory(CommandComponentFactory componentFactory) {
+        this.componentFactory = componentFactory;
+    }
 
-    CmdlineParser<C> getCmdlineParser();
+    public void setCmdlineParser(CmdlineParser<C> cmdlineParser) {
+        this.cmdlineParser = cmdlineParser;
+    }
 
-    boolean isExecutable(Command command);
-    CmdlineExecResult exec(String[] cmdline, Command command);
+    public CmdlineParser<C> getCmdlineParser() {
+        return this.cmdlineParser;
+    }
+    public abstract boolean isExecutable(Command command);
+    public final CmdlineExecResult exec(String[] cmdline, Command command) {
+        CmdlineExecResult execResult = new CmdlineExecResult(cmdline);
+        execResult.setCommand(command);
+        Cmdline<C> parsedCmdline = null;
+        try {
+            parsedCmdline = getCmdlineParser().parse(command, cmdline);
+        } catch (MalformedCommandException e) {
+            execResult.setErr(e);
+            return execResult;
+        }
+        try {
+            Object methodResult = internalExecute(parsedCmdline);
+            execResult.setStdoutData(methodResult);
+        }catch (Throwable e){
+            execResult.setErr(e);
+        }
 
+        return execResult;
+    }
+
+    protected abstract Object internalExecute(Cmdline<C> cmdline);
 
 }

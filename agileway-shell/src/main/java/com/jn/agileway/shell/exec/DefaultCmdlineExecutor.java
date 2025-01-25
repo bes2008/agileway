@@ -6,7 +6,6 @@ import com.jn.agileway.shell.command.CommandOption;
 import com.jn.agileway.shell.exception.MalformedCommandArgumentsException;
 import com.jn.agileway.shell.exception.MalformedOptionValueException;
 import com.jn.agileway.shell.exception.UnsupportedCollectionException;
-import com.jn.agileway.shell.result.CmdlineExecResult;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.collection.Arrs;
 import com.jn.langx.util.collection.Collects;
@@ -25,7 +24,7 @@ import java.util.*;
 import java.lang.reflect.Method;
 import java.util.concurrent.LinkedBlockingDeque;
 
-public final class DefaultCmdlineExecutor extends AbstractCmdlineExecutor<CommandLine> {
+public final class DefaultCmdlineExecutor extends CmdlineExecutor<CommandLine> {
 
     public DefaultCmdlineExecutor() {
         this(true);
@@ -40,17 +39,12 @@ public final class DefaultCmdlineExecutor extends AbstractCmdlineExecutor<Comman
         return true;
     }
 
-    protected void internalExecute(Cmdline<CommandLine> cmdline, CmdlineExecResult cmdExecResult) {
+    protected Object internalExecute(Cmdline<CommandLine> cmdline) {
         Method method = cmdline.getCommand().getMethod();
-        try {
-            Object[] methodArgs = prepareMethodArgs(cmdline);
-            Object component = getComponentFactory().get(method.getDeclaringClass());
-
-            Object methodResult = Reflects.invokeMethod(method, component, methodArgs);
-            cmdExecResult.setStdoutData(methodResult);
-        }catch (Throwable e){
-            cmdExecResult.setErr(e);
-        }
+        Object[] methodArgs = prepareMethodArgs(cmdline);
+        Object component = getComponentFactory().get(method.getDeclaringClass());
+        Object methodResult = Reflects.invokeMethod(method, component, methodArgs);
+        return methodResult;
     }
 
     private Object[] prepareMethodArgs(Cmdline<CommandLine> cmdline) {
