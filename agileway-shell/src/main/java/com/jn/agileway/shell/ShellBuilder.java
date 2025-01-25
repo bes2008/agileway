@@ -103,7 +103,7 @@ public class ShellBuilder implements Builder<Shell> {
         return this;
     }
 
-    public ShellBuilder componentFactory(CommandComponentFactory factory){
+    public ShellBuilder componentFactoryForDefaultExecutor(CommandComponentFactory factory){
         if(factory != null) {
             componentFactoriesForDefaultExecutor.add(factory);
         }
