@@ -6,7 +6,6 @@ import com.jn.agileway.shell.result.CmdlineExecResult;
 
 public abstract class AbstractCmdlineExecutor<C> implements CmdlineExecutor<C>{
     private CmdlineParser<C> parser;
-    private CommandComponentFactory factory;
     private CmdExecContext execContext;
 
     @Override
@@ -20,16 +19,6 @@ public abstract class AbstractCmdlineExecutor<C> implements CmdlineExecutor<C>{
     }
 
     @Override
-    public CommandComponentFactory getCommandComponentFactory() {
-        return this.factory;
-    }
-
-    @Override
-    public void setCommandComponentFactory(CommandComponentFactory factory) {
-        this.factory = factory;
-    }
-
-    @Override
     public void setCmdlineParser(CmdlineParser<C> cmdlineParser) {
         this.parser = cmdlineParser;
     }
@@ -37,6 +26,11 @@ public abstract class AbstractCmdlineExecutor<C> implements CmdlineExecutor<C>{
     @Override
     public CmdlineParser<C> getCmdlineParser() {
         return this.parser;
+    }
+
+    @Override
+    public boolean isExecutable(Command command) {
+        return true;
     }
 
     @Override

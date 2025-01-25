@@ -105,12 +105,6 @@ public class Shell extends AbstractLifecycle {
             }
         });
 
-        CmdExecContext cmdExecContext = new CmdExecContext();
-        cmdExecContext.setEnv(environment);
-        cmdExecContext.setComponentFactory(commandComponentFactory);
-        cmdExecContext.setConverterService(new ConverterService());
-        this.commandlineExecutor.setCmdExecContext(cmdExecContext);
-
         if (this.defaultRunMode == null || this.defaultRunMode == RunMode.SCRIPT) {
             this.defaultRunMode = RunMode.INTERACTIVE;
         }

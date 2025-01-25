@@ -8,10 +8,7 @@ import com.jn.agileway.shell.cmdline.interactive.PromptSupplier;
 import com.jn.agileway.shell.command.CommandRegistry;
 import com.jn.agileway.shell.command.CommandSupplier;
 import com.jn.agileway.shell.command.DefaultCommandSupplier;
-import com.jn.agileway.shell.exec.CmdlineExecutor;
-import com.jn.agileway.shell.exec.CommandComponentFactory;
-import com.jn.agileway.shell.exec.CompoundCommandComponentFactory;
-import com.jn.agileway.shell.exec.ReflectiveCommandComponentFactory;
+import com.jn.agileway.shell.exec.*;
 import com.jn.agileway.shell.history.HistoryHandler;
 import com.jn.agileway.shell.result.CmdlineExecResultHandler;
 import com.jn.langx.Builder;
@@ -23,6 +20,7 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.SystemPropertys;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.converter.ConverterService;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
 
@@ -42,7 +40,7 @@ public class ShellBuilder implements Builder<Shell> {
     private BannerSupplier bannerSupplier = new DefaultBannerSupplier();
     private HistoryHandler historyHandler;
 
-    private CmdlineExecutor executor;
+    private CmdlineExecutor cmdlineExecutor;
 
     public ShellBuilder propertySet(PropertySet propertySet) {
         if (propertySet != null) {
@@ -101,7 +99,7 @@ public class ShellBuilder implements Builder<Shell> {
         shell.commandsSuppliers = commandsSuppliers;
         propertySets.add(new SystemPropertiesPropertySource());
         propertySets.add(new EnvironmentVariablesPropertySource());
-        shell.environment = new MultiplePropertySetEnvironment("agileway-shell", propertySets);
+        MultiplePropertySetEnvironment environment = new MultiplePropertySetEnvironment("agileway-shell", propertySets);
 
         shell.execResultHandler = new CmdlineExecResultHandler();
 
@@ -136,8 +134,15 @@ public class ShellBuilder implements Builder<Shell> {
         builtinCommandsComponentFactory.setHistoryHandler(historyHandler);
         componentFactories.add(builtinCommandsComponentFactory);
         componentFactories.add(new ReflectiveCommandComponentFactory());
-        shell.commandComponentFactory = new CompoundCommandComponentFactory(componentFactories);
+        CompoundCommandComponentFactory commandComponentFactory = new CompoundCommandComponentFactory(componentFactories);
 
+        CmdExecContext cmdExecContext = new CmdExecContext();
+        cmdExecContext.setEnv(environment);
+        cmdExecContext.setComponentFactory(commandComponentFactory);
+        cmdExecContext.setConverterService(new ConverterService());
+
+        DefaultCmdlineExecutor defaultCmdlineExecutor = new DefaultCmdlineExecutor();
+        defaultCmdlineExecutor.setCmdExecContext(cmdExecContext);
 
         return shell;
     }
