@@ -29,20 +29,32 @@ import java.util.List;
 
 public class ShellBuilder implements Builder<Shell> {
 
-    private List<PropertySet> propertySets = Lists.<PropertySet>newArrayList();
-    private RunMode defaultRunMode = RunMode.INTERACTIVE;
-    private final List<CommandSupplier> commandsSuppliers = Lists.newArrayList(new DefaultCommandSupplier());
-    private boolean ansiConsoleEnabled = true;
-
     private String shellName = "agileway-shell";
 
+    /**
+     * 环境相关配置
+     */
+    private List<PropertySet> propertySets = Lists.<PropertySet>newArrayList();
+
+    /**
+     * 命令定义
+     */
+    private final List<CommandSupplier> commandsSuppliers = Lists.newArrayList(new DefaultCommandSupplier());
+
+    // 运行模式
+    private RunMode defaultRunMode = RunMode.INTERACTIVE;
     private PromptSupplier promptSupplier;
     private BannerSupplier bannerSupplier = new DefaultBannerSupplier();
+    // 自定义的命令执行器
+    private List<CmdlineExecutor<?>> cmdlineExecutors = Lists.newArrayList(new DefaultCmdlineExecutor());
+    // 为默认的命令执行器提供的 component
+    private List<CommandComponentFactory> componentFactoriesForDefaultExecutor = Lists.newArrayList();
+
+    // 是否启用 ANSI 输出
+    private boolean ansiConsoleEnabled = true;
+    // 命令历史
     private HistoryHandler historyHandler;
 
-    private List<CmdlineExecutor> cmdlineExecutors = Lists.newArrayList(new DefaultCmdlineExecutor());
-
-    private List<CommandComponentFactory> commandComponentFactories = Lists.newArrayList();
 
     public ShellBuilder propertySet(PropertySet propertySet) {
         if (propertySet != null) {
@@ -93,7 +105,14 @@ public class ShellBuilder implements Builder<Shell> {
 
     public ShellBuilder componentFactory(CommandComponentFactory factory){
         if(factory != null) {
-            commandComponentFactories.add(factory);
+            componentFactoriesForDefaultExecutor.add(factory);
+        }
+        return this;
+    }
+
+    public final ShellBuilder cmdlineExecutor(CmdlineExecutor<?> executor){
+        if(executor!=null && !(executor instanceof DefaultCmdlineExecutor) ){
+            this.cmdlineExecutors.add(executor);
         }
         return this;
     }
@@ -125,16 +144,14 @@ public class ShellBuilder implements Builder<Shell> {
         }
         shell.historyHandler = historyHandler;
 
+        // 添加自定义的 cmdline executors
         for (CmdlineExecutor<?> executor : this.cmdlineExecutors) {
-            if(!(executor instanceof DefaultCmdlineExecutor)){
-                shell.commandlineExecutors.add(executor);
-            }
+            shell.commandlineExecutors.add(executor);
         }
 
         // 添加默认 executor
-
         final List<CommandComponentFactory> componentFactories = Lists.newArrayList();
-        Pipeline.of(commandComponentFactories).forEach(new Predicate<CommandComponentFactory>() {
+        Pipeline.of(componentFactoriesForDefaultExecutor).forEach(new Predicate<CommandComponentFactory>() {
             @Override
             public boolean test(CommandComponentFactory factory) {
                 return factory instanceof ReflectiveCommandComponentFactory;

@@ -48,9 +48,9 @@ public class Shell extends AbstractLifecycle {
     @NonNull
     protected List<CommandSupplier> commandsSuppliers;
 
-    /**
-     * 命令执行相关
-     */
+    ///////////////////////////////////////////////////////////////////////////
+    // 命令执行相关
+    //////////////////////////////////////////////////////////////////////////
 
     @NonNull
     protected final List<CmdlineExecutor> commandlineExecutors = Lists.newArrayList();
