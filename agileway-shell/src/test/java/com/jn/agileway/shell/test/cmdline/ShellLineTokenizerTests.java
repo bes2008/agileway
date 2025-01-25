@@ -1,6 +1,6 @@
 package com.jn.agileway.shell.test.cmdline;
 
-import com.jn.agileway.shell.cmdline.ShellLineTokenizer;
+import com.jn.agileway.shell.cmdline.ShellCmdlines;
 import org.junit.Test;
 
 
@@ -15,6 +15,6 @@ public class ShellLineTokenizerTests {
     }
 
     private void showAsTokens(String cmdline){
-        System.out.println(new ShellLineTokenizer(cmdline).tokenize());
+        System.out.println(ShellCmdlines.cmdlineToArgs(cmdline));
     }
 }
