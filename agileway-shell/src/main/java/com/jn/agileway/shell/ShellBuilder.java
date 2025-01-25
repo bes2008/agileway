@@ -145,9 +145,7 @@ public class ShellBuilder implements Builder<Shell> {
         shell.historyHandler = historyHandler;
 
         // 添加自定义的 cmdline executors
-        for (CmdlineExecutor<?> executor : this.cmdlineExecutors) {
-            shell.commandlineExecutors.add(executor);
-        }
+        shell.commandlineExecutors.addAll(cmdlineExecutors);
 
         // 添加默认 executor
         final List<CommandComponentFactory> componentFactories = Lists.newArrayList();
