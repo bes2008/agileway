@@ -25,7 +25,7 @@ public class History {
 
     @Command(value = "history", desc = "list history records")
     public String list(
-            @CommandOption(value = "d", longName = "datetime", isFlag = true, desc = "display the datetime")
+            @CommandOption(shortName = "d", value = "datetime", isFlag = true, desc = "display the datetime")
             boolean displayDate,
             @CommandArgument(value = "limit", desc = "records limit, max 1000", defaultValue = "1000")
             int limit){

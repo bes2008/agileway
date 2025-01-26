@@ -345,8 +345,8 @@ public class DefaultCommandSupplier implements CommandSupplier {
 
         AnnotationParameterValueList parameterValueList = annotationInfo.getParameterValues(true);
         if (parameterValueList != null) {
-            shortName = (String) parameterValueList.getValue("value");
-            longOptionName = (String) parameterValueList.getValue("longName");
+            shortName = (String) parameterValueList.getValue("shortName");
+            longOptionName = (String) parameterValueList.getValue("value");
             argName = Strings.trimToNull((String) parameterValueList.getValue("argName"));
             if (isFlag) {
                 isFlag = (boolean) parameterValueList.getValue("isFlag");
@@ -356,7 +356,9 @@ public class DefaultCommandSupplier implements CommandSupplier {
             valueSeparator = (char) parameterValueList.getValue("valueSeparator");
             desc = (String) parameterValueList.getValue("desc");
         }
-
+        if(Objs.isEmpty(longOptionName)){
+            throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("Illegal option value for option {} in command {}, value (the long name) should be not empty", longOptionName, commandKey));
+        }
         if (Objs.length(shortName) > 1) {
             throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("Illegal option shortName for option {} in command {}, short name should be only one letter", shortName, commandKey));
         }

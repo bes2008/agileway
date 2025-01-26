@@ -32,15 +32,15 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 public @interface CommandOption {
     /**
-     * 选项短名称
+     * 选项的长称
      * @return string
      */
     String value() default "";
 
     /**
-     * 选项的长名
+     * 选项的短名
      */
-    String longName() default "";
+    String shortName() default "";
     /**
      * 只针对 boolean 、Boolean 类型的数据有用
      * @return

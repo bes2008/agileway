@@ -24,9 +24,9 @@ public class Usage {
 
     @Command(value = "commands", desc = "List commands in some or all groups")
     public String listCommands(
-            @CommandOption(value = "a", longName = "all",  isFlag = true, desc = "whether list all groups when argument <groups> is empty")
+            @CommandOption(shortName = "a", value = "all",  isFlag = true, desc = "whether list all groups when argument <groups> is empty")
             boolean getAllIfGroupsIsEmpty,
-            @CommandOption(value = "s", longName = "sort", isFlag = true, desc = "sort the commands")
+            @CommandOption(shortName = "s", value = "sort", isFlag = true, desc = "sort the commands")
             boolean sort,
             @CommandArgument(value = "groups", desc = "the command groups" ,defaultValue = "builtin")
             String... groupNames) {

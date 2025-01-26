@@ -33,9 +33,9 @@ public class Sh {
 
     @Command(value = "env-variables", desc = "Search or list all environment variables ", outputTransformer = YamlStyleOutputTransformer.class)
     public Map<String, String> environmentVariables(
-            @CommandOption(value = "i", longName = "ignoreCase", isFlag = true, desc = "search string with ignore case")
+            @CommandOption(shortName = "i", value = "ignoreCase", isFlag = true, desc = "search string with ignore case")
             boolean ignoreCase,
-            @CommandOption(value = "v", longName = "searchValue", isFlag = true, desc = "search variable value also")
+            @CommandOption(shortName = "v", value = "searchValue", isFlag = true, desc = "search variable value also")
             boolean searchValue,
             @CommandArgument(value = "search_text", desc = "the search text")
             String... search) {
@@ -60,9 +60,9 @@ public class Sh {
 
     @Command(value = "system-props", desc = "Search or list all system properties", outputTransformer = YamlStyleOutputTransformer.class)
     public Map<String, String> systemProperties(
-            @CommandOption(value = "i", longName = "ignoreCase", isFlag = true, desc = "search string with ignore case")
+            @CommandOption(shortName = "i", value = "ignoreCase", isFlag = true, desc = "search string with ignore case")
             boolean ignoreCase,
-            @CommandOption(value = "v", longName = "searchValue", isFlag = true, defaultValue = "true", desc = "search property value also")
+            @CommandOption(shortName = "v", value = "searchValue", isFlag = true, defaultValue = "true", desc = "search property value also")
             boolean searchValue,
             @CommandArgument(value = "search_text", desc = "the search text")
             String... search) {
