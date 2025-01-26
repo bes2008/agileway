@@ -33,10 +33,10 @@ import java.util.Map;
 
 
 public class DefaultCommandSupplier implements CommandSupplier {
-    private static final String SCAN_ENABLED_PROP = "agileway.shell.scan.default.enabled";
-    private static final String SCAN_PACKAGES_PROP = "agileway.shell.scan.default.packages";
+    private static final String SCAN_ENABLED_PROP = "agileway.shell.scan.enabled";
+    private static final String SCAN_PACKAGES_PROP = "agileway.shell.scan.packages";
 
-    private static final String SCAN_BUILTIN_PACKAGES = "agileway.shell.scan.default.builtin.enabled";
+    private static final String SCAN_BUILTIN_PACKAGES = "agileway.shell.scan.builtin.enabled";
     private static final String BUILTIN_PACKAGE = "com.jn.agileway.shell.builtin";
 
     public CommandScanConfig buildScanConfig(Environment env) {
