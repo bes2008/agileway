@@ -27,6 +27,11 @@
         </dependency>
         <dependency>
             <groupId>io.github.bes2008.solution.agileway</groupId>
+            <artifactId>agileway-shell</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bes2008.solution.agileway</groupId>
             <artifactId>agileway-redis-springdata2</artifactId>
         </dependency>
         <dependency>
