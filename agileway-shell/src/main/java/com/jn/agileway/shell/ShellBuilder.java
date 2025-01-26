@@ -29,31 +29,28 @@ import java.util.List;
 
 public class ShellBuilder implements Builder<Shell> {
 
-    private String shellName = "agileway-shell";
-
     /**
      * 环境相关配置
      */
     private final List<PropertySet> propertySets = Lists.<PropertySet>newArrayList();
-
     /**
      * 命令定义
      */
     private final List<CommandSupplier> commandsSuppliers = Lists.newArrayList(new DefaultCommandSupplier());
-
-    // 运行模式
-    private RunMode defaultRunMode = RunMode.INTERACTIVE;
-    private PromptSupplier promptSupplier;
-    private BannerSupplier bannerSupplier = new DefaultBannerSupplier();
     // 自定义的命令执行器
     private final List<CmdlineExecutor<?>> cmdlineExecutors = Lists.newArrayList();
     // 为默认的命令执行器提供的 component
     private final List<CommandComponentFactory> customizedComponentFactories = Lists.newArrayList();
-
+    private String shellName = "agileway-shell";
+    // 运行模式
+    private RunMode defaultRunMode = RunMode.INTERACTIVE;
+    private PromptSupplier promptSupplier;
+    private BannerSupplier bannerSupplier = new DefaultBannerSupplier();
     // 是否启用 ANSI 输出
     private boolean ansiConsoleEnabled = true;
     // 命令历史
     private HistoryHandler historyHandler;
+    private boolean stopParseAtNonDefinedOption = true;
 
 
     public ShellBuilder propertySet(PropertySet propertySet) {
@@ -103,17 +100,23 @@ public class ShellBuilder implements Builder<Shell> {
         return this;
     }
 
-    public ShellBuilder defaultExecutor(CommandComponentFactory factory){
-        if(factory != null) {
+
+    public final ShellBuilder cmdlineExecutor(CmdlineExecutor<?> executor) {
+        if (executor != null && !(executor instanceof DefaultCmdlineExecutor)) {
+            this.cmdlineExecutors.add(executor);
+        }
+        return this;
+    }
+
+    public ShellBuilder defaultExecutor(CommandComponentFactory factory) {
+        if (factory != null) {
             customizedComponentFactories.add(factory);
         }
         return this;
     }
 
-    public final ShellBuilder cmdlineExecutor(CmdlineExecutor<?> executor){
-        if(executor!=null && !(executor instanceof DefaultCmdlineExecutor) ){
-            this.cmdlineExecutors.add(executor);
-        }
+    public ShellBuilder defaultExecutor(boolean stopParseAtNonDefinedOption) {
+        this.stopParseAtNonDefinedOption = stopParseAtNonDefinedOption;
         return this;
     }
 
@@ -168,7 +171,7 @@ public class ShellBuilder implements Builder<Shell> {
         componentFactories.add(new ReflectiveCommandComponentFactory());
         CompoundCommandComponentFactory commandComponentFactory = new CompoundCommandComponentFactory(componentFactories);
 
-        DefaultCmdlineExecutor defaultCmdlineExecutor = new DefaultCmdlineExecutor(true);
+        DefaultCmdlineExecutor defaultCmdlineExecutor = new DefaultCmdlineExecutor(this.stopParseAtNonDefinedOption);
         defaultCmdlineExecutor.setConverterService(new ConverterService());
         defaultCmdlineExecutor.setEnv(environment);
         defaultCmdlineExecutor.setComponentFactory(commandComponentFactory);
