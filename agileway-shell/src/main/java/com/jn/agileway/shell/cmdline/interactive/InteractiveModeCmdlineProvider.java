@@ -2,7 +2,6 @@ package com.jn.agileway.shell.cmdline.interactive;
 
 import com.jn.agileway.shell.ApplicationArgs;
 import com.jn.agileway.shell.cmdline.InputStreamCmdlineProvider;
-import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.SystemPropertys;
@@ -50,8 +49,7 @@ public class InteractiveModeCmdlineProvider extends InputStreamCmdlineProvider {
     }
 
     @Override
-    protected String[] handleInvalidMultipleLineCommand(String rawLine) {
+    protected void handleUnfinishedMultipleLineCommand(String rawLine) {
         System.out.println("cmd error");
-        return Emptys.EMPTY_STRINGS;
     }
 }

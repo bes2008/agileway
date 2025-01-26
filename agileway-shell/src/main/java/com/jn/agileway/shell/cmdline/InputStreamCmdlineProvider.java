@@ -72,7 +72,8 @@ public abstract class InputStreamCmdlineProvider implements CmdlineProvider{
             String rawLine = buffer.toString();
 
             if (Strings.endsWith(rawLine, "\\")) {
-                return handleUnfinishedMultipleLineCommand(rawLine);
+                handleUnfinishedMultipleLineCommand(rawLine);
+                return Emptys.EMPTY_STRINGS;
             }
             return ShellCmdlines.cmdlineToArgs(rawLine);
         } catch (IOException ioe) {
@@ -80,8 +81,7 @@ public abstract class InputStreamCmdlineProvider implements CmdlineProvider{
         }
     }
 
-    protected String[] handleUnfinishedMultipleLineCommand(String rawLine){
-        return Emptys.EMPTY_STRINGS;
+    protected void handleUnfinishedMultipleLineCommand(String rawLine){
     }
 
     private boolean lineEnd(String lineFragment) {

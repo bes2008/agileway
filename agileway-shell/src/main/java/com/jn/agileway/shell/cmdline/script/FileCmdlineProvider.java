@@ -4,6 +4,8 @@ import com.jn.agileway.shell.ApplicationArgs;
 import com.jn.agileway.shell.cmdline.InputStreamCmdlineProvider;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.io.Charsets;
+import com.jn.langx.util.logging.Loggers;
+import org.slf4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -27,4 +29,8 @@ public class FileCmdlineProvider extends InputStreamCmdlineProvider {
 
     }
 
+    protected void handleUnfinishedMultipleLineCommand(String rawLine){
+        Logger logger  = Loggers.getLogger(FileCmdlineProvider.class);
+        logger.warn("unfinished command line: {}", rawLine);
+    }
 }
