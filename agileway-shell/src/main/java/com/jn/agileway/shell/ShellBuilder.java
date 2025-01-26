@@ -48,7 +48,7 @@ public class ShellBuilder implements Builder<Shell> {
     // 自定义的命令执行器
     private final List<CmdlineExecutor<?>> cmdlineExecutors = Lists.newArrayList();
     // 为默认的命令执行器提供的 component
-    private final List<CommandComponentFactory> componentFactoriesForDefaultExecutor = Lists.newArrayList();
+    private final List<CommandComponentFactory> customizedComponentFactories = Lists.newArrayList();
 
     // 是否启用 ANSI 输出
     private boolean ansiConsoleEnabled = true;
@@ -103,9 +103,9 @@ public class ShellBuilder implements Builder<Shell> {
         return this;
     }
 
-    public ShellBuilder componentFactoryForDefaultExecutor(CommandComponentFactory factory){
+    public ShellBuilder defaultExecutor(CommandComponentFactory factory){
         if(factory != null) {
-            componentFactoriesForDefaultExecutor.add(factory);
+            customizedComponentFactories.add(factory);
         }
         return this;
     }
@@ -149,10 +149,10 @@ public class ShellBuilder implements Builder<Shell> {
 
         // 添加默认 executor
         final List<CommandComponentFactory> componentFactories = Lists.newArrayList();
-        Pipeline.of(componentFactoriesForDefaultExecutor).forEach(new Predicate<CommandComponentFactory>() {
+        Pipeline.of(this.customizedComponentFactories).forEach(new Predicate<CommandComponentFactory>() {
             @Override
             public boolean test(CommandComponentFactory factory) {
-                return factory instanceof ReflectiveCommandComponentFactory;
+                return !(factory instanceof ReflectiveCommandComponentFactory);
             }
         }, new Consumer<CommandComponentFactory>() {
             @Override
