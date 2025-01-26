@@ -126,7 +126,7 @@ public class Shell extends AbstractLifecycle {
                                 return Strings.startsWith(arg, "@") && Objs.length(arg) > 1;
                             }
                         });
-                this.cmdlineProvider = new FileCmdlineProvider(this.appArgs, filepath);
+                this.cmdlineProvider = new FileCmdlineProvider(filepath);
                 break;
         }
 
