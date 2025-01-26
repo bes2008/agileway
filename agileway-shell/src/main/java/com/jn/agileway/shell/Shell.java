@@ -1,12 +1,12 @@
 package com.jn.agileway.shell;
 
 import com.jn.agileway.shell.cmdline.CmdlineProvider;
+import com.jn.agileway.shell.cmdline.interactive.InteractiveModeCmdlineProvider;
+import com.jn.agileway.shell.cmdline.script.FileCmdlineProvider;
 import com.jn.agileway.shell.exec.*;
 import com.jn.agileway.shell.cmdline.adhoc.AdhocModeCmdlineProvider;
 import com.jn.agileway.shell.cmdline.interactive.BannerSupplier;
-import com.jn.agileway.shell.cmdline.interactive.InteractiveModeCmdlineProvider;
 import com.jn.agileway.shell.cmdline.interactive.PromptSupplier;
-import com.jn.agileway.shell.cmdline.script.ScriptModeCmdlineProvider;
 import com.jn.agileway.shell.command.*;
 import com.jn.agileway.shell.exception.NotFoundCommandException;
 import com.jn.agileway.shell.exception.ShellInterruptedException;
@@ -119,7 +119,14 @@ public class Shell extends AbstractLifecycle {
                 break;
             case SCRIPT:
             default:
-                this.cmdlineProvider = new ScriptModeCmdlineProvider(this.appArgs);
+                String filepath = Pipeline.of( this.appArgs.getArgs())
+                        .findFirst(new Predicate<String>() {
+                            @Override
+                            public boolean test(String arg) {
+                                return Strings.startsWith(arg, "@") && Objs.length(arg) > 1;
+                            }
+                        });
+                this.cmdlineProvider = new FileCmdlineProvider(this.appArgs, filepath);
                 break;
         }
 
@@ -147,7 +154,7 @@ public class Shell extends AbstractLifecycle {
     @Override
     protected void doStart() {
         super.doStart();
-        run();
+        run(this.cmdlineProvider);
     }
 
     public void start(String[] appArgs) {
@@ -156,12 +163,12 @@ public class Shell extends AbstractLifecycle {
     }
 
 
-    private void run() {
+    public void run(CmdlineProvider cmdlineProvider) {
         CmdlineExecResult execResult = null;
         while (execResult == null || !(execResult.getErr() instanceof ShellInterruptedException)) {
             String[] cmdline = null;
             try {
-                cmdline = this.cmdlineProvider.get();
+                cmdline = cmdlineProvider.get();
             } catch (ShellInterruptedException sie) {
                 execResult = new CmdlineExecResult(cmdline);
                 execResult.setErr(sie);
@@ -286,8 +293,15 @@ public class Shell extends AbstractLifecycle {
         return command;
     }
 
-    @Override
-    protected void doStop() {
-        super.doStop();
+    public CommandRegistry getCommandRegistry() {
+        return commandRegistry;
+    }
+
+    public CmdlineExecResultHandler getExecResultHandler() {
+        return execResultHandler;
+    }
+
+    public HistoryHandler getHistoryHandler() {
+        return historyHandler;
     }
 }

@@ -164,9 +164,7 @@ public class ShellBuilder implements Builder<Shell> {
             }
         });
         BuiltinCommandsComponentFactory builtinCommandsComponentFactory = new BuiltinCommandsComponentFactory();
-        builtinCommandsComponentFactory.setCommandRegistry(shell.commandRegistry);
-        builtinCommandsComponentFactory.setCmdExecResultHandler(shell.execResultHandler);
-        builtinCommandsComponentFactory.setHistoryHandler(historyHandler);
+        builtinCommandsComponentFactory.setShell(shell);
         componentFactories.add(builtinCommandsComponentFactory);
         componentFactories.add(new ReflectiveCommandComponentFactory());
         CompoundCommandComponentFactory commandComponentFactory = new CompoundCommandComponentFactory(componentFactories);
