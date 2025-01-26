@@ -79,15 +79,15 @@ new ShellBuilder()
 ```
 2. 交互模式：
 ```java
-
-ApplicationContext appCtx = SpringApplication.run(YourApplication.class, args);
-
-new ShellBuilder()
-    .ansiConsoleEnabled(true) // 启用 ANSI 输出
-    .name("reposcan") // 指定shell命令
-    .propertySet(new SpringEnvironmentPropertySet("spring", appCtx.getEnvironment())) // 集成 spring environment
-    .defaultExecutor(SpringContextHolder.getBean(SpringComponentFactory.class)) // 引入 spring 的bean factory
-    .defaultRunMode(RunMode.INTERACTIVE) // 启用 交互模式
-    .build().start(args); // 启用shell，如果 args 是一个命令，可直接执行
-
+public static void main(String[] args){
+   ApplicationContext appCtx = SpringApplication.run(YourApplication.class, args);
+   
+   new ShellBuilder()
+       .ansiConsoleEnabled(true) // 启用 ANSI 输出
+       .name("reposcan") // 指定shell命令
+       .propertySet(new SpringEnvironmentPropertySet("spring", appCtx.getEnvironment())) // 集成 spring environment
+       .defaultExecutor(SpringContextHolder.getBean(SpringComponentFactory.class)) // 引入 spring 的bean factory
+       .defaultRunMode(RunMode.INTERACTIVE) // 启用 交互模式
+       .build().start(args); // 启用shell，如果 args 是一个命令，可直接执行
+}
 ```
