@@ -363,7 +363,7 @@ public class DefaultCommandSupplier implements CommandSupplier {
             throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("Illegal option shortName for option {} in command {}, short name should be only one letter", shortName, commandKey));
         }
 
-        String optionName = Objs.useValueIfEmpty(shortName, longOptionName);
+        shortName = Strings.trimToNull(shortName);
 
         String defaultValue = null;
         String[] defaultValues = null;
@@ -392,18 +392,18 @@ public class DefaultCommandSupplier implements CommandSupplier {
                 if (hasArgN) {
                     String[] values = Strings.split(defaultValueString, valueSeparator + "");
                     // 这个过程如果没有异常，那么可以直接将 values作为 defaultValues使用
-                    Commands.checkOptionOrArgumentDefaultValues(values, converter, optionName, commandKey);
+                    Commands.checkOptionOrArgumentDefaultValues(values, converter, longOptionName, commandKey);
                     defaultValues = values;
                 } else {
                     // 这个过程如果没有异常，那么可以直接将 defaultValueString 作为 defaultValue使用
-                    Commands.checkOptionOrArgumentDefaultValue(defaultValueString, converter, optionName, commandKey);
+                    Commands.checkOptionOrArgumentDefaultValue(defaultValueString, converter, longOptionName, commandKey);
                     defaultValue = defaultValueString;
                 }
             }
         }
 
         if (Strings.isBlank(desc)) {
-            desc = Objs.useValueIfEmpty(longOptionName, optionName);
+            desc = longOptionName;
         }
 
         try {
