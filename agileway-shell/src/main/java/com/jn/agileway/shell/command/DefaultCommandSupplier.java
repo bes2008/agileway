@@ -35,6 +35,7 @@ import java.util.Map;
 public class DefaultCommandSupplier implements CommandSupplier {
     private static final String SCAN_ENABLED_PROP = "agileway.shell.scan.enabled";
     private static final String SCAN_PACKAGES_PROP = "agileway.shell.scan.packages";
+    private static final String OPTION_SHORT_NAME_SINGLE_CHAR_PROP="agileway.shell.option.shortname.singleChar";
 
     private static final String SCAN_BUILTIN_PACKAGES = "agileway.shell.scan.builtin.enabled";
     private static final String BUILTIN_PACKAGE = "com.jn.agileway.shell.builtin";
@@ -46,6 +47,7 @@ public class DefaultCommandSupplier implements CommandSupplier {
         CommandScanConfig commandsScanConfig = new CommandScanConfig();
         commandsScanConfig.setEnabled(defaultScannerEnabled);
         commandsScanConfig.setBuiltinPackagesEnabled(scanBuiltinPackage);
+
         List<String> scanPackageList = Pipeline.of(Strings.split(scanPackages, ",")).addIf(BUILTIN_PACKAGE, new Predicate2<Collection<String>, String>() {
             @Override
             public boolean test(Collection<String> packages, String string) {
@@ -62,10 +64,10 @@ public class DefaultCommandSupplier implements CommandSupplier {
 
     @Override
     public Map<CommandGroup, List<Command>> get(Environment env) {
-        return scan(buildScanConfig(env));
+        return scan(buildScanConfig(env), env);
     }
 
-    private Map<CommandGroup, List<Command>> scan(CommandScanConfig scanConfig) {
+    private Map<CommandGroup, List<Command>> scan(CommandScanConfig scanConfig,Environment env) {
         Map<CommandGroup, List<Command>> result = new HashMap<>();
 
         if (!scanConfig.isEnabled() || Objs.isEmpty(scanConfig.getPackages())) {
@@ -98,14 +100,14 @@ public class DefaultCommandSupplier implements CommandSupplier {
 
         for (int i = 0; i < commandClassInfoList.size(); i++) {
             ClassInfo classInfo = commandClassInfoList.get(i);
-            Pair<CommandGroup, List<Command>> groupCommandsEntry = resolveCommandClass(classInfo);
+            Pair<CommandGroup, List<Command>> groupCommandsEntry = resolveCommandClass(classInfo, env);
             result.put(groupCommandsEntry.getKey(), groupCommandsEntry.getValue());
         }
 
         return result;
     }
 
-    private Pair<CommandGroup, List<Command>> resolveCommandClass(ClassInfo classInfo) {
+    private Pair<CommandGroup, List<Command>> resolveCommandClass(ClassInfo classInfo, Environment env) {
         classInfo.getPackageInfo();
         CommandGroup commandGroup = createCommandGroup(classInfo);
         MethodInfoList methodInfoList = classInfo.getDeclaredMethodInfo();
@@ -120,7 +122,7 @@ public class DefaultCommandSupplier implements CommandSupplier {
             if (!methodInfo.hasAnnotation(com.jn.agileway.shell.command.annotation.Command.class)) {
                 continue;
             }
-            Command command = createCommand(methodInfo);
+            Command command = createCommand(methodInfo, env);
             command.setGroup(commandGroup.getName());
             commands.add(command);
         }
@@ -177,7 +179,7 @@ public class DefaultCommandSupplier implements CommandSupplier {
         return group;
     }
 
-    private Command createCommand(MethodInfo methodInfo) {
+    private Command createCommand(MethodInfo methodInfo, Environment env) {
         AnnotationInfo annotationInfo = methodInfo.getAnnotationInfo(com.jn.agileway.shell.command.annotation.Command.class);
         AnnotationParameterValueList parameterValueList = annotationInfo.getParameterValues(true);
 
@@ -227,10 +229,10 @@ public class DefaultCommandSupplier implements CommandSupplier {
         for (int i = 0; i < methodParameterInfoList.length; i++) {
             MethodParameterInfo methodParameterInfo = methodParameterInfoList[i];
             if (firstCommandArgumentIndex < 0 || i < firstCommandArgumentIndex) {
-                Option option = createCommandOption(command.getName(), methodParameterInfo, method, i);
+                Option option = createCommandOption(env, command.getName(), methodParameterInfo, method, i);
                 options.add(option);
             } else {
-                CommandArgument commandArgument = createCommandArgument(command.getName(), methodParameterInfo, method, i);
+                CommandArgument commandArgument = createCommandArgument(env,command.getName(), methodParameterInfo, method, i);
                 arguments.add(commandArgument);
             }
         }
@@ -255,7 +257,7 @@ public class DefaultCommandSupplier implements CommandSupplier {
         return command;
     }
 
-    private CommandArgument createCommandArgument(String commandKey, MethodParameterInfo methodParameterInfo, Method method, int parameterIndex) {
+    private CommandArgument createCommandArgument(Environment env, String commandKey, MethodParameterInfo methodParameterInfo, Method method, int parameterIndex) {
         AnnotationInfo annotationInfo = methodParameterInfo.getAnnotationInfo(com.jn.agileway.shell.command.annotation.CommandArgument.class);
         if (annotationInfo == null) {
             throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("Missing @CommandArgument at the {}th parameter for method {}", parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
@@ -319,7 +321,7 @@ public class DefaultCommandSupplier implements CommandSupplier {
         return argument;
     }
 
-    private CommandOption createCommandOption(final String commandKey, MethodParameterInfo methodParameterInfo, Method method, int parameterIndex) {
+    private CommandOption createCommandOption(Environment env, final String commandKey, MethodParameterInfo methodParameterInfo, Method method, int parameterIndex) {
         AnnotationInfo annotationInfo = methodParameterInfo.getAnnotationInfo(com.jn.agileway.shell.command.annotation.CommandOption.class);
         if(annotationInfo==null){
             throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("Missing @CommandOption at the {}th parameter for method {}", parameterIndex, Reflects.getFQNClassName(method.getDeclaringClass()) + "#" + method.getName()));
@@ -359,8 +361,11 @@ public class DefaultCommandSupplier implements CommandSupplier {
         if(Objs.isEmpty(longOptionName)){
             throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("Illegal option value for option {} in command {}, value (the long name) should be not empty", longOptionName, commandKey));
         }
-        if (Objs.length(shortName) > 1) {
-            throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("Illegal option shortName for option {} in command {}, short name should be only one letter", shortName, commandKey));
+        boolean optionShortNameSingleCharEnabled = Booleans.truth(env.getProperty(OPTION_SHORT_NAME_SINGLE_CHAR_PROP, "true"));
+        if(optionShortNameSingleCharEnabled) {
+            if (Objs.length(shortName) > 1) {
+                throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("Illegal option shortName for option {} in command {}, short name should be only one letter", shortName, commandKey));
+            }
         }
 
         shortName = Strings.trimToNull(shortName);

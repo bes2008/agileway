@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 public @interface CommandOption {
     /**
-     * 选项的长称
+     * 选项的长名
      * @return string
      */
     String value() default "";
