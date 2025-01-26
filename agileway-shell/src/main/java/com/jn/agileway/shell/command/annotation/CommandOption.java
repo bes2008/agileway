@@ -3,6 +3,11 @@ package com.jn.agileway.shell.command.annotation;
 import com.jn.agileway.shell.command.Commands;
 import com.jn.agileway.shell.command.DefaultConverter;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * example:
  * <pre>
@@ -23,6 +28,8 @@ import com.jn.agileway.shell.command.DefaultConverter;
  * -Dproperty=value set property to value
  * </pre>
  */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.PARAMETER)
 public @interface CommandOption {
     /**
      * 选项短名称

@@ -3,6 +3,11 @@ package com.jn.agileway.shell.command.annotation;
 import com.jn.agileway.shell.command.Commands;
 import com.jn.agileway.shell.command.DefaultConverter;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * <pre>
  * command [&lt;options&gt;] [&lt;arguments&gt;]
@@ -15,6 +20,8 @@ import com.jn.agileway.shell.command.DefaultConverter;
  *
  *
  */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.PARAMETER)
 public @interface CommandArgument {
     /**
      * 参数名称，用于显示
