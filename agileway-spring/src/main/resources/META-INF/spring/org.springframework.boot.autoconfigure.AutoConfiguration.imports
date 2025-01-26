@@ -4,3 +4,4 @@ com.jn.agileway.springboot.redis.RedisLuaScriptRepositoryAutoConfiguration
 com.jn.agileway.springboot.redis.RedisGlobalTemplateAutoConfiguration
 com.jn.agileway.springboot.httpclient.HttpClientAutoConfiguration
 com.jn.agileway.springboot.vfs.ArtifactRepositoryConfiguration
+com.jn.agileway.springboot.shell.SpringCommandComponentFactoryConfiguration
