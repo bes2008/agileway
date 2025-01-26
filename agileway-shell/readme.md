@@ -84,7 +84,7 @@ public static void main(String[] args){
    
    new ShellBuilder()
        .ansiConsoleEnabled(true) // 启用 ANSI 输出
-       .name("reposcan") // 指定shell命令
+       .name("reposcan") // 指定shell名称
        .propertySet(new SpringEnvironmentPropertySet("spring", appCtx.getEnvironment())) // 集成 spring environment
        .defaultExecutor(SpringContextHolder.getBean(SpringComponentFactory.class)) // 引入 spring 的bean factory
        .defaultRunMode(RunMode.INTERACTIVE) // 启用 交互模式
