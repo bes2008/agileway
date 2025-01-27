@@ -101,7 +101,9 @@ public final class CmdlineExecResultHandler {
 
         // TODO 1: 通用错误
         recordStacktrace(err, true);
-        execResult.setExitCode(1);
+        if (execResult.getExitCode() < 0) {
+            execResult.setExitCode(1);
+        }
         execResult.setStderr(StringTemplates.formatWithPlaceholder("error: {}", Throwables.getRootCause(err).getMessage()));
     }
 

@@ -78,7 +78,7 @@ public class CmdlineExecResult {
     }
 
     public void setExitCode(int exitCode) {
-        this.exitCode = exitCode;
+        this.exitCode = exitCode % 256;
     }
 
     public String getStderr() {
