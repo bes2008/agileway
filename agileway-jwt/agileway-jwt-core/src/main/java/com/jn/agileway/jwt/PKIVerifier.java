@@ -7,7 +7,8 @@ import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.function.Supplier;
 import com.jn.langx.util.io.Charsets;
 
-import java.security.*;
+import java.security.PublicKey;
+import java.security.Signature;
 
 public class PKIVerifier implements Verifier {
 

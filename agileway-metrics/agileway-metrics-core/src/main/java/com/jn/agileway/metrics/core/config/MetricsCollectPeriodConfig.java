@@ -3,6 +3,7 @@ package com.jn.agileway.metrics.core.config;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
 import static com.jn.agileway.metrics.core.Metric.MetricLevel;
 
 /**

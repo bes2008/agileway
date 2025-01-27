@@ -18,11 +18,10 @@ package com.jn.agileway.web.security.csrf;
 
 import com.jn.langx.util.Preconditions;
 
-import java.util.UUID;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.UUID;
 
 
 /**

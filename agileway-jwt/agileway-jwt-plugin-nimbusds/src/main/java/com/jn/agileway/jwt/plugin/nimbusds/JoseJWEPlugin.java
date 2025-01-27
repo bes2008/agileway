@@ -1,8 +1,8 @@
 package com.jn.agileway.jwt.plugin.nimbusds;
 
+import com.jn.agileway.jwt.JWTException;
 import com.jn.agileway.jwt.jwe.JWEPlugin;
 import com.jn.agileway.jwt.jwe.JWEToken;
-import com.jn.agileway.jwt.JWTException;
 import com.jn.agileway.jwt.jwe.JWETokenBuilder;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;

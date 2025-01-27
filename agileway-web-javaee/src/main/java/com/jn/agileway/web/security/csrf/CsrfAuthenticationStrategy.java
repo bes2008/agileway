@@ -16,12 +16,12 @@
 
 package com.jn.agileway.web.security.csrf;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**

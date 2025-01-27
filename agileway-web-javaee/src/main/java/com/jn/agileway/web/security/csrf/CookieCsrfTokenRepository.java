@@ -16,16 +16,15 @@
 
 package com.jn.agileway.web.security.csrf;
 
-import java.util.UUID;
+import com.jn.agileway.web.servlet.Servlets;
+import com.jn.langx.util.Preconditions;
+import com.jn.langx.util.Strings;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.jn.agileway.web.servlet.Servlets;
-import com.jn.langx.util.Preconditions;
-import com.jn.langx.util.Strings;
+import java.util.UUID;
 
 /**
  * A {@link CsrfTokenRepository} that persists the CSRF token in a cookie named

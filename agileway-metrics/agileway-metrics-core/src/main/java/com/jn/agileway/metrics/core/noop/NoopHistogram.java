@@ -1,7 +1,7 @@
 package com.jn.agileway.metrics.core.noop;
 
-import com.jn.agileway.metrics.core.snapshot.Snapshot;
 import com.jn.agileway.metrics.core.meter.Histogram;
+import com.jn.agileway.metrics.core.snapshot.Snapshot;
 
 /**
  * @since 4.1.0

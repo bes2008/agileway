@@ -3,7 +3,9 @@ package com.jn.agileway.feign.supports.rpc;
 import com.jn.agileway.feign.ErrorHandler;
 import com.jn.agileway.feign.Feigns;
 import com.jn.langx.util.Preconditions;
-import feign.*;
+import feign.InvocationHandlerFactory;
+import feign.MethodMetadata;
+import feign.Target;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

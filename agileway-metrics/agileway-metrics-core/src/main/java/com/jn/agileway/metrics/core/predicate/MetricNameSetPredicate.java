@@ -1,9 +1,10 @@
 package com.jn.agileway.metrics.core.predicate;
 
+import com.jn.agileway.metrics.core.Meter;
+import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.collector.MetricObject;
 import com.jn.agileway.metrics.core.collector.MetricsCollector;
 import com.jn.agileway.metrics.core.meter.Timer;
-import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.collector.MetricObject;
 import com.jn.agileway.metrics.core.meter.*;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 

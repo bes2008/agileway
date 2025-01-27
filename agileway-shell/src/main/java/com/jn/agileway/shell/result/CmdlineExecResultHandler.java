@@ -1,8 +1,8 @@
 package com.jn.agileway.shell.result;
 
-import com.jn.agileway.shell.util.AnsiText;
 import com.jn.agileway.shell.command.Command;
 import com.jn.agileway.shell.exception.*;
+import com.jn.agileway.shell.util.AnsiText;
 import com.jn.langx.io.stream.StringBuilderWriter;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Maths;

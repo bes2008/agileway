@@ -27,7 +27,6 @@ import java.security.SecureRandom;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
 /**
  * The <code>KnownHosts</code> class is a handy tool to verify received server hostkeys

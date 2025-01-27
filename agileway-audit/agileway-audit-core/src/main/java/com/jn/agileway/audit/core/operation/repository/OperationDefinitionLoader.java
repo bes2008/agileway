@@ -5,7 +5,6 @@ import com.jn.agileway.audit.core.model.OperationImportance;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.configuration.ConfigurationLoader;
-import com.jn.langx.configuration.FullLoadConfigurationLoader;
 
 import java.util.List;
 import java.util.Map;

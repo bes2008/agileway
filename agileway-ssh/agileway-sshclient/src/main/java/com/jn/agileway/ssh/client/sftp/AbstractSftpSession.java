@@ -7,7 +7,6 @@ import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Functions;
 import com.jn.langx.util.function.Predicate;
 
-import java.io.IOException;
 import java.util.List;
 
 public abstract class AbstractSftpSession implements SftpSession {

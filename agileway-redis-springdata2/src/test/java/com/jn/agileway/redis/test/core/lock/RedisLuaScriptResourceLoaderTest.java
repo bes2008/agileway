@@ -4,8 +4,6 @@ import com.jn.agileway.redis.core.script.BuiltinLuaScriptLocationProvider;
 import com.jn.agileway.redis.core.script.RedisLuaScript;
 import com.jn.agileway.redis.core.script.RedisLuaScriptParser;
 import com.jn.agileway.redis.core.script.RedisLuaScriptResourceLoader;
-import com.jn.langx.io.resource.Location;
-import com.jn.langx.io.resource.ResourceLocationProvider;
 import org.junit.Test;
 import org.springframework.data.redis.connection.ReturnType;
 

@@ -1,7 +1,6 @@
 package com.jn.agileway.web.filter.waf.allowedmethods;
 
 import com.jn.langx.util.Strings;
-import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.net.http.HttpMethod;
 
 import java.util.*;

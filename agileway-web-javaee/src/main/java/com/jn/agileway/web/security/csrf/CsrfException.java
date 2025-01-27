@@ -17,7 +17,6 @@
 package com.jn.agileway.web.security.csrf;
 
 import com.jn.agileway.web.security.AccessDeniedException;
-import com.jn.agileway.web.security.csrf.CsrfToken;
 
 /**
  * Thrown when an invalid or missing {@link CsrfToken} is found in the HttpServletRequest

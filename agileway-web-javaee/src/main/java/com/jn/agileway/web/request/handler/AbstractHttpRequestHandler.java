@@ -1,7 +1,7 @@
 package com.jn.agileway.web.request.handler;
 
-import com.jn.agileway.web.prediate.HttpRequestPredicateGroup;
 import com.jn.agileway.http.rr.RR;
+import com.jn.agileway.web.prediate.HttpRequestPredicateGroup;
 
 public abstract class AbstractHttpRequestHandler implements HttpRequestHandler {
     private HttpRequestPredicateGroup predicates;

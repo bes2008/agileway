@@ -1,8 +1,9 @@
 package com.jn.agileway.metrics.core.predicate;
 
 
-import static com.jn.agileway.metrics.core.Metric.MetricLevel;
 import com.jn.agileway.metrics.core.config.MetricsCollectPeriodConfig;
+
+import static com.jn.agileway.metrics.core.Metric.MetricLevel;
 
 /**
  * 计算某一个level是否允许report 每到达一个整的时间间隔，就允许report

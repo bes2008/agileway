@@ -1,8 +1,8 @@
 package com.jn.agileway.web.security.xss;
 
-import com.jn.agileway.web.security.WAFStrategy;
 import com.jn.agileway.web.prediate.HttpRequestPredicateGroup;
 import com.jn.agileway.web.prediate.HttpRequestPredicateGroupFactory;
+import com.jn.agileway.web.security.WAFStrategy;
 import com.jn.langx.Factory;
 
 public class XssWafFactory implements Factory<XssProperties, XssFirewall> {

@@ -1,8 +1,8 @@
 package com.jn.agileway.audit.spring.boot.autoconfigure;
 
 
-import com.jn.agileway.dmmq.core.MessageTopicDispatcher;
 import com.jn.agileway.audit.spring.webmvc.AuditHttpHandlerInterceptor;
+import com.jn.agileway.dmmq.core.MessageTopicDispatcher;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

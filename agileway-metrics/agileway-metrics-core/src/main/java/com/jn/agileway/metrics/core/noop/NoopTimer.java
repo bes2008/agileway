@@ -1,7 +1,7 @@
 package com.jn.agileway.metrics.core.noop;
 
-import com.jn.agileway.metrics.core.snapshot.Snapshot;
 import com.jn.agileway.metrics.core.meter.Timer;
+import com.jn.agileway.metrics.core.snapshot.Snapshot;
 import com.jn.langx.util.Emptys;
 
 import java.io.IOException;

@@ -11,7 +11,6 @@ import org.glassfish.jersey.spi.ExtendedExceptionMapper;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Map;
 
 public class JerseyGlobalRestExceptionMapper implements ExtendedExceptionMapper<Throwable> {
     private JaxrsGlobalRestExceptionHandler exceptionHandler;

@@ -1,6 +1,5 @@
 package com.jn.agileway.shell.builtin;
 
-import com.jn.agileway.shell.util.AnsiText;
 import com.jn.agileway.shell.command.CommandGroup;
 import com.jn.agileway.shell.command.CommandRegistry;
 import com.jn.agileway.shell.command.Commands;
@@ -8,6 +7,7 @@ import com.jn.agileway.shell.command.annotation.Command;
 import com.jn.agileway.shell.command.annotation.CommandArgument;
 import com.jn.agileway.shell.command.annotation.CommandComponent;
 import com.jn.agileway.shell.command.annotation.CommandOption;
+import com.jn.agileway.shell.util.AnsiText;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Strings;
 

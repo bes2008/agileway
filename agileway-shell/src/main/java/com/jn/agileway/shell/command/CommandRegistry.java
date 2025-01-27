@@ -10,7 +10,10 @@ import com.jn.langx.util.comparator.MappingComparator;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Predicate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CommandRegistry {
     private Map<String, CommandGroup> commandGroupMap = new HashMap<>();

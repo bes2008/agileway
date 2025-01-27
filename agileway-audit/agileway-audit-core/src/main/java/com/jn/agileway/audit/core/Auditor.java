@@ -1,9 +1,9 @@
 package com.jn.agileway.audit.core;
 
+import com.jn.agileway.audit.core.model.AuditEvent;
 import com.jn.agileway.dmmq.core.MessageTopicDispatcher;
 import com.jn.agileway.dmmq.core.MessageTopicDispatcherAware;
 import com.jn.agileway.dmmq.core.Producer;
-import com.jn.agileway.audit.core.model.AuditEvent;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.lifecycle.Destroyable;

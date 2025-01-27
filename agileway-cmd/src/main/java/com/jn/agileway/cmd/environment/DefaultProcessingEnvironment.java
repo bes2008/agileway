@@ -1,14 +1,14 @@
 package com.jn.agileway.cmd.environment;
 
+import com.jn.agileway.cmd.CommandLine;
+import com.jn.langx.util.os.OS;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
-
-import com.jn.agileway.cmd.CommandLine;
-import com.jn.langx.util.os.OS;
 
 /**
  * Helper class to determine the environment variable
