@@ -6,9 +6,7 @@ import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.comparator.Comparators;
-import com.jn.langx.util.comparator.DelegatableComparator;
 import com.jn.langx.util.comparator.MappingComparator;
-import com.jn.langx.util.comparator.OrderedComparator;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Predicate;
 

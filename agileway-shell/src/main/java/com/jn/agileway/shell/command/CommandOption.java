@@ -1,9 +1,6 @@
 package com.jn.agileway.shell.command;
 
-import com.jn.langx.util.collection.Lists;
 import org.apache.commons.cli.Option;
-
-import java.util.List;
 
 public class CommandOption extends Option {
     private String defaultValue;
