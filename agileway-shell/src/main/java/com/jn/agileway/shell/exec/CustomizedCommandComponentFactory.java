@@ -16,7 +16,7 @@ public class CustomizedCommandComponentFactory implements CommandComponentFactor
     }
 
     @Override
-    public Object get(Class type) {
+    public final Object get(Class type) {
         return components.get(type);
     }
 }
