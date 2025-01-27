@@ -1,5 +1,5 @@
 [![License](https://img.shields.io/badge/license-Apach2.0-green.svg)](https://github.com/fangjinuo/agileway/blob/master/LICENSE)
-[![maven](https://img.shields.io/badge/maven-v5.0.4-green.svg)](https://search.maven.org/search?q=g:io.github.bes2008.solution.agileway%20AND%20v:5.0.4)
+[![maven](https://img.shields.io/badge/maven-v5.1.0-green.svg)](https://search.maven.org/search?q=g:io.github.bes2008.solution.agileway%20AND%20v:5.1.0)
 
 
 
@@ -74,12 +74,13 @@ Java、Web开发工具套件，尽量避免996
     + 一个consumer可以从多个topic拉取消息， 一个topic的消息可以被多个消费者重复的消费
     + 一个consumer可以依赖于从同一topic拉取消息的多个其他的consumer
 + agileway-aop: 对AOP的支持、适配    
-+ agileway-sshclient:
++ agileway-ssh:
     + 功能
       + 支持 Session Channel
       + 支持 forwarding
       + 支持 SCP
       + 支持 SFTP
+      + 支持基于多种不同的ssh-client库实现
     + 类库
       + com.jcraft:jsch:0.1.55
       + com.trilead:trilead-ssh2:1.0.0-build222
@@ -88,23 +89,20 @@ Java、Web开发工具套件，尽量避免996
       + sshtools:j2ssh-core:0.2.9
 + agileway-vfs: 
     + 对commons-vfs 进行二次封装
-    + 支持 agileway-sshclient
+    + 支持 agileway-ssh
     + 提供统一的 artifact管理抽象
 + agileway-zip
     + 对commons-compress 进行二次封装，简化使用      
-
-| module | jdk | version |
-|---|---|---|
-|agileway-web|7|1.0.0+|
-|agileway-spring|7|1.0.0+|
-|agileway-feign|6|1.0.0+|
-|agileway-codec|7|1.1.0+|
-|agileway-redis|7|1.1.0+|
-|agileway-shiro-redis|7|1.1.0+|
-|agileway-dmmq|7|1.2.0+|
-|agileway-httpclient|6|1.3.0+|
-|agileway-aop|6|2.1.0+|
-|agileway-sshclient|6|2.3.0+|
++ agileway-cmd: 提供操作系统命令行执行能力。对 Java Runtime的二次封装。
++ agileway-shell：提供 CLI 程序的开发框架。可以替换 spring-shell。
++ agileway-jwt：提供JWT功能
++ agileway-syslog：提供syslog能力
++ agileway-metrics：提供监控指标的管理能力
++ agileway-eipchannel：提供企业级的集成能力。支持多种数据通道。
++ agileway-httpclient：提供通用的http client能力
++ agileway-feigh：提供feign的二次封装。
++ agileway-dmmq：基于disruptor提供内存级的消息队列。
++ agileway-audit: 提供审计功能
  
 
 
