@@ -249,7 +249,7 @@ public class Shell extends AbstractLifecycle {
 
         if (Collects.contains(cmdline, "--help")) {
             execResult.setCommand(null); // 故意设置为null，为的是避免以 其它输出格式输出。
-            String commandUsage = Commands.commandHelp(command, true);
+            String commandUsage = Commands.commandHelp(command, ansiConsoleEnabled);
             execResult.setStdoutData(commandUsage);
         } else {
 
