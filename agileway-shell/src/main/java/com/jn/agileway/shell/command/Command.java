@@ -10,24 +10,39 @@ import org.apache.commons.cli.Options;
 
 import java.lang.reflect.Method;
 import java.util.List;
-
+/**
+ * Command类代表了一个命令的定义，包含了命令的所有相关信息，如命令的组、名称、别名、选项、参数以及描述等
+ * 它主要用于在应用程序中构建和解析命令行接口
+ */
 public class Command {
+    // 命令所属的组名
     private String group;
 
+    // 命令的名称
     private String name;
 
+    // 命令的别名列表，方便用户使用不同的名称引用同一个命令
     private List<String> alias;
 
-    private List<String> optionKeys= Lists.newArrayList();
+    // 命令的选项键列表，用于定义命令可以接受的所有选项
+    private List<String> optionKeys = Lists.newArrayList();
+
+    // 选项的详细定义，包括每个选项的类型、描述等
     private Options options;
 
+    // 命令的参数列表，定义了命令期望接收的所有参数
     private List<CommandArgument> arguments = Lists.newArrayList();
+
+    // 命令的描述，提供命令功能的简短说明
     private String desc;
 
+    // 与命令关联的Java方法，当命令执行时，这个方法会被调用
     private Method method;
 
+    // 输出转换器，可选的，用于在命令执行后对输出结果进行转换处理
     @Nullable
     private CmdOutputTransformer outputTransformer;
+
 
     public String getName() {
         return name;

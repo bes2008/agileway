@@ -2,10 +2,17 @@ package com.jn.agileway.shell.command;
 
 import org.apache.commons.cli.Converter;
 
+/**
+ * CommandArgument 类用于表示命令行参数的信息
+ */
 public class CommandArgument {
+    // 参数的名称
     private String name;
+    // 参数是否是必须的
     private boolean required;
+    // 参数的描述
     private String desc;
+    // 参数是否可以有多个值
     private boolean multipleValue;
 
     /**
@@ -16,7 +23,10 @@ public class CommandArgument {
      */
     private Class type;
 
+    // 参数的转换器，用于将字符串转换为指定类型
     private Converter converter;
+
+
 
     public Converter getConverter() {
         return converter;
