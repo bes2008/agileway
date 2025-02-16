@@ -13,6 +13,7 @@ import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Lists;
+import com.jn.langx.util.collection.Maps;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.function.Predicate2;
@@ -114,15 +115,45 @@ public class DefaultCommandSupplier implements CommandSupplier {
         List<Command> commands = Lists.newArrayList();
 
         Pair<CommandGroup, List<Command>> result = new Pair<>(commandGroup, commands);
+
+        Map<String, CommandAvailability> availabilityMap = Maps.<String, CommandAvailability>newMap();
+        // 解析 CommandAvailability列表
         for (int i = 0; i < methodInfoList.size(); i++) {
             MethodInfo methodInfo = methodInfoList.get(i);
-            if (!methodInfo.isPublic() || methodInfo.isAbstract() || methodInfo.isConstructor() || methodInfo.isNative() || methodInfo.isStatic()) {
+            if (!methodInfo.isPublic() || methodInfo.isAbstract() || methodInfo.isConstructor() || methodInfo.isSynthetic() || methodInfo.isNative() || methodInfo.isStatic()) {
+                continue;
+            }
+            if(Objs.isNotEmpty(methodInfo.getParameterInfo())){
+                continue;
+            }
+            if (methodInfo.hasAnnotation(com.jn.agileway.shell.command.annotation.Command.class)) {
+                continue;
+            }
+            Method method = methodInfo.loadClassAndGetMethod();
+            if(method.getReturnType()!= Availability.class){
+                continue;
+            }
+
+            CommandAvailability commandAvailability = null;
+            if(Reflects.hasAnnotation(method, com.jn.agileway.shell.command.annotation.CommandAvailability.class)){
+                com.jn.agileway.shell.command.annotation.CommandAvailability availabilityAnnotation = Reflects.getAnnotation(method, com.jn.agileway.shell.command.annotation.CommandAvailability.class);
+                commandAvailability = new CommandAvailability(method, availabilityAnnotation.value());
+            }else{
+                commandAvailability = new CommandAvailability(method, new String[]{});
+            }
+            availabilityMap.put(commandAvailability.getName(), commandAvailability);
+        }
+
+        // 解析命令定义
+        for (int i = 0; i < methodInfoList.size(); i++) {
+            MethodInfo methodInfo = methodInfoList.get(i);
+            if (!methodInfo.isPublic() || methodInfo.isAbstract() || methodInfo.isConstructor() || methodInfo.isSynthetic() || methodInfo.isNative() || methodInfo.isStatic()) {
                 continue;
             }
             if (!methodInfo.hasAnnotation(com.jn.agileway.shell.command.annotation.Command.class)) {
                 continue;
             }
-            Command command = createCommand(methodInfo, env);
+            Command command = createCommand(methodInfo, availabilityMap, env);
             command.setGroup(commandGroup.getName());
             commands.add(command);
         }
@@ -179,7 +210,7 @@ public class DefaultCommandSupplier implements CommandSupplier {
         return group;
     }
 
-    private Command createCommand(MethodInfo methodInfo, Environment env) {
+    private Command createCommand(MethodInfo methodInfo,Map<String, CommandAvailability> availabilityMap, Environment env) {
         AnnotationInfo annotationInfo = methodInfo.getAnnotationInfo(com.jn.agileway.shell.command.annotation.Command.class);
         AnnotationParameterValueList parameterValueList = annotationInfo.getParameterValues(true);
 
@@ -253,6 +284,32 @@ public class DefaultCommandSupplier implements CommandSupplier {
             }
         }
         command.setArguments(arguments);
+
+
+        if(Reflects.hasAnnotation(method, com.jn.agileway.shell.command.annotation.CommandAvailability.class)){
+            com.jn.agileway.shell.command.annotation.CommandAvailability availabilityAnnotation = Reflects.getAnnotation(method, com.jn.agileway.shell.command.annotation.CommandAvailability.class);
+            String[] expectedAvailabilityList = availabilityAnnotation.value();
+            for (int i = 0; i < expectedAvailabilityList.length; i++){
+                String expectedAvailabilityName = expectedAvailabilityList[i];
+                if (Strings.isBlank(expectedAvailabilityName)) {
+                    continue;
+                }
+                if (availabilityMap.containsKey(expectedAvailabilityName)) {
+                    CommandAvailability commandAvailability = availabilityMap.get(expectedAvailabilityName);
+                    if (commandAvailability.isAvailableFor(command)) {
+                        command.addAvailability(commandAvailability);
+                    }
+                }
+                throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("CommandAvailability {} is not available for command {}", expectedAvailabilityName, command.getName()));
+            }
+        }
+        else{
+            for (Map.Entry<String, CommandAvailability> entry : availabilityMap.entrySet()){
+                if(entry.getValue().isAvailableFor(command)){
+                    command.addAvailability(entry.getValue());
+                }
+            }
+        }
 
         return command;
     }

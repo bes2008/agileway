@@ -42,7 +42,7 @@ public class Command {
     /**
      * 可用性定义列表
      */
-    private List<CommandAvailability> availabilityList;
+    private final List<CommandAvailability> availabilityList=Lists.<CommandAvailability>newArrayList();
 
     // 输出转换器，可选的，用于在命令执行后对输出结果进行转换处理
     @Nullable
@@ -127,6 +127,10 @@ public class Command {
     @Override
     public String toString() {
         return StringTemplates.formatWithPlaceholder( "name: {}, group: {}, alias: {}, desc: {}, options: {}", name, group, alias, desc, options);
+    }
+
+    public void addAvailability(CommandAvailability availability){
+        availabilityList.add(availability);
     }
 
     public List<CommandAvailability> getAvailabilityList() {

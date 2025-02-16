@@ -10,12 +10,10 @@ public class CommandAvailability extends AbstractNameable {
     private Method method;
     private String[] commands;
 
-    public void setCommands(String[] commands) {
+    public CommandAvailability(Method method, String[] commands) {
         this.commands = commands;
-    }
-
-    public void setMethod(Method method) {
         this.method = method;
+        this.name = method.getName();
     }
 
     public Method getMethod() {
