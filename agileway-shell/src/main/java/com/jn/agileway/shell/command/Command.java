@@ -39,6 +39,11 @@ public class Command {
     // 与命令关联的Java方法，当命令执行时，这个方法会被调用
     private Method method;
 
+    /**
+     * 可用性定义列表
+     */
+    private List<CommandAvailability> availabilityList;
+
     // 输出转换器，可选的，用于在命令执行后对输出结果进行转换处理
     @Nullable
     private CmdOutputTransformer outputTransformer;
@@ -122,6 +127,10 @@ public class Command {
     @Override
     public String toString() {
         return StringTemplates.formatWithPlaceholder( "name: {}, group: {}, alias: {}, desc: {}, options: {}", name, group, alias, desc, options);
+    }
+
+    public List<CommandAvailability> getAvailabilityList() {
+        return availabilityList;
     }
 
     public List<Command> newCommandsForAlias(){
