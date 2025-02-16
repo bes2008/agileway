@@ -1,8 +1,6 @@
 package com.jn.agileway.shell.exec;
 
-import com.jn.agileway.shell.command.Command;
-import com.jn.agileway.shell.command.CommandArgument;
-import com.jn.agileway.shell.command.CommandOption;
+import com.jn.agileway.shell.command.*;
 import com.jn.agileway.shell.exception.MalformedCommandArgumentsException;
 import com.jn.agileway.shell.exception.MalformedOptionValueException;
 import com.jn.agileway.shell.exception.UnsupportedCollectionException;
@@ -41,8 +39,19 @@ public final class DefaultCmdlineExecutor extends CmdlineExecutor<CommandLine> {
 
     protected Object internalExecute(Cmdline<CommandLine> cmdline) {
         Method method = cmdline.getCommand().getMethod();
-        Object[] methodArgs = prepareMethodArgs(cmdline);
         Object component = getComponentFactory().get(method.getDeclaringClass());
+        if (component == null) {
+            throw new IllegalStateException(StringTemplates.formatWithPlaceholder("The component of command {} is null", cmdline.getCommand().getName()));
+        }
+        List<CommandAvailability> availabilityList = cmdline.getCommand().getAvailabilityList();
+        for (CommandAvailability commandAvailabilityDefinition : availabilityList) {
+            Method availabilityMethod = commandAvailabilityDefinition.getMethod();
+            Availability availability = Reflects.invokeMethod(availabilityMethod, component);
+            if(!availability.isAvailable()){
+                throw new IllegalStateException(StringTemplates.formatWithPlaceholder("The command {} is unavailable, reason: {}", cmdline.getCommand().getName(), availability.getReason()));
+            }
+        }
+        Object[] methodArgs = prepareMethodArgs(cmdline);
         Object methodResult = Reflects.invokeMethod(method, component, methodArgs);
         return methodResult;
     }
