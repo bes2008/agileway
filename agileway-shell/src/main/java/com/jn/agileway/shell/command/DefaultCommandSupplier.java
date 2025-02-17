@@ -146,7 +146,7 @@ public class DefaultCommandSupplier implements CommandSupplier {
                 String[] definitions = Pipeline.of(availabilityAnnotation.value()).clearEmptys().filter(new Predicate<String>() {
                     @Override
                     public boolean test(String s) {
-                        return !Strings.containsAny(s,'/');
+                        return !Strings.containsAny(s,'/','.');
                     }
                 }).toArray(String[].class);
 
@@ -312,6 +312,7 @@ public class DefaultCommandSupplier implements CommandSupplier {
                     CommandAvailability commandAvailability = availabilityMap.get(expectedAvailabilityName);
                     if (commandAvailability.isAvailableFor(command)) {
                         command.addAvailability(commandAvailability);
+                        continue;
                     }
                 }
                 throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("CommandAvailability {} is not exists or available for command {}", expectedAvailabilityName, command.getName()));

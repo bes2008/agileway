@@ -1,9 +1,6 @@
 package com.jn.agileway.shell.builtin;
 
-import com.jn.agileway.shell.command.annotation.Command;
-import com.jn.agileway.shell.command.annotation.CommandArgument;
-import com.jn.agileway.shell.command.annotation.CommandComponent;
-import com.jn.agileway.shell.command.annotation.CommandOption;
+import com.jn.agileway.shell.command.annotation.*;
 import com.jn.agileway.shell.exception.ShellInterruptedException;
 import com.jn.agileway.shell.result.YamlStyleOutputTransformer;
 import com.jn.langx.text.properties.Props;
