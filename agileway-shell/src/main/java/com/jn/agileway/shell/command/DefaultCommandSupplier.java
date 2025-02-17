@@ -18,6 +18,7 @@ import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.function.Predicate2;
 import com.jn.langx.util.logging.Loggers;
+import com.jn.langx.util.reflect.Modifiers;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.type.Primitives;
 import com.jn.langx.util.struct.Pair;
@@ -111,25 +112,30 @@ public class DefaultCommandSupplier implements CommandSupplier {
     private Pair<CommandGroup, List<Command>> resolveCommandClass(ClassInfo classInfo, Environment env) {
         classInfo.getPackageInfo();
         CommandGroup commandGroup = createCommandGroup(classInfo);
-        MethodInfoList methodInfoList = classInfo.getDeclaredMethodInfo();
+
+        Class commandComponentClass = classInfo.loadClass();
+
         List<Command> commands = Lists.newArrayList();
 
         Pair<CommandGroup, List<Command>> result = new Pair<>(commandGroup, commands);
 
         Map<String, CommandAvailability> availabilityMap = Maps.<String, CommandAvailability>newMap();
+
+        // 获取到类以及父类中，所有的public方法（包含继承 ）
+        Method[] methods = commandComponentClass.getMethods();
+
         // 解析 CommandAvailability列表
-        for (int i = 0; i < methodInfoList.size(); i++) {
-            MethodInfo methodInfo = methodInfoList.get(i);
-            if (!methodInfo.isPublic() || methodInfo.isAbstract() || methodInfo.isConstructor() || methodInfo.isSynthetic() || methodInfo.isNative() || methodInfo.isStatic()) {
+        for (int i = 0; i < methods.length; i++) {
+            Method method = methods[i];
+            if(!Modifiers.isPublic(method) || Modifiers.isAbstract(method) || Modifiers.isSynthetic(method) || Modifiers.isNative(method) || Modifiers.isStatic(method)){
                 continue;
             }
-            if(Objs.isNotEmpty(methodInfo.getParameterInfo())){
+            if(method.getParameterCount()>0){
                 continue;
             }
-            if (methodInfo.hasAnnotation(com.jn.agileway.shell.command.annotation.Command.class)) {
+            if (Reflects.hasAnnotation(method, com.jn.agileway.shell.command.annotation.Command.class)) {
                 continue;
             }
-            Method method = methodInfo.loadClassAndGetMethod();
             if(method.getReturnType()!= Availability.class){
                 continue;
             }
@@ -144,6 +150,7 @@ public class DefaultCommandSupplier implements CommandSupplier {
             availabilityMap.put(commandAvailability.getName(), commandAvailability);
         }
 
+        MethodInfoList methodInfoList = classInfo.getDeclaredMethodInfo();
         // 解析命令定义
         for (int i = 0; i < methodInfoList.size(); i++) {
             MethodInfo methodInfo = methodInfoList.get(i);
