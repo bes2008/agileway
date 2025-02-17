@@ -314,7 +314,7 @@ public class DefaultCommandSupplier implements CommandSupplier {
                         command.addAvailability(commandAvailability);
                     }
                 }
-                throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("CommandAvailability {} is not available for command {}", expectedAvailabilityName, command.getName()));
+                throw new MalformedCommandException(StringTemplates.formatWithPlaceholder("CommandAvailability {} is not exists or available for command {}", expectedAvailabilityName, command.getName()));
             }
         }
         else{
