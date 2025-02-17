@@ -143,7 +143,14 @@ public class DefaultCommandSupplier implements CommandSupplier {
             CommandAvailability commandAvailability = null;
             if(Reflects.hasAnnotation(method, com.jn.agileway.shell.command.annotation.CommandAvailability.class)){
                 com.jn.agileway.shell.command.annotation.CommandAvailability availabilityAnnotation = Reflects.getAnnotation(method, com.jn.agileway.shell.command.annotation.CommandAvailability.class);
-                commandAvailability = new CommandAvailability(method, availabilityAnnotation.value());
+                String[] definitions = Pipeline.of(availabilityAnnotation.value()).clearEmptys().filter(new Predicate<String>() {
+                    @Override
+                    public boolean test(String s) {
+                        return !Strings.containsAny(s,'/');
+                    }
+                }).toArray(String[].class);
+
+                commandAvailability = new CommandAvailability(method, definitions);
             }else{
                 commandAvailability = new CommandAvailability(method, new String[]{});
             }
