@@ -15,7 +15,7 @@ public abstract class InputStreamCmdlineProvider implements CmdlineProvider{
     private boolean appArgsUsed = false;
     protected BufferedReader reader;
 
-    public InputStreamCmdlineProvider(ApplicationArgs applicationArgs){
+    protected InputStreamCmdlineProvider(ApplicationArgs applicationArgs){
         this.appArgs = applicationArgs;
         this.reader = new BufferedReader(new InputStreamReader(System.in, Charsets.getDefault()));
     }
@@ -34,10 +34,14 @@ public abstract class InputStreamCmdlineProvider implements CmdlineProvider{
 
     }
 
+    protected String nextLine() throws IOException{
+        return this.reader.readLine();
+    }
+
     protected String[] next(){
         String line = null;
         try {
-            line = this.reader.readLine();
+            line = nextLine();
             line = line.trim();
 
             if (Strings.startsWith(line, "//")) {

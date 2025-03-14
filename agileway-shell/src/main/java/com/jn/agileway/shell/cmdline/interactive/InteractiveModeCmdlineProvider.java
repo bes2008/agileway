@@ -16,7 +16,7 @@ public class InteractiveModeCmdlineProvider extends InputStreamCmdlineProvider {
 
     public InteractiveModeCmdlineProvider(ApplicationArgs appArgs, PromptSupplier promptSupplier, BannerSupplier bannerSupplier) {
         super(appArgs);
-        this.prompt = Strings.trimToEmpty(promptSupplier.get()) + getGuidChar() + " ";
+        this.prompt = Strings.trimToEmpty(promptSupplier.get()) + getGuideChar() + " ";
         String b = bannerSupplier.get();
         if(Strings.isBlank(b)){
             b = Strings.EMPTY;
@@ -24,7 +24,7 @@ public class InteractiveModeCmdlineProvider extends InputStreamCmdlineProvider {
         this.banner = b;
     }
 
-    private char getGuidChar() {
+    private char getGuideChar() {
         String osUserName = SystemPropertys.getUserName();
         boolean isSupperUser = false;
         if (OS.isFamilyLinux() || OS.isFamilyMac() || OS.isFamilyAIX() || OS.isFamilyHP_UX()) {
