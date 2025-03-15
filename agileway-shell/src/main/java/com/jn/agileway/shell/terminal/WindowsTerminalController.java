@@ -1,11 +1,15 @@
 package com.jn.agileway.shell.terminal;
 
-import org.fusesource.jansi.internal.Kernel32;
+
+import com.jn.langx.text.StringTemplates;
+import com.sun.jna.platform.win32.*;
+import com.sun.jna.ptr.IntByReference;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
 public class WindowsTerminalController implements TerminalController {
+    private Kernel32 kernel32;
 
     /**
      * Input Buffers
@@ -19,16 +23,27 @@ public class WindowsTerminalController implements TerminalController {
     private static final int ENABLE_MOUSE_INPUT = 0x0010;
     private static final int ENABLE_INSERT_MODE = 0x0020;
     private static final int ENABLE_QUIET_EDIT_MODE = 0x0040;
-    private static final int ENABLE_VIRTUAL_TERMINAL_INPUT = 0x0001;
+    private static final int ENABLE_VIRTUAL_TERMINAL_INPUT = 0x0200;
 
-    private long terminalInputHandle;
-    private long terminalOutputHandle;
-    private long terminalErrorHandle;
+    private WinNT.HANDLE terminalInputHandle;
+    private WinNT.HANDLE terminalOutputHandle;
+    private WinNT.HANDLE terminalErrorHandle;
 
     public WindowsTerminalController() {
-        terminalInputHandle = Kernel32.GetStdHandle(Kernel32.STD_INPUT_HANDLE);
-        terminalOutputHandle = Kernel32.GetStdHandle(Kernel32.STD_OUTPUT_HANDLE);
-        terminalErrorHandle = Kernel32.GetStdHandle(Kernel32.STD_ERROR_HANDLE);
+        kernel32 = Kernel32.INSTANCE;
+
+        terminalInputHandle =  kernel32.GetStdHandle(Kernel32.STD_INPUT_HANDLE);
+        if(WinBase.INVALID_HANDLE_VALUE.equals(terminalInputHandle)){
+            throw new RuntimeException("Failed to get std-in handle");
+        }
+        terminalOutputHandle = kernel32.GetStdHandle(Kernel32.STD_OUTPUT_HANDLE);
+        if(WinBase.INVALID_HANDLE_VALUE.equals(terminalOutputHandle)){
+            throw new RuntimeException("Failed to get std-out handle");
+        }
+        terminalErrorHandle = kernel32.GetStdHandle(Kernel32.STD_ERROR_HANDLE);
+        if(WinBase.INVALID_HANDLE_VALUE.equals(terminalErrorHandle)){
+            throw new RuntimeException("Failed to get std-err handle");
+        }
     }
 
     @Override
@@ -38,7 +53,7 @@ public class WindowsTerminalController implements TerminalController {
 
     @Override
     public boolean setTitle(String title) {
-        return Kernel32.SetConsoleTitle(title) == 0;
+        return Kernel32.INSTANCE.SetConsoleTitle(title);
     }
 
     @Override
@@ -51,13 +66,13 @@ public class WindowsTerminalController implements TerminalController {
         return enableMode(terminalInputHandle, ENABLE_LINE_INPUT, enabled);
     }
 
-    private boolean enableMode(long stdHandle, int mode, boolean enabled) {
+    private boolean enableMode(WinNT.HANDLE stdHandle, int mode, boolean enabled) {
         int modes = getConsoleMode(stdHandle);
         if(modes == -1){
             return false;
         }
         modes = computeModes(modes, mode, enabled);
-        return setConsoleMode(stdHandle, modes);
+        return kernel32.SetConsoleMode(stdHandle, modes);
     }
 
     private int computeModes(int modes, int mode, boolean enabled) {
@@ -69,16 +84,17 @@ public class WindowsTerminalController implements TerminalController {
         return modes;
     }
 
-    private boolean setConsoleMode(long stdHandle, int mode) {
-        return Kernel32.SetConsoleMode(stdHandle, mode) != 0;
+    private boolean setConsoleMode(WinNT.HANDLE stdHandle, int mode) {
+        return kernel32.SetConsoleMode(stdHandle, mode);
     }
 
-    private int getConsoleMode(long stdHandle) {
-        int[] mode = new int[1];
-        if (0 == Kernel32.GetConsoleMode(stdHandle, mode)) {
+    private int getConsoleMode(WinNT.HANDLE stdHandle) {
+        IntByReference mode = new IntByReference();
+        boolean success = kernel32.GetConsoleMode(stdHandle, mode) ;
+        if(!success){
             return -1;
         }
-        return mode[0];
+        return mode.getValue();
     }
 
     @Override
@@ -98,6 +114,6 @@ public class WindowsTerminalController implements TerminalController {
 
     @Override
     public String getLastErrorMessage() {
-        return Kernel32.getLastErrorMessage();
+        return StringTemplates.formatWithPlaceholder("errorCode: {}, errorMessage: {}", kernel32.GetLastError(), Kernel32Util.getLastErrorMessage());
     }
 }
