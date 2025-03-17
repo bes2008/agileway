@@ -13,17 +13,20 @@ import java.io.IOException;
 public class Jline3CmdlineReader implements CmdlineReader {
     private LineReader lineReader;
     private String prompt;
-    public Jline3CmdlineReader(){
+
+    public Jline3CmdlineReader() {
         try {
             Terminal terminal = TerminalBuilder.builder().system(true).streams(System.in, System.out).jansi(true).type("jansi").build();
             lineReader = LineReaderBuilder.builder()
                     .terminal(terminal)
                     .appName("agileway-shell")
+                    .completer(new Jline3CmdlineCompleter())
                     .build();
-        }catch(IOException e){
+        } catch (IOException e) {
             throw Throwables.wrapAsRuntimeException(e);
         }
     }
+
     @Override
     public String[] readCmdline() {
         String cmdline = lineReader.readLine(this.prompt);
@@ -32,7 +35,7 @@ public class Jline3CmdlineReader implements CmdlineReader {
 
     @Override
     public void setPrompt(String prompt) {
-        this.prompt=prompt;
+        this.prompt = prompt;
     }
 
     @Override

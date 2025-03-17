@@ -38,14 +38,14 @@ public class InteractiveModeCmdlineProvider extends InputStreamCmdlineProvider {
 
     @Override
     protected void initCmdlineReader() {
-        if(AnsiTerminals.isInstalled()){
+        if(AnsiTerminals.isInstalled() && !Platform.isWindows){
             // 尝试使用 jline3 reader
             if(this.reader==null) {
                 try {
                     this.reader = new Jline3CmdlineReader();
                 } catch (Throwable ex) {
                     Logger logger = Loggers.getLogger(InteractiveModeCmdlineProvider.class);
-                    logger.info("create jline-2 reader failed: {}", ex.getMessage());
+                    logger.info("create jline-3 reader failed: {}", ex.getMessage());
                 }
             }
         }
