@@ -149,7 +149,7 @@ public class Shell extends AbstractLifecycle {
                 }
             }, AnsiTerminals.JANSI_MODE_STRIP);
             System.setProperty(AnsiTerminals.JANSI_MODE, mode);
-            AnsiConsole.systemInstall();
+            AnsiTerminals.install();
         }
     }
 

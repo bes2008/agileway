@@ -11,7 +11,7 @@ import com.jn.langx.util.SystemPropertys;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.os.OS;
-import org.fusesource.jansi.AnsiConsole;
+import com.jn.langx.util.os.Platform;
 import org.slf4j.Logger;
 
 import java.io.BufferedReader;
@@ -38,7 +38,7 @@ public class InteractiveModeCmdlineProvider extends InputStreamCmdlineProvider {
 
     @Override
     protected void initCmdlineReader() {
-        if(AnsiTerminals.isInstalled()){
+        if(AnsiTerminals.isInstalled() && !Platform.isWindows){
             // 尝试使用 jline3 reader
             if(this.reader==null){
                 //
