@@ -242,7 +242,7 @@ public class Shell extends AbstractLifecycle {
         }
         execResult.setCommand(command);
         try {
-            historyHandler.append(cmdline);
+            historyHandler.append(command, cmdline);
         } catch (IOException e) {
             execResult.setErr(new ShellInterruptedException(e.getMessage(), 255));
             return execResult;

@@ -8,6 +8,9 @@ import org.jline.reader.ParsedLine;
 
 import java.util.List;
 
+/**
+ * @since 5.1.1
+ */
 public class Jline3CmdlineCompleter implements Completer {
 
     private CommandRegistry commandRegistry;

@@ -11,6 +11,9 @@ import org.jline.terminal.TerminalBuilder;
 
 import java.io.IOException;
 
+/**
+ * @since 5.1.1
+ */
 public class Jline3CmdlineReader implements CmdlineReader {
     private LineReader lineReader;
     private String prompt;

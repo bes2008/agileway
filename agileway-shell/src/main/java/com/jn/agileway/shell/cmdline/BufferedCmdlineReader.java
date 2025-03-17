@@ -10,6 +10,9 @@ import org.slf4j.Logger;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+/**
+ * @since 5.1.1
+ */
 public class BufferedCmdlineReader implements CmdlineReader {
     private BufferedReader reader;
     private String prompt = "> ";

@@ -7,6 +7,9 @@ import com.jn.langx.util.Strings;
 
 import java.io.IOException;
 
+/**
+ * @since 5.1.1
+ */
 public abstract class AbstractCmdlineProvider extends AbstractInitializable implements CmdlineProvider{
 
     protected ApplicationArgs appArgs;
