@@ -1,6 +1,6 @@
 package com.jn.agileway.shell.history;
 
-import com.jn.agileway.shell.cmdline.ShellCmdlines;
+import com.jn.agileway.shell.command.Command;
 import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.Dates;
@@ -21,15 +21,18 @@ import java.util.List;
  * 只记录存在的命令，不存在的命令因为不会执行，所以不进行记录。
  */
 public final class HistoryHandler extends AbstractInitializable {
-
+    /**
+     * @since 5.1.1
+     */
+    private HistoryTransformer transformer;
     private File file;
     private final BoundedQueue<Record> records;
 
-    public HistoryHandler(File file) {
-        this(file,1000);
+    public HistoryHandler(File file, HistoryTransformer historyTransformer) {
+        this(file, 1000, historyTransformer);
     }
 
-    public HistoryHandler(File file, int maxRecords) {
+    public HistoryHandler(File file, int maxRecords, HistoryTransformer transformer) {
         Preconditions.checkNotNull(file);
         this.file = file;
         this.records = new BoundedQueue<Record>(maxRecords, true, true);
@@ -38,7 +41,7 @@ public final class HistoryHandler extends AbstractInitializable {
     @Override
     protected void doInit() throws InitializationException {
         try {
-            if(!file.exists()){
+            if (!file.exists()) {
                 Files.makeDirs(file.getParent());
                 Files.makeFile(file);
             }
@@ -53,11 +56,15 @@ public final class HistoryHandler extends AbstractInitializable {
         }
     }
 
-    public void append( String[] cmdline) throws IOException {
+    public void append(Command command, String[] cmdline) throws IOException {
         if (Objs.isEmpty(cmdline)) {
             return;
         }
-        Record record = new Record(Dates.format(Dates.now(), Dates.yyyy_MM_dd_HH_mm_ss_SSS), ShellCmdlines.cmdlineToString(cmdline));
+        String str = transformer.apply(command, cmdline);
+        if (Objs.isEmpty(str)) {
+            return;
+        }
+        Record record = new Record(Dates.format(Dates.now(), Dates.yyyy_MM_dd_HH_mm_ss_SSS), str);
         records.add(record);
 
         Files.appendLine(file, record.toString(), Charsets.UTF_8);

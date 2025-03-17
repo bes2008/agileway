@@ -9,7 +9,9 @@ import com.jn.agileway.shell.command.CommandRegistry;
 import com.jn.agileway.shell.command.CommandSupplier;
 import com.jn.agileway.shell.command.DefaultCommandSupplier;
 import com.jn.agileway.shell.exec.*;
+import com.jn.agileway.shell.history.DefaultHistoryTransformer;
 import com.jn.agileway.shell.history.HistoryHandler;
+import com.jn.agileway.shell.history.HistoryTransformer;
 import com.jn.agileway.shell.result.CmdlineExecResultHandler;
 import com.jn.langx.Builder;
 import com.jn.langx.environment.MultiplePropertySetEnvironment;
@@ -48,8 +50,10 @@ public class ShellBuilder implements Builder<Shell> {
     private BannerSupplier bannerSupplier = new DefaultBannerSupplier();
     // 是否启用 ANSI 输出
     private boolean ansiConsoleEnabled = true;
-    // 命令历史
-    private HistoryHandler historyHandler;
+    // 命令历史相关
+    private HistoryTransformer historyTransformer = new DefaultHistoryTransformer();
+
+    // 解析相关配置
     private boolean stopParseAtNonDefinedOption = true;
 
 
@@ -100,6 +104,15 @@ public class ShellBuilder implements Builder<Shell> {
         return this;
     }
 
+    /**
+     * @since 5.1.1
+     */
+    public ShellBuilder historyTransformer(HistoryTransformer historyTransformer) {
+        if (historyTransformer != null) {
+            this.historyTransformer = historyTransformer;
+        }
+        return this;
+    }
 
     public final ShellBuilder cmdlineExecutor(CmdlineExecutor<?> executor) {
         if (executor != null && !(executor instanceof DefaultCmdlineExecutor)) {
@@ -142,9 +155,7 @@ public class ShellBuilder implements Builder<Shell> {
         shell.promptSupplier = this.promptSupplier == null ? new DefaultPromptSupplier(this.shellName) : promptSupplier;
         shell.bannerSupplier = this.bannerSupplier;
 
-        if (historyHandler == null) {
-            historyHandler = new HistoryHandler(new File(SystemPropertys.getUserWorkDir() + "/.agileway-shell-history.log"), 1000);
-        }
+        HistoryHandler historyHandler = new HistoryHandler(new File(SystemPropertys.getUserWorkDir() + "/.agileway-shell-history.log"), 1000, historyTransformer);
         shell.historyHandler = historyHandler;
 
         // 添加自定义的 cmdline executors
