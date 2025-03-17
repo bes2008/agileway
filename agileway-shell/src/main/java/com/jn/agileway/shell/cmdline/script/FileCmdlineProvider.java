@@ -32,7 +32,7 @@ public class FileCmdlineProvider extends InputStreamCmdlineProvider {
     protected void initCmdlineReader() {
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(this.filepath), Charsets.getDefault()));
-            this.reader = new BufferedCmdlineReader(bufferedReader);
+            this.reader = new BufferedCmdlineReader(bufferedReader, false);
         } catch (FileNotFoundException e) {
             throw Throwables.wrapAsRuntimeIOException(e);
         }

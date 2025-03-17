@@ -55,7 +55,7 @@ public class InteractiveModeCmdlineProvider extends InputStreamCmdlineProvider {
         }
         if(reader == null) {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in, Charsets.getDefault()));
-            this.reader = new BufferedCmdlineReader(bufferedReader);
+            this.reader = new BufferedCmdlineReader(bufferedReader, true);
         }
 
     }

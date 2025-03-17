@@ -14,8 +14,11 @@ public class BufferedCmdlineReader implements CmdlineReader {
     private BufferedReader reader;
     private String prompt = "> ";
 
-    public BufferedCmdlineReader(BufferedReader reader){
+    private boolean isInteractive;
+
+    public BufferedCmdlineReader(BufferedReader reader, boolean isInteractive){
         this.reader = reader;
+        this.isInteractive = isInteractive;
     }
 
     @Override
@@ -23,19 +26,14 @@ public class BufferedCmdlineReader implements CmdlineReader {
         this.prompt = prompt;
     }
 
-    protected String nextLine() throws IOException{
-        beforeRead();
-        return this.reader.readLine();
-    }
-    protected void beforeRead() {
-        System.out.print(this.prompt);
-    }
-
     @Override
     public String[] readCmdline(){
         String line = null;
         try {
-            line = nextLine();
+            if(isInteractive){
+                System.out.print(this.prompt);
+            }
+            line = this.reader.readLine();
             line = line.trim();
 
             if (Strings.startsWith(line, "//")) {
