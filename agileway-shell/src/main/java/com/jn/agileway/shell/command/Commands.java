@@ -10,6 +10,7 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
+import com.jn.langx.util.function.Predicate2;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.type.Primitives;
 import org.apache.commons.cli.Converter;
@@ -219,5 +220,33 @@ public abstract class Commands {
             }
             builder.append(Strings.CRLF);
         }
+    }
+
+    public static Command findCommand(CommandRegistry commandRegistry, String[] cmdline) {
+        int index = Collects.<String, List>firstOccurrence(Collects.asList(cmdline), new Predicate2<Integer, String>() {
+            @Override
+            public boolean test(Integer integer, String s) {
+                return Strings.startsWith(s, "-");
+            }
+        });
+        String commandKey = null;
+        if (index < 0) {
+            index = cmdline.length;
+            commandKey = Strings.join(" ", cmdline);
+        } else if (index > 0) {
+            commandKey = Strings.join(" ", cmdline, 0, index);
+        }
+        commandKey = Strings.trimToNull(commandKey);
+        Command command = null;
+        if (Strings.isNotEmpty(commandKey)) {
+            command = commandRegistry.getCommand(commandKey);
+            index--;
+            while (command == null && index >= 1) {
+                String newCommandKey = Strings.join(" ", cmdline, 0, index);
+                command = commandRegistry.getCommand(newCommandKey);
+                index--;
+            }
+        }
+        return command;
     }
 }

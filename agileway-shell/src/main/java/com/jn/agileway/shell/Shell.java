@@ -27,12 +27,10 @@ import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
-import com.jn.langx.util.function.Predicate2;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.fusesource.jansi.AnsiConsole;
 
 import java.io.IOException;
 import java.util.List;
@@ -117,7 +115,7 @@ public class Shell extends AbstractLifecycle {
                 this.cmdlineProvider = new AdhocModeCmdlineProvider(this.appArgs);
                 break;
             case INTERACTIVE:
-                this.cmdlineProvider = new InteractiveModeCmdlineProvider(this.appArgs, promptSupplier, bannerSupplier);
+                this.cmdlineProvider = new InteractiveModeCmdlineProvider(this.appArgs, promptSupplier, bannerSupplier, this.commandRegistry);
                 break;
             case SCRIPT:
             default:
@@ -203,7 +201,7 @@ public class Shell extends AbstractLifecycle {
         String[] cmdline = appArgs.getArgs();
 
         // 先判断是不是个命令
-        Command commandDef = findCommand(cmdline);
+        Command commandDef = Commands.findCommand(this.commandRegistry, cmdline);
         if (commandDef == null) {
             // 判断 是否是以脚本方式运行
             CommandLine commandLine = null;
@@ -237,7 +235,7 @@ public class Shell extends AbstractLifecycle {
 
     private CmdlineExecResult evaluate(String[] cmdline) {
         CmdlineExecResult execResult = new CmdlineExecResult(cmdline);
-        final Command command = findCommand(cmdline);
+        final Command command = Commands.findCommand(this.commandRegistry, cmdline);
         if (command == null) {
             execResult.setErr(new NotFoundCommandException(Strings.join(" ", cmdline)));
             return execResult;
@@ -266,34 +264,6 @@ public class Shell extends AbstractLifecycle {
             execResult = cmdlineExecutor.exec(cmdline, command);
         }
         return execResult;
-    }
-
-    private Command findCommand(String[] cmdline) {
-        int index = Collects.<String, List>firstOccurrence(Collects.asList(cmdline), new Predicate2<Integer, String>() {
-            @Override
-            public boolean test(Integer integer, String s) {
-                return Strings.startsWith(s, "-");
-            }
-        });
-        String commandKey = null;
-        if (index < 0) {
-            index = cmdline.length;
-            commandKey = Strings.join(" ", cmdline);
-        } else if (index > 0) {
-            commandKey = Strings.join(" ", cmdline, 0, index);
-        }
-        commandKey = Strings.trimToNull(commandKey);
-        Command command = null;
-        if (Strings.isNotEmpty(commandKey)) {
-            command = commandRegistry.getCommand(commandKey);
-            index--;
-            while (command == null && index >= 1) {
-                String newCommandKey = Strings.join(" ", cmdline, 0, index);
-                command = commandRegistry.getCommand(newCommandKey);
-                index--;
-            }
-        }
-        return command;
     }
 
     public CommandRegistry getCommandRegistry() {

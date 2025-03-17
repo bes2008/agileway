@@ -4,7 +4,9 @@ import com.jn.agileway.shell.ApplicationArgs;
 import com.jn.agileway.shell.cmdline.BufferedCmdlineReader;
 import com.jn.agileway.shell.cmdline.InputStreamCmdlineProvider;
 import com.jn.agileway.shell.cmdline.interactive.jline3.Jline3CmdlineReader;
+import com.jn.agileway.shell.command.CommandRegistry;
 import com.jn.agileway.shell.util.AnsiTerminals;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.SystemPropertys;
@@ -22,8 +24,10 @@ public class InteractiveModeCmdlineProvider extends InputStreamCmdlineProvider {
     private String prompt;
     private String banner;
     private boolean bannerUsed = false;
+    @Nullable
+    private CommandRegistry commandRegistry;
 
-    public InteractiveModeCmdlineProvider(ApplicationArgs appArgs, PromptSupplier promptSupplier, BannerSupplier bannerSupplier) {
+    public InteractiveModeCmdlineProvider(ApplicationArgs appArgs, PromptSupplier promptSupplier, BannerSupplier bannerSupplier, CommandRegistry commandRegistry) {
         super(appArgs);
         this.prompt = Strings.trimToEmpty(promptSupplier.get()) + getGuideChar() + " ";
         String b = bannerSupplier.get();
@@ -31,7 +35,7 @@ public class InteractiveModeCmdlineProvider extends InputStreamCmdlineProvider {
             b = Strings.EMPTY;
         }
         this.banner = b;
-
+        this.commandRegistry = commandRegistry;
         init();
         this.reader.setPrompt(this.prompt);
     }
@@ -42,7 +46,7 @@ public class InteractiveModeCmdlineProvider extends InputStreamCmdlineProvider {
             // 尝试使用 jline3 reader
             if(this.reader==null) {
                 try {
-                    this.reader = new Jline3CmdlineReader();
+                    this.reader = new Jline3CmdlineReader(commandRegistry);
                 } catch (Throwable ex) {
                     Logger logger = Loggers.getLogger(InteractiveModeCmdlineProvider.class);
                     logger.info("create jline-3 reader failed: {}", ex.getMessage());

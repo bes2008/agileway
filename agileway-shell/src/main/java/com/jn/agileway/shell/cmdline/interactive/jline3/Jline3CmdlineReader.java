@@ -2,6 +2,7 @@ package com.jn.agileway.shell.cmdline.interactive.jline3;
 
 import com.jn.agileway.shell.cmdline.CmdlineReader;
 import com.jn.agileway.shell.cmdline.ShellCmdlines;
+import com.jn.agileway.shell.command.CommandRegistry;
 import com.jn.langx.util.Throwables;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -14,7 +15,7 @@ public class Jline3CmdlineReader implements CmdlineReader {
     private LineReader lineReader;
     private String prompt;
 
-    public Jline3CmdlineReader() {
+    public Jline3CmdlineReader(CommandRegistry commandRegistry) {
         try {
             Terminal terminal = TerminalBuilder.builder().system(true).streams(System.in, System.out).jansi(true).type("jansi").build();
             lineReader = LineReaderBuilder.builder()

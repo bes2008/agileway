@@ -48,6 +48,7 @@
             <groupId>org.jline</groupId>
             <artifactId>jline</artifactId>
             <version>3.26.3</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>io.github.bes2008.solution.easyjson</groupId>

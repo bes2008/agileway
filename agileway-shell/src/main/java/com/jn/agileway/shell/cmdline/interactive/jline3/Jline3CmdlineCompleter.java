@@ -1,12 +1,21 @@
 package com.jn.agileway.shell.cmdline.interactive.jline3;
 
+import com.jn.agileway.shell.command.CommandRegistry;
 import org.jline.reader.Candidate;
+import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
 import org.jline.reader.ParsedLine;
 
 import java.util.List;
 
-public class Jline3CmdlineCompleter implements org.jline.reader.Completer{
+public class Jline3CmdlineCompleter implements Completer {
+
+    private CommandRegistry commandRegistry;
+
+    public Jline3CmdlineCompleter(CommandRegistry commandRegistry) {
+        this.commandRegistry = commandRegistry;
+    }
+
     @Override
     public void complete(LineReader reader, ParsedLine line, List<Candidate> candidates) {
         // 如果 line 是空，则列出所有命令
