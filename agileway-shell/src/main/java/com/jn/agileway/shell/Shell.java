@@ -13,6 +13,7 @@ import com.jn.agileway.shell.exec.CmdlineExecutor;
 import com.jn.agileway.shell.history.HistoryHandler;
 import com.jn.agileway.shell.result.CmdlineExecResult;
 import com.jn.agileway.shell.result.CmdlineExecResultHandler;
+import com.jn.agileway.shell.util.AnsiTerminals;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.environment.Environment;
 import com.jn.langx.io.resource.Resource;
@@ -38,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Shell extends AbstractLifecycle {
+
     Environment environment;
 
     /**
@@ -138,15 +140,15 @@ public class Shell extends AbstractLifecycle {
      */
     private void enableAnsiConsole() {
         if (ansiConsoleEnabled) {
-            String mode = this.environment.getProperty(AnsiConsole.JANSI_MODE, AnsiConsole.JANSI_MODE_FORCE);
+            String mode = this.environment.getProperty(AnsiTerminals.JANSI_MODE, AnsiTerminals.JANSI_MODE_FORCE);
             mode = Strings.lowerCase(mode);
             mode = Objs.useValueIfNotMatch(mode, new Predicate<String>() {
                 @Override
                 public boolean test(String m) {
-                    return Lists.newArrayList(AnsiConsole.JANSI_MODE_DEFAULT, AnsiConsole.JANSI_MODE_FORCE, AnsiConsole.JANSI_MODE_STRIP).contains(m);
+                    return Lists.newArrayList(AnsiTerminals.JANSI_MODE_DEFAULT, AnsiTerminals.JANSI_MODE_FORCE, AnsiTerminals.JANSI_MODE_STRIP).contains(m);
                 }
-            }, AnsiConsole.JANSI_MODE_STRIP);
-            System.setProperty(AnsiConsole.JANSI_MODE, mode);
+            }, AnsiTerminals.JANSI_MODE_STRIP);
+            System.setProperty(AnsiTerminals.JANSI_MODE, mode);
             AnsiConsole.systemInstall();
         }
     }

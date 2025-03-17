@@ -4,6 +4,7 @@ import com.jn.agileway.shell.ApplicationArgs;
 import com.jn.agileway.shell.cmdline.BufferedCmdlineReader;
 import com.jn.agileway.shell.cmdline.InputStreamCmdlineProvider;
 import com.jn.agileway.shell.cmdline.interactive.jline2.Jline2CmdlineReader;
+import com.jn.agileway.shell.util.AnsiTerminals;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.SystemPropertys;
@@ -32,11 +33,12 @@ public class InteractiveModeCmdlineProvider extends InputStreamCmdlineProvider {
         this.banner = b;
 
         init();
+        this.reader.setPrompt(this.prompt);
     }
 
     @Override
     protected void initCmdlineReader() {
-        if(AnsiConsole.isInstalled()){
+        if(AnsiTerminals.isInstalled()){
             // 尝试使用 jline3 reader
             if(this.reader==null){
                 //
@@ -47,7 +49,7 @@ public class InteractiveModeCmdlineProvider extends InputStreamCmdlineProvider {
                     this.reader = new Jline2CmdlineReader();
                 } catch (Throwable ex) {
                     Logger logger = Loggers.getLogger(InteractiveModeCmdlineProvider.class);
-                    logger.info("create jline-2 reader failed");
+                    logger.info("create jline-2 reader failed: {}", ex.getMessage());
                 }
             }
         }
@@ -55,7 +57,7 @@ public class InteractiveModeCmdlineProvider extends InputStreamCmdlineProvider {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in, Charsets.getDefault()));
             this.reader = new BufferedCmdlineReader(bufferedReader);
         }
-        this.reader.setPrompt(this.prompt);
+
     }
 
     private char getGuideChar() {

@@ -75,7 +75,7 @@ public class AnsiText {
     @Override
     public String toString() {
         String text = this.text == null ? "" : this.text;
-        if (AnsiConsole.isInstalled()) {
+        if (AnsiTerminals.isInstalled()) {
             Ansi ansi = Ansi.ansi();
             if (fontColor != null) {
                 ansi.fg(fontColor);

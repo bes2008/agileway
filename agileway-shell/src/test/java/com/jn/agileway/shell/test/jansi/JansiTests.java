@@ -1,5 +1,6 @@
 package com.jn.agileway.shell.test.jansi;
 
+import com.jn.agileway.shell.util.AnsiTerminals;
 import com.jn.agileway.shell.util.AnsiText;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
@@ -8,7 +9,7 @@ public class JansiTests {
     public static void main(String[] args) {
         System.setProperty("jansi.mode", "force");
         AnsiConsole.systemInstall();
-        System.out.println(AnsiConsole.isInstalled());
+        System.out.println(AnsiTerminals.isInstalled());
 
         System.out.print(new StringBuilder()
                 .append(new AnsiText("hello").strikethrough(true))

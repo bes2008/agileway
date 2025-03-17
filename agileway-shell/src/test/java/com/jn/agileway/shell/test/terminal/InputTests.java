@@ -1,5 +1,5 @@
 package com.jn.agileway.shell.test.terminal;
-
+/*
 
 import com.jn.agileway.shell.terminal.TerminalController;
 import com.jn.agileway.shell.terminal.Terminals;
@@ -34,3 +34,6 @@ public class InputTests {
     }
 
 }
+
+
+ */

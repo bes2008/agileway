@@ -3,6 +3,7 @@ package com.jn.agileway.shell.builtin;
 import com.jn.agileway.shell.command.annotation.*;
 import com.jn.agileway.shell.exception.ShellInterruptedException;
 import com.jn.agileway.shell.result.YamlStyleOutputTransformer;
+import com.jn.agileway.shell.util.AnsiTerminals;
 import com.jn.langx.text.properties.Props;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
@@ -17,7 +18,7 @@ import java.util.Map;
 public class Sh {
     @Command(value = "clear", alias = {"cls","clean"}, desc = "clear screen")
     public void clear(){
-        if (AnsiConsole.isInstalled()) {
+        if (AnsiTerminals.isInstalled()) {
             System.out.println(Ansi.ansi().eraseScreen().cursor(1, 1));
         }
     }
