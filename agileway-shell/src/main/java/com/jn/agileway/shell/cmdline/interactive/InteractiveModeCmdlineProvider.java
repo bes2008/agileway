@@ -30,6 +30,8 @@ public class InteractiveModeCmdlineProvider extends InputStreamCmdlineProvider {
             b = Strings.EMPTY;
         }
         this.banner = b;
+
+        init();
     }
 
     @Override

@@ -24,6 +24,8 @@ public class FileCmdlineProvider extends InputStreamCmdlineProvider {
     public FileCmdlineProvider(ApplicationArgs applicationArgs, String filepath) {
         super(applicationArgs);
         this.filepath = filepath;
+
+        init();
     }
 
     @Override
