@@ -29,21 +29,26 @@
             <version>4.8.179</version>
         </dependency>
 
-        <!--
         <dependency>
             <groupId>org.fusesource.jansi</groupId>
             <artifactId>jansi</artifactId>
             <version>2.4.1</version>
         </dependency>
-        -->
 
+        <!-- jline2 中的 jansi 相关类库，是有问题的， 不能及时输出 prompt-->
+        <!--
         <dependency>
             <groupId>jline</groupId>
             <artifactId>jline</artifactId>
             <version>2.14.6</version>
             <optional>true</optional>
         </dependency>
-
+        -->
+        <dependency>
+            <groupId>org.jline</groupId>
+            <artifactId>jline</artifactId>
+            <version>3.26.3</version>
+        </dependency>
         <dependency>
             <groupId>io.github.bes2008.solution.easyjson</groupId>
             <artifactId>easyjson-jackson</artifactId>

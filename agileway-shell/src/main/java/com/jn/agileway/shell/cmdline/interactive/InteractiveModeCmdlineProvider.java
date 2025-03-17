@@ -3,7 +3,7 @@ package com.jn.agileway.shell.cmdline.interactive;
 import com.jn.agileway.shell.ApplicationArgs;
 import com.jn.agileway.shell.cmdline.BufferedCmdlineReader;
 import com.jn.agileway.shell.cmdline.InputStreamCmdlineProvider;
-import com.jn.agileway.shell.cmdline.interactive.jline2.Jline2CmdlineReader;
+import com.jn.agileway.shell.cmdline.interactive.jline3.Jline3CmdlineReader;
 import com.jn.agileway.shell.util.AnsiTerminals;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
@@ -38,15 +38,11 @@ public class InteractiveModeCmdlineProvider extends InputStreamCmdlineProvider {
 
     @Override
     protected void initCmdlineReader() {
-        if(AnsiTerminals.isInstalled() && !Platform.isWindows){
+        if(AnsiTerminals.isInstalled()){
             // 尝试使用 jline3 reader
-            if(this.reader==null){
-                //
-            }
-            // 尝试使用 jline2 reader
             if(this.reader==null) {
                 try {
-                    this.reader = new Jline2CmdlineReader();
+                    this.reader = new Jline3CmdlineReader();
                 } catch (Throwable ex) {
                     Logger logger = Loggers.getLogger(InteractiveModeCmdlineProvider.class);
                     logger.info("create jline-2 reader failed: {}", ex.getMessage());
