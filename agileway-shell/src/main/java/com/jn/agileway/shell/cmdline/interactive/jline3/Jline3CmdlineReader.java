@@ -21,7 +21,7 @@ public class Jline3CmdlineReader implements CmdlineReader {
             lineReader = LineReaderBuilder.builder()
                     .terminal(terminal)
                     .appName("agileway-shell")
-                    .completer(new Jline3CmdlineCompleter())
+                    .completer(new Jline3CmdlineCompleter(commandRegistry))
                     .build();
         } catch (IOException e) {
             throw Throwables.wrapAsRuntimeException(e);
