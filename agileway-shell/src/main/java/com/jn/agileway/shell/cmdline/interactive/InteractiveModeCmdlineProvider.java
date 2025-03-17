@@ -1,15 +1,23 @@
 package com.jn.agileway.shell.cmdline.interactive;
 
 import com.jn.agileway.shell.ApplicationArgs;
+import com.jn.agileway.shell.cmdline.BufferedCmdlineReader;
 import com.jn.agileway.shell.cmdline.InputStreamCmdlineProvider;
+import com.jn.agileway.shell.cmdline.interactive.jline2.Jline2CmdlineReader;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.SystemPropertys;
+import com.jn.langx.util.io.Charsets;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.os.OS;
+import org.fusesource.jansi.AnsiConsole;
+import org.slf4j.Logger;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 
 public class InteractiveModeCmdlineProvider extends InputStreamCmdlineProvider {
-
     private String prompt;
     private String banner;
     private boolean bannerUsed = false;
@@ -22,6 +30,30 @@ public class InteractiveModeCmdlineProvider extends InputStreamCmdlineProvider {
             b = Strings.EMPTY;
         }
         this.banner = b;
+    }
+
+    @Override
+    protected void initCmdlineReader() {
+        if(AnsiConsole.isInstalled()){
+            // 尝试使用 jline3 reader
+            if(this.reader==null){
+                //
+            }
+            // 尝试使用 jline2 reader
+            if(this.reader==null) {
+                try {
+                    this.reader = new Jline2CmdlineReader();
+                } catch (Throwable ex) {
+                    Logger logger = Loggers.getLogger(InteractiveModeCmdlineProvider.class);
+                    logger.info("create jline-2 reader failed");
+                }
+            }
+        }
+        if(reader == null) {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in, Charsets.getDefault()));
+            this.reader = new BufferedCmdlineReader(bufferedReader);
+        }
+        this.reader.setPrompt(this.prompt);
     }
 
     private char getGuideChar() {
@@ -39,13 +71,13 @@ public class InteractiveModeCmdlineProvider extends InputStreamCmdlineProvider {
         return isSupperUser ? '#' : '>';
     }
 
+
     @Override
     protected void beforeRead() {
         if (!this.bannerUsed && Strings.isNotEmpty(banner)) {
             this.bannerUsed = true;
             System.out.println(this.banner);
         }
-        System.out.print(this.prompt);
     }
 
     @Override

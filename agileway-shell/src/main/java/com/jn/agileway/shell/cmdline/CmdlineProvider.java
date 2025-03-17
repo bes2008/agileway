@@ -2,10 +2,12 @@ package com.jn.agileway.shell.cmdline;
 
 import com.jn.langx.util.function.Supplier0;
 
+import java.io.Closeable;
+
 /**
  * 阻塞式使命行提供商，正常结束时，返回null即可。
  */
-public interface CmdlineProvider extends Supplier0<String[]> {
+public interface CmdlineProvider extends Supplier0<String[]>, Closeable {
     /**
      * 获取一个命令
      *

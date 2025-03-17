@@ -1,22 +1,25 @@
 package com.jn.agileway.shell.cmdline.adhoc;
 
 import com.jn.agileway.shell.ApplicationArgs;
-import com.jn.agileway.shell.cmdline.CmdlineProvider;
+import com.jn.agileway.shell.cmdline.AbstractCmdlineProvider;
 
-public class AdhocModeCmdlineProvider implements CmdlineProvider {
-    private ApplicationArgs args;
-    private boolean appArgsUsed = false;
+public class AdhocModeCmdlineProvider extends AbstractCmdlineProvider {
 
     public AdhocModeCmdlineProvider(ApplicationArgs args) {
-        this.args = args;
+        this.appArgs = args;
     }
 
     @Override
-    public String[] get() {
+    protected String[] nextCmdline() {
         if (appArgsUsed) {
             return null;
         }
         appArgsUsed = true;
-        return this.args==null ? null: this.args.getArgs();
+        return this.appArgs==null ? null: this.appArgs.getArgs();
+    }
+
+    @Override
+    protected void handleUnfinishedMultipleLineCommand(String rawLine) {
+        System.out.println("unfinished command line: " + rawLine);
     }
 }

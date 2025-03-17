@@ -155,6 +155,7 @@ public class Shell extends AbstractLifecycle {
     protected void doStart() {
         super.doStart();
         run(this.cmdlineProvider);
+
     }
 
     public void start(String[] appArgs) {
