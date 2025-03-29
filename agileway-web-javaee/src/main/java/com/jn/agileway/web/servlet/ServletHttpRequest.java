@@ -34,6 +34,31 @@ public class ServletHttpRequest implements HttpRequest<HttpServletRequest> {
     }
 
     @Override
+    public String getContextPath() {
+        return containerRequest.getContextPath();
+    }
+
+    @Override
+    public int getRemotePort() {
+        return containerRequest.getRemotePort();
+    }
+
+    @Override
+    public String getServerName() {
+        return containerRequest.getServerName();
+    }
+
+    @Override
+    public int getServerPort() {
+        return containerRequest.getServerPort();
+    }
+
+    @Override
+    public String getScheme() {
+        return containerRequest.getScheme();
+    }
+
+    @Override
     public String getMethod() {
         return containerRequest.getMethod();
     }

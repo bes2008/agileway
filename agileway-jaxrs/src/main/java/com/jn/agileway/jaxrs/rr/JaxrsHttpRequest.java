@@ -23,6 +23,30 @@ public class JaxrsHttpRequest implements HttpRequest<ContainerRequestContext> {
         return this.containerRequest;
     }
 
+    @Override
+    public String getContextPath() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int getRemotePort() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String getServerName() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int getServerPort() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String getScheme() {
+        throw new UnsupportedOperationException();
+    }
 
     @Override
     public String getMethod() {
