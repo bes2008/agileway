@@ -87,7 +87,7 @@ public class OriginalRequestParser implements Parser<HttpServletRequest, Origina
                 }
             } else {
                 HostAndPort host = null;
-                String firstHost = splitAndGetFirstHeader(request, ",", "X-Forwarded-Host");
+                String firstHost = splitAndGetFirstHeader(request, ",", "X-Forwarded-Host", "X-Forwarded-Server");
                 if (Strings.isNotBlank(firstHost)) {
                     host = HostAndPort.of(firstHost);
                 }

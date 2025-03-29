@@ -1,6 +1,8 @@
 package com.jn.agileway.web.servlet.forwarded;
 
 
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.HostAndPort;
 
@@ -14,29 +16,34 @@ public class Forwarded {
     /**
      * WebServer 使用的协议（如 http/https）
      */
+    @Nullable
     private String proto;
 
     /**
      * 请求发送到 WebServer 时的 Host 头内容
      * 示例：通过代理访问时可能是 "api.example.com"
      */
+    @NonNull
     private HostAndPort host;
 
     /**
      * WebServer 接收到的请求来源（客户端信息）
      * 示例：客户端 IP 和端口 "192.168.1.100:12345"
      */
+    @Nullable
     private HostAndPort client;
 
     /**
      * WebServer 自身的代理信息（当存在多层代理时使用）
      */
+    @Nullable
     private HostAndPort proxy;
 
     /**
      * 接收请求时的上下文路径（未指定时为 null）
      * 示例："/api/v2"
      */
+    @Nullable
     private String contextPath;
 
     public String getProto() {
