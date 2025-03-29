@@ -1,7 +1,6 @@
-package com.jn.agileway.http.utils.forwarded;
+package com.jn.agileway.web.servlet.forwarded;
 
 
-import com.jn.agileway.http.rr.HttpRequest;
 import com.jn.langx.Parser;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
@@ -16,8 +15,10 @@ import com.jn.langx.util.regexp.Regexps;
 import com.jn.langx.util.struct.Holder;
 import org.slf4j.Logger;
 
+import javax.servlet.http.HttpServletRequest;
 
-public class OriginalRequestParser implements Parser<HttpRequest, OriginalRequest> {
+
+public class OriginalRequestParser implements Parser<HttpServletRequest, OriginalRequest> {
     private static final Logger logger = Loggers.getLogger(OriginalRequestParser.class);
 
     // 正则表达式模板（示例格式："host=\"example.com\""）
@@ -52,7 +53,7 @@ public class OriginalRequestParser implements Parser<HttpRequest, OriginalReques
     /**
      * 解析请求并构建 OriginalRequest 对象
      */
-    public OriginalRequest parse(HttpRequest request) {
+    public OriginalRequest parse(HttpServletRequest request) {
         Forwarded firstForward = parseForwarded ? parseFirstForward(request) : null;
         Forwarded lastForward = parseLastForward(request);
         return new OriginalRequest(firstForward, lastForward);
@@ -61,7 +62,7 @@ public class OriginalRequestParser implements Parser<HttpRequest, OriginalReques
     /**
      * 解析代理链中的第一个转发信息（需补充具体解析逻辑）
      */
-    private Forwarded parseFirstForward(HttpRequest request) {
+    private Forwarded parseFirstForward(HttpServletRequest request) {
         Forwarded forwarded = new Forwarded();
         String forwardedHeader = request.getHeader("Forwarded");
         try {
@@ -150,7 +151,7 @@ public class OriginalRequestParser implements Parser<HttpRequest, OriginalReques
     /**
      * 解析应用服务器接收的请求信息
      */
-    private Forwarded parseLastForward(HttpRequest request) {
+    private Forwarded parseLastForward(HttpServletRequest request) {
         Forwarded forwarded = new Forwarded();
         forwarded.setProto(request.getScheme());
         forwarded.setHost(new HostAndPort(request.getServerName(), request.getServerPort()));
@@ -167,7 +168,7 @@ public class OriginalRequestParser implements Parser<HttpRequest, OriginalReques
      * @param separator   多值分隔符（如逗号）
      * @return 第一个非空的有效值，若不存在则返回 null
      */
-    public static String splitAndGetFirstHeader(HttpRequest request, String separator, String... headerNames) {
+    public static String splitAndGetFirstHeader(HttpServletRequest request, String separator, String... headerNames) {
         final Holder<String> result = new Holder<>();
         Pipeline.<String>of(headerNames)
                 .forEach(new Consumer<String>() {

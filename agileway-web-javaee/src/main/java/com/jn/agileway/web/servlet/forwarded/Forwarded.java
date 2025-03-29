@@ -1,4 +1,4 @@
-package com.jn.agileway.http.utils.forwarded;
+package com.jn.agileway.web.servlet.forwarded;
 
 
 import com.jn.langx.util.Strings;
