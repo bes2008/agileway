@@ -19,6 +19,6 @@ public class BasicAuthorizationHeaderBuilder extends AuthorizationHeaderBuilder<
     public String build() {
         UserPasswordCredentials credentials = this.credentials;
         String userPass = credentials.getUsername() + ":" + credentials.getPassword();
-        return Stringifys.stringify(userPass.getBytes(Charsets.UTF_8), StringifyFormat.UTF8);
+        return Stringifys.stringify(userPass.getBytes(Charsets.UTF_8), StringifyFormat.BASE64);
     }
 }
