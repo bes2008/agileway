@@ -14,6 +14,8 @@ import java.util.List;
  * For historical reasons, a sender MUST only generate the quoted string
  * syntax values for the following parameters: realm, domain, nonce,
  * opaque, and qop.
+ *
+ * <a href="https://datatracker.ietf.org/doc/html/rfc7616">rfc7616</a>
  */
 public class DigestWwwAuthenticate extends WwwAuthenticate {
 
@@ -118,6 +120,11 @@ public class DigestWwwAuthenticate extends WwwAuthenticate {
 
     public String getQop() {
         return getField("qop");
+    }
+
+    public List<String> getQopAsList() {
+        String qop = getQop();
+        return AuthHeaders.getFieldAsList(qop, ",");
     }
 
     /**

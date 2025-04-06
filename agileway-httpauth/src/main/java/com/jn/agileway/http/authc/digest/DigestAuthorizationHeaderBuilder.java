@@ -13,6 +13,7 @@ import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.random.Randoms;
 import com.jn.langx.validation.rule.CharData;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.jn.agileway.http.authc.WwwAuthenticate.quoted;
@@ -57,9 +58,11 @@ public class DigestAuthorizationHeaderBuilder extends AuthorizationHeaderBuilder
         if (Strings.endsWith(digestAlgorithm, "-sess")) {
             A1 = hash(A1) + ":" + unquoted(nonce) + ":" + unquoted(cnonce);
         }
-        String qop = this.wwwAuthenticate.getQop();
+        List<String> qops = this.wwwAuthenticate.getQopAsList();
         String A2 = requestMethod + ":" + requestUri;
-        if ("auth-int".equals(qop)) {
+        String qop = "auth";
+        if (qops.contains("auth-int")) {
+            qop = "auth-int";
             A2 = A2 + ":" + hash(requestEntityBody);
         }
         String usernameHash = username;

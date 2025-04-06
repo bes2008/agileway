@@ -4,6 +4,9 @@ import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.regexp.Regexp;
+import com.jn.langx.util.regexp.RegexpMatcher;
+import com.jn.langx.util.regexp.Regexps;
 
 import java.util.List;
 import java.util.Map;
@@ -21,15 +24,23 @@ public class AuthHeaders {
 
         // 2. 解析参数键值对
         if (parts.length > 1) {
-            // 处理带引号的参数值（如：realm="example", scope="read write"）
-            String[] params = parts[1].split("\\s*,\\s*");
-            for (String param : params) {
-                String[] kv = param.split("=", 2);
-                if (kv.length == 2) {
-                    String value = kv[1].replaceAll("^\"|\"$", "");
-                    wwwAuthenticate.setField(kv[0], value);
+            String fieldsString = parts[1];
+            String keyValuePattern = "\\s*([a-zA-Z0-9_]+)\\s*=\\s*(\"([^\"]*)\"|([^,]*))\\s*,?";
+            Regexp regexp = Regexps.compile(keyValuePattern);
+            RegexpMatcher matcher = regexp.matcher(fieldsString);
+            while (matcher.find()) {
+                String key = matcher.group(1);
+                String value = matcher.group(3);
+                if (Strings.isNotBlank(value)) {
+                    wwwAuthenticate.setField(key, value);
+                } else {
+                    value = matcher.group(4);
+                    if (Strings.isNotBlank(value)) {
+                        wwwAuthenticate.setField(key, value);
+                    }
                 }
             }
+
         }
 
         return wwwAuthenticate;
@@ -48,10 +59,10 @@ public class AuthHeaders {
         builder.append(authScheme);
         int i = 0;
         for (Map.Entry<String, String> entry : fields.entrySet()) {
-            builder.append(" ");
             if (i > 0) {
                 builder.append(",");
             }
+            builder.append(" ");
             builder.append(entry.getKey()).append("=").append(entry.getValue());
             i++;
         }
