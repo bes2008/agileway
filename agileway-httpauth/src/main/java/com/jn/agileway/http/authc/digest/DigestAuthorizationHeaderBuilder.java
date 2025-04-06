@@ -13,6 +13,9 @@ import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.random.Randoms;
 import com.jn.langx.validation.rule.CharData;
 
+import static com.jn.agileway.http.authc.WwwAuthenticate.quoted;
+import static com.jn.agileway.http.authc.WwwAuthenticate.unquoted;
+
 public class DigestAuthorizationHeaderBuilder extends AuthorizationHeaderBuilder<DigestAuthorizationHeaderBuilder, DigestWwwAuthenticate, UserPasswordCredentials> {
     @NotEmpty
     private String requestUri;
@@ -48,9 +51,9 @@ public class DigestAuthorizationHeaderBuilder extends AuthorizationHeaderBuilder
         String nonce = this.wwwAuthenticate.getNonce();
         String cnonce = generateCNonce();
 
-        String A1 = unq(username) + ":" + unq(realm) + ":" + password;
+        String A1 = unquoted(username) + ":" + unquoted(realm) + ":" + password;
         if (Strings.endsWith(digestAlgorithm, "-sess")) {
-            A1 = hash(A1) + ":" + unq(nonce) + ":" + unq(cnonce);
+            A1 = hash(A1) + ":" + unquoted(nonce) + ":" + unquoted(cnonce);
         }
         String qop = this.wwwAuthenticate.getQop();
         String A2 = requestMethod + ":" + requestUri;
@@ -59,13 +62,14 @@ public class DigestAuthorizationHeaderBuilder extends AuthorizationHeaderBuilder
         }
         String usernameHash = username;
         if (this.wwwAuthenticate.isUserhash()) {
-            usernameHash = hash(unq(username) + ":" + unq(realm));
+            usernameHash = hash(unquoted(username) + ":" + unquoted(realm));
         }
         String nc = "00000001";
-        String response = kd(hash(A1), StringTemplates.formatWithPlaceholder("{}:{}:{}:{}:{}", unq(nonce), nc, unq(cnonce), unq(qop), hash(A2)));
+        String response = kd(hash(A1), StringTemplates.formatWithPlaceholder("{}:{}:{}:{}:{}", unquoted(nonce), nc, unquoted(cnonce), unquoted(qop), hash(A2)));
 
         String template = "Digest username={}, realm=\"{}\", uri={}, algorithm={}, nonce=\"{}\", nc={}, cnonce=\"{}\", qop={}, response=\"{}\", opaque=\"{}\", userhash={}";
-        String result = StringTemplates.formatWithPlaceholder(template, usernameHash, realm, requestUri, digestAlgorithm, nonce, nc, cnonce, qop, response, this.wwwAuthenticate.getOpaque(), this.wwwAuthenticate.isUserhash());
+        String result = StringTemplates.formatWithPlaceholder(template,
+                quoted(usernameHash), quoted(realm), quoted(requestUri), unquoted(digestAlgorithm), quoted(nonce), unquoted(nc), quoted(cnonce), unquoted(qop), quoted(response), quoted(this.wwwAuthenticate.getOpaque()), this.wwwAuthenticate.isUserhash());
         return result;
     }
 
@@ -90,10 +94,6 @@ public class DigestAuthorizationHeaderBuilder extends AuthorizationHeaderBuilder
      */
     private String kd(String secret, String data) {
         return hash(secret + ":" + data);
-    }
-
-    private static String unq(String str) {
-        return WwwAuthenticate.unquoted(str);
     }
 
 
