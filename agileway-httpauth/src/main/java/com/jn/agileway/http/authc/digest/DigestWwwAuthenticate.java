@@ -1,12 +1,11 @@
 package com.jn.agileway.http.authc.digest;
 
+import com.jn.agileway.http.authc.AuthHeaders;
 import com.jn.agileway.http.authc.AuthScheme;
 import com.jn.agileway.http.authc.WwwAuthenticate;
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Strings;
-import com.jn.langx.util.collection.Lists;
-import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.enums.Enums;
 
 import java.util.List;
@@ -37,11 +36,8 @@ public class DigestWwwAuthenticate extends WwwAuthenticate {
     }
 
     public List<String> getDomainAsList() {
-        String scope = getDomain();
-        if (Strings.isNotBlank(scope)) {
-            return Pipeline.of(Strings.split(scope, " ")).asList();
-        }
-        return Lists.immutableList();
+        String domain = getDomain();
+        return AuthHeaders.getFieldAsList(domain, " ");
     }
 
     /**

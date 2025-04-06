@@ -1,7 +1,11 @@
 package com.jn.agileway.http.authc;
 
 import com.jn.langx.util.Preconditions;
+import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.Lists;
+import com.jn.langx.util.collection.Pipeline;
 
+import java.util.List;
 import java.util.Map;
 
 public class AuthHeaders {
@@ -52,6 +56,13 @@ public class AuthHeaders {
             i++;
         }
         return builder.toString();
+    }
+
+    public static List<String> getFieldAsList(String fieldValue, String separator) {
+        if (Strings.isNotBlank(fieldValue)) {
+            return Pipeline.of(Strings.split(fieldValue, separator)).asList();
+        }
+        return Lists.immutableList();
     }
 
 }

@@ -1,10 +1,8 @@
 package com.jn.agileway.http.authc.bearer;
 
+import com.jn.agileway.http.authc.AuthHeaders;
 import com.jn.agileway.http.authc.AuthScheme;
 import com.jn.agileway.http.authc.WwwAuthenticate;
-import com.jn.langx.util.Strings;
-import com.jn.langx.util.collection.Lists;
-import com.jn.langx.util.collection.Pipeline;
 
 import java.util.List;
 
@@ -20,9 +18,6 @@ public class BearerWwwAuthenticate extends WwwAuthenticate {
 
     public List<String> getScopeAsList() {
         String scope = getScope();
-        if (Strings.isNotBlank(scope)) {
-            return Pipeline.of(Strings.split(scope, " ")).asList();
-        }
-        return Lists.immutableList();
+        return AuthHeaders.getFieldAsList(scope, " ");
     }
 }
