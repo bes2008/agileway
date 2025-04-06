@@ -1,5 +1,6 @@
 package com.jn.agileway.http.authc.digest;
 
+import com.jn.agileway.http.authc.AuthHeaders;
 import com.jn.agileway.http.authc.AuthorizationHeaderBuilder;
 import com.jn.agileway.http.authc.UserPasswordCredentials;
 import com.jn.langx.annotation.NotEmpty;
@@ -11,6 +12,8 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.random.Randoms;
 import com.jn.langx.validation.rule.CharData;
+
+import java.util.Map;
 
 import static com.jn.agileway.http.authc.WwwAuthenticate.quoted;
 import static com.jn.agileway.http.authc.WwwAuthenticate.unquoted;
@@ -66,10 +69,21 @@ public class DigestAuthorizationHeaderBuilder extends AuthorizationHeaderBuilder
         String nc = "00000001";
         String response = kd(hash(A1), StringTemplates.formatWithPlaceholder("{}:{}:{}:{}:{}", unquoted(nonce), nc, unquoted(cnonce), unquoted(qop), hash(A2)));
 
-        String template = "Digest username={}, realm=\"{}\", uri={}, algorithm={}, nonce=\"{}\", nc={}, cnonce=\"{}\", qop={}, response=\"{}\", opaque=\"{}\", userhash={}";
-        String result = StringTemplates.formatWithPlaceholder(template,
-                quoted(usernameHash), quoted(realm), quoted(requestUri), unquoted(digestAlgorithm), quoted(nonce), unquoted(nc), quoted(cnonce), unquoted(qop), quoted(response), quoted(this.wwwAuthenticate.getOpaque()), this.wwwAuthenticate.isUserhash());
-        return result;
+        Map<String, String> fields = this.wwwAuthenticate.getFields();
+        fields.put("username", quoted(usernameHash));
+        fields.put("realm", quoted(realm));
+        fields.put("uri", quoted(requestUri));
+        fields.put("algorithm", unquoted(digestAlgorithm));
+        fields.put("nonce", quoted(nonce));
+        fields.put("cnonce", quoted(cnonce));
+        fields.put("nc", unquoted(nc));
+        fields.put("qop", unquoted(qop));
+        fields.put("response", quoted(response));
+        fields.put("opaque", quoted(this.wwwAuthenticate.getOpaque()));
+        fields.put("userhash", "" + this.wwwAuthenticate.isUserhash());
+
+        String template = AuthHeaders.buildAuthHeaderString("Digest", fields);
+        return template;
     }
 
     /**

@@ -18,6 +18,10 @@ public class WwwAuthenticate {
         this.authScheme = authScheme;
     }
 
+    public Map<String, String> getFields() {
+        return fields;
+    }
+
     public final String getField(String fieldName) {
         return unquoted(fields.get(fieldName));
     }
@@ -53,17 +57,6 @@ public class WwwAuthenticate {
     }
 
     public String toHeaderValue() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(authScheme);
-        int i = 0;
-        for (Map.Entry<String, String> entry : fields.entrySet()) {
-            builder.append(" ");
-            if (i > 0) {
-                builder.append(",");
-            }
-            builder.append(entry.getKey()).append("=").append(entry.getValue());
-            i++;
-        }
-        return builder.toString();
+        return AuthHeaders.buildWwwAuthenticate(this);
     }
 }
