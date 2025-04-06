@@ -1,0 +1,29 @@
+package com.jn.agileway.http.authc;
+
+import com.jn.langx.Builder;
+
+public abstract class AuthorizationHeaderBuilder<B extends AuthorizationHeaderBuilder, W extends WwwAuthenticate, C extends Credentials> implements Builder<String> {
+    protected C credentials;
+    protected String authScheme;
+    protected W wwwAuthenticate;
+
+    public B withCredentials(C credentials) {
+        this.credentials = credentials;
+        return (B) this;
+    }
+
+    public B withAuthScheme(String authScheme) {
+        this.authScheme = authScheme;
+        return (B) this;
+    }
+
+    public B withAuthScheme(AuthScheme authScheme) {
+        return withAuthScheme(authScheme.getScheme());
+    }
+
+    public B withWwwAuthenticate(W wwwAuthenticate) {
+        this.wwwAuthenticate = wwwAuthenticate;
+        return (B) this;
+    }
+
+}
