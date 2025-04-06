@@ -1,6 +1,8 @@
 package com.jn.agileway.http.authc;
 
-public enum AuthScheme {
+import com.jn.langx.util.enums.base.CommonEnum;
+
+public enum AuthScheme implements CommonEnum {
     BASIC("Basic"),
     DIGEST("Digest"),
     NTLM("NTLM"),
@@ -17,5 +19,21 @@ public enum AuthScheme {
 
     public String getScheme() {
         return scheme;
+    }
+
+
+    @Override
+    public int getCode() {
+        return ordinal();
+    }
+
+    @Override
+    public String getDisplayText() {
+        return getName();
+    }
+
+    @Override
+    public String getName() {
+        return getScheme();
     }
 }

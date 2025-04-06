@@ -1,10 +1,15 @@
 package com.jn.agileway.http.authc.digest;
 
+import com.jn.agileway.http.authc.AuthScheme;
 import com.jn.agileway.http.authc.WwwAuthenticate;
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.Lists;
+import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.enums.Enums;
+
+import java.util.List;
 
 /**
  * For historical reasons, a sender MUST only generate the quoted string
@@ -13,17 +18,9 @@ import com.jn.langx.util.enums.Enums;
  */
 public class DigestWwwAuthenticate extends WwwAuthenticate {
 
-    /**
-     * 指定从哪个 realm 获取凭证，
-     * 值一定有双引号
-     */
-    public void setRealm(String realm) {
-        setField("realm", realm, true);
-    }
-
-    @Nullable
-    public String getRealm() {
-        return getField("realm");
+    public DigestWwwAuthenticate() {
+        super();
+        setAuthScheme(AuthScheme.DIGEST.getScheme());
     }
 
 
@@ -37,6 +34,14 @@ public class DigestWwwAuthenticate extends WwwAuthenticate {
      */
     public String getDomain() {
         return getField("domain");
+    }
+
+    public List<String> getDomainAsList() {
+        String scope = getDomain();
+        if (Strings.isNotBlank(scope)) {
+            return Pipeline.of(Strings.split(scope, " ")).asList();
+        }
+        return Lists.immutableList();
     }
 
     /**

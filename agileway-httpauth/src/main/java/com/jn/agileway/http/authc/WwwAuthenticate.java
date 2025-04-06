@@ -1,5 +1,6 @@
 package com.jn.agileway.http.authc;
 
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Strings;
 
@@ -17,6 +18,20 @@ public class WwwAuthenticate {
     public void setAuthScheme(String authScheme) {
         this.authScheme = authScheme;
     }
+
+    /**
+     * 指定从哪个 realm 获取凭证，
+     * 值一定有双引号
+     */
+    public void setRealm(String realm) {
+        setField("realm", realm, true);
+    }
+
+    @Nullable
+    public String getRealm() {
+        return getField("realm");
+    }
+
 
     public Map<String, String> getFields() {
         return fields;

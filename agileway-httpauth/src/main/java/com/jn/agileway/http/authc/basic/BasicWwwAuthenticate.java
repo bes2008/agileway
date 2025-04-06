@@ -1,5 +1,6 @@
 package com.jn.agileway.http.authc.basic;
 
+import com.jn.agileway.http.authc.AuthScheme;
 import com.jn.agileway.http.authc.WwwAuthenticate;
 import com.jn.langx.annotation.Nullable;
 
@@ -9,20 +10,10 @@ import com.jn.langx.annotation.Nullable;
  * </pre>
  */
 public class BasicWwwAuthenticate extends WwwAuthenticate {
-    /**
-     * 指定从哪个 realm 获取凭证
-     */
-    /**
-     * 指定从哪个 realm 获取凭证，
-     * 值一定有双引号
-     */
-    public void setRealm(String realm) {
-        setField("realm", realm, true);
-    }
 
-    @Nullable
-    public String getRealm() {
-        return getField("realm");
+    public BasicWwwAuthenticate() {
+        super();
+        setAuthScheme(AuthScheme.BASIC.getScheme());
     }
 
     /**
