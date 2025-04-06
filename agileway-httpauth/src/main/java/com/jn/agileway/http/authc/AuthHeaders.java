@@ -25,19 +25,18 @@ public class AuthHeaders {
         // 2. 解析参数键值对
         if (parts.length > 1) {
             String fieldsString = parts[1];
-            String keyValuePattern = "\\s*([a-zA-Z0-9_]+)\\s*=\\s*(\"([^\"]*)\"|([^,]*))\\s*,?";
+            String keyValuePattern = "\\s*([a-zA-Z0-9_]+)\\s*=\\s*((\"[^\"]*\")|([^,]*))\\s*,?";
             Regexp regexp = Regexps.compile(keyValuePattern);
             RegexpMatcher matcher = regexp.matcher(fieldsString);
             while (matcher.find()) {
-                String key = matcher.group(1);
+                String key = Strings.trim(matcher.group(1));
                 String value = matcher.group(3);
-                if (Strings.isNotBlank(value)) {
-                    wwwAuthenticate.setField(key, value);
-                } else {
+                if (Strings.isBlank(value)) {
                     value = matcher.group(4);
-                    if (Strings.isNotBlank(value)) {
-                        wwwAuthenticate.setField(key, value);
-                    }
+                }
+                value = Strings.trim(value);
+                if (Strings.isNotBlank(value)) {
+                    wwwAuthenticate.setField(key, value, WwwAuthenticate.isQuoted(value));
                 }
             }
 

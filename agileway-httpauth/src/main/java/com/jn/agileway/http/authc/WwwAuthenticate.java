@@ -55,7 +55,17 @@ public class WwwAuthenticate {
         if (Strings.isBlank(str)) {
             return "";
         }
-        return StringTemplates.formatWithPlaceholder("{}", unquoted(str));
+        return StringTemplates.formatWithPlaceholder("\"{}\"", unquoted(str));
+    }
+
+    public static boolean isQuoted(String str) {
+        if (str == null) {
+            return false;
+        }
+        if (Strings.isEmpty(str)) {
+            return false;
+        }
+        return str.length() > 1 && str.startsWith("\"") && str.endsWith("\"");
     }
 
     public final void setField(String fieldName, String fieldValue) {
