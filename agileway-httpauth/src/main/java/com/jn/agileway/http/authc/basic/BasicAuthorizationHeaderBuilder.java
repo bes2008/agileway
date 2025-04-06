@@ -1,6 +1,5 @@
 package com.jn.agileway.http.authc.basic;
 
-import com.jn.agileway.http.authc.AuthScheme;
 import com.jn.agileway.http.authc.AuthorizationHeaderBuilder;
 import com.jn.agileway.http.authc.UserPasswordCredentials;
 import com.jn.langx.codec.StringifyFormat;
@@ -14,7 +13,6 @@ import com.jn.langx.util.io.Charsets;
  */
 public class BasicAuthorizationHeaderBuilder extends AuthorizationHeaderBuilder<BasicAuthorizationHeaderBuilder, BasicWwwAuthenticate, UserPasswordCredentials> {
     public BasicAuthorizationHeaderBuilder() {
-        withAuthScheme(AuthScheme.BASIC.getScheme());
     }
 
     @Override
