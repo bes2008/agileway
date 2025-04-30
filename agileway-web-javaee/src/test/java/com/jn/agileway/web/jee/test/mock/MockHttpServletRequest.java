@@ -71,12 +71,12 @@ public class MockHttpServletRequest implements HttpServletRequest {
 
     @Override
     public String getContextPath() {
-        return null;
+        return delegate.getContextPath();
     }
 
     @Override
     public String getQueryString() {
-        return delegate.getContextPath();
+        return null;
     }
 
     @Override

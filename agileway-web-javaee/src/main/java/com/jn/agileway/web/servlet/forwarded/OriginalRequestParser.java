@@ -86,7 +86,7 @@ public class OriginalRequestParser implements Parser<HttpServletRequest, Origina
                     matcher = FORWARDED_FOR_PATTERN.matcher(forwardedHeader);
                     if (matcher.find()) {
                         HostAndPort host = HostAndPort.of(matcher.group(1).trim());
-                        forwarded.setHost(host);
+                        forwarded.setClient(host);
                     }
                 }
             } else {

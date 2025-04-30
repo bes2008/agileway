@@ -64,14 +64,16 @@ public class OriginalRequest {
     public String getRequestBaseUrl(boolean useLastContextIfAbsent) {
         String scheme = getRequestScheme();
         HostAndPort host = getRequestHost();
-        String contextPath = getContextPath();
-
+        String contextPath = Strings.trimToEmpty(getContextPath());
         if (Strings.isBlank(contextPath) && isForwardedRequest()) {
             contextPath = useLastContextIfAbsent ? last.getContextPath() : "/";
         }
 
         if (Strings.isNotBlank(contextPath) && !Strings.startsWith(contextPath, "/")) {
             contextPath = "/" + contextPath;
+        }
+        if (Strings.isBlank(contextPath)) {
+            contextPath = "/";
         }
         String hostname = host.getKey();
         int port = host.getValue();
