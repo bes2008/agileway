@@ -83,7 +83,11 @@ public class OriginalRequestParser implements Parser<HttpServletRequest, Origina
 
                 // 3. 解析 client
                 if (parseForwardedFor) {
-                    // TODO
+                    matcher = FORWARDED_FOR_PATTERN.matcher(forwardedHeader);
+                    if (matcher.find()) {
+                        HostAndPort host = HostAndPort.of(matcher.group(1).trim());
+                        forwarded.setHost(host);
+                    }
                 }
             } else {
                 HostAndPort host = null;
@@ -102,7 +106,11 @@ public class OriginalRequestParser implements Parser<HttpServletRequest, Origina
                 forwarded.setHost(host);
 
                 if (parseForwardedFor) {
-                    // TODO
+                    String firstClient = splitAndGetFirstHeader(request, ",", "X-Forwarded-For", "X-Real-Ip");
+                    if (Strings.isNotBlank(firstClient)) {
+                        HostAndPort client = HostAndPort.of(firstClient);
+                        forwarded.setClient(client);
+                    }
                 }
             }
         } catch (NumberFormatException e) {
