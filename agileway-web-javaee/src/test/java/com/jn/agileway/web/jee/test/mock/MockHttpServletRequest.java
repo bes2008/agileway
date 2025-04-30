@@ -1,4 +1,6 @@
-package com.jn.agileway.web.jee.test;
+package com.jn.agileway.web.jee.test.mock;
+
+import com.jn.langx.util.collection.iter.IterableEnumeration;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -6,12 +8,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public class MockHttpServletRequest implements HttpServletRequest {
+
+    private MockHttpRequest delegate;
+
+    public MockHttpServletRequest(MockHttpRequest delegate) {
+        this.delegate = delegate;
+    }
     @Override
     public String getAuthType() {
         return null;
@@ -29,27 +34,29 @@ public class MockHttpServletRequest implements HttpServletRequest {
 
     @Override
     public String getHeader(String name) {
-        return null;
+        return delegate.getHeaders().getFirst(name);
     }
 
     @Override
     public Enumeration<String> getHeaders(String name) {
-        return null;
+        List<String> headerValues = delegate.getHeaders().get(name);
+        return new IterableEnumeration<String>(headerValues);
     }
 
     @Override
     public Enumeration<String> getHeaderNames() {
-        return null;
+        return new IterableEnumeration<String>(delegate.getHeaders().keySet());
     }
 
     @Override
     public int getIntHeader(String name) {
-        return 0;
+        String header = getHeader(name);
+        return Integer.parseInt(header);
     }
 
     @Override
     public String getMethod() {
-        return null;
+        return delegate.getMethod();
     }
 
     @Override
@@ -69,7 +76,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
 
     @Override
     public String getQueryString() {
-        return null;
+        return delegate.getContextPath();
     }
 
     @Override
@@ -94,7 +101,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
 
     @Override
     public String getRequestURI() {
-        return null;
+        return delegate.getRequestURI();
     }
 
     @Override
@@ -219,22 +226,22 @@ public class MockHttpServletRequest implements HttpServletRequest {
 
     @Override
     public String getProtocol() {
-        return null;
+        return delegate.getScheme() + "/1.1";
     }
 
     @Override
     public String getScheme() {
-        return null;
+        return delegate.getScheme();
     }
 
     @Override
     public String getServerName() {
-        return null;
+        return delegate.getServerName();
     }
 
     @Override
     public int getServerPort() {
-        return 0;
+        return delegate.getServerPort();
     }
 
     @Override
@@ -244,12 +251,12 @@ public class MockHttpServletRequest implements HttpServletRequest {
 
     @Override
     public String getRemoteAddr() {
-        return null;
+        return delegate.getRemoteAddr();
     }
 
     @Override
     public String getRemoteHost() {
-        return null;
+        return delegate.getRemoteHost();
     }
 
     @Override
@@ -274,7 +281,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
 
     @Override
     public boolean isSecure() {
-        return false;
+        return getScheme().equalsIgnoreCase("https") || getScheme().equalsIgnoreCase("wss");
     }
 
     @Override
@@ -289,7 +296,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
 
     @Override
     public int getRemotePort() {
-        return 0;
+        return -1;
     }
 
     @Override

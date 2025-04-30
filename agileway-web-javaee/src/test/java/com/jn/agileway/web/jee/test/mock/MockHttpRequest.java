@@ -1,4 +1,4 @@
-package com.jn.agileway.web.jee.test;
+package com.jn.agileway.web.jee.test.mock;
 
 import com.jn.langx.util.net.http.HttpHeaders;
 
@@ -79,5 +79,17 @@ public class MockHttpRequest {
 
     public void setScheme(String scheme) {
         this.scheme = scheme;
+    }
+
+    public void setHeaders(HttpHeaders headers) {
+        this.headers = headers;
+    }
+
+    public void addHeader(String name, String value) {
+        headers.add(name, value);
+    }
+
+    public HttpHeaders getHeaders() {
+        return headers;
     }
 }
