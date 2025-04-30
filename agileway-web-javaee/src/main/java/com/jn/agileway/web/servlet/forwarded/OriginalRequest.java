@@ -67,7 +67,7 @@ public class OriginalRequest {
         String contextPath = getContextPath();
 
         if (Strings.isBlank(contextPath) && isForwardedRequest()) {
-            contextPath = useLastContextIfAbsent ? last.getContextPath() : contextPath;
+            contextPath = useLastContextIfAbsent ? last.getContextPath() : "/";
         }
 
         if (Strings.isNotBlank(contextPath) && !Strings.startsWith(contextPath, "/")) {

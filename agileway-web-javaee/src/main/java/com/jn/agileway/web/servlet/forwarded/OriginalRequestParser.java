@@ -141,18 +141,7 @@ public class OriginalRequestParser implements Parser<HttpServletRequest, Origina
         }
         forwarded.setProto(protocol);
 
-        if (firstPort == 443 || firstPort == 80) {
-            firstPort = -1;
-        }
-
-        if (host == null) {
-            host = new HostAndPort(null, firstPort);
-        } else {
-            host = new HostAndPort(host.getKey(), firstPort);
-        }
-        forwarded.setHost(host);
-
-        forwarded.setContextPath(splitAndGetFirstHeader(request, ",", "X-Forwarded-ContextPath", "X-Forwarded-Prefix"));
+        forwarded.setContextPath(splitAndGetFirstHeader(request, ",", "X-Forwarded-ContextPath", "X-Forwarded-Context", "X-Forwarded-Path", "X-Forwarded-Prefix"));
         return forwarded;
     }
 
