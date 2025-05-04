@@ -12,7 +12,8 @@ import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.ClassLoaders;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Objs;
-import com.jn.langx.util.concurrent.CommonTask;
+import com.jn.langx.util.concurrent.promise.Promise;
+import com.jn.langx.util.concurrent.promise.Promises;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Function2;
 import com.jn.langx.util.logging.Loggers;
@@ -21,13 +22,12 @@ import com.jn.langx.util.struct.ThreadLocalHolder;
 import org.slf4j.Logger;
 
 import java.util.Stack;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializable, Destroyable, MessageTopicDispatcherAware {
     private static Logger logger = Loggers.getLogger(Auditor.class);
     private static ThreadLocalHolder<Stack<AuditRequest>> auditRequestHolder = new ThreadLocalHolder<Stack<AuditRequest>>();
-    private static ThreadLocalHolder<CompletableFuture<Void>> asyncTaskHolder = new ThreadLocalHolder<CompletableFuture<Void>>();
+    private static ThreadLocalHolder<Promise> asyncTaskHolder = new ThreadLocalHolder<Promise>();
 
     /**
      * 用于在audit event 提取之前进行过滤
@@ -162,10 +162,10 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
     public AuditRequest<AuditedRequest, AuditedRequestContext> startAsyncAudit(final AuditedRequest request, final AuditedRequestContext ctx) {
         final AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest = createAuditRequest(request, ctx);
         cacheRequest(wrappedRequest);
-        Loggers.debug(logger,"start async audit {}", wrappedRequest);
+        Loggers.debug(logger, "start async audit {}", wrappedRequest);
         wrappedRequest.setStartTime(System.currentTimeMillis());
         final ClassLoader mThreadClassLoader = Thread.currentThread().getContextClassLoader();
-        asyncTaskHolder.set(CompletableFuture.runAsync(CommonTask.wrap(new Runnable() {
+        asyncTaskHolder.set(Promises.runAsync(this.executor, new Runnable() {
             @Override
             public void run() {
                 ClassLoaders.doAction(mThreadClassLoader, new Function<Object, Object>() {
@@ -176,7 +176,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
                     }
                 }, null);
             }
-        }), executor));
+        }));
         return wrappedRequest;
     }
 
@@ -189,7 +189,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
      */
     public AuditRequest<AuditedRequest, AuditedRequestContext> startSyncAudit(final AuditedRequest request, final AuditedRequestContext ctx) {
         final AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest = createAuditRequest(request, ctx);
-        Loggers.debug(logger,"start sync audit {}", wrappedRequest);
+        Loggers.debug(logger, "start sync audit {}", wrappedRequest);
         wrappedRequest.setStartTime(System.currentTimeMillis());
         startAuditInternal(wrappedRequest);
         cacheRequest(wrappedRequest);
@@ -247,7 +247,7 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
         } catch (Throwable ex) {
             logger.warn(ex.getMessage(), ex);
         } finally {
-            Loggers.debug(logger,"finish sync audit {}", wrappedRequest);
+            Loggers.debug(logger, "finish sync audit {}", wrappedRequest);
             removeRequest();
         }
     }
@@ -260,15 +260,15 @@ public class Auditor<AuditedRequest, AuditedRequestContext> implements Initializ
      */
     public void finishAsyncAudit(final AuditRequest<AuditedRequest, AuditedRequestContext> wrappedRequest) {
         wrappedRequest.setEndTime(System.currentTimeMillis());
-        Loggers.debug(logger,"finish sync audit {}", wrappedRequest);
-        CompletableFuture future = asyncTaskHolder.get();
+        Loggers.debug(logger, "finish sync audit {}", wrappedRequest);
+        Promise future = asyncTaskHolder.get();
         if (future != null) {
-            future.thenRunAsync(CommonTask.wrap(new Runnable() {
+            future.then(new Runnable() {
                 @Override
                 public void run() {
                     finishAuditInternal(wrappedRequest);
                 }
-            }));
+            });
         }
         asyncTaskHolder.reset();
         removeRequest();
