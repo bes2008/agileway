@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.github.bes2008.solution.agileway</groupId>
         <artifactId>agileway</artifactId>
-        <version>5.1.1</version>
+        <version>6.0.0</version>
     </parent>
 
     <artifactId>agileway-web-jakarta</artifactId>
@@ -22,7 +22,7 @@
     <dependencies>
         <dependency>
             <groupId>io.github.bes2008.solution.agileway</groupId>
-            <artifactId>agileway-web-javaee</artifactId>
+            <artifactId>agileway-httpcontainer-common</artifactId>
         </dependency>
         <dependency>
             <groupId>jakarta.servlet</groupId>

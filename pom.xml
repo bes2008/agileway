@@ -5,20 +5,18 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.bes2008.solution.agileway</groupId>
     <artifactId>agileway</artifactId>
-    <version>5.1.1</version>
+    <version>6.0.0</version>
     <packaging>pom</packaging>
 
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
     <modules>
         <module>agileway-codec</module>
         <module>agileway-httpcontainer-common</module>
-        <module>agileway-web-javaee</module>
         <module>agileway-web-jakarta</module>
         <module>agileway-vfs</module>
         <module>agileway-httpclient</module>
         <module>agileway-aop</module>
         <module>agileway-spring</module>
-        <module>agileway-springboot1_2-web</module>
         <module>agileway-springboot3-web</module>
         <module>agileway-redis-springdata2</module>
         <module>agileway-shiro-redis-springdata2</module>
