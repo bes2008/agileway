@@ -1,3 +1,7 @@
+## 5.2.0
++ 升级 Spring 6.x
++ 升级 Spring Boot 3.x
+
 ## 5.1.0
 + 新特性：
   + 提供 agileway-shell：用于支持 CLI 程序开发
