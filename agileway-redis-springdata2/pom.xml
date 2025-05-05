@@ -22,6 +22,9 @@
         the enhanced RedisTemplate based on a specified key prefix and the agileway-codec module
     </description>
     <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+
         <spring.data.redis.version>2.3.4.RELEASE</spring.data.redis.version>
     </properties>
 
