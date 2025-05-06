@@ -19,7 +19,7 @@
         <module>agileway-spring</module>
         <module>agileway-springboot3-web</module>
         <module>agileway-redis-springdata</module>
-        <module>agileway-shiro-redis-springdata2</module>
+        <module>agileway-shiro-redis</module>
         <module>agileway-feign</module>
         <module>agileway-zip</module>
         <module>agileway-dmmq</module>
