@@ -24,7 +24,7 @@
     <dependencies>
         <dependency>
             <groupId>io.github.bes2008.solution.agileway</groupId>
-            <artifactId>agileway-redis-springdata2</artifactId>
+            <artifactId>agileway-redis-springdata</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.shiro</groupId>

@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>agileway-redis-springdata2</artifactId>
+    <artifactId>agileway-redis-springdata</artifactId>
 
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
 
@@ -43,37 +43,37 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-tx</artifactId>
-                <version>${spring5.version}</version>
+                <version>${spring6.version}</version>
                 <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-oxm</artifactId>
-                <version>${spring5.version}</version>
+                <version>${spring6.version}</version>
                 <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context-support</artifactId>
-                <version>${spring5.version}</version>
+                <version>${spring6.version}</version>
                 <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
-                <version>${spring5.version}</version>
+                <version>${spring6.version}</version>
                 <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-jdbc</artifactId>
-                <version>${spring5.version}</version>
+                <version>${spring6.version}</version>
                 <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
-                <version>${spring5.version}</version>
+                <version>${spring6.version}</version>
                 <optional>true</optional>
                 <exclusions>
                     <exclusion>
@@ -112,12 +112,12 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
-            <version>${spring5.version}</version>
+            <version>${spring6.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
-            <version>${spring5.version}</version>
+            <version>${spring6.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -126,17 +126,17 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${spring5.version}</version>
+            <version>${spring6.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-oxm</artifactId>
-            <version>${spring5.version}</version>
+            <version>${spring6.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
-            <version>${spring5.version}</version>
+            <version>${spring6.version}</version>
         </dependency>
 
 

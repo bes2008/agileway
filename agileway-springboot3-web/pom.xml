@@ -64,46 +64,4 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>${maven-shade-plugin.version}</version>
-                <configuration>
-                    <createDependencyReducedPom>true</createDependencyReducedPom>
-                    <useDependencyReducedPomInJar>true</useDependencyReducedPomInJar>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>shade-javaee-to-jakarta</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <useBaseVersion>true</useBaseVersion>
-                            <shadedArtifactAttached>false</shadedArtifactAttached>
-                            <createSourcesJar>true</createSourcesJar>
-
-                            <artifactSet>
-                                <includes>
-                                    <include>io.github.bes2008.solution.agileway:agileway-springboot1_2-web</include>
-                                </includes>
-                            </artifactSet>
-
-                            <relocations>
-                                <relocation>
-                                    <pattern>javax.servlet</pattern>
-                                    <shadedPattern>jakarta.servlet</shadedPattern>
-                                </relocation>
-                            </relocations>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
-
 </project>

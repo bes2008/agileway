@@ -32,18 +32,18 @@
         </dependency>
         <dependency>
             <groupId>io.github.bes2008.solution.agileway</groupId>
-            <artifactId>agileway-redis-springdata2</artifactId>
+            <artifactId>agileway-redis-springdata</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
-            <version>${spring5.version}</version>
+            <version>${spring6.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>${spring5.version}</version>
+            <version>${spring6.version}</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -57,13 +57,13 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-            <version>${spring.boot2.version}</version>
+            <version>${spring.boot3.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
-            <version>${spring.boot2.version}</version>
+            <version>${spring.boot3.version}</version>
             <scope>provided</scope>
         </dependency>
 
