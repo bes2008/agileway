@@ -22,8 +22,8 @@
         the enhanced RedisTemplate based on a specified key prefix and the agileway-codec module
     </description>
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
 
         <spring.data.redis.version>2.3.4.RELEASE</spring.data.redis.version>
     </properties>
@@ -33,7 +33,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-redis</artifactId>
-                <version>${spring.boot2.version}</version>
+                <version>${spring.boot3.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.data</groupId>
