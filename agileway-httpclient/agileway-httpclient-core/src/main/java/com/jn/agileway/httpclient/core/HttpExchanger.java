@@ -11,8 +11,11 @@ import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.retry.RetryConfig;
 import com.jn.langx.util.retry.Retryer;
+import com.jn.langx.util.struct.Holder;
 
+import java.io.OutputStream;
 import java.net.URI;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 
@@ -21,6 +24,7 @@ public class HttpExchanger {
     private Executor executor;
     private HttpRequestFactory requestFactory;
 
+    private List<HttpRequestInterceptor> interceptors;
 
     public Promise<HttpResponse> exchange(URI uri, HttpMethod method, HttpHeaders headers, byte[] body, @Nullable final RetryConfig retryConfig) {
         return new Promise<HttpResponse>(executor, new Task<HttpResponse>() {
@@ -45,10 +49,22 @@ public class HttpExchanger {
                     }, theRetryConfig, null, new Callable<HttpResponse>() {
                         @Override
                         public HttpResponse call() throws Exception {
+
+                            Holder<URI> uriHolder = new Holder<URI>(uri);
+                            Holder<HttpMethod> methodHolder = new Holder<HttpMethod>(method);
+                            Holder<byte[]> bodyHolder = new Holder<byte[]>(body);
+                            for (HttpRequestInterceptor interceptor : interceptors) {
+                                if (!interceptor.intercept(uriHolder, methodHolder, headers, bodyHolder)) {
+                                    return null;
+                                }
+                            }
                             try {
                                 HttpRequest request = requestFactory.create(method, uri);
                                 request.setHeaders(headers);
-                                request.setBody(body);
+                                OutputStream out = request.getBody();
+                                if (out != null) {
+                                    out.write(body);
+                                }
                                 return request.exchange();
                             } catch (Throwable ex) {
                                 if (ex instanceof Exception) {

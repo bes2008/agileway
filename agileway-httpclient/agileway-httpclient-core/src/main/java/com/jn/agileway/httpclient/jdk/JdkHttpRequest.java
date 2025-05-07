@@ -7,6 +7,7 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -17,10 +18,16 @@ public class JdkHttpRequest extends AbstractHttpRequest {
 
     private HttpURLConnection httpConnection;
 
+    private ByteArrayOutputStream bodyBuffer = new ByteArrayOutputStream(1024);
+
     JdkHttpRequest(HttpURLConnection httpConnection) {
         this.httpConnection = httpConnection;
     }
 
+    @Override
+    public OutputStream getBody() throws IOException {
+        return this.bodyBuffer;
+    }
 
     @Override
     public HttpMethod getMethod() {
@@ -42,11 +49,10 @@ public class JdkHttpRequest extends AbstractHttpRequest {
         this.httpConnection.connect();
         if (this.httpConnection.getDoOutput()) {
             OutputStream out = this.httpConnection.getOutputStream();
-            out.write(this.getBody());
-        } else {
-            // Immediately trigger the request in a no-output scenario as well
-            this.httpConnection.getResponseCode();
+            out.write(this.bodyBuffer.toByteArray());
+            out.flush();
         }
+        this.httpConnection.getResponseCode();
         return new JdkHttpResponse(this.httpConnection);
     }
 

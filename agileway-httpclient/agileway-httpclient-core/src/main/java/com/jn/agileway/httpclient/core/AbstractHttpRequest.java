@@ -10,15 +10,6 @@ public abstract class AbstractHttpRequest implements HttpRequest {
     private final HttpHeaders headers = new HttpHeaders();
     private boolean executed = false;
 
-    private byte[] body;
-
-    public void setBody(byte[] body) {
-        this.body = body;
-    }
-
-    protected byte[] getBody() throws IOException {
-        return body;
-    }
 
     public void setHeaders(HttpHeaders headers) {
         if (!executed) {
