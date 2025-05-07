@@ -12,7 +12,6 @@ import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.retry.RetryConfig;
 import com.jn.langx.util.retry.Retryer;
 
-import java.io.OutputStream;
 import java.net.URI;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
