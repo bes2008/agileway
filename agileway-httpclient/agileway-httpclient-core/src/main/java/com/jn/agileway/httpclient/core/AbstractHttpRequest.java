@@ -4,20 +4,19 @@ import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.net.http.HttpHeaders;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 public abstract class AbstractHttpRequest implements HttpRequest {
 
     private final HttpHeaders headers = new HttpHeaders();
     private boolean executed = false;
 
-    private OutputStream body;
+    private byte[] body;
 
-    public void setBody(OutputStream outputStream) {
-        this.body = outputStream;
+    public void setBody(byte[] body) {
+        this.body = body;
     }
 
-    protected OutputStream getBody() throws IOException {
+    protected byte[] getBody() throws IOException {
         return body;
     }
 

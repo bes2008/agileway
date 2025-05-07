@@ -16,7 +16,7 @@ public interface HttpRequest {
 
     void setHeaders(HttpHeaders headers);
 
-    void setBody(OutputStream outputStream);
+    void setBody(byte[] body);
 
     HttpResponse exchange() throws IOException;
 }

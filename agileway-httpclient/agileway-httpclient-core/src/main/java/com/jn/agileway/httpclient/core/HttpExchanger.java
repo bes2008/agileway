@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.core;
 
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.exception.ErrorHandler;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.concurrent.promise.Promise;
@@ -22,7 +23,7 @@ public class HttpExchanger {
     private HttpRequestFactory requestFactory;
 
 
-    public Promise<HttpResponse> exchange(URI uri, HttpMethod method, HttpHeaders headers, OutputStream body, final RetryConfig retryConfig) {
+    public Promise<HttpResponse> exchange(URI uri, HttpMethod method, HttpHeaders headers, byte[] body, @Nullable final RetryConfig retryConfig) {
         return new Promise<HttpResponse>(executor, new Task<HttpResponse>() {
 
             @Override
