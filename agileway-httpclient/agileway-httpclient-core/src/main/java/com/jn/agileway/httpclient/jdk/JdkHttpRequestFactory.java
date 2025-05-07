@@ -42,6 +42,7 @@ public class JdkHttpRequestFactory implements HttpRequestFactory {
         if (this.readTimeoutMills >= 0) {
             httpConn.setReadTimeout(this.readTimeoutMills);
         }
+        // 需要注意的是， JDK http client ，不支持 PATCH方法
         httpConn.setRequestMethod(method.name());
 
         httpConn.setDoInput(true);
