@@ -11,7 +11,7 @@ import java.net.URI;
 
 public class ApacheHttpClientRequest extends AbstractHttpRequest {
     @Override
-    protected Promise<HttpResponse> doExecute() throws IOException {
+    protected HttpResponse exchangeInternal() throws IOException {
         return null;
     }
 
@@ -25,8 +25,4 @@ public class ApacheHttpClientRequest extends AbstractHttpRequest {
         return null;
     }
 
-    @Override
-    public HttpHeaders getHeaders() {
-        return null;
-    }
 }

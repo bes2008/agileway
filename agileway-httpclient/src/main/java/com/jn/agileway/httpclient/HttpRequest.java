@@ -5,6 +5,7 @@ import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URI;
 
 public interface HttpRequest {
@@ -14,7 +15,9 @@ public interface HttpRequest {
 
     HttpHeaders getHeaders();
 
-    void setBody(byte[] body);
+    void setHeaders(HttpHeaders headers);
 
-    Promise<HttpResponse> execute() throws IOException;
+    void setBody(OutputStream outputStream);
+
+    HttpResponse exchange() throws IOException;
 }

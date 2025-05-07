@@ -13,24 +13,37 @@ public abstract class AbstractHttpRequest implements HttpRequest {
     private final HttpHeaders headers = new HttpHeaders();
     private boolean executed = false;
 
-    private ByteArrayOutputStream bufferedOutput = new ByteArrayOutputStream(1024);
+    private OutputStream body;
 
-    @Override
-    public void setBody(byte[] body) {
-
+    public void setBody(OutputStream outputStream) {
+        this.body = outputStream;
     }
 
     protected OutputStream getBody() throws IOException {
-        return bufferedOutput;
+        return body;
+    }
+
+    public void setHeaders(HttpHeaders headers) {
+        if (!executed) {
+            this.headers.clear();
+            this.headers.putAll(headers);
+        }
+    }
+    @Override
+    public final HttpHeaders getHeaders() {
+        if (executed) {
+            return new HttpHeaders(this.headers);
+        }
+        return this.headers;
     }
 
     @Override
-    public Promise<HttpResponse> execute() throws IOException {
+    public HttpResponse exchange() throws IOException {
         Preconditions.checkState(!executed, "http already executed");
-        Promise<HttpResponse> promise = this.doExecute();
+        HttpResponse promise = this.exchangeInternal();
         this.executed = true;
         return promise;
     }
 
-    protected abstract Promise<HttpResponse> doExecute() throws IOException;
+    protected abstract HttpResponse exchangeInternal() throws IOException;
 }
