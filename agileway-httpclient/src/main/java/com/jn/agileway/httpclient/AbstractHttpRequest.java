@@ -8,7 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public abstract class AbstractBufferedHttpRequest implements HttpRequest {
+public abstract class AbstractHttpRequest implements HttpRequest {
 
     private final HttpHeaders headers = new HttpHeaders();
     private boolean executed = false;

@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.okhttp;
+package com.jn.agileway.httpclient.apache;
 
 import com.jn.agileway.httpclient.AbstractHttpRequest;
 import com.jn.agileway.httpclient.HttpResponse;
@@ -9,7 +9,7 @@ import com.jn.langx.util.net.http.HttpMethod;
 import java.io.IOException;
 import java.net.URI;
 
-public class OkHttpRequest extends AbstractHttpRequest {
+public class ApacheHttpClientRequest extends AbstractHttpRequest {
     @Override
     protected Promise<HttpResponse> doExecute() throws IOException {
         return null;
