@@ -11,7 +11,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.util.concurrent.Executor;
 
-public class HttpClient {
+public class HttpExchanger {
 
     private Executor executor;
     private HttpRequestFactory requestFactory;
