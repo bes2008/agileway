@@ -29,7 +29,7 @@
         </dependency>
         <dependency>
             <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
-            <artifactId>agileway-httpclient-apachehttpcomponents</artifactId>
+            <artifactId>agileway-httpclient-httpcomponents</artifactId>
         </dependency>
         <dependency>
             <groupId>io.github.bes2008.solution.agileway</groupId>

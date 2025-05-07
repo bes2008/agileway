@@ -1,6 +1,6 @@
 package com.jn.agileway.feign;
 
-import com.jn.agileway.httpclient.apache.CookieSpecs;
+import com.jn.agileway.httpclient.httpcomponents.ext.CookieSpecs;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Emptys;
