@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient;
+package com.jn.agileway.httpclient.apache;
 
 public class HttpClientProperties {
 

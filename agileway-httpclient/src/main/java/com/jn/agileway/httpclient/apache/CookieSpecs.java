@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient;
+package com.jn.agileway.httpclient.apache;
 
 import com.jn.langx.util.collection.Collects;
 import org.apache.http.config.RegistryBuilder;

@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient;
+package com.jn.agileway.httpclient.apache;
 
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.HttpClientBuilder;

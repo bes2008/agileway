@@ -1,6 +1,6 @@
 package com.jn.agileway.feign;
 
-import com.jn.agileway.httpclient.CookieSpecs;
+import com.jn.agileway.httpclient.apache.CookieSpecs;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Emptys;
@@ -83,8 +83,8 @@ public class HttpConnectionContext {
         if (Strings.isBlank(urlPrefix)) {
             return url;
         }
-        if(!urlPrefix.startsWith("/")){
-            urlPrefix="/" + urlPrefix;
+        if (!urlPrefix.startsWith("/")) {
+            urlPrefix = "/" + urlPrefix;
         }
         return url + urlPrefix;
     }

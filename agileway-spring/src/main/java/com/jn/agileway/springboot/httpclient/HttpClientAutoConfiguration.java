@@ -1,8 +1,8 @@
 package com.jn.agileway.springboot.httpclient;
 
-import com.jn.agileway.httpclient.HttpClientCustomizer;
-import com.jn.agileway.httpclient.HttpClientProperties;
-import com.jn.agileway.httpclient.HttpClientProvider;
+import com.jn.agileway.httpclient.apache.HttpClientCustomizer;
+import com.jn.agileway.httpclient.apache.HttpClientProperties;
+import com.jn.agileway.httpclient.apache.HttpClientProvider;
 import com.jn.langx.util.Emptys;
 import org.apache.http.client.HttpClient;
 import org.springframework.beans.factory.ObjectProvider;
@@ -41,7 +41,7 @@ public class HttpClientAutoConfiguration {
     public HttpClientProvider httpClientProvider(
             @Qualifier("agilewayHttpClientProperties") HttpClientProperties httpClientProperties,
             @Autowired(required = false)
-                    ObjectProvider<List<HttpClientCustomizer>> httpClientCustomizersProviders) {
+            ObjectProvider<List<HttpClientCustomizer>> httpClientCustomizersProviders) {
         HttpClientProvider provider = new HttpClientProvider();
         provider.setConfig(httpClientProperties);
         List<HttpClientCustomizer> customizers = httpClientCustomizersProviders.getIfAvailable();
