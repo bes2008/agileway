@@ -28,8 +28,8 @@
             <artifactId>agileway-httpcontainer-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.github.bes2008.solution.agileway</groupId>
-            <artifactId>agileway-httpclient</artifactId>
+            <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
+            <artifactId>agileway-httpclient-apachehttpcomponents</artifactId>
         </dependency>
         <dependency>
             <groupId>io.github.bes2008.solution.agileway</groupId>

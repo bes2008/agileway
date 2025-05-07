@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient;
+package com.jn.agileway.httpclient.core;
 
 import com.jn.langx.exception.ErrorHandler;
 import com.jn.langx.util.concurrent.promise.Promise;

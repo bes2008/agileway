@@ -7,13 +7,20 @@
         <artifactId>agileway</artifactId>
         <version>5.2.0</version>
     </parent>
+    <packaging>pom</packaging>
+    <modules>
+        <module>agileway-httpclient-core</module>
+        <module>agileway-httpclient-apachehttpcomponents</module>
+        <module>agileway-httpclient-okhttp</module>
+        <module>agileway-httpclient-jodd</module>
+    </modules>
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
     <artifactId>agileway-httpclient</artifactId>
-
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
 
-    <description>Simplify the use of apache httpclient</description>
+    <description>common httpclient module</description>
     <dependencies>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>

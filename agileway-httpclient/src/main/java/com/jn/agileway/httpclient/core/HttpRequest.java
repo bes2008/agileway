@@ -1,6 +1,5 @@
-package com.jn.agileway.httpclient;
+package com.jn.agileway.httpclient.core;
 
-import com.jn.langx.util.concurrent.promise.Promise;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 

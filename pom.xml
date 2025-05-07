@@ -235,8 +235,23 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.github.bes2008.solution.agileway</groupId>
-                <artifactId>agileway-httpclient</artifactId>
+                <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
+                <artifactId>agileway-httpclient-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
+                <artifactId>agileway-httpclient-jodd</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
+                <artifactId>agileway-httpclient-okhttp</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
+                <artifactId>agileway-httpclient-apachehttpcomponents</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

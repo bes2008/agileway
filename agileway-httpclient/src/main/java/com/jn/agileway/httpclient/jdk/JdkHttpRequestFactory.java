@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.jdk;
 
-import com.jn.agileway.httpclient.HttpRequest;
-import com.jn.agileway.httpclient.HttpRequestFactory;
+import com.jn.agileway.httpclient.core.HttpRequest;
+import com.jn.agileway.httpclient.core.HttpRequestFactory;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.os.Platform;
 

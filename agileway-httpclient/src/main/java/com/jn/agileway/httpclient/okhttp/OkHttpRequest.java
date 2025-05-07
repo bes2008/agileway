@@ -1,8 +1,7 @@
 package com.jn.agileway.httpclient.okhttp;
 
-import com.jn.agileway.httpclient.AbstractHttpRequest;
-import com.jn.agileway.httpclient.HttpResponse;
-import com.jn.langx.util.concurrent.promise.Promise;
+import com.jn.agileway.httpclient.core.AbstractHttpRequest;
+import com.jn.agileway.httpclient.core.HttpResponse;
 import com.jn.langx.util.net.http.HttpMethod;
 
 import java.io.IOException;
