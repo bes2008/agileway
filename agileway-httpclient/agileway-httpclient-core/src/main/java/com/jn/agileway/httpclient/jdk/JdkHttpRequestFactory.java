@@ -30,6 +30,10 @@ public class JdkHttpRequestFactory implements HttpRequestFactory {
     }
 
     private HttpURLConnection createHttpUrlConnection(HttpMethod method, URI uri) throws Exception {
+        if (method == HttpMethod.PATCH) {
+            throw new UnsupportedOperationException("The JDK http client does not support PATCH method");
+        }
+
         URL url = uri.toURL();
         URLConnection connection = proxy != null ? url.openConnection(proxy) : url.openConnection();
         if (!(connection instanceof HttpURLConnection)) {
