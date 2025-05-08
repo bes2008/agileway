@@ -49,7 +49,7 @@ public class HttpExchanger {
     }
 
     public <I, O> Promise<HttpResponseEntity<O>> exchange(boolean async, @NonNull HttpMethod method, @NonNull URI uri, @Nullable HttpHeaders headers, I body, @Nullable final RetryConfig retryConfig) {
-        Task<HttpResponse> sendHttpTask = new Task<HttpResponse>() {
+        Task<HttpResponse> sendRequestTask = new Task<HttpResponse>() {
 
             @Override
             public HttpResponse run(Handler<HttpResponse> resolve, ErrorHandler reject) {
@@ -128,7 +128,7 @@ public class HttpExchanger {
             }
         };
 
-        Promise<HttpResponse> promise = async ? new Promise<HttpResponse>(executor, sendHttpTask) : new Promise<HttpResponse>(sendHttpTask);
+        Promise<HttpResponse> promise = async ? new Promise<HttpResponse>(executor, sendRequestTask) : new Promise<HttpResponse>(sendRequestTask);
 
         return promise.then(new AsyncCallback<HttpResponse, HttpResponseEntity<O>>() {
             @Override
