@@ -5,14 +5,14 @@ import com.jn.langx.util.net.http.HttpMethod;
 
 import java.net.URI;
 
-public class FilteringHttpRequest<T> {
+public class InterceptingHttpRequest<T> {
     private URI uri;
     private HttpMethod method;
     private HttpHeaders headers;
     private T body;
 
 
-    FilteringHttpRequest(URI uri, HttpMethod method, HttpHeaders headers, T body) {
+    InterceptingHttpRequest(URI uri, HttpMethod method, HttpHeaders headers, T body) {
         this.uri = uri;
         this.method = method;
         this.headers = headers == null ? new HttpHeaders() : headers;

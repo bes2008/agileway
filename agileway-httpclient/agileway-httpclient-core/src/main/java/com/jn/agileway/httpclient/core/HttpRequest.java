@@ -19,7 +19,7 @@ public interface HttpRequest {
 
     HttpHeaders getHeaders();
 
-    void setHeaders(HttpHeaders headers);
+    void addHeaders(HttpHeaders headers);
 
     /**
      * 获取body输出流，用于输出数据

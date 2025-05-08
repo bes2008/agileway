@@ -3,6 +3,7 @@ package com.jn.agileway.httpclient.jdk;
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.HttpRequestFactory;
 import com.jn.langx.util.net.http.HttpMethod;
+import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.os.Platform;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -25,7 +26,10 @@ public class JdkHttpRequestFactory implements HttpRequestFactory {
     }
 
     @Override
-    public HttpRequest create(HttpMethod method, URI uri) throws Exception {
+    public HttpRequest create(HttpMethod method, URI uri, MediaType contentType) throws Exception {
+        if (contentType == MediaType.MULTIPART_FORM_DATA) {
+
+        }
         return new JdkHttpRequest(createHttpUrlConnection(method, uri));
     }
 

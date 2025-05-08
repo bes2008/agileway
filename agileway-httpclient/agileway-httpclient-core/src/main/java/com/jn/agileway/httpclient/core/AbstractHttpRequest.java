@@ -4,6 +4,7 @@ import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.net.http.HttpHeaders;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 public abstract class AbstractHttpRequest implements HttpRequest {
 
@@ -11,12 +12,17 @@ public abstract class AbstractHttpRequest implements HttpRequest {
     private boolean executed = false;
 
 
-    public void setHeaders(HttpHeaders headers) {
+    public void addHeaders(HttpHeaders headers) {
         if (!executed) {
-            this.headers.clear();
             this.headers.putAll(headers);
         }
     }
+
+    @Override
+    public OutputStream getBody() throws IOException {
+        return null;
+    }
+
     @Override
     public final HttpHeaders getHeaders() {
         if (executed) {
