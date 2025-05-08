@@ -7,11 +7,11 @@ import com.jn.langx.util.concurrent.promise.Promise;
 import com.jn.langx.util.concurrent.promise.Task;
 import com.jn.langx.util.function.Handler;
 import com.jn.langx.util.function.Predicate;
+import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.retry.RetryConfig;
 import com.jn.langx.util.retry.Retryer;
-import com.jn.langx.util.struct.Holder;
 
 import java.io.OutputStream;
 import java.net.URI;
@@ -24,9 +24,17 @@ public class HttpExchanger {
     private Executor executor;
     private HttpRequestFactory requestFactory;
 
+    /**
+     * 对请求进行拦截处理
+     */
     private List<HttpRequestInterceptor> interceptors;
 
-    public Promise<HttpResponse> exchange(URI uri, HttpMethod method, HttpHeaders headers, byte[] body, @Nullable final RetryConfig retryConfig) {
+    /**
+     * 请求转换器，主要是将 body进行转换，补充 header等，只要一个转换成功就可以。
+     */
+    private List<HttpRequestTransformer> requestTransformers;
+
+    public <T> Promise<HttpResponse> exchange(URI uri, HttpMethod method, HttpHeaders headers, T body, @Nullable final RetryConfig retryConfig) {
         return new Promise<HttpResponse>(executor, new Task<HttpResponse>() {
 
             @Override
@@ -50,20 +58,37 @@ public class HttpExchanger {
                         @Override
                         public HttpResponse call() throws Exception {
 
-                            Holder<URI> uriHolder = new Holder<URI>(uri);
-                            Holder<HttpMethod> methodHolder = new Holder<HttpMethod>(method);
-                            Holder<byte[]> bodyHolder = new Holder<byte[]>(body);
+                            FilteringHttpRequest filteringHttpRequest = new FilteringHttpRequest(uri, method, headers, body);
                             for (HttpRequestInterceptor interceptor : interceptors) {
-                                if (!interceptor.intercept(uriHolder, methodHolder, headers, bodyHolder)) {
+                                if (!interceptor.intercept(filteringHttpRequest)) {
                                     return null;
                                 }
                             }
                             try {
-                                HttpRequest request = requestFactory.create(method, uri);
-                                request.setHeaders(headers);
+
+                                FilteringHttpRequest transformedHttpRequest = null;
+                                for (int i = 0; transformedHttpRequest == null && i < requestTransformers.size(); i++) {
+                                    if (requestTransformers.get(i).canTransform(filteringHttpRequest)) {
+                                        transformedHttpRequest = requestTransformers.get(i).transform(filteringHttpRequest);
+                                    }
+                                }
+
+                                if (transformedHttpRequest == null) {
+                                    transformedHttpRequest = filteringHttpRequest;
+                                }
+
+                                Object bodyObj = transformedHttpRequest.getBody();
+                                if (bodyObj != null && bodyObj.getClass() != byte[].class) {
+                                    throw new IllegalStateException("the http request body is not byte[]");
+                                }
+
+                                HttpRequest request = requestFactory.create(transformedHttpRequest.getMethod(), transformedHttpRequest.getUri());
+                                request.setHeaders(transformedHttpRequest.getHeaders());
                                 OutputStream out = request.getBody();
-                                if (out != null) {
-                                    out.write(body);
+
+                                if (out != null && bodyObj != null) {
+                                    byte[] body = (byte[]) bodyObj;
+                                    IOs.write(body, out);
                                 }
                                 return request.exchange();
                             } catch (Throwable ex) {

@@ -1,11 +1,6 @@
 package com.jn.agileway.httpclient.core;
 
-import com.jn.langx.util.net.http.HttpHeaders;
-import com.jn.langx.util.net.http.HttpMethod;
-import com.jn.langx.util.struct.Holder;
-
 import java.io.IOException;
-import java.net.URI;
 
 public interface HttpRequestInterceptor {
     /**
@@ -19,5 +14,5 @@ public interface HttpRequestInterceptor {
      * @return 是否继续处理
      * @throws IOException 拦截器抛出的异常
      */
-    boolean intercept(Holder<URI> uri, Holder<HttpMethod> method, HttpHeaders headers, Holder<byte[]> body) throws IOException;
+    boolean intercept(FilteringHttpRequest request) throws IOException;
 }
