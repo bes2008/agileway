@@ -39,17 +39,17 @@ public class HttpExchanger {
      */
     private List<HttpRequestTransformer> requestTransformers;
 
-    public <I, O> Promise<HttpResponseEntity<O>> exchange(HttpMethod method, String uriTemplate, Map<String, Object> uriVariables, HttpHeaders headers, I body, @Nullable final RetryConfig retryConfig) {
+    public <I, O> Promise<HttpResponseEntity<O>> exchange(boolean async, HttpMethod method, String uriTemplate, Map<String, Object> uriVariables, HttpHeaders headers, I body, @Nullable final RetryConfig retryConfig) {
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(uriTemplate);
         if (uriVariables != null) {
             uriBuilder.uriVariables(uriVariables);
         }
         URI uri = uriBuilder.build().toUri();
-        return exchange(method, uri, headers, body, retryConfig);
+        return exchange(async, method, uri, headers, body, retryConfig);
     }
 
-    public <I, O> Promise<HttpResponseEntity<O>> exchange(@NonNull HttpMethod method, @NonNull URI uri, @Nullable HttpHeaders headers, I body, @Nullable final RetryConfig retryConfig) {
-        return new Promise<HttpResponse>(executor, new Task<HttpResponse>() {
+    public <I, O> Promise<HttpResponseEntity<O>> exchange(boolean async, @NonNull HttpMethod method, @NonNull URI uri, @Nullable HttpHeaders headers, I body, @Nullable final RetryConfig retryConfig) {
+        Task<HttpResponse> sendHttpTask = new Task<HttpResponse>() {
 
             @Override
             public HttpResponse run(Handler<HttpResponse> resolve, ErrorHandler reject) {
@@ -126,7 +126,11 @@ public class HttpExchanger {
                     return null;
                 }
             }
-        }).then(new AsyncCallback<HttpResponse, HttpResponseEntity<O>>() {
+        };
+
+        Promise<HttpResponse> promise = async ? new Promise<HttpResponse>(executor, sendHttpTask) : new Promise<HttpResponse>(sendHttpTask);
+
+        return promise.then(new AsyncCallback<HttpResponse, HttpResponseEntity<O>>() {
             @Override
             public HttpResponseEntity<O> apply(HttpResponse httpResponse) {
                 return null;
