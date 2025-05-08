@@ -1,7 +1,9 @@
 package com.jn.agileway.httpclient.core;
 
+import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.exception.ErrorHandler;
+import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.concurrent.promise.AsyncCallback;
 import com.jn.langx.util.concurrent.promise.Promise;
@@ -11,12 +13,14 @@ import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
+import com.jn.langx.util.net.uri.component.UriComponentsBuilder;
 import com.jn.langx.util.retry.RetryConfig;
 import com.jn.langx.util.retry.Retryer;
 
 import java.io.OutputStream;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 
@@ -35,7 +39,16 @@ public class HttpExchanger {
      */
     private List<HttpRequestTransformer> requestTransformers;
 
-    public <I, O> Promise<HttpResponseEntity<O>> exchange(URI uri, HttpMethod method, HttpHeaders headers, I body, @Nullable final RetryConfig retryConfig) {
+    public <I, O> Promise<HttpResponseEntity<O>> exchange(HttpMethod method, String uriTemplate, Map<String, Object> uriVariables, HttpHeaders headers, I body, @Nullable final RetryConfig retryConfig) {
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(uriTemplate);
+        if (uriVariables != null) {
+            uriBuilder.uriVariables(uriVariables);
+        }
+        URI uri = uriBuilder.build().toUri();
+        return exchange(method, uri, headers, body, retryConfig);
+    }
+
+    public <I, O> Promise<HttpResponseEntity<O>> exchange(@NonNull HttpMethod method, @NonNull URI uri, @Nullable HttpHeaders headers, I body, @Nullable final RetryConfig retryConfig) {
         return new Promise<HttpResponse>(executor, new Task<HttpResponse>() {
 
             @Override
@@ -44,6 +57,10 @@ public class HttpExchanger {
                 if (theRetryConfig == null) {
                     theRetryConfig = RetryConfig.noneRetryConfig();
                 }
+
+                Preconditions.checkNotNull(method, "http method is required");
+                Preconditions.checkNotNull(uri, "http uri is required");
+
                 try {
                     return Retryer.<HttpResponse>execute(new Predicate<Throwable>() {
                         @Override
@@ -68,7 +85,7 @@ public class HttpExchanger {
                             try {
                                 Object bodyObj = filteringHttpRequest.getBody();
                                 if (bodyObj == null) {
-                                    headers.setContentLength(0L);
+                                    filteringHttpRequest.getHeaders().setContentLength(0L);
                                 } else {
                                     FilteringHttpRequest transformedHttpRequest = null;
                                     for (int i = 0; transformedHttpRequest == null && i < requestTransformers.size(); i++) {

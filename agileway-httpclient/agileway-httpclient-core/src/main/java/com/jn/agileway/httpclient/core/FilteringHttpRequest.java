@@ -15,7 +15,7 @@ public class FilteringHttpRequest<T> {
     FilteringHttpRequest(URI uri, HttpMethod method, HttpHeaders headers, T body) {
         this.uri = uri;
         this.method = method;
-        this.headers = headers;
+        this.headers = headers == null ? new HttpHeaders() : headers;
         this.body = body;
     }
 
