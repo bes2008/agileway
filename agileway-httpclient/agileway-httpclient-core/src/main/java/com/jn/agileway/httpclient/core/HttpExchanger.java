@@ -3,7 +3,10 @@ package com.jn.agileway.httpclient.core;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.exception.ErrorHandler;
+import com.jn.langx.lifecycle.AbstractInitializable;
+import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.Throwables;
+import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.concurrent.promise.AsyncCallback;
 import com.jn.langx.util.concurrent.promise.Promise;
 import com.jn.langx.util.concurrent.promise.Task;
@@ -21,7 +24,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 
-public class HttpExchanger {
+public class HttpExchanger extends AbstractInitializable {
 
     private Executor executor;
     private HttpRequestFactory requestFactory;
@@ -29,12 +32,29 @@ public class HttpExchanger {
     /**
      * 对请求进行拦截处理
      */
+    private List<HttpRequestInterceptor> builtinInterceptors = Lists.asList(new ContentTypeInterceptor());
+    private List<HttpRequestInterceptor> customInterceptors = Lists.newArrayList();
     private List<HttpRequestInterceptor> interceptors;
-
     /**
      * 请求转换器，主要是将 body进行转换，顺带补充 header等，只要一个转换成功就可以。
      */
     private List<HttpRequestBodyWriter> requestBodyWriters;
+
+    @Override
+    protected void doInit() throws InitializationException {
+        List<HttpRequestInterceptor> interceptors = Lists.newArrayList();
+        if (customInterceptors != null) {
+            interceptors.addAll(customInterceptors);
+        }
+        interceptors.addAll(builtinInterceptors);
+        this.interceptors = Lists.immutableList(interceptors);
+    }
+
+    public void addRequestInterceptor(HttpRequestInterceptor interceptor) {
+        if (interceptor != null) {
+            this.customInterceptors.add(interceptor);
+        }
+    }
 
     public <I, O> Promise<HttpResponseEntity<O>> exchange(boolean async, HttpMethod method, String uriTemplate, Map<String, Object> uriVariables, HttpHeaders headers, I body, @Nullable final RetryConfig retryConfig) {
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(uriTemplate);
@@ -78,10 +98,10 @@ public class HttpExchanger {
                         public HttpResponse call() throws Exception {
 
                             InterceptingHttpRequest interceptingHttpRequest = new InterceptingHttpRequest(uri, method, headers, body);
+
                             for (HttpRequestInterceptor interceptor : interceptors) {
                                 interceptor.intercept(interceptingHttpRequest);
                             }
-                            new ContentTypeInterceptor().intercept(interceptingHttpRequest);
 
                             HttpRequest request = requestFactory.create(interceptingHttpRequest.getMethod(), interceptingHttpRequest.getUri(), interceptingHttpRequest.getHeaders().getContentType());
                             request.addHeaders(interceptingHttpRequest.getHeaders());
