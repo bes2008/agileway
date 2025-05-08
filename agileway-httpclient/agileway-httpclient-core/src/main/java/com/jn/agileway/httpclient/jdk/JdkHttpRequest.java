@@ -19,8 +19,9 @@ public class JdkHttpRequest extends AbstractHttpRequest {
     private HttpURLConnection httpConnection;
 
     private ByteArrayOutputStream bodyBuffer = new ByteArrayOutputStream(1024);
+    private boolean chunked;
 
-    JdkHttpRequest(HttpURLConnection httpConnection) {
+    JdkHttpRequest(HttpURLConnection httpConnection, boolean chunked) {
         this.httpConnection = httpConnection;
     }
 
