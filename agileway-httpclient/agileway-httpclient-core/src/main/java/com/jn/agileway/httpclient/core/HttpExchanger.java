@@ -89,7 +89,7 @@ public class HttpExchanger {
 
                                 OutputStream out = request.getBody();
 
-                                if (out != null && bodyObj != null) {
+                                if (bodyObj != null) {
                                     byte[] body = (byte[]) bodyObj;
                                     IOs.write(body, out);
                                 }
