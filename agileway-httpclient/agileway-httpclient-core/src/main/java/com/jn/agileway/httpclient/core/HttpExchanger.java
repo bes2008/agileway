@@ -3,6 +3,7 @@ package com.jn.agileway.httpclient.core;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.exception.ErrorHandler;
 import com.jn.langx.util.Throwables;
+import com.jn.langx.util.concurrent.promise.AsyncCallback;
 import com.jn.langx.util.concurrent.promise.Promise;
 import com.jn.langx.util.concurrent.promise.Task;
 import com.jn.langx.util.function.Handler;
@@ -34,7 +35,7 @@ public class HttpExchanger {
      */
     private List<HttpRequestTransformer> requestTransformers;
 
-    public <T> Promise<HttpResponse> exchange(URI uri, HttpMethod method, HttpHeaders headers, T body, @Nullable final RetryConfig retryConfig) {
+    public <I, O> Promise<HttpResponseEntity<O>> exchange(URI uri, HttpMethod method, HttpHeaders headers, I body, @Nullable final RetryConfig retryConfig) {
         return new Promise<HttpResponse>(executor, new Task<HttpResponse>() {
 
             @Override
@@ -107,6 +108,16 @@ public class HttpExchanger {
                     reject.handle(ex);
                     return null;
                 }
+            }
+        }).then(new AsyncCallback<HttpResponse, HttpResponseEntity<O>>() {
+            @Override
+            public HttpResponseEntity<O> apply(HttpResponse httpResponse) {
+                return null;
+            }
+        }).catchError(new AsyncCallback<Throwable, HttpResponseEntity<O>>() {
+            @Override
+            public HttpResponseEntity<O> apply(Throwable ex) {
+                return null;
             }
         });
     }

@@ -7,6 +7,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
 
+/**
+ * 代表一个http请求
+ * <p>
+ * 框架底层使用，用户不直接使用
+ */
 public interface HttpRequest {
     HttpMethod getMethod();
 
