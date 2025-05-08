@@ -30,7 +30,7 @@ public class HttpExchanger {
     private List<HttpRequestInterceptor> interceptors;
 
     /**
-     * 请求转换器，主要是将 body进行转换，补充 header等，只要一个转换成功就可以。
+     * 请求转换器，主要是将 body进行转换，顺带补充 header等，只要一个转换成功就可以。
      */
     private List<HttpRequestTransformer> requestTransformers;
 
@@ -65,25 +65,28 @@ public class HttpExchanger {
                                 }
                             }
                             try {
+                                Object bodyObj = filteringHttpRequest.getBody();
+                                if (bodyObj == null) {
+                                    headers.setContentLength(0L);
+                                } else {
+                                    FilteringHttpRequest transformedHttpRequest = null;
+                                    for (int i = 0; transformedHttpRequest == null && i < requestTransformers.size(); i++) {
+                                        if (requestTransformers.get(i).canTransform(filteringHttpRequest)) {
+                                            transformedHttpRequest = requestTransformers.get(i).transform(filteringHttpRequest);
+                                        }
+                                    }
 
-                                FilteringHttpRequest transformedHttpRequest = null;
-                                for (int i = 0; transformedHttpRequest == null && i < requestTransformers.size(); i++) {
-                                    if (requestTransformers.get(i).canTransform(filteringHttpRequest)) {
-                                        transformedHttpRequest = requestTransformers.get(i).transform(filteringHttpRequest);
+                                    if (transformedHttpRequest != null) {
+                                        filteringHttpRequest = transformedHttpRequest;
                                     }
                                 }
-
-                                if (transformedHttpRequest == null) {
-                                    transformedHttpRequest = filteringHttpRequest;
-                                }
-
-                                Object bodyObj = transformedHttpRequest.getBody();
                                 if (bodyObj != null && bodyObj.getClass() != byte[].class) {
                                     throw new IllegalStateException("the http request body is not byte[]");
                                 }
 
-                                HttpRequest request = requestFactory.create(transformedHttpRequest.getMethod(), transformedHttpRequest.getUri());
-                                request.setHeaders(transformedHttpRequest.getHeaders());
+                                HttpRequest request = requestFactory.create(filteringHttpRequest.getMethod(), filteringHttpRequest.getUri());
+                                request.setHeaders(filteringHttpRequest.getHeaders());
+
                                 OutputStream out = request.getBody();
 
                                 if (out != null && bodyObj != null) {
