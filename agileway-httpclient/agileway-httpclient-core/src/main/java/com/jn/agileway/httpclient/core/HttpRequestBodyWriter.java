@@ -6,8 +6,8 @@ import com.jn.langx.util.net.mime.MediaType;
 /**
  * 用于对请求体内容进行转换
  */
-public interface HttpRequestBodySerializer<T> {
+public interface HttpRequestBodyWriter<T> {
     boolean canWrite(T body, MediaType contentType);
 
-    void write(T body, MediaType contentType, UnderlyingHttpRequest request);
+    void write(T body, MediaType contentType, UnderlyingHttpRequest output);
 }

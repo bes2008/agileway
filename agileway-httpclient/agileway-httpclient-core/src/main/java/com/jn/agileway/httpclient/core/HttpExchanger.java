@@ -14,6 +14,7 @@ import com.jn.langx.util.function.Handler;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
+import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.net.uri.component.UriComponentsBuilder;
 import com.jn.langx.util.retry.RetryConfig;
 import com.jn.langx.util.retry.Retryer;
@@ -38,7 +39,12 @@ public class HttpExchanger extends AbstractInitializable {
     /**
      * 主要是将 body进行转换，顺带补充 header等，只要一个转换成功就可以。
      */
-    private List<HttpRequestBodySerializer> requestBodySerializers;
+    private List<HttpRequestBodyWriter> requestBodySerializers;
+
+    /**
+     * 对响应进行反序列化
+     */
+    private List<HttpResponseBodyReader> responseBodyDeserializers;
 
     @Override
     protected void doInit() throws InitializationException {
@@ -97,23 +103,23 @@ public class HttpExchanger extends AbstractInitializable {
                         @Override
                         public UnderlyingHttpResponse call() throws Exception {
 
-                            HttpRequest interceptingHttpRequest = new HttpRequest(uri, method, headers, body);
+                            HttpRequest httpRequest = new HttpRequest(uri, method, headers, body);
 
                             for (HttpRequestInterceptor interceptor : requestInterceptors) {
-                                interceptor.intercept(interceptingHttpRequest);
+                                interceptor.intercept(httpRequest);
                             }
 
-                            UnderlyingHttpRequest request = requestFactory.create(interceptingHttpRequest.getMethod(), interceptingHttpRequest.getUri(), interceptingHttpRequest.getHeaders().getContentType());
-                            request.addHeaders(interceptingHttpRequest.getHeaders());
+                            UnderlyingHttpRequest underlyingHttpRequest = requestFactory.create(httpRequest.getMethod(), httpRequest.getUri(), httpRequest.getHeaders().getContentType());
+                            underlyingHttpRequest.addHeaders(httpRequest.getHeaders());
 
-                            for (HttpRequestBodySerializer requestBodyWriter : requestBodySerializers) {
-                                if (requestBodyWriter.canWrite(interceptingHttpRequest.getBody(), interceptingHttpRequest.getHeaders().getContentType())) {
-                                    requestBodyWriter.write(interceptingHttpRequest.getBody(), interceptingHttpRequest.getHeaders().getContentType(), request);
+                            for (HttpRequestBodyWriter requestBodySerializer : requestBodySerializers) {
+                                if (requestBodySerializer.canWrite(httpRequest.getBody(), httpRequest.getHeaders().getContentType())) {
+                                    requestBodySerializer.write(httpRequest.getBody(), httpRequest.getHeaders().getContentType(), underlyingHttpRequest);
                                     break;
                                 }
                             }
                             try {
-                                return request.exchange();
+                                return underlyingHttpRequest.exchange();
                             } catch (Throwable ex) {
                                 if (ex instanceof Exception) {
                                     throw (Exception) ex;
@@ -135,6 +141,8 @@ public class HttpExchanger extends AbstractInitializable {
         return promise.then(new AsyncCallback<UnderlyingHttpResponse, HttpResponse<O>>() {
             @Override
             public HttpResponse<O> apply(UnderlyingHttpResponse httpResponse) {
+                MediaType contentType = httpResponse.getHeaders().getContentType();
+
                 return null;
             }
         }).catchError(new AsyncCallback<Throwable, HttpResponse<O>>() {
