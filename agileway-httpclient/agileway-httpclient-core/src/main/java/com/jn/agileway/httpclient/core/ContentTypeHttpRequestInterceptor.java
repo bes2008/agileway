@@ -6,7 +6,7 @@ import com.jn.langx.util.net.mime.MediaType;
 
 import java.io.IOException;
 
-public class ContentTypeInterceptor implements HttpRequestInterceptor {
+public class ContentTypeHttpRequestInterceptor implements HttpRequestInterceptor {
     @Override
     public void intercept(HttpRequest request) throws IOException {
         HttpMethod method = request.getMethod();

@@ -32,13 +32,13 @@ public class HttpExchanger extends AbstractInitializable {
     /**
      * 对请求进行拦截处理
      */
-    private List<HttpRequestInterceptor> builtinInterceptors = Lists.asList(new ContentTypeInterceptor());
+    private List<HttpRequestInterceptor> builtinInterceptors = Lists.asList(new ContentTypeHttpRequestInterceptor());
     private List<HttpRequestInterceptor> customInterceptors = Lists.newArrayList();
     private List<HttpRequestInterceptor> interceptors;
     /**
      * 请求转换器，主要是将 body进行转换，顺带补充 header等，只要一个转换成功就可以。
      */
-    private List<HttpRequestBodyWriter> requestBodyWriters;
+    private List<HttpRequestBodySerializer> requestBodyWriters;
 
     @Override
     protected void doInit() throws InitializationException {
@@ -106,7 +106,7 @@ public class HttpExchanger extends AbstractInitializable {
                             UnderlyingHttpRequest request = requestFactory.create(interceptingHttpRequest.getMethod(), interceptingHttpRequest.getUri(), interceptingHttpRequest.getHeaders().getContentType());
                             request.addHeaders(interceptingHttpRequest.getHeaders());
 
-                            for (HttpRequestBodyWriter requestBodyWriter : requestBodyWriters) {
+                            for (HttpRequestBodySerializer requestBodyWriter : requestBodyWriters) {
                                 if (requestBodyWriter.canWrite(interceptingHttpRequest.getBody(), interceptingHttpRequest.getHeaders().getContentType())) {
                                     requestBodyWriter.write(interceptingHttpRequest.getBody(), interceptingHttpRequest.getHeaders().getContentType(), request);
                                     break;
