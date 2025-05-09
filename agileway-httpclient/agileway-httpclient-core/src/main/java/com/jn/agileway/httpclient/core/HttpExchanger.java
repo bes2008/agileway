@@ -1,6 +1,5 @@
 package com.jn.agileway.httpclient.core;
 
-import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.exception.ErrorHandler;
 import com.jn.langx.lifecycle.AbstractInitializable;
@@ -39,12 +38,12 @@ public class HttpExchanger extends AbstractInitializable {
     /**
      * 主要是将 body进行转换，顺带补充 header等，只要一个转换成功就可以。
      */
-    private List<HttpRequestBodyWriter> requestBodySerializers;
+    private List<HttpRequestBodyWriter> requestBodyWriters;
 
     /**
      * 对响应进行反序列化
      */
-    private List<HttpResponseBodyReader> responseBodyDeserializers;
+    private List<HttpResponseBodyReader> responseBodyReaders;
 
     @Override
     protected void doInit() throws InitializationException {
@@ -62,16 +61,17 @@ public class HttpExchanger extends AbstractInitializable {
         }
     }
 
-    public <I, O> Promise<HttpResponse<O>> exchange(boolean async, HttpMethod method, String uriTemplate, Map<String, Object> uriVariables, HttpHeaders headers, I body, @Nullable final RetryConfig retryConfig) {
+    public <I, O> Promise<HttpResponse<O>> exchange(boolean async, HttpMethod method, String uriTemplate, Map<String, Object> uriVariables, HttpHeaders headers, I body, final Class responseType, @Nullable final RetryConfig retryConfig) {
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(uriTemplate);
         if (uriVariables != null) {
             uriBuilder.uriVariables(uriVariables);
         }
         URI uri = uriBuilder.build().toUri();
-        return exchange(async, method, uri, headers, body, retryConfig);
+
+        return exchange(async, new HttpRequest(uri, method, headers, body), responseType, retryConfig);
     }
 
-    public <I, O> Promise<HttpResponse<O>> exchange(boolean async, @NonNull HttpMethod method, @NonNull URI uri, @Nullable HttpHeaders headers, I body, @Nullable final RetryConfig retryConfig) {
+    public <I, O> Promise<HttpResponse<O>> exchange(boolean async, final HttpRequest request, final Class responseType, @Nullable final RetryConfig retryConfig) {
         Task<UnderlyingHttpResponse> sendRequestTask = new Task<UnderlyingHttpResponse>() {
 
             @Override
@@ -81,10 +81,10 @@ public class HttpExchanger extends AbstractInitializable {
                     theRetryConfig = RetryConfig.noneRetryConfig();
                 }
 
-                if (method == null) {
+                if (request.getMethod() == null) {
                     throw new InvalidHttpRequestException("http method is required");
                 }
-                if (uri == null) {
+                if (request.getUri() == null) {
                     throw new InvalidHttpRequestException("http uri is required");
                 }
 
@@ -103,18 +103,16 @@ public class HttpExchanger extends AbstractInitializable {
                         @Override
                         public UnderlyingHttpResponse call() throws Exception {
 
-                            HttpRequest httpRequest = new HttpRequest(uri, method, headers, body);
-
                             for (HttpRequestInterceptor interceptor : requestInterceptors) {
-                                interceptor.intercept(httpRequest);
+                                interceptor.intercept(request);
                             }
 
-                            UnderlyingHttpRequest underlyingHttpRequest = requestFactory.create(httpRequest.getMethod(), httpRequest.getUri(), httpRequest.getHeaders().getContentType());
-                            underlyingHttpRequest.addHeaders(httpRequest.getHeaders());
+                            UnderlyingHttpRequest underlyingHttpRequest = requestFactory.create(request.getMethod(), request.getUri(), request.getHeaders().getContentType());
+                            underlyingHttpRequest.addHeaders(request.getHeaders());
 
-                            for (HttpRequestBodyWriter requestBodySerializer : requestBodySerializers) {
-                                if (requestBodySerializer.canWrite(httpRequest.getBody(), httpRequest.getHeaders().getContentType())) {
-                                    requestBodySerializer.write(httpRequest.getBody(), httpRequest.getHeaders().getContentType(), underlyingHttpRequest);
+                            for (HttpRequestBodyWriter requestBodyWriter : requestBodyWriters) {
+                                if (requestBodyWriter.canWrite(request.getBody(), request.getHeaders().getContentType())) {
+                                    requestBodyWriter.write(request.getBody(), request.getHeaders().getContentType(), underlyingHttpRequest);
                                     break;
                                 }
                             }
@@ -142,6 +140,12 @@ public class HttpExchanger extends AbstractInitializable {
             @Override
             public HttpResponse<O> apply(UnderlyingHttpResponse httpResponse) {
                 MediaType contentType = httpResponse.getHeaders().getContentType();
+                for (HttpResponseBodyReader responseBodyReader : responseBodyReaders) {
+                    if (responseBodyReader.canRead(httpResponse, contentType, responseType)) {
+                        return new HttpResponse<O>(httpResponse, (O) responseBodyReader.read(httpResponse, contentType, responseType));
+                    }
+                }
+
 
                 return null;
             }
