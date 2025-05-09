@@ -32,27 +32,27 @@ public class HttpExchanger extends AbstractInitializable {
     /**
      * 对请求进行拦截处理
      */
-    private List<HttpRequestInterceptor> builtinInterceptors = Lists.asList(new ContentTypeHttpRequestInterceptor());
-    private List<HttpRequestInterceptor> customInterceptors = Lists.newArrayList();
-    private List<HttpRequestInterceptor> interceptors;
+    private List<HttpRequestInterceptor> builtinRequestInterceptors = Lists.asList(new ContentTypeHttpRequestInterceptor());
+    private List<HttpRequestInterceptor> customRequestInterceptors = Lists.newArrayList();
+    private List<HttpRequestInterceptor> requestInterceptors;
     /**
-     * 请求转换器，主要是将 body进行转换，顺带补充 header等，只要一个转换成功就可以。
+     * 主要是将 body进行转换，顺带补充 header等，只要一个转换成功就可以。
      */
-    private List<HttpRequestBodySerializer> requestBodyWriters;
+    private List<HttpRequestBodySerializer> requestBodySerializers;
 
     @Override
     protected void doInit() throws InitializationException {
         List<HttpRequestInterceptor> interceptors = Lists.newArrayList();
-        if (customInterceptors != null) {
-            interceptors.addAll(customInterceptors);
+        if (customRequestInterceptors != null) {
+            interceptors.addAll(customRequestInterceptors);
         }
-        interceptors.addAll(builtinInterceptors);
-        this.interceptors = Lists.immutableList(interceptors);
+        interceptors.addAll(builtinRequestInterceptors);
+        this.requestInterceptors = Lists.immutableList(interceptors);
     }
 
     public void addRequestInterceptor(HttpRequestInterceptor interceptor) {
         if (interceptor != null) {
-            this.customInterceptors.add(interceptor);
+            this.customRequestInterceptors.add(interceptor);
         }
     }
 
@@ -99,14 +99,14 @@ public class HttpExchanger extends AbstractInitializable {
 
                             HttpRequest interceptingHttpRequest = new HttpRequest(uri, method, headers, body);
 
-                            for (HttpRequestInterceptor interceptor : interceptors) {
+                            for (HttpRequestInterceptor interceptor : requestInterceptors) {
                                 interceptor.intercept(interceptingHttpRequest);
                             }
 
                             UnderlyingHttpRequest request = requestFactory.create(interceptingHttpRequest.getMethod(), interceptingHttpRequest.getUri(), interceptingHttpRequest.getHeaders().getContentType());
                             request.addHeaders(interceptingHttpRequest.getHeaders());
 
-                            for (HttpRequestBodySerializer requestBodyWriter : requestBodyWriters) {
+                            for (HttpRequestBodySerializer requestBodyWriter : requestBodySerializers) {
                                 if (requestBodyWriter.canWrite(interceptingHttpRequest.getBody(), interceptingHttpRequest.getHeaders().getContentType())) {
                                     requestBodyWriter.write(interceptingHttpRequest.getBody(), interceptingHttpRequest.getHeaders().getContentType(), request);
                                     break;
