@@ -145,9 +145,7 @@ public class HttpExchanger extends AbstractInitializable {
                         return new HttpResponse<O>(httpResponse, (O) responseBodyReader.read(httpResponse, contentType, responseType));
                     }
                 }
-
-
-                return null;
+                return new HttpResponse(httpResponse);
             }
         }).catchError(new AsyncCallback<Throwable, HttpResponse<O>>() {
             @Override

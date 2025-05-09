@@ -2,8 +2,10 @@ package com.jn.agileway.httpclient.core;
 
 import com.jn.langx.util.net.mime.MediaType;
 
-public interface HttpResponseBodyReader {
-    boolean canRead(UnderlyingHttpResponse response, MediaType contentType, Class<?> clazz);
+import java.lang.reflect.Type;
 
-    <T> T read(UnderlyingHttpResponse response, MediaType contentType, Class<T> clazz);
+public interface HttpResponseBodyReader {
+    boolean canRead(UnderlyingHttpResponse response, MediaType contentType, Type expectedBodyType);
+
+    <T> T read(UnderlyingHttpResponse response, MediaType contentType, Type expectedBodyType);
 }
