@@ -2,6 +2,9 @@ package com.jn.agileway.httpclient.core;
 
 import java.io.IOException;
 
+/**
+ * 用于在请求发送之前，进行拦截处理
+ */
 public interface HttpRequestInterceptor {
     /**
      * 对请求进行拦截处理。如果需要继续处理，请返回true，否则返回false。

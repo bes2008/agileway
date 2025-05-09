@@ -18,16 +18,37 @@ public class JdkHttpRequest extends AbstractHttpRequest {
 
     private HttpURLConnection httpConnection;
 
-    private ByteArrayOutputStream bodyBuffer = new ByteArrayOutputStream(1024);
-    private boolean chunked;
+    private ByteArrayOutputStream bufferedBody;
+    private OutputStream streamBody;
+    private boolean streamMode;
 
-    JdkHttpRequest(HttpURLConnection httpConnection, boolean chunked) {
+    JdkHttpRequest(HttpURLConnection httpConnection, boolean streamMode) {
+        this.streamMode = streamMode;
         this.httpConnection = httpConnection;
+        if (!streamMode) {
+            this.bufferedBody = new ByteArrayOutputStream(1024);
+        }
     }
 
     @Override
     public OutputStream getBody() throws IOException {
-        return this.bodyBuffer;
+        if (!streamMode) {
+            return this.bufferedBody;
+        } else {
+            if (streamBody == null) {
+                long contentLength = this.getHeaders().getContentLength();
+                if (contentLength > 0) {
+                    this.httpConnection.setFixedLengthStreamingMode(contentLength);
+                } else {
+                    this.httpConnection.setChunkedStreamingMode(4096);
+                }
+
+                addHeaders(this.httpConnection, this.getHeaders());
+                this.httpConnection.connect();
+                this.streamBody = this.httpConnection.getOutputStream();
+            }
+            return streamBody;
+        }
     }
 
     @Override
@@ -46,12 +67,15 @@ public class JdkHttpRequest extends AbstractHttpRequest {
 
     @Override
     protected HttpResponse exchangeInternal() throws IOException {
-        addHeaders(this.httpConnection, this.getHeaders());
-        this.httpConnection.connect();
-        if (this.httpConnection.getDoOutput()) {
-            OutputStream out = this.httpConnection.getOutputStream();
-            out.write(this.bodyBuffer.toByteArray());
-            out.flush();
+        if (!this.streamMode) {
+            // buffered 模式
+            addHeaders(this.httpConnection, this.getHeaders());
+            this.httpConnection.connect();
+            if (this.httpConnection.getDoOutput()) {
+                OutputStream out = this.httpConnection.getOutputStream();
+                out.write(this.bufferedBody.toByteArray());
+                out.flush();
+            }
         }
         this.httpConnection.getResponseCode();
         return new JdkHttpResponse(this.httpConnection);

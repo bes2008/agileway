@@ -27,8 +27,8 @@ public class JdkHttpRequestFactory implements HttpRequestFactory {
 
     @Override
     public HttpRequest create(HttpMethod method, URI uri, MediaType contentType) throws Exception {
-        boolean chunked = contentType == MediaType.MULTIPART_FORM_DATA && method == HttpMethod.POST;
-        return new JdkHttpRequest(createHttpUrlConnection(method, uri), chunked);
+        boolean streamMode = contentType == MediaType.MULTIPART_FORM_DATA && method == HttpMethod.POST;
+        return new JdkHttpRequest(createHttpUrlConnection(method, uri), streamMode);
     }
 
     private HttpURLConnection createHttpUrlConnection(HttpMethod method, URI uri) throws Exception {
