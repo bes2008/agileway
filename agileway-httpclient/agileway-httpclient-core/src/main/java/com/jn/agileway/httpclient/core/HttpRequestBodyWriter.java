@@ -9,5 +9,5 @@ import com.jn.langx.util.net.mime.MediaType;
 public interface HttpRequestBodyWriter<T> {
     boolean canWrite(T body, MediaType contentType);
 
-    void write(T body, MediaType contentType, HttpRequest request);
+    void write(T body, MediaType contentType, UnderlyingHttpRequest request);
 }

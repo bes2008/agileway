@@ -7,6 +7,6 @@ import com.jn.langx.util.net.mime.MediaType;
 
 import java.net.URI;
 
-public interface HttpRequestFactory {
-    HttpRequest create(@NonNull HttpMethod method, @NonNull URI uri, @Nullable MediaType contentType) throws Exception;
+public interface UnderlyingHttpRequestFactory {
+    UnderlyingHttpRequest create(@NonNull HttpMethod method, @NonNull URI uri, @Nullable MediaType contentType) throws Exception;
 }

@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
-public abstract class AbstractHttpRequest implements HttpRequest {
+public abstract class AbstractHttpRequest implements UnderlyingHttpRequest {
 
     private final HttpHeaders headers = new HttpHeaders();
     private boolean executed = false;
@@ -38,12 +38,12 @@ public abstract class AbstractHttpRequest implements HttpRequest {
     }
 
     @Override
-    public HttpResponse exchange() throws IOException {
+    public UnderlyingHttpResponse exchange() throws IOException {
         Preconditions.checkState(!executed, "http already executed");
-        HttpResponse promise = this.exchangeInternal();
+        UnderlyingHttpResponse promise = this.exchangeInternal();
         this.executed = true;
         return promise;
     }
 
-    protected abstract HttpResponse exchangeInternal() throws IOException;
+    protected abstract UnderlyingHttpResponse exchangeInternal() throws IOException;
 }

@@ -13,6 +13,6 @@ public interface HttpRequestInterceptor {
      * @param request 请求地址
      * @throws IOException 拦截器抛出的异常
      */
-    void intercept(InterceptingHttpRequest request) throws IOException;
+    void intercept(HttpRequest request) throws IOException;
 
 }

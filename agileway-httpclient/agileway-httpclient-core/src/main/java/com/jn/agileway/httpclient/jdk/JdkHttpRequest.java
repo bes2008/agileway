@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.jdk;
 
 import com.jn.agileway.httpclient.core.AbstractHttpRequest;
-import com.jn.agileway.httpclient.core.HttpResponse;
+import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpHeaders;
@@ -66,7 +66,7 @@ public class JdkHttpRequest extends AbstractHttpRequest {
     }
 
     @Override
-    protected HttpResponse exchangeInternal() throws IOException {
+    protected UnderlyingHttpResponse exchangeInternal() throws IOException {
         if (!this.streamMode) {
             // buffered 模式
             addHeaders(this.httpConnection, this.getHeaders());

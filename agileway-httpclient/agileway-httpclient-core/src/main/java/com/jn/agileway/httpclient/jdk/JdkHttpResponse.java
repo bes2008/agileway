@@ -1,6 +1,6 @@
 package com.jn.agileway.httpclient.jdk;
 
-import com.jn.agileway.httpclient.core.HttpResponse;
+import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpHeaders;
 
@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 
-public class JdkHttpResponse implements HttpResponse {
+public class JdkHttpResponse implements UnderlyingHttpResponse {
 
     private HttpURLConnection httpConnection;
     private HttpHeaders headers;

@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.jdk;
 
-import com.jn.agileway.httpclient.core.HttpRequest;
-import com.jn.agileway.httpclient.core.HttpRequestFactory;
+import com.jn.agileway.httpclient.core.UnderlyingHttpRequest;
+import com.jn.agileway.httpclient.core.UnderlyingHttpRequestFactory;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.os.Platform;
@@ -10,7 +10,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
 import java.net.*;
 
-public class JdkHttpRequestFactory implements HttpRequestFactory {
+public class JdkHttpRequestFactory implements UnderlyingHttpRequestFactory {
     private Proxy proxy;
     private int connectTimeoutMills = -1;
     private int readTimeoutMills = -1;
@@ -26,7 +26,7 @@ public class JdkHttpRequestFactory implements HttpRequestFactory {
     }
 
     @Override
-    public HttpRequest create(HttpMethod method, URI uri, MediaType contentType) throws Exception {
+    public UnderlyingHttpRequest create(HttpMethod method, URI uri, MediaType contentType) throws Exception {
         boolean streamMode = contentType == MediaType.MULTIPART_FORM_DATA && method == HttpMethod.POST;
         return new JdkHttpRequest(createHttpUrlConnection(method, uri), streamMode);
     }

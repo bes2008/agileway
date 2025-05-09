@@ -27,7 +27,7 @@ import java.util.concurrent.Executor;
 public class HttpExchanger extends AbstractInitializable {
 
     private Executor executor;
-    private HttpRequestFactory requestFactory;
+    private UnderlyingHttpRequestFactory requestFactory;
 
     /**
      * 对请求进行拦截处理
@@ -56,7 +56,7 @@ public class HttpExchanger extends AbstractInitializable {
         }
     }
 
-    public <I, O> Promise<HttpResponseEntity<O>> exchange(boolean async, HttpMethod method, String uriTemplate, Map<String, Object> uriVariables, HttpHeaders headers, I body, @Nullable final RetryConfig retryConfig) {
+    public <I, O> Promise<HttpResponse<O>> exchange(boolean async, HttpMethod method, String uriTemplate, Map<String, Object> uriVariables, HttpHeaders headers, I body, @Nullable final RetryConfig retryConfig) {
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(uriTemplate);
         if (uriVariables != null) {
             uriBuilder.uriVariables(uriVariables);
@@ -65,11 +65,11 @@ public class HttpExchanger extends AbstractInitializable {
         return exchange(async, method, uri, headers, body, retryConfig);
     }
 
-    public <I, O> Promise<HttpResponseEntity<O>> exchange(boolean async, @NonNull HttpMethod method, @NonNull URI uri, @Nullable HttpHeaders headers, I body, @Nullable final RetryConfig retryConfig) {
-        Task<HttpResponse> sendRequestTask = new Task<HttpResponse>() {
+    public <I, O> Promise<HttpResponse<O>> exchange(boolean async, @NonNull HttpMethod method, @NonNull URI uri, @Nullable HttpHeaders headers, I body, @Nullable final RetryConfig retryConfig) {
+        Task<UnderlyingHttpResponse> sendRequestTask = new Task<UnderlyingHttpResponse>() {
 
             @Override
-            public HttpResponse run(Handler<HttpResponse> resolve, ErrorHandler reject) {
+            public UnderlyingHttpResponse run(Handler<UnderlyingHttpResponse> resolve, ErrorHandler reject) {
                 RetryConfig theRetryConfig = retryConfig;
                 if (theRetryConfig == null) {
                     theRetryConfig = RetryConfig.noneRetryConfig();
@@ -83,27 +83,27 @@ public class HttpExchanger extends AbstractInitializable {
                 }
 
                 try {
-                    return Retryer.<HttpResponse>execute(new Predicate<Throwable>() {
+                    return Retryer.<UnderlyingHttpResponse>execute(new Predicate<Throwable>() {
                         @Override
                         public boolean test(Throwable ex) {
                             return false;
                         }
-                    }, new Predicate<HttpResponse>() {
+                    }, new Predicate<UnderlyingHttpResponse>() {
                         @Override
-                        public boolean test(HttpResponse value) {
+                        public boolean test(UnderlyingHttpResponse value) {
                             return false;
                         }
-                    }, theRetryConfig, null, new Callable<HttpResponse>() {
+                    }, theRetryConfig, null, new Callable<UnderlyingHttpResponse>() {
                         @Override
-                        public HttpResponse call() throws Exception {
+                        public UnderlyingHttpResponse call() throws Exception {
 
-                            InterceptingHttpRequest interceptingHttpRequest = new InterceptingHttpRequest(uri, method, headers, body);
+                            HttpRequest interceptingHttpRequest = new HttpRequest(uri, method, headers, body);
 
                             for (HttpRequestInterceptor interceptor : interceptors) {
                                 interceptor.intercept(interceptingHttpRequest);
                             }
 
-                            HttpRequest request = requestFactory.create(interceptingHttpRequest.getMethod(), interceptingHttpRequest.getUri(), interceptingHttpRequest.getHeaders().getContentType());
+                            UnderlyingHttpRequest request = requestFactory.create(interceptingHttpRequest.getMethod(), interceptingHttpRequest.getUri(), interceptingHttpRequest.getHeaders().getContentType());
                             request.addHeaders(interceptingHttpRequest.getHeaders());
 
                             for (HttpRequestBodyWriter requestBodyWriter : requestBodyWriters) {
@@ -130,16 +130,16 @@ public class HttpExchanger extends AbstractInitializable {
             }
         };
 
-        Promise<HttpResponse> promise = async ? new Promise<HttpResponse>(executor, sendRequestTask) : new Promise<HttpResponse>(sendRequestTask);
+        Promise<UnderlyingHttpResponse> promise = async ? new Promise<UnderlyingHttpResponse>(executor, sendRequestTask) : new Promise<UnderlyingHttpResponse>(sendRequestTask);
 
-        return promise.then(new AsyncCallback<HttpResponse, HttpResponseEntity<O>>() {
+        return promise.then(new AsyncCallback<UnderlyingHttpResponse, HttpResponse<O>>() {
             @Override
-            public HttpResponseEntity<O> apply(HttpResponse httpResponse) {
+            public HttpResponse<O> apply(UnderlyingHttpResponse httpResponse) {
                 return null;
             }
-        }).catchError(new AsyncCallback<Throwable, HttpResponseEntity<O>>() {
+        }).catchError(new AsyncCallback<Throwable, HttpResponse<O>>() {
             @Override
-            public HttpResponseEntity<O> apply(Throwable ex) {
+            public HttpResponse<O> apply(Throwable ex) {
                 return null;
             }
         });

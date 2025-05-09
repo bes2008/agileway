@@ -2,19 +2,29 @@ package com.jn.agileway.httpclient.core;
 
 import com.jn.langx.util.net.http.HttpHeaders;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
-
 /**
- * 代表了http响应，框架内部使用，用户不要直接使用
+ * 代表了Http响应，它是提供给用户直接使用的
+ *
+ * @param <T>
  */
-public interface HttpResponse extends Closeable {
-    int getStatusCode();
+public class HttpResponse<T> {
+    private UnderlyingHttpResponse response;
+    private T body;
 
-    void close() throws IOException;
+    HttpResponse(UnderlyingHttpResponse response, T body) {
+        this.response = response;
+        this.body = body;
+    }
 
-    InputStream getBody() throws IOException;
+    public HttpHeaders getHeaders() {
+        return response.getHeaders();
+    }
 
-    HttpHeaders getHeaders();
+    public int getStatusCode() {
+        return response.getStatusCode();
+    }
+
+    public T getBody() {
+        return body;
+    }
 }
