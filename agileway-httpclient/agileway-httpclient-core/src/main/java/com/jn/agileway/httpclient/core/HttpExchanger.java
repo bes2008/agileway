@@ -6,6 +6,7 @@ import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Lists;
+import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.concurrent.promise.AsyncCallback;
 import com.jn.langx.util.concurrent.promise.Promise;
 import com.jn.langx.util.concurrent.promise.Task;
@@ -18,6 +19,7 @@ import com.jn.langx.util.net.uri.component.UriComponentsBuilder;
 import com.jn.langx.util.retry.RetryConfig;
 import com.jn.langx.util.retry.Retryer;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -138,14 +140,29 @@ public class HttpExchanger extends AbstractInitializable {
 
         return promise.then(new AsyncCallback<UnderlyingHttpResponse, HttpResponse<O>>() {
             @Override
-            public HttpResponse<O> apply(UnderlyingHttpResponse httpResponse) {
-                MediaType contentType = httpResponse.getHeaders().getContentType();
-                for (HttpResponseBodyReader responseBodyReader : responseBodyReaders) {
-                    if (responseBodyReader.canRead(httpResponse, contentType, responseType)) {
-                        return new HttpResponse<O>(httpResponse, (O) responseBodyReader.read(httpResponse, contentType, responseType));
-                    }
+            public HttpResponse<O> apply(UnderlyingHttpResponse underlyingHttpResponse) {
+                MediaType contentType = underlyingHttpResponse.getHeaders().getContentType();
+
+                HttpResponseBodyReader reader = Pipeline.of(responseBodyReaders)
+                        .findFirst(new Predicate<HttpResponseBodyReader>() {
+                            @Override
+                            public boolean test(HttpResponseBodyReader httpResponseBodyReader) {
+                                return httpResponseBodyReader.canRead(underlyingHttpResponse, contentType, responseType);
+                            }
+                        });
+                HttpResponse<O> response = null;
+                if (reader != null) {
+                    O bodyEntity = reader.read(underlyingHttpResponse, contentType, responseType);
+                    response = new HttpResponse<>(underlyingHttpResponse, bodyEntity);
+                } else {
+                    return new HttpResponse(underlyingHttpResponse);
                 }
-                return new HttpResponse(httpResponse);
+                try {
+                    underlyingHttpResponse.close();
+                } catch (IOException ex) {
+                    throw Throwables.wrapAsRuntimeIOException(ex);
+                }
+                return response;
             }
         }).catchError(new AsyncCallback<Throwable, HttpResponse<O>>() {
             @Override

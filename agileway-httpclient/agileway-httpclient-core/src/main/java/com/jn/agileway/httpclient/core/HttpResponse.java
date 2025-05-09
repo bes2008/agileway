@@ -1,18 +1,24 @@
 package com.jn.agileway.httpclient.core;
 
 import com.jn.langx.util.Throwables;
+import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.net.http.HttpHeaders;
+import com.jn.langx.util.net.http.HttpMethod;
 
-import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 
 /**
  * 代表了Http响应，它是提供给用户直接使用的
  *
  * @param <T>
  */
-public class HttpResponse<T> implements Closeable {
-    private UnderlyingHttpResponse response;
+public class HttpResponse<T> {
+    private URI uri;
+    private HttpMethod method;
+    private int statusCode;
+    private HttpHeaders httpHeaders;
     private T body;
 
     public HttpResponse(UnderlyingHttpResponse response) {
@@ -20,12 +26,17 @@ public class HttpResponse<T> implements Closeable {
     }
 
     public HttpResponse(UnderlyingHttpResponse response, T body) {
-        this.response = response;
+        this.uri = response.getUri();
+        this.method = response.getMethod();
+        this.statusCode = response.getStatusCode();
+        this.httpHeaders = response.getHeaders();
+
         if (body != null) {
             this.body = body;
         } else {
             try {
-                this.body = (T) this.response.getBody();
+                InputStream inputStream = response.getBody();
+                this.body = (T) IOs.toByteArray(inputStream);
             } catch (IOException e) {
                 throw Throwables.wrapAsRuntimeIOException(e);
             }
@@ -33,19 +44,16 @@ public class HttpResponse<T> implements Closeable {
     }
 
     public HttpHeaders getHeaders() {
-        return response.getHeaders();
+        return this.httpHeaders;
     }
 
     public int getStatusCode() {
-        return response.getStatusCode();
+        return this.statusCode;
     }
 
     public T getBody() {
         return body;
     }
 
-    @Override
-    public void close() throws IOException {
-        response.close();
-    }
+
 }

@@ -3,20 +3,39 @@ package com.jn.agileway.httpclient.jdk;
 import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpHeaders;
+import com.jn.langx.util.net.http.HttpMethod;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 
 public class JdkHttpResponse implements UnderlyingHttpResponse {
 
+    private URI uri;
+    private HttpMethod method;
     private HttpURLConnection httpConnection;
+    /**
+     * 响应头
+     */
     private HttpHeaders headers;
 
     private InputStream responseStream;
 
     JdkHttpResponse(HttpURLConnection httpConnection) {
         this.httpConnection = httpConnection;
+        this.uri = URI.create(httpConnection.getURL().toString());
+        this.method = HttpMethod.resolve(httpConnection.getRequestMethod());
+    }
+
+    @Override
+    public HttpMethod getMethod() {
+        return method;
+    }
+
+    @Override
+    public URI getUri() {
+        return uri;
     }
 
     @Override
