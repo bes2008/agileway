@@ -5,6 +5,7 @@ import com.jn.langx.util.net.http.HttpHeaders;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 public abstract class AbstractHttpRequest implements HttpRequest {
 
@@ -14,7 +15,12 @@ public abstract class AbstractHttpRequest implements HttpRequest {
 
     public void addHeaders(HttpHeaders headers) {
         if (!executed) {
-            this.headers.putAll(headers);
+            for (String key : headers.keySet()) {
+                List<String> values = headers.get(key);
+                for (String value : values) {
+                    this.headers.addIfValueAbsent(key, value);
+                }
+            }
         }
     }
 
