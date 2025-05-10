@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.core;
 
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.net.http.HttpHeaders;
@@ -60,5 +61,23 @@ public class HttpResponse<T> {
         return body;
     }
 
+    public String getErrorMessage() {
+        return errorMessage;
+    }
 
+    public URI getUri() {
+        return uri;
+    }
+
+    public HttpMethod getMethod() {
+        return method;
+    }
+
+    public HttpHeaders getHttpHeaders() {
+        return httpHeaders;
+    }
+
+    public boolean hasError() {
+        return statusCode >= 400 || Strings.isNotEmpty(errorMessage);
+    }
 }

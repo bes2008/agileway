@@ -154,25 +154,17 @@ public class HttpExchanger extends AbstractInitializable {
         Promise<UnderlyingHttpResponse> promise = async ? new Promise<UnderlyingHttpResponse>(executor, sendRequestTask) : new Promise<UnderlyingHttpResponse>(sendRequestTask);
 
         return promise
-                .then(new AsyncCallback<UnderlyingHttpResponse, UnderlyingHttpResponse>() {
-                          @Override
-                          public UnderlyingHttpResponse apply(UnderlyingHttpResponse underlyingHttpResponse) {
-                              // 处理响应中4xx, 5xx错误
-                              return null;
-                          }
-                      }
-                )
-
                 .then(new AsyncCallback<UnderlyingHttpResponse, HttpResponse<O>>() {
                           // 读取响应
                           @Override
                           public HttpResponse<O> apply(UnderlyingHttpResponse underlyingHttpResponse) {
+                              HttpResponse<O> response = null;
+                              if (underlyingHttpResponse.getStatusCode() >= 400) {
+                                  response = new HttpResponse<>(underlyingHttpResponse, null, true);
+                                  return response;
+                              }
 
                               MediaType contentType = underlyingHttpResponse.getHeaders().getContentType();
-
-
-                              HttpResponse<O> response = null;
-
                               boolean needReadBody = needReadBody(underlyingHttpResponse);
                               try {
                                   if (needReadBody) {
@@ -204,7 +196,7 @@ public class HttpExchanger extends AbstractInitializable {
                 .then(new AsyncCallback<HttpResponse<O>, HttpResponse<O>>() {
                     @Override
                     public HttpResponse<O> apply(HttpResponse<O> httpResponse) {
-                        // 处理4xx, 5xx响应
+
                         return null;
                     }
                 })
