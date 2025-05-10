@@ -39,30 +39,71 @@ public class HttpExchanger extends AbstractInitializable {
     private List<HttpRequestInterceptor> builtinRequestInterceptors = Lists.asList(new ContentTypeHttpRequestInterceptor());
     private List<HttpRequestInterceptor> customRequestInterceptors = Lists.newArrayList();
     private List<HttpRequestInterceptor> requestInterceptors;
+    ;
     /**
      * 主要是将 body进行转换，顺带补充 header等，只要一个转换成功就可以。
      */
-    private List<HttpRequestBodyWriter> requestBodyWriters;
+    private List<HttpRequestBodyWriter> requestBodyWriters = Lists.newArrayList();
 
     /**
-     * 对响应进行反序列化
+     * 对正常的响应进行反序列化
      */
-    private List<HttpResponseBodyReader> responseBodyReaders;
+    private List<HttpResponseBodyReader> responseBodyReaders = Lists.newArrayList();
+    /**
+     * 对4xx,5xx的响应进行反序列化
+     */
+    private HttpResponseErrorHandler httpResponseErrorHandler;
+    /**
+     * 响应拦截器
+     */
+    private List<HttpResponseInterceptor> builtinResponseInterceptors = Lists.newArrayList();
+    private List<HttpResponseInterceptor> customResponseInterceptors = Lists.newArrayList();
+    private List<HttpResponseInterceptor> responseInterceptors;
 
     @Override
     protected void doInit() throws InitializationException {
-        List<HttpRequestInterceptor> interceptors = Lists.newArrayList();
+        List<HttpRequestInterceptor> requestInterceptors = Lists.newArrayList();
         if (customRequestInterceptors != null) {
-            interceptors.addAll(customRequestInterceptors);
+            requestInterceptors.addAll(customRequestInterceptors);
         }
-        interceptors.addAll(builtinRequestInterceptors);
-        this.requestInterceptors = Lists.immutableList(interceptors);
+        requestInterceptors.addAll(builtinRequestInterceptors);
+        this.requestInterceptors = Lists.immutableList(requestInterceptors);
+
+
+        List<HttpResponseInterceptor> responseInterceptors = Lists.newArrayList();
+        if (customResponseInterceptors != null) {
+            responseInterceptors.addAll(customResponseInterceptors);
+        }
+        responseInterceptors.addAll(builtinResponseInterceptors);
+        this.responseInterceptors = Lists.immutableList(responseInterceptors);
     }
 
     public void addRequestInterceptor(HttpRequestInterceptor interceptor) {
         if (interceptor != null) {
             this.customRequestInterceptors.add(interceptor);
         }
+    }
+
+    public void addResponseInterceptor(HttpResponseInterceptor interceptor) {
+        if (interceptor != null) {
+            this.customResponseInterceptors.add(interceptor);
+        }
+    }
+
+    public void addRequestBodyWriter(HttpRequestBodyWriter writer) {
+        if (writer != null) {
+            this.requestBodyWriters.add(writer);
+        }
+    }
+
+    public void addResponseBodyReader(HttpResponseBodyReader reader) {
+        if (reader != null) {
+            this.responseBodyReaders.add(reader);
+        }
+    }
+
+    public void setHttpResponseErrorHandler(HttpResponseErrorHandler errorResponseHandler) {
+        this.httpResponseErrorHandler = errorResponseHandler;
     }
 
     public <I, O> Promise<HttpResponse<O>> exchange(boolean async,
@@ -158,28 +199,34 @@ public class HttpExchanger extends AbstractInitializable {
                           // 读取响应
                           @Override
                           public HttpResponse<O> apply(UnderlyingHttpResponse underlyingHttpResponse) {
-                              HttpResponse<O> response = null;
-                              if (underlyingHttpResponse.getStatusCode() >= 400) {
-                                  response = new HttpResponse<>(underlyingHttpResponse, null, true);
-                                  return response;
-                              }
-
-                              MediaType contentType = underlyingHttpResponse.getHeaders().getContentType();
-                              boolean needReadBody = needReadBody(underlyingHttpResponse);
                               try {
+                                  HttpResponse<O> response = null;
+                                  boolean needReadBody = needReadBody(underlyingHttpResponse);
                                   if (needReadBody) {
-                                      HttpResponseBodyReader reader = Pipeline.of(responseBodyReaders)
-                                              .findFirst(new Predicate<HttpResponseBodyReader>() {
-                                                  @Override
-                                                  public boolean test(HttpResponseBodyReader httpResponseBodyReader) {
-                                                      return httpResponseBodyReader.canRead(underlyingHttpResponse, contentType, responseType);
-                                                  }
-                                              });
-                                      if (reader != null) {
-                                          O bodyEntity = reader.read(underlyingHttpResponse, contentType, responseType);
-                                          response = new HttpResponse<>(underlyingHttpResponse, bodyEntity);
-                                      } else {
+                                      if (underlyingHttpResponse.getStatusCode() >= 400) {
                                           response = new HttpResponse<>(underlyingHttpResponse, null, true);
+                                          if (httpResponseErrorHandler != null) {
+                                              httpResponseErrorHandler.handle(response);
+                                          }
+                                      } else {
+                                          MediaType contentType = underlyingHttpResponse.getHeaders().getContentType();
+                                          HttpResponseBodyReader reader = Pipeline.of(responseBodyReaders)
+                                                  .findFirst(new Predicate<HttpResponseBodyReader>() {
+                                                      @Override
+                                                      public boolean test(HttpResponseBodyReader httpResponseBodyReader) {
+                                                          return httpResponseBodyReader.canRead(underlyingHttpResponse, contentType, responseType);
+                                                      }
+                                                  });
+                                          if (reader != null) {
+                                              O bodyEntity = reader.read(underlyingHttpResponse, contentType, responseType);
+                                              response = new HttpResponse<>(underlyingHttpResponse, bodyEntity);
+                                          } else {
+                                              response = new HttpResponse<>(underlyingHttpResponse, null, true);
+                                          }
+
+                                          if (httpResponseErrorHandler != null && httpResponseErrorHandler.isError(response)) {
+                                              httpResponseErrorHandler.handle(response);
+                                          }
                                       }
                                   } else {
                                       response = new HttpResponse<>(underlyingHttpResponse);

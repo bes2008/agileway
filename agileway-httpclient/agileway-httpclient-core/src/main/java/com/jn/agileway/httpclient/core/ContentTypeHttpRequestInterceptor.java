@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class ContentTypeHttpRequestInterceptor implements HttpRequestInterceptor {
     @Override
-    public void intercept(HttpRequest request) throws IOException {
+    public void intercept(HttpRequest request) {
         HttpMethod method = request.getMethod();
         MediaType contentType = request.getHeaders().getContentType();
         switch (method) {
