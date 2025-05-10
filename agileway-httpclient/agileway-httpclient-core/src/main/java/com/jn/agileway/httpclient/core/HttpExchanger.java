@@ -29,35 +29,39 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 
 public class HttpExchanger extends AbstractInitializable {
-
+    /**
+     * 执行同步执行时，可以为 null
+     */
+    @Nullable
     private Executor executor;
+    @NonNull
     private UnderlyingHttpRequestFactory requestFactory;
 
     /**
      * 对请求进行拦截处理
      */
-    private List<HttpRequestInterceptor> builtinRequestInterceptors = Lists.asList(new ContentTypeHttpRequestInterceptor());
-    private List<HttpRequestInterceptor> customRequestInterceptors = Lists.newArrayList();
+    private final List<HttpRequestInterceptor> builtinRequestInterceptors = Lists.asList(new ContentTypeHttpRequestInterceptor());
+    private final List<HttpRequestInterceptor> customRequestInterceptors = Lists.newArrayList();
     private List<HttpRequestInterceptor> requestInterceptors;
-    ;
     /**
      * 主要是将 body进行转换，顺带补充 header等，只要一个转换成功就可以。
      */
-    private List<HttpRequestBodyWriter> requestBodyWriters = Lists.newArrayList();
+    private final List<HttpRequestBodyWriter> requestBodyWriters = Lists.newArrayList();
 
     /**
      * 对正常的响应进行反序列化
      */
-    private List<HttpResponseBodyReader> responseBodyReaders = Lists.newArrayList();
+    private final List<HttpResponseBodyReader> responseBodyReaders = Lists.newArrayList();
     /**
-     * 对4xx,5xx的响应进行反序列化
+     * 对4xx,5xx的响应进行处理
      */
+    @Nullable
     private HttpResponseErrorHandler httpResponseErrorHandler;
     /**
      * 响应拦截器
      */
-    private List<HttpResponseInterceptor> builtinResponseInterceptors = Lists.newArrayList();
-    private List<HttpResponseInterceptor> customResponseInterceptors = Lists.newArrayList();
+    private final List<HttpResponseInterceptor> builtinResponseInterceptors = Lists.newArrayList();
+    private final List<HttpResponseInterceptor> customResponseInterceptors = Lists.newArrayList();
     private List<HttpResponseInterceptor> responseInterceptors;
 
     @Override
@@ -166,11 +170,11 @@ public class HttpExchanger extends AbstractInitializable {
                     }, theRetryConfig, null, new Callable<UnderlyingHttpResponse>() {
                         @Override
                         public UnderlyingHttpResponse call() throws Exception {
-
-                            for (HttpRequestInterceptor interceptor : requestInterceptors) {
-                                interceptor.intercept(request);
+                            if (requestInterceptors != null) {
+                                for (HttpRequestInterceptor interceptor : requestInterceptors) {
+                                    interceptor.intercept(request);
+                                }
                             }
-
                             UnderlyingHttpRequest underlyingHttpRequest = requestFactory.create(request.getMethod(), request.getUri(), request.getHeaders().getContentType());
                             underlyingHttpRequest.addHeaders(request.getHeaders());
 
@@ -234,6 +238,11 @@ public class HttpExchanger extends AbstractInitializable {
                                   }
                                   if (httpResponseErrorHandler != null && httpResponseErrorHandler.isError(response)) {
                                       httpResponseErrorHandler.handle(response);
+                                  }
+                                  if (responseInterceptors != null) {
+                                      for (HttpResponseInterceptor interceptor : responseInterceptors) {
+                                          interceptor.intercept(response);
+                                      }
                                   }
                                   return response;
                               } catch (IOException ex) {
