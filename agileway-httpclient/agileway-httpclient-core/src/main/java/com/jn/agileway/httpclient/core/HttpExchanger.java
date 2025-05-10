@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.core;
 
+import com.jn.agileway.httpclient.jdk.JdkHttpRequestFactory;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.exception.ErrorHandler;
@@ -33,7 +34,7 @@ public class HttpExchanger extends AbstractInitializable {
     @Nullable
     private Executor executor;
     @NonNull
-    private UnderlyingHttpRequestFactory requestFactory;
+    private UnderlyingHttpRequestFactory requestFactory = new JdkHttpRequestFactory();
 
     /**
      * 对请求进行拦截处理

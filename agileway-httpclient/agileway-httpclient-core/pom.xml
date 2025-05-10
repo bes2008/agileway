@@ -17,4 +17,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>io.github.bes2008.solution.easyjson</groupId>
+            <artifactId>easyjson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bes2008.solution.easyjson</groupId>
+            <artifactId>easyjson-jackson</artifactId>
+        </dependency>
+    </dependencies>
 </project>

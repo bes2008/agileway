@@ -5,7 +5,6 @@ import com.jn.agileway.httpclient.core.UnderlyingHttpRequestFactory;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
-import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.os.Platform;
 
 import javax.net.ssl.HttpsURLConnection;
