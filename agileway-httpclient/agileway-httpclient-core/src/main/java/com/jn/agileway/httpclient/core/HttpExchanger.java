@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.core;
 
+import com.jn.agileway.httpclient.core.serialize.GeneralJsonHttpResponseReader;
 import com.jn.agileway.httpclient.jdk.JdkHttpRequestFactory;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
@@ -7,6 +8,7 @@ import com.jn.langx.exception.ErrorHandler;
 import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.text.StringTemplates;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
@@ -16,12 +18,10 @@ import com.jn.langx.util.concurrent.promise.Promise;
 import com.jn.langx.util.concurrent.promise.Task;
 import com.jn.langx.util.function.Handler;
 import com.jn.langx.util.function.Predicate;
-import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.net.uri.component.UriComponentsBuilder;
-import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -203,7 +203,7 @@ public class HttpExchanger extends AbstractInitializable {
                                       if (underlyingHttpResponse.getStatusCode() >= 400) {
                                           response = new HttpResponse<>(underlyingHttpResponse, null, true);
                                       } else {
-                                          MediaType contentType = underlyingHttpResponse.getHeaders().getContentType();
+                                          final MediaType contentType = Objs.useValueIfNull(underlyingHttpResponse.getHeaders().getContentType(), MediaType.TEXT_HTML);
                                           HttpResponseBodyReader reader = Pipeline.of(responseBodyReaders)
                                                   .findFirst(new Predicate<HttpResponseBodyReader>() {
                                                       @Override
@@ -212,7 +212,7 @@ public class HttpExchanger extends AbstractInitializable {
                                                       }
                                                   });
                                           if (reader != null) {
-                                              O bodyEntity = reader.read(underlyingHttpResponse, contentType, responseType);
+                                              O bodyEntity = (O) reader.read(underlyingHttpResponse, contentType, responseType);
                                               response = new HttpResponse<>(underlyingHttpResponse, bodyEntity);
                                           } else {
                                               throw new NotFoundHttpContentReaderException(StringTemplates.formatWithPlaceholder("Can't find a HttpResponseBodyReader to read the response body for Content-Type {}", contentType));

@@ -5,8 +5,8 @@ import com.jn.langx.util.net.mime.MediaType;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
-public interface HttpResponseBodyReader {
+public interface HttpResponseBodyReader<T> {
     boolean canRead(UnderlyingHttpResponse response, MediaType contentType, Type expectedBodyType);
 
-    <T> T read(UnderlyingHttpResponse response, MediaType contentType, Type expectedBodyType) throws IOException;
+    T read(UnderlyingHttpResponse response, MediaType contentType, Type expectedBodyType) throws IOException;
 }
