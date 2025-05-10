@@ -4,9 +4,7 @@ import com.jn.langx.io.resource.Resource;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
 
-import java.io.IOException;
-
-public class ContentTypeHttpRequestInterceptor implements HttpRequestInterceptor {
+public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
     @Override
     public void intercept(HttpRequest request) {
         HttpMethod method = request.getMethod();

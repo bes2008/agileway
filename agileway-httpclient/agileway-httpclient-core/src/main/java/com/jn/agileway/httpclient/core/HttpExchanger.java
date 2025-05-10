@@ -18,15 +18,12 @@ import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.net.uri.component.UriComponentsBuilder;
-import com.jn.langx.util.retry.RetryConfig;
-import com.jn.langx.util.retry.Retryer;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 
 public class HttpExchanger extends AbstractInitializable {
@@ -41,7 +38,7 @@ public class HttpExchanger extends AbstractInitializable {
     /**
      * 对请求进行拦截处理
      */
-    private final List<HttpRequestInterceptor> builtinRequestInterceptors = Lists.asList(new ContentTypeHttpRequestInterceptor());
+    private final List<HttpRequestInterceptor> builtinRequestInterceptors = Lists.asList(new HttpRequestHeadersInterceptor());
     private final List<HttpRequestInterceptor> customRequestInterceptors = Lists.newArrayList();
     private List<HttpRequestInterceptor> requestInterceptors;
     /**
