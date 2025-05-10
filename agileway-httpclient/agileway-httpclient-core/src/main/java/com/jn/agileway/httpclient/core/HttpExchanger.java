@@ -144,22 +144,19 @@ public class HttpExchanger extends AbstractInitializable {
 
             @Override
             public UnderlyingHttpResponse run(Handler<UnderlyingHttpResponse> resolve, ErrorHandler reject) {
-
+                if (request.getMethod() == null) {
+                    throw new HttpRequestInvalidException("HTTP method is required");
+                }
+                if (request.getUri() == null) {
+                    throw new HttpRequestInvalidException("HTTP uri is required");
+                }
+                if (requestInterceptors != null) {
+                    for (HttpRequestInterceptor interceptor : requestInterceptors) {
+                        interceptor.intercept(request);
+                    }
+                }
                 try {
-                    if (request.getMethod() == null) {
-                        throw new HttpRequestInvalidException("HTTP method is required");
-                    }
-                    if (request.getUri() == null) {
-                        throw new HttpRequestInvalidException("HTTP uri is required");
-                    }
-
-                    if (requestInterceptors != null) {
-                        for (HttpRequestInterceptor interceptor : requestInterceptors) {
-                            interceptor.intercept(request);
-                        }
-                    }
                     UnderlyingHttpRequest underlyingHttpRequest = requestFactory.create(request.getMethod(), request.getUri(), request.getHeaders().getContentType());
-                    underlyingHttpRequest.addHeaders(request.getHeaders());
 
                     if (request.getBody() != null) {
                         HttpRequestBodyWriter requestBodyWriter = Pipeline.of(requestBodyWriters)

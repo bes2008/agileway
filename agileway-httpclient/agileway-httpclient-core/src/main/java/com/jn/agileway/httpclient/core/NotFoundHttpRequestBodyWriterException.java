@@ -1,8 +1,6 @@
 package com.jn.agileway.httpclient.core;
 
-import java.io.IOException;
-
-public class NotFoundHttpRequestBodyWriterException extends IOException {
+public class NotFoundHttpRequestBodyWriterException extends RuntimeException {
     public NotFoundHttpRequestBodyWriterException() {
         super();
     }
