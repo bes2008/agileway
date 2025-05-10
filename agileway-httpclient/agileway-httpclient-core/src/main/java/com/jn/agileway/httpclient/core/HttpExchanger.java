@@ -97,10 +97,10 @@ public class HttpExchanger extends AbstractInitializable {
                 }
 
                 if (request.getMethod() == null) {
-                    throw new InvalidHttpRequestException("http method is required");
+                    throw new HttpRequestInvalidException("HTTP method is required");
                 }
                 if (request.getUri() == null) {
-                    throw new InvalidHttpRequestException("http uri is required");
+                    throw new HttpRequestInvalidException("HTTP uri is required");
                 }
 
                 try {
@@ -153,46 +153,67 @@ public class HttpExchanger extends AbstractInitializable {
 
         Promise<UnderlyingHttpResponse> promise = async ? new Promise<UnderlyingHttpResponse>(executor, sendRequestTask) : new Promise<UnderlyingHttpResponse>(sendRequestTask);
 
-        return promise.then(new AsyncCallback<UnderlyingHttpResponse, HttpResponse<O>>() {
-            @Override
-            public HttpResponse<O> apply(UnderlyingHttpResponse underlyingHttpResponse) {
-                MediaType contentType = underlyingHttpResponse.getHeaders().getContentType();
+        return promise
+                .then(new AsyncCallback<UnderlyingHttpResponse, UnderlyingHttpResponse>() {
+                          @Override
+                          public UnderlyingHttpResponse apply(UnderlyingHttpResponse underlyingHttpResponse) {
+                              // 处理响应中4xx, 5xx错误
+                              return null;
+                          }
+                      }
+                )
+
+                .then(new AsyncCallback<UnderlyingHttpResponse, HttpResponse<O>>() {
+                          // 读取响应
+                          @Override
+                          public HttpResponse<O> apply(UnderlyingHttpResponse underlyingHttpResponse) {
+
+                              MediaType contentType = underlyingHttpResponse.getHeaders().getContentType();
 
 
-                HttpResponse<O> response = null;
+                              HttpResponse<O> response = null;
 
-                boolean needReadBody = needReadBody(underlyingHttpResponse);
-                try {
-                    if (needReadBody) {
-                        HttpResponseBodyReader reader = Pipeline.of(responseBodyReaders)
-                                .findFirst(new Predicate<HttpResponseBodyReader>() {
-                                    @Override
-                                    public boolean test(HttpResponseBodyReader httpResponseBodyReader) {
-                                        return httpResponseBodyReader.canRead(underlyingHttpResponse, contentType, responseType);
-                                    }
-                                });
-                        if (reader != null) {
-                            O bodyEntity = reader.read(underlyingHttpResponse, contentType, responseType);
-                            response = new HttpResponse<>(underlyingHttpResponse, bodyEntity);
-                        } else {
-                            response = new HttpResponse<>(underlyingHttpResponse, null, true);
-                        }
-                    } else {
-                        response = new HttpResponse<>(underlyingHttpResponse);
+                              boolean needReadBody = needReadBody(underlyingHttpResponse);
+                              try {
+                                  if (needReadBody) {
+                                      HttpResponseBodyReader reader = Pipeline.of(responseBodyReaders)
+                                              .findFirst(new Predicate<HttpResponseBodyReader>() {
+                                                  @Override
+                                                  public boolean test(HttpResponseBodyReader httpResponseBodyReader) {
+                                                      return httpResponseBodyReader.canRead(underlyingHttpResponse, contentType, responseType);
+                                                  }
+                                              });
+                                      if (reader != null) {
+                                          O bodyEntity = reader.read(underlyingHttpResponse, contentType, responseType);
+                                          response = new HttpResponse<>(underlyingHttpResponse, bodyEntity);
+                                      } else {
+                                          response = new HttpResponse<>(underlyingHttpResponse, null, true);
+                                      }
+                                  } else {
+                                      response = new HttpResponse<>(underlyingHttpResponse);
+                                  }
+                                  return response;
+                              } catch (IOException ex) {
+                                  throw Throwables.wrapAsRuntimeIOException(ex);
+                              } finally {
+                                  underlyingHttpResponse.close();
+                              }
+                          }
+                      }
+                )
+                .then(new AsyncCallback<HttpResponse<O>, HttpResponse<O>>() {
+                    @Override
+                    public HttpResponse<O> apply(HttpResponse<O> httpResponse) {
+                        // 处理4xx, 5xx响应
+                        return null;
                     }
-                    return response;
-                } catch (IOException ex) {
-                    throw Throwables.wrapAsRuntimeIOException(ex);
-                } finally {
-                    underlyingHttpResponse.close();
-                }
-            }
-        }).catchError(new AsyncCallback<Throwable, HttpResponse<O>>() {
-            @Override
-            public HttpResponse<O> apply(Throwable ex) {
-                return null;
-            }
-        });
+                })
+                .catchError(new AsyncCallback<Throwable, HttpResponse<O>>() {
+                    @Override
+                    public HttpResponse<O> apply(Throwable ex) {
+                        return null;
+                    }
+                });
     }
 
     private boolean needReadBody(UnderlyingHttpResponse underlyingHttpResponse) {

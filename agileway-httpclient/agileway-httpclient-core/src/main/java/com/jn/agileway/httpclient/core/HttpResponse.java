@@ -20,7 +20,7 @@ public class HttpResponse<T> {
     private int statusCode;
     private HttpHeaders httpHeaders;
     private T body;
-
+    private String errorMessage;
 
     public HttpResponse(UnderlyingHttpResponse response) {
         this(response, null);
