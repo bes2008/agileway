@@ -22,6 +22,7 @@ import com.jn.langx.util.retry.RetryConfig;
 import com.jn.langx.util.retry.Retryer;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -125,8 +126,7 @@ public class HttpExchanger extends AbstractInitializable {
                                                     @Nullable Map<String, Object> uriVariables,
                                                     @Nullable HttpHeaders headers,
                                                     @Nullable I body,
-                                                    @Nullable final Class responseType,
-                                                    @Nullable final RetryConfig retryConfig) {
+                                                    @Nullable final Type responseType) {
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(uriTemplate);
         if (queryParams != null) {
             uriBuilder.queryParams(queryParams);
@@ -136,68 +136,48 @@ public class HttpExchanger extends AbstractInitializable {
         }
         URI uri = uriBuilder.build().toUri();
 
-        return exchange(async, new HttpRequest(uri, method, headers, body), responseType, retryConfig);
+        return exchange(async, new HttpRequest(uri, method, headers, body), responseType);
     }
 
-    public <I, O> Promise<HttpResponse<O>> exchange(boolean async, final HttpRequest request, final Class responseType, @Nullable final RetryConfig retryConfig) {
+    public <I, O> Promise<HttpResponse<O>> exchange(boolean async, final HttpRequest request, final Type responseType) {
         Task<UnderlyingHttpResponse> sendRequestTask = new Task<UnderlyingHttpResponse>() {
 
             @Override
             public UnderlyingHttpResponse run(Handler<UnderlyingHttpResponse> resolve, ErrorHandler reject) {
-                RetryConfig theRetryConfig = retryConfig;
-                if (theRetryConfig == null) {
-                    theRetryConfig = RetryConfig.noneRetryConfig();
-                }
-
-                if (request.getMethod() == null) {
-                    throw new HttpRequestInvalidException("HTTP method is required");
-                }
-                if (request.getUri() == null) {
-                    throw new HttpRequestInvalidException("HTTP uri is required");
-                }
 
                 try {
-                    return Retryer.<UnderlyingHttpResponse>execute(new Predicate<Throwable>() {
-                        @Override
-                        public boolean test(Throwable ex) {
-                            return false;
-                        }
-                    }, new Predicate<UnderlyingHttpResponse>() {
-                        @Override
-                        public boolean test(UnderlyingHttpResponse value) {
-                            return false;
-                        }
-                    }, theRetryConfig, null, new Callable<UnderlyingHttpResponse>() {
-                        @Override
-                        public UnderlyingHttpResponse call() throws Exception {
-                            if (requestInterceptors != null) {
-                                for (HttpRequestInterceptor interceptor : requestInterceptors) {
-                                    interceptor.intercept(request);
-                                }
-                            }
-                            UnderlyingHttpRequest underlyingHttpRequest = requestFactory.create(request.getMethod(), request.getUri(), request.getHeaders().getContentType());
-                            underlyingHttpRequest.addHeaders(request.getHeaders());
+                    if (request.getMethod() == null) {
+                        throw new HttpRequestInvalidException("HTTP method is required");
+                    }
+                    if (request.getUri() == null) {
+                        throw new HttpRequestInvalidException("HTTP uri is required");
+                    }
 
-                            if (request.getBody() != null) {
-                                HttpRequestBodyWriter requestBodyWriter = Pipeline.of(requestBodyWriters)
-                                        .findFirst(new Predicate<HttpRequestBodyWriter>() {
-                                            @Override
-                                            public boolean test(HttpRequestBodyWriter writer) {
-                                                return writer.canWrite(request.getBody(), request.getHeaders().getContentType());
-                                            }
-                                        });
-                                if (requestBodyWriter != null) {
-                                    requestBodyWriter.write(request.getBody(), request.getHeaders().getContentType(), underlyingHttpRequest);
-                                } else {
-                                    throw new NotFoundHttpRequestBodyWriterException();
-                                }
-                            }
-
-                            return underlyingHttpRequest.exchange();
+                    if (requestInterceptors != null) {
+                        for (HttpRequestInterceptor interceptor : requestInterceptors) {
+                            interceptor.intercept(request);
                         }
-                    });
+                    }
+                    UnderlyingHttpRequest underlyingHttpRequest = requestFactory.create(request.getMethod(), request.getUri(), request.getHeaders().getContentType());
+                    underlyingHttpRequest.addHeaders(request.getHeaders());
 
-                } catch (Exception ex) {
+                    if (request.getBody() != null) {
+                        HttpRequestBodyWriter requestBodyWriter = Pipeline.of(requestBodyWriters)
+                                .findFirst(new Predicate<HttpRequestBodyWriter>() {
+                                    @Override
+                                    public boolean test(HttpRequestBodyWriter writer) {
+                                        return writer.canWrite(request.getBody(), request.getHeaders().getContentType());
+                                    }
+                                });
+                        if (requestBodyWriter != null) {
+                            requestBodyWriter.write(request.getBody(), request.getHeaders().getContentType(), underlyingHttpRequest);
+                        } else {
+                            throw new NotFoundHttpRequestBodyWriterException();
+                        }
+                    }
+
+                    return underlyingHttpRequest.exchange();
+                } catch (Throwable ex) {
                     reject.handle(ex);
                     return null;
                 }
