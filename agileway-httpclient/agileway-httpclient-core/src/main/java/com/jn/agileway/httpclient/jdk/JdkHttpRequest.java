@@ -2,6 +2,8 @@ package com.jn.agileway.httpclient.jdk;
 
 import com.jn.agileway.httpclient.core.AbstractHttpRequest;
 import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
+import com.jn.agileway.httpclient.util.ContentEncoding;
+import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpHeaders;
@@ -13,6 +15,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 public class JdkHttpRequest extends AbstractHttpRequest {
 
@@ -45,8 +48,12 @@ public class JdkHttpRequest extends AbstractHttpRequest {
 
                 addHeaders(this.httpConnection, this.getHeaders());
                 this.httpConnection.connect();
-                this.streamBody = this.httpConnection.getOutputStream();
+                OutputStream outputStream = this.httpConnection.getOutputStream();
+                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncoding(this.getHeaders());
+                outputStream = HttpClientUtils.wrapByContentEncodings(outputStream, contentEncodings);
+                this.streamBody = outputStream;
             }
+
             return streamBody;
         }
     }
@@ -72,9 +79,11 @@ public class JdkHttpRequest extends AbstractHttpRequest {
             addHeaders(this.httpConnection, this.getHeaders());
             this.httpConnection.connect();
             if (this.httpConnection.getDoOutput()) {
-                OutputStream out = this.httpConnection.getOutputStream();
-                out.write(this.bufferedBody.toByteArray());
-                out.flush();
+                OutputStream outputStream = this.httpConnection.getOutputStream();
+                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncoding(this.getHeaders());
+                outputStream = HttpClientUtils.wrapByContentEncodings(outputStream, contentEncodings);
+                outputStream.write(this.bufferedBody.toByteArray());
+                outputStream.flush();
             }
         }
         this.httpConnection.getResponseCode();

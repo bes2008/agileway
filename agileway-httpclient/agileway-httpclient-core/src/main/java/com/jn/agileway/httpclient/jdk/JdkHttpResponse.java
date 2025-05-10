@@ -2,7 +2,7 @@ package com.jn.agileway.httpclient.jdk;
 
 import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.ContentEncoding;
-import com.jn.agileway.httpclient.util.HttpUtils;
+import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpHeaders;
@@ -66,18 +66,11 @@ public class JdkHttpResponse implements UnderlyingHttpResponse {
             if (inputStream == null) {
                 inputStream = this.httpConnection.getInputStream();
             }
-            List<ContentEncoding> contentEncodings = HttpUtils.getContentEncoding(this.getHeaders());
-            if (Objs.isNotEmpty(contentEncodings)) {
-                for (ContentEncoding contentEncoding : contentEncodings) {
-                    if (ContentEncoding.GZIP.equals(contentEncoding)) {
-                        inputStream = new GZIPInputStream(inputStream);
-                    } else if (ContentEncoding.DEFLATE.equals(contentEncoding)) {
-                        inputStream = new InflaterInputStream(inputStream);
-                    } else {
-                        throw new UnsupportedEncodingException("Unsupported http Content-Encoding: " + contentEncoding);
-                    }
-                }
-            }
+
+            // 处理压缩
+            List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncoding(this.getHeaders());
+            inputStream = HttpClientUtils.wrapByContentEncodings(inputStream, contentEncodings);
+            this.responseStream = inputStream;
         }
         return this.responseStream;
     }
