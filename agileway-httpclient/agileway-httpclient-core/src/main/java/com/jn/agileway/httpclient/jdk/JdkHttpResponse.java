@@ -1,14 +1,21 @@
 package com.jn.agileway.httpclient.jdk;
 
 import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
+import com.jn.agileway.httpclient.util.ContentEncoding;
+import com.jn.agileway.httpclient.util.HttpUtils;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.util.List;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.InflaterInputStream;
 
 public class JdkHttpResponse implements UnderlyingHttpResponse {
 
@@ -55,10 +62,28 @@ public class JdkHttpResponse implements UnderlyingHttpResponse {
     @Override
     public InputStream getBody() throws IOException {
         if (this.responseStream == null) {
-            InputStream errorStream = this.httpConnection.getErrorStream();
-            this.responseStream = (errorStream != null ? errorStream : this.httpConnection.getInputStream());
+            InputStream inputStream = this.httpConnection.getErrorStream();
+            if (inputStream == null) {
+                inputStream = this.httpConnection.getInputStream();
+            }
+            List<ContentEncoding> contentEncodings = HttpUtils.getContentEncoding(this.getHeaders());
+            if (Objs.isNotEmpty(contentEncodings)) {
+                for (ContentEncoding contentEncoding : contentEncodings) {
+                    if (ContentEncoding.GZIP.equals(contentEncoding)) {
+                        inputStream = new GZIPInputStream(inputStream);
+                    } else if (ContentEncoding.DEFLATE.equals(contentEncoding)) {
+                        inputStream = new InflaterInputStream(inputStream);
+                    } else {
+                        throw new UnsupportedEncodingException("Unsupported http Content-Encoding: " + contentEncoding);
+                    }
+                }
+            }
         }
         return this.responseStream;
+    }
+
+    public void setBody(InputStream responseStream) {
+        this.responseStream = responseStream;
     }
 
     @Override
