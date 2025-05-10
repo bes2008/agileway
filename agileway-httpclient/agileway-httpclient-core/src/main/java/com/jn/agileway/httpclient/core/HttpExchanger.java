@@ -192,20 +192,7 @@ public class HttpExchanger extends AbstractInitializable {
                               }
                           }
                       }
-                )
-                .then(new AsyncCallback<HttpResponse<O>, HttpResponse<O>>() {
-                    @Override
-                    public HttpResponse<O> apply(HttpResponse<O> httpResponse) {
-
-                        return null;
-                    }
-                })
-                .catchError(new AsyncCallback<Throwable, HttpResponse<O>>() {
-                    @Override
-                    public HttpResponse<O> apply(Throwable ex) {
-                        return null;
-                    }
-                });
+                );
     }
 
     private boolean needReadBody(UnderlyingHttpResponse underlyingHttpResponse) {
