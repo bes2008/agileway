@@ -78,6 +78,14 @@ public class HttpExchanger extends AbstractInitializable {
         this.responseInterceptors = Lists.immutableList(responseInterceptors);
     }
 
+    public void setExecutor(Executor executor) {
+        this.executor = executor;
+    }
+
+    public void setRequestFactory(UnderlyingHttpRequestFactory requestFactory) {
+        this.requestFactory = requestFactory;
+    }
+
     public void addRequestInterceptor(HttpRequestInterceptor interceptor) {
         if (interceptor != null) {
             this.customRequestInterceptors.add(interceptor);
@@ -205,9 +213,6 @@ public class HttpExchanger extends AbstractInitializable {
                                   if (needReadBody) {
                                       if (underlyingHttpResponse.getStatusCode() >= 400) {
                                           response = new HttpResponse<>(underlyingHttpResponse, null, true);
-                                          if (httpResponseErrorHandler != null) {
-                                              httpResponseErrorHandler.handle(response);
-                                          }
                                       } else {
                                           MediaType contentType = underlyingHttpResponse.getHeaders().getContentType();
                                           HttpResponseBodyReader reader = Pipeline.of(responseBodyReaders)
@@ -223,13 +228,12 @@ public class HttpExchanger extends AbstractInitializable {
                                           } else {
                                               response = new HttpResponse<>(underlyingHttpResponse, null, true);
                                           }
-
-                                          if (httpResponseErrorHandler != null && httpResponseErrorHandler.isError(response)) {
-                                              httpResponseErrorHandler.handle(response);
-                                          }
                                       }
                                   } else {
                                       response = new HttpResponse<>(underlyingHttpResponse);
+                                  }
+                                  if (httpResponseErrorHandler != null && httpResponseErrorHandler.isError(response)) {
+                                      httpResponseErrorHandler.handle(response);
                                   }
                                   return response;
                               } catch (IOException ex) {
