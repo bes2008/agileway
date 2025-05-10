@@ -27,6 +27,10 @@ public class HttpResponse<T> {
     }
 
     public HttpResponse(UnderlyingHttpResponse response, T body) {
+        this(response, body, false);
+    }
+
+    public HttpResponse(UnderlyingHttpResponse response, T body, boolean readIfBodyAbsent) {
         this.uri = response.getUri();
         this.method = response.getMethod();
         this.statusCode = response.getStatusCode();
@@ -34,7 +38,7 @@ public class HttpResponse<T> {
 
         if (body != null) {
             this.body = body;
-        } else {
+        } else if (readIfBodyAbsent) {
             try {
                 InputStream inputStream = response.getBody();
                 this.body = (T) IOs.toByteArray(inputStream);

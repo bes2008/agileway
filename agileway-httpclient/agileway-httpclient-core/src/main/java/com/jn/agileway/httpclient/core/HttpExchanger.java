@@ -14,7 +14,6 @@ import com.jn.langx.util.concurrent.promise.Promise;
 import com.jn.langx.util.concurrent.promise.Task;
 import com.jn.langx.util.function.Handler;
 import com.jn.langx.util.function.Predicate;
-import com.jn.langx.util.matchexp.MatchExp;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
@@ -175,9 +174,10 @@ public class HttpExchanger extends AbstractInitializable {
                         if (reader != null) {
                             O bodyEntity = reader.read(underlyingHttpResponse, contentType, responseType);
                             response = new HttpResponse<>(underlyingHttpResponse, bodyEntity);
+                        } else {
+                            response = new HttpResponse<>(underlyingHttpResponse, null, true);
                         }
-                    }
-                    if (response == null) {
+                    } else {
                         response = new HttpResponse<>(underlyingHttpResponse);
                     }
                     return response;
