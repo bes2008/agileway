@@ -68,6 +68,7 @@ public class HttpExchanger extends AbstractInitializable {
 
     @Override
     protected void doInit() throws InitializationException {
+        // requestInterceptors
         List<HttpRequestInterceptor> requestInterceptors = Lists.newArrayList();
         if (customRequestInterceptors != null) {
             requestInterceptors.addAll(customRequestInterceptors);
@@ -76,12 +77,18 @@ public class HttpExchanger extends AbstractInitializable {
         this.requestInterceptors = Lists.immutableList(requestInterceptors);
 
 
+        // responseInterceptors
         List<HttpResponseInterceptor> responseInterceptors = Lists.newArrayList();
         if (customResponseInterceptors != null) {
             responseInterceptors.addAll(customResponseInterceptors);
         }
         responseInterceptors.addAll(builtinResponseInterceptors);
         this.responseInterceptors = Lists.immutableList(responseInterceptors);
+
+        // requestBodyWriters
+
+        // responseBodyReaders
+        responseBodyReaders.add(new GeneralJsonHttpResponseReader());
     }
 
     public void setExecutor(Executor executor) {
