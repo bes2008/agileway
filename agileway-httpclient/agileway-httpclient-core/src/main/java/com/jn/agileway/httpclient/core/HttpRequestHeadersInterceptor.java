@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.core;
 
+import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
@@ -44,6 +45,10 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
                     request.getHeaders().setContentType(MediaType.APPLICATION_FORM_URLENCODED);
                 }
                 break;
+        }
+
+        if (HttpClientUtils.requestBodyUseStreamMode(method, request.getHeaders())) {
+            request.getHeaders().remove("Content-Length");
         }
     }
 }

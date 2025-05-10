@@ -5,6 +5,8 @@ import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.net.http.HttpHeaders;
+import com.jn.langx.util.net.http.HttpMethod;
+import com.jn.langx.util.net.mime.MediaType;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -70,5 +72,19 @@ public class HttpClientUtils {
             }
         }
         return inputStream;
+    }
+
+    public static boolean requestBodyUseStreamMode(HttpMethod method, HttpHeaders headers) {
+        MediaType contentType = headers.getContentType();
+        // 文件上传请求时
+        if (method == HttpMethod.POST && contentType == MediaType.MULTIPART_FORM_DATA) {
+            return true;
+        }
+        // 内容压缩时
+        List<ContentEncoding> contentEncodings = getContentEncoding(headers);
+        if (Objs.isNotEmpty(contentEncodings)) {
+            return true;
+        }
+        return false;
     }
 }

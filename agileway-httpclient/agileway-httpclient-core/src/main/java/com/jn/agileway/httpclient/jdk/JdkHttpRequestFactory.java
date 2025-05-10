@@ -2,6 +2,8 @@ package com.jn.agileway.httpclient.jdk;
 
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequest;
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequestFactory;
+import com.jn.agileway.httpclient.util.HttpClientUtils;
+import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.os.Platform;
@@ -26,10 +28,11 @@ public class JdkHttpRequestFactory implements UnderlyingHttpRequestFactory {
     }
 
     @Override
-    public UnderlyingHttpRequest create(HttpMethod method, URI uri, MediaType contentType) throws Exception {
-        boolean streamMode = contentType == MediaType.MULTIPART_FORM_DATA && method == HttpMethod.POST;
+    public UnderlyingHttpRequest create(HttpMethod method, URI uri, HttpHeaders httpHeaders) throws Exception {
+        boolean streamMode = HttpClientUtils.requestBodyUseStreamMode(method, httpHeaders);
         return new JdkHttpRequest(createHttpUrlConnection(method, uri), streamMode);
     }
+
 
     private HttpURLConnection createHttpUrlConnection(HttpMethod method, URI uri) throws Exception {
         if (method == HttpMethod.PATCH) {

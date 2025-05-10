@@ -153,7 +153,7 @@ public class HttpExchanger extends AbstractInitializable {
                     }
                 }
                 try {
-                    UnderlyingHttpRequest underlyingHttpRequest = requestFactory.create(request.getMethod(), request.getUri(), request.getHeaders().getContentType());
+                    UnderlyingHttpRequest underlyingHttpRequest = requestFactory.create(request.getMethod(), request.getUri(), request.getHeaders());
 
                     if (request.getBody() != null) {
                         HttpRequestBodyWriter requestBodyWriter = Pipeline.of(requestBodyWriters)
