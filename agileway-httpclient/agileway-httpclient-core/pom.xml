@@ -24,7 +24,13 @@
         </dependency>
         <dependency>
             <groupId>io.github.bes2008.solution.easyjson</groupId>
-            <artifactId>easyjson-jackson</artifactId>
+            <artifactId>easyjson-gson</artifactId>
+            <version>${easyjson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.11.0</version>
         </dependency>
     </dependencies>
 </project>

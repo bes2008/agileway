@@ -6,6 +6,7 @@ import com.jn.langx.annotation.Nullable;
 import com.jn.langx.exception.ErrorHandler;
 import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.lifecycle.InitializationException;
+import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
@@ -15,10 +16,12 @@ import com.jn.langx.util.concurrent.promise.Promise;
 import com.jn.langx.util.concurrent.promise.Task;
 import com.jn.langx.util.function.Handler;
 import com.jn.langx.util.function.Predicate;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.net.uri.component.UriComponentsBuilder;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -167,7 +170,7 @@ public class HttpExchanger extends AbstractInitializable {
                         if (requestBodyWriter != null) {
                             requestBodyWriter.write(request.getBody(), request.getHeaders().getContentType(), underlyingHttpRequest);
                         } else {
-                            throw new NotFoundHttpRequestBodyWriterException();
+                            throw new NotFoundHttpContentWriterException();
                         }
                     }
 
@@ -205,7 +208,7 @@ public class HttpExchanger extends AbstractInitializable {
                                               O bodyEntity = reader.read(underlyingHttpResponse, contentType, responseType);
                                               response = new HttpResponse<>(underlyingHttpResponse, bodyEntity);
                                           } else {
-                                              response = new HttpResponse<>(underlyingHttpResponse, null, true);
+                                              throw new NotFoundHttpContentReaderException(StringTemplates.formatWithPlaceholder("Can't find a HttpResponseBodyReader to read the response body for Content-Type {}", contentType));
                                           }
                                       }
                                   } else {

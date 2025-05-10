@@ -44,9 +44,9 @@ public class NacosApiTests {
                 .then(new AsyncCallback<HttpResponse<Map>, Map>() {
                     @Override
                     public Map apply(HttpResponse<Map> mapHttpResponse) {
-                        Map data = mapHttpResponse.getData();
-                        System.out.println(JSONs.toJson(data));
-                        return data;
+                        //Map data = mapHttpResponse.getData();
+                        System.out.println(JSONs.toJson(mapHttpResponse.getData()));
+                        return null;
                     }
                 })
                 .await();
