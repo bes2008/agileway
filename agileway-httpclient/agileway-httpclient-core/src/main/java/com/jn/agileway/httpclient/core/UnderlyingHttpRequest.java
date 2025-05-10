@@ -30,4 +30,5 @@ public interface UnderlyingHttpRequest {
     OutputStream getBody() throws IOException;
 
     UnderlyingHttpResponse exchange() throws IOException;
+
 }

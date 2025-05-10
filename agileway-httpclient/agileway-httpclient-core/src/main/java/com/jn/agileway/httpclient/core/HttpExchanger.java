@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.core;
 
+import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.exception.ErrorHandler;
 import com.jn.langx.lifecycle.AbstractInitializable;
@@ -7,6 +8,7 @@ import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.concurrent.promise.AsyncCallback;
 import com.jn.langx.util.concurrent.promise.Promise;
 import com.jn.langx.util.concurrent.promise.Task;
@@ -63,8 +65,19 @@ public class HttpExchanger extends AbstractInitializable {
         }
     }
 
-    public <I, O> Promise<HttpResponse<O>> exchange(boolean async, HttpMethod method, String uriTemplate, Map<String, Object> uriVariables, HttpHeaders headers, I body, final Class responseType, @Nullable final RetryConfig retryConfig) {
+    public <I, O> Promise<HttpResponse<O>> exchange(boolean async,
+                                                    @NonNull HttpMethod method,
+                                                    @NonNull String uriTemplate,
+                                                    @Nullable MultiValueMap<String, String> queryParams,
+                                                    @Nullable Map<String, Object> uriVariables,
+                                                    @Nullable HttpHeaders headers,
+                                                    @Nullable I body,
+                                                    @Nullable final Class responseType,
+                                                    @Nullable final RetryConfig retryConfig) {
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(uriTemplate);
+        if (queryParams != null) {
+            uriBuilder.queryParams(queryParams);
+        }
         if (uriVariables != null) {
             uriBuilder.uriVariables(uriVariables);
         }
@@ -112,20 +125,22 @@ public class HttpExchanger extends AbstractInitializable {
                             UnderlyingHttpRequest underlyingHttpRequest = requestFactory.create(request.getMethod(), request.getUri(), request.getHeaders().getContentType());
                             underlyingHttpRequest.addHeaders(request.getHeaders());
 
-                            for (HttpRequestBodyWriter requestBodyWriter : requestBodyWriters) {
-                                if (requestBodyWriter.canWrite(request.getBody(), request.getHeaders().getContentType())) {
+                            if (request.getBody() != null) {
+                                HttpRequestBodyWriter requestBodyWriter = Pipeline.of(requestBodyWriters)
+                                        .findFirst(new Predicate<HttpRequestBodyWriter>() {
+                                            @Override
+                                            public boolean test(HttpRequestBodyWriter writer) {
+                                                return writer.canWrite(request.getBody(), request.getHeaders().getContentType());
+                                            }
+                                        });
+                                if (requestBodyWriter != null) {
                                     requestBodyWriter.write(request.getBody(), request.getHeaders().getContentType(), underlyingHttpRequest);
-                                    break;
+                                } else {
+                                    throw new NotFoundHttpRequestBodyWriterException();
                                 }
                             }
-                            try {
-                                return underlyingHttpRequest.exchange();
-                            } catch (Throwable ex) {
-                                if (ex instanceof Exception) {
-                                    throw (Exception) ex;
-                                }
-                                throw Throwables.wrapAsRuntimeException(ex);
-                            }
+
+                            return underlyingHttpRequest.exchange();
                         }
                     });
 
