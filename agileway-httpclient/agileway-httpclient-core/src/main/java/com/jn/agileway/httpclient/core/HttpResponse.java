@@ -31,7 +31,7 @@ public class HttpResponse<T> {
     private URI uri;
     private HttpMethod method;
     private int statusCode;
-    private HttpHeaders httpHeaders;
+    private HttpHeaders headers;
     private T data;
     private String errorMessage;
 
@@ -47,7 +47,7 @@ public class HttpResponse<T> {
         this.uri = response.getUri();
         this.method = response.getMethod();
         this.statusCode = response.getStatusCode();
-        this.httpHeaders = response.getHeaders();
+        this.headers = response.getHeaders();
 
         if (data != null) {
             this.data = data;
@@ -67,7 +67,7 @@ public class HttpResponse<T> {
     }
 
     public HttpHeaders getHeaders() {
-        return this.httpHeaders;
+        return this.headers;
     }
 
     public int getStatusCode() {
@@ -88,10 +88,6 @@ public class HttpResponse<T> {
 
     public HttpMethod getMethod() {
         return method;
-    }
-
-    public HttpHeaders getHttpHeaders() {
-        return httpHeaders;
     }
 
     public boolean hasError() {

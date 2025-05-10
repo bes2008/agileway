@@ -26,11 +26,11 @@ public class NacosApiTests {
     @Test
     public void listClusterNodes() {
         HttpExchanger httpExchanger = initExchanger();
-        MultiValueMap<String, String> params = new CommonMultiValueMap<>();
+        MultiValueMap<String, Object> params = new CommonMultiValueMap<>();
         params.add("serviceName", "com.jn.agileway.test");
-        params.add("withInstances", "false");
-        params.add("pageNo", "1");
-        params.add("pageSize", "10");
+        params.add("withInstances", false);
+        params.add("pageNo", 1);
+        params.add("pageSize", 10);
 
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.add("Accept", "application/json");
@@ -40,16 +40,9 @@ public class NacosApiTests {
         requestHeaders.add("Accept-Encoding", "gzip");
         requestHeaders.add("Accept-Encoding", "deflate");
         requestHeaders.add("Accept-Encoding", "br");
-        httpExchanger.<Object, Map>exchange(false, HttpMethod.GET, baseUri + "/v1/core/cluster/nodes", params, null, requestHeaders, null, Map.class)
-                .then(new AsyncCallback<HttpResponse<Map>, Map>() {
-                    @Override
-                    public Map apply(HttpResponse<Map> mapHttpResponse) {
-                        //Map data = mapHttpResponse.getData();
-                        System.out.println(JSONs.toJson(mapHttpResponse.getData()));
-                        return null;
-                    }
-                })
+        HttpResponse<Map> response = httpExchanger.<Map>exchange(false, HttpMethod.GET, baseUri + "/v1/core/cluster/nodes", params, null, requestHeaders, null, Map.class)
                 .await();
+        System.out.println(JSONs.toJson(response, true));
 
     }
 }

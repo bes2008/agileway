@@ -127,14 +127,14 @@ public class HttpExchanger extends AbstractInitializable {
         this.httpResponseErrorHandler = errorResponseHandler;
     }
 
-    public <I, O> Promise<HttpResponse<O>> exchange(boolean async,
-                                                    @NonNull HttpMethod method,
-                                                    @NonNull String uriTemplate,
-                                                    @Nullable MultiValueMap<String, String> queryParams,
-                                                    @Nullable Map<String, Object> uriVariables,
-                                                    @Nullable HttpHeaders headers,
-                                                    @Nullable I body,
-                                                    @Nullable final Type responseType) {
+    public <O> Promise<HttpResponse<O>> exchange(boolean async,
+                                                 @NonNull HttpMethod method,
+                                                 @NonNull String uriTemplate,
+                                                 @Nullable MultiValueMap<String, Object> queryParams,
+                                                 @Nullable Map<String, Object> uriVariables,
+                                                 @Nullable HttpHeaders headers,
+                                                 @Nullable Object body,
+                                                 @Nullable final Type responseType) {
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(uriTemplate);
         if (queryParams != null) {
             uriBuilder.queryParams(queryParams);
