@@ -18,7 +18,7 @@ public interface UnderlyingHttpResponse extends Closeable {
 
     int getStatusCode();
 
-    void close() throws IOException;
+    void close();
 
     InputStream getBody() throws IOException;
 

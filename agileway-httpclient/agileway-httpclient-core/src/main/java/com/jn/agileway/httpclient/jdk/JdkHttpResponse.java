@@ -48,7 +48,7 @@ public class JdkHttpResponse implements UnderlyingHttpResponse {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         this.httpConnection.disconnect();
     }
 

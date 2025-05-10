@@ -21,6 +21,7 @@ public class HttpResponse<T> {
     private HttpHeaders httpHeaders;
     private T body;
 
+
     public HttpResponse(UnderlyingHttpResponse response) {
         this(response, null);
     }

@@ -14,6 +14,7 @@ import com.jn.langx.util.concurrent.promise.Promise;
 import com.jn.langx.util.concurrent.promise.Task;
 import com.jn.langx.util.function.Handler;
 import com.jn.langx.util.function.Predicate;
+import com.jn.langx.util.matchexp.MatchExp;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
@@ -158,26 +159,33 @@ public class HttpExchanger extends AbstractInitializable {
             public HttpResponse<O> apply(UnderlyingHttpResponse underlyingHttpResponse) {
                 MediaType contentType = underlyingHttpResponse.getHeaders().getContentType();
 
-                HttpResponseBodyReader reader = Pipeline.of(responseBodyReaders)
-                        .findFirst(new Predicate<HttpResponseBodyReader>() {
-                            @Override
-                            public boolean test(HttpResponseBodyReader httpResponseBodyReader) {
-                                return httpResponseBodyReader.canRead(underlyingHttpResponse, contentType, responseType);
-                            }
-                        });
+
                 HttpResponse<O> response = null;
-                if (reader != null) {
-                    O bodyEntity = reader.read(underlyingHttpResponse, contentType, responseType);
-                    response = new HttpResponse<>(underlyingHttpResponse, bodyEntity);
-                } else {
-                    return new HttpResponse(underlyingHttpResponse);
-                }
+
+                boolean needReadBody = needReadBody(underlyingHttpResponse);
                 try {
-                    underlyingHttpResponse.close();
+                    if (needReadBody) {
+                        HttpResponseBodyReader reader = Pipeline.of(responseBodyReaders)
+                                .findFirst(new Predicate<HttpResponseBodyReader>() {
+                                    @Override
+                                    public boolean test(HttpResponseBodyReader httpResponseBodyReader) {
+                                        return httpResponseBodyReader.canRead(underlyingHttpResponse, contentType, responseType);
+                                    }
+                                });
+                        if (reader != null) {
+                            O bodyEntity = reader.read(underlyingHttpResponse, contentType, responseType);
+                            response = new HttpResponse<>(underlyingHttpResponse, bodyEntity);
+                        }
+                    }
+                    if (response == null) {
+                        response = new HttpResponse<>(underlyingHttpResponse);
+                    }
+                    return response;
                 } catch (IOException ex) {
                     throw Throwables.wrapAsRuntimeIOException(ex);
+                } finally {
+                    underlyingHttpResponse.close();
                 }
-                return response;
             }
         }).catchError(new AsyncCallback<Throwable, HttpResponse<O>>() {
             @Override
@@ -185,5 +193,28 @@ public class HttpExchanger extends AbstractInitializable {
                 return null;
             }
         });
+    }
+
+    private boolean needReadBody(UnderlyingHttpResponse underlyingHttpResponse) {
+        if (underlyingHttpResponse.getMethod() == HttpMethod.HEAD) {
+            return false;
+        }
+        if (underlyingHttpResponse.getStatusCode() < 200) {
+            return false;
+        }
+        if (underlyingHttpResponse.getStatusCode() == 204) {
+            return false;
+        }
+        if (underlyingHttpResponse.getStatusCode() == 304) {
+            return false;
+        }
+
+        if (!underlyingHttpResponse.getHeaders().containsKey("Transfer-Encoding")) {
+            long contentLength = underlyingHttpResponse.getHeaders().getContentLength();
+            if (contentLength == 0L) {
+                return false;
+            }
+        }
+        return true;
     }
 }
