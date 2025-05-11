@@ -13,7 +13,6 @@
         <module>agileway-httpclient-core</module>
         <module>agileway-httpclient-httpcomponents</module>
         <module>agileway-httpclient-okhttp</module>
-        <module>agileway-httpclient-jodd</module>
     </modules>
 
     <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
