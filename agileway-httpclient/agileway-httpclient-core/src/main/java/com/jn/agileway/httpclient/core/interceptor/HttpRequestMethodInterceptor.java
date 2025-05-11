@@ -6,6 +6,7 @@ import com.jn.agileway.httpclient.core.exception.HttpRequestInvalidException;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
+import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.net.http.HttpMethod;
@@ -47,6 +48,9 @@ public class HttpRequestMethodInterceptor implements HttpRequestInterceptor {
     }
 
     public void setNotAllowedMethods(List<String> theNotAllowedMethods) {
+        if (Objs.isEmpty(theNotAllowedMethods)) {
+            theNotAllowedMethods = Lists.asList("head", "options", "trace");
+        }
         this.notAllowedMethods = Pipeline.<String>of(theNotAllowedMethods)
                 .map(new Function<String, HttpMethod>() {
                     @Override
