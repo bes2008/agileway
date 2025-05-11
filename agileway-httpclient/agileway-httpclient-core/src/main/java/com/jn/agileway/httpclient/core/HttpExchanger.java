@@ -1,9 +1,6 @@
 package com.jn.agileway.httpclient.core;
 
-import com.jn.agileway.httpclient.core.serialize.GeneralFontHttpResponseReader;
-import com.jn.agileway.httpclient.core.serialize.GeneralImageHttpResponseReader;
-import com.jn.agileway.httpclient.core.serialize.GeneralJsonHttpResponseReader;
-import com.jn.agileway.httpclient.core.serialize.GeneralTextHttpResponseReader;
+import com.jn.agileway.httpclient.core.serialize.*;
 import com.jn.agileway.httpclient.jdk.JdkHttpRequestFactory;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
@@ -93,8 +90,7 @@ public class HttpExchanger extends AbstractInitializable {
         // responseBodyReaders
         responseBodyReaders.add(new GeneralJsonHttpResponseReader());
         responseBodyReaders.add(new GeneralTextHttpResponseReader());
-        responseBodyReaders.add(new GeneralImageHttpResponseReader());
-        responseBodyReaders.add(new GeneralFontHttpResponseReader());
+        responseBodyReaders.add(new ResourceHttpResponseReader());
     }
 
     public void setExecutor(Executor executor) {
