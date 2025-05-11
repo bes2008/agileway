@@ -1,6 +1,7 @@
 package com.jn.agileway.httpclient.core;
 
 import com.jn.agileway.httpclient.core.exception.BadHttpRequestException;
+import com.jn.agileway.httpclient.core.exception.HttpRequestServerErrorException;
 import com.jn.agileway.httpclient.core.exception.NotFoundHttpContentReaderException;
 import com.jn.agileway.httpclient.core.exception.NotFoundHttpContentWriterException;
 import com.jn.agileway.httpclient.core.interceptor.HttpRequestHeadersInterceptor;
@@ -21,19 +22,26 @@ import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.concurrent.promise.AsyncCallback;
 import com.jn.langx.util.concurrent.promise.Promise;
+import com.jn.langx.util.concurrent.promise.Promises;
 import com.jn.langx.util.concurrent.promise.Task;
+import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Handler;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.net.uri.component.UriComponentsBuilder;
+import com.jn.langx.util.retry.RetryConfig;
+import com.jn.langx.util.retry.RetryInfo;
+import com.jn.langx.util.retry.Retryer;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.ConnectException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 
 public class HttpExchanger extends AbstractInitializable {
@@ -164,7 +172,7 @@ public class HttpExchanger extends AbstractInitializable {
         return exchange(async, new HttpRequest(uri, method, headers, body), responseType);
     }
 
-    public <I, O> Promise<HttpResponse<O>> exchange(boolean async, final HttpRequest request, final Type responseType) {
+    public <O> Promise<HttpResponse<O>> exchange(boolean async, final HttpRequest request, final Type responseType) {
         Task<UnderlyingHttpResponse> sendRequestTask = new Task<UnderlyingHttpResponse>() {
 
             @Override
@@ -278,5 +286,36 @@ public class HttpExchanger extends AbstractInitializable {
             }
         }
         return true;
+    }
+
+    public <O> Promise<HttpResponse<O>> exchangeWithRetry(boolean async, HttpRequest request, Type responseType, final RetryConfig retryConfig, Callable<HttpResponse<O>> fallback) {
+        return exchangeWithRetry(async, request, responseType, null, null, null, retryConfig, fallback);
+    }
+
+    public <O> Promise<HttpResponse<O>> exchangeWithRetry(boolean async, HttpRequest request, Type responseType, Predicate<Throwable> errorRetryPredicate, Predicate<HttpResponse<O>> resultRetryPredicate, Consumer<RetryInfo<HttpResponse<O>>> attemptsListener, final RetryConfig retryConfig, Callable<HttpResponse<O>> fallback) {
+        RetryConfig theRetryConfig = retryConfig != null ? retryConfig : RetryConfig.noneRetryConfig();
+        Predicate<Throwable> theErrorRetryPredicate = errorRetryPredicate == null ? new Predicate<Throwable>() {
+            @Override
+            public boolean test(Throwable throwable) {
+                return (throwable instanceof HttpRequestServerErrorException) || Throwables.hasCause(throwable, ConnectException.class);
+            }
+        } : errorRetryPredicate;
+        Predicate<HttpResponse<O>> theResultRetryPredicate = resultRetryPredicate == null ? new Predicate<HttpResponse<O>>() {
+            @Override
+            public boolean test(HttpResponse<O> oHttpResponse) {
+                return oHttpResponse.hasError() && oHttpResponse.getStatusCode() >= 500;
+            }
+        } : resultRetryPredicate;
+        return Promises.of(async ? executor : null, new Callable<HttpResponse<O>>() {
+            @Override
+            public HttpResponse<O> call() throws Exception {
+                return Retryer.<HttpResponse<O>>execute(theErrorRetryPredicate, theResultRetryPredicate, theRetryConfig, attemptsListener, new Callable<HttpResponse<O>>() {
+                    @Override
+                    public HttpResponse<O> call() throws Exception {
+                        return (HttpResponse<O>) exchange(async, request, responseType).await();
+                    }
+                }, fallback);
+            }
+        });
     }
 }
