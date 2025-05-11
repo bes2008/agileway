@@ -16,7 +16,7 @@ public class GeneralResourceHttpResponseReader extends CustomMediaTypesHttpRespo
         // 办公文件
         addSupportedMediaType(MediaType.parseMediaType("application/vnd.ms-excel")); // .xls
         addSupportedMediaType(MediaType.parseMediaType("application/pdf")); // .pdf
-        addSupportedMediaType(MediaType.parseMediaType("application/application/msword")); // .doc
+        addSupportedMediaType(MediaType.parseMediaType("application/msword")); // .doc
         addSupportedMediaType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.wordprocessingml.document")); // .docx
         addSupportedMediaType(MediaType.parseMediaType("application/vnd.ms-powerpoint")); //  .ppt
         // 未知类型的二进制文件

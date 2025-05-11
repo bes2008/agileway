@@ -64,8 +64,6 @@ public class HttpExchanger extends AbstractInitializable {
 
     /**
      * 该方法要在 自定义的 interceptor, readers, writers 完成之后调用
-     *
-     * @throws InitializationException
      */
     @Override
     protected void doInit() throws InitializationException {
