@@ -3,7 +3,7 @@ package com.jn.agileway.httpclient.core.interceptor;
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.HttpRequestInterceptor;
 import com.jn.agileway.httpclient.core.MultiplePartsBody;
-import com.jn.agileway.httpclient.core.exception.HttpRequestInvalidException;
+import com.jn.agileway.httpclient.core.exception.BadHttpRequestException;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.text.StringTemplates;
@@ -77,7 +77,7 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
 
         if (HttpClientUtils.isForm(request.getHeaders().getContentType())) {
             if (request.getMethod() != HttpMethod.POST) {
-                throw new HttpRequestInvalidException(StringTemplates.formatWithPlaceholder("Http request with Content-Type {}, method {} is invalid", request.getHeaders().getContentType(), request.getMethod()));
+                throw new BadHttpRequestException(StringTemplates.formatWithPlaceholder("Http request with Content-Type {}, method {} is invalid", request.getHeaders().getContentType(), request.getMethod()));
             }
         }
 

@@ -2,7 +2,7 @@ package com.jn.agileway.httpclient.core.serialize;
 
 import com.jn.agileway.httpclient.core.HttpRequestBodyWriter;
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequest;
-import com.jn.agileway.httpclient.core.exception.HttpRequestInvalidException;
+import com.jn.agileway.httpclient.core.exception.BadHttpRequestException;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.net.mime.MediaType;
@@ -46,7 +46,7 @@ public class GeneralFormHttpRequestWriter implements HttpRequestBodyWriter {
         if (formData instanceof MultiValueMap) {
             return serializeMultiValueMap((MultiValueMap) formData, charset);
         }
-        throw new HttpRequestInvalidException("the form data type is not supported, the type is " + Reflects.getFQNClassName(formData.getClass()));
+        throw new BadHttpRequestException("the form data type is not supported, the type is " + Reflects.getFQNClassName(formData.getClass()));
     }
 
     private String serializeMap(Map<String, ?> formData, final Charset charset) throws UnsupportedEncodingException {

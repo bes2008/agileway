@@ -2,8 +2,8 @@ package com.jn.agileway.httpclient.core.interceptor;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.HttpRequestInterceptor;
-import com.jn.agileway.httpclient.core.exception.HttpRequestInvalidException;
-import com.jn.agileway.httpclient.util.HttpClientUtils;
+import com.jn.agileway.httpclient.core.exception.BadHttpRequestException;
+import com.jn.agileway.httpclient.core.exception.MethodNotAllowedRequestException;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Lists;
@@ -28,7 +28,7 @@ public class HttpRequestMethodInterceptor implements HttpRequestInterceptor {
     @Override
     public void intercept(HttpRequest request) {
         if (!isAllowedMethod(request.getMethod())) {
-            throw new HttpRequestInvalidException(StringTemplates.formatWithPlaceholder("Http request method {} is not allowed", request.getMethod()));
+            throw new MethodNotAllowedRequestException(StringTemplates.formatWithPlaceholder("Http request method {} is not allowed", request.getMethod()));
         }
     }
 

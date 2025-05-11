@@ -1,6 +1,6 @@
 package com.jn.agileway.httpclient.core;
 
-import com.jn.agileway.httpclient.core.exception.HttpRequestInvalidException;
+import com.jn.agileway.httpclient.core.exception.BadHttpRequestException;
 import com.jn.agileway.httpclient.core.exception.NotFoundHttpContentReaderException;
 import com.jn.agileway.httpclient.core.exception.NotFoundHttpContentWriterException;
 import com.jn.agileway.httpclient.core.interceptor.HttpRequestHeadersInterceptor;
@@ -97,6 +97,11 @@ public class HttpExchanger extends AbstractInitializable {
         responseBodyReaders.add(new GeneralResourceHttpResponseReader());
         responseBodyReaders.add(0, new GeneralBytesHttpResponseReader());
         this.responseBodyReaders = Lists.immutableList(responseBodyReaders);
+
+        // httpResponseErrorHandler
+        if (this.httpResponseErrorHandler == null) {
+            this.httpResponseErrorHandler = new DefaultHttpResponseErrorHandler();
+        }
     }
 
     public void setExecutor(Executor executor) {
@@ -165,10 +170,10 @@ public class HttpExchanger extends AbstractInitializable {
             @Override
             public UnderlyingHttpResponse run(Handler<UnderlyingHttpResponse> resolve, ErrorHandler reject) {
                 if (request.getMethod() == null) {
-                    throw new HttpRequestInvalidException("HTTP method is required");
+                    throw new BadHttpRequestException("HTTP method is required");
                 }
                 if (request.getUri() == null) {
-                    throw new HttpRequestInvalidException("HTTP uri is required");
+                    throw new BadHttpRequestException("HTTP uri is required");
                 }
                 if (requestInterceptors != null) {
                     for (HttpRequestInterceptor interceptor : requestInterceptors) {

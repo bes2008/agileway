@@ -2,7 +2,7 @@ package com.jn.agileway.httpclient.core.interceptor;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.HttpRequestInterceptor;
-import com.jn.agileway.httpclient.core.exception.HttpRequestInvalidException;
+import com.jn.agileway.httpclient.core.exception.BadHttpRequestException;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
@@ -87,19 +87,19 @@ public class HttpRequestUriInterceptor implements HttpRequestInterceptor {
     public void intercept(HttpRequest request) {
         URI uri = request.getUri();
         if (uri == null) {
-            throw new HttpRequestInvalidException("Http request uri is required");
+            throw new BadHttpRequestException("Http request uri is required");
         }
         String scheme = uri.getScheme();
         if (scheme == null) {
-            throw new HttpRequestInvalidException("Http request uri scheme is required");
+            throw new BadHttpRequestException("Http request uri scheme is required");
         }
         if (!supportedSchemes.contains(scheme)) {
-            throw new HttpRequestInvalidException("Http request uri scheme is not supported: " + scheme);
+            throw new BadHttpRequestException("Http request uri scheme is not supported: " + scheme);
         }
 
         String authority = uri.getAuthority();
         if (!isAllowedAuthority(authority)) {
-            throw new HttpRequestInvalidException("Http request uri authority is not allowed: " + authority);
+            throw new BadHttpRequestException("Http request uri authority is not allowed: " + authority);
         }
     }
 
