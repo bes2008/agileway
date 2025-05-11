@@ -18,6 +18,14 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 public class HttpClientUtils {
+    public static boolean isForm(HttpHeaders headers) {
+        MediaType contentType = headers.getContentType();
+        if (contentType == null) {
+            return false;
+        }
+        return contentType.equalsTypeAndSubtype(MediaType.APPLICATION_FORM_URLENCODED) || "multipart".equals(contentType.getType());
+    }
+
     public static List<ContentEncoding> getContentEncoding(HttpHeaders headers) {
         List<String> contentEncodings = headers.get("Content-Encoding");
         if (Objs.isEmpty(contentEncodings)) {

@@ -4,6 +4,8 @@ import com.jn.agileway.httpclient.core.exception.HttpRequestInvalidException;
 import com.jn.agileway.httpclient.core.exception.NotFoundHttpContentReaderException;
 import com.jn.agileway.httpclient.core.exception.NotFoundHttpContentWriterException;
 import com.jn.agileway.httpclient.core.interceptor.HttpRequestHeadersInterceptor;
+import com.jn.agileway.httpclient.core.interceptor.HttpRequestMethodInterceptor;
+import com.jn.agileway.httpclient.core.interceptor.HttpRequestUriInterceptor;
 import com.jn.agileway.httpclient.core.serialize.*;
 import com.jn.agileway.httpclient.jdk.JdkHttpRequestFactory;
 import com.jn.langx.annotation.NonNull;
@@ -42,7 +44,7 @@ public class HttpExchanger extends AbstractInitializable {
     private Executor executor;
     @NonNull
     private UnderlyingHttpRequestFactory requestFactory = new JdkHttpRequestFactory();
-
+    private HttpExchangerConfiguration configuration;
     /**
      * 对请求进行拦截处理
      */
@@ -71,7 +73,12 @@ public class HttpExchanger extends AbstractInitializable {
      */
     @Override
     protected void doInit() throws InitializationException {
+        if (configuration == null) {
+            configuration = new HttpExchangerConfiguration();
+        }
         // requestInterceptors
+        this.requestInterceptors.add(new HttpRequestUriInterceptor(configuration.getAllowedSchemes(), configuration.getAllowedAuthorities(), configuration.getNotAllowedAuthorities()));
+        this.requestInterceptors.add(new HttpRequestMethodInterceptor(configuration.getAllowedMethods(), configuration.getNotAllowedMethods()));
         this.requestInterceptors.add(new HttpRequestHeadersInterceptor());
         this.requestInterceptors = Lists.immutableList(requestInterceptors);
 
@@ -94,6 +101,10 @@ public class HttpExchanger extends AbstractInitializable {
 
     public void setExecutor(Executor executor) {
         this.executor = executor;
+    }
+
+    public void setConfiguration(HttpExchangerConfiguration configuration) {
+        this.configuration = configuration;
     }
 
     public void setRequestFactory(UnderlyingHttpRequestFactory requestFactory) {
