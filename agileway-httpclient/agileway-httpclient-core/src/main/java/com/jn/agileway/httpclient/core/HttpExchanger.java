@@ -42,18 +42,16 @@ public class HttpExchanger extends AbstractInitializable {
     /**
      * 对请求进行拦截处理
      */
-    private final List<HttpRequestInterceptor> builtinRequestInterceptors = Lists.asList(new HttpRequestHeadersInterceptor());
-    private final List<HttpRequestInterceptor> customRequestInterceptors = Lists.newArrayList();
-    private List<HttpRequestInterceptor> requestInterceptors;
+    private List<HttpRequestInterceptor> requestInterceptors = Lists.newArrayList();
     /**
      * 主要是将 body进行转换，顺带补充 header等，只要一个转换成功就可以。
      */
-    private final List<HttpRequestBodyWriter> requestBodyWriters = Lists.newArrayList();
+    private List<HttpRequestBodyWriter> requestBodyWriters = Lists.newArrayList();
 
     /**
      * 对正常的响应进行反序列化
      */
-    private final List<HttpResponseBodyReader> responseBodyReaders = Lists.newArrayList();
+    private List<HttpResponseBodyReader> responseBodyReaders = Lists.newArrayList();
     /**
      * 对4xx,5xx的响应进行处理
      */
@@ -62,35 +60,33 @@ public class HttpExchanger extends AbstractInitializable {
     /**
      * 响应拦截器
      */
-    private final List<HttpResponseInterceptor> builtinResponseInterceptors = Lists.newArrayList();
-    private final List<HttpResponseInterceptor> customResponseInterceptors = Lists.newArrayList();
-    private List<HttpResponseInterceptor> responseInterceptors;
+    private List<HttpResponseInterceptor> responseInterceptors = Lists.newArrayList();
 
+    /**
+     * 该方法要在 自定义的 interceptor, readers, writers 完成之后调用
+     *
+     * @throws InitializationException
+     */
     @Override
     protected void doInit() throws InitializationException {
         // requestInterceptors
-        List<HttpRequestInterceptor> requestInterceptors = Lists.newArrayList();
-        if (customRequestInterceptors != null) {
-            requestInterceptors.addAll(customRequestInterceptors);
-        }
-        requestInterceptors.addAll(builtinRequestInterceptors);
+        this.requestInterceptors.add(new HttpRequestHeadersInterceptor());
         this.requestInterceptors = Lists.immutableList(requestInterceptors);
 
 
         // responseInterceptors
-        List<HttpResponseInterceptor> responseInterceptors = Lists.newArrayList();
-        if (customResponseInterceptors != null) {
-            responseInterceptors.addAll(customResponseInterceptors);
-        }
-        responseInterceptors.addAll(builtinResponseInterceptors);
         this.responseInterceptors = Lists.immutableList(responseInterceptors);
 
         // requestBodyWriters
+        this.requestBodyWriters.add(new GeneralJsonHttpRequestWriter());
+        this.requestBodyWriters = Lists.immutableList(requestBodyWriters);
 
         // responseBodyReaders
         responseBodyReaders.add(new GeneralJsonHttpResponseReader());
         responseBodyReaders.add(new GeneralTextHttpResponseReader());
-        responseBodyReaders.add(new ResourceHttpResponseReader());
+        responseBodyReaders.add(new GeneralResourceHttpResponseReader());
+        responseBodyReaders.add(0, new GeneralBytesHttpResponseReader());
+        this.responseBodyReaders = Lists.immutableList(responseBodyReaders);
     }
 
     public void setExecutor(Executor executor) {
@@ -103,13 +99,13 @@ public class HttpExchanger extends AbstractInitializable {
 
     public void addRequestInterceptor(HttpRequestInterceptor interceptor) {
         if (interceptor != null) {
-            this.customRequestInterceptors.add(interceptor);
+            this.requestInterceptors.add(interceptor);
         }
     }
 
     public void addResponseInterceptor(HttpResponseInterceptor interceptor) {
         if (interceptor != null) {
-            this.customResponseInterceptors.add(interceptor);
+            this.responseInterceptors.add(interceptor);
         }
     }
 

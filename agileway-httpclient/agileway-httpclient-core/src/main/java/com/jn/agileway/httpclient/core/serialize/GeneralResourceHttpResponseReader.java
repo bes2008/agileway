@@ -10,8 +10,8 @@ import com.jn.langx.util.net.mime.MediaType;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
-public class ResourceHttpResponseReader extends CustomMediaTypesHttpResponseReader<Resource> {
-    public ResourceHttpResponseReader() {
+public class GeneralResourceHttpResponseReader extends CustomMediaTypesHttpResponseReader<Resource> {
+    public GeneralResourceHttpResponseReader() {
 
         // 办公文件
         addSupportedMediaType(MediaType.parseMediaType("application/vnd.ms-excel")); // .xls
