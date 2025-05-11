@@ -1,5 +1,8 @@
-package com.jn.agileway.httpclient.core;
+package com.jn.agileway.httpclient.core.interceptor;
 
+import com.jn.agileway.httpclient.core.HttpRequest;
+import com.jn.agileway.httpclient.core.HttpRequestInterceptor;
+import com.jn.agileway.httpclient.core.MultiplePartsBody;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.util.net.http.HttpMethod;

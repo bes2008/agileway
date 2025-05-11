@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.core;
+package com.jn.agileway.httpclient.core.exception;
 
 public class NotFoundHttpContentReaderException extends RuntimeException {
     public NotFoundHttpContentReaderException() {
