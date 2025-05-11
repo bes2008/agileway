@@ -79,6 +79,7 @@ public class HttpExchanger extends AbstractInitializable {
 
         // requestBodyWriters
         this.requestBodyWriters.add(new GeneralJsonHttpRequestWriter());
+        this.requestBodyWriters.add(new GeneralFormHttpRequestWriter());
         this.requestBodyWriters = Lists.immutableList(requestBodyWriters);
 
         // responseBodyReaders
