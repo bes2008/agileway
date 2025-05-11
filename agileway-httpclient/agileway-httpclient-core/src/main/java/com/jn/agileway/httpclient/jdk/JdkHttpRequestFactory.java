@@ -1,26 +1,17 @@
 package com.jn.agileway.httpclient.jdk;
 
+import com.jn.agileway.httpclient.core.AbstractUnderlyingHttpRequestFactory;
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequest;
-import com.jn.agileway.httpclient.core.UnderlyingHttpRequestFactory;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.os.Platform;
 
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSocketFactory;
 import java.net.*;
 
-public class JdkHttpRequestFactory implements UnderlyingHttpRequestFactory {
+public class JdkHttpRequestFactory extends AbstractUnderlyingHttpRequestFactory {
     private Proxy proxy;
-    private int connectTimeoutMills = -1;
-    private int readTimeoutMills = -1;
-
-    private SSLSocketFactory sslSocketFactory;
-
-    public void setSSLSocketFactory(SSLSocketFactory sslSocketFactory) {
-        this.sslSocketFactory = sslSocketFactory;
-    }
 
     public void setProxy(Proxy proxy) {
         this.proxy = proxy;
@@ -57,10 +48,9 @@ public class JdkHttpRequestFactory implements UnderlyingHttpRequestFactory {
         httpConn.setInstanceFollowRedirects(method == HttpMethod.GET);
         httpConn.setDoOutput(writable(method));
 
-        String scheme = uri.getScheme();
-        if ("https".equals(scheme) || "wss".equals(scheme)) {
+        if (HttpClientUtils.isSSLEnabled(uri)) {
             HttpsURLConnection httpsConn = (HttpsURLConnection) httpConn;
-            httpsConn.setSSLSocketFactory(sslSocketFactory);
+            httpsConn.setSSLSocketFactory(getSslSocketFactory());
         }
 
         return httpConn;

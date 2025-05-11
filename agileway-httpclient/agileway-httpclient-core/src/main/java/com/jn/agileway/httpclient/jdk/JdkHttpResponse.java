@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
 
-public class JdkHttpResponse implements UnderlyingHttpResponse {
+class JdkHttpResponse implements UnderlyingHttpResponse {
 
     private URI uri;
     private HttpMethod method;

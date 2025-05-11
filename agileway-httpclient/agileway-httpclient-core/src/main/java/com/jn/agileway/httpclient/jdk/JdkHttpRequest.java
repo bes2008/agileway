@@ -1,6 +1,6 @@
 package com.jn.agileway.httpclient.jdk;
 
-import com.jn.agileway.httpclient.core.AbstractHttpRequest;
+import com.jn.agileway.httpclient.core.AbstractUnderlyingHttpRequest;
 import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.ContentEncoding;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
@@ -17,7 +17,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
-public class JdkHttpRequest extends AbstractHttpRequest {
+class JdkHttpRequest extends AbstractUnderlyingHttpRequest {
 
     private HttpURLConnection httpConnection;
 
@@ -37,25 +37,24 @@ public class JdkHttpRequest extends AbstractHttpRequest {
     public OutputStream getBody() throws IOException {
         if (!streamMode) {
             return this.bufferedBody;
-        } else {
-            if (streamBody == null) {
-                long contentLength = this.getHeaders().getContentLength();
-                if (contentLength > 0) {
-                    this.httpConnection.setFixedLengthStreamingMode(contentLength);
-                } else {
-                    this.httpConnection.setChunkedStreamingMode(4096);
-                }
-
-                addHeaders(this.httpConnection, this.getHeaders());
-                this.httpConnection.connect();
-                OutputStream outputStream = this.httpConnection.getOutputStream();
-                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncoding(this.getHeaders());
-                outputStream = HttpClientUtils.wrapByContentEncodings(outputStream, contentEncodings);
-                this.streamBody = outputStream;
+        }
+        if (streamBody == null) {
+            long contentLength = this.getHeaders().getContentLength();
+            if (contentLength > 0) {
+                this.httpConnection.setFixedLengthStreamingMode(contentLength);
+            } else {
+                this.httpConnection.setChunkedStreamingMode(4096);
             }
 
-            return streamBody;
+            addHeaders(this.httpConnection, this.getHeaders());
+            this.httpConnection.connect();
+            OutputStream outputStream = this.httpConnection.getOutputStream();
+            List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncoding(this.getHeaders());
+            outputStream = HttpClientUtils.wrapByContentEncodings(outputStream, contentEncodings);
+            this.streamBody = outputStream;
         }
+
+        return streamBody;
     }
 
     @Override

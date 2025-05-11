@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
-public abstract class AbstractHttpRequest implements UnderlyingHttpRequest {
+public abstract class AbstractUnderlyingHttpRequest implements UnderlyingHttpRequest {
 
     private final HttpHeaders headers = new HttpHeaders();
     private boolean executed = false;
@@ -22,11 +22,6 @@ public abstract class AbstractHttpRequest implements UnderlyingHttpRequest {
                 }
             }
         }
-    }
-
-    @Override
-    public OutputStream getBody() throws IOException {
-        return null;
     }
 
     @Override

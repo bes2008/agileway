@@ -1,6 +1,7 @@
 package com.jn.agileway.httpclient.util;
 
 import com.jn.langx.util.Objs;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
@@ -11,6 +12,7 @@ import com.jn.langx.util.net.mime.MediaType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 import java.util.List;
 import java.util.zip.DeflaterInputStream;
 import java.util.zip.DeflaterOutputStream;
@@ -18,6 +20,15 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 public class HttpClientUtils {
+    public static boolean isSSLEnabled(String httpUri) {
+        return Strings.startsWith(httpUri, "https://") || Strings.startsWith(httpUri, "wss://");
+    }
+
+    public static boolean isSSLEnabled(URI httpUri) {
+        String scheme = httpUri.getScheme();
+        return "https".equals(scheme) || "wss".equals(scheme);
+    }
+
     public static boolean isForm(HttpHeaders headers) {
         MediaType contentType = headers.getContentType();
         if (contentType == null) {

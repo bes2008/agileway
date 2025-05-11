@@ -3,7 +3,6 @@ package com.jn.agileway.httpclient.core.serialize;
 import com.jn.agileway.httpclient.core.HttpRequestBodyWriter;
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequest;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
-import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.net.uri.component.UriComponentUtils;
 import com.jn.langx.util.reflect.Reflects;
@@ -30,9 +29,6 @@ public class GeneralFormHttpRequestWriter implements HttpRequestBodyWriter {
 
     public void write(Object body, MediaType contentType, UnderlyingHttpRequest output) throws IOException {
         Charset charset = contentType.getCharset();
-        if (charset == null) {
-            charset = Charsets.UTF_8;
-        }
         String formString = serializeForm(body, contentType.getCharset());
         output.getBody().write(formString.getBytes(charset));
     }
@@ -46,6 +42,9 @@ public class GeneralFormHttpRequestWriter implements HttpRequestBodyWriter {
         }
         if (formData instanceof Map) {
             return serializeMap((Map) formData, charset);
+        }
+        if (formData instanceof MultiValueMap) {
+            return serializeMultiValueMap((MultiValueMap) formData, charset);
         }
         return formData.toString();
     }

@@ -6,7 +6,7 @@ import com.jn.agileway.httpclient.core.MultiplePartsBody;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
-import com.jn.langx.util.net.http.HttpHeaders;
+import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
 
@@ -34,6 +34,8 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
     private void handleContentTypeAndLength(HttpRequest request) {
         HttpMethod method = request.getMethod();
         MediaType contentType = request.getHeaders().getContentType();
+
+        // 确保要上传body的请求，都设置了 Content-Type
         switch (method) {
             case GET:
             case HEAD:
@@ -46,7 +48,7 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
             case PATCH:
             case PUT:
                 if (contentType == null) {
-                    request.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+                    request.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
                 }
                 if (request.getBody() == null) {
                     request.getHeaders().setContentLength(0L);
@@ -69,6 +71,13 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
 
         if (HttpClientUtils.requestBodyUseStreamMode(method, request.getHeaders())) {
             request.getHeaders().remove("Content-Length");
+        }
+
+        contentType = request.getHeaders().getContentType();
+        if (contentType != null) {
+            if (contentType.getCharset() == null) {
+                request.getHeaders().setContentType(new MediaType(contentType, Charsets.UTF_8));
+            }
         }
     }
 }

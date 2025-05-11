@@ -1,13 +1,14 @@
 package com.jn.agileway.httpclient.httpcomponents.impl;
 
-import com.jn.agileway.httpclient.core.AbstractHttpRequest;
+import com.jn.agileway.httpclient.core.AbstractUnderlyingHttpRequest;
 import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
 import com.jn.langx.util.net.http.HttpMethod;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URI;
 
-public class ApacheHttpClientRequest extends AbstractHttpRequest {
+public class ApacheHttpClientRequest extends AbstractUnderlyingHttpRequest {
     @Override
     protected UnderlyingHttpResponse exchangeInternal() throws IOException {
         return null;
@@ -23,4 +24,8 @@ public class ApacheHttpClientRequest extends AbstractHttpRequest {
         return null;
     }
 
+    @Override
+    public OutputStream getBody() throws IOException {
+        return null;
+    }
 }
