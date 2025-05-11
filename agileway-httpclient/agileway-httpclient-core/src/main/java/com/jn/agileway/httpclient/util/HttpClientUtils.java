@@ -29,12 +29,22 @@ public class HttpClientUtils {
         return "https".equals(scheme) || "wss".equals(scheme);
     }
 
-    public static boolean isForm(HttpHeaders headers) {
-        MediaType contentType = headers.getContentType();
+    public static boolean isForm(MediaType contentType) {
+        return isSimpleForm(contentType) || isMultipartForm(contentType);
+    }
+
+    public static boolean isSimpleForm(MediaType contentType) {
         if (contentType == null) {
             return false;
         }
-        return contentType.equalsTypeAndSubtype(MediaType.APPLICATION_FORM_URLENCODED) || "multipart".equals(contentType.getType());
+        return contentType.equalsTypeAndSubtype(MediaType.APPLICATION_FORM_URLENCODED);
+    }
+
+    public static boolean isMultipartForm(MediaType contentType) {
+        if (contentType == null) {
+            return false;
+        }
+        return "multipart".equals(contentType.getType());
     }
 
     public static List<ContentEncoding> getContentEncoding(HttpHeaders headers) {

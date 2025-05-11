@@ -28,6 +28,7 @@ public class GeneralFormHttpRequestWriter implements HttpRequestBodyWriter {
     }
 
     public void write(Object body, MediaType contentType, UnderlyingHttpRequest output) throws IOException {
+
         Charset charset = contentType.getCharset();
         String formString = serializeForm(body, contentType.getCharset());
         output.getBody().write(formString.getBytes(charset));

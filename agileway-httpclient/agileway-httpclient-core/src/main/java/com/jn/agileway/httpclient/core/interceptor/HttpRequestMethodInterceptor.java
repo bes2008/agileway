@@ -27,11 +27,6 @@ public class HttpRequestMethodInterceptor implements HttpRequestInterceptor {
 
     @Override
     public void intercept(HttpRequest request) {
-        if (HttpClientUtils.isForm(request.getHeaders())) {
-            if (request.getMethod() != HttpMethod.POST) {
-                throw new HttpRequestInvalidException(StringTemplates.formatWithPlaceholder("Http request with Content-Type {}, method {} is invalid", request.getHeaders().getContentType(), request.getMethod()));
-            }
-        }
         if (!isAllowedMethod(request.getMethod())) {
             throw new HttpRequestInvalidException(StringTemplates.formatWithPlaceholder("Http request method {} is not allowed", request.getMethod()));
         }
