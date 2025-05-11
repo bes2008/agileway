@@ -214,7 +214,7 @@ public class HttpExchanger extends AbstractInitializable {
             }
         };
 
-        Promise<UnderlyingHttpResponse> promise = Promises.of(async ? executor : null, sendRequestTask);
+        Promise<UnderlyingHttpResponse> promise = async ? new Promise<UnderlyingHttpResponse>(executor, sendRequestTask) : new Promise<UnderlyingHttpResponse>(sendRequestTask);
 
         return promise
                 .then(new AsyncCallback<UnderlyingHttpResponse, HttpResponse<O>>() {
