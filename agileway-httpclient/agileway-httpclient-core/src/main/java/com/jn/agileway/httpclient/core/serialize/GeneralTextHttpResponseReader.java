@@ -22,6 +22,7 @@ public class GeneralTextHttpResponseReader implements HttpResponseBodyReader<Str
         addSupportedMediaType(MediaType.TEXT_EVENT_STREAM);
         addSupportedMediaType(MediaType.TEXT_MARKDOWN);
         addSupportedMediaType(MediaType.parseMediaType("text/css"));
+        addSupportedMediaType(MediaType.parseMediaType("text/javascript"));
         addSupportedMediaType(MediaType.parseMediaType("application/javascript"));
     }
 
