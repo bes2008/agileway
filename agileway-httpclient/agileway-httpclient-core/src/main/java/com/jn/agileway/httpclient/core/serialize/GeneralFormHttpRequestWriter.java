@@ -2,6 +2,7 @@ package com.jn.agileway.httpclient.core.serialize;
 
 import com.jn.agileway.httpclient.core.HttpRequestBodyWriter;
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequest;
+import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.net.uri.component.UriComponentUtils;
@@ -17,7 +18,7 @@ import java.util.Set;
 
 public class GeneralFormHttpRequestWriter implements HttpRequestBodyWriter {
     public boolean canWrite(Object body, MediaType contentType) {
-        if (MediaType.APPLICATION_FORM_URLENCODED.isCompatibleWith(contentType)) {
+        if (HttpClientUtils.isForm(contentType)) {
             return true;
         }
         Class bodyClass = body.getClass();
@@ -28,13 +29,14 @@ public class GeneralFormHttpRequestWriter implements HttpRequestBodyWriter {
     }
 
     public void write(Object body, MediaType contentType, UnderlyingHttpRequest output) throws IOException {
-
-        Charset charset = contentType.getCharset();
-        String formString = serializeForm(body, contentType.getCharset());
-        output.getBody().write(formString.getBytes(charset));
+        if (HttpClientUtils.isSimpleForm(contentType)) {
+            Charset charset = contentType.getCharset();
+            String formString = serializeSimpleForm(body, contentType.getCharset());
+            output.getBody().write(formString.getBytes(charset));
+        }
     }
 
-    private String serializeForm(Object formData, final Charset charset) throws UnsupportedEncodingException {
+    private String serializeSimpleForm(Object formData, final Charset charset) throws UnsupportedEncodingException {
         if (formData instanceof String) {
             return (String) formData;
         }
