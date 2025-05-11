@@ -12,6 +12,9 @@ import com.jn.langx.util.net.http.HttpMethod;
 
 import java.util.List;
 
+/**
+ * 对 method 进行校验
+ */
 public class HttpRequestMethodInterceptor implements HttpRequestInterceptor {
     private List<HttpMethod> allowedMethods;
     private List<HttpMethod> notAllowedMethods;

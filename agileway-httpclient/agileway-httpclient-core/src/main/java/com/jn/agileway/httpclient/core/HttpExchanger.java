@@ -79,7 +79,7 @@ public class HttpExchanger extends AbstractInitializable {
         // requestInterceptors
         this.requestInterceptors.add(new HttpRequestUriInterceptor(configuration.getAllowedSchemes(), configuration.getAllowedAuthorities(), configuration.getNotAllowedAuthorities()));
         this.requestInterceptors.add(new HttpRequestMethodInterceptor(configuration.getAllowedMethods(), configuration.getNotAllowedMethods()));
-        this.requestInterceptors.add(new HttpRequestHeadersInterceptor());
+        this.requestInterceptors.add(new HttpRequestHeadersInterceptor(configuration.getFixedHeaders()));
         this.requestInterceptors = Lists.immutableList(requestInterceptors);
 
 

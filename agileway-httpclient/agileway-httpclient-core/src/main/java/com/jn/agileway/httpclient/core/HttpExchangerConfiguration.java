@@ -1,5 +1,7 @@
 package com.jn.agileway.httpclient.core;
 
+import com.jn.langx.util.collection.multivalue.MultiValueMap;
+
 import java.util.List;
 
 public class HttpExchangerConfiguration {
@@ -8,6 +10,7 @@ public class HttpExchangerConfiguration {
     private List<String> notAllowedAuthorities;
     private List<String> allowedMethods;
     private List<String> notAllowedMethods;
+    private MultiValueMap<String, String> fixedHeaders;
 
     public List<String> getAllowedSchemes() {
         return allowedSchemes;
@@ -47,5 +50,13 @@ public class HttpExchangerConfiguration {
 
     public void setNotAllowedMethods(List<String> notAllowedMethods) {
         this.notAllowedMethods = notAllowedMethods;
+    }
+
+    public void setFixedHeaders(MultiValueMap<String, String> fixedHeaders) {
+        this.fixedHeaders = fixedHeaders;
+    }
+
+    public MultiValueMap<String, String> getFixedHeaders() {
+        return fixedHeaders;
     }
 }

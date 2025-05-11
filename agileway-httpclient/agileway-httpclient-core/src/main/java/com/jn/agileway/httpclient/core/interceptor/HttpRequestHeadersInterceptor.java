@@ -5,13 +5,30 @@ import com.jn.agileway.httpclient.core.HttpRequestInterceptor;
 import com.jn.agileway.httpclient.core.MultiplePartsBody;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.io.resource.Resource;
+import com.jn.langx.util.collection.multivalue.MultiValueMap;
+import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
 
+/**
+ * 对 Header 进行默认值处理
+ */
 public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
+    private MultiValueMap<String, String> fixedHeaders;
+
+    public HttpRequestHeadersInterceptor(MultiValueMap<String, String> fixedHeaders) {
+        this.fixedHeaders = fixedHeaders;
+    }
+
     @Override
     public void intercept(HttpRequest request) {
         handleContentTypeAndLength(request);
+    }
+
+    private void addFixedHeaders(HttpRequest request) {
+        if (fixedHeaders != null) {
+            request.getHeaders().addAll(fixedHeaders);
+        }
     }
 
     private void handleContentTypeAndLength(HttpRequest request) {

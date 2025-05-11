@@ -15,6 +15,9 @@ import com.jn.langx.util.regexp.Regexps;
 import java.net.URI;
 import java.util.List;
 
+/**
+ * 对 uri 进行校验
+ */
 public class HttpRequestUriInterceptor implements HttpRequestInterceptor {
     private List<String> supportedSchemes;
     private List<Regexp> allowedAuthorities;
