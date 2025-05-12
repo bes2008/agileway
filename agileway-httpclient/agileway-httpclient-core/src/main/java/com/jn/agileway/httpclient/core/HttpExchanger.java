@@ -61,12 +61,12 @@ public class HttpExchanger extends AbstractInitializable {
     /**
      * 主要是将 body进行转换，顺带补充 header等，只要一个转换成功就可以。
      */
-    private List<HttpRequestContentWriter> requestBodyWriters = Lists.newArrayList();
+    private List<HttpRequestContentWriter> requestContentWriters = Lists.newArrayList();
 
     /**
      * 对正常的响应进行反序列化
      */
-    private List<HttpResponseContentReader> responseBodyReaders = Lists.newArrayList();
+    private List<HttpResponseContentReader> responseContentReaders = Lists.newArrayList();
     /**
      * 对4xx,5xx的响应进行处理
      */
@@ -96,16 +96,16 @@ public class HttpExchanger extends AbstractInitializable {
         this.responseInterceptors = Lists.immutableList(responseInterceptors);
 
         // requestBodyWriters
-        this.requestBodyWriters.add(new GeneralJsonHttpRequestWriter());
-        this.requestBodyWriters.add(new GeneralFormHttpRequestWriter());
-        this.requestBodyWriters = Lists.immutableList(requestBodyWriters);
+        this.requestContentWriters.add(new GeneralJsonHttpRequestWriter());
+        this.requestContentWriters.add(new GeneralFormHttpRequestWriter());
+        this.requestContentWriters = Lists.immutableList(requestContentWriters);
 
         // responseBodyReaders
-        responseBodyReaders.add(new GeneralJsonHttpResponseReader());
-        responseBodyReaders.add(new GeneralTextHttpResponseReader());
-        responseBodyReaders.add(new GeneralResourceHttpResponseReader());
-        responseBodyReaders.add(0, new GeneralBytesHttpResponseReader());
-        this.responseBodyReaders = Lists.immutableList(responseBodyReaders);
+        responseContentReaders.add(new GeneralJsonHttpResponseReader());
+        responseContentReaders.add(new GeneralTextHttpResponseReader());
+        responseContentReaders.add(new GeneralResourceHttpResponseReader());
+        responseContentReaders.add(0, new GeneralBytesHttpResponseReader());
+        this.responseContentReaders = Lists.immutableList(responseContentReaders);
 
         // httpResponseErrorHandler
         if (this.httpResponseErrorHandler == null) {
@@ -137,15 +137,15 @@ public class HttpExchanger extends AbstractInitializable {
         }
     }
 
-    public void addRequestBodyWriter(HttpRequestContentWriter writer) {
+    public void addRequestContentWriter(HttpRequestContentWriter writer) {
         if (writer != null) {
-            this.requestBodyWriters.add(writer);
+            this.requestContentWriters.add(writer);
         }
     }
 
-    public void addResponseBodyReader(HttpResponseContentReader reader) {
+    public void addResponseContentReader(HttpResponseContentReader reader) {
         if (reader != null) {
-            this.responseBodyReaders.add(reader);
+            this.responseContentReaders.add(reader);
         }
     }
 
@@ -193,7 +193,7 @@ public class HttpExchanger extends AbstractInitializable {
                     UnderlyingHttpRequest underlyingHttpRequest = requestFactory.create(request.getMethod(), request.getUri(), request.getHeaders());
 
                     if (HttpClientUtils.isWriteable(request.getMethod()) && request.getContent() != null) {
-                        HttpRequestContentWriter requestBodyWriter = Pipeline.of(requestBodyWriters)
+                        HttpRequestContentWriter requestBodyWriter = Pipeline.of(requestContentWriters)
                                 .findFirst(new Predicate<HttpRequestContentWriter>() {
                                     @Override
                                     public boolean test(HttpRequestContentWriter writer) {
@@ -230,7 +230,7 @@ public class HttpExchanger extends AbstractInitializable {
                                           response = new HttpResponse<>(underlyingHttpResponse, null, true);
                                       } else {
                                           final MediaType contentType = Objs.useValueIfNull(underlyingHttpResponse.getHeaders().getContentType(), MediaType.TEXT_HTML);
-                                          HttpResponseContentReader reader = Pipeline.of(responseBodyReaders)
+                                          HttpResponseContentReader reader = Pipeline.of(responseContentReaders)
                                                   .findFirst(new Predicate<HttpResponseContentReader>() {
                                                       @Override
                                                       public boolean test(HttpResponseContentReader httpResponseBodyReader) {
