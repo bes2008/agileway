@@ -24,13 +24,12 @@
         </dependency>
         <dependency>
             <groupId>io.github.bes2008.solution.easyjson</groupId>
-            <artifactId>easyjson-gson</artifactId>
+            <artifactId>easyjson-jackson</artifactId>
             <version>${easyjson.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.11.0</version>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
         </dependency>
     </dependencies>
 </project>

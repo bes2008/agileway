@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
 
-public class ApacheHttpClientRequest extends AbstractUnderlyingHttpRequest {
+public class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest {
     @Override
     protected UnderlyingHttpResponse exchangeInternal() throws IOException {
         return null;

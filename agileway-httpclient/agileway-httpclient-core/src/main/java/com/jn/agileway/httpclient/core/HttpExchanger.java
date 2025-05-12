@@ -292,7 +292,7 @@ public class HttpExchanger extends AbstractInitializable {
         return exchangeWithRetry(async, request, responseType, null, null, null, retryConfig, fallback);
     }
 
-    public <O> Promise<HttpResponse<O>> exchangeWithRetry(boolean async, HttpRequest request, Type responseType, Predicate<Throwable> errorRetryPredicate, Predicate<HttpResponse<O>> resultRetryPredicate, Consumer<RetryInfo<HttpResponse<O>>> attemptsListener, final RetryConfig retryConfig, Callable<HttpResponse<O>> fallback) {
+    public <O> Promise<HttpResponse<O>> exchangeWithRetry(boolean async, HttpRequest request, Type responseType, @Nullable Predicate<Throwable> errorRetryPredicate, @Nullable Predicate<HttpResponse<O>> resultRetryPredicate, @Nullable Consumer<RetryInfo<HttpResponse<O>>> attemptsListener, @Nullable final RetryConfig retryConfig, @Nullable Callable<HttpResponse<O>> fallback) {
         RetryConfig theRetryConfig = retryConfig != null ? retryConfig : RetryConfig.noneRetryConfig();
         Predicate<Throwable> theErrorRetryPredicate = errorRetryPredicate == null ? new Predicate<Throwable>() {
             @Override
