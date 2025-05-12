@@ -2,6 +2,7 @@ package com.jn.agileway.httpclient.jdk;
 
 import com.jn.agileway.httpclient.core.AbstractUnderlyingHttpRequestFactory;
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequest;
+import com.jn.agileway.httpclient.core.exception.UnsupportedHttpMethodException;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
@@ -26,14 +27,11 @@ public class JdkHttpRequestFactory extends AbstractUnderlyingHttpRequestFactory 
 
     private HttpURLConnection createHttpUrlConnection(HttpMethod method, URI uri) throws Exception {
         if (method == HttpMethod.PATCH) {
-            throw new UnsupportedOperationException("The JDK http client does not support PATCH method");
+            throw new UnsupportedHttpMethodException("The JDK HttpURLConnection does not support PATCH method");
         }
 
         URL url = uri.toURL();
         URLConnection connection = proxy != null ? url.openConnection(proxy) : url.openConnection();
-        if (!(connection instanceof HttpURLConnection)) {
-            throw new UnsupportedOperationException("The url connection is not a http(s) connection");
-        }
         HttpURLConnection httpConn = (HttpURLConnection) connection;
         if (this.connectTimeoutMills >= 0) {
             httpConn.setConnectTimeout(this.connectTimeoutMills);
