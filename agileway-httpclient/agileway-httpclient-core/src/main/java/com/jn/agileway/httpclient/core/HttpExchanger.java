@@ -6,6 +6,7 @@ import com.jn.agileway.httpclient.core.exception.NotFoundHttpContentReaderExcept
 import com.jn.agileway.httpclient.core.exception.NotFoundHttpContentWriterException;
 import com.jn.agileway.httpclient.core.interceptor.HttpRequestHeadersInterceptor;
 import com.jn.agileway.httpclient.core.interceptor.HttpRequestMethodInterceptor;
+import com.jn.agileway.httpclient.core.interceptor.HttpRequestMultiPartsFormInterceptor;
 import com.jn.agileway.httpclient.core.interceptor.HttpRequestUriInterceptor;
 import com.jn.agileway.httpclient.core.serialize.*;
 import com.jn.agileway.httpclient.jdk.JdkHttpRequestFactory;
@@ -86,6 +87,7 @@ public class HttpExchanger extends AbstractInitializable {
             configuration = new HttpExchangerConfiguration();
         }
         // requestInterceptors
+        this.requestInterceptors.add(new HttpRequestMultiPartsFormInterceptor());
         this.requestInterceptors.add(new HttpRequestHeadersInterceptor(configuration.getFixedHeaders()));
         this.requestInterceptors.add(0, new HttpRequestUriInterceptor(configuration.getAllowedSchemes(), configuration.getAllowedAuthorities(), configuration.getNotAllowedAuthorities()));
         this.requestInterceptors.add(0, new HttpRequestMethodInterceptor(configuration.getAllowedMethods(), configuration.getNotAllowedMethods()));
