@@ -2,6 +2,10 @@ package com.jn.agileway.httpclient.util;
 
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.util.Strings;
+import com.jn.langx.util.io.Charsets;
+
+import java.net.URLEncoder;
 
 /**
  * <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Disposition">Content-Disposition</a>
@@ -54,5 +58,24 @@ public class ContentDisposition {
         contentDisposition.setFilename(filename);
         contentDisposition.setValue("form-data");
         return contentDisposition;
+    }
+
+    public String asString() {
+        StringBuilder builder = new StringBuilder(128);
+        builder.append("Content-Disposition: ").append(value);
+
+        if (Strings.equals(value, "form-data")) {
+            if (Strings.isNotEmpty(fieldName)) {
+                builder.append("; name=\"").append(fieldName).append("\"");
+            }
+            if (Strings.isNotEmpty(filename)) {
+                try {
+                    builder.append("; filename=\"").append(URLEncoder.encode(filename, Charsets.US_ASCII.name())).append("\"");
+                } catch (Exception ex) {
+                    // ignore it
+                }
+            }
+        }
+        return builder.toString();
     }
 }

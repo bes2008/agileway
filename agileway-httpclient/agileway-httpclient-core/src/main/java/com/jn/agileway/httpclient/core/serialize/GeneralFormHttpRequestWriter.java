@@ -19,18 +19,16 @@ import java.util.Set;
 
 public class GeneralFormHttpRequestWriter implements HttpRequestContentWriter {
     public boolean canWrite(Object body, MediaType contentType) {
-        if (!HttpClientUtils.isForm(contentType)) {
+        if (!HttpClientUtils.isSimpleForm(contentType)) {
             return false;
         }
         return true;
     }
 
     public void write(Object body, MediaType contentType, UnderlyingHttpRequest output) throws IOException {
-        if (HttpClientUtils.isSimpleForm(contentType)) {
-            Charset charset = contentType.getCharset();
-            String formString = serializeSimpleForm(body, contentType.getCharset());
-            output.getContent().write(formString.getBytes(charset));
-        }
+        Charset charset = contentType.getCharset();
+        String formString = serializeSimpleForm(body, contentType.getCharset());
+        output.getContent().write(formString.getBytes(charset));
     }
 
     private String serializeSimpleForm(Object formData, final Charset charset) throws UnsupportedEncodingException {

@@ -129,7 +129,7 @@ public class HttpClientUtils {
 
     public static String generateMultipartBoundary() {
         Random random = Securitys.getSecureRandom();
-        int prefixLength = random.nextInt(7) + 2;
+        int prefixLength = random.nextInt(7);
         byte[] boundary = new byte[prefixLength + 7];
         for (int i = 0; i < prefixLength; i++) {
             boundary[i] = '-';

@@ -11,11 +11,11 @@ public class TextPart extends Part<String> {
         this(fieldName, content, null);
     }
 
-    public TextPart(@NotEmpty String fieldName, @Nullable String content, String contentType) {
+    public TextPart(@NotEmpty String fieldName, @Nullable String content, @Nullable String contentType) {
         super();
         setName(Preconditions.checkNotEmpty(fieldName));
         setContent(content);
-        setContentType(contentType);
+        setContentType(Objs.useValueIfEmpty(contentType, "text/plain"));
         setContentDisposition(ContentDisposition.ofFormData(fieldName, null));
     }
 }

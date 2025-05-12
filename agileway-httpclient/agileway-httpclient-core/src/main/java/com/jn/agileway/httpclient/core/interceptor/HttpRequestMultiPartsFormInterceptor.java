@@ -8,9 +8,11 @@ import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
+import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
 
+import java.nio.charset.Charset;
 import java.util.Map;
 
 public class HttpRequestMultiPartsFormInterceptor implements HttpRequestInterceptor {
@@ -51,6 +53,9 @@ public class HttpRequestMultiPartsFormInterceptor implements HttpRequestIntercep
             MediaType contentType = request.getHeaders().getContentType();
             String boundary = HttpClientUtils.generateMultipartBoundary();
             contentType.getParameters().put("boundary", boundary);
+            MultiPartsForm form = (MultiPartsForm) request.getContent();
+            Charset formCharset = form.getCharset() == null ? Charsets.UTF_8 : form.getCharset();
+            contentType.getParameters().put("charset", formCharset.name());
         }
     }
 }

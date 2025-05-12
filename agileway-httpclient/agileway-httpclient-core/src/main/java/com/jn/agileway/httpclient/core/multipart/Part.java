@@ -5,7 +5,7 @@ import com.jn.langx.annotation.NonNull;
 
 import java.nio.charset.Charset;
 
-class Part<T> {
+public class Part<T> {
     /**
      * field name
      */
@@ -25,7 +25,7 @@ class Part<T> {
     /**
      * 当 content-type 为 "text/plain" 时，它来指定content 的 charset
      */
-    private Charset charset;
+    private Charset charset = null;
 
     private T content;
 

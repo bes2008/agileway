@@ -17,7 +17,7 @@ import java.util.Set;
 public class MultiPartsForm {
     @Nullable
     private Charset charset;
-    private List<Part<?>> parts = Lists.newArrayList();
+    private List<Part> parts = Lists.newArrayList();
 
     public MultiPartsForm(Charset charset) {
         this.charset = charset;
@@ -42,7 +42,7 @@ public class MultiPartsForm {
         return charset;
     }
 
-    public List<Part<?>> getParts() {
+    public List<Part> getParts() {
         return parts;
     }
 
