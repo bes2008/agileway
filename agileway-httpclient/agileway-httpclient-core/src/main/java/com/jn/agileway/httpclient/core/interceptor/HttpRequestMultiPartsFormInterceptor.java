@@ -5,6 +5,7 @@ import com.jn.agileway.httpclient.core.HttpRequestInterceptor;
 import com.jn.agileway.httpclient.core.exception.BadHttpRequestException;
 import com.jn.agileway.httpclient.core.multipart.MultiPartsForm;
 import com.jn.langx.text.StringTemplates;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
@@ -42,6 +43,14 @@ public class HttpRequestMultiPartsFormInterceptor implements HttpRequestIntercep
                 } catch (Throwable ex) {
                     throw new BadHttpRequestException(StringTemplates.formatWithPlaceholder("invalid multipart/form-data content "));
                 }
+            }
+        }
+
+        if (request.getContent() instanceof MultiPartsForm) {
+            MultiPartsForm multiPartsForm = (MultiPartsForm) request.getContent();
+            String boundary = multiPartsForm.getBoundary();
+            if (Strings.isNotEmpty(boundary)) {
+
             }
         }
     }
