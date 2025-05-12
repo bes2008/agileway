@@ -67,6 +67,12 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
                 if (contentType == null) {
                     request.getHeaders().setContentType(MediaType.APPLICATION_FORM_URLENCODED);
                 }
+                if (request.getHeaders().getContentType().equalsTypeAndSubtype(MediaType.APPLICATION_FORM_URLENCODED)) {
+                    request.getHeaders().getContentType().getParameters().putIfAbsent("charset", Charsets.UTF_8.name());
+                }
+                if (request.getHeaders().getContentType().equalsTypeAndSubtype(MediaType.TEXT_PLAIN)) {
+                    request.getHeaders().getContentType().getParameters().putIfAbsent("charset", Charsets.UTF_8.name());
+                }
                 break;
         }
 
