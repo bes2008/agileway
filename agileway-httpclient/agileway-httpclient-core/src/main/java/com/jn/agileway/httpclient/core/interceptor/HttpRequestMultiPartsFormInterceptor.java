@@ -47,11 +47,9 @@ public class HttpRequestMultiPartsFormInterceptor implements HttpRequestIntercep
         }
 
         if (request.getContent() instanceof MultiPartsForm) {
-            MultiPartsForm multiPartsForm = (MultiPartsForm) request.getContent();
-            String boundary = multiPartsForm.getBoundary();
-            if (Strings.isNotEmpty(boundary)) {
-
-            }
+            MediaType contentType = request.getHeaders().getContentType();
+            String boundary = contentType.getParameter("boundary");
+            contentType.getParameters().put("boundary", boundary);
         }
     }
 }

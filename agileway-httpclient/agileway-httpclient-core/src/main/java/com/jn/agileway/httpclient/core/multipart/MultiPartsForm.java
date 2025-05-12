@@ -16,8 +16,6 @@ import java.util.Set;
 
 public class MultiPartsForm {
     @Nullable
-    private String boundary;
-    @Nullable
     private Charset charset;
     private List<Part<?>> parts = Lists.newArrayList();
 
@@ -38,10 +36,6 @@ public class MultiPartsForm {
 
     void addPart(Part part) {
         parts.add(part);
-    }
-
-    public String getBoundary() {
-        return boundary;
     }
 
     public Charset getCharset() {
