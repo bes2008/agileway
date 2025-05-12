@@ -128,10 +128,14 @@ public class HttpClientUtils {
     }
 
     public static String generateMultipartBoundary() {
-        Random randomToUse = Securitys.getSecureRandom();
-        byte[] boundary = new byte[randomToUse.nextInt(11) + 30];
-        for (int i = 0; i < boundary.length; i++) {
-            boundary[i] = BOUNDARY_ALPHABET[randomToUse.nextInt(BOUNDARY_ALPHABET.length)];
+        Random random = Securitys.getSecureRandom();
+        int prefixLength = random.nextInt(7) + 2;
+        byte[] boundary = new byte[prefixLength + 7];
+        for (int i = 0; i < prefixLength; i++) {
+            boundary[i] = '-';
+        }
+        for (int i = prefixLength; i < boundary.length; i++) {
+            boundary[i] = BOUNDARY_ALPHABET[random.nextInt(BOUNDARY_ALPHABET.length)];
         }
         return new String(boundary, Charsets.US_ASCII);
     }
