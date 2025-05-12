@@ -8,6 +8,7 @@ import com.jn.agileway.httpclient.core.interceptor.HttpRequestHeadersInterceptor
 import com.jn.agileway.httpclient.core.interceptor.HttpRequestMethodInterceptor;
 import com.jn.agileway.httpclient.core.interceptor.HttpRequestMultiPartsFormInterceptor;
 import com.jn.agileway.httpclient.core.interceptor.HttpRequestUriInterceptor;
+import com.jn.agileway.httpclient.core.multipart.MultiPartsForm;
 import com.jn.agileway.httpclient.core.serialize.*;
 import com.jn.agileway.httpclient.jdk.JdkHttpRequestFactory;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
@@ -100,6 +101,7 @@ public class HttpExchanger extends AbstractInitializable {
         // requestBodyWriters
         this.requestContentWriters.add(new GeneralJsonHttpRequestWriter());
         this.requestContentWriters.add(new GeneralFormHttpRequestWriter());
+        this.requestContentWriters.add(new GeneralMultiPartsFormHttpRequestWriter());
         this.requestContentWriters = Lists.immutableList(requestContentWriters);
 
         // responseBodyReaders
@@ -300,6 +302,9 @@ public class HttpExchanger extends AbstractInitializable {
         Predicate<Throwable> theErrorRetryPredicate = errorRetryPredicate == null ? new Predicate<Throwable>() {
             @Override
             public boolean test(Throwable throwable) {
+                if (request.getContent() instanceof MultiPartsForm) {
+                    return false;
+                }
                 return (throwable instanceof HttpRequestServerErrorException) || Throwables.hasCause(throwable, ConnectException.class);
             }
         } : errorRetryPredicate;

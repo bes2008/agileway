@@ -1,6 +1,7 @@
 package com.jn.agileway.httpclient.core.multipart;
 
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.io.resource.Resource;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
 
@@ -65,6 +66,8 @@ public class MultiPartsForm {
             return new FilePart(fieldName, ((Path) value).getFileName().toString(), ((Path) value).toFile(), null);
         } else if (value instanceof InputStream) {
             return new FilePart(fieldName, null, (InputStream) value, null);
+        } else if (value instanceof Resource) {
+            return new FilePart(fieldName, null, ((Resource) value).getInputStream(), null);
         } else {
             return new TextPart(fieldName, value == null ? null : value.toString());
         }
