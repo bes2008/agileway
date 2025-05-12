@@ -16,7 +16,7 @@ public class FilePart extends Part<InputStream> {
         this(fieldName, filename, new FileInputStream(content), contentType);
     }
 
-    public FilePart(String fieldName, String filename, InputStream content, @Nullable String contentType) {
+    public FilePart(String fieldName, @Nullable String filename, InputStream content, @Nullable String contentType) {
         super();
         setName(Preconditions.checkNotEmpty(fieldName));
         setContent(content);
