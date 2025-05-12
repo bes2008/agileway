@@ -55,7 +55,7 @@ public class GeneralResourceHttpResponseReader extends CustomMediaTypesHttpRespo
         }
         byte[] bytes = new byte[contentLength];
         if (contentLength > 0) {
-            IOs.read(response.getBody(), bytes);
+            IOs.read(response.getContent(), bytes);
         }
         return new ByteArrayResource(bytes);
     }

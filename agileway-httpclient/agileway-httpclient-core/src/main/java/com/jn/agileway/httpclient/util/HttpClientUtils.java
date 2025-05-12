@@ -103,10 +103,13 @@ public class HttpClientUtils {
         return inputStream;
     }
 
+    /**
+     * 请求 content 是否要在本地先放到Buffer中，再发送。不放在Buffer中，就是直接放到不可重复读取的stream中
+     */
     public static boolean requestBodyUseStreamMode(HttpMethod method, HttpHeaders headers) {
         MediaType contentType = headers.getContentType();
         // 文件上传请求时
-        if (method == HttpMethod.POST && contentType == MediaType.MULTIPART_FORM_DATA) {
+        if (method == HttpMethod.POST && isMultipartForm(contentType)) {
             return true;
         }
         // 内容压缩时

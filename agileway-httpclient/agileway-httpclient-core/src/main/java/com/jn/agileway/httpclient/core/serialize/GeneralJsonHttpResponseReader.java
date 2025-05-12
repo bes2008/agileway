@@ -19,6 +19,6 @@ public class GeneralJsonHttpResponseReader<T> implements HttpResponseBodyReader<
 
     @Override
     public T read(UnderlyingHttpResponse response, MediaType contentType, Type expectedBodyType) throws IOException {
-        return JSONs.parse(response.getBody(), expectedBodyType);
+        return JSONs.parse(response.getContent(), expectedBodyType);
     }
 }

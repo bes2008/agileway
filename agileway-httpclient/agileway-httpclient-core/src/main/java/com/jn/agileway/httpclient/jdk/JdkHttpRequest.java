@@ -34,7 +34,7 @@ class JdkHttpRequest extends AbstractUnderlyingHttpRequest {
     }
 
     @Override
-    public OutputStream getBody() throws IOException {
+    public OutputStream getContent() throws IOException {
         if (!streamMode) {
             return this.bufferedBody;
         }

@@ -53,7 +53,7 @@ public class HttpResponse<T> {
             this.data = data;
         } else if (readIfDataAbsent) {
             try {
-                InputStream inputStream = response.getBody();
+                InputStream inputStream = response.getContent();
                 byte[] bytes = IOs.toByteArray(inputStream);
                 if (statusCode >= 400) {
                     this.errorMessage = new String(bytes, Charsets.UTF_8);

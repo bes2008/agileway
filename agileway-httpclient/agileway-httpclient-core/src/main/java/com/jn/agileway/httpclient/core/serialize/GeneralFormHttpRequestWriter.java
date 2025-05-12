@@ -29,7 +29,7 @@ public class GeneralFormHttpRequestWriter implements HttpRequestBodyWriter {
         if (HttpClientUtils.isSimpleForm(contentType)) {
             Charset charset = contentType.getCharset();
             String formString = serializeSimpleForm(body, contentType.getCharset());
-            output.getBody().write(formString.getBytes(charset));
+            output.getContent().write(formString.getBytes(charset));
         }
     }
 

@@ -20,7 +20,7 @@ public interface UnderlyingHttpResponse extends Closeable {
 
     void close();
 
-    InputStream getBody() throws IOException;
+    InputStream getContent() throws IOException;
 
     HttpHeaders getHeaders();
 }

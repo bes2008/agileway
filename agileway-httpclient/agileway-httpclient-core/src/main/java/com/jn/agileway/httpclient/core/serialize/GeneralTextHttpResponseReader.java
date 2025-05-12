@@ -23,6 +23,6 @@ public class GeneralTextHttpResponseReader extends CustomMediaTypesHttpResponseR
 
     @Override
     public String read(UnderlyingHttpResponse response, MediaType contentType, Type expectedBodyType) throws IOException {
-        return IOs.readAsString(response.getBody());
+        return IOs.readAsString(response.getContent());
     }
 }

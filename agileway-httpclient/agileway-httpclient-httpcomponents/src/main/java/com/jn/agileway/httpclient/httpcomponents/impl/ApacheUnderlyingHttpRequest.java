@@ -25,7 +25,7 @@ public class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest {
     }
 
     @Override
-    public OutputStream getBody() throws IOException {
+    public OutputStream getContent() throws IOException {
         return null;
     }
 }

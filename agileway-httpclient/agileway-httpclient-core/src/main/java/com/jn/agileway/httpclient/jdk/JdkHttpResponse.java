@@ -60,7 +60,7 @@ class JdkHttpResponse implements UnderlyingHttpResponse {
     }
 
     @Override
-    public InputStream getBody() throws IOException {
+    public InputStream getContent() throws IOException {
         if (this.responseStream == null) {
             InputStream inputStream = this.httpConnection.getErrorStream();
             if (inputStream == null) {
