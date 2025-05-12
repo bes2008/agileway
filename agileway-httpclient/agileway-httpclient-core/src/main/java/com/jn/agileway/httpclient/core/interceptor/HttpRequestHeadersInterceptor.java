@@ -2,7 +2,7 @@ package com.jn.agileway.httpclient.core.interceptor;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.HttpRequestInterceptor;
-import com.jn.agileway.httpclient.core.multipart.MultipartsForm;
+import com.jn.agileway.httpclient.core.multipart.MultiPartsForm;
 import com.jn.agileway.httpclient.core.exception.BadHttpRequestException;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.io.resource.Resource;
@@ -60,7 +60,7 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
             default:
                 if (request.getContent() == null) {
                     request.getHeaders().setContentLength(0L);
-                } else if (request.getContent() instanceof MultipartsForm || request.getContent() instanceof Resource) {
+                } else if (request.getContent() instanceof MultiPartsForm) {
                     request.getHeaders().setContentType(MediaType.MULTIPART_FORM_DATA);
                     contentType = request.getHeaders().getContentType();
                     // 文件上传时，不设置 Content-Length,要改用 chunked

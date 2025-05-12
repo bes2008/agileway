@@ -21,7 +21,7 @@ class Part<T> {
      * Content-Type
      */
     @NonNull
-    private String contentType = "text/plain";
+    private String contentType;
     /**
      * 当 content-type 为 "text/plain" 时，它来指定content 的 charset
      */

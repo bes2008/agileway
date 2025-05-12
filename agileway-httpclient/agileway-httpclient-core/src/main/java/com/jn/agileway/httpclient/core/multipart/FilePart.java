@@ -1,7 +1,9 @@
 package com.jn.agileway.httpclient.core.multipart;
 
 import com.jn.agileway.httpclient.util.ContentDisposition;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Objs;
+import com.jn.langx.util.Preconditions;
 
 import java.io.*;
 
@@ -14,9 +16,9 @@ public class FilePart extends Part<InputStream> {
         this(fieldName, filename, new FileInputStream(content), contentType);
     }
 
-    public FilePart(String fieldName, String filename, InputStream content, String contentType) {
+    public FilePart(String fieldName, String filename, InputStream content, @Nullable String contentType) {
         super();
-        setName(fieldName);
+        setName(Preconditions.checkNotEmpty(fieldName));
         setContent(content);
         setContentType(Objs.useValueIfEmpty(contentType, "application/octet-stream"));
         setContentDisposition(ContentDisposition.ofFormData(fieldName, filename));
