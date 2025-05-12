@@ -32,7 +32,7 @@ public class HttpResponse<T> {
     private HttpMethod method;
     private int statusCode;
     private HttpHeaders headers;
-    private T data;
+    private T content;
     private String errorMessage;
 
     public HttpResponse(UnderlyingHttpResponse response) {
@@ -50,7 +50,7 @@ public class HttpResponse<T> {
         this.headers = response.getHeaders();
 
         if (data != null) {
-            this.data = data;
+            this.content = data;
         } else if (readIfDataAbsent) {
             try {
                 InputStream inputStream = response.getContent();
@@ -58,7 +58,7 @@ public class HttpResponse<T> {
                 if (statusCode >= 400) {
                     this.errorMessage = new String(bytes, Charsets.UTF_8);
                 } else {
-                    this.data = (T) bytes;
+                    this.content = (T) bytes;
                 }
             } catch (IOException e) {
                 throw Throwables.wrapAsRuntimeIOException(e);
@@ -74,8 +74,8 @@ public class HttpResponse<T> {
         return this.statusCode;
     }
 
-    public T getData() {
-        return data;
+    public T getContent() {
+        return content;
     }
 
     public String getErrorMessage() {

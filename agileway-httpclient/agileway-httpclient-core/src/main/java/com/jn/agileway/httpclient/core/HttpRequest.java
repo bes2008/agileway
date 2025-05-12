@@ -9,14 +9,14 @@ public class HttpRequest<T> {
     private URI uri;
     private HttpMethod method;
     private HttpHeaders headers;
-    private T body;
+    private T content;
 
 
     HttpRequest(URI uri, HttpMethod method, HttpHeaders headers, T body) {
         this.uri = uri;
         this.method = method;
         this.headers = headers == null ? new HttpHeaders() : headers;
-        this.body = body;
+        this.content = body;
     }
 
     public URI getUri() {
@@ -43,11 +43,11 @@ public class HttpRequest<T> {
         this.headers = headers;
     }
 
-    public T getBody() {
-        return body;
+    public T getContent() {
+        return content;
     }
 
-    public void setBody(T body) {
-        this.body = body;
+    public void setContent(T content) {
+        this.content = content;
     }
 }

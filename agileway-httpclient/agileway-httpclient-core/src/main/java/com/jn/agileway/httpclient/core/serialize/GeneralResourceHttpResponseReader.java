@@ -24,8 +24,8 @@ public class GeneralResourceHttpResponseReader extends CustomMediaTypesHttpRespo
     }
 
     @Override
-    public boolean canRead(UnderlyingHttpResponse response, MediaType contentType, Type expectedBodyType) {
-        if (expectedBodyType == Resource.class) {
+    public boolean canRead(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) {
+        if (expectedContentType == Resource.class) {
             return true;
         }
         // 是文件
@@ -35,7 +35,7 @@ public class GeneralResourceHttpResponseReader extends CustomMediaTypesHttpRespo
         if (isFont(contentType)) {
             return true;
         }
-        return super.canRead(response, contentType, expectedBodyType);
+        return super.canRead(response, contentType, expectedContentType);
     }
 
     private boolean isFont(MediaType contentType) {
@@ -48,7 +48,7 @@ public class GeneralResourceHttpResponseReader extends CustomMediaTypesHttpRespo
     }
 
     @Override
-    public Resource read(UnderlyingHttpResponse response, MediaType contentType, Type expectedBodyType) throws IOException {
+    public Resource read(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) throws IOException {
         int contentLength = (int) response.getHeaders().getContentLength();
         if (contentLength < 0) {
             throw new IOException("Content-Length header is required for Content-Type " + contentType);

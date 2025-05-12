@@ -1,6 +1,6 @@
 package com.jn.agileway.httpclient.core.serialize;
 
-import com.jn.agileway.httpclient.core.HttpRequestBodyWriter;
+import com.jn.agileway.httpclient.core.HttpRequestContentWriter;
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequest;
 import com.jn.agileway.httpclient.core.exception.BadHttpRequestException;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-public class GeneralFormHttpRequestWriter implements HttpRequestBodyWriter {
+public class GeneralFormHttpRequestWriter implements HttpRequestContentWriter {
     public boolean canWrite(Object body, MediaType contentType) {
         if (!HttpClientUtils.isForm(contentType)) {
             return false;

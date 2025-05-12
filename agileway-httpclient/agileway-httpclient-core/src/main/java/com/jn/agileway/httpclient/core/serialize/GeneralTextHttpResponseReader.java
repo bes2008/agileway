@@ -14,15 +14,15 @@ public class GeneralTextHttpResponseReader extends CustomMediaTypesHttpResponseR
     }
 
     @Override
-    public boolean canRead(UnderlyingHttpResponse response, MediaType contentType, Type expectedBodyType) {
+    public boolean canRead(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) {
         if ("text".equals(contentType.getType())) {
             return true;
         }
-        return super.canRead(response, contentType, expectedBodyType);
+        return super.canRead(response, contentType, expectedContentType);
     }
 
     @Override
-    public String read(UnderlyingHttpResponse response, MediaType contentType, Type expectedBodyType) throws IOException {
+    public String read(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) throws IOException {
         return IOs.readAsString(response.getContent());
     }
 }

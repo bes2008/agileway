@@ -61,12 +61,12 @@ public class HttpExchanger extends AbstractInitializable {
     /**
      * 主要是将 body进行转换，顺带补充 header等，只要一个转换成功就可以。
      */
-    private List<HttpRequestBodyWriter> requestBodyWriters = Lists.newArrayList();
+    private List<HttpRequestContentWriter> requestBodyWriters = Lists.newArrayList();
 
     /**
      * 对正常的响应进行反序列化
      */
-    private List<HttpResponseBodyReader> responseBodyReaders = Lists.newArrayList();
+    private List<HttpResponseContentReader> responseBodyReaders = Lists.newArrayList();
     /**
      * 对4xx,5xx的响应进行处理
      */
@@ -137,13 +137,13 @@ public class HttpExchanger extends AbstractInitializable {
         }
     }
 
-    public void addRequestBodyWriter(HttpRequestBodyWriter writer) {
+    public void addRequestBodyWriter(HttpRequestContentWriter writer) {
         if (writer != null) {
             this.requestBodyWriters.add(writer);
         }
     }
 
-    public void addResponseBodyReader(HttpResponseBodyReader reader) {
+    public void addResponseBodyReader(HttpResponseContentReader reader) {
         if (reader != null) {
             this.responseBodyReaders.add(reader);
         }
@@ -192,16 +192,16 @@ public class HttpExchanger extends AbstractInitializable {
                 try {
                     UnderlyingHttpRequest underlyingHttpRequest = requestFactory.create(request.getMethod(), request.getUri(), request.getHeaders());
 
-                    if (HttpClientUtils.isWriteable(request.getMethod()) && request.getBody() != null) {
-                        HttpRequestBodyWriter requestBodyWriter = Pipeline.of(requestBodyWriters)
-                                .findFirst(new Predicate<HttpRequestBodyWriter>() {
+                    if (HttpClientUtils.isWriteable(request.getMethod()) && request.getContent() != null) {
+                        HttpRequestContentWriter requestBodyWriter = Pipeline.of(requestBodyWriters)
+                                .findFirst(new Predicate<HttpRequestContentWriter>() {
                                     @Override
-                                    public boolean test(HttpRequestBodyWriter writer) {
-                                        return writer.canWrite(request.getBody(), request.getHeaders().getContentType());
+                                    public boolean test(HttpRequestContentWriter writer) {
+                                        return writer.canWrite(request.getContent(), request.getHeaders().getContentType());
                                     }
                                 });
                         if (requestBodyWriter != null) {
-                            requestBodyWriter.write(request.getBody(), request.getHeaders().getContentType(), underlyingHttpRequest);
+                            requestBodyWriter.write(request.getContent(), request.getHeaders().getContentType(), underlyingHttpRequest);
                         } else {
                             throw new NotFoundHttpContentWriterException();
                         }
@@ -230,10 +230,10 @@ public class HttpExchanger extends AbstractInitializable {
                                           response = new HttpResponse<>(underlyingHttpResponse, null, true);
                                       } else {
                                           final MediaType contentType = Objs.useValueIfNull(underlyingHttpResponse.getHeaders().getContentType(), MediaType.TEXT_HTML);
-                                          HttpResponseBodyReader reader = Pipeline.of(responseBodyReaders)
-                                                  .findFirst(new Predicate<HttpResponseBodyReader>() {
+                                          HttpResponseContentReader reader = Pipeline.of(responseBodyReaders)
+                                                  .findFirst(new Predicate<HttpResponseContentReader>() {
                                                       @Override
-                                                      public boolean test(HttpResponseBodyReader httpResponseBodyReader) {
+                                                      public boolean test(HttpResponseContentReader httpResponseBodyReader) {
                                                           return httpResponseBodyReader.canRead(underlyingHttpResponse, contentType, responseType);
                                                       }
                                                   });

@@ -1,6 +1,6 @@
 package com.jn.agileway.httpclient.core.serialize;
 
-import com.jn.agileway.httpclient.core.HttpResponseBodyReader;
+import com.jn.agileway.httpclient.core.HttpResponseContentReader;
 import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Predicate;
@@ -10,7 +10,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CustomMediaTypesHttpResponseReader<T> implements HttpResponseBodyReader<T> {
+public abstract class CustomMediaTypesHttpResponseReader<T> implements HttpResponseContentReader<T> {
     private List<MediaType> supportedMediaTypes = new ArrayList<MediaType>();
 
     public void addSupportedMediaType(MediaType mediaType) {
@@ -22,7 +22,7 @@ public abstract class CustomMediaTypesHttpResponseReader<T> implements HttpRespo
     }
 
     @Override
-    public boolean canRead(UnderlyingHttpResponse response, MediaType contentType, Type expectedBodyType) {
+    public boolean canRead(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) {
         return Pipeline.<MediaType>of(supportedMediaTypes)
                 .anyMatch(new Predicate<MediaType>() {
                     @Override

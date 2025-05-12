@@ -52,15 +52,15 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
                 if (contentType == null) {
                     request.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
                 }
-                if (request.getBody() == null) {
+                if (request.getContent() == null) {
                     request.getHeaders().setContentLength(0L);
                 }
                 break;
             case POST:
             default:
-                if (request.getBody() == null) {
+                if (request.getContent() == null) {
                     request.getHeaders().setContentLength(0L);
-                } else if (request.getBody() instanceof MultiplePartsBody || request.getBody() instanceof Resource) {
+                } else if (request.getContent() instanceof MultiplePartsBody || request.getContent() instanceof Resource) {
                     request.getHeaders().setContentType(MediaType.MULTIPART_FORM_DATA);
                     contentType = request.getHeaders().getContentType();
                     // 文件上传时，不设置 Content-Length,要改用 chunked
