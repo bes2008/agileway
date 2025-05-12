@@ -44,7 +44,7 @@ public class JdkHttpRequestFactory extends AbstractUnderlyingHttpRequestFactory 
 
         httpConn.setDoInput(true);
         httpConn.setInstanceFollowRedirects(method == HttpMethod.GET);
-        httpConn.setDoOutput(writable(method));
+        httpConn.setDoOutput(HttpClientUtils.isWriteable(method));
 
         if (HttpClientUtils.isSSLEnabled(uri)) {
             HttpsURLConnection httpsConn = (HttpsURLConnection) httpConn;
@@ -52,15 +52,5 @@ public class JdkHttpRequestFactory extends AbstractUnderlyingHttpRequestFactory 
         }
 
         return httpConn;
-    }
-
-    private boolean writable(HttpMethod method) {
-        if (HttpMethod.POST == method || HttpMethod.PUT == method || HttpMethod.PATCH == method) {
-            return true;
-        }
-        if (HttpMethod.DELETE == method) {
-            return Platform.is8VMOrGreater();
-        }
-        return false;
     }
 }

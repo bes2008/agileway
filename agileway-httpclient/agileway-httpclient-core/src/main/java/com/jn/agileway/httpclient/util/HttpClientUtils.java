@@ -116,4 +116,8 @@ public class HttpClientUtils {
         }
         return false;
     }
+
+    public static boolean isWriteable(HttpMethod method) {
+        return method == HttpMethod.POST || method == HttpMethod.PUT || method == HttpMethod.PATCH;
+    }
 }

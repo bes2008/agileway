@@ -9,6 +9,7 @@ import com.jn.agileway.httpclient.core.interceptor.HttpRequestMethodInterceptor;
 import com.jn.agileway.httpclient.core.interceptor.HttpRequestUriInterceptor;
 import com.jn.agileway.httpclient.core.serialize.*;
 import com.jn.agileway.httpclient.jdk.JdkHttpRequestFactory;
+import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.exception.ErrorHandler;
@@ -191,7 +192,7 @@ public class HttpExchanger extends AbstractInitializable {
                 try {
                     UnderlyingHttpRequest underlyingHttpRequest = requestFactory.create(request.getMethod(), request.getUri(), request.getHeaders());
 
-                    if (request.getBody() != null) {
+                    if (HttpClientUtils.isWriteable(request.getMethod()) && request.getBody() != null) {
                         HttpRequestBodyWriter requestBodyWriter = Pipeline.of(requestBodyWriters)
                                 .findFirst(new Predicate<HttpRequestBodyWriter>() {
                                     @Override
