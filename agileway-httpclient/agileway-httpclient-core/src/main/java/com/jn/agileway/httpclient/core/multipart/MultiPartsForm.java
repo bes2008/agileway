@@ -2,8 +2,10 @@ package com.jn.agileway.httpclient.core.multipart;
 
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.io.resource.Resource;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
+import com.jn.langx.util.io.Charsets;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +38,15 @@ public class MultiPartsForm {
     }
 
     void addPart(Part part) {
-        parts.add(part);
+        if (part != null) {
+            if (part instanceof TextPart) {
+                if (Strings.equals(part.getName(), "_charset_")) {
+                    charset = Charsets.getCharset(((TextPart) part).getContent());
+                    return;
+                }
+            }
+            parts.add(part);
+        }
     }
 
     public Charset getCharset() {
