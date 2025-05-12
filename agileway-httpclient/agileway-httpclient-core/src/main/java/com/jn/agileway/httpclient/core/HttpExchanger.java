@@ -311,6 +311,9 @@ public class HttpExchanger extends AbstractInitializable {
         Predicate<HttpResponse<O>> theResultRetryPredicate = resultRetryPredicate == null ? new Predicate<HttpResponse<O>>() {
             @Override
             public boolean test(HttpResponse<O> oHttpResponse) {
+                if (request.getContent() instanceof MultiPartsForm) {
+                    return false;
+                }
                 return oHttpResponse.hasError() && oHttpResponse.getStatusCode() >= 500;
             }
         } : resultRetryPredicate;
