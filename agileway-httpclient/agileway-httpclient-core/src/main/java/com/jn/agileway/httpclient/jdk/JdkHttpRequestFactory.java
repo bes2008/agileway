@@ -1,18 +1,40 @@
 package com.jn.agileway.httpclient.jdk;
 
-import com.jn.agileway.httpclient.core.AbstractUnderlyingHttpRequestFactory;
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequest;
+import com.jn.agileway.httpclient.core.UnderlyingHttpRequestFactory;
 import com.jn.agileway.httpclient.core.exception.UnsupportedHttpMethodException;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
-import com.jn.langx.util.os.Platform;
 
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocketFactory;
 import java.net.*;
 
-public class JdkHttpRequestFactory extends AbstractUnderlyingHttpRequestFactory {
+public class JdkHttpRequestFactory implements UnderlyingHttpRequestFactory {
     private Proxy proxy;
+
+    protected int connectTimeoutMills;
+    protected int readTimeoutMills;
+    private SSLSocketFactory sslSocketFactory;
+
+    @Override
+    public void setConnectTimeoutMills(int connectTimeoutMills) {
+        this.connectTimeoutMills = connectTimeoutMills;
+    }
+
+    @Override
+    public void setReadTimeoutMills(int readTimeoutMills) {
+        this.readTimeoutMills = readTimeoutMills;
+    }
+
+    public void setSslSocketFactory(SSLSocketFactory sslSocketFactory) {
+        this.sslSocketFactory = sslSocketFactory;
+    }
+
+    protected SSLSocketFactory getSslSocketFactory() {
+        return this.sslSocketFactory == null ? (SSLSocketFactory) SSLSocketFactory.getDefault() : this.sslSocketFactory;
+    }
 
     public void setProxy(Proxy proxy) {
         this.proxy = proxy;

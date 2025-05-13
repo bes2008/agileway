@@ -6,19 +6,19 @@ import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
 public class ApacheUnderlyingHttpResponse implements UnderlyingHttpResponse {
-    private HttpResponse response;
+    private CloseableHttpResponse response;
     private HttpMethod method;
     private URI uri;
     private HttpHeaders headers;
 
-    public ApacheUnderlyingHttpResponse(HttpMethod method, URI uri, HttpResponse response) {
+    public ApacheUnderlyingHttpResponse(HttpMethod method, URI uri, CloseableHttpResponse response) {
         this.response = response;
         this.method = method;
         this.uri = uri;
@@ -41,7 +41,11 @@ public class ApacheUnderlyingHttpResponse implements UnderlyingHttpResponse {
 
     @Override
     public void close() {
-
+        try {
+            this.response.close();
+        } catch (IOException ex) {
+            // ignore it
+        }
     }
 
     @Override

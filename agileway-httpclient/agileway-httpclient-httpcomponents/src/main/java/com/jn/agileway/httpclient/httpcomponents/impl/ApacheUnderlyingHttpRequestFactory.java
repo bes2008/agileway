@@ -1,20 +1,22 @@
 package com.jn.agileway.httpclient.httpcomponents.impl;
 
-import com.jn.agileway.httpclient.core.AbstractUnderlyingHttpRequestFactory;
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequest;
+import com.jn.agileway.httpclient.core.UnderlyingHttpRequestFactory;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.*;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 import java.net.URI;
 
-public class ApacheUnderlyingHttpRequestFactory extends AbstractUnderlyingHttpRequestFactory {
-    private HttpClient httpClient;
-
+public class ApacheUnderlyingHttpRequestFactory implements UnderlyingHttpRequestFactory {
+    private CloseableHttpClient httpClient;
 
     @Override
     public UnderlyingHttpRequest create(HttpMethod method, URI uri, HttpHeaders httpHeaders) throws Exception {
+
+        HttpUriRequest request = createHttpUriRequest(method, uri, httpHeaders);
+
         return null;
     }
 

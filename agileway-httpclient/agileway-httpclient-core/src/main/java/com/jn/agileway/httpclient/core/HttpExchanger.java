@@ -29,6 +29,7 @@ import com.jn.langx.util.concurrent.promise.Task;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Handler;
 import com.jn.langx.util.function.Predicate;
+import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.retry.RetryConfig;
@@ -224,6 +225,11 @@ public class HttpExchanger extends AbstractInitializable {
                                           }
                                       }
                                   } else {
+
+                                      if (underlyingHttpResponse.getContent() != null) {
+                                          // 消耗掉
+                                          IOs.readAsString(underlyingHttpResponse.getContent());
+                                      }
                                       response = new HttpResponse<>(underlyingHttpResponse);
                                   }
                                   if (httpResponseErrorHandler != null && httpResponseErrorHandler.isError(response)) {

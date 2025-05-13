@@ -5,7 +5,9 @@ import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
 import com.jn.langx.util.net.http.HttpMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -13,9 +15,9 @@ import java.net.URI;
 
 public class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest {
     private HttpUriRequest request;
-    private HttpClient underlyingClient;
+    private CloseableHttpClient underlyingClient;
 
-    public ApacheUnderlyingHttpRequest(HttpClient client, HttpUriRequest request) {
+    public ApacheUnderlyingHttpRequest(CloseableHttpClient client, HttpUriRequest request) {
         this.underlyingClient = client;
         this.request = request;
     }
@@ -39,8 +41,8 @@ public class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest {
 
     @Override
     protected UnderlyingHttpResponse exchangeInternal() throws IOException {
-        HttpResponse response = this.underlyingClient.execute(request);
-        return null;
+        CloseableHttpResponse response = this.underlyingClient.execute(request);
+        return new ApacheUnderlyingHttpResponse(this.getMethod(), this.getUri(), response);
     }
 
 }
