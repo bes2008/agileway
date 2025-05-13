@@ -1,14 +1,13 @@
 package com.jn.agileway.httpclient.test.core;
 
 import com.jn.agileway.httpclient.core.HttpExchanger;
+import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.HttpResponse;
 import com.jn.agileway.httpclient.jdk.JdkHttpRequestFactory;
 import com.jn.easyjson.core.util.JSONs;
 import com.jn.langx.util.collection.multivalue.CommonMultiValueMap;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
-import com.jn.langx.util.concurrent.promise.AsyncCallback;
 import com.jn.langx.util.net.http.HttpHeaders;
-import com.jn.langx.util.net.http.HttpMethod;
 import org.junit.Test;
 
 import java.util.Map;
@@ -40,7 +39,9 @@ public class NacosApiTests {
         requestHeaders.add("Accept-Encoding", "gzip");
         requestHeaders.add("Accept-Encoding", "deflate");
         requestHeaders.add("Accept-Encoding", "br");
-        HttpResponse<Map> response = httpExchanger.<Map>exchange(false, HttpMethod.GET, baseUri + "/v1/core/cluster/nodes", params, null, requestHeaders, null, Map.class)
+
+        HttpRequest request = HttpRequest.forGet(baseUri + "/v1/core/cluster/nodes", params, null, requestHeaders);
+        HttpResponse<Map> response = httpExchanger.<Map>exchange(false, request, Map.class)
                 .await();
         System.out.println(JSONs.toJson(response, true));
 
