@@ -5,7 +5,6 @@ import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import org.apache.http.Header;
-import org.apache.http.HeaderElement;
 import org.apache.http.HttpResponse;
 
 import java.io.IOException;
@@ -56,12 +55,9 @@ public class ApacheUnderlyingHttpResponse implements UnderlyingHttpResponse {
 
             HttpHeaders httpHeaders = new HttpHeaders();
             for (Header underlyingHeader : underlyingHeaders) {
-                HeaderElement[] elements = underlyingHeader.getElements();
-                for (HeaderElement element : elements) {
-                    httpHeaders.add(underlyingHeader.getName(), element.getValue());
-                }
-
+                httpHeaders.add(underlyingHeader.getName(), underlyingHeader.getValue());
             }
+            this.headers = httpHeaders;
         }
         return this.headers;
     }
