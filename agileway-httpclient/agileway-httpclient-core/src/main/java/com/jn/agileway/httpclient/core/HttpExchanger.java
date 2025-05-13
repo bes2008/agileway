@@ -165,16 +165,7 @@ public class HttpExchanger extends AbstractInitializable {
                                                  @Nullable HttpHeaders headers,
                                                  @Nullable Object body,
                                                  @Nullable final Type responseType) {
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(uriTemplate);
-        if (queryParams != null) {
-            uriBuilder.queryParams(queryParams);
-        }
-        if (uriVariables != null) {
-            uriBuilder.uriVariables(uriVariables);
-        }
-        URI uri = uriBuilder.build().toUri();
-
-        return exchange(async, new HttpRequest(uri, method, headers, body), responseType);
+        return exchange(async, HttpRequest.create(method, uriTemplate, queryParams, uriVariables, headers, body), responseType);
     }
 
     public <O> Promise<HttpResponse<O>> exchange(boolean async, final HttpRequest request, final Type responseType) {
