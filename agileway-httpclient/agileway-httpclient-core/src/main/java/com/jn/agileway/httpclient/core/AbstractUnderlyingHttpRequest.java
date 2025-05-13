@@ -4,7 +4,6 @@ import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.net.http.HttpHeaders;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 
 public abstract class AbstractUnderlyingHttpRequest implements UnderlyingHttpRequest {
