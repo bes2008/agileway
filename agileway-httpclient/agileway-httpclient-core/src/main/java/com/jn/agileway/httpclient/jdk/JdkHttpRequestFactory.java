@@ -13,17 +13,20 @@ import java.net.*;
 
 public class JdkHttpRequestFactory implements UnderlyingHttpRequestFactory {
     private Proxy proxy;
-
+    /**
+     * 创建http连接的超时时间
+     */
     protected int connectTimeoutMills;
+    /**
+     * 从http连接中读取数据的超时时间
+     */
     protected int readTimeoutMills;
     private SSLSocketFactory sslSocketFactory;
 
-    @Override
     public void setConnectTimeoutMills(int connectTimeoutMills) {
         this.connectTimeoutMills = connectTimeoutMills;
     }
 
-    @Override
     public void setReadTimeoutMills(int readTimeoutMills) {
         this.readTimeoutMills = readTimeoutMills;
     }
