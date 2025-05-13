@@ -22,7 +22,6 @@ import com.jn.langx.util.Objs;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
-import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.concurrent.promise.AsyncCallback;
 import com.jn.langx.util.concurrent.promise.Promise;
 import com.jn.langx.util.concurrent.promise.Promises;
@@ -30,10 +29,8 @@ import com.jn.langx.util.concurrent.promise.Task;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Handler;
 import com.jn.langx.util.function.Predicate;
-import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
-import com.jn.langx.util.net.uri.component.UriComponentsBuilder;
 import com.jn.langx.util.retry.RetryConfig;
 import com.jn.langx.util.retry.RetryInfo;
 import com.jn.langx.util.retry.Retryer;
@@ -41,9 +38,7 @@ import com.jn.langx.util.retry.Retryer;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.ConnectException;
-import java.net.URI;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 
@@ -155,17 +150,6 @@ public class HttpExchanger extends AbstractInitializable {
 
     public void setHttpResponseErrorHandler(HttpResponseErrorHandler errorResponseHandler) {
         this.httpResponseErrorHandler = errorResponseHandler;
-    }
-
-    public <O> Promise<HttpResponse<O>> exchange(boolean async,
-                                                 @NonNull HttpMethod method,
-                                                 @NonNull String uriTemplate,
-                                                 @Nullable MultiValueMap<String, Object> queryParams,
-                                                 @Nullable Map<String, Object> uriVariables,
-                                                 @Nullable HttpHeaders headers,
-                                                 @Nullable Object body,
-                                                 @Nullable final Type responseType) {
-        return exchange(async, HttpRequest.create(method, uriTemplate, queryParams, uriVariables, headers, body), responseType);
     }
 
     public <O> Promise<HttpResponse<O>> exchange(boolean async, final HttpRequest request, final Type responseType) {
