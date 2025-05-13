@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.core.exception;
 
-public class UnsupportedHttpMethodException extends HttpRequestClientErrorException {
+public class UnsupportedHttpMethodException extends MethodNotAllowedRequestException {
     public UnsupportedHttpMethodException(String message) {
-        super(405, message);
+        super(message);
     }
 }
