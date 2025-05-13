@@ -5,6 +5,7 @@ import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 
 import java.io.IOException;
@@ -45,6 +46,10 @@ public class ApacheUnderlyingHttpResponse implements UnderlyingHttpResponse {
 
     @Override
     public InputStream getContent() throws IOException {
+        HttpEntity body = this.response.getEntity();
+        if (body != null) {
+            return body.getContent();
+        }
         return null;
     }
 

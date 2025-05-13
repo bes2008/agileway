@@ -54,11 +54,13 @@ public class HttpResponse<T> {
         } else if (readIfDataAbsent) {
             try {
                 InputStream inputStream = response.getContent();
-                byte[] bytes = IOs.toByteArray(inputStream);
-                if (statusCode >= 400) {
-                    this.errorMessage = new String(bytes, Charsets.UTF_8);
-                } else {
-                    this.content = (T) bytes;
+                if (inputStream != null) {
+                    byte[] bytes = IOs.toByteArray(inputStream);
+                    if (statusCode >= 400) {
+                        this.errorMessage = new String(bytes, Charsets.UTF_8);
+                    } else {
+                        this.content = (T) bytes;
+                    }
                 }
             } catch (IOException e) {
                 throw Throwables.wrapAsRuntimeIOException(e);

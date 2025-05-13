@@ -20,6 +20,11 @@ public interface UnderlyingHttpResponse extends Closeable {
 
     void close();
 
+    /**
+     * 获取响应体
+     *
+     * @return 如果没有响应体，可以返回null
+     */
     InputStream getContent() throws IOException;
 
     HttpHeaders getHeaders();

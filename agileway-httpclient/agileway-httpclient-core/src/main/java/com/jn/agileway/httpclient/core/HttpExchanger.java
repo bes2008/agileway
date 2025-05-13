@@ -245,7 +245,8 @@ public class HttpExchanger extends AbstractInitializable {
                 );
     }
 
-    private boolean needReadBody(UnderlyingHttpResponse underlyingHttpResponse) {
+    private boolean needReadBody(UnderlyingHttpResponse underlyingHttpResponse) throws IOException {
+
         if (underlyingHttpResponse.getMethod() == HttpMethod.HEAD) {
             return false;
         }
@@ -256,6 +257,10 @@ public class HttpExchanger extends AbstractInitializable {
             return false;
         }
         if (underlyingHttpResponse.getStatusCode() == 304) {
+            return false;
+        }
+
+        if (underlyingHttpResponse.getContent() == null) {
             return false;
         }
 
