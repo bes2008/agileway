@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
-public class ApacheUnderlyingHttpResponse implements UnderlyingHttpResponse {
+class ApacheUnderlyingHttpResponse implements UnderlyingHttpResponse {
     private CloseableHttpResponse response;
     private HttpMethod method;
     private URI uri;

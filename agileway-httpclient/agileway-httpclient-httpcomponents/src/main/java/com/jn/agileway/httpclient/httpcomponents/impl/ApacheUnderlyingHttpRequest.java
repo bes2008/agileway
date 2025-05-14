@@ -14,13 +14,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
 
-public class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest {
+class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest {
     private HttpUriRequest request;
     private CloseableHttpClient underlyingClient;
     private BufferedHttpEntity contentEntity;
     private HttpHeaders httpHeaders;
 
-    public ApacheUnderlyingHttpRequest(CloseableHttpClient client, HttpUriRequest request, HttpHeaders httpHeaders) {
+    ApacheUnderlyingHttpRequest(CloseableHttpClient client, HttpUriRequest request, HttpHeaders httpHeaders) {
         this.underlyingClient = client;
         this.request = request;
         this.httpHeaders = httpHeaders;

@@ -8,7 +8,7 @@ import org.apache.http.message.BasicHeader;
 
 import java.io.*;
 
-public class BufferedHttpEntity extends OutputStream implements HttpEntity {
+class BufferedHttpEntity extends OutputStream implements HttpEntity {
     private Header contentType;
     private Header contentEncoding;
     private ByteArrayOutputStream buffer = new ByteArrayOutputStream();

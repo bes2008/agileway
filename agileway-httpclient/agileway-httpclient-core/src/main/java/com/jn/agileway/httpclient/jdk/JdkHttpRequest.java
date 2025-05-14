@@ -4,7 +4,7 @@ import com.jn.agileway.httpclient.core.AbstractUnderlyingHttpRequest;
 import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.ContentEncoding;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
-import com.jn.langx.text.StringTemplates;
+import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 
 import java.io.ByteArrayOutputStream;
@@ -12,20 +12,23 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 class JdkHttpRequest extends AbstractUnderlyingHttpRequest {
-
+    private URI uri;
+    private HttpMethod method;
     private HttpURLConnection httpConnection;
 
     private ByteArrayOutputStream bufferedBody;
     private OutputStream streamBody;
     private boolean streamMode;
 
-    JdkHttpRequest(HttpURLConnection httpConnection, boolean streamMode) {
+    JdkHttpRequest(HttpMethod method, URI uri, HttpHeaders httpHeaders, HttpURLConnection httpConnection, boolean streamMode) {
         this.streamMode = streamMode;
         this.httpConnection = httpConnection;
+        this.uri = uri;
+        this.method = method;
+        addHeaders(httpHeaders);
         if (!streamMode) {
             this.bufferedBody = new ByteArrayOutputStream(1024);
         }
@@ -56,16 +59,12 @@ class JdkHttpRequest extends AbstractUnderlyingHttpRequest {
 
     @Override
     public HttpMethod getMethod() {
-        return HttpMethod.resolve(this.httpConnection.getRequestMethod());
+        return method;
     }
 
     @Override
     public URI getUri() {
-        try {
-            return this.httpConnection.getURL().toURI();
-        } catch (URISyntaxException ex) {
-            throw new IllegalStateException(StringTemplates.formatWithPlaceholder("Error occur when get HttpURLConnection URI: {}", ex.getMessage()), ex);
-        }
+        return uri;
     }
 
     @Override

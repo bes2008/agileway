@@ -8,7 +8,6 @@ import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import org.apache.http.client.methods.*;
 
-import java.net.HttpURLConnection;
 import java.net.URI;
 
 public class ApacheUnderlyingHttpRequestFactory implements UnderlyingHttpRequestFactory {

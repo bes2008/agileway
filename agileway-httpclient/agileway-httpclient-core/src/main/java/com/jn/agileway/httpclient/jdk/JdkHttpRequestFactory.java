@@ -52,7 +52,7 @@ public class JdkHttpRequestFactory implements UnderlyingHttpRequestFactory {
     @Override
     public UnderlyingHttpRequest create(HttpMethod method, URI uri, HttpHeaders httpHeaders) throws Exception {
         boolean streamMode = HttpClientUtils.requestBodyUseStreamMode(method, httpHeaders);
-        return new JdkHttpRequest(createHttpUrlConnection(method, uri), streamMode);
+        return new JdkHttpRequest(method, uri, httpHeaders, createHttpUrlConnection(method, uri), streamMode);
     }
 
 
