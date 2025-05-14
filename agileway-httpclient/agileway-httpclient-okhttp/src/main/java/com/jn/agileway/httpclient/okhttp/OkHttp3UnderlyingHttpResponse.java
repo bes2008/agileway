@@ -10,13 +10,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
-class OkHttp3HttpResponse implements UnderlyingHttpResponse {
+class OkHttp3UnderlyingHttpResponse implements UnderlyingHttpResponse {
     private URI uri;
     private HttpMethod method;
     private HttpHeaders headers;
     private Response response;
 
-    OkHttp3HttpResponse(HttpMethod method, URI uri, Response response) {
+    OkHttp3UnderlyingHttpResponse(HttpMethod method, URI uri, Response response) {
         this.uri = uri;
         this.method = method;
         this.response = response;

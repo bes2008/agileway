@@ -8,7 +8,7 @@ import okhttp3.OkHttpClient;
 
 import java.net.URI;
 
-public class OkHttp3HttpRequestFactory implements UnderlyingHttpRequestFactory {
+public class OkHttp3UnderlyingHttpRequestFactory implements UnderlyingHttpRequestFactory {
     private OkHttpClient httpClient;
 
     public void setHttpClient(OkHttpClient httpClient) {
@@ -17,6 +17,6 @@ public class OkHttp3HttpRequestFactory implements UnderlyingHttpRequestFactory {
 
     @Override
     public UnderlyingHttpRequest create(HttpMethod method, URI uri, HttpHeaders httpHeaders) throws Exception {
-        return new OkHttp3HttpRequest(method, uri, httpHeaders, httpClient);
+        return new OkHttp3UnderlyingHttpRequest(method, uri, httpHeaders, httpClient);
     }
 }

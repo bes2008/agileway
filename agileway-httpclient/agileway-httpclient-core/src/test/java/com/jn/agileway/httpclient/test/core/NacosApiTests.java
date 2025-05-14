@@ -3,7 +3,7 @@ package com.jn.agileway.httpclient.test.core;
 import com.jn.agileway.httpclient.core.HttpExchanger;
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.HttpResponse;
-import com.jn.agileway.httpclient.jdk.JdkHttpRequestFactory;
+import com.jn.agileway.httpclient.jdk.JdkUnderlyingHttpRequestFactory;
 import com.jn.easyjson.core.util.JSONs;
 import com.jn.langx.util.collection.multivalue.CommonMultiValueMap;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
@@ -17,7 +17,7 @@ public class NacosApiTests {
 
     private HttpExchanger initExchanger() {
         HttpExchanger exchanger = new HttpExchanger();
-        exchanger.setRequestFactory(new JdkHttpRequestFactory());
+        exchanger.setRequestFactory(new JdkUnderlyingHttpRequestFactory());
         exchanger.init();
         return exchanger;
     }

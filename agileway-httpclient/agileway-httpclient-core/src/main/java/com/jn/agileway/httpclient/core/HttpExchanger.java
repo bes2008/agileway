@@ -10,7 +10,7 @@ import com.jn.agileway.httpclient.core.interceptor.HttpRequestMultiPartsFormInte
 import com.jn.agileway.httpclient.core.interceptor.HttpRequestUriInterceptor;
 import com.jn.agileway.httpclient.core.multipart.MultiPartsForm;
 import com.jn.agileway.httpclient.core.serialize.*;
-import com.jn.agileway.httpclient.jdk.JdkHttpRequestFactory;
+import com.jn.agileway.httpclient.jdk.JdkUnderlyingHttpRequestFactory;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
@@ -50,7 +50,7 @@ public class HttpExchanger extends AbstractInitializable {
     @Nullable
     private Executor executor;
     @NonNull
-    private UnderlyingHttpRequestFactory requestFactory = new JdkHttpRequestFactory();
+    private UnderlyingHttpRequestFactory requestFactory = new JdkUnderlyingHttpRequestFactory();
     private HttpExchangerConfiguration configuration;
     /**
      * 对请求进行拦截处理

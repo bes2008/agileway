@@ -12,7 +12,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import java.net.*;
 
-public class JdkHttpRequestFactory implements UnderlyingHttpRequestFactory {
+public class JdkUnderlyingHttpRequestFactory implements UnderlyingHttpRequestFactory {
     private Proxy proxy;
     /**
      * 创建http连接的超时时间
@@ -52,7 +52,7 @@ public class JdkHttpRequestFactory implements UnderlyingHttpRequestFactory {
     @Override
     public UnderlyingHttpRequest create(HttpMethod method, URI uri, HttpHeaders httpHeaders) throws Exception {
         boolean streamMode = HttpClientUtils.requestBodyUseStreamMode(method, httpHeaders);
-        return new JdkHttpRequest(method, uri, httpHeaders, createHttpUrlConnection(method, uri), streamMode);
+        return new JdkUnderlyingHttpRequest(method, uri, httpHeaders, createHttpUrlConnection(method, uri), streamMode);
     }
 
 

@@ -16,14 +16,14 @@ import java.net.URI;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
-class OkHttp3HttpRequest extends AbstractUnderlyingHttpRequest {
+class OkHttp3UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest {
     private URI uri;
     private HttpMethod method;
     private OkHttpClient httpClient;
     private ByteArrayOutputStream content = new ByteArrayOutputStream(1024);
 
 
-    OkHttp3HttpRequest(HttpMethod method, URI uri, HttpHeaders httpHeaders, OkHttpClient client) {
+    OkHttp3UnderlyingHttpRequest(HttpMethod method, URI uri, HttpHeaders httpHeaders, OkHttpClient client) {
         this.httpClient = client;
         this.uri = uri;
         this.method = method;
@@ -70,6 +70,6 @@ class OkHttp3HttpRequest extends AbstractUnderlyingHttpRequest {
             }
         });
         Request request = builder.build();
-        return new OkHttp3HttpResponse(method, uri, this.httpClient.newCall(request).execute());
+        return new OkHttp3UnderlyingHttpResponse(method, uri, this.httpClient.newCall(request).execute());
     }
 }

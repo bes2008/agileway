@@ -3,21 +3,17 @@ package com.jn.agileway.httpclient.jdk;
 import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.ContentEncoding;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
-import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.List;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.InflaterInputStream;
 
-class JdkHttpResponse implements UnderlyingHttpResponse {
+class JdkUnderlyingHttpResponse implements UnderlyingHttpResponse {
 
     private URI uri;
     private HttpMethod method;
@@ -29,7 +25,7 @@ class JdkHttpResponse implements UnderlyingHttpResponse {
 
     private InputStream responseStream;
 
-    JdkHttpResponse(HttpURLConnection httpConnection) {
+    JdkUnderlyingHttpResponse(HttpURLConnection httpConnection) {
         this.httpConnection = httpConnection;
         this.uri = URI.create(httpConnection.getURL().toString());
         this.method = HttpMethod.resolve(httpConnection.getRequestMethod());
