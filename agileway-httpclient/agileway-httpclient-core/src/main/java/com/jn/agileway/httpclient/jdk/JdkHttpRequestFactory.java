@@ -8,6 +8,7 @@ import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import java.net.*;
 
@@ -21,6 +22,7 @@ public class JdkHttpRequestFactory implements UnderlyingHttpRequestFactory {
      * 从http连接中读取数据的超时时间
      */
     protected int readTimeoutMills;
+
     private SSLSocketFactory sslSocketFactory;
 
     public void setConnectTimeoutMills(int connectTimeoutMills) {
@@ -29,6 +31,10 @@ public class JdkHttpRequestFactory implements UnderlyingHttpRequestFactory {
 
     public void setReadTimeoutMills(int readTimeoutMills) {
         this.readTimeoutMills = readTimeoutMills;
+    }
+
+    public void setSslSocketFactory(SSLContext sslContext) {
+        setSslSocketFactory(sslContext == null ? null : sslContext.getSocketFactory());
     }
 
     public void setSslSocketFactory(SSLSocketFactory sslSocketFactory) {
