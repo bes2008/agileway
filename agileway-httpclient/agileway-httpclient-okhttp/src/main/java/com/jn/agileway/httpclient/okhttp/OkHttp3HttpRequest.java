@@ -2,6 +2,7 @@ package com.jn.agileway.httpclient.okhttp;
 
 import com.jn.agileway.httpclient.core.AbstractUnderlyingHttpRequest;
 import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
+import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
@@ -58,10 +59,10 @@ class OkHttp3HttpRequest extends AbstractUnderlyingHttpRequest {
     protected UnderlyingHttpResponse exchangeInternal() throws IOException {
         String rawContentType = getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
         okhttp3.MediaType contentType = Strings.isNotEmpty(rawContentType) ? okhttp3.MediaType.parse(rawContentType) : null;
-        RequestBody body = (content.size() > 0 ||
-                okhttp3.internal.http.HttpMethod.requiresRequestBody(method.name()) ?
-                RequestBody.create(contentType, content.toByteArray()) : null);
-
+        RequestBody body = null;
+        if (content.size() > 0 && HttpClientUtils.isWriteable(method)) {
+            body = RequestBody.create(contentType, content.toByteArray());
+        }
         Request.Builder builder = new Request.Builder().url(uri.toURL()).method(method.name(), body);
         getHeaders().forEach((headerName, headerValues) -> {
             for (String headerValue : headerValues) {
