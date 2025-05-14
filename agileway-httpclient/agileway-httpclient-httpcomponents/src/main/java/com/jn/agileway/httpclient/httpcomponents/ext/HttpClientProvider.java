@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.httpcomponents.ext;
 
+import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.lifecycle.Lifecycle;
@@ -36,7 +37,7 @@ import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class HttpClientProvider implements Initializable, Lifecycle, Supplier0<HttpClient> {
+public class HttpClientProvider extends AbstractInitializable implements Lifecycle, Supplier0<HttpClient> {
     private static final Logger logger = Loggers.getLogger(HttpClientProvider.class);
 
     private CloseableHttpClient httpClient;
@@ -74,7 +75,7 @@ public class HttpClientProvider implements Initializable, Lifecycle, Supplier0<H
     }
 
     @Override
-    public void init() throws InitializationException {
+    public void doInit() throws InitializationException {
         if (inited) {
             return;
         }

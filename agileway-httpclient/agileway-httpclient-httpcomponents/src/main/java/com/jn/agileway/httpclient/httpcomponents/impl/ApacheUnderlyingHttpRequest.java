@@ -23,6 +23,8 @@ public class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest {
     public ApacheUnderlyingHttpRequest(CloseableHttpClient client, HttpUriRequest request, HttpHeaders httpHeaders) {
         this.underlyingClient = client;
         this.request = request;
+        this.httpHeaders = httpHeaders;
+        this.addHeaders(httpHeaders);
     }
 
 
@@ -47,6 +49,7 @@ public class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest {
 
     @Override
     protected UnderlyingHttpResponse exchangeInternal() throws IOException {
+        writeHeaders();
         if (this.request instanceof HttpEntityEnclosingRequestBase && this.contentEntity != null) {
             HttpEntityEnclosingRequestBase request = (HttpEntityEnclosingRequestBase) this.request;
             request.setEntity(this.contentEntity);
@@ -55,4 +58,14 @@ public class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest {
         return new ApacheUnderlyingHttpResponse(this.getMethod(), this.getUri(), response);
     }
 
+    @Override
+    protected void addHeaderToUnderlying(String headerName, String headerValue) {
+        this.request.addHeader(headerName, headerValue);
+    }
+
+    @Override
+    protected void setHeaderToUnderlying(String headerName, String headerValue) {
+        this.request.removeHeaders(headerName);
+        this.request.addHeader(headerName, headerValue);
+    }
 }

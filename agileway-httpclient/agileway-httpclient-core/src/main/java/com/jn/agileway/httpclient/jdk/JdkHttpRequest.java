@@ -5,8 +5,6 @@ import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.ContentEncoding;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.text.StringTemplates;
-import com.jn.langx.util.Strings;
-import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 
 import java.io.ByteArrayOutputStream;
@@ -45,9 +43,8 @@ class JdkHttpRequest extends AbstractUnderlyingHttpRequest {
             } else {
                 this.httpConnection.setChunkedStreamingMode(4096);
             }
-
-            addHeaders(this.httpConnection, this.getHeaders());
             this.httpConnection.connect();
+            writeHeaders();
             OutputStream outputStream = this.httpConnection.getOutputStream();
             List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncoding(this.getHeaders());
             outputStream = HttpClientUtils.wrapByContentEncodings(outputStream, contentEncodings);
@@ -75,7 +72,7 @@ class JdkHttpRequest extends AbstractUnderlyingHttpRequest {
     protected UnderlyingHttpResponse exchangeInternal() throws IOException {
         if (!this.streamMode) {
             // buffered 模式
-            addHeaders(this.httpConnection, this.getHeaders());
+            writeHeaders();
             this.httpConnection.connect();
             if (this.httpConnection.getDoOutput()) {
                 OutputStream outputStream = this.httpConnection.getOutputStream();
@@ -89,32 +86,13 @@ class JdkHttpRequest extends AbstractUnderlyingHttpRequest {
         return new JdkHttpResponse(this.httpConnection);
     }
 
+    @Override
+    protected void setHeaderToUnderlying(String headerName, String headerValue) {
+        httpConnection.setRequestProperty(headerName, headerValue);
+    }
 
-    /**
-     * Add the given headers to the given HTTP connection.
-     *
-     * @param connection the connection to add the headers to
-     * @param headers    the headers to add
-     */
-    static void addHeaders(HttpURLConnection connection, HttpHeaders headers) {
-        String method = connection.getRequestMethod();
-        if (method.equals("PUT") || method.equals("DELETE")) {
-            if (Strings.isBlank(headers.getFirst(HttpHeaders.ACCEPT))) {
-                // Avoid "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2"
-                // from HttpUrlConnection which prevents JSON error response details.
-                headers.set(HttpHeaders.ACCEPT, "*/*");
-            }
-        }
-        headers.forEach((headerName, headerValues) -> {
-            if (HttpHeaders.COOKIE.equalsIgnoreCase(headerName)) {  // RFC 6265
-                String headerValue = Strings.join("; ", headerValues);
-                connection.setRequestProperty(headerName, headerValue);
-            } else {
-                for (String headerValue : headerValues) {
-                    String actualHeaderValue = headerValue != null ? headerValue : "";
-                    connection.addRequestProperty(headerName, actualHeaderValue);
-                }
-            }
-        });
+    @Override
+    protected void addHeaderToUnderlying(String headerName, String headerValue) {
+        httpConnection.addRequestProperty(headerName, headerValue);
     }
 }

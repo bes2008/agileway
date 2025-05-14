@@ -2,26 +2,30 @@ package com.jn.agileway.httpclient.httpcomponents.impl;
 
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequest;
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequestFactory;
-import com.jn.agileway.httpclient.util.HttpClientUtils;
+import com.jn.agileway.httpclient.httpcomponents.ext.HttpClientProvider;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import org.apache.http.client.methods.*;
-import org.apache.http.impl.client.CloseableHttpClient;
 
+import java.net.HttpURLConnection;
 import java.net.URI;
 
 public class ApacheUnderlyingHttpRequestFactory implements UnderlyingHttpRequestFactory {
-    private CloseableHttpClient httpClient;
+    private HttpClientProvider httpClientProvider;
+
+    public void setHttpClientProvider(HttpClientProvider httpClient) {
+        this.httpClientProvider = httpClient;
+        httpClient.startup();
+    }
 
     @Override
     public UnderlyingHttpRequest create(HttpMethod method, URI uri, HttpHeaders httpHeaders) throws Exception {
-
-        HttpUriRequest request = createHttpUriRequest(method, uri, httpHeaders);
-        boolean streamMode = HttpClientUtils.requestBodyUseStreamMode(method, httpHeaders);
-        return new ApacheUnderlyingHttpRequest(httpClient, request, streamMode);
+        HttpUriRequest request = createHttpUriRequest(method, uri);
+        return new ApacheUnderlyingHttpRequest(this.httpClientProvider.get(), request, httpHeaders);
     }
 
-    private HttpUriRequest createHttpUriRequest(HttpMethod method, URI uri, HttpHeaders httpHeaders) throws Exception {
+    private HttpUriRequest createHttpUriRequest(HttpMethod method, URI uri) throws Exception {
         HttpUriRequest request = null;
         switch (method) {
             case GET:
@@ -53,4 +57,5 @@ public class ApacheUnderlyingHttpRequestFactory implements UnderlyingHttpRequest
 
         return request;
     }
+
 }
