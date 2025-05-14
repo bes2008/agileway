@@ -2,6 +2,7 @@ package com.jn.agileway.httpclient.httpcomponents.impl;
 
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequest;
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequestFactory;
+import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import org.apache.http.client.methods.*;
@@ -16,8 +17,8 @@ public class ApacheUnderlyingHttpRequestFactory implements UnderlyingHttpRequest
     public UnderlyingHttpRequest create(HttpMethod method, URI uri, HttpHeaders httpHeaders) throws Exception {
 
         HttpUriRequest request = createHttpUriRequest(method, uri, httpHeaders);
-
-        return null;
+        boolean streamMode = HttpClientUtils.requestBodyUseStreamMode(method, httpHeaders);
+        return new ApacheUnderlyingHttpRequest(httpClient, request, streamMode);
     }
 
     private HttpUriRequest createHttpUriRequest(HttpMethod method, URI uri, HttpHeaders httpHeaders) throws Exception {

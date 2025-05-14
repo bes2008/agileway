@@ -2,10 +2,11 @@ package com.jn.agileway.httpclient.httpcomponents.impl;
 
 import com.jn.agileway.httpclient.core.AbstractUnderlyingHttpRequest;
 import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
+import com.jn.agileway.httpclient.util.ContentEncoding;
+import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
 
@@ -16,8 +17,10 @@ import java.net.URI;
 public class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest {
     private HttpUriRequest request;
     private CloseableHttpClient underlyingClient;
+    private BufferedHttpEntity contentEntity;
+    private HttpHeaders httpHeaders;
 
-    public ApacheUnderlyingHttpRequest(CloseableHttpClient client, HttpUriRequest request) {
+    public ApacheUnderlyingHttpRequest(CloseableHttpClient client, HttpUriRequest request, HttpHeaders httpHeaders) {
         this.underlyingClient = client;
         this.request = request;
     }
@@ -35,12 +38,19 @@ public class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest {
 
     @Override
     public OutputStream getContent() throws IOException {
-        return null;
+        if (this.contentEntity == null) {
+            this.contentEntity = new BufferedHttpEntity(this.httpHeaders.getContentType().toString(), ContentEncoding.ofName(this.httpHeaders.getFirst("Content-Encoding")));
+        }
+        return this.contentEntity;
     }
 
 
     @Override
     protected UnderlyingHttpResponse exchangeInternal() throws IOException {
+        if (this.request instanceof HttpEntityEnclosingRequestBase && this.contentEntity != null) {
+            HttpEntityEnclosingRequestBase request = (HttpEntityEnclosingRequestBase) this.request;
+            request.setEntity(this.contentEntity);
+        }
         CloseableHttpResponse response = this.underlyingClient.execute(request);
         return new ApacheUnderlyingHttpResponse(this.getMethod(), this.getUri(), response);
     }
