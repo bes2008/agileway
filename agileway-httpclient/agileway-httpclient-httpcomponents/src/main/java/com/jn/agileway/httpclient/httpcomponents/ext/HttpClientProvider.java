@@ -1,7 +1,6 @@
 package com.jn.agileway.httpclient.httpcomponents.ext;
 
 import com.jn.langx.lifecycle.AbstractInitializable;
-import com.jn.langx.lifecycle.Initializable;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.lifecycle.Lifecycle;
 import com.jn.langx.util.Emptys;
@@ -19,9 +18,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.ConnectionKeepAliveStrategy;
+import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -42,7 +41,7 @@ public class HttpClientProvider extends AbstractInitializable implements Lifecyc
 
     private CloseableHttpClient httpClient;
 
-    private IdleConnectionMonitorThread monitorThread;
+    private IdleConnectionMonitorTask idleConnectionMonitorTask;
 
     private HttpClientProperties config;
 
@@ -118,8 +117,8 @@ public class HttpClientProvider extends AbstractInitializable implements Lifecyc
         });
         httpClient = httpClientBuilder.build();
 
-        monitorThread = new IdleConnectionMonitorThread(httpClient.getConnectionManager());
-        monitorThread.start();
+        idleConnectionMonitorTask = new IdleConnectionMonitorTask((HttpClientConnectionManager) httpClient.getConnectionManager(), config.getIdleConnectionTimeoutInMills(), config.getIdleConnectionCleanupIntervalInMills());
+        new Thread(idleConnectionMonitorTask).start();
         running = true;
     }
 
@@ -134,42 +133,9 @@ public class HttpClientProvider extends AbstractInitializable implements Lifecyc
         if (httpClient != null) {
             this.httpClient.getConnectionManager().shutdown();
         }
-        monitorThread.shutdown();
+        idleConnectionMonitorTask.shutdown();
     }
 
-    private class IdleConnectionMonitorThread extends Thread {
-        private final ClientConnectionManager connectionManager;
-        private volatile boolean shutdown;
-
-        public IdleConnectionMonitorThread(ClientConnectionManager connectionManager) {
-            super();
-            this.connectionManager = connectionManager;
-            setDaemon(true);
-            setName("Agileway-HttpClient-IdleConnectionMonitor");
-        }
-
-        @Override
-        public void run() {
-            try {
-                while (!shutdown) {
-                    synchronized (this) {
-                        wait(config.getIdleConnectionCleanupIntervalInMills());
-                        this.connectionManager.closeExpiredConnections();
-                        this.connectionManager.closeIdleConnections(config.getIdleConnectionTimeoutInMills(), TimeUnit.MILLISECONDS);
-                    }
-                }
-            } catch (InterruptedException ex) {
-                //
-            }
-        }
-
-        public void shutdown() {
-            shutdown = true;
-            synchronized (this) {
-                notifyAll();
-            }
-        }
-    }
 
     private class AgilewayConnectionKeepAliveStrategy implements ConnectionKeepAliveStrategy {
         @Override
