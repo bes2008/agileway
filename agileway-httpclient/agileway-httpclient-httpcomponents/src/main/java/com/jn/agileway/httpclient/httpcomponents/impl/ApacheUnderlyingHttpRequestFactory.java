@@ -3,7 +3,6 @@ package com.jn.agileway.httpclient.httpcomponents.impl;
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequest;
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequestFactory;
 import com.jn.agileway.httpclient.httpcomponents.ext.HttpClientProvider;
-import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import org.apache.http.client.methods.*;

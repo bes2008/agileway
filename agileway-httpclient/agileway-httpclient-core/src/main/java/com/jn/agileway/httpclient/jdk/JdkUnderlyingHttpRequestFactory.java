@@ -7,6 +7,7 @@ import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -14,6 +15,7 @@ import java.net.*;
 
 public class JdkUnderlyingHttpRequestFactory implements UnderlyingHttpRequestFactory {
     private Proxy proxy;
+    private HostnameVerifier hostnameVerifier;
     /**
      * 创建http连接的超时时间
      */
@@ -23,7 +25,16 @@ public class JdkUnderlyingHttpRequestFactory implements UnderlyingHttpRequestFac
      */
     protected int readTimeoutMills;
 
-    private SSLSocketFactory sslSocketFactory;
+    private SSLContext sslContext;
+
+    @Override
+    public HostnameVerifier getHostnameVerifier() {
+        return this.hostnameVerifier;
+    }
+
+    public void setHostnameVerifier(HostnameVerifier hostnameVerifier) {
+        this.hostnameVerifier = hostnameVerifier;
+    }
 
     public void setConnectTimeoutMills(int connectTimeoutMills) {
         this.connectTimeoutMills = connectTimeoutMills;
@@ -33,16 +44,13 @@ public class JdkUnderlyingHttpRequestFactory implements UnderlyingHttpRequestFac
         this.readTimeoutMills = readTimeoutMills;
     }
 
-    public void setSslSocketFactory(SSLContext sslContext) {
-        setSslSocketFactory(sslContext == null ? null : sslContext.getSocketFactory());
+    public void setSSLContext(SSLContext sslContext) {
+        this.sslContext = sslContext;
     }
 
-    public void setSslSocketFactory(SSLSocketFactory sslSocketFactory) {
-        this.sslSocketFactory = sslSocketFactory;
-    }
 
     protected SSLSocketFactory getSslSocketFactory() {
-        return this.sslSocketFactory == null ? (SSLSocketFactory) SSLSocketFactory.getDefault() : this.sslSocketFactory;
+        return this.sslContext == null ? (SSLSocketFactory) SSLSocketFactory.getDefault() : this.sslContext.getSocketFactory();
     }
 
     public void setProxy(Proxy proxy) {
@@ -79,6 +87,9 @@ public class JdkUnderlyingHttpRequestFactory implements UnderlyingHttpRequestFac
 
         if (HttpClientUtils.isSSLEnabled(uri)) {
             HttpsURLConnection httpsConn = (HttpsURLConnection) httpConn;
+            if (getHostnameVerifier() != null) {
+                httpsConn.setHostnameVerifier(getHostnameVerifier());
+            }
             httpsConn.setSSLSocketFactory(getSslSocketFactory());
         }
 

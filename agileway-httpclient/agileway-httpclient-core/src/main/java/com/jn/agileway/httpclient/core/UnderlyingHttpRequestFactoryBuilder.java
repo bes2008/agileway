@@ -4,7 +4,7 @@ import com.jn.langx.Builder;
 import com.jn.langx.security.ssl.SSLContextBuilder;
 
 import javax.net.ssl.HostnameVerifier;
-import java.lang.reflect.Proxy;
+import java.net.Proxy;
 
 public interface UnderlyingHttpRequestFactoryBuilder extends Builder<UnderlyingHttpRequestFactory> {
 

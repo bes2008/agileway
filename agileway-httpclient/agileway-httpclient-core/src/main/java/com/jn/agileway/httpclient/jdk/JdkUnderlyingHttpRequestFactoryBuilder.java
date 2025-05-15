@@ -5,7 +5,8 @@ import com.jn.agileway.httpclient.core.UnderlyingHttpRequestFactoryBuilder;
 import com.jn.langx.security.ssl.SSLContextBuilder;
 
 import javax.net.ssl.HostnameVerifier;
-import java.lang.reflect.Proxy;
+import javax.net.ssl.SSLContext;
+import java.net.Proxy;
 
 public class JdkUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpRequestFactoryBuilder {
 
@@ -45,16 +46,25 @@ public class JdkUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpReq
 
     @Override
     public UnderlyingHttpRequestFactoryBuilder hostnameVerifier(HostnameVerifier hostnameVerifier) {
+        this.hostnameVerifier = hostnameVerifier;
         return this;
     }
 
     @Override
     public UnderlyingHttpRequestFactoryBuilder sslContextBuilder(SSLContextBuilder sslContextBuilder) {
+        this.sslContextBuilder = sslContextBuilder;
         return this;
     }
 
     @Override
     public UnderlyingHttpRequestFactory build() {
-        return new JdkUnderlyingHttpRequestFactory();
+        JdkUnderlyingHttpRequestFactory factory = new JdkUnderlyingHttpRequestFactory();
+        factory.setConnectTimeoutMills(connectTimeoutInMills);
+        factory.setReadTimeoutMills(readTimeoutInMills);
+        factory.setProxy(proxy);
+        factory.setHostnameVerifier(hostnameVerifier);
+        SSLContext sslContext = sslContextBuilder.build();
+        factory.setSSLContext(sslContext);
+        return factory;
     }
 }
