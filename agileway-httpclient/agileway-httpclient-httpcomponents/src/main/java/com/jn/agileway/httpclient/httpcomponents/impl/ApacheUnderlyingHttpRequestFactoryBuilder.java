@@ -6,18 +6,22 @@ import com.jn.agileway.httpclient.httpcomponents.ext.HttpClientCustomizer;
 import com.jn.agileway.httpclient.httpcomponents.ext.HttpClientProperties;
 import com.jn.agileway.httpclient.httpcomponents.ext.HttpClientProvider;
 import com.jn.langx.security.ssl.SSLContextBuilder;
-import com.jn.langx.util.collection.Lists;
+import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
+import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ApacheUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpRequestFactoryBuilder {
     private HttpClientProperties config = new HttpClientProperties();
     private HostnameVerifier hostnameVerifier;
     private SSLContextBuilder sslContextBuilder;
+    private Proxy proxy;
 
     @Override
     public UnderlyingHttpRequestFactoryBuilder poolMaxIdleConnections(int maxIdleConnections) {
@@ -45,7 +49,7 @@ public class ApacheUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttp
 
     @Override
     public UnderlyingHttpRequestFactoryBuilder proxy(Proxy proxy) {
-
+        this.proxy = proxy;
         return this;
     }
 
@@ -67,9 +71,10 @@ public class ApacheUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttp
         this.config.setMaxRetry(1);
         HttpClientProvider clientProvider = new HttpClientProvider();
         clientProvider.setConfig(this.config);
+        List<HttpClientCustomizer> customizers = new ArrayList<>();
         if (sslContextBuilder != null) {
             SSLContext sslContext = sslContextBuilder.build();
-            HttpClientCustomizer customizer = new HttpClientCustomizer() {
+            customizers.add(new HttpClientCustomizer() {
                 @Override
                 public void customizeHttpRequest(RequestConfig.Builder requestConfigBuilder) {
 
@@ -82,9 +87,24 @@ public class ApacheUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttp
                     }
                     httpClientBuilder.setSSLContext(sslContext);
                 }
-            };
-            clientProvider.setCustomizers(Lists.newArrayList(customizer));
+            });
         }
+        if (proxy != null) {
+            customizers.add(new HttpClientCustomizer() {
+                @Override
+                public void customizeHttpRequest(RequestConfig.Builder requestConfigBuilder) {
+                }
+
+                @Override
+                public void customizeHttpClient(HttpClientBuilder httpClientBuilder) {
+                    Proxy javaProxy = ApacheUnderlyingHttpRequestFactoryBuilder.this.proxy;
+                    InetSocketAddress proxyAddress = (InetSocketAddress) javaProxy.address();
+                    HttpHost httpHost = new HttpHost(proxyAddress.getHostName(), proxyAddress.getPort(), sslContextBuilder != null ? "https" : "http");
+                    httpClientBuilder.setProxy(httpHost);
+                }
+            });
+        }
+        clientProvider.setCustomizers(customizers);
         clientProvider.startup();
         factory.setHttpClientProvider(clientProvider);
         return factory;
