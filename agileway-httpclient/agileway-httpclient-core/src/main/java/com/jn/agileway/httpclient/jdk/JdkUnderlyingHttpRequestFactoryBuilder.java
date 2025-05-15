@@ -8,43 +8,53 @@ import javax.net.ssl.HostnameVerifier;
 import java.lang.reflect.Proxy;
 
 public class JdkUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpRequestFactoryBuilder {
+
+    private int connectTimeoutInMills = 3000;
+    private int readTimeoutInMills = 60000;
+    private Proxy proxy;
+    private HostnameVerifier hostnameVerifier;
+    private SSLContextBuilder sslContextBuilder;
+
     @Override
     public UnderlyingHttpRequestFactoryBuilder poolMaxIdleConnections(int maxIdleConnections) {
-        return null;
+        return this;
     }
 
     @Override
     public UnderlyingHttpRequestFactoryBuilder keepAliveDurationMills(int keepAliveDurationInMills) {
-        return null;
+        return this;
     }
 
     @Override
     public UnderlyingHttpRequestFactoryBuilder connectTimeoutMills(int connectTimeoutInMills) {
-        return null;
+        this.connectTimeoutInMills = connectTimeoutInMills;
+        return this;
     }
 
     @Override
     public UnderlyingHttpRequestFactoryBuilder readTimeoutMills(int readTimeoutInMills) {
-        return null;
+        this.readTimeoutInMills = readTimeoutInMills;
+        return this;
     }
 
     @Override
     public UnderlyingHttpRequestFactoryBuilder proxy(Proxy proxy) {
-        return null;
+        this.proxy = proxy;
+        return this;
     }
 
     @Override
     public UnderlyingHttpRequestFactoryBuilder hostnameVerifier(HostnameVerifier hostnameVerifier) {
-        return null;
+        return this;
     }
 
     @Override
     public UnderlyingHttpRequestFactoryBuilder sslContextBuilder(SSLContextBuilder sslContextBuilder) {
-        return null;
+        return this;
     }
 
     @Override
     public UnderlyingHttpRequestFactory build() {
-        return null;
+        return new JdkUnderlyingHttpRequestFactory();
     }
 }
