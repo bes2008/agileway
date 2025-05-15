@@ -7,6 +7,7 @@ import javax.net.ssl.HostnameVerifier;
 import java.lang.reflect.Proxy;
 
 public interface UnderlyingHttpRequestFactoryBuilder extends Builder<UnderlyingHttpRequestFactory> {
+
     UnderlyingHttpRequestFactoryBuilder poolMaxIdleConnections(int maxIdleConnections);
 
     UnderlyingHttpRequestFactoryBuilder keepAliveDurationMills(int keepAliveDurationInMills);
@@ -18,8 +19,6 @@ public interface UnderlyingHttpRequestFactoryBuilder extends Builder<UnderlyingH
     UnderlyingHttpRequestFactoryBuilder proxy(Proxy proxy);
 
     UnderlyingHttpRequestFactoryBuilder hostnameVerifier(HostnameVerifier hostnameVerifier);
-
-    UnderlyingHttpRequestFactoryBuilder retry(int retry);
 
     UnderlyingHttpRequestFactoryBuilder sslContextBuilder(SSLContextBuilder sslContextBuilder);
 
