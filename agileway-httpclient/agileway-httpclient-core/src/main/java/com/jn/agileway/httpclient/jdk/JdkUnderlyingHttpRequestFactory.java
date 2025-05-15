@@ -27,11 +27,6 @@ public class JdkUnderlyingHttpRequestFactory implements UnderlyingHttpRequestFac
 
     private SSLContext sslContext;
 
-    @Override
-    public HostnameVerifier getHostnameVerifier() {
-        return this.hostnameVerifier;
-    }
-
     public void setHostnameVerifier(HostnameVerifier hostnameVerifier) {
         this.hostnameVerifier = hostnameVerifier;
     }
@@ -87,8 +82,8 @@ public class JdkUnderlyingHttpRequestFactory implements UnderlyingHttpRequestFac
 
         if (HttpClientUtils.isSSLEnabled(uri)) {
             HttpsURLConnection httpsConn = (HttpsURLConnection) httpConn;
-            if (getHostnameVerifier() != null) {
-                httpsConn.setHostnameVerifier(getHostnameVerifier());
+            if (this.hostnameVerifier != null) {
+                httpsConn.setHostnameVerifier(hostnameVerifier);
             }
             httpsConn.setSSLSocketFactory(getSslSocketFactory());
         }

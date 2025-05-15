@@ -8,6 +8,7 @@ public class HttpClientProperties {
     private int poolMaxConnections = 100;
     private int poolMaxPerRoute = 100;
     private int poolIdleConnValidateDelayInMills = 5 * 1000;
+    private int poolMaxIdleConnections = 3;
 
     /**
      * connect and request configs
@@ -58,6 +59,14 @@ public class HttpClientProperties {
         if (poolIdleConnValidateDelayInMills > 0) {
             this.poolIdleConnValidateDelayInMills = poolIdleConnValidateDelayInMills;
         }
+    }
+
+    public int getPoolMaxIdleConnections() {
+        return poolMaxIdleConnections;
+    }
+
+    public void setPoolMaxIdleConnections(int poolMaxIdleConnections) {
+        this.poolMaxIdleConnections = poolMaxIdleConnections;
     }
 
     public int getSocketTimeoutInMills() {
