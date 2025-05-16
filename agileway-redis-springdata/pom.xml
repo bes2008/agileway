@@ -101,11 +101,6 @@
     <dependencies>
 
         <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-redis</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
         </dependency>
@@ -162,8 +157,8 @@
             <version>${slf4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.github.bes2008.solution.langx</groupId>
-            <artifactId>langx-java-distributed</artifactId>
+            <groupId>io.github.bes2008.solution.agileway</groupId>
+            <artifactId>agileway-distributed</artifactId>
         </dependency>
     </dependencies>
 

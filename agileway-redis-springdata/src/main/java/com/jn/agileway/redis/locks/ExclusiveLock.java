@@ -3,7 +3,7 @@ package com.jn.agileway.redis.locks;
 import com.jn.agileway.redis.core.RedisTemplate;
 import com.jn.langx.Builder;
 import com.jn.langx.annotation.NotThreadSafe;
-import com.jn.langx.distributed.locks.DistributedLock;
+import com.jn.agileway.distributed.locks.DistributedLock;
 import com.jn.langx.util.collection.Collects;
 
 import java.util.concurrent.TimeUnit;

@@ -342,6 +342,11 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>io.github.bes2008.solution.agileway</groupId>
+                <artifactId>agileway-distributed</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>io.github.bes2008.solution.agileway.eipchannel</groupId>
                 <artifactId>agileway-eipchannel-core</artifactId>
                 <version>${project.version}</version>
@@ -364,11 +369,6 @@
             <dependency>
                 <groupId>io.github.bes2008.solution.langx</groupId>
                 <artifactId>langx-java-reflect-aspectj</artifactId>
-                <version>${langx.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.bes2008.solution.langx</groupId>
-                <artifactId>langx-java-distributed</artifactId>
                 <version>${langx.version}</version>
             </dependency>
             <dependency>
