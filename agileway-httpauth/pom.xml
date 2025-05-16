@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>agileway-httpauth</artifactId>
-
+    <name>${project.groupId}:${project.artifactId}:${project.version}</name>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
