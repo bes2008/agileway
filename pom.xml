@@ -348,6 +348,11 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>io.github.bes2008.solution.agileway</groupId>
+                <artifactId>agileway-zookeeper</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>io.github.bes2008.solution.agileway.eipchannel</groupId>
                 <artifactId>agileway-eipchannel-core</artifactId>
                 <version>${project.version}</version>
