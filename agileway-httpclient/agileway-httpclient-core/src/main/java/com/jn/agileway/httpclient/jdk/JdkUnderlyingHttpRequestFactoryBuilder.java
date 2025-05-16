@@ -17,41 +17,41 @@ public class JdkUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpReq
     private SSLContextBuilder sslContextBuilder;
 
     @Override
-    public UnderlyingHttpRequestFactoryBuilder poolMaxIdleConnections(int maxIdleConnections) {
+    public JdkUnderlyingHttpRequestFactoryBuilder poolMaxIdleConnections(int maxIdleConnections) {
         return this;
     }
 
     @Override
-    public UnderlyingHttpRequestFactoryBuilder keepAliveDurationMills(int keepAliveDurationInMills) {
+    public JdkUnderlyingHttpRequestFactoryBuilder keepAliveDurationMills(int keepAliveDurationInMills) {
         return this;
     }
 
     @Override
-    public UnderlyingHttpRequestFactoryBuilder connectTimeoutMills(int connectTimeoutInMills) {
+    public JdkUnderlyingHttpRequestFactoryBuilder connectTimeoutMills(int connectTimeoutInMills) {
         this.connectTimeoutInMills = connectTimeoutInMills;
         return this;
     }
 
     @Override
-    public UnderlyingHttpRequestFactoryBuilder readTimeoutMills(int readTimeoutInMills) {
+    public JdkUnderlyingHttpRequestFactoryBuilder readTimeoutMills(int readTimeoutInMills) {
         this.readTimeoutInMills = readTimeoutInMills;
         return this;
     }
 
     @Override
-    public UnderlyingHttpRequestFactoryBuilder proxy(Proxy proxy) {
+    public JdkUnderlyingHttpRequestFactoryBuilder proxy(Proxy proxy) {
         this.proxy = proxy;
         return this;
     }
 
     @Override
-    public UnderlyingHttpRequestFactoryBuilder hostnameVerifier(HostnameVerifier hostnameVerifier) {
+    public JdkUnderlyingHttpRequestFactoryBuilder hostnameVerifier(HostnameVerifier hostnameVerifier) {
         this.hostnameVerifier = hostnameVerifier;
         return this;
     }
 
     @Override
-    public UnderlyingHttpRequestFactoryBuilder sslContextBuilder(SSLContextBuilder sslContextBuilder) {
+    public JdkUnderlyingHttpRequestFactoryBuilder sslContextBuilder(SSLContextBuilder sslContextBuilder) {
         this.sslContextBuilder = sslContextBuilder;
         return this;
     }

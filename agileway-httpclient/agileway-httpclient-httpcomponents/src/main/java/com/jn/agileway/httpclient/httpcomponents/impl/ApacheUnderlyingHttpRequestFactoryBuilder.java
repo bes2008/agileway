@@ -24,43 +24,43 @@ public class ApacheUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttp
     private Proxy proxy;
 
     @Override
-    public UnderlyingHttpRequestFactoryBuilder poolMaxIdleConnections(int maxIdleConnections) {
+    public ApacheUnderlyingHttpRequestFactoryBuilder poolMaxIdleConnections(int maxIdleConnections) {
         config.setPoolMaxIdleConnections(maxIdleConnections);
         return this;
     }
 
     @Override
-    public UnderlyingHttpRequestFactoryBuilder keepAliveDurationMills(int keepAliveDurationInMills) {
+    public ApacheUnderlyingHttpRequestFactoryBuilder keepAliveDurationMills(int keepAliveDurationInMills) {
         config.setKeepAliveTimeoutInMills(keepAliveDurationInMills);
         return this;
     }
 
     @Override
-    public UnderlyingHttpRequestFactoryBuilder connectTimeoutMills(int connectTimeoutInMills) {
+    public ApacheUnderlyingHttpRequestFactoryBuilder connectTimeoutMills(int connectTimeoutInMills) {
         config.setConnectTimeoutInMills(connectTimeoutInMills);
         return this;
     }
 
     @Override
-    public UnderlyingHttpRequestFactoryBuilder readTimeoutMills(int readTimeoutInMills) {
+    public ApacheUnderlyingHttpRequestFactoryBuilder readTimeoutMills(int readTimeoutInMills) {
         config.setSocketTimeoutInMills(readTimeoutInMills);
         return this;
     }
 
     @Override
-    public UnderlyingHttpRequestFactoryBuilder proxy(Proxy proxy) {
+    public ApacheUnderlyingHttpRequestFactoryBuilder proxy(Proxy proxy) {
         this.proxy = proxy;
         return this;
     }
 
     @Override
-    public UnderlyingHttpRequestFactoryBuilder hostnameVerifier(HostnameVerifier hostnameVerifier) {
+    public ApacheUnderlyingHttpRequestFactoryBuilder hostnameVerifier(HostnameVerifier hostnameVerifier) {
         this.hostnameVerifier = hostnameVerifier;
         return this;
     }
 
     @Override
-    public UnderlyingHttpRequestFactoryBuilder sslContextBuilder(SSLContextBuilder sslContextBuilder) {
+    public ApacheUnderlyingHttpRequestFactoryBuilder sslContextBuilder(SSLContextBuilder sslContextBuilder) {
         this.sslContextBuilder = sslContextBuilder;
         return this;
     }
