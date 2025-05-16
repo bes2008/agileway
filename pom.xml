@@ -35,6 +35,7 @@
         <module>agileway-jwt</module>
         <module>agileway-shell</module>
         <module>agileway-httpauth</module>
+        <module>agileway-distributed</module>
     </modules>
 
     <description>
