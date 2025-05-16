@@ -14,7 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.List;
 
-class JdkUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest {
+class JdkUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpURLConnection> {
     private URI uri;
     private HttpMethod method;
     private HttpURLConnection httpConnection;
@@ -46,8 +46,8 @@ class JdkUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest {
             } else {
                 this.httpConnection.setChunkedStreamingMode(4096);
             }
+            writeHeaders(this.httpConnection);
             this.httpConnection.connect();
-            writeHeaders();
             OutputStream outputStream = this.httpConnection.getOutputStream();
             List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncoding(this.getHeaders());
             outputStream = HttpClientUtils.wrapByContentEncodings(outputStream, contentEncodings);
@@ -71,7 +71,7 @@ class JdkUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest {
     protected UnderlyingHttpResponse exchangeInternal() throws IOException {
         if (!this.streamMode) {
             // buffered 模式
-            writeHeaders();
+            writeHeaders(this.httpConnection);
             this.httpConnection.connect();
             if (this.httpConnection.getDoOutput()) {
                 OutputStream outputStream = this.httpConnection.getOutputStream();
@@ -86,12 +86,12 @@ class JdkUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest {
     }
 
     @Override
-    protected void setHeaderToUnderlying(String headerName, String headerValue) {
-        httpConnection.setRequestProperty(headerName, headerValue);
+    protected void setHeaderToUnderlying(HttpURLConnection context, String headerName, String headerValue) {
+        context.setRequestProperty(headerName, headerValue);
     }
 
     @Override
-    protected void addHeaderToUnderlying(String headerName, String headerValue) {
-        httpConnection.addRequestProperty(headerName, headerValue);
+    protected void addHeaderToUnderlying(HttpURLConnection context, String headerName, String headerValue) {
+        context.addRequestProperty(headerName, headerValue);
     }
 }

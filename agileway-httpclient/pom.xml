@@ -13,6 +13,7 @@
         <module>agileway-httpclient-core</module>
         <module>agileway-httpclient-httpcomponents</module>
         <module>agileway-httpclient-okhttp</module>
+        <module>agileway-httpclient-jdk11</module>
     </modules>
 
     <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
@@ -20,8 +21,4 @@
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
 
     <description>common httpclient module</description>
-    <dependencies>
-
-    </dependencies>
-
 </project>

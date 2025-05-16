@@ -6,9 +6,10 @@ import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
-public abstract class AbstractUnderlyingHttpRequest implements UnderlyingHttpRequest {
+public abstract class AbstractUnderlyingHttpRequest<CONTEXT> implements UnderlyingHttpRequest {
 
     private final HttpHeaders headers = new HttpHeaders();
     private boolean executed = false;
@@ -41,7 +42,7 @@ public abstract class AbstractUnderlyingHttpRequest implements UnderlyingHttpReq
         return promise;
     }
 
-    protected final void writeHeaders() {
+    protected final void writeHeaders(CONTEXT context) {
         HttpMethod method = getMethod();
         if (method.equals(HttpMethod.PUT) || method.equals(HttpMethod.DELETE)) {
             if (Strings.isBlank(headers.getFirst(HttpHeaders.ACCEPT))) {
@@ -50,22 +51,25 @@ public abstract class AbstractUnderlyingHttpRequest implements UnderlyingHttpReq
                 headers.set(HttpHeaders.ACCEPT, "*/*");
             }
         }
-        headers.forEach((headerName, headerValues) -> {
+
+        for (String headerName : headers.keySet()) {
+            Collection<String> headerValues = headers.get(headerName);
             if (HttpHeaders.COOKIE.equalsIgnoreCase(headerName)) {  // RFC 6265
                 String headerValue = Strings.join("; ", headerValues);
-                setHeaderToUnderlying(headerName, headerValue);
+                setHeaderToUnderlying(context, headerName, headerValue);
             } else {
                 for (String headerValue : headerValues) {
                     String actualHeaderValue = headerValue != null ? headerValue : "";
-                    addHeaderToUnderlying(headerName, actualHeaderValue);
+                    addHeaderToUnderlying(context,
+                            headerName, actualHeaderValue);
                 }
             }
-        });
+        }
     }
 
-    protected abstract void addHeaderToUnderlying(String headerName, String headerValue);
+    protected abstract void addHeaderToUnderlying(CONTEXT context, String headerName, String headerValue);
 
-    protected abstract void setHeaderToUnderlying(String headerName, String headerValue);
+    protected abstract void setHeaderToUnderlying(CONTEXT context, String headerName, String headerValue);
 
     protected abstract UnderlyingHttpResponse exchangeInternal() throws IOException;
 }

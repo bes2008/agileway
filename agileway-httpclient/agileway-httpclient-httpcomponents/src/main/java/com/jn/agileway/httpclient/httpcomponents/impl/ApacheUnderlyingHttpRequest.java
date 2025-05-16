@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
 
-class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest {
+class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpUriRequest> {
     private HttpUriRequest request;
     private CloseableHttpClient underlyingClient;
     private BufferedHttpEntity contentEntity;
@@ -49,7 +49,7 @@ class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest {
 
     @Override
     protected UnderlyingHttpResponse exchangeInternal() throws IOException {
-        writeHeaders();
+        writeHeaders(this.request);
         if (this.request instanceof HttpEntityEnclosingRequestBase && this.contentEntity != null) {
             HttpEntityEnclosingRequestBase request = (HttpEntityEnclosingRequestBase) this.request;
             request.setEntity(this.contentEntity);
@@ -59,13 +59,13 @@ class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest {
     }
 
     @Override
-    protected void addHeaderToUnderlying(String headerName, String headerValue) {
-        this.request.addHeader(headerName, headerValue);
+    protected void addHeaderToUnderlying(HttpUriRequest context, String headerName, String headerValue) {
+        context.addHeader(headerName, headerValue);
     }
 
     @Override
-    protected void setHeaderToUnderlying(String headerName, String headerValue) {
-        this.request.removeHeaders(headerName);
-        this.request.addHeader(headerName, headerValue);
+    protected void setHeaderToUnderlying(HttpUriRequest context, String headerName, String headerValue) {
+        context.removeHeaders(headerName);
+        context.addHeader(headerName, headerValue);
     }
 }

@@ -16,7 +16,7 @@ import java.net.URI;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
-class OkHttp3UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest {
+class OkHttp3UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<Request.Builder> {
     private URI uri;
     private HttpMethod method;
     private OkHttpClient httpClient;
@@ -46,13 +46,13 @@ class OkHttp3UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest {
     }
 
     @Override
-    protected void addHeaderToUnderlying(String headerName, String headerValue) {
-
+    protected void addHeaderToUnderlying(Request.Builder context, String headerName, String headerValue) {
+        context.addHeader(headerName, headerValue);
     }
 
     @Override
-    protected void setHeaderToUnderlying(String headerName, String headerValue) {
-
+    protected void setHeaderToUnderlying(Request.Builder context, String headerName, String headerValue) {
+        context.header(headerName, headerValue);
     }
 
     @Override
@@ -64,11 +64,7 @@ class OkHttp3UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest {
             body = RequestBody.create(contentType, content.toByteArray());
         }
         Request.Builder builder = new Request.Builder().url(uri.toURL()).method(method.name(), body);
-        getHeaders().forEach((headerName, headerValues) -> {
-            for (String headerValue : headerValues) {
-                builder.addHeader(headerName, headerValue);
-            }
-        });
+        writeHeaders(builder);
         Request request = builder.build();
         return new OkHttp3UnderlyingHttpResponse(method, uri, this.httpClient.newCall(request).execute());
     }
