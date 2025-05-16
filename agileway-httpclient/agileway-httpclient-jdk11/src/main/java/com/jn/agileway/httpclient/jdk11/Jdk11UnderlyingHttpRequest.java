@@ -4,6 +4,7 @@ import com.jn.agileway.httpclient.core.AbstractUnderlyingHttpRequest;
 import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.Throwables;
+import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.struct.Holder;
 
@@ -24,11 +25,12 @@ class Jdk11UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpReque
     private ByteArrayOutputStream content;
     private Duration timeout;
 
-    Jdk11UnderlyingHttpRequest(HttpMethod method, URI uri, HttpClient httpClient, Duration timeout) {
+    Jdk11UnderlyingHttpRequest(HttpMethod method, URI uri, HttpHeaders headers, HttpClient httpClient, Duration timeout) {
         this.method = method;
         this.uri = uri;
         this.timeout = timeout;
         this.httpClient = httpClient;
+        addHeaders(headers);
     }
 
     @Override
