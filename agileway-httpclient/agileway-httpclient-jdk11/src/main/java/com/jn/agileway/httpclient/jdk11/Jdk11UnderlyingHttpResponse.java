@@ -12,13 +12,16 @@ import java.net.URI;
 class Jdk11UnderlyingHttpResponse implements UnderlyingHttpResponse {
     private URI uri;
     private HttpMethod method;
-    ByteArrayInputStream content;
-    final HttpHeaders headers = new HttpHeaders();
+    private ByteArrayInputStream content;
+    private HttpHeaders headers;
     int statusCode;
 
-    Jdk11UnderlyingHttpResponse(HttpMethod method, URI uri) {
+    Jdk11UnderlyingHttpResponse(HttpMethod method, URI uri, HttpHeaders headers, int statusCode, ByteArrayInputStream content) {
         this.uri = uri;
         this.method = method;
+        this.headers = headers;
+        this.statusCode = statusCode;
+        this.content = content;
     }
 
     @Override

@@ -6,7 +6,6 @@ import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
-import com.jn.langx.util.struct.Holder;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -74,34 +73,23 @@ class Jdk11UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpReque
         writeHeaders(builder);
         builder.timeout(timeout == null ? Duration.ofSeconds(60) : timeout);
         HttpRequest request = builder.build();
-        Jdk11UnderlyingHttpResponse response = new Jdk11UnderlyingHttpResponse(method, uri);
-        Holder<HttpResponse.BodySubscriber<byte[]>> contentHolder = new Holder<HttpResponse.BodySubscriber<byte[]>>();
-        try {
-            httpClient.send(request, new HttpResponse.BodyHandler<byte[]>() {
-                @Override
-                public HttpResponse.BodySubscriber<byte[]> apply(HttpResponse.ResponseInfo responseInfo) {
-                    response.statusCode = responseInfo.statusCode();
-                    java.net.http.HttpHeaders headers = responseInfo.headers();
-                    for (String name : headers.map().keySet()) {
-                        for (String value : headers.allValues(name)) {
-                            response.headers.add(name, value);
-                        }
-                    }
-                    HttpResponse.BodySubscriber<byte[]> bodySubscriber = HttpResponse.BodyHandlers.ofByteArray().apply(responseInfo);
-                    contentHolder.set(bodySubscriber);
-                    return bodySubscriber;
-                }
-            });
 
-            if (contentHolder.get() != null) {
-                byte[] content = contentHolder.get().getBody().<byte[]>toCompletableFuture().get();
-                response.content = new ByteArrayInputStream(content);
+        try {
+            HttpResponse<byte[]> underlyingHttpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray());
+            java.net.http.HttpHeaders headers = underlyingHttpResponse.headers();
+            HttpHeaders responseHeaders = new HttpHeaders();
+            for (String name : headers.map().keySet()) {
+                for (String value : headers.allValues(name)) {
+                    responseHeaders.add(name, value);
+                }
             }
+            Jdk11UnderlyingHttpResponse response = new Jdk11UnderlyingHttpResponse(method, uri, responseHeaders, underlyingHttpResponse.statusCode(), new ByteArrayInputStream(underlyingHttpResponse.body()));
+            return response;
         } catch (IOException e) {
             throw e;
         } catch (Throwable e) {
             throw Throwables.wrapAsRuntimeException(e);
         }
-        return response;
+
     }
 }
