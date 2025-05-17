@@ -16,6 +16,7 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 public class ApacheUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpRequestFactoryBuilder {
     private HttpClientProperties config = new HttpClientProperties();
@@ -62,6 +63,10 @@ public class ApacheUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttp
     @Override
     public ApacheUnderlyingHttpRequestFactoryBuilder sslContextBuilder(SSLContextBuilder sslContextBuilder) {
         this.sslContextBuilder = sslContextBuilder;
+        return this;
+    }
+
+    public ApacheUnderlyingHttpRequestFactoryBuilder executor(ExecutorService executor) {
         return this;
     }
 

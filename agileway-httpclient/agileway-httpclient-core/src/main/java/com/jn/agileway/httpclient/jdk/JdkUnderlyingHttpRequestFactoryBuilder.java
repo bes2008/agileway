@@ -7,6 +7,7 @@ import com.jn.langx.security.ssl.SSLContextBuilder;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import java.net.Proxy;
+import java.util.concurrent.ExecutorService;
 
 public class JdkUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpRequestFactoryBuilder {
 
@@ -53,6 +54,11 @@ public class JdkUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpReq
     @Override
     public JdkUnderlyingHttpRequestFactoryBuilder sslContextBuilder(SSLContextBuilder sslContextBuilder) {
         this.sslContextBuilder = sslContextBuilder;
+        return this;
+    }
+
+    @Override
+    public JdkUnderlyingHttpRequestFactoryBuilder executor(ExecutorService executor) {
         return this;
     }
 

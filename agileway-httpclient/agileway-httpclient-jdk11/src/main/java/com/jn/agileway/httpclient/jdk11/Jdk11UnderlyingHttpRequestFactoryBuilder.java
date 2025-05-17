@@ -11,12 +11,15 @@ import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.http.HttpClient;
 import java.time.Duration;
+import java.util.concurrent.ExecutorService;
 
 public class Jdk11UnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpRequestFactoryBuilder {
     private int connectTimeoutMills = 5000;
     private SSLContextBuilder sslContextBuilder;
     private Proxy proxy;
     private int readTimeoutMills = 5000;
+
+    private ExecutorService executor;
 
     @Override
     public Jdk11UnderlyingHttpRequestFactoryBuilder poolMaxIdleConnections(int maxIdleConnections) {
@@ -58,6 +61,12 @@ public class Jdk11UnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpR
     }
 
     @Override
+    public Jdk11UnderlyingHttpRequestFactoryBuilder executor(ExecutorService executor) {
+        this.executor = executor;
+        return this;
+    }
+
+    @Override
     public UnderlyingHttpRequestFactory build() {
         HttpClient.Builder builder = HttpClient.newBuilder();
         builder.connectTimeout(Duration.ofMillis(connectTimeoutMills));
@@ -68,6 +77,10 @@ public class Jdk11UnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpR
         if (proxy != null) {
             builder.proxy(ProxySelector.of((InetSocketAddress) proxy.address()));
         }
+        if (executor != null) {
+            builder.executor(executor);
+        }
+
         HttpClient httpClient = builder.build();
         Jdk11UnderlyingHttpRequestFactory factory = new Jdk11UnderlyingHttpRequestFactory();
         factory.setHttpClient(httpClient);

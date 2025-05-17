@@ -46,6 +46,17 @@ class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpUriR
         return this.contentEntity;
     }
 
+    @Override
+    protected void addHeaderToUnderlying(HttpUriRequest context, String headerName, String headerValue) {
+        context.addHeader(headerName, headerValue);
+    }
+
+    @Override
+    protected void setHeaderToUnderlying(HttpUriRequest context, String headerName, String headerValue) {
+        context.removeHeaders(headerName);
+        context.addHeader(headerName, headerValue);
+    }
+
 
     @Override
     protected UnderlyingHttpResponse exchangeInternal() throws IOException {
@@ -56,16 +67,5 @@ class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpUriR
         }
         CloseableHttpResponse response = this.underlyingClient.execute(request);
         return new ApacheUnderlyingHttpResponse(this.getMethod(), this.getUri(), response);
-    }
-
-    @Override
-    protected void addHeaderToUnderlying(HttpUriRequest context, String headerName, String headerValue) {
-        context.addHeader(headerName, headerValue);
-    }
-
-    @Override
-    protected void setHeaderToUnderlying(HttpUriRequest context, String headerName, String headerValue) {
-        context.removeHeaders(headerName);
-        context.addHeader(headerName, headerValue);
     }
 }

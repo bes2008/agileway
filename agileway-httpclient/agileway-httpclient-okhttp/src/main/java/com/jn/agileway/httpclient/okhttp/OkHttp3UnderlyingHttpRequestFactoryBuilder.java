@@ -3,10 +3,12 @@ package com.jn.agileway.httpclient.okhttp;
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequestFactoryBuilder;
 import com.jn.langx.security.ssl.SSLContextBuilder;
 import okhttp3.ConnectionPool;
+import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
 
 import javax.net.ssl.HostnameVerifier;
 import java.net.Proxy;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class OkHttp3UnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpRequestFactoryBuilder {
@@ -17,6 +19,8 @@ public class OkHttp3UnderlyingHttpRequestFactoryBuilder implements UnderlyingHtt
     private Proxy proxy;
     private SSLContextBuilder sslContextBuilder;
     private HostnameVerifier hostnameVerifier;
+
+    private ExecutorService executor;
 
     @Override
     public OkHttp3UnderlyingHttpRequestFactoryBuilder poolMaxIdleConnections(int maxIdleConnections) {
@@ -61,14 +65,24 @@ public class OkHttp3UnderlyingHttpRequestFactoryBuilder implements UnderlyingHtt
     }
 
     @Override
+    public UnderlyingHttpRequestFactoryBuilder executor(ExecutorService executor) {
+        this.executor = executor;
+        return this;
+    }
+
+    @Override
     public OkHttp3UnderlyingHttpRequestFactory build() {
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectionPool(new ConnectionPool(poolMaxIdleConnections, keepAliveDurationMills, TimeUnit.MILLISECONDS))
                 .readTimeout(readTimeoutMills, TimeUnit.MILLISECONDS)
-                .connectTimeout(connectTimeoutMills, TimeUnit.MILLISECONDS);
+                .connectTimeout(connectTimeoutMills, TimeUnit.MILLISECONDS)
+                .retryOnConnectionFailure(true);
         if (sslContextBuilder != null) {
             builder.sslSocketFactory(sslContextBuilder.build().getSocketFactory());
+        }
+        if (executor != null) {
+            builder.dispatcher(new Dispatcher(executor));
         }
         if (proxy != null) {
             builder.proxy(proxy);
