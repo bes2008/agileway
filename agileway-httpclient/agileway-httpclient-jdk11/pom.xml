@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>agileway-httpclient-jdk11</artifactId>
-
+    <name>${project.groupId}:${project.artifactId}:${project.version}</name>
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
