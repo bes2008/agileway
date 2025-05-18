@@ -23,6 +23,11 @@ public class OkHttp3UnderlyingHttpRequestFactoryBuilder implements UnderlyingHtt
     private ExecutorService executor;
 
     @Override
+    public String getName() {
+        return "okhttp3";
+    }
+
+    @Override
     public OkHttp3UnderlyingHttpRequestFactoryBuilder poolMaxIdleConnections(int maxIdleConnections) {
         this.poolMaxIdleConnections = maxIdleConnections;
         return this;
@@ -91,8 +96,9 @@ public class OkHttp3UnderlyingHttpRequestFactoryBuilder implements UnderlyingHtt
             builder.hostnameVerifier(hostnameVerifier);
         }
         OkHttpClient okHttpClient = builder.build();
-        OkHttp3UnderlyingHttpRequestFactory result = new OkHttp3UnderlyingHttpRequestFactory();
-        result.setHttpClient(okHttpClient);
-        return result;
+        OkHttp3UnderlyingHttpRequestFactory factory = new OkHttp3UnderlyingHttpRequestFactory();
+        factory.setHttpClient(okHttpClient);
+        factory.setExecutor(executor);
+        return factory;
     }
 }

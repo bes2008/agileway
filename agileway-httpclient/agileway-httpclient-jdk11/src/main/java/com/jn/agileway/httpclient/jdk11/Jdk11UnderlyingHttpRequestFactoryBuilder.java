@@ -27,6 +27,11 @@ public class Jdk11UnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpR
     }
 
     @Override
+    public String getName() {
+        return "jdk11";
+    }
+
+    @Override
     public Jdk11UnderlyingHttpRequestFactoryBuilder keepAliveDurationMills(int keepAliveDurationInMills) {
         return this;
     }
@@ -87,6 +92,7 @@ public class Jdk11UnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpR
 
         int timeoutMills = this.connectTimeoutMills + this.readTimeoutMills * 3;
         factory.setTimeout(Duration.ofMillis(timeoutMills));
+        factory.setExecutor(executor);
         return factory;
     }
 }

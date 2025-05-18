@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.httpcomponents.impl;
+package com.jn.agileway.httpclient.httpcomponents.httpexchange;
 
 
 import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;

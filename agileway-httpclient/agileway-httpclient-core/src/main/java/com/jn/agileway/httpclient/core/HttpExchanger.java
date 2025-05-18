@@ -44,13 +44,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 
 public class HttpExchanger extends AbstractInitializable {
-    /**
-     * 执行同步执行时，可以为 null
-     */
-    @Nullable
-    private Executor executor;
     @NonNull
-    private UnderlyingHttpRequestFactory requestFactory = new JdkUnderlyingHttpRequestFactory();
+    private UnderlyingHttpRequestFactory requestFactory;
     private HttpExchangerConfiguration configuration;
     /**
      * 对请求进行拦截处理
@@ -111,10 +106,10 @@ public class HttpExchanger extends AbstractInitializable {
         if (this.httpResponseErrorHandler == null) {
             this.httpResponseErrorHandler = new DefaultHttpResponseErrorHandler();
         }
-    }
 
-    public void setExecutor(Executor executor) {
-        this.executor = executor;
+        if (this.requestFactory == null) {
+
+        }
     }
 
     public void setConfiguration(HttpExchangerConfiguration configuration) {
@@ -195,7 +190,7 @@ public class HttpExchanger extends AbstractInitializable {
             }
         };
 
-        Promise<UnderlyingHttpResponse> promise = async ? new Promise<UnderlyingHttpResponse>(executor, sendRequestTask) : new Promise<UnderlyingHttpResponse>(sendRequestTask);
+        Promise<UnderlyingHttpResponse> promise = async ? new Promise<UnderlyingHttpResponse>(this.requestFactory.getExecutor(), sendRequestTask) : new Promise<UnderlyingHttpResponse>(sendRequestTask);
 
         return promise
                 .then(new AsyncCallback<UnderlyingHttpResponse, HttpResponse<O>>() {
@@ -303,7 +298,7 @@ public class HttpExchanger extends AbstractInitializable {
                 return oHttpResponse.hasError() && oHttpResponse.getStatusCode() >= 500;
             }
         } : resultRetryPredicate;
-        return Promises.of(async ? executor : null, new Callable<HttpResponse<O>>() {
+        return Promises.of(async ? this.requestFactory.getExecutor() : null, new Callable<HttpResponse<O>>() {
             @Override
             public HttpResponse<O> call() throws Exception {
                 return Retryer.<HttpResponse<O>>execute(theErrorRetryPredicate, theResultRetryPredicate, theRetryConfig, attemptsListener, new Callable<HttpResponse<O>>() {

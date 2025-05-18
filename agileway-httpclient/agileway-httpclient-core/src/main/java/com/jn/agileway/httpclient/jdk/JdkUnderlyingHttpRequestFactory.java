@@ -12,10 +12,12 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import java.net.*;
+import java.util.concurrent.ExecutorService;
 
 public class JdkUnderlyingHttpRequestFactory implements UnderlyingHttpRequestFactory {
     private Proxy proxy;
     private HostnameVerifier hostnameVerifier;
+    private ExecutorService executor;
     /**
      * 创建http连接的超时时间
      */
@@ -26,6 +28,15 @@ public class JdkUnderlyingHttpRequestFactory implements UnderlyingHttpRequestFac
     protected int readTimeoutMills;
 
     private SSLContext sslContext;
+
+    public void setExecutor(ExecutorService executor) {
+        this.executor = executor;
+    }
+
+    @Override
+    public ExecutorService getExecutor() {
+        return executor;
+    }
 
     public void setHostnameVerifier(HostnameVerifier hostnameVerifier) {
         this.hostnameVerifier = hostnameVerifier;

@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.httpcomponents.impl;
+package com.jn.agileway.httpclient.httpcomponents.httpexchange;
 
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequestFactory;
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequestFactoryBuilder;
@@ -23,11 +23,17 @@ public class ApacheUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttp
     private HostnameVerifier hostnameVerifier;
     private SSLContextBuilder sslContextBuilder;
     private Proxy proxy;
+    private ExecutorService executor;
 
     @Override
     public ApacheUnderlyingHttpRequestFactoryBuilder poolMaxIdleConnections(int maxIdleConnections) {
         config.setPoolMaxIdleConnections(maxIdleConnections);
         return this;
+    }
+
+    @Override
+    public String getName() {
+        return "apache-httpcomponents";
     }
 
     @Override
@@ -67,6 +73,7 @@ public class ApacheUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttp
     }
 
     public ApacheUnderlyingHttpRequestFactoryBuilder executor(ExecutorService executor) {
+        this.executor = executor;
         return this;
     }
 
@@ -112,6 +119,7 @@ public class ApacheUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttp
         clientProvider.setCustomizers(customizers);
         clientProvider.startup();
         factory.setHttpClientProvider(clientProvider);
+        factory.setExecutor(executor);
         return factory;
     }
 }

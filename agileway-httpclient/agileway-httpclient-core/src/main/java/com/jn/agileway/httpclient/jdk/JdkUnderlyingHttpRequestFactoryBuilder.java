@@ -16,6 +16,12 @@ public class JdkUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpReq
     private Proxy proxy;
     private HostnameVerifier hostnameVerifier;
     private SSLContextBuilder sslContextBuilder;
+    private ExecutorService executor;
+
+    @Override
+    public String getName() {
+        return "jdk";
+    }
 
     @Override
     public JdkUnderlyingHttpRequestFactoryBuilder poolMaxIdleConnections(int maxIdleConnections) {
@@ -59,6 +65,7 @@ public class JdkUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpReq
 
     @Override
     public JdkUnderlyingHttpRequestFactoryBuilder executor(ExecutorService executor) {
+        this.executor = executor;
         return this;
     }
 
@@ -71,6 +78,7 @@ public class JdkUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpReq
         factory.setHostnameVerifier(hostnameVerifier);
         SSLContext sslContext = sslContextBuilder.build();
         factory.setSSLContext(sslContext);
+        factory.setExecutor(executor);
         return factory;
     }
 }
