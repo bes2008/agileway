@@ -17,8 +17,14 @@ import java.util.Map;
 public class UnderlyingHttpRequestFactoryBuilderSupplier extends AbstractInitializable implements Supplier0<UnderlyingHttpRequestFactoryBuilder> {
     private Map<String, UnderlyingHttpRequestFactoryBuilder> builders = new LinkedHashMap<String, UnderlyingHttpRequestFactoryBuilder>();
 
-    public UnderlyingHttpRequestFactoryBuilderSupplier() {
+    private static final UnderlyingHttpRequestFactoryBuilderSupplier INSTANCE = new UnderlyingHttpRequestFactoryBuilderSupplier();
+
+    private UnderlyingHttpRequestFactoryBuilderSupplier() {
         init();
+    }
+
+    public static UnderlyingHttpRequestFactoryBuilderSupplier getInstance() {
+        return INSTANCE;
     }
 
     @Override

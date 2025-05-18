@@ -10,18 +10,19 @@ import com.jn.agileway.httpclient.core.interceptor.HttpRequestMultiPartsFormInte
 import com.jn.agileway.httpclient.core.interceptor.HttpRequestUriInterceptor;
 import com.jn.agileway.httpclient.core.multipart.MultiPartsForm;
 import com.jn.agileway.httpclient.core.serialize.*;
-import com.jn.agileway.httpclient.jdk.JdkUnderlyingHttpRequestFactory;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.exception.ErrorHandler;
 import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.lifecycle.InitializationException;
+import com.jn.langx.security.ssl.SSLContextBuilder;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.concurrent.CommonThreadFactory;
 import com.jn.langx.util.concurrent.promise.AsyncCallback;
 import com.jn.langx.util.concurrent.promise.Promise;
 import com.jn.langx.util.concurrent.promise.Promises;
@@ -36,12 +37,13 @@ import com.jn.langx.util.retry.RetryConfig;
 import com.jn.langx.util.retry.RetryInfo;
 import com.jn.langx.util.retry.Retryer;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSession;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.ConnectException;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executor;
+import java.util.concurrent.*;
 
 public class HttpExchanger extends AbstractInitializable {
     @NonNull
@@ -108,7 +110,20 @@ public class HttpExchanger extends AbstractInitializable {
         }
 
         if (this.requestFactory == null) {
-
+            UnderlyingHttpRequestFactoryBuilder requestFactoryBuilder = UnderlyingHttpRequestFactoryBuilderSupplier.getInstance().get();
+            requestFactoryBuilder.connectTimeoutMills(5000);
+            requestFactoryBuilder.readTimeoutMills(60000);
+            requestFactoryBuilder.keepAliveDurationMills(120000);
+            requestFactoryBuilder.hostnameVerifier(new HostnameVerifier() {
+                @Override
+                public boolean verify(String s, SSLSession sslSession) {
+                    return true;
+                }
+            });
+            requestFactoryBuilder.sslContextBuilder(new SSLContextBuilder());
+            requestFactoryBuilder.poolMaxIdleConnections(5);
+            requestFactoryBuilder.executor(new ThreadPoolExecutor(5, 10, 120, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(Integer.MAX_VALUE), new CommonThreadFactory("http-exchange", true)));
+            this.requestFactory = requestFactoryBuilder.build();
         }
     }
 
