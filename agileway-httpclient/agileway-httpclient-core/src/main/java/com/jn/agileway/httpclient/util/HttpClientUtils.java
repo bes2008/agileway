@@ -154,10 +154,4 @@ public class HttpClientUtils {
                     'V', 'W', 'X', 'Y', 'Z'};
 
 
-    public static MediaType addContentTypeParameter(MediaType contentType, String key, String value) {
-        Preconditions.checkNotNull(contentType, "argument contentType is required");
-        Map<String, String> parameterMap = new HashMap<String, String>(contentType.getParameters());
-        parameterMap.put(key, value);
-        return new MediaType(contentType.getType(), contentType.getSubtype(), parameterMap);
-    }
 }

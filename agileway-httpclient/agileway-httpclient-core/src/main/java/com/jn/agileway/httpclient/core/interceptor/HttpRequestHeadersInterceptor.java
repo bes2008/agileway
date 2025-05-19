@@ -11,8 +11,6 @@ import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
 
-import java.util.Map;
-
 /**
  * 对 Header 进行默认值处理
  */
@@ -70,14 +68,13 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
                 if (contentType == null) {
                     request.getHeaders().setContentType(MediaType.APPLICATION_FORM_URLENCODED);
                 }
-                
-                if (request.getHeaders().getContentType().equalsTypeAndSubtype(MediaType.APPLICATION_FORM_URLENCODED) ||
-                        request.getHeaders().getContentType().equalsTypeAndSubtype(MediaType.TEXT_PLAIN) ||
-                        request.getHeaders().getContentType().equalsTypeAndSubtype(MediaType.TEXT_HTML)) {
-                    MediaType newContentType = HttpClientUtils.addContentTypeParameter(request.getHeaders().getContentType(), "charset", Charsets.UTF_8.name());
-                    request.getHeaders().setContentType(newContentType);
+                contentType = request.getHeaders().getContentType();
+                if (contentType.equalsTypeAndSubtype(MediaType.APPLICATION_FORM_URLENCODED) ||
+                        contentType.equalsTypeAndSubtype(MediaType.TEXT_PLAIN) ||
+                        contentType.equalsTypeAndSubtype(MediaType.TEXT_HTML)) {
+                    request.getHeaders().setContentType(new MediaType(contentType, Charsets.UTF_8));
+                    break;
                 }
-                break;
         }
 
         if (HttpClientUtils.requestBodyUseStreamMode(method, request.getHeaders())) {

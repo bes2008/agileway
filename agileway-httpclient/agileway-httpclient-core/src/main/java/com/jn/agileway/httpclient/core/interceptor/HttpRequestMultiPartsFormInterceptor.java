@@ -54,8 +54,8 @@ public class HttpRequestMultiPartsFormInterceptor implements HttpRequestIntercep
             MultiPartsForm form = (MultiPartsForm) request.getContent();
             Charset formCharset = form.getCharset() == null ? Charsets.UTF_8 : form.getCharset();
 
-            contentType = HttpClientUtils.addContentTypeParameter(contentType, "boundary", boundary);
-            contentType = HttpClientUtils.addContentTypeParameter(contentType, "charset", formCharset.name());
+            contentType = new MediaType(contentType, "boundary", boundary);
+            contentType = new MediaType(contentType, "charset", formCharset.name());
             request.getHeaders().setContentType(contentType);
         }
     }

@@ -52,7 +52,7 @@ public class ContentDisposition {
     /**
      * 用作 http 文件上传时
      */
-    public static ContentDisposition ofFormData(@NotEmpty String fieldName, @Nullable String filename) {
+    public static ContentDisposition forFormData(@NotEmpty String fieldName, @Nullable String filename) {
         ContentDisposition contentDisposition = new ContentDisposition();
         contentDisposition.setFieldName(fieldName);
         contentDisposition.setFilename(filename);

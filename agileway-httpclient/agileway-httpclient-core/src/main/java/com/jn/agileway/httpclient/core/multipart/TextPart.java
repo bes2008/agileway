@@ -16,6 +16,6 @@ public class TextPart extends Part<String> {
         setName(Preconditions.checkNotEmpty(fieldName));
         setContent(content);
         setContentType(Objs.useValueIfEmpty(contentType, "text/plain"));
-        setContentDisposition(ContentDisposition.ofFormData(fieldName, null));
+        setContentDisposition(ContentDisposition.forFormData(fieldName, null));
     }
 }

@@ -21,6 +21,6 @@ public class FilePart extends Part<InputStream> {
         setName(Preconditions.checkNotEmpty(fieldName));
         setContent(content);
         setContentType(Objs.useValueIfEmpty(contentType, "application/octet-stream"));
-        setContentDisposition(ContentDisposition.ofFormData(fieldName, filename));
+        setContentDisposition(ContentDisposition.forFormData(fieldName, filename));
     }
 }
