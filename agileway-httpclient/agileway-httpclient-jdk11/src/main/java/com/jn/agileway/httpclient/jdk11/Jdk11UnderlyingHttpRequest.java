@@ -73,6 +73,7 @@ class Jdk11UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpReque
                     out.write(bufferedContent.toByteArray());
                     out.flush();
                     builder.method(getMethod().name(), HttpRequest.BodyPublishers.ofByteArray(baos.toByteArray()));
+                    out.close();
                 } else {
                     builder.method(getMethod().name(), HttpRequest.BodyPublishers.ofByteArray(bufferedContent.toByteArray()));
                 }

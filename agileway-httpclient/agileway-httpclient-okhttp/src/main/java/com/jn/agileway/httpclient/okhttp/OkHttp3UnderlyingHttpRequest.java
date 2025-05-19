@@ -73,6 +73,7 @@ class OkHttp3UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<Request
                     out.write(bufferedContent.toByteArray());
                     out.flush();
                     body = RequestBody.create(contentType, baos.toByteArray());
+                    out.close();
                 } else {
                     body = RequestBody.create(contentType, bufferedContent.toByteArray());
                 }
