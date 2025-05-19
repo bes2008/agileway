@@ -2,7 +2,9 @@ package com.jn.agileway.httpclient.jdk11;
 
 import com.jn.agileway.httpclient.core.AbstractUnderlyingHttpRequest;
 import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
+import com.jn.agileway.httpclient.util.ContentEncoding;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
@@ -16,10 +18,11 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.List;
 
 class Jdk11UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpRequest.Builder> {
     private HttpClient httpClient;
-    private ByteArrayOutputStream content;
+    private ByteArrayOutputStream bufferedContent;
     private Duration timeout;
 
     Jdk11UnderlyingHttpRequest(HttpMethod method, URI uri, HttpHeaders headers, HttpClient httpClient, Duration timeout) {
@@ -29,13 +32,13 @@ class Jdk11UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpReque
     }
 
     @Override
-    public OutputStream getContent() throws IOException {
-        if (content == null) {
+    public OutputStream getBufferedContent() throws IOException {
+        if (bufferedContent == null) {
             if (HttpClientUtils.isWriteable(getMethod())) {
-                content = new ByteArrayOutputStream();
+                bufferedContent = new ByteArrayOutputStream(1024);
             }
         }
-        return content;
+        return bufferedContent;
     }
 
     @Override
@@ -50,21 +53,35 @@ class Jdk11UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpReque
 
     @Override
     protected long computeContentLength() {
-        if (this.content == null) {
+        if (this.bufferedContent == null) {
             return -1L;
         }
-        return content.size();
+        return bufferedContent.size();
     }
 
     @Override
     protected UnderlyingHttpResponse exchangeInternal() throws IOException {
         HttpRequest.Builder builder = HttpRequest.newBuilder(getUri());
-        if (content != null) {
-            builder.method(getMethod().name(), HttpRequest.BodyPublishers.ofByteArray(content.toByteArray()));
+        writeHeaders(builder);
+        if (HttpClientUtils.isWriteable(getMethod())) {
+            if (computeContentLength() > 0) {
+                // 压缩处理：
+                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(getHeaders());
+                if (!Objs.isEmpty(contentEncodings)) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream((int) computeContentLength() / 5);
+                    OutputStream out = HttpClientUtils.wrapByContentEncodings(baos, contentEncodings);
+                    out.write(bufferedContent.toByteArray());
+                    out.flush();
+                    builder.method(getMethod().name(), HttpRequest.BodyPublishers.ofByteArray(baos.toByteArray()));
+                } else {
+                    builder.method(getMethod().name(), HttpRequest.BodyPublishers.ofByteArray(bufferedContent.toByteArray()));
+                }
+            } else {
+                builder.method(getMethod().name(), HttpRequest.BodyPublishers.noBody());
+            }
         } else {
             builder.method(getMethod().name(), HttpRequest.BodyPublishers.noBody());
         }
-        writeHeaders(builder);
         builder.timeout(timeout == null ? Duration.ofSeconds(60) : timeout);
         HttpRequest request = builder.build();
 

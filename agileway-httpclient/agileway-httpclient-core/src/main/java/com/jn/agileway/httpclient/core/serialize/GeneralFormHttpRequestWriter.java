@@ -28,7 +28,7 @@ public class GeneralFormHttpRequestWriter implements HttpRequestContentWriter {
     public void write(Object body, MediaType contentType, UnderlyingHttpRequest output) throws IOException {
         Charset charset = contentType.getCharset();
         String formString = serializeSimpleForm(body, contentType.getCharset());
-        output.getContent().write(formString.getBytes(charset));
+        output.getBufferedContent().write(formString.getBytes(charset));
     }
 
     private String serializeSimpleForm(Object formData, final Charset charset) throws UnsupportedEncodingException {

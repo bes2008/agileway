@@ -25,7 +25,7 @@ public interface UnderlyingHttpRequest {
      * @return body输出流
      * @throws IOException 出错
      */
-    OutputStream getContent() throws IOException;
+    OutputStream getBufferedContent() throws IOException;
 
     UnderlyingHttpResponse exchange() throws IOException;
 
