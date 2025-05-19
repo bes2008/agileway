@@ -3,6 +3,7 @@ package com.jn.agileway.httpclient.okhttp;
 import com.jn.agileway.httpclient.core.AbstractUnderlyingHttpRequest;
 import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
+import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
@@ -18,7 +19,7 @@ import okhttp3.RequestBody;
 
 class OkHttp3UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<Request.Builder> {
     private OkHttpClient httpClient;
-    private ByteArrayOutputStream content = new ByteArrayOutputStream(1024);
+    private ByteArrayOutputStream content;
 
 
     OkHttp3UnderlyingHttpRequest(HttpMethod method, URI uri, HttpHeaders httpHeaders, OkHttpClient client) {
@@ -30,7 +31,7 @@ class OkHttp3UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<Request
     public OutputStream getContent() throws IOException {
         if (content == null) {
             if (HttpClientUtils.isWriteable(getMethod())) {
-                content = new ByteArrayOutputStream();
+                content = new ByteArrayOutputStream(1024);
             }
         }
         return content;
@@ -59,8 +60,12 @@ class OkHttp3UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<Request
         String rawContentType = getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
         okhttp3.MediaType contentType = Strings.isNotEmpty(rawContentType) ? okhttp3.MediaType.parse(rawContentType) : null;
         RequestBody body = null;
-        if (content.size() > 0 && HttpClientUtils.isWriteable(getMethod())) {
-            body = RequestBody.create(contentType, content.toByteArray());
+        if (HttpClientUtils.isWriteable(getMethod())) {
+            if (computeContentLength() > 0) {
+                body = RequestBody.create(contentType, content.toByteArray());
+            } else {
+                body = RequestBody.create(contentType, Emptys.EMPTY_BYTES);
+            }
         }
         Request.Builder builder = new Request.Builder().url(getUri().toURL()).method(getMethod().name(), body);
         writeHeaders(builder);

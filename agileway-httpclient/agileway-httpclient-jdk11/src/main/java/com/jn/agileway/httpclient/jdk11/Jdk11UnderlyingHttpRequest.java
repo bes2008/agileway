@@ -19,8 +19,6 @@ import java.time.Duration;
 
 class Jdk11UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpRequest.Builder> {
     private HttpClient httpClient;
-    private URI uri;
-    private HttpMethod method;
     private ByteArrayOutputStream content;
     private Duration timeout;
 
@@ -31,19 +29,9 @@ class Jdk11UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpReque
     }
 
     @Override
-    public HttpMethod getMethod() {
-        return method;
-    }
-
-    @Override
-    public URI getUri() {
-        return uri;
-    }
-
-    @Override
     public OutputStream getContent() throws IOException {
         if (content == null) {
-            if (HttpClientUtils.isWriteable(method)) {
+            if (HttpClientUtils.isWriteable(getMethod())) {
                 content = new ByteArrayOutputStream();
             }
         }
@@ -70,11 +58,11 @@ class Jdk11UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpReque
 
     @Override
     protected UnderlyingHttpResponse exchangeInternal() throws IOException {
-        HttpRequest.Builder builder = HttpRequest.newBuilder(uri);
+        HttpRequest.Builder builder = HttpRequest.newBuilder(getUri());
         if (content != null) {
-            builder.method(method.name(), HttpRequest.BodyPublishers.ofByteArray(content.toByteArray()));
+            builder.method(getMethod().name(), HttpRequest.BodyPublishers.ofByteArray(content.toByteArray()));
         } else {
-            builder.method(method.name(), HttpRequest.BodyPublishers.noBody());
+            builder.method(getMethod().name(), HttpRequest.BodyPublishers.noBody());
         }
         writeHeaders(builder);
         builder.timeout(timeout == null ? Duration.ofSeconds(60) : timeout);
@@ -89,7 +77,7 @@ class Jdk11UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpReque
                     responseHeaders.add(name, value);
                 }
             }
-            Jdk11UnderlyingHttpResponse response = new Jdk11UnderlyingHttpResponse(method, uri, responseHeaders, underlyingHttpResponse.statusCode(), new ByteArrayInputStream(underlyingHttpResponse.body()));
+            Jdk11UnderlyingHttpResponse response = new Jdk11UnderlyingHttpResponse(getMethod(), getUri(), responseHeaders, underlyingHttpResponse.statusCode(), new ByteArrayInputStream(underlyingHttpResponse.body()));
             return response;
         } catch (IOException e) {
             throw e;
