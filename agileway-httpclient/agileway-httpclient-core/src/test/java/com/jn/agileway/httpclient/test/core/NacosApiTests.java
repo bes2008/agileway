@@ -17,7 +17,6 @@ public class NacosApiTests {
 
     private HttpExchanger initExchanger() {
         HttpExchanger exchanger = new HttpExchanger();
-        exchanger.setRequestFactory(new JdkUnderlyingHttpRequestFactory());
         exchanger.init();
         return exchanger;
     }
