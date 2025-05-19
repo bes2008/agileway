@@ -50,8 +50,12 @@ public class HttpClientUtils {
         return "multipart".equals(contentType.getType());
     }
 
-    public static List<ContentEncoding> getContentEncoding(HttpHeaders headers) {
+    public static List<ContentEncoding> getContentEncodings(HttpHeaders headers) {
         List<String> contentEncodings = headers.get("Content-Encoding");
+        return getContentEncoding(contentEncodings);
+    }
+
+    public static List<ContentEncoding> getContentEncoding(List<String> contentEncodings) {
         if (Objs.isEmpty(contentEncodings)) {
             return Lists.newArrayList();
         }
@@ -116,7 +120,7 @@ public class HttpClientUtils {
             return true;
         }
         // 内容压缩时
-        List<ContentEncoding> contentEncodings = getContentEncoding(headers);
+        List<ContentEncoding> contentEncodings = getContentEncodings(headers);
         if (Objs.isNotEmpty(contentEncodings)) {
             return true;
         }
