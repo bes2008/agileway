@@ -49,7 +49,7 @@ class JdkUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpURLConn
             writeHeaders(this.httpConnection);
             this.httpConnection.connect();
             OutputStream outputStream = this.httpConnection.getOutputStream();
-            List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncoding(this.getHeaders());
+            List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(this.getHeaders());
             outputStream = HttpClientUtils.wrapByContentEncodings(outputStream, contentEncodings);
             this.streamBody = outputStream;
         }
@@ -75,7 +75,7 @@ class JdkUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpURLConn
             this.httpConnection.connect();
             if (this.httpConnection.getDoOutput()) {
                 OutputStream outputStream = this.httpConnection.getOutputStream();
-                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncoding(this.getHeaders());
+                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(this.getHeaders());
                 outputStream = HttpClientUtils.wrapByContentEncodings(outputStream, contentEncodings);
                 outputStream.write(this.bufferedBody.toByteArray());
                 outputStream.flush();

@@ -64,7 +64,7 @@ class JdkUnderlyingHttpResponse implements UnderlyingHttpResponse {
             }
 
             // 处理压缩
-            List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncoding(this.getHeaders());
+            List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(this.getHeaders());
             inputStream = HttpClientUtils.wrapByContentEncodings(inputStream, contentEncodings);
             this.responseStream = inputStream;
         }
