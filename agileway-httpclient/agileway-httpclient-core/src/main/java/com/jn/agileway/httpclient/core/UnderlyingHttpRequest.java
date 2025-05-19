@@ -19,8 +19,6 @@ public interface UnderlyingHttpRequest {
 
     HttpHeaders getHeaders();
 
-    void addHeaders(HttpHeaders headers);
-
     /**
      * 获取body输出流，用于输出数据
      *

@@ -15,8 +15,7 @@ import java.net.URI;
 import java.util.List;
 
 class JdkUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpURLConnection> {
-    private URI uri;
-    private HttpMethod method;
+
     private HttpURLConnection httpConnection;
 
     private ByteArrayOutputStream bufferedBody;
@@ -24,11 +23,9 @@ class JdkUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpURLConn
     private boolean streamMode;
 
     JdkUnderlyingHttpRequest(HttpMethod method, URI uri, HttpHeaders httpHeaders, HttpURLConnection httpConnection, boolean streamMode) {
+        super(method, uri, httpHeaders);
         this.streamMode = streamMode;
         this.httpConnection = httpConnection;
-        this.uri = uri;
-        this.method = method;
-        addHeaders(httpHeaders);
     }
 
     @Override
@@ -59,16 +56,6 @@ class JdkUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpURLConn
         }
 
         return streamBody;
-    }
-
-    @Override
-    public HttpMethod getMethod() {
-        return method;
-    }
-
-    @Override
-    public URI getUri() {
-        return uri;
     }
 
     @Override

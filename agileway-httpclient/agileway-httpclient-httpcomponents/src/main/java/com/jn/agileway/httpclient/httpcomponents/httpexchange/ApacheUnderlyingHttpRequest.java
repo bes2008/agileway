@@ -14,41 +14,28 @@ import org.apache.http.impl.client.CloseableHttpClient;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URI;
 
 class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpUriRequest> {
     private HttpUriRequest request;
     private CloseableHttpClient underlyingClient;
     private HttpEntity contentEntity;
-    private HttpHeaders httpHeaders;
 
     ApacheUnderlyingHttpRequest(CloseableHttpClient client, HttpUriRequest request, HttpHeaders httpHeaders) {
+        super(HttpMethod.resolve(request.getMethod()), request.getURI(), httpHeaders);
         this.underlyingClient = client;
         this.request = request;
-        this.httpHeaders = httpHeaders;
-        this.addHeaders(httpHeaders);
     }
 
-
-    @Override
-    public HttpMethod getMethod() {
-        return HttpMethod.resolve(request.getMethod());
-    }
-
-    @Override
-    public URI getUri() {
-        return request.getURI();
-    }
 
     @Override
     public OutputStream getContent() throws IOException {
         if (this.contentEntity == null) {
             if (HttpClientUtils.isWriteable(this.getMethod())) {
-                String contentEncoding = this.httpHeaders.getFirst("Content-Encoding");
+                String contentEncoding = getHeaders().getFirst("Content-Encoding");
                 if (Strings.isBlank(contentEncoding)) {
-                    this.contentEntity = new BufferedHttpEntity(this.httpHeaders.getContentType().toString());
+                    this.contentEntity = new BufferedHttpEntity(getHeaders().getContentType().toString());
                 } else {
-                    this.contentEntity = new CompressedHttpEntity(this.httpHeaders.getContentType().toString(), contentEncoding);
+                    this.contentEntity = new CompressedHttpEntity(getHeaders().getContentType().toString(), contentEncoding);
                 }
             }
         }

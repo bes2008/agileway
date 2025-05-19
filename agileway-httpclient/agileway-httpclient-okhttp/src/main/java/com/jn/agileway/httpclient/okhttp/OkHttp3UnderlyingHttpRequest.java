@@ -17,33 +17,19 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 class OkHttp3UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<Request.Builder> {
-    private URI uri;
-    private HttpMethod method;
     private OkHttpClient httpClient;
     private ByteArrayOutputStream content = new ByteArrayOutputStream(1024);
 
 
     OkHttp3UnderlyingHttpRequest(HttpMethod method, URI uri, HttpHeaders httpHeaders, OkHttpClient client) {
+        super(method, uri, httpHeaders);
         this.httpClient = client;
-        this.uri = uri;
-        this.method = method;
-        addHeaders(httpHeaders);
-    }
-
-    @Override
-    public HttpMethod getMethod() {
-        return method;
-    }
-
-    @Override
-    public URI getUri() {
-        return uri;
     }
 
     @Override
     public OutputStream getContent() throws IOException {
         if (content == null) {
-            if (HttpClientUtils.isWriteable(method)) {
+            if (HttpClientUtils.isWriteable(getMethod())) {
                 content = new ByteArrayOutputStream();
             }
         }
@@ -73,12 +59,12 @@ class OkHttp3UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<Request
         String rawContentType = getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
         okhttp3.MediaType contentType = Strings.isNotEmpty(rawContentType) ? okhttp3.MediaType.parse(rawContentType) : null;
         RequestBody body = null;
-        if (content.size() > 0 && HttpClientUtils.isWriteable(method)) {
+        if (content.size() > 0 && HttpClientUtils.isWriteable(getMethod())) {
             body = RequestBody.create(contentType, content.toByteArray());
         }
-        Request.Builder builder = new Request.Builder().url(uri.toURL()).method(method.name(), body);
+        Request.Builder builder = new Request.Builder().url(getUri().toURL()).method(getMethod().name(), body);
         writeHeaders(builder);
         Request request = builder.build();
-        return new OkHttp3UnderlyingHttpResponse(method, uri, this.httpClient.newCall(request).execute());
+        return new OkHttp3UnderlyingHttpResponse(getMethod(), getUri(), this.httpClient.newCall(request).execute());
     }
 }

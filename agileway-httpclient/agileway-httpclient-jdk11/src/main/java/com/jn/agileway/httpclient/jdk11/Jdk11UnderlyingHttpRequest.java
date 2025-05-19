@@ -25,11 +25,9 @@ class Jdk11UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpReque
     private Duration timeout;
 
     Jdk11UnderlyingHttpRequest(HttpMethod method, URI uri, HttpHeaders headers, HttpClient httpClient, Duration timeout) {
-        this.method = method;
-        this.uri = uri;
+        super(method, uri, headers);
         this.timeout = timeout;
         this.httpClient = httpClient;
-        addHeaders(headers);
     }
 
     @Override

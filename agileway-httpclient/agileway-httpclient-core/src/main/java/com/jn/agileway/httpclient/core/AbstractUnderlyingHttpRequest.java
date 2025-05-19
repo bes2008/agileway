@@ -7,16 +7,23 @@ import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 
 public abstract class AbstractUnderlyingHttpRequest<TARGET> implements UnderlyingHttpRequest {
-
+    private URI uri;
+    private HttpMethod method;
     private final HttpHeaders headers = new HttpHeaders();
     private boolean executed = false;
 
+    protected AbstractUnderlyingHttpRequest(HttpMethod method, URI uri, HttpHeaders headers) {
+        this.method = method;
+        this.uri = uri;
+        addHeaders(headers);
+    }
 
-    public void addHeaders(HttpHeaders headers) {
+    private void addHeaders(HttpHeaders headers) {
         if (!executed) {
             for (String key : headers.keySet()) {
                 List<String> values = headers.get(key);
@@ -79,6 +86,16 @@ public abstract class AbstractUnderlyingHttpRequest<TARGET> implements Underlyin
                 }
             }
         }
+    }
+
+    @Override
+    public HttpMethod getMethod() {
+        return method;
+    }
+
+    @Override
+    public URI getUri() {
+        return uri;
     }
 
     /**
