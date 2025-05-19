@@ -8,20 +8,9 @@ import com.jn.langx.util.net.http.HttpMethod;
 import org.apache.http.client.methods.*;
 
 import java.net.URI;
-import java.util.concurrent.ExecutorService;
 
 public class ApacheUnderlyingHttpRequestFactory implements UnderlyingHttpRequestFactory {
     private HttpClientProvider httpClientProvider;
-    private ExecutorService executor;
-
-    @Override
-    public ExecutorService getExecutor() {
-        return executor;
-    }
-
-    public void setExecutor(ExecutorService executor) {
-        this.executor = executor;
-    }
 
     public void setHttpClientProvider(HttpClientProvider httpClient) {
         this.httpClientProvider = httpClient;

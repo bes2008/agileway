@@ -92,7 +92,6 @@ public class Jdk11UnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpR
 
         int timeoutMills = this.connectTimeoutMills + this.readTimeoutMills * 3;
         factory.setTimeout(Duration.ofMillis(timeoutMills));
-        factory.setExecutor(executor);
         return factory;
     }
 }

@@ -8,25 +8,15 @@ import com.jn.langx.util.net.http.HttpMethod;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.time.Duration;
-import java.util.concurrent.ExecutorService;
 
 public class Jdk11UnderlyingHttpRequestFactory implements UnderlyingHttpRequestFactory {
     private HttpClient httpClient;
     private Duration timeout = Duration.ofMinutes(5);
-    private ExecutorService executor;
 
     public Jdk11UnderlyingHttpRequestFactory() {
 
     }
 
-    public void setExecutor(ExecutorService executor) {
-        this.executor = executor;
-    }
-
-    @Override
-    public ExecutorService getExecutor() {
-        return executor;
-    }
 
     public void setHttpClient(HttpClient httpClient) {
         this.httpClient = httpClient;

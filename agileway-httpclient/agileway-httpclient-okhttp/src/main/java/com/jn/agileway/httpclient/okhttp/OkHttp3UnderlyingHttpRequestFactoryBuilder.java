@@ -98,7 +98,6 @@ public class OkHttp3UnderlyingHttpRequestFactoryBuilder implements UnderlyingHtt
         OkHttpClient okHttpClient = builder.build();
         OkHttp3UnderlyingHttpRequestFactory factory = new OkHttp3UnderlyingHttpRequestFactory();
         factory.setHttpClient(okHttpClient);
-        factory.setExecutor(executor);
         return factory;
     }
 }

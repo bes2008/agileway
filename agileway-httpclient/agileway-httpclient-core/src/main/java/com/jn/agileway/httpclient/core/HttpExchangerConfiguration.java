@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.core;
 
+import com.jn.agileway.httpclient.core.ssl.DefaultHostnameVerifier;
 import com.jn.langx.security.ssl.SSLContextBuilder;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.concurrent.CommonThreadFactory;
@@ -93,7 +94,7 @@ public class HttpExchangerConfiguration {
 
     public HostnameVerifier getHostnameVerifier() {
         if (hostnameVerifier == null) {
-
+            this.hostnameVerifier = new DefaultHostnameVerifier(allowedAuthorities, notAllowedAuthorities, proxy);
         }
         return hostnameVerifier;
     }

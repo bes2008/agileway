@@ -119,7 +119,6 @@ public class ApacheUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttp
         clientProvider.setCustomizers(customizers);
         clientProvider.startup();
         factory.setHttpClientProvider(clientProvider);
-        factory.setExecutor(executor);
         return factory;
     }
 }

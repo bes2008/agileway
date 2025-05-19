@@ -24,7 +24,7 @@ public class DefaultHostnameVerifier implements HostnameVerifier {
             }
         };
         this.allowedHostnames = Pipeline.of(allowedAuthorities).map(getHostnameFunction).asList();
-        this.notAllowedHostnames = Pipeline.of(notAllowedHostnames).map(getHostnameFunction).asList();
+        this.notAllowedHostnames = Pipeline.of(notAllowedAuthorities).map(getHostnameFunction).asList();
         if (proxy.type() == Proxy.Type.HTTP) {
             this.proxy = proxy;
         }
