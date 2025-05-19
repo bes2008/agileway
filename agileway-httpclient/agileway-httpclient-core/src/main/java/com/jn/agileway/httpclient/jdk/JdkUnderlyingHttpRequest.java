@@ -29,14 +29,17 @@ class JdkUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpURLConn
         this.uri = uri;
         this.method = method;
         addHeaders(httpHeaders);
-        if (!streamMode) {
-            this.bufferedBody = new ByteArrayOutputStream(1024);
-        }
     }
 
     @Override
     public OutputStream getContent() throws IOException {
+        if (!HttpClientUtils.isWriteable(getMethod())) {
+            return null;
+        }
         if (!streamMode) {
+            if (this.bufferedBody == null) {
+                this.bufferedBody = new ByteArrayOutputStream(1024);
+            }
             return this.bufferedBody;
         }
         if (streamBody == null) {

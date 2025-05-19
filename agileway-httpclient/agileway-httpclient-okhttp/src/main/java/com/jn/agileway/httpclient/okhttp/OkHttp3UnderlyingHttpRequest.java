@@ -42,17 +42,30 @@ class OkHttp3UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<Request
 
     @Override
     public OutputStream getContent() throws IOException {
+        if (content == null) {
+            if (HttpClientUtils.isWriteable(method)) {
+                content = new ByteArrayOutputStream();
+            }
+        }
         return content;
     }
 
     @Override
-    protected void addHeaderToUnderlying(Request.Builder context, String headerName, String headerValue) {
-        context.addHeader(headerName, headerValue);
+    protected void addHeaderToUnderlying(Request.Builder target, String headerName, String headerValue) {
+        target.addHeader(headerName, headerValue);
     }
 
     @Override
-    protected void setHeaderToUnderlying(Request.Builder context, String headerName, String headerValue) {
-        context.header(headerName, headerValue);
+    protected void setHeaderToUnderlying(Request.Builder target, String headerName, String headerValue) {
+        target.header(headerName, headerValue);
+    }
+
+    @Override
+    protected long computeContentLength() {
+        if (this.content == null) {
+            return -1L;
+        }
+        return content.size();
     }
 
     @Override

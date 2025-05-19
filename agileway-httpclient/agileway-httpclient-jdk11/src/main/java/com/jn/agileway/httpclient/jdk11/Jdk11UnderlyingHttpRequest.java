@@ -53,13 +53,21 @@ class Jdk11UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpReque
     }
 
     @Override
-    protected void addHeaderToUnderlying(HttpRequest.Builder context, String headerName, String headerValue) {
-        context.header(headerName, headerValue);
+    protected void addHeaderToUnderlying(HttpRequest.Builder target, String headerName, String headerValue) {
+        target.header(headerName, headerValue);
     }
 
     @Override
-    protected void setHeaderToUnderlying(HttpRequest.Builder context, String headerName, String headerValue) {
-        context.setHeader(headerName, headerValue);
+    protected void setHeaderToUnderlying(HttpRequest.Builder target, String headerName, String headerValue) {
+        target.setHeader(headerName, headerValue);
+    }
+
+    @Override
+    protected long computeContentLength() {
+        if (this.content == null) {
+            return -1L;
+        }
+        return content.size();
     }
 
     @Override

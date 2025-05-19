@@ -2,6 +2,7 @@ package com.jn.agileway.httpclient.httpcomponents.httpexchange;
 
 import com.jn.agileway.httpclient.core.AbstractUnderlyingHttpRequest;
 import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
+import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
@@ -42,11 +43,13 @@ class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpUriR
     @Override
     public OutputStream getContent() throws IOException {
         if (this.contentEntity == null) {
-            String contentEncoding = this.httpHeaders.getFirst("Content-Encoding");
-            if (Strings.isBlank(contentEncoding)) {
-                this.contentEntity = new BufferedHttpEntity(this.httpHeaders.getContentType().toString());
-            } else {
-                this.contentEntity = new CompressedHttpEntity(this.httpHeaders.getContentType().toString(), contentEncoding);
+            if (HttpClientUtils.isWriteable(this.getMethod())) {
+                String contentEncoding = this.httpHeaders.getFirst("Content-Encoding");
+                if (Strings.isBlank(contentEncoding)) {
+                    this.contentEntity = new BufferedHttpEntity(this.httpHeaders.getContentType().toString());
+                } else {
+                    this.contentEntity = new CompressedHttpEntity(this.httpHeaders.getContentType().toString(), contentEncoding);
+                }
             }
         }
         return (OutputStream) this.contentEntity;
