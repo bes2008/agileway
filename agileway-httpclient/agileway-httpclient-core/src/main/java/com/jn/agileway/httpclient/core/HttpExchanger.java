@@ -15,13 +15,11 @@ import com.jn.langx.annotation.Nullable;
 import com.jn.langx.exception.ErrorHandler;
 import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.lifecycle.InitializationException;
-import com.jn.langx.security.ssl.SSLContextBuilder;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
-import com.jn.langx.util.concurrent.CommonThreadFactory;
 import com.jn.langx.util.concurrent.promise.AsyncCallback;
 import com.jn.langx.util.concurrent.promise.Promise;
 import com.jn.langx.util.concurrent.promise.Promises;
@@ -194,7 +192,7 @@ public class HttpExchanger extends AbstractInitializable {
             }
         };
 
-        Promise<UnderlyingHttpResponse> promise = async ? new Promise<UnderlyingHttpResponse>(this.requestFactory.getExecutor(), sendRequestTask) : new Promise<UnderlyingHttpResponse>(sendRequestTask);
+        Promise<UnderlyingHttpResponse> promise = async ? new Promise<UnderlyingHttpResponse>(this.configuration.getExecutor(), sendRequestTask) : new Promise<UnderlyingHttpResponse>(sendRequestTask);
 
         return promise
                 .then(new AsyncCallback<UnderlyingHttpResponse, HttpResponse<O>>() {
@@ -302,7 +300,7 @@ public class HttpExchanger extends AbstractInitializable {
                 return oHttpResponse.hasError() && oHttpResponse.getStatusCode() >= 500;
             }
         } : resultRetryPredicate;
-        return Promises.of(async ? this.requestFactory.getExecutor() : null, new Callable<HttpResponse<O>>() {
+        return Promises.of(async ? this.configuration.getExecutor() : null, new Callable<HttpResponse<O>>() {
             @Override
             public HttpResponse<O> call() throws Exception {
                 return Retryer.<HttpResponse<O>>execute(theErrorRetryPredicate, theResultRetryPredicate, theRetryConfig, attemptsListener, new Callable<HttpResponse<O>>() {
