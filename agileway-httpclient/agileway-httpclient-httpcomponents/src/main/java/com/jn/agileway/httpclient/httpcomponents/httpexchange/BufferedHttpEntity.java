@@ -1,28 +1,20 @@
 package com.jn.agileway.httpclient.httpcomponents.httpexchange;
 
-import com.jn.agileway.httpclient.util.HttpClientUtils;
-import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.message.BasicHeader;
 
 import java.io.*;
-import java.util.List;
 
 class BufferedHttpEntity extends OutputStream implements HttpEntity {
     private Header contentType;
-    private Header contentEncoding;
     private ByteArrayOutputStream buffer;
 
-    public BufferedHttpEntity(String contentType, List<String> contentEncodings) {
+    public BufferedHttpEntity(String contentType) {
         this.buffer = new ByteArrayOutputStream();
         if (Strings.isNotEmpty(contentType)) {
             this.contentType = new BasicHeader("Content-Type", contentType);
-        }
-        if (Objs.isNotEmpty(contentEncodings)) {
-            this.contentEncoding = new BasicHeader("Content-Encoding", String.join(",", contentEncodings));
-            this.buffer = HttpClientUtils.wrapByContentEncodings(buffer, HttpClientUtils.getContentEncoding(contentEncodings));
         }
     }
 
@@ -39,10 +31,7 @@ class BufferedHttpEntity extends OutputStream implements HttpEntity {
 
     @Override
     public long getContentLength() {
-        if (this.contentEncoding == null) {
-            return ((ByteArrayOutputStream) buffer).size();
-        }
-        return -1;
+        return buffer.size();
     }
 
     @Override
@@ -52,7 +41,7 @@ class BufferedHttpEntity extends OutputStream implements HttpEntity {
 
     @Override
     public Header getContentEncoding() {
-        return contentEncoding;
+        return null;
     }
 
     @Override

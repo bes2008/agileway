@@ -2,11 +2,10 @@ package com.jn.agileway.httpclient.httpcomponents.httpexchange;
 
 import com.jn.agileway.httpclient.core.AbstractUnderlyingHttpRequest;
 import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
-import com.jn.agileway.httpclient.util.ContentEncoding;
-import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
+import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -15,12 +14,11 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
-import java.util.List;
 
 class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpUriRequest> {
     private HttpUriRequest request;
     private CloseableHttpClient underlyingClient;
-    private BufferedHttpEntity contentEntity;
+    private HttpEntity contentEntity;
     private HttpHeaders httpHeaders;
 
     ApacheUnderlyingHttpRequest(CloseableHttpClient client, HttpUriRequest request, HttpHeaders httpHeaders) {
@@ -44,11 +42,14 @@ class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpUriR
     @Override
     public OutputStream getContent() throws IOException {
         if (this.contentEntity == null) {
-            List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(this.httpHeaders);
-            String contentEncoding = Strings.join(", ", contentEncodings);
-            this.contentEntity = new BufferedHttpEntity(this.httpHeaders.getContentType().toString(), contentEncoding);
+            String contentEncoding = this.httpHeaders.getFirst("Content-Encoding");
+            if (Strings.isBlank(contentEncoding)) {
+                this.contentEntity = new BufferedHttpEntity(this.httpHeaders.getContentType().toString());
+            } else {
+                this.contentEntity = new CompressedHttpEntity(this.httpHeaders.getContentType().toString(), contentEncoding);
+            }
         }
-        return this.contentEntity;
+        return (OutputStream) this.contentEntity;
     }
 
     @Override
@@ -72,5 +73,19 @@ class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpUriR
         }
         CloseableHttpResponse response = this.underlyingClient.execute(request);
         return new ApacheUnderlyingHttpResponse(this.getMethod(), this.getUri(), response);
+    }
+
+    @Override
+    protected long computeContentLength() {
+        if (this.contentEntity == null) {
+            return -1L;
+        }
+        if (this.contentEntity instanceof BufferedHttpEntity) {
+            return ((BufferedHttpEntity) this.contentEntity).getContentLength();
+        }
+        if (this.contentEntity instanceof CompressedHttpEntity) {
+            return ((CompressedHttpEntity) this.contentEntity).getContentLength();
+        }
+        return -1L;
     }
 }

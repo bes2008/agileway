@@ -44,7 +44,7 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
             case DELETE:
             case TRACE:
                 request.getHeaders().setContentType(null);
-                request.getHeaders().setContentLength(0L);
+                request.getHeaders().remove("Content-Length");
                 break;
             case PATCH:
             case PUT:

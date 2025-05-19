@@ -42,6 +42,7 @@ class JdkUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpURLConn
         if (streamBody == null) {
             long contentLength = this.getHeaders().getContentLength();
             if (contentLength > 0) {
+                // 要求 提前告知长度
                 this.httpConnection.setFixedLengthStreamingMode(contentLength);
             } else {
                 this.httpConnection.setChunkedStreamingMode(4096);
@@ -83,6 +84,14 @@ class JdkUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpURLConn
         }
         this.httpConnection.getResponseCode();
         return new JdkUnderlyingHttpResponse(this.httpConnection);
+    }
+
+    @Override
+    protected long computeContentLength() {
+        if (!streamMode) {
+            return this.bufferedBody.size();
+        }
+        return -1L;
     }
 
     @Override

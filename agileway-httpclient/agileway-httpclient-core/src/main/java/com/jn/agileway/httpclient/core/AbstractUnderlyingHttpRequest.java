@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.core;
 
+import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpHeaders;
@@ -44,6 +45,19 @@ public abstract class AbstractUnderlyingHttpRequest<TARGET> implements Underlyin
 
     protected final void writeHeaders(TARGET target) {
         HttpMethod method = getMethod();
+        if (HttpClientUtils.requestBodyUseStreamMode(method, headers)) {
+            getHeaders().remove(HttpHeaders.CONTENT_LENGTH);
+        }
+        if (method == HttpMethod.GET || method.equals(HttpMethod.HEAD) || method.equals(HttpMethod.OPTIONS) || method.equals(HttpMethod.TRACE)) {
+            getHeaders().remove(HttpHeaders.CONTENT_TYPE);
+        } else {
+            long contentLength = computeContentLength();
+            if (contentLength >= 0) {
+                getHeaders().setContentLength(contentLength);
+            } else {
+                getHeaders().remove(HttpHeaders.CONTENT_LENGTH);
+            }
+        }
         if (method.equals(HttpMethod.PUT) || method.equals(HttpMethod.DELETE)) {
             if (Strings.isBlank(headers.getFirst(HttpHeaders.ACCEPT))) {
                 // Avoid "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2"
@@ -66,6 +80,11 @@ public abstract class AbstractUnderlyingHttpRequest<TARGET> implements Underlyin
             }
         }
     }
+
+    /**
+     * 会在写 header之前调用，当有 Content-Encoding 时，会返回 -1
+     */
+    protected abstract long computeContentLength();
 
     protected abstract void addHeaderToUnderlying(TARGET target, String headerName, String headerValue);
 

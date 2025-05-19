@@ -51,11 +51,11 @@ public class HttpClientUtils {
     }
 
     public static List<ContentEncoding> getContentEncodings(HttpHeaders headers) {
-        List<String> contentEncodings = headers.get("Content-Encoding");
-        return getContentEncoding(contentEncodings);
+        String[] contentEncodings = Strings.split(headers.getFirst("Content-Encoding"), ",");
+        return getContentEncodings(Lists.newArrayList(contentEncodings));
     }
 
-    public static List<ContentEncoding> getContentEncoding(List<String> contentEncodings) {
+    public static List<ContentEncoding> getContentEncodings(List<String> contentEncodings) {
         if (Objs.isEmpty(contentEncodings)) {
             return Lists.newArrayList();
         }
