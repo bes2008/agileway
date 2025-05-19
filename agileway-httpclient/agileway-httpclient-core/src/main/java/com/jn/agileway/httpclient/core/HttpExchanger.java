@@ -168,12 +168,6 @@ public class HttpExchanger extends AbstractInitializable {
 
             @Override
             public UnderlyingHttpResponse run(Handler<UnderlyingHttpResponse> resolve, ErrorHandler reject) {
-                if (request.getMethod() == null) {
-                    throw new BadHttpRequestException("HTTP method is required");
-                }
-                if (request.getUri() == null) {
-                    throw new BadHttpRequestException("HTTP uri is required");
-                }
                 if (requestInterceptors != null) {
                     for (HttpRequestInterceptor interceptor : requestInterceptors) {
                         interceptor.intercept(request);
@@ -198,7 +192,7 @@ public class HttpExchanger extends AbstractInitializable {
                     }
 
                     return underlyingHttpRequest.exchange();
-                } catch (Throwable ex) {
+                } catch (Exception ex) {
                     reject.handle(ex);
                     return null;
                 }
