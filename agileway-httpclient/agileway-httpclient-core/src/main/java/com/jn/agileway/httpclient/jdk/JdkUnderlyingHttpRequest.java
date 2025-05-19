@@ -85,12 +85,12 @@ class JdkUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpURLConn
     }
 
     @Override
-    protected void setHeaderToUnderlying(HttpURLConnection context, String headerName, String headerValue) {
-        context.setRequestProperty(headerName, headerValue);
+    protected void setHeaderToUnderlying(HttpURLConnection target, String headerName, String headerValue) {
+        target.setRequestProperty(headerName, headerValue);
     }
 
     @Override
-    protected void addHeaderToUnderlying(HttpURLConnection context, String headerName, String headerValue) {
-        context.addRequestProperty(headerName, headerValue);
+    protected void addHeaderToUnderlying(HttpURLConnection target, String headerName, String headerValue) {
+        target.addRequestProperty(headerName, headerValue);
     }
 }

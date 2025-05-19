@@ -43,14 +43,14 @@ class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpUriR
     }
 
     @Override
-    protected void addHeaderToUnderlying(HttpUriRequest context, String headerName, String headerValue) {
-        context.addHeader(headerName, headerValue);
+    protected void addHeaderToUnderlying(HttpUriRequest target, String headerName, String headerValue) {
+        target.addHeader(headerName, headerValue);
     }
 
     @Override
-    protected void setHeaderToUnderlying(HttpUriRequest context, String headerName, String headerValue) {
-        context.removeHeaders(headerName);
-        context.addHeader(headerName, headerValue);
+    protected void setHeaderToUnderlying(HttpUriRequest target, String headerName, String headerValue) {
+        target.removeHeaders(headerName);
+        target.addHeader(headerName, headerValue);
     }
 
 
