@@ -8,6 +8,7 @@ import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.collection.exclusion.IncludeExcludePredicate;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.net.http.HttpMethod;
 
@@ -59,24 +60,6 @@ public class HttpRequestMethodInterceptor implements HttpRequestInterceptor {
     }
 
     private boolean isAllowedMethod(HttpMethod method) {
-        boolean allowed = false;
-        if (Objs.isEmpty(allowedMethods)) {
-            allowed = true;
-        } else {
-            if (allowedMethods.contains(method)) {
-                allowed = true;
-            }
-        }
-        if (!allowed) {
-            return false;
-        }
-        if (Objs.isEmpty(notAllowedMethods)) {
-            return true;
-        }
-        if (notAllowedMethods.contains(method)) {
-            allowed = false;
-        }
-        return allowed;
-
+        return new IncludeExcludePredicate<HttpMethod, HttpMethod>(this.allowedMethods, this.notAllowedMethods).test(method);
     }
 }

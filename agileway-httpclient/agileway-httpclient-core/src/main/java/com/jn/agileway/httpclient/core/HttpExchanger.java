@@ -1,6 +1,5 @@
 package com.jn.agileway.httpclient.core;
 
-import com.jn.agileway.httpclient.core.exception.BadHttpRequestException;
 import com.jn.agileway.httpclient.core.exception.HttpRequestServerErrorException;
 import com.jn.agileway.httpclient.core.exception.NotFoundHttpContentReaderException;
 import com.jn.agileway.httpclient.core.exception.NotFoundHttpContentWriterException;
@@ -37,14 +36,15 @@ import com.jn.langx.util.retry.RetryConfig;
 import com.jn.langx.util.retry.RetryInfo;
 import com.jn.langx.util.retry.Retryer;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSession;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.ConnectException;
 import java.util.List;
 import java.util.concurrent.*;
 
+/**
+ * 建议的做法是，一个系统里，只创建一个 HttpExchanger 对象即可。一个 HttpExchanger通常会关联一个 ExecutorService （线程池）
+ */
 public class HttpExchanger extends AbstractInitializable {
     @NonNull
     private UnderlyingHttpRequestFactory requestFactory;
@@ -111,18 +111,13 @@ public class HttpExchanger extends AbstractInitializable {
 
         if (this.requestFactory == null) {
             UnderlyingHttpRequestFactoryBuilder requestFactoryBuilder = UnderlyingHttpRequestFactoryBuilderSupplier.getInstance().get();
-            requestFactoryBuilder.connectTimeoutMills(5000);
-            requestFactoryBuilder.readTimeoutMills(60000);
-            requestFactoryBuilder.keepAliveDurationMills(120000);
-            requestFactoryBuilder.hostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String s, SSLSession sslSession) {
-                    return true;
-                }
-            });
-            requestFactoryBuilder.sslContextBuilder(new SSLContextBuilder());
-            requestFactoryBuilder.poolMaxIdleConnections(5);
-            requestFactoryBuilder.executor(new ThreadPoolExecutor(5, 10, 120, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(Integer.MAX_VALUE), new CommonThreadFactory("http-exchange", true)));
+            requestFactoryBuilder.connectTimeoutMills(configuration.getConnectTimeoutMillis());
+            requestFactoryBuilder.readTimeoutMills(configuration.getConnectTimeoutMillis());
+            requestFactoryBuilder.keepAliveDurationMills(configuration.getKeepAliveDurationMills());
+            requestFactoryBuilder.hostnameVerifier(configuration.getHostnameVerifier());
+            requestFactoryBuilder.sslContextBuilder(configuration.getSslContextBuilder());
+            requestFactoryBuilder.poolMaxIdleConnections(configuration.getPoolMaxIdleConnections());
+            requestFactoryBuilder.executor(configuration.getExecutor());
             this.requestFactory = requestFactoryBuilder.build();
         }
     }

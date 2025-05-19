@@ -7,8 +7,10 @@ import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.collection.exclusion.IncludeExcludePredicate;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
+import com.jn.langx.util.function.Predicate2;
 import com.jn.langx.util.regexp.Regexp;
 import com.jn.langx.util.regexp.Regexps;
 
@@ -104,31 +106,12 @@ public class HttpRequestUriInterceptor implements HttpRequestInterceptor {
     }
 
     private boolean isAllowedAuthority(String authority) {
-        boolean allowed = false;
-        if (Objs.isEmpty(allowedAuthorities)) {
-            allowed = true;
-        } else {
-            for (Regexp allowedAuthority : allowedAuthorities) {
-                if (allowedAuthority.matcher(authority).matches()) {
-                    allowed = true;
-                    break;
-                }
+        Predicate2<Regexp, String> regexpPredicate = new Predicate2<Regexp, String>() {
+            @Override
+            public boolean test(Regexp regexp, String authority) {
+                return Regexps.match(regexp, authority);
             }
-        }
-        if (!allowed) {
-            return false;
-        }
-        if (Objs.isEmpty(notAllowedAuthorities)) {
-            return true;
-        }
-        for (Regexp notAllowedAuthority : notAllowedAuthorities) {
-            if (notAllowedAuthority.matcher(authority).matches()) {
-                allowed = false;
-                break;
-            }
-        }
-
-        return allowed;
-
+        };
+        return new IncludeExcludePredicate<Regexp, String>(this.allowedAuthorities, regexpPredicate, this.notAllowedAuthorities, regexpPredicate).test(authority);
     }
 }

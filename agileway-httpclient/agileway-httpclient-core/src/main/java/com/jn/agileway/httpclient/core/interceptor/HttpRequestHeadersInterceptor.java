@@ -23,6 +23,7 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
 
     @Override
     public void intercept(HttpRequest request) {
+        addFixedHeaders(request);
         handleContentTypeAndLength(request);
     }
 
