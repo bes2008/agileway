@@ -1,8 +1,7 @@
 package com.jn.agileway.httpclient.httpcomponents.ext;
 
-import com.jn.langx.lifecycle.Initializable;
+import com.jn.langx.lifecycle.AbstractLifecycle;
 import com.jn.langx.lifecycle.InitializationException;
-import com.jn.langx.lifecycle.Lifecycle;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Numbers;
 import com.jn.langx.util.Preconditions;
@@ -34,7 +33,7 @@ import java.lang.reflect.Method;
 import java.net.SocketTimeoutException;
 import java.util.List;
 
-public class HttpAsyncClientProvider implements Initializable, Lifecycle, Supplier0<HttpAsyncClient> {
+public class HttpAsyncClientProvider extends AbstractLifecycle implements Supplier0<HttpAsyncClient> {
     private static final Logger logger = Loggers.getLogger(HttpClientProvider.class);
 
     private CloseableHttpAsyncClient httpClient;
@@ -43,12 +42,9 @@ public class HttpAsyncClientProvider implements Initializable, Lifecycle, Suppli
     private HttpClientProperties config;
 
     private final List<HttpAsyncClientCustomizer> customizers = Collects.emptyArrayList();
-    private volatile boolean inited = false;
-
-    private volatile boolean running = false;
 
     public HttpAsyncClient get() {
-        if (!running) {
+        if (!isRunning()) {
             return null;
         }
         return httpClient;
@@ -71,11 +67,7 @@ public class HttpAsyncClientProvider implements Initializable, Lifecycle, Suppli
     }
 
     @Override
-    public void init() throws InitializationException {
-        if (inited) {
-            return;
-        }
-        inited = true;
+    public void doInit() throws InitializationException {
         Preconditions.checkNotNull(config, "the httpclient provider's config is null");
         logger.info("===[AGILE_WAY-HTTP_CLIENT_PROVIDER]=== Initial the AGILEWAY http client provider");
 
@@ -113,17 +105,11 @@ public class HttpAsyncClientProvider implements Initializable, Lifecycle, Suppli
             }
         });
         httpClient = httpClientBuilder.build();
-        running = true;
     }
 
-    @Override
-    public void startup() {
-        init();
-    }
 
     @Override
-    public void shutdown() {
-        running = false;
+    public void doStop() {
         if (httpClient != null) {
             IOs.close(this.httpClient);
         }

@@ -1,6 +1,7 @@
 package com.jn.agileway.httpclient.httpcomponents.ext;
 
 import com.jn.langx.lifecycle.AbstractInitializable;
+import com.jn.langx.lifecycle.AbstractLifecycle;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.lifecycle.Lifecycle;
 import com.jn.langx.util.Emptys;
@@ -36,22 +37,17 @@ import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class HttpClientProvider extends AbstractInitializable implements Lifecycle, Supplier0<HttpClient> {
+public class HttpClientProvider extends AbstractLifecycle implements Supplier0<HttpClient> {
     private static final Logger logger = Loggers.getLogger(HttpClientProvider.class);
 
     private CloseableHttpClient httpClient;
 
-    private IdleConnectionMonitorTask idleConnectionMonitorTask;
-
     private HttpClientProperties config;
 
     private final List<HttpClientCustomizer> customizers = Collects.emptyArrayList();
-    private volatile boolean inited = false;
-
-    private volatile boolean running = false;
 
     public CloseableHttpClient get() {
-        if (!running) {
+        if (!isRunning()) {
             return null;
         }
         return httpClient;
@@ -75,10 +71,6 @@ public class HttpClientProvider extends AbstractInitializable implements Lifecyc
 
     @Override
     public void doInit() throws InitializationException {
-        if (inited) {
-            return;
-        }
-        inited = true;
         Preconditions.checkNotNull(config, "the httpclient provider's config is null");
         logger.info("===[AGILE_WAY-HTTP_CLIENT_PROVIDER]=== Initial the AGILEWAY http client provider");
 
@@ -116,24 +108,14 @@ public class HttpClientProvider extends AbstractInitializable implements Lifecyc
             }
         });
         httpClient = httpClientBuilder.build();
-
-        idleConnectionMonitorTask = new IdleConnectionMonitorTask((HttpClientConnectionManager) httpClient.getConnectionManager(), config.getIdleConnectionTimeoutInMills(), config.getIdleConnectionCleanupIntervalInMills());
-        new Thread(idleConnectionMonitorTask).start();
-        running = true;
     }
 
-    @Override
-    public void startup() {
-        init();
-    }
 
     @Override
-    public void shutdown() {
-        running = false;
+    public void doStop() {
         if (httpClient != null) {
             this.httpClient.getConnectionManager().shutdown();
         }
-        idleConnectionMonitorTask.shutdown();
     }
 
 

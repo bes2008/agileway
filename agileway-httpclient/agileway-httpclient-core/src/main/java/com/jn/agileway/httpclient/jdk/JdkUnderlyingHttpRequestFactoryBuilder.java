@@ -74,8 +74,10 @@ public class JdkUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpReq
         factory.setReadTimeoutMills(readTimeoutInMills);
         factory.setProxy(proxy);
         factory.setHostnameVerifier(hostnameVerifier);
-        SSLContext sslContext = sslContextBuilder.build();
-        factory.setSSLContext(sslContext);
+        if (sslContextBuilder != null) {
+            SSLContext sslContext = sslContextBuilder.build();
+            factory.setSSLContext(sslContext);
+        }
         return factory;
     }
 }
