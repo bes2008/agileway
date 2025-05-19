@@ -2,6 +2,7 @@ package com.jn.agileway.httpclient.util;
 
 import com.jn.langx.security.Securitys;
 import com.jn.langx.util.Objs;
+import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
@@ -15,7 +16,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.zip.DeflaterInputStream;
 import java.util.zip.DeflaterOutputStream;
@@ -149,4 +152,12 @@ public class HttpClientUtils {
                     'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A',
                     'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
                     'V', 'W', 'X', 'Y', 'Z'};
+
+
+    public static MediaType addContentTypeParameter(MediaType contentType, String key, String value) {
+        Preconditions.checkNotNull(contentType, "argument contentType is required");
+        Map<String, String> parameterMap = new HashMap<String, String>(contentType.getParameters());
+        parameterMap.put(key, value);
+        return new MediaType(contentType.getType(), contentType.getSubtype(), parameterMap);
+    }
 }
