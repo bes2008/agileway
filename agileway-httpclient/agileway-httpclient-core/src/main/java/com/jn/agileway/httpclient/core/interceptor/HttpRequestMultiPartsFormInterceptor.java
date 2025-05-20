@@ -19,12 +19,12 @@ public class HttpRequestMultiPartsFormInterceptor implements HttpRequestIntercep
     public void intercept(HttpRequest request) {
         if (request.getContent() instanceof MultiPartsForm) {
             if (request.getMethod() != HttpMethod.POST) {
-                throw new BadHttpRequestException(StringTemplates.formatWithPlaceholder("multipart/form-data content should use the POST, current is: {}", request.getMethod()));
+                throw new BadHttpRequestException(request.getMethod(), request.getUri(), StringTemplates.formatWithPlaceholder("multipart/form-data content should use the POST, current is: {}", request.getMethod()));
             }
             MediaType contentType = request.getHeaders().getContentType();
             if (contentType != null) {
                 if (!MediaType.MULTIPART_FORM_DATA.equalsTypeAndSubtype(contentType)) {
-                    throw new BadHttpRequestException(StringTemplates.formatWithPlaceholder("multipart/form-data content should use the multipart/form-data content-type, current is: {}", contentType));
+                    throw new BadHttpRequestException(request.getMethod(), request.getUri(), StringTemplates.formatWithPlaceholder("multipart/form-data content should use the multipart/form-data content-type, current is: {}", contentType));
                 }
             } else {
                 request.getHeaders().setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -33,7 +33,7 @@ public class HttpRequestMultiPartsFormInterceptor implements HttpRequestIntercep
 
         if (MediaType.MULTIPART_FORM_DATA.equalsTypeAndSubtype(request.getHeaders().getContentType())) {
             if (request.getMethod() != HttpMethod.POST) {
-                throw new BadHttpRequestException(StringTemplates.formatWithPlaceholder("multipart/form-data content should use the POST, current is: {}", request.getMethod()));
+                throw new BadHttpRequestException(request.getMethod(), request.getUri(), StringTemplates.formatWithPlaceholder("multipart/form-data content should use the POST, current is: {}", request.getMethod()));
             }
             if (!(request.getContent() instanceof MultiPartsForm)) {
                 try {
@@ -43,7 +43,7 @@ public class HttpRequestMultiPartsFormInterceptor implements HttpRequestIntercep
                         request.setContent(MultiPartsForm.ofMap((Map) request.getContent()));
                     }
                 } catch (Throwable ex) {
-                    throw new BadHttpRequestException(StringTemplates.formatWithPlaceholder("invalid multipart/form-data content "));
+                    throw new BadHttpRequestException(request.getMethod(), request.getUri(), StringTemplates.formatWithPlaceholder("invalid multipart/form-data content "));
                 }
             }
         }

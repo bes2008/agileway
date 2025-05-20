@@ -63,7 +63,7 @@ public class JdkUnderlyingHttpRequestFactory implements UnderlyingHttpRequestFac
 
     private HttpURLConnection createHttpUrlConnection(HttpMethod method, URI uri) throws Exception {
         if (method == HttpMethod.PATCH) {
-            throw new UnsupportedHttpMethodException("The JDK HttpURLConnection does not support PATCH method");
+            throw new UnsupportedHttpMethodException(method, uri, "The JDK HttpURLConnection does not support PATCH method");
         }
 
         URL url = uri.toURL();

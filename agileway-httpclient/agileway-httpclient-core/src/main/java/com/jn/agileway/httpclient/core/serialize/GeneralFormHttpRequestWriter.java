@@ -27,11 +27,11 @@ public class GeneralFormHttpRequestWriter implements HttpRequestContentWriter {
 
     public void write(Object body, MediaType contentType, UnderlyingHttpRequest output) throws IOException {
         Charset charset = contentType.getCharset();
-        String formString = serializeSimpleForm(body, contentType.getCharset());
+        String formString = serializeSimpleForm(body, contentType.getCharset(), output);
         output.getBufferedContent().write(formString.getBytes(charset));
     }
 
-    private String serializeSimpleForm(Object formData, final Charset charset) throws UnsupportedEncodingException {
+    private String serializeSimpleForm(Object formData, final Charset charset, UnderlyingHttpRequest output) throws UnsupportedEncodingException {
         if (formData instanceof String) {
             return (String) formData;
         }
@@ -44,7 +44,7 @@ public class GeneralFormHttpRequestWriter implements HttpRequestContentWriter {
         if (formData instanceof MultiValueMap) {
             return serializeMultiValueMap((MultiValueMap) formData, charset);
         }
-        throw new BadHttpRequestException("the form data type is not supported, the type is " + Reflects.getFQNClassName(formData.getClass()));
+        throw new BadHttpRequestException(output.getMethod(), output.getUri(), "the form data type is not supported, the type is " + Reflects.getFQNClassName(formData.getClass()));
     }
 
     private String serializeMap(Map<String, ?> formData, final Charset charset) throws UnsupportedEncodingException {

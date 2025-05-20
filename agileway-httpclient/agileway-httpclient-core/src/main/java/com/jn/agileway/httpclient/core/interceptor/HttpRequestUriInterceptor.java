@@ -89,19 +89,19 @@ public class HttpRequestUriInterceptor implements HttpRequestInterceptor {
     public void intercept(HttpRequest request) {
         URI uri = request.getUri();
         if (uri == null) {
-            throw new BadHttpRequestException("Http request uri is required");
+            throw new BadHttpRequestException(request.getMethod(), request.getUri(), "Http request uri is required");
         }
         String scheme = uri.getScheme();
         if (scheme == null) {
-            throw new BadHttpRequestException("Http request uri scheme is required");
+            throw new BadHttpRequestException(request.getMethod(), request.getUri(), "Http request uri scheme is required");
         }
         if (!supportedSchemes.contains(scheme)) {
-            throw new BadHttpRequestException("Http request uri scheme is not supported: " + scheme);
+            throw new BadHttpRequestException(request.getMethod(), request.getUri(), "Http request uri scheme is not supported: " + scheme);
         }
 
         String authority = uri.getAuthority();
         if (!isAllowedAuthority(authority)) {
-            throw new BadHttpRequestException("Http request uri authority is not allowed: " + authority);
+            throw new BadHttpRequestException(request.getMethod(), request.getUri(), "Http request uri authority is not allowed: " + authority);
         }
     }
 

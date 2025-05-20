@@ -20,15 +20,15 @@ public class DefaultHttpResponseErrorHandler implements HttpResponseErrorHandler
         int statusCode = httpResponse.getStatusCode();
         if (statusCode >= 400 && statusCode < 500) {
             if (statusCode == 400) {
-                throw new BadHttpRequestException(httpResponse.getErrorMessage());
+                throw new BadHttpRequestException(httpResponse.getMethod(), httpResponse.getUri(), httpResponse.getErrorMessage());
             }
             if (statusCode == 405) {
-                throw new MethodNotAllowedRequestException(httpResponse.getErrorMessage());
+                throw new MethodNotAllowedRequestException(httpResponse.getMethod(), httpResponse.getUri(), httpResponse.getErrorMessage());
             }
-            throw new HttpRequestClientErrorException(statusCode, httpResponse.getErrorMessage());
+            throw new HttpRequestClientErrorException(httpResponse.getMethod(), httpResponse.getUri(), statusCode, httpResponse.getErrorMessage());
         }
         if (statusCode >= 500) {
-            throw new HttpRequestServerErrorException(statusCode, httpResponse.getErrorMessage());
+            throw new HttpRequestServerErrorException(httpResponse.getMethod(), httpResponse.getUri(), statusCode, httpResponse.getErrorMessage());
         }
     }
 }

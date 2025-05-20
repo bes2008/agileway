@@ -29,10 +29,10 @@ public class HttpRequestMethodInterceptor implements HttpRequestInterceptor {
     @Override
     public void intercept(HttpRequest request) {
         if (request.getMethod() == null) {
-            throw new BadHttpRequestException("HTTP method is required");
+            throw new BadHttpRequestException(request.getMethod(), request.getUri(), "HTTP method is required");
         }
         if (!isAllowedMethod(request.getMethod())) {
-            throw new MethodNotAllowedRequestException(StringTemplates.formatWithPlaceholder("Http request method {} is not allowed", request.getMethod()));
+            throw new MethodNotAllowedRequestException(request.getMethod(), request.getUri(), StringTemplates.formatWithPlaceholder("Http request method {} is not allowed", request.getMethod()));
         }
     }
 
