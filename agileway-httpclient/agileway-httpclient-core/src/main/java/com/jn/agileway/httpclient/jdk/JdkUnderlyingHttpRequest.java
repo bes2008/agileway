@@ -79,7 +79,9 @@ class JdkUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpURLConn
     @Override
     protected long computeContentLength() {
         if (!streamMode) {
-            return this.bufferedBody.size();
+            if (this.bufferedBody != null) {
+                return this.bufferedBody.size();
+            }
         }
         return -1L;
     }
