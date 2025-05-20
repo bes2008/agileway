@@ -80,10 +80,6 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
             }
         }
 
-        if (request.getContent() != null && !HttpClientUtils.isWriteable(request.getMethod())) {
-            throw new BadHttpRequestException(StringTemplates.formatWithPlaceholder("Http request has content with a not writable method {}", request.getMethod()));
-        }
-
         contentType = request.getHeaders().getContentType();
         if (contentType != null) {
             if (contentType.getCharset() == null) {

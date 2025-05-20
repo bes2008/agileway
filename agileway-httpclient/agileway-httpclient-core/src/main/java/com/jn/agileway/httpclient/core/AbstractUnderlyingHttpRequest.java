@@ -81,8 +81,7 @@ public abstract class AbstractUnderlyingHttpRequest<TARGET> implements Underlyin
             } else {
                 for (String headerValue : headerValues) {
                     String actualHeaderValue = headerValue != null ? headerValue : "";
-                    addHeaderToUnderlying(target,
-                            headerName, actualHeaderValue);
+                    addHeaderToUnderlying(target, headerName, actualHeaderValue);
                 }
             }
         }

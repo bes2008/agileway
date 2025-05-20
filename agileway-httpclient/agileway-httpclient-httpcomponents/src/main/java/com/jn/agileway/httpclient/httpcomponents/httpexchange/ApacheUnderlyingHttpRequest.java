@@ -44,11 +44,18 @@ class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpUriR
 
     @Override
     protected void addHeaderToUnderlying(HttpUriRequest target, String headerName, String headerValue) {
+        // apache httpclient 不支持由用户写 Content-Length，要由要 它自己来写
+        if (Strings.equals("Content-Length", headerName, true)) {
+            return;
+        }
         target.addHeader(headerName, headerValue);
     }
 
     @Override
     protected void setHeaderToUnderlying(HttpUriRequest target, String headerName, String headerValue) {
+        if (Strings.equals("Content-Length", headerName, true)) {
+            return;
+        }
         target.removeHeaders(headerName);
         target.addHeader(headerName, headerValue);
     }
