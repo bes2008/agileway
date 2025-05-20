@@ -5,6 +5,7 @@ import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.ContentEncoding;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.Objs;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
@@ -43,12 +44,16 @@ class Jdk11UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpReque
 
     @Override
     protected void addHeaderToUnderlying(HttpRequest.Builder target, String headerName, String headerValue) {
-        target.header(headerName, headerValue);
+        if (!Strings.equals("Content-Length", headerName, true)) {
+            target.header(headerName, headerValue);
+        }
     }
 
     @Override
     protected void setHeaderToUnderlying(HttpRequest.Builder target, String headerName, String headerValue) {
-        target.setHeader(headerName, headerValue);
+        if (!Strings.equals("Content-Length", headerName, true)) {
+            target.setHeader(headerName, headerValue);
+        }
     }
 
     @Override

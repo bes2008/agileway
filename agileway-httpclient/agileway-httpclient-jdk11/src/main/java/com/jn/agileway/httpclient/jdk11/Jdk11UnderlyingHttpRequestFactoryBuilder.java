@@ -86,6 +86,8 @@ public class Jdk11UnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpR
             builder.executor(executor);
         }
 
+        builder.followRedirects(HttpClient.Redirect.NORMAL);
+
         HttpClient httpClient = builder.build();
         Jdk11UnderlyingHttpRequestFactory factory = new Jdk11UnderlyingHttpRequestFactory();
         factory.setHttpClient(httpClient);
