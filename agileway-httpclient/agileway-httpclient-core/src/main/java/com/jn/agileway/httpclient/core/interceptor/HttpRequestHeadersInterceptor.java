@@ -49,13 +49,6 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
                 break;
             case PATCH:
             case PUT:
-                if (contentType == null) {
-                    request.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
-                }
-                if (request.getContent() == null) {
-                    request.getHeaders().setContentLength(0L);
-                }
-                break;
             case POST:
             default:
                 if (request.getContent() == null) {
@@ -82,9 +75,13 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
         }
 
         if (HttpClientUtils.isForm(request.getHeaders().getContentType())) {
-            if (request.getMethod() != HttpMethod.POST) {
+            if (!HttpClientUtils.isWriteable(request.getMethod())) {
                 throw new BadHttpRequestException(StringTemplates.formatWithPlaceholder("Http request with Content-Type {}, method {} is invalid", request.getHeaders().getContentType(), request.getMethod()));
             }
+        }
+
+        if (request.getContent() != null && !HttpClientUtils.isWriteable(request.getMethod())) {
+            throw new BadHttpRequestException(StringTemplates.formatWithPlaceholder("Http request has content with a not writable method {}", request.getMethod()));
         }
 
         contentType = request.getHeaders().getContentType();
