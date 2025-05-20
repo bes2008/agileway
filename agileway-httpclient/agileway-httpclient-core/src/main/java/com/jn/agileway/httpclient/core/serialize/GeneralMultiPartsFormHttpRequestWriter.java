@@ -2,11 +2,12 @@ package com.jn.agileway.httpclient.core.serialize;
 
 import com.jn.agileway.httpclient.core.HttpRequestContentWriter;
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequest;
-import com.jn.agileway.httpclient.core.multipart.FilePart;
 import com.jn.agileway.httpclient.core.multipart.MultiPartsForm;
 import com.jn.agileway.httpclient.core.multipart.Part;
+import com.jn.agileway.httpclient.core.multipart.ResourcePart;
 import com.jn.agileway.httpclient.core.multipart.TextPart;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
+import com.jn.langx.io.resource.Resource;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.net.mime.MediaType;
@@ -54,8 +55,13 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestConten
         if (part instanceof TextPart) {
             Charset charset = part.getCharset() == null ? formCharset : part.getCharset();
             output.getBufferedContent().write(((TextPart) part).getContent().getBytes(charset));
-        } else if (part instanceof FilePart) {
-            IOs.copy(((FilePart) part).getContent(), output.getBufferedContent());
+        } else if (part instanceof ResourcePart) {
+            Resource resource = ((ResourcePart) part).getContent();
+            try {
+                IOs.copy(resource.getInputStream(), output.getBufferedContent());
+            } finally {
+                IOs.close(resource);
+            }
         }
     }
 }

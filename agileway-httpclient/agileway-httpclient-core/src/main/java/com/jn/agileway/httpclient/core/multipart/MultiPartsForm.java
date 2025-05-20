@@ -1,7 +1,9 @@
 package com.jn.agileway.httpclient.core.multipart;
 
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.io.resource.InputStreamResource;
 import com.jn.langx.io.resource.Resource;
+import com.jn.langx.io.resource.Resources;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
@@ -33,7 +35,7 @@ public class MultiPartsForm {
         parts.add(textPart);
     }
 
-    public void addPart(FilePart filePart) {
+    public void addPart(ResourcePart filePart) {
         parts.add(filePart);
     }
 
@@ -69,15 +71,15 @@ public class MultiPartsForm {
 
     static Part ofPart(String fieldName, Object value) throws IOException {
         if (value instanceof byte[]) {
-            return new FilePart(fieldName, null, (byte[]) value, null);
+            return new ResourcePart(fieldName, null, Resources.asByteArrayResource((byte[]) value), null);
         } else if (value instanceof File) {
-            return new FilePart(fieldName, ((File) value).getName(), (File) value, null);
+            return new ResourcePart(fieldName, ((File) value).getName(), Resources.loadFileResource((File) value), null);
         } else if (value instanceof Path) {
-            return new FilePart(fieldName, ((Path) value).getFileName().toString(), ((Path) value).toFile(), null);
+            return new ResourcePart(fieldName, ((Path) value).getFileName().toString(), Resources.loadFileResource(((Path) value).toFile()), null);
         } else if (value instanceof InputStream) {
-            return new FilePart(fieldName, null, (InputStream) value, null);
+            return new ResourcePart(fieldName, null, new InputStreamResource((InputStream) value), null);
         } else if (value instanceof Resource) {
-            return new FilePart(fieldName, null, ((Resource) value).getInputStream(), null);
+            return new ResourcePart(fieldName, null, (Resource) value, null);
         } else {
             return new TextPart(fieldName, value == null ? null : value.toString());
         }
