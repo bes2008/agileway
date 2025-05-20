@@ -24,7 +24,7 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
     @Override
     public void intercept(HttpRequest request) {
         addFixedHeaders(request);
-        handleContentTypeAndLength(request);
+        handleContentType(request);
     }
 
     private void addFixedHeaders(HttpRequest request) {
@@ -33,7 +33,7 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
         }
     }
 
-    private void handleContentTypeAndLength(HttpRequest request) {
+    private void handleContentType(HttpRequest request) {
         HttpMethod method = request.getMethod();
         MediaType contentType = request.getHeaders().getContentType();
 
@@ -44,19 +44,15 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
             case OPTIONS:
             case DELETE:
             case TRACE:
-                request.getHeaders().setContentType(null);
-                request.getHeaders().remove("Content-Length");
+                request.getHeaders().remove("Content-Type");
                 break;
             case PATCH:
             case PUT:
             case POST:
             default:
-                if (request.getContent() == null) {
-                    request.getHeaders().setContentLength(0L);
-                } else if (request.getContent() instanceof MultiPartsForm) {
+                if (request.getContent() != null && (request.getContent() instanceof MultiPartsForm)) {
                     request.getHeaders().setContentType(MediaType.MULTIPART_FORM_DATA);
                     contentType = request.getHeaders().getContentType();
-                    // 文件上传时，不设置 Content-Length,要改用 chunked
                 }
                 if (contentType == null) {
                     request.getHeaders().setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -68,10 +64,6 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
                     request.getHeaders().setContentType(new MediaType(contentType, Charsets.UTF_8));
                     break;
                 }
-        }
-
-        if (HttpClientUtils.requestBodyUseStreamMode(method, request.getHeaders())) {
-            request.getHeaders().remove("Content-Length");
         }
 
         if (HttpClientUtils.isForm(request.getHeaders().getContentType())) {
@@ -86,5 +78,8 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
                 request.getHeaders().setContentType(new MediaType(contentType, Charsets.UTF_8));
             }
         }
+
+        // Content-Length 由底层 http库完成
+        request.getHeaders().remove("Content-Length");
     }
 }
