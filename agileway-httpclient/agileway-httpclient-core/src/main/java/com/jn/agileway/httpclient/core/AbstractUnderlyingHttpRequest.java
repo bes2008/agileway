@@ -55,8 +55,9 @@ public abstract class AbstractUnderlyingHttpRequest<TARGET> implements Underlyin
         if (HttpClientUtils.requestBodyUseStreamMode(method, headers)) {
             getHeaders().remove(HttpHeaders.CONTENT_LENGTH);
         }
-        if (method == HttpMethod.GET || method.equals(HttpMethod.HEAD) || method.equals(HttpMethod.OPTIONS) || method.equals(HttpMethod.TRACE)) {
+        if (HttpClientUtils.isWriteable(method)) {
             getHeaders().remove(HttpHeaders.CONTENT_TYPE);
+            getHeaders().remove(HttpHeaders.CONTENT_LENGTH);
         } else {
             long contentLength = computeContentLength();
             if (contentLength >= 0) {
