@@ -57,14 +57,6 @@ public abstract class AbstractUnderlyingHttpRequest<TARGET> implements Underlyin
         }
         if (!HttpClientUtils.isWriteable(method)) {
             getHeaders().remove(HttpHeaders.CONTENT_TYPE);
-            getHeaders().remove(HttpHeaders.CONTENT_LENGTH);
-        } else {
-            long contentLength = computeContentLength();
-            if (contentLength >= 0) {
-                getHeaders().setContentLength(contentLength);
-            } else {
-                getHeaders().remove(HttpHeaders.CONTENT_LENGTH);
-            }
         }
         if (method.equals(HttpMethod.PUT) || method.equals(HttpMethod.DELETE)) {
             if (Strings.isBlank(headers.getFirst(HttpHeaders.ACCEPT))) {

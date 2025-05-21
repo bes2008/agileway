@@ -6,6 +6,7 @@ import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
+import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.net.uri.component.UriComponentsBuilder;
 
 import java.net.URI;
@@ -78,6 +79,13 @@ public class HttpRequest<T> {
     public static HttpRequest forGet(
             @NonNull String uriTemplate,
             @Nullable MultiValueMap<String, Object> queryParams,
+            @Nullable Map<String, Object> uriVariables) {
+        return forGet(uriTemplate, queryParams, uriVariables, null);
+    }
+
+    public static HttpRequest forGet(
+            @NonNull String uriTemplate,
+            @Nullable MultiValueMap<String, Object> queryParams,
             @Nullable Map<String, Object> uriVariables,
             @Nullable HttpHeaders headers) {
         return create(HttpMethod.GET, uriTemplate, queryParams, uriVariables, headers, null);
@@ -86,9 +94,24 @@ public class HttpRequest<T> {
     public static HttpRequest forDelete(
             @NonNull String uriTemplate,
             @Nullable MultiValueMap<String, Object> queryParams,
+            @Nullable Map<String, Object> uriVariables) {
+        return forDelete(uriTemplate, queryParams, uriVariables, null);
+    }
+
+    public static HttpRequest forDelete(
+            @NonNull String uriTemplate,
+            @Nullable MultiValueMap<String, Object> queryParams,
             @Nullable Map<String, Object> uriVariables,
             @Nullable HttpHeaders headers) {
         return create(HttpMethod.DELETE, uriTemplate, queryParams, uriVariables, headers, null);
+    }
+
+    public static HttpRequest forPut(
+            @NonNull String uriTemplate,
+            @Nullable MultiValueMap<String, Object> queryParams,
+            @Nullable Map<String, Object> uriVariables,
+            @Nullable Object body) {
+        return forPut(uriTemplate, queryParams, uriVariables, null, body);
     }
 
     public static HttpRequest forPut(
@@ -104,9 +127,26 @@ public class HttpRequest<T> {
             @NonNull String uriTemplate,
             @Nullable MultiValueMap<String, Object> queryParams,
             @Nullable Map<String, Object> uriVariables,
+            @Nullable Object body) {
+        return forPatch(uriTemplate, queryParams, uriVariables, null, body);
+    }
+
+    public static HttpRequest forPatch(
+            @NonNull String uriTemplate,
+            @Nullable MultiValueMap<String, Object> queryParams,
+            @Nullable Map<String, Object> uriVariables,
             @Nullable HttpHeaders headers,
             @Nullable Object body) {
         return create(HttpMethod.PATCH, uriTemplate, queryParams, uriVariables, headers, body);
+    }
+
+    public static HttpRequest forPost(
+            @NonNull String uriTemplate,
+            @Nullable MultiValueMap<String, Object> queryParams,
+            @Nullable Map<String, Object> uriVariables,
+            @Nullable Object body
+    ) {
+        return forPost(uriTemplate, queryParams, uriVariables, null, body);
     }
 
     public static HttpRequest forPost(
@@ -123,9 +163,10 @@ public class HttpRequest<T> {
             @NonNull String uriTemplate,
             @Nullable MultiValueMap<String, Object> queryParams,
             @Nullable Map<String, Object> uriVariables,
-            @Nullable HttpHeaders headers,
             MultiPartsForm body
     ) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         return create(HttpMethod.HEAD, uriTemplate, queryParams, uriVariables, headers, body);
     }
 
@@ -133,9 +174,10 @@ public class HttpRequest<T> {
             @NonNull String uriTemplate,
             @Nullable MultiValueMap<String, Object> queryParams,
             @Nullable Map<String, Object> uriVariables,
-            @Nullable HttpHeaders headers,
             MultiValueMap<String, Object> body
     ) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         return create(HttpMethod.HEAD, uriTemplate, queryParams, uriVariables, headers, body);
     }
 
@@ -143,9 +185,10 @@ public class HttpRequest<T> {
             @NonNull String uriTemplate,
             @Nullable MultiValueMap<String, Object> queryParams,
             @Nullable Map<String, Object> uriVariables,
-            @Nullable HttpHeaders headers,
             Map<String, Object> body
     ) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         return create(HttpMethod.HEAD, uriTemplate, queryParams, uriVariables, headers, body);
     }
 }
