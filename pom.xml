@@ -108,7 +108,7 @@
 
         <!-- JSON, YAML -->
         <easyjson.version>4.1.5</easyjson.version>
-        <jackson.version>2.13.5</jackson.version>
+        <jackson.version>2.19.0</jackson.version>
         <snakeyaml.version>1.33</snakeyaml.version>
 
         <!-- WebServer-->
