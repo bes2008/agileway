@@ -1,6 +1,13 @@
 ## 5.2.0
 + 升级 Spring 6.x
 + 升级 Spring Boot 3.x
++ 支持 httpclient 模块
+  + 升级 JDK 11 之前的 HttpURLConnection
+  + 支持 JDK 11 HttpClient
+  + 支持 OkHttp3
+  + 支持 apache httpcomponents
++ 将 langx-java-distributed 模块迁移为 agileway-distributed模块
++ 提供 agileway-zookeeper模块 
 
 ## 5.1.0
 + 新特性：
