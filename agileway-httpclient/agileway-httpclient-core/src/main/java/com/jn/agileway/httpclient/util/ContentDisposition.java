@@ -2,9 +2,11 @@ package com.jn.agileway.httpclient.util;
 
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.io.Charsets;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 /**
@@ -60,6 +62,43 @@ public class ContentDisposition {
         return contentDisposition;
     }
 
+    public static ContentDisposition parseResponseHeader(@Nullable String headerValue) {
+        // Content-Disposition: attachment; filename="filename.jpg"
+        if (Strings.isBlank(headerValue)) {
+            return null;
+        }
+        ContentDisposition contentDisposition = new ContentDisposition();
+        String[] parts = Strings.split(headerValue, ";");
+        boolean first = true;
+        try {
+
+            for (String part : parts) {
+                if (first) {
+                    contentDisposition.setValue(Strings.trim(part));
+                    first = false;
+                } else {
+                    String[] kv = Strings.split(part, "=");
+                    if (kv.length == 2) {
+                        String k = Strings.trim(kv[0]);
+                        String v = Strings.trim(kv[1]);
+                        if (Strings.isNotEmpty(v)) {
+                            if (Strings.equals(k, "filename") || Strings.equals(k, "filename*")) {
+                                contentDisposition.setFilename(new URLDecoder().decode(v, Charsets.US_ASCII.name()));
+                            }
+                        }
+                    }
+                }
+            }
+
+        } catch (Exception ex) {
+            throw new IllegalArgumentException(StringTemplates.formatWithPlaceholder("Invalid Content-Disposition value: {}, error: {}", headerValue, ex.getMessage()), ex);
+        }
+        if (!Strings.equals("inline", contentDisposition.getValue()) && !Strings.equals("attachment", contentDisposition.getValue())) {
+            throw new IllegalArgumentException("Invalid Content-Disposition value: " + headerValue);
+        }
+        return contentDisposition;
+    }
+
     public String asString() {
         StringBuilder builder = new StringBuilder(128);
         builder.append("Content-Disposition: ").append(value);
@@ -77,5 +116,17 @@ public class ContentDisposition {
             }
         }
         return builder.toString();
+    }
+
+    public boolean isAttachment() {
+        return Strings.equals("attachment", value);
+    }
+
+    public boolean isInline() {
+        return Strings.equals("inline", value);
+    }
+
+    public boolean isFormData() {
+        return Strings.equals("form-data", value);
     }
 }
