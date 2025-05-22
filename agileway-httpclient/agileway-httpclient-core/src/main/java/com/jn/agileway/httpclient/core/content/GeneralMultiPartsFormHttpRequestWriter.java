@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.core.serialize;
+package com.jn.agileway.httpclient.core.content;
 
 import com.jn.agileway.httpclient.core.HttpRequestContentWriter;
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequest;

@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.core.serialize;
+package com.jn.agileway.httpclient.restful;
 
 import com.jn.agileway.httpclient.core.HttpResponseContentReader;
 import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
