@@ -1,6 +1,5 @@
 package com.jn.agileway.httpclient.core.content;
 
-import com.jn.agileway.httpclient.core.HttpResponseContentReader;
 import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Predicate;

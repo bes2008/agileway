@@ -1,11 +1,10 @@
 package com.jn.agileway.httpclient.core.content;
 
-import com.jn.agileway.httpclient.core.HttpRequestContentWriter;
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequest;
-import com.jn.agileway.httpclient.core.multipart.MultiPartsForm;
-import com.jn.agileway.httpclient.core.multipart.Part;
-import com.jn.agileway.httpclient.core.multipart.ResourcePart;
-import com.jn.agileway.httpclient.core.multipart.TextPart;
+import com.jn.agileway.httpclient.core.content.multipart.MultiPartsForm;
+import com.jn.agileway.httpclient.core.content.multipart.Part;
+import com.jn.agileway.httpclient.core.content.multipart.ResourcePart;
+import com.jn.agileway.httpclient.core.content.multipart.TextPart;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.util.io.Charsets;

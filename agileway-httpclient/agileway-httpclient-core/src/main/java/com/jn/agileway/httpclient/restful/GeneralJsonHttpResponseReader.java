@@ -1,6 +1,6 @@
 package com.jn.agileway.httpclient.restful;
 
-import com.jn.agileway.httpclient.core.HttpResponseContentReader;
+import com.jn.agileway.httpclient.core.content.HttpResponseContentReader;
 import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
 import com.jn.easyjson.core.util.JSONs;
 import com.jn.langx.util.net.mime.MediaType;
@@ -8,7 +8,7 @@ import com.jn.langx.util.net.mime.MediaType;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
-public class GeneralJsonHttpResponseReader<T> implements HttpResponseContentReader<T> {
+public class GeneralJsonHttpResponseReader implements HttpResponseContentReader {
     @Override
     public boolean canRead(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) {
         if (MediaType.APPLICATION_JSON.equalsTypeAndSubtype(contentType)) {
@@ -18,7 +18,7 @@ public class GeneralJsonHttpResponseReader<T> implements HttpResponseContentRead
     }
 
     @Override
-    public T read(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) throws IOException {
+    public Object read(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) throws IOException {
         return JSONs.parse(response.getContent(), expectedContentType);
     }
 }

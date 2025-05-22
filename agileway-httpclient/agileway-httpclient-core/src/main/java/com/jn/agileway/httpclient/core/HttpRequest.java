@@ -1,6 +1,6 @@
 package com.jn.agileway.httpclient.core;
 
-import com.jn.agileway.httpclient.core.multipart.MultiPartsForm;
+import com.jn.agileway.httpclient.core.content.multipart.MultiPartsForm;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;

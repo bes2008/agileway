@@ -1,5 +1,6 @@
-package com.jn.agileway.httpclient.core;
+package com.jn.agileway.httpclient.core.content;
 
+import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
 import com.jn.langx.util.net.mime.MediaType;
 
 import java.io.IOException;

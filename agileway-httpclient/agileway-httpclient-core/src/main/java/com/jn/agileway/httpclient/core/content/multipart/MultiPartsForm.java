@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.core.multipart;
+package com.jn.agileway.httpclient.core.content.multipart;
 
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.io.resource.InputStreamResource;

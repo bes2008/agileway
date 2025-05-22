@@ -1,6 +1,5 @@
 package com.jn.agileway.httpclient.core.content;
 
-import com.jn.agileway.httpclient.core.HttpRequestContentWriter;
 import com.jn.agileway.httpclient.core.UnderlyingHttpRequest;
 import com.jn.agileway.httpclient.core.exception.BadHttpRequestException;
 import com.jn.agileway.httpclient.util.HttpClientUtils;

@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.core.multipart;
+package com.jn.agileway.httpclient.core.content.multipart;
 
 import com.jn.agileway.httpclient.util.ContentDisposition;
 import com.jn.langx.io.resource.Resource;
