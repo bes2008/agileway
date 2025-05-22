@@ -158,6 +158,10 @@ public class HttpExchanger extends AbstractInitializable {
     }
 
     public <O> Promise<HttpResponse<O>> exchange(boolean async, final HttpRequest request, final Type responseType) {
+        return exchange(async, request, responseType, null);
+    }
+
+    public <O> Promise<HttpResponse<O>> exchange(boolean async, final HttpRequest request, final Type responseType, HttpResponseContentExtractor contentExtractor) {
         Task<UnderlyingHttpResponse> sendRequestTask = new Task<UnderlyingHttpResponse>() {
 
             @Override
@@ -207,19 +211,25 @@ public class HttpExchanger extends AbstractInitializable {
                                       if (underlyingHttpResponse.getStatusCode() >= 400) {
                                           response = new HttpResponse<>(underlyingHttpResponse, null, true);
                                       } else {
-                                          final MediaType contentType = Objs.useValueIfNull(underlyingHttpResponse.getHeaders().getContentType(), MediaType.TEXT_HTML);
-                                          HttpResponseContentReader reader = Pipeline.of(responseContentReaders)
-                                                  .findFirst(new Predicate<HttpResponseContentReader>() {
-                                                      @Override
-                                                      public boolean test(HttpResponseContentReader httpResponseBodyReader) {
-                                                          return httpResponseBodyReader.canRead(underlyingHttpResponse, contentType, responseType);
-                                                      }
-                                                  });
-                                          if (reader != null) {
-                                              O bodyEntity = (O) reader.read(underlyingHttpResponse, contentType, responseType);
-                                              response = new HttpResponse<>(underlyingHttpResponse, bodyEntity);
-                                          } else {
-                                              throw new NotFoundHttpContentReaderException(StringTemplates.formatWithPlaceholder("Can't find a HttpResponseBodyReader to read the response body for Content-Type {}", contentType));
+                                          if (contentExtractor != null) {
+                                              response = contentExtractor.extract(underlyingHttpResponse);
+                                          }
+
+                                          if (response == null) {
+                                              final MediaType contentType = Objs.useValueIfNull(underlyingHttpResponse.getHeaders().getContentType(), MediaType.TEXT_HTML);
+                                              HttpResponseContentReader reader = Pipeline.of(responseContentReaders)
+                                                      .findFirst(new Predicate<HttpResponseContentReader>() {
+                                                          @Override
+                                                          public boolean test(HttpResponseContentReader httpResponseBodyReader) {
+                                                              return httpResponseBodyReader.canRead(underlyingHttpResponse, contentType, responseType);
+                                                          }
+                                                      });
+                                              if (reader != null) {
+                                                  O bodyEntity = (O) reader.read(underlyingHttpResponse, contentType, responseType);
+                                                  response = new HttpResponse<>(underlyingHttpResponse, bodyEntity);
+                                              } else {
+                                                  throw new NotFoundHttpContentReaderException(StringTemplates.formatWithPlaceholder("Can't find a HttpResponseBodyReader to read the response body for Content-Type {}", contentType));
+                                              }
                                           }
                                       }
                                   } else {
