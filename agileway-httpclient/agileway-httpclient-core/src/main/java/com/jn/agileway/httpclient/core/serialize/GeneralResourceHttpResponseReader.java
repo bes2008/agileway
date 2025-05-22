@@ -1,6 +1,7 @@
 package com.jn.agileway.httpclient.core.serialize;
 
 import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
+import com.jn.agileway.httpclient.util.ContentDisposition;
 import com.jn.langx.io.resource.ByteArrayResource;
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.util.Strings;
@@ -10,6 +11,9 @@ import com.jn.langx.util.net.mime.MediaType;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
+/**
+ * 处理静态资源文件
+ */
 public class GeneralResourceHttpResponseReader extends CustomMediaTypesHttpResponseReader<Resource> {
     public GeneralResourceHttpResponseReader() {
 

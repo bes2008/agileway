@@ -13,6 +13,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
+/**
+ * 处理附件下载
+ */
 public class GeneralAttachmentReader extends CustomMediaTypesHttpResponseReader<Resource> {
 
     public GeneralAttachmentReader() {

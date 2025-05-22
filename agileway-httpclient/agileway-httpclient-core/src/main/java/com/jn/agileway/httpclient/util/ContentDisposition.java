@@ -83,7 +83,7 @@ public class ContentDisposition {
                         String v = Strings.trim(kv[1]);
                         if (Strings.isNotEmpty(v)) {
                             if (Strings.equals(k, "filename") || Strings.equals(k, "filename*")) {
-                                contentDisposition.setFilename(new URLDecoder().decode(v, Charsets.US_ASCII.name()));
+                                contentDisposition.setFilename(URLDecoder.decode(v, Charsets.US_ASCII.name()));
                             }
                         }
                     }

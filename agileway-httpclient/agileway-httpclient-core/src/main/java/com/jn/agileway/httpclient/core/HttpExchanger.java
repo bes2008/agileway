@@ -96,6 +96,7 @@ public class HttpExchanger extends AbstractInitializable {
         this.requestContentWriters = Lists.immutableList(requestContentWriters);
 
         // responseBodyReaders
+        responseContentReaders.add(new GeneralAttachmentReader());
         responseContentReaders.add(new GeneralJsonHttpResponseReader());
         responseContentReaders.add(new GeneralTextHttpResponseReader());
         responseContentReaders.add(new GeneralResourceHttpResponseReader());
