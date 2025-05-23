@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.restful;
+package com.jn.agileway.httpclient.restful.content;
 
 import com.jn.agileway.httpclient.core.content.HttpRequestContentWriter;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequest;
