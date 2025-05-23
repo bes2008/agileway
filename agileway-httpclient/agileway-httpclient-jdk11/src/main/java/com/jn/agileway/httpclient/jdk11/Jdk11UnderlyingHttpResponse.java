@@ -1,6 +1,6 @@
 package com.jn.agileway.httpclient.jdk11;
 
-import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 

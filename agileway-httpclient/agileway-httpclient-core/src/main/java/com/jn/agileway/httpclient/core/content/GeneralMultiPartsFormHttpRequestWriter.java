@@ -1,6 +1,6 @@
 package com.jn.agileway.httpclient.core.content;
 
-import com.jn.agileway.httpclient.core.UnderlyingHttpRequest;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequest;
 import com.jn.agileway.httpclient.core.content.multipart.MultiPartsForm;
 import com.jn.agileway.httpclient.core.content.multipart.Part;
 import com.jn.agileway.httpclient.core.content.multipart.ResourcePart;

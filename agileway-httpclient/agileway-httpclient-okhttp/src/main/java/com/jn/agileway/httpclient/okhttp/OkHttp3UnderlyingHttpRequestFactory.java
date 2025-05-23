@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.okhttp;
 
-import com.jn.agileway.httpclient.core.UnderlyingHttpRequest;
-import com.jn.agileway.httpclient.core.UnderlyingHttpRequestFactory;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequest;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactory;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import okhttp3.OkHttpClient;
@@ -10,6 +10,7 @@ import java.net.URI;
 
 public class OkHttp3UnderlyingHttpRequestFactory implements UnderlyingHttpRequestFactory {
     private OkHttpClient httpClient;
+
     public void setHttpClient(OkHttpClient httpClient) {
         this.httpClient = httpClient;
     }

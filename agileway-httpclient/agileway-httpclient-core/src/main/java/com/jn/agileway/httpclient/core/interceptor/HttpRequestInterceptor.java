@@ -1,4 +1,6 @@
-package com.jn.agileway.httpclient.core;
+package com.jn.agileway.httpclient.core.interceptor;
+
+import com.jn.agileway.httpclient.core.HttpRequest;
 
 /**
  * 用于在请求发送之前，进行拦截处理

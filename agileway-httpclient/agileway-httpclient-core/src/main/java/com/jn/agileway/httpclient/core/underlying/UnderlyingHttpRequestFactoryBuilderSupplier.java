@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.core;
+package com.jn.agileway.httpclient.core.underlying;
 
 import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.lifecycle.InitializationException;

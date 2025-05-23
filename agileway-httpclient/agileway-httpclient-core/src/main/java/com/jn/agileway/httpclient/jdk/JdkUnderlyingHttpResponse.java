@@ -1,6 +1,6 @@
 package com.jn.agileway.httpclient.jdk;
 
-import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.ContentEncoding;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.Strings;

@@ -1,8 +1,8 @@
 package com.jn.agileway.httpclient.jdk;
 
-import com.jn.agileway.httpclient.core.UnderlyingHttpRequest;
-import com.jn.agileway.httpclient.core.UnderlyingHttpRequestFactory;
-import com.jn.agileway.httpclient.core.exception.UnsupportedHttpMethodException;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequest;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactory;
+import com.jn.agileway.httpclient.core.error.exception.UnsupportedHttpMethodException;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
@@ -12,7 +12,6 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import java.net.*;
-import java.util.concurrent.ExecutorService;
 
 public class JdkUnderlyingHttpRequestFactory implements UnderlyingHttpRequestFactory {
     private Proxy proxy;

@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.core;
+package com.jn.agileway.httpclient.core.underlying;
 
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;

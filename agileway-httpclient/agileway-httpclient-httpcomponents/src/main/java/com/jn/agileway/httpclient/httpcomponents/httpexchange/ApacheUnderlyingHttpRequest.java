@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.httpcomponents.httpexchange;
 
-import com.jn.agileway.httpclient.core.AbstractUnderlyingHttpRequest;
-import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
+import com.jn.agileway.httpclient.core.underlying.AbstractUnderlyingHttpRequest;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpHeaders;

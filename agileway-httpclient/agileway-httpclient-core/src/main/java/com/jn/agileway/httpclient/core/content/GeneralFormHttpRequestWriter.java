@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.core.content;
 
-import com.jn.agileway.httpclient.core.UnderlyingHttpRequest;
-import com.jn.agileway.httpclient.core.exception.BadHttpRequestException;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequest;
+import com.jn.agileway.httpclient.core.error.exception.BadHttpRequestException;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.net.mime.MediaType;

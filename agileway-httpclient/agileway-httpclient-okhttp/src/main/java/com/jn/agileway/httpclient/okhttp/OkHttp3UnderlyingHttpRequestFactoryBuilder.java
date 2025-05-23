@@ -1,6 +1,6 @@
 package com.jn.agileway.httpclient.okhttp;
 
-import com.jn.agileway.httpclient.core.UnderlyingHttpRequestFactoryBuilder;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactoryBuilder;
 import com.jn.langx.security.ssl.SSLContextBuilder;
 import okhttp3.ConnectionPool;
 import okhttp3.Dispatcher;

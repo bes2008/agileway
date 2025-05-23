@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.httpcomponents.httpexchange;
 
-import com.jn.agileway.httpclient.core.UnderlyingHttpRequestFactory;
-import com.jn.agileway.httpclient.core.UnderlyingHttpRequestFactoryBuilder;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactory;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactoryBuilder;
 import com.jn.agileway.httpclient.httpcomponents.ext.HttpClientCustomizer;
 import com.jn.agileway.httpclient.httpcomponents.ext.HttpClientProperties;
 import com.jn.agileway.httpclient.httpcomponents.ext.HttpClientProvider;

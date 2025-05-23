@@ -1,8 +1,7 @@
 package com.jn.agileway.httpclient.core.interceptor;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
-import com.jn.agileway.httpclient.core.HttpRequestInterceptor;
-import com.jn.agileway.httpclient.core.exception.BadHttpRequestException;
+import com.jn.agileway.httpclient.core.error.exception.BadHttpRequestException;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;

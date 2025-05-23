@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.jdk;
 
-import com.jn.agileway.httpclient.core.UnderlyingHttpRequestFactory;
-import com.jn.agileway.httpclient.core.UnderlyingHttpRequestFactoryBuilder;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactory;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactoryBuilder;
 import com.jn.langx.security.ssl.SSLContextBuilder;
 
 import javax.net.ssl.HostnameVerifier;

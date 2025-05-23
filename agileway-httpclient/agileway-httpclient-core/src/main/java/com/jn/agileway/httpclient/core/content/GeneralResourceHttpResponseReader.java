@@ -1,6 +1,6 @@
 package com.jn.agileway.httpclient.core.content;
 
-import com.jn.agileway.httpclient.core.UnderlyingHttpResponse;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.langx.io.resource.ByteArrayResource;
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.util.Strings;

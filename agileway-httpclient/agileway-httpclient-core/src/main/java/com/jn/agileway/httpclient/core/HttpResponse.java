@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.core;
 
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.io.Charsets;

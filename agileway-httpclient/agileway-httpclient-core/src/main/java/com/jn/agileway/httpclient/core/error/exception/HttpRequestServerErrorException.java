@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.core.exception;
+package com.jn.agileway.httpclient.core.error.exception;
 
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.net.http.HttpMethod;

@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.restful;
 
 import com.jn.agileway.httpclient.core.content.HttpRequestContentWriter;
-import com.jn.agileway.httpclient.core.UnderlyingHttpRequest;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequest;
 import com.jn.easyjson.core.util.JSONs;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.net.mime.MediaType;
