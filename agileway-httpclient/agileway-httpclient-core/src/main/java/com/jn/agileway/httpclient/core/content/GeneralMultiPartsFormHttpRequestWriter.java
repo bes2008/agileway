@@ -36,7 +36,7 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestConten
         for (Part part : form.getParts()) {
             writePart(part, output, boundary, formCharset);
         }
-        output.getBufferedContent().write(("--" + boundary + "--\r\n").getBytes(Charsets.US_ASCII));
+        output.getContent().write(("--" + boundary + "--\r\n").getBytes(Charsets.US_ASCII));
     }
 
     private void writePart(Part part, UnderlyingHttpRequest output, String boundary, Charset formCharset) throws IOException {
@@ -44,20 +44,20 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestConten
             return;
         }
 
-        output.getBufferedContent().write(("--" + boundary + "\r\n").getBytes(Charsets.US_ASCII));
+        output.getContent().write(("--" + boundary + "\r\n").getBytes(Charsets.US_ASCII));
         String contentDisposition = part.getContentDisposition().asString();
-        output.getBufferedContent().write((contentDisposition + "\r\n").getBytes(Charsets.US_ASCII));
-        output.getBufferedContent().write(("Content-Type: " + part.getContentType() + "\r\n").getBytes(Charsets.US_ASCII));
-        output.getBufferedContent().write("\r\n".getBytes(StandardCharsets.US_ASCII));
+        output.getContent().write((contentDisposition + "\r\n").getBytes(Charsets.US_ASCII));
+        output.getContent().write(("Content-Type: " + part.getContentType() + "\r\n").getBytes(Charsets.US_ASCII));
+        output.getContent().write("\r\n".getBytes(StandardCharsets.US_ASCII));
 
 
         if (part instanceof TextPart) {
             Charset charset = part.getCharset() == null ? formCharset : part.getCharset();
-            output.getBufferedContent().write(((TextPart) part).getContent().getBytes(charset));
+            output.getContent().write(((TextPart) part).getContent().getBytes(charset));
         } else if (part instanceof ResourcePart) {
             Resource resource = ((ResourcePart) part).getContent();
             try {
-                IOs.copy(resource.getInputStream(), output.getBufferedContent());
+                IOs.copy(resource.getInputStream(), output.getContent());
             } finally {
                 IOs.close(resource);
             }

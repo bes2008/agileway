@@ -31,7 +31,7 @@ class OkHttp3UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<Request
     }
 
     @Override
-    public OutputStream getBufferedContent() throws IOException {
+    public OutputStream getContent() throws IOException {
         if (bufferedContent == null) {
             if (HttpClientUtils.isWriteable(getMethod())) {
                 bufferedContent = new ByteArrayOutputStream(1024);
