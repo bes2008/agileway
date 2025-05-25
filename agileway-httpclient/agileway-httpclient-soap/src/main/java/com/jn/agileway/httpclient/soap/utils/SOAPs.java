@@ -1,9 +1,9 @@
 package com.jn.agileway.httpclient.soap.utils;
 
-import com.jn.agileway.httpclient.soap.SoapBody;
-import com.jn.agileway.httpclient.soap.SoapEnvelope;
-import com.jn.agileway.httpclient.soap.SoapHeader;
-import com.jn.agileway.httpclient.soap.SoapHeaderElement;
+import com.jn.agileway.httpclient.soap.entity.SoapBody;
+import com.jn.agileway.httpclient.soap.entity.SoapEnvelope;
+import com.jn.agileway.httpclient.soap.entity.SoapHeader;
+import com.jn.agileway.httpclient.soap.entity.SoapHeaderElement;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;

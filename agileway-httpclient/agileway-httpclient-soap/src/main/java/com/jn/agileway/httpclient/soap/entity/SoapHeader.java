@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.soap;
+package com.jn.agileway.httpclient.soap.entity;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.soap;
+package com.jn.agileway.httpclient.soap.entity;
 
 public class SoapBody<T> {
     private T payload;

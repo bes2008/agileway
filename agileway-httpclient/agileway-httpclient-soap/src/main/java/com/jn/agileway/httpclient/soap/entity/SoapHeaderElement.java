@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.soap;
+package com.jn.agileway.httpclient.soap.entity;
 
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.util.Strings;
