@@ -1,5 +1,9 @@
 package com.jn.agileway.httpclient.soap.utils;
 
+import com.jn.agileway.httpclient.soap.SoapBody;
+import com.jn.agileway.httpclient.soap.SoapEnvelope;
+import com.jn.agileway.httpclient.soap.SoapHeader;
+import com.jn.agileway.httpclient.soap.SoapHeaderElement;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
@@ -15,14 +19,69 @@ public class SOAPs {
     private SOAPs() {
     }
 
-    private static String soapEnvelopeTemplate = "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">" + Strings.CRLF +
-            "  <soap:Body>" + Strings.CRLF +
+    private static String soapEnvelopeTemplate = "<agilewaysoap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">" + Strings.CRLF +
             "{}" +
-            "  </soap:Body>" + Strings.CRLF +
-            "</soap:Envelope>" + Strings.CRLF;
+            "  <agilewaysoap:Body>" + Strings.CRLF +
+            "{}" +
+            "  </agilewaysoap:Body>" + Strings.CRLF +
+            "</agilewaysoap:Envelope>" + Strings.CRLF;
 
+    public static String marshalSoapHeader(SoapHeader soapHeader) {
+        if (soapHeader == null) {
+            return "  <agilewaysoap:Header/>";
+        }
+        if (Objs.isEmpty(soapHeader.getElements())) {
+            return "  <agilewaysoap:Header/>";
+        } else {
+            StringBuilder builder = new StringBuilder();
+            for (SoapHeaderElement element : soapHeader.getElements()) {
+                String elementNamespacePrefix = element.getName().getPrefix();
+                String elementTag = Strings.isEmpty(elementNamespacePrefix) ? element.getName().getLocalPart() : (elementNamespacePrefix + ":" + element.getName().getLocalPart());
+                String namespaceAttrName = null;
+                String namespaceAttrValue = element.getName().getNamespaceURI();
+                if (Strings.isNotEmpty(namespaceAttrValue)) {
+                    namespaceAttrName = Strings.isEmpty(elementNamespacePrefix) ? "xmlns" : ("xmlns:" + element.getName().getPrefix());
+                }
 
-    public static String javaBeanToSoapEnvelope(Object soapPayload) throws Throwable {
+                builder.append("    ").append("<").append(elementTag);
+                if (namespaceAttrName != null) {
+                    builder.append(" ").append(namespaceAttrName).append("=\"").append(namespaceAttrValue).append("\"");
+                }
+                if (Strings.isNotEmpty(element.getRole())) {
+                    if ("1.2".equals(soapHeader.getVersion())) {
+                        builder.append(" agilewaysoap:role=\"").append(element.getRole()).append("\"");
+                    } else {
+                        builder.append(" agilewaysoap:actor=\"").append(element.getActor()).append("\"");
+                    }
+                }
+                builder.append(" agilewaysoap:mustUnderstand=\"").append("" + element.isMustUnderstand()).append("\"");
+                if ("1.2".equals(soapHeader.getVersion())) {
+                    builder.append(" agilewaysoap:relay=\"").append("" + element.isRelay()).append("\"");
+                }
+
+                builder.append(" >").append(Strings.CRLF);
+                builder.append("    ").append("</").append(elementTag).append(">").append(Strings.CRLF);
+            }
+            return builder.toString();
+        }
+    }
+
+    public static String toSoapEnvelope(Object soapPayload) throws Throwable {
+        return toSoapEnvelope(null, soapPayload);
+    }
+
+    public static String toSoapEnvelope(SoapHeader soapHeader, Object soapPayload) throws Throwable {
+        if (soapPayload instanceof SoapEnvelope) {
+            soapPayload = ((SoapEnvelope) soapPayload).getBody().getPayload();
+            soapHeader = ((SoapEnvelope) soapPayload).getHeader();
+        }
+        if (soapPayload instanceof SoapBody) {
+            soapPayload = ((SoapBody) soapPayload).getPayload();
+        }
+        if (soapPayload == null) {
+            throw new NullPointerException("soap payload is required");
+        }
+        String header = marshalSoapHeader(soapHeader);
         byte[] bytes = JAXBs.javaBeanToXml(soapPayload);
         List<String> lines = IOs.readLines(new ByteArrayInputStream(bytes));
         StringBuilder builder = new StringBuilder();
@@ -44,7 +103,7 @@ public class SOAPs {
             }
         }
 
-        String soapEnvelope = StringTemplates.formatWithPlaceholder(soapEnvelopeTemplate, builder.toString());
+        String soapEnvelope = StringTemplates.formatWithPlaceholder(soapEnvelopeTemplate, header, builder.toString());
         return soapEnvelope;
     }
 
