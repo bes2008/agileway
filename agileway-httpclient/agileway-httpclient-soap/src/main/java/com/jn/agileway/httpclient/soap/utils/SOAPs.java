@@ -19,7 +19,7 @@ public class SOAPs {
     private SOAPs() {
     }
 
-    private static String soapEnvelopeTemplate = "<agilewaysoap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">" + Strings.CRLF +
+    private static String soapEnvelopeTemplate = "<agilewaysoap:Envelope xmlns:agilewaysoap=\"http://schemas.xmlsoap.org/soap/envelope/\">" + Strings.CRLF +
             "{}" +
             "    <agilewaysoap:Body>" + Strings.CRLF +
             "{}" +
