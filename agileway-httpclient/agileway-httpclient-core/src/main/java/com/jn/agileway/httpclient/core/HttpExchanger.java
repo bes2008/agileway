@@ -6,6 +6,7 @@ import com.jn.agileway.httpclient.core.error.exception.*;
 import com.jn.agileway.httpclient.core.interceptor.*;
 import com.jn.agileway.httpclient.core.content.multipart.MultiPartsForm;
 import com.jn.agileway.httpclient.core.content.*;
+import com.jn.agileway.httpclient.core.plugin.PluginBasedHttpRequestInterceptor;
 import com.jn.agileway.httpclient.core.underlying.*;
 import com.jn.agileway.httpclient.restful.content.GeneralJsonHttpRequestWriter;
 import com.jn.agileway.httpclient.restful.content.GeneralJsonHttpResponseReader;
@@ -15,6 +16,9 @@ import com.jn.langx.annotation.Nullable;
 import com.jn.langx.exception.ErrorHandler;
 import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.lifecycle.InitializationException;
+import com.jn.langx.plugin.PluginRegistry;
+import com.jn.langx.plugin.SimpleLoadablePluginRegistry;
+import com.jn.langx.plugin.SpiPluginLoader;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Throwables;
@@ -70,6 +74,10 @@ public class HttpExchanger extends AbstractInitializable {
      */
     private List<HttpResponseInterceptor> responseInterceptors = Lists.newArrayList();
 
+    private PluginRegistry httpMessagePluginRegistry;
+
+
+
     /**
      * 该方法要在 自定义的 interceptor, readers, writers 完成之后调用
      */
@@ -78,7 +86,15 @@ public class HttpExchanger extends AbstractInitializable {
         if (configuration == null) {
             configuration = new HttpExchangerConfiguration();
         }
+
+        if (this.httpMessagePluginRegistry == null) {
+            SimpleLoadablePluginRegistry httpMessagePluginRegistry = new SimpleLoadablePluginRegistry();
+            httpMessagePluginRegistry.setPluginLoader(new SpiPluginLoader());
+            this.httpMessagePluginRegistry = httpMessagePluginRegistry;
+        }
+
         // requestInterceptors
+        this.requestInterceptors.add(new PluginBasedHttpRequestInterceptor());
         this.requestInterceptors.add(new HttpRequestMultiPartsFormInterceptor());
         this.requestInterceptors.add(new HttpRequestHeadersInterceptor(configuration.getFixedHeaders()));
         this.requestInterceptors.add(new HttpRequestLoggingInterceptor());
@@ -324,5 +340,11 @@ public class HttpExchanger extends AbstractInitializable {
                 }, fallback);
             }
         });
+    }
+
+    public void setHttpMessagePluginRegistry(PluginRegistry httpMessagePluginRegistry) {
+        if (httpMessagePluginRegistry != null) {
+            this.httpMessagePluginRegistry = httpMessagePluginRegistry;
+        }
     }
 }
