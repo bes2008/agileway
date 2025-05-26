@@ -11,8 +11,8 @@ import com.jn.agileway.httpclient.core.plugin.GeneralPluginBasedHttpResponseRead
 import com.jn.agileway.httpclient.core.plugin.PluginBasedHttpRequestInterceptor;
 import com.jn.agileway.httpclient.core.plugin.PluginBasedHttpResponseInterceptor;
 import com.jn.agileway.httpclient.core.underlying.*;
-import com.jn.agileway.httpclient.restful.content.GeneralJsonHttpRequestWriter;
-import com.jn.agileway.httpclient.restful.content.GeneralJsonHttpResponseReader;
+import com.jn.agileway.httpclient.supports.restful.content.GeneralJsonHttpRequestWriter;
+import com.jn.agileway.httpclient.supports.restful.content.GeneralJsonHttpResponseReader;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;

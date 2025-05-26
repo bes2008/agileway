@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.restful;
+package com.jn.agileway.httpclient.supports.restful;
 
 /**
  * @see <a href="https://www.rfc-editor.org/rfc/rfc9457.html">RFC9457</a>
