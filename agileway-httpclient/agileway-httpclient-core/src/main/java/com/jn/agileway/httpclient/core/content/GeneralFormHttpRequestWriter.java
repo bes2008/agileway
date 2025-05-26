@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.core.content;
 
+import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequest;
 import com.jn.agileway.httpclient.core.error.exception.BadHttpRequestException;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
@@ -17,14 +18,17 @@ import java.util.Map;
 import java.util.Set;
 
 public class GeneralFormHttpRequestWriter implements HttpRequestContentWriter {
-    public boolean canWrite(Object body, MediaType contentType) {
+    public boolean canWrite(HttpRequest request) {
+        MediaType contentType = request.getHeaders().getContentType();
         if (!HttpClientUtils.isSimpleForm(contentType)) {
             return false;
         }
         return true;
     }
 
-    public void write(Object body, MediaType contentType, UnderlyingHttpRequest output) throws IOException {
+    public void write(HttpRequest request, UnderlyingHttpRequest output) throws IOException {
+        Object body = request.getContent();
+        MediaType contentType = request.getHeaders().getContentType();
         Charset charset = contentType.getCharset();
         String formString = serializeSimpleForm(body, contentType.getCharset(), output);
         output.getContent().write(formString.getBytes(charset));

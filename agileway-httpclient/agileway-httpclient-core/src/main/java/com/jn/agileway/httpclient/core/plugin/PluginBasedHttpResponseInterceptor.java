@@ -1,28 +1,19 @@
 package com.jn.agileway.httpclient.core.plugin;
 
 import com.jn.agileway.httpclient.core.HttpResponse;
-import com.jn.agileway.httpclient.core.interceptor.HttpRequestInterceptor;
 import com.jn.agileway.httpclient.core.interceptor.HttpResponseInterceptor;
-import com.jn.langx.plugin.PluginRegistry;
-import com.jn.langx.util.function.Predicate;
 
 public class PluginBasedHttpResponseInterceptor implements HttpResponseInterceptor {
 
-    private PluginRegistry httpMessagePluginRegistry;
+    private HttpMessagePlugin plugin;
 
-    public PluginBasedHttpResponseInterceptor(PluginRegistry pluginRegistry) {
-        this.httpMessagePluginRegistry = pluginRegistry;
+    public PluginBasedHttpResponseInterceptor(HttpMessagePlugin plugin) {
+        this.plugin = plugin;
     }
 
     @Override
     public void intercept(HttpResponse response) {
-        HttpMessagePlugin plugin = httpMessagePluginRegistry.findOne(HttpMessagePlugin.class, new Predicate<HttpMessagePlugin>() {
-            @Override
-            public boolean test(HttpMessagePlugin plugin) {
-                return plugin.availableFor(response) && !plugin.getResponseInterceptors().isEmpty();
-            }
-        });
-        if (plugin != null) {
+        if (!plugin.getResponseInterceptors().isEmpty() && plugin.availableFor(response)) {
             for (HttpResponseInterceptor interceptor : plugin.getResponseInterceptors()) {
                 interceptor.intercept(response);
             }

@@ -1,28 +1,47 @@
 package com.jn.agileway.httpclient.core.plugin;
 
+import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.content.HttpRequestContentWriter;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequest;
-import com.jn.langx.plugin.PluginRegistry;
-import com.jn.langx.util.net.mime.MediaType;
+import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.function.Predicate;
 
 import java.io.IOException;
 
 public class GeneralPluginBasedHttpRequestWriter implements HttpRequestContentWriter {
 
-    private PluginRegistry httpMessagePluginRegistry;
+    private HttpMessagePlugin plugin;
 
-    public GeneralPluginBasedHttpRequestWriter(PluginRegistry httpMessagePluginRegistry) {
-        this.httpMessagePluginRegistry = httpMessagePluginRegistry;
+    public GeneralPluginBasedHttpRequestWriter(HttpMessagePlugin plugin) {
+        this.plugin = plugin;
     }
 
 
     @Override
-    public boolean canWrite(Object body, MediaType contentType) {
-        return false;
+    public boolean canWrite(HttpRequest request) {
+        if (plugin.getRequestContentWriters().isEmpty()) {
+            return false;
+        }
+        if (!plugin.availableFor(request)) {
+            return false;
+        }
+        return Pipeline.of(plugin.getRequestContentWriters())
+                .anyMatch(new Predicate<HttpRequestContentWriter>() {
+                    @Override
+                    public boolean test(HttpRequestContentWriter writer) {
+                        return writer.canWrite(request);
+                    }
+                });
     }
 
     @Override
-    public void write(Object body, MediaType contentType, UnderlyingHttpRequest output) throws IOException {
+    public void write(HttpRequest request, UnderlyingHttpRequest output) throws IOException {
+        Pipeline.of(plugin.getRequestContentWriters()).findFirst(new Predicate<HttpRequestContentWriter>() {
+            @Override
+            public boolean test(HttpRequestContentWriter httpRequestContentWriter) {
+                return httpRequestContentWriter.canWrite(request);
+            }
+        }).write(request, output);
 
     }
 }

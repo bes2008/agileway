@@ -5,12 +5,9 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
-import com.jn.langx.util.net.http.HttpHeaders;
-import com.jn.langx.util.net.http.HttpMethod;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 
 /**
  * 代表了Http响应，它是提供给用户直接使用的.
@@ -28,7 +25,7 @@ import java.net.URI;
  *
  * @param <T>
  */
-public class HttpResponse<T> extends HttpMessage<T> {
+public class HttpResponse<T> extends BaseHttpMessage<T> {
     private int statusCode;
     private String errorMessage;
 

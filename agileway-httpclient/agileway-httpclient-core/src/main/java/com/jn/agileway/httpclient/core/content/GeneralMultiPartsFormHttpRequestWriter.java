@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.core.content;
 
+import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequest;
 import com.jn.agileway.httpclient.core.content.multipart.MultiPartsForm;
 import com.jn.agileway.httpclient.core.content.multipart.Part;
@@ -17,7 +18,9 @@ import java.nio.charset.StandardCharsets;
 
 public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestContentWriter {
     @Override
-    public boolean canWrite(Object body, MediaType contentType) {
+    public boolean canWrite(HttpRequest request) {
+        Object body = request.getContent();
+        MediaType contentType = request.getHeaders().getContentType();
         if (!HttpClientUtils.isMultipartForm(contentType)) {
             return false;
         }
@@ -28,7 +31,9 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestConten
     }
 
     @Override
-    public void write(Object body, MediaType contentType, UnderlyingHttpRequest output) throws IOException {
+    public void write(HttpRequest request, UnderlyingHttpRequest output) throws IOException {
+        Object body = request.getContent();
+        MediaType contentType = request.getHeaders().getContentType();
         MultiPartsForm form = (MultiPartsForm) body;
         Charset formCharset = form.getCharset() == null ? Charsets.UTF_8 : form.getCharset();
         String boundary = contentType.getParameter("boundary");

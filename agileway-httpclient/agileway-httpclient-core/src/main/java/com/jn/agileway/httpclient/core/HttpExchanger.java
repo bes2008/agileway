@@ -6,10 +6,7 @@ import com.jn.agileway.httpclient.core.error.exception.*;
 import com.jn.agileway.httpclient.core.interceptor.*;
 import com.jn.agileway.httpclient.core.content.multipart.MultiPartsForm;
 import com.jn.agileway.httpclient.core.content.*;
-import com.jn.agileway.httpclient.core.plugin.GeneralPluginBasedHttpRequestWriter;
-import com.jn.agileway.httpclient.core.plugin.GeneralPluginBasedHttpResponseReader;
-import com.jn.agileway.httpclient.core.plugin.PluginBasedHttpRequestInterceptor;
-import com.jn.agileway.httpclient.core.plugin.PluginBasedHttpResponseInterceptor;
+import com.jn.agileway.httpclient.core.plugin.*;
 import com.jn.agileway.httpclient.core.underlying.*;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.annotation.NonNull;
@@ -94,8 +91,12 @@ public class HttpExchanger extends AbstractInitializable {
             this.httpMessagePluginRegistry = httpMessagePluginRegistry;
         }
 
+        List<HttpMessagePlugin> plugins = this.httpMessagePluginRegistry.find(HttpMessagePlugin.class);
+
         // requestInterceptors
-        this.requestInterceptors.add(new PluginBasedHttpRequestInterceptor(this.httpMessagePluginRegistry));
+        for (HttpMessagePlugin plugin : plugins) {
+            this.requestInterceptors.add(new PluginBasedHttpRequestInterceptor(plugin));
+        }
         this.requestInterceptors.add(new HttpRequestMultiPartsFormInterceptor());
         this.requestInterceptors.add(new HttpRequestHeadersInterceptor(configuration.getFixedHeaders()));
         this.requestInterceptors.add(new HttpRequestLoggingInterceptor());
@@ -106,21 +107,27 @@ public class HttpExchanger extends AbstractInitializable {
 
         // responseInterceptors
         this.responseInterceptors.add(new HttpResponseLoggingInterceptor());
-        this.responseInterceptors.add(new PluginBasedHttpResponseInterceptor(this.httpMessagePluginRegistry));
+        for (HttpMessagePlugin plugin : plugins) {
+            this.responseInterceptors.add(new PluginBasedHttpResponseInterceptor(plugin));
+        }
         this.responseInterceptors = Lists.immutableList(responseInterceptors);
 
         // requestBodyWriters
-        this.requestContentWriters.add(new GeneralPluginBasedHttpRequestWriter(this.httpMessagePluginRegistry));
+        for (HttpMessagePlugin plugin : plugins) {
+            this.requestContentWriters.add(new GeneralPluginBasedHttpRequestWriter(plugin));
+        }
         this.requestContentWriters.add(new GeneralFormHttpRequestWriter());
         this.requestContentWriters.add(new GeneralMultiPartsFormHttpRequestWriter());
         this.requestContentWriters = Lists.immutableList(requestContentWriters);
 
         // responseBodyReaders
-        responseContentReaders.add(new GeneralPluginBasedHttpResponseReader(this.httpMessagePluginRegistry));
-        responseContentReaders.add(new GeneralAttachmentReader());
-        responseContentReaders.add(new GeneralTextHttpResponseReader());
-        responseContentReaders.add(new GeneralResourceHttpResponseReader());
-        responseContentReaders.add(0, new GeneralBytesHttpResponseReader());
+        for (HttpMessagePlugin plugin : plugins) {
+            responseContentReaders.add(new GeneralPluginBasedHttpResponseReader(plugin));
+        }
+        this.responseContentReaders.add(new GeneralAttachmentReader());
+        this.responseContentReaders.add(new GeneralTextHttpResponseReader());
+        this.responseContentReaders.add(new GeneralResourceHttpResponseReader());
+        this.responseContentReaders.add(0, new GeneralBytesHttpResponseReader());
         this.responseContentReaders = Lists.immutableList(responseContentReaders);
 
         // httpResponseErrorHandler
@@ -199,11 +206,11 @@ public class HttpExchanger extends AbstractInitializable {
                                 .findFirst(new Predicate<HttpRequestContentWriter>() {
                                     @Override
                                     public boolean test(HttpRequestContentWriter writer) {
-                                        return writer.canWrite(request.getContent(), request.getHeaders().getContentType());
+                                        return writer.canWrite(request);
                                     }
                                 });
                         if (requestBodyWriter != null) {
-                            requestBodyWriter.write(request.getContent(), request.getHeaders().getContentType(), underlyingHttpRequest);
+                            requestBodyWriter.write(request, underlyingHttpRequest);
                         } else {
                             throw new NotFoundHttpContentWriterException();
                         }

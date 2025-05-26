@@ -12,7 +12,7 @@ import com.jn.langx.util.net.uri.component.UriComponentsBuilder;
 import java.net.URI;
 import java.util.Map;
 
-public class HttpRequest<T> extends HttpMessage<T> {
+public class HttpRequest<T> extends BaseHttpMessage<T> {
 
     HttpRequest(URI uri, HttpMethod method, HttpHeaders headers, T body) {
         this.uri = uri;
@@ -20,6 +20,7 @@ public class HttpRequest<T> extends HttpMessage<T> {
         this.headers = headers == null ? new HttpHeaders() : headers;
         this.content = body;
     }
+
 
     public static HttpRequest create(@NonNull HttpMethod method,
                                      @NonNull String uriTemplate,

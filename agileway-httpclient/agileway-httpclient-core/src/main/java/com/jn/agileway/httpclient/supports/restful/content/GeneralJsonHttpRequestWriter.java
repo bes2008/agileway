@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.supports.restful.content;
 
+import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.content.HttpRequestContentWriter;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequest;
 import com.jn.easyjson.core.util.JSONs;
@@ -10,7 +11,8 @@ import java.io.IOException;
 
 public class GeneralJsonHttpRequestWriter implements HttpRequestContentWriter {
     @Override
-    public boolean canWrite(Object body, MediaType contentType) {
+    public boolean canWrite(HttpRequest request) {
+        MediaType contentType = request.getHeaders().getContentType();
         if (MediaType.APPLICATION_JSON.equalsTypeAndSubtype(contentType)) {
             return true;
         }
@@ -18,7 +20,8 @@ public class GeneralJsonHttpRequestWriter implements HttpRequestContentWriter {
     }
 
     @Override
-    public void write(Object body, MediaType contentType, UnderlyingHttpRequest output) throws IOException {
+    public void write(HttpRequest request, UnderlyingHttpRequest output) throws IOException {
+        Object body = request.getContent();
         output.getContent().write(JSONs.toJson(body).getBytes(Charsets.UTF_8));
     }
 }
