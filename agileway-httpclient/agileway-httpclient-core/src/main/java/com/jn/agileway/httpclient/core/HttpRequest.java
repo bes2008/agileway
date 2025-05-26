@@ -12,50 +12,13 @@ import com.jn.langx.util.net.uri.component.UriComponentsBuilder;
 import java.net.URI;
 import java.util.Map;
 
-public class HttpRequest<T> {
-    private URI uri;
-    private HttpMethod method;
-    private HttpHeaders headers;
-    private T content;
-
+public class HttpRequest<T> extends HttpMessage<T> {
 
     HttpRequest(URI uri, HttpMethod method, HttpHeaders headers, T body) {
         this.uri = uri;
         this.method = method;
         this.headers = headers == null ? new HttpHeaders() : headers;
         this.content = body;
-    }
-
-    public URI getUri() {
-        return uri;
-    }
-
-    public void setUri(URI uri) {
-        this.uri = uri;
-    }
-
-    public HttpMethod getMethod() {
-        return method;
-    }
-
-    public void setMethod(HttpMethod method) {
-        this.method = method;
-    }
-
-    public HttpHeaders getHeaders() {
-        return headers;
-    }
-
-    public void setHeaders(HttpHeaders headers) {
-        this.headers = headers;
-    }
-
-    public T getContent() {
-        return content;
-    }
-
-    public void setContent(T content) {
-        this.content = content;
     }
 
     public static HttpRequest create(@NonNull HttpMethod method,

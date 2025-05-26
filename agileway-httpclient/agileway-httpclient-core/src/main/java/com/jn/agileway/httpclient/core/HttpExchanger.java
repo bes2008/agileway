@@ -57,7 +57,7 @@ public class HttpExchanger extends AbstractInitializable {
     private List<HttpRequestContentWriter> requestContentWriters = Lists.newArrayList();
 
     /**
-     * 对正常的响应进行反序列化
+     * 对正常响应进行反序列化
      */
     private List<HttpResponseContentReader> responseContentReaders = Lists.newArrayList();
     /**

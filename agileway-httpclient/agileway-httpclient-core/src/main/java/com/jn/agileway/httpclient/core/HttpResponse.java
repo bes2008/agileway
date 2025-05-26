@@ -28,12 +28,8 @@ import java.net.URI;
  *
  * @param <T>
  */
-public class HttpResponse<T> {
-    private URI uri;
-    private HttpMethod method;
+public class HttpResponse<T> extends HttpMessage<T> {
     private int statusCode;
-    private HttpHeaders headers;
-    private T content;
     private String errorMessage;
 
     public HttpResponse(UnderlyingHttpResponse response) {
@@ -69,28 +65,13 @@ public class HttpResponse<T> {
         }
     }
 
-    public HttpHeaders getHeaders() {
-        return this.headers;
-    }
 
     public int getStatusCode() {
         return this.statusCode;
     }
 
-    public T getContent() {
-        return content;
-    }
-
     public String getErrorMessage() {
         return errorMessage;
-    }
-
-    public URI getUri() {
-        return uri;
-    }
-
-    public HttpMethod getMethod() {
-        return method;
     }
 
     public boolean hasError() {
