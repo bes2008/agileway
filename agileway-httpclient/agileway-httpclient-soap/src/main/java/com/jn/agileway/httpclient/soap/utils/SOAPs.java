@@ -21,17 +21,17 @@ public class SOAPs {
 
     private static String soapEnvelopeTemplate = "<agilewaysoap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">" + Strings.CRLF +
             "{}" +
-            "  <agilewaysoap:Body>" + Strings.CRLF +
+            "    <agilewaysoap:Body>" + Strings.CRLF +
             "{}" +
-            "  </agilewaysoap:Body>" + Strings.CRLF +
+            "    </agilewaysoap:Body>" + Strings.CRLF +
             "</agilewaysoap:Envelope>" + Strings.CRLF;
 
     public static String marshalSoapHeader(SoapHeader soapHeader) {
         if (soapHeader == null) {
-            return "  <agilewaysoap:Header/>";
+            return "    <agilewaysoap:Header/>" + Strings.CRLF;
         }
         if (Objs.isEmpty(soapHeader.getElements())) {
-            return "  <agilewaysoap:Header/>";
+            return "    <agilewaysoap:Header/>" + Strings.CRLF;
         } else {
             StringBuilder builder = new StringBuilder();
             for (SoapHeaderElement element : soapHeader.getElements()) {
@@ -43,7 +43,7 @@ public class SOAPs {
                     namespaceAttrName = Strings.isEmpty(elementNamespacePrefix) ? "xmlns" : ("xmlns:" + element.getName().getPrefix());
                 }
 
-                builder.append("    ").append("<").append(elementTag);
+                builder.append("        ").append("<").append(elementTag);
                 if (namespaceAttrName != null) {
                     builder.append(" ").append(namespaceAttrName).append("=\"").append(namespaceAttrValue).append("\"");
                 }
@@ -60,7 +60,7 @@ public class SOAPs {
                 }
 
                 builder.append(" >").append(Strings.CRLF);
-                builder.append("    ").append("</").append(elementTag).append(">").append(Strings.CRLF);
+                builder.append("        ").append("</").append(elementTag).append(">").append(Strings.CRLF);
             }
             return builder.toString();
         }
