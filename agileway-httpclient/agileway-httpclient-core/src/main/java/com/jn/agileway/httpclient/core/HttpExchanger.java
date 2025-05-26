@@ -11,8 +11,6 @@ import com.jn.agileway.httpclient.core.plugin.GeneralPluginBasedHttpResponseRead
 import com.jn.agileway.httpclient.core.plugin.PluginBasedHttpRequestInterceptor;
 import com.jn.agileway.httpclient.core.plugin.PluginBasedHttpResponseInterceptor;
 import com.jn.agileway.httpclient.core.underlying.*;
-import com.jn.agileway.httpclient.supports.restful.content.GeneralJsonHttpRequestWriter;
-import com.jn.agileway.httpclient.supports.restful.content.GeneralJsonHttpResponseReader;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
@@ -112,14 +110,12 @@ public class HttpExchanger extends AbstractInitializable {
         this.responseInterceptors = Lists.immutableList(responseInterceptors);
 
         // requestBodyWriters
-        this.requestContentWriters.add(new GeneralJsonHttpRequestWriter());
         this.requestContentWriters.add(new GeneralPluginBasedHttpRequestWriter(this.httpMessagePluginRegistry));
         this.requestContentWriters.add(new GeneralFormHttpRequestWriter());
         this.requestContentWriters.add(new GeneralMultiPartsFormHttpRequestWriter());
         this.requestContentWriters = Lists.immutableList(requestContentWriters);
 
         // responseBodyReaders
-        responseContentReaders.add(new GeneralJsonHttpResponseReader());
         responseContentReaders.add(new GeneralPluginBasedHttpResponseReader(this.httpMessagePluginRegistry));
         responseContentReaders.add(new GeneralAttachmentReader());
         responseContentReaders.add(new GeneralTextHttpResponseReader());

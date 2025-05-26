@@ -10,12 +10,12 @@ import com.jn.langx.util.collection.Lists;
 import java.util.List;
 
 public abstract class HttpMessagePlugin implements Plugin<HttpMessage> {
-    private List<HttpRequestInterceptor> requestInterceptors = Lists.newArrayList();
+    protected final List<HttpRequestInterceptor> requestInterceptors = Lists.newArrayList();
 
-    private List<HttpRequestInterceptor> responseInterceptors = Lists.newArrayList();
+    protected final List<HttpRequestInterceptor> responseInterceptors = Lists.newArrayList();
 
-    private List<HttpRequestContentWriter> requestContentWriters = Lists.newArrayList();
-    private List<HttpResponseContentReader> responseContentReaders = Lists.newArrayList();
+    protected final List<HttpRequestContentWriter> requestContentWriters = Lists.newArrayList();
+    protected final List<HttpResponseContentReader> responseContentReaders = Lists.newArrayList();
 
     public List<HttpRequestContentWriter> getRequestContentWriters() {
         return requestContentWriters;
