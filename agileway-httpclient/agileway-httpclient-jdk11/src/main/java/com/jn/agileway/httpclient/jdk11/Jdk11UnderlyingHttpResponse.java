@@ -45,7 +45,7 @@ class Jdk11UnderlyingHttpResponse implements UnderlyingHttpResponse {
     }
 
     @Override
-    public InputStream getContent() throws IOException {
+    public InputStream getContent() {
         return content;
     }
 

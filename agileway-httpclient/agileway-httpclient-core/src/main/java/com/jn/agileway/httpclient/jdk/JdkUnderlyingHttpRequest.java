@@ -4,6 +4,7 @@ import com.jn.agileway.httpclient.core.underlying.AbstractUnderlyingHttpRequest;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.ContentEncoding;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
+import com.jn.langx.util.Throwables;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 
@@ -29,7 +30,7 @@ class JdkUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpURLConn
     }
 
     @Override
-    public OutputStream getContent() throws IOException {
+    public OutputStream getContent() {
         if (!HttpClientUtils.isWriteable(getMethod())) {
             return null;
         }
@@ -40,19 +41,23 @@ class JdkUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpURLConn
             return this.bufferedBody;
         }
         if (streamBody == null) {
-            long contentLength = this.getHeaders().getContentLength();
-            if (contentLength > 0) {
-                // 要求 提前告知长度
-                this.httpConnection.setFixedLengthStreamingMode(contentLength);
-            } else {
-                this.httpConnection.setChunkedStreamingMode(4096);
+            try {
+                long contentLength = this.getHeaders().getContentLength();
+                if (contentLength > 0) {
+                    // 要求 提前告知长度
+                    this.httpConnection.setFixedLengthStreamingMode(contentLength);
+                } else {
+                    this.httpConnection.setChunkedStreamingMode(4096);
+                }
+                writeHeaders(this.httpConnection);
+                this.httpConnection.connect();
+                OutputStream outputStream = this.httpConnection.getOutputStream();
+                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(this.getHeaders());
+                outputStream = HttpClientUtils.wrapByContentEncodings(outputStream, contentEncodings);
+                this.streamBody = outputStream;
+            } catch (IOException ex) {
+                throw Throwables.wrapAsRuntimeIOException(ex);
             }
-            writeHeaders(this.httpConnection);
-            this.httpConnection.connect();
-            OutputStream outputStream = this.httpConnection.getOutputStream();
-            List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(this.getHeaders());
-            outputStream = HttpClientUtils.wrapByContentEncodings(outputStream, contentEncodings);
-            this.streamBody = outputStream;
         }
 
         return streamBody;

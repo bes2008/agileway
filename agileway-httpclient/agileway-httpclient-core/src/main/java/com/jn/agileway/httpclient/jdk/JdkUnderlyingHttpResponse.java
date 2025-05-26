@@ -4,6 +4,7 @@ import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.ContentEncoding;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.Throwables;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 
@@ -56,19 +57,23 @@ class JdkUnderlyingHttpResponse implements UnderlyingHttpResponse {
     }
 
     @Override
-    public InputStream getContent() throws IOException {
-        if (this.responseStream == null) {
-            InputStream inputStream = this.httpConnection.getErrorStream();
-            if (inputStream == null) {
-                inputStream = this.httpConnection.getInputStream();
-            }
+    public InputStream getContent() {
+        try {
+            if (this.responseStream == null) {
+                InputStream inputStream = this.httpConnection.getErrorStream();
+                if (inputStream == null) {
+                    inputStream = this.httpConnection.getInputStream();
+                }
 
-            // 处理压缩
-            List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(this.getHeaders());
-            inputStream = HttpClientUtils.wrapByContentEncodings(inputStream, contentEncodings);
-            this.responseStream = inputStream;
+                // 处理压缩
+                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(this.getHeaders());
+                inputStream = HttpClientUtils.wrapByContentEncodings(inputStream, contentEncodings);
+                this.responseStream = inputStream;
+            }
+            return this.responseStream;
+        } catch (IOException ex) {
+            throw Throwables.wrapAsRuntimeIOException(ex);
         }
-        return this.responseStream;
     }
 
     public void setBody(InputStream responseStream) {

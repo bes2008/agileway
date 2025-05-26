@@ -21,6 +21,17 @@ public class HttpRequest<T> extends BaseHttpMessage<T> {
         this.content = body;
     }
 
+    public void setUri(URI uri) {
+        this.uri = uri;
+    }
+
+    public void setMethod(HttpMethod method) {
+        this.method = method;
+    }
+
+    public void setContent(T content) {
+        this.content = content;
+    }
 
     public static HttpRequest create(@NonNull HttpMethod method,
                                      @NonNull String uriTemplate,

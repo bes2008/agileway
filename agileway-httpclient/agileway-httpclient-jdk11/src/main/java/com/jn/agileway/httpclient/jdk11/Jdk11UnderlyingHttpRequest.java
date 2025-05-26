@@ -33,7 +33,7 @@ class Jdk11UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpReque
     }
 
     @Override
-    public OutputStream getContent() throws IOException {
+    public OutputStream getContent() {
         if (bufferedContent == null) {
             if (HttpClientUtils.isWriteable(getMethod())) {
                 bufferedContent = new ByteArrayOutputStream(1024);
