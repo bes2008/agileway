@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.supports.restful;
+package com.jn.agileway.httpclient.supports.restful.plugin;
 
 import com.jn.agileway.httpclient.core.HttpMessage;
 import com.jn.agileway.httpclient.core.plugin.HttpMessagePlugin;
