@@ -4,6 +4,7 @@ import com.jn.agileway.httpclient.core.HttpMessage;
 import com.jn.agileway.httpclient.core.content.HttpRequestContentWriter;
 import com.jn.agileway.httpclient.core.content.HttpResponseContentReader;
 import com.jn.agileway.httpclient.core.interceptor.HttpRequestInterceptor;
+import com.jn.agileway.httpclient.core.interceptor.HttpResponseInterceptor;
 import com.jn.langx.plugin.Plugin;
 import com.jn.langx.util.collection.Lists;
 
@@ -12,7 +13,7 @@ import java.util.List;
 public abstract class HttpMessagePlugin implements Plugin<HttpMessage> {
     protected final List<HttpRequestInterceptor> requestInterceptors = Lists.newArrayList();
 
-    protected final List<HttpRequestInterceptor> responseInterceptors = Lists.newArrayList();
+    protected final List<HttpResponseInterceptor> responseInterceptors = Lists.newArrayList();
 
     protected final List<HttpRequestContentWriter> requestContentWriters = Lists.newArrayList();
     protected final List<HttpResponseContentReader> responseContentReaders = Lists.newArrayList();
@@ -25,7 +26,7 @@ public abstract class HttpMessagePlugin implements Plugin<HttpMessage> {
         return requestInterceptors;
     }
 
-    public List<HttpRequestInterceptor> getResponseInterceptors() {
+    public List<HttpResponseInterceptor> getResponseInterceptors() {
         return responseInterceptors;
     }
 
