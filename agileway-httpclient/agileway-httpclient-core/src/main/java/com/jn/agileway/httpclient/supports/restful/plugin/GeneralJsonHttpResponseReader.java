@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.supports.restful.content;
+package com.jn.agileway.httpclient.supports.restful.plugin;
 
 import com.jn.agileway.httpclient.core.content.HttpResponseContentReader;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;

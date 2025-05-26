@@ -2,8 +2,8 @@ package com.jn.agileway.httpclient.supports.restful;
 
 import com.jn.agileway.httpclient.core.HttpMessage;
 import com.jn.agileway.httpclient.core.plugin.HttpMessagePlugin;
-import com.jn.agileway.httpclient.supports.restful.content.GeneralJsonHttpRequestWriter;
-import com.jn.agileway.httpclient.supports.restful.content.GeneralJsonHttpResponseReader;
+import com.jn.agileway.httpclient.supports.restful.plugin.GeneralJsonHttpRequestWriter;
+import com.jn.agileway.httpclient.supports.restful.plugin.GeneralJsonHttpResponseReader;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.net.mime.MediaType;
 
