@@ -8,11 +8,11 @@ import com.jn.langx.util.function.Predicate;
 
 import java.io.IOException;
 
-public class GeneralPluginBasedHttpRequestWriter implements HttpRequestContentWriter {
+public class PluginBasedHttpRequestWriter implements HttpRequestContentWriter {
 
     private HttpMessagePlugin plugin;
 
-    public GeneralPluginBasedHttpRequestWriter(HttpMessagePlugin plugin) {
+    public PluginBasedHttpRequestWriter(HttpMessagePlugin plugin) {
         this.plugin = plugin;
     }
 

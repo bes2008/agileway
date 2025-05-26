@@ -7,11 +7,11 @@ import com.jn.langx.util.net.mime.MediaType;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
-public class GeneralPluginBasedHttpResponseReader implements HttpResponseContentReader {
+public class PluginBasedHttpResponseReader implements HttpResponseContentReader {
 
     private HttpMessagePlugin plugin;
 
-    public GeneralPluginBasedHttpResponseReader(HttpMessagePlugin plugin) {
+    public PluginBasedHttpResponseReader(HttpMessagePlugin plugin) {
         this.plugin = plugin;
     }
 

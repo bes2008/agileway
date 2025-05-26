@@ -114,7 +114,7 @@ public class HttpExchanger extends AbstractInitializable {
 
         // requestBodyWriters
         for (HttpMessagePlugin plugin : plugins) {
-            this.requestContentWriters.add(new GeneralPluginBasedHttpRequestWriter(plugin));
+            this.requestContentWriters.add(new PluginBasedHttpRequestWriter(plugin));
         }
         this.requestContentWriters.add(new GeneralFormHttpRequestWriter());
         this.requestContentWriters.add(new GeneralMultiPartsFormHttpRequestWriter());
@@ -122,7 +122,7 @@ public class HttpExchanger extends AbstractInitializable {
 
         // responseBodyReaders
         for (HttpMessagePlugin plugin : plugins) {
-            responseContentReaders.add(new GeneralPluginBasedHttpResponseReader(plugin));
+            responseContentReaders.add(new PluginBasedHttpResponseReader(plugin));
         }
         this.responseContentReaders.add(new GeneralAttachmentReader());
         this.responseContentReaders.add(new GeneralTextHttpResponseReader());
