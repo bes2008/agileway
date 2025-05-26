@@ -4,11 +4,11 @@ import com.jn.agileway.httpclient.core.HttpResponse;
 import com.jn.agileway.httpclient.core.interceptor.HttpResponseInterceptor;
 import com.jn.langx.plugin.PluginRegistry;
 
-class PluginBasedHttpResponseInterceptor implements HttpResponseInterceptor {
+public class PluginBasedHttpResponseInterceptor implements HttpResponseInterceptor {
 
     private PluginRegistry httpMessagePluginRegistry;
 
-    PluginBasedHttpResponseInterceptor(PluginRegistry pluginRegistry) {
+    public PluginBasedHttpResponseInterceptor(PluginRegistry pluginRegistry) {
         this.httpMessagePluginRegistry = pluginRegistry;
     }
 

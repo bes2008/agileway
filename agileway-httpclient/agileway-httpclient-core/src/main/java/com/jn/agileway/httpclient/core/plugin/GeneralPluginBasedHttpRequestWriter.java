@@ -7,7 +7,7 @@ import com.jn.langx.util.net.mime.MediaType;
 
 import java.io.IOException;
 
-class GeneralPluginBasedHttpRequestWriter implements HttpRequestContentWriter {
+public class GeneralPluginBasedHttpRequestWriter implements HttpRequestContentWriter {
 
     private PluginRegistry httpMessagePluginRegistry;
 

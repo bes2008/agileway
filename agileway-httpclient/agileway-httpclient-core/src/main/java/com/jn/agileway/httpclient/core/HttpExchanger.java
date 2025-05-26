@@ -6,7 +6,10 @@ import com.jn.agileway.httpclient.core.error.exception.*;
 import com.jn.agileway.httpclient.core.interceptor.*;
 import com.jn.agileway.httpclient.core.content.multipart.MultiPartsForm;
 import com.jn.agileway.httpclient.core.content.*;
+import com.jn.agileway.httpclient.core.plugin.GeneralPluginBasedHttpRequestWriter;
+import com.jn.agileway.httpclient.core.plugin.GeneralPluginBasedHttpResponseReader;
 import com.jn.agileway.httpclient.core.plugin.PluginBasedHttpRequestInterceptor;
+import com.jn.agileway.httpclient.core.plugin.PluginBasedHttpResponseInterceptor;
 import com.jn.agileway.httpclient.core.underlying.*;
 import com.jn.agileway.httpclient.restful.content.GeneralJsonHttpRequestWriter;
 import com.jn.agileway.httpclient.restful.content.GeneralJsonHttpResponseReader;
@@ -94,7 +97,7 @@ public class HttpExchanger extends AbstractInitializable {
         }
 
         // requestInterceptors
-        this.requestInterceptors.add(new PluginBasedHttpRequestInterceptor());
+        this.requestInterceptors.add(new PluginBasedHttpRequestInterceptor(this.httpMessagePluginRegistry));
         this.requestInterceptors.add(new HttpRequestMultiPartsFormInterceptor());
         this.requestInterceptors.add(new HttpRequestHeadersInterceptor(configuration.getFixedHeaders()));
         this.requestInterceptors.add(new HttpRequestLoggingInterceptor());
@@ -105,17 +108,20 @@ public class HttpExchanger extends AbstractInitializable {
 
         // responseInterceptors
         this.responseInterceptors.add(new HttpResponseLoggingInterceptor());
+        this.responseInterceptors.add(new PluginBasedHttpResponseInterceptor(this.httpMessagePluginRegistry));
         this.responseInterceptors = Lists.immutableList(responseInterceptors);
 
         // requestBodyWriters
         this.requestContentWriters.add(new GeneralJsonHttpRequestWriter());
+        this.requestContentWriters.add(new GeneralPluginBasedHttpRequestWriter(this.httpMessagePluginRegistry));
         this.requestContentWriters.add(new GeneralFormHttpRequestWriter());
         this.requestContentWriters.add(new GeneralMultiPartsFormHttpRequestWriter());
         this.requestContentWriters = Lists.immutableList(requestContentWriters);
 
         // responseBodyReaders
-        responseContentReaders.add(new GeneralAttachmentReader());
         responseContentReaders.add(new GeneralJsonHttpResponseReader());
+        responseContentReaders.add(new GeneralPluginBasedHttpResponseReader(this.httpMessagePluginRegistry));
+        responseContentReaders.add(new GeneralAttachmentReader());
         responseContentReaders.add(new GeneralTextHttpResponseReader());
         responseContentReaders.add(new GeneralResourceHttpResponseReader());
         responseContentReaders.add(0, new GeneralBytesHttpResponseReader());
