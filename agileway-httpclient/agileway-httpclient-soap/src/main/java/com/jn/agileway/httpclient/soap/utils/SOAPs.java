@@ -66,11 +66,19 @@ public class SOAPs {
         }
     }
 
-    public static String toSoapEnvelope(Object soapPayload) throws Throwable {
-        return toSoapEnvelope(null, soapPayload);
+    public static String toSoapEnvelopeXml(Object soapPayload) throws Throwable {
+        return toSoapEnvelopeXml(null, soapPayload);
     }
 
-    public static String toSoapEnvelope(SoapHeader soapHeader, Object soapPayload) throws Throwable {
+    public static String toSoapEnvelopeXml(SoapEnvelope soapEnvelope) throws Throwable {
+        return toSoapEnvelopeXml(soapEnvelope.getHeader(), soapEnvelope.getBody());
+    }
+
+    public static String toSoapEnvelopeXml(SoapHeader soapHeader, SoapBody soapBody) throws Throwable {
+        return toSoapEnvelopeXml(soapHeader, soapBody == null ? null : soapBody.getPayload());
+    }
+
+    public static String toSoapEnvelopeXml(SoapHeader soapHeader, Object soapPayload) throws Throwable {
         if (soapPayload instanceof SoapEnvelope) {
             soapPayload = ((SoapEnvelope) soapPayload).getBody().getPayload();
             soapHeader = ((SoapEnvelope) soapPayload).getHeader();
