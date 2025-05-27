@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.soap.entity;
 
+import com.jn.agileway.httpclient.soap.utils.SoapVersion;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 
@@ -11,6 +12,8 @@ public class SoapEnvelope {
     private SoapHeader header;
     @NonNull
     private SoapBody body;
+
+    private SoapVersion version;
 
     public SoapHeader getHeader() {
         return header;
@@ -26,5 +29,13 @@ public class SoapEnvelope {
 
     public void setBody(SoapBody body) {
         this.body = body;
+    }
+
+    public SoapVersion getVersion() {
+        return version;
+    }
+
+    public void setVersion(SoapVersion version) {
+        this.version = version;
     }
 }

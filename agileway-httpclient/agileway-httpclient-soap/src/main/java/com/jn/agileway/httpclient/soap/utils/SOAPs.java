@@ -4,10 +4,7 @@ import com.jn.agileway.httpclient.soap.entity.*;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
-import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.Unmarshaller;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -19,14 +16,14 @@ public class SOAPs {
     private SOAPs() {
     }
 
-    private static String soapEnvelopeTemplate = "<agilewaysoap:Envelope xmlns:agilewaysoap=\"http://schemas.xmlsoap.org/soap/envelope/\">" + Strings.CRLF +
+    private static String soapEnvelopeTemplate = "<agilewaysoap:Envelope xmlns:agilewaysoap=\"{}\">" + Strings.CRLF +
             "{}" +
             "    <agilewaysoap:Body>" + Strings.CRLF +
             "{}" +
             "    </agilewaysoap:Body>" + Strings.CRLF +
             "</agilewaysoap:Envelope>" + Strings.CRLF;
 
-    public static String marshalSoapHeader(SoapHeader soapHeader) {
+    private static String marshalSoapHeader(SoapHeader soapHeader) {
         if (soapHeader == null) {
             return "    <agilewaysoap:Header/>" + Strings.CRLF;
         }
@@ -67,27 +64,35 @@ public class SOAPs {
     }
 
     public static String marshalSoapEnvelope(Object soapPayload) throws Throwable {
-        return marshalSoapEnvelope(null, soapPayload);
+        return marshalSoapEnvelope(null, null, soapPayload);
     }
 
     public static String marshalSoapEnvelope(SoapEnvelope soapEnvelope) throws Throwable {
-        return marshalSoapEnvelope(soapEnvelope.getHeader(), soapEnvelope.getBody());
+        return marshalSoapEnvelope(soapEnvelope.getVersion(), soapEnvelope.getHeader(), soapEnvelope.getBody());
     }
 
-    public static String marshalSoapEnvelope(SoapHeader soapHeader, SoapBody soapBody) throws Throwable {
-        return marshalSoapEnvelope(soapHeader, soapBody == null ? null : soapBody.getPayload());
+    public static String marshalSoapEnvelope(SoapVersion soapVersion, SoapHeader soapHeader, SoapBody soapBody) throws Throwable {
+        return marshalSoapEnvelope(soapVersion, soapHeader, soapBody == null ? null : soapBody.getPayload());
     }
 
-    public static String marshalSoapEnvelope(SoapHeader soapHeader, Object soapPayload) throws Throwable {
+    public static String marshalSoapEnvelope(SoapVersion soapVersion, SoapHeader soapHeader, Object soapPayload) throws Throwable {
         if (soapPayload instanceof SoapEnvelope) {
             soapPayload = ((SoapEnvelope) soapPayload).getBody().getPayload();
-            soapHeader = ((SoapEnvelope) soapPayload).getHeader();
+            if (soapHeader == null) {
+                soapHeader = ((SoapEnvelope) soapPayload).getHeader();
+            }
+            if (soapVersion == null) {
+                soapVersion = ((SoapEnvelope) soapPayload).getVersion();
+            }
         }
         if (soapPayload instanceof SoapBody) {
             soapPayload = ((SoapBody) soapPayload).getPayload();
         }
         if (soapPayload == null) {
             throw new NullPointerException("soap payload is required");
+        }
+        if (soapVersion == null) {
+            soapVersion = SoapVersion.V1_2;
         }
         String header = marshalSoapHeader(soapHeader);
         byte[] bytes = JAXBs.marshal(soapPayload);
@@ -111,7 +116,7 @@ public class SOAPs {
             }
         }
 
-        String soapEnvelope = StringTemplates.formatWithPlaceholder(soapEnvelopeTemplate, header, builder.toString());
+        String soapEnvelope = StringTemplates.formatWithPlaceholder(soapEnvelopeTemplate, soapVersion.getNamespaceUri(), header, builder.toString());
         return soapEnvelope;
     }
 
