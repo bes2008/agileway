@@ -125,6 +125,8 @@ public class SOAPs {
         }
         namespacePrefix = Strings.isBlank(namespacePrefix) ? NAMESPACE_PREFIX_DEFAULT : namespacePrefix;
         String header = marshalSoapHeader(namespacePrefix, soapVersion, soapHeader);
+
+        // payload
         byte[] bytes = JAXBs.marshal(soapPayload);
         List<String> lines = IOs.readLines(new ByteArrayInputStream(bytes));
         StringBuilder payloadBuilder = new StringBuilder();
