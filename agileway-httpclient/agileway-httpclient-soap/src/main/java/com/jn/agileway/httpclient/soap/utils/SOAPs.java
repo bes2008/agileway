@@ -66,19 +66,19 @@ public class SOAPs {
         }
     }
 
-    public static String toSoapEnvelopeXml(Object soapPayload) throws Throwable {
-        return toSoapEnvelopeXml(null, soapPayload);
+    public static String marshalSoapEnvelope(Object soapPayload) throws Throwable {
+        return marshalSoapEnvelope(null, soapPayload);
     }
 
-    public static String toSoapEnvelopeXml(SoapEnvelope soapEnvelope) throws Throwable {
-        return toSoapEnvelopeXml(soapEnvelope.getHeader(), soapEnvelope.getBody());
+    public static String marshalSoapEnvelope(SoapEnvelope soapEnvelope) throws Throwable {
+        return marshalSoapEnvelope(soapEnvelope.getHeader(), soapEnvelope.getBody());
     }
 
-    public static String toSoapEnvelopeXml(SoapHeader soapHeader, SoapBody soapBody) throws Throwable {
-        return toSoapEnvelopeXml(soapHeader, soapBody == null ? null : soapBody.getPayload());
+    public static String marshalSoapEnvelope(SoapHeader soapHeader, SoapBody soapBody) throws Throwable {
+        return marshalSoapEnvelope(soapHeader, soapBody == null ? null : soapBody.getPayload());
     }
 
-    public static String toSoapEnvelopeXml(SoapHeader soapHeader, Object soapPayload) throws Throwable {
+    public static String marshalSoapEnvelope(SoapHeader soapHeader, Object soapPayload) throws Throwable {
         if (soapPayload instanceof SoapEnvelope) {
             soapPayload = ((SoapEnvelope) soapPayload).getBody().getPayload();
             soapHeader = ((SoapEnvelope) soapPayload).getHeader();
@@ -90,7 +90,7 @@ public class SOAPs {
             throw new NullPointerException("soap payload is required");
         }
         String header = marshalSoapHeader(soapHeader);
-        byte[] bytes = JAXBs.javaBeanToXml(soapPayload);
+        byte[] bytes = JAXBs.marshal(soapPayload);
         List<String> lines = IOs.readLines(new ByteArrayInputStream(bytes));
         StringBuilder builder = new StringBuilder();
 

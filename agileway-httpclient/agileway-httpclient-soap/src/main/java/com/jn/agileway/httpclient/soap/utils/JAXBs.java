@@ -12,7 +12,7 @@ public class JAXBs {
     private JAXBs() {
     }
 
-    public static byte[] javaBeanToXml(Object javaBean) throws Exception {
+    public static byte[] marshal(Object javaBean) throws Exception {
         JAXBContext jaxbContext = JAXBContext.newInstance(javaBean.getClass());
         Marshaller marshaller = jaxbContext.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
@@ -24,7 +24,7 @@ public class JAXBs {
         return outputStream.toByteArray();
     }
 
-    public static <T> T xmlToJavaBean(String xml, Class<T> expectedClazz) throws Exception {
+    public static <T> T unmarshal(String xml, Class<T> expectedClazz) throws Exception {
         JAXBContext jaxbContext = JAXBContext.newInstance(expectedClazz);
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
         return (T) unmarshaller.unmarshal(new ByteArrayInputStream(xml.getBytes(Charsets.UTF_8)));
