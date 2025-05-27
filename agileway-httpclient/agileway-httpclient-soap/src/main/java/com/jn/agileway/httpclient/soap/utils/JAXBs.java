@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.soap.utils;
 
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.io.Charsets;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Marshaller;
@@ -7,6 +8,7 @@ import jakarta.xml.bind.Unmarshaller;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 
 public class JAXBs {
     private JAXBs() {
@@ -25,8 +27,15 @@ public class JAXBs {
     }
 
     public static <T> T unmarshal(String xml, Class<T> expectedClazz) throws Exception {
+        if (Strings.isBlank(xml)) {
+            return null;
+        }
+        return (T) unmarshal(new ByteArrayInputStream(xml.getBytes(Charsets.UTF_8)), expectedClazz);
+    }
+
+    public static <T> T unmarshal(InputStream xml, Class<T> expectedClazz) throws Exception {
         JAXBContext jaxbContext = JAXBContext.newInstance(expectedClazz);
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-        return (T) unmarshaller.unmarshal(new ByteArrayInputStream(xml.getBytes(Charsets.UTF_8)));
+        return (T) unmarshaller.unmarshal(xml);
     }
 }
