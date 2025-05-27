@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.supports.restful;
+package com.jn.agileway.httpclient.protocol.restful;
 
 import com.jn.agileway.httpclient.core.HttpExchanger;
 import com.jn.agileway.httpclient.core.HttpRequest;

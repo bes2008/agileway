@@ -3,6 +3,9 @@ package com.jn.agileway.httpclient.soap.entity;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 
+/**
+ * https://www.w3.org/2003/05/soap-envelope/
+ */
 public class SoapEnvelope {
     @Nullable
     private SoapHeader header;

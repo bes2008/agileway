@@ -1,9 +1,13 @@
 package com.jn.agileway.httpclient.soap.entity;
 
+import com.jn.langx.annotation.NonNull;
+
 import java.util.Map;
 
 public class SoapFault {
+    @NonNull
     private String faultCode;
+    @NonNull
     private String faultString;
     private String faultActor;
     private Map<String, String> detail;

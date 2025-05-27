@@ -1,13 +1,11 @@
-package com.jn.agileway.httpclient.supports.restful.plugin;
+package com.jn.agileway.httpclient.protocol.restful.plugin;
 
 import com.jn.agileway.httpclient.core.HttpMessage;
-import com.jn.agileway.httpclient.core.plugin.HttpMessagePlugin;
-import com.jn.agileway.httpclient.supports.restful.plugin.GeneralJsonHttpRequestWriter;
-import com.jn.agileway.httpclient.supports.restful.plugin.GeneralJsonHttpResponseReader;
+import com.jn.agileway.httpclient.core.plugin.HttpMessageProtocolPlugin;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.net.mime.MediaType;
 
-public class RestfulHttpMessagePlugin extends HttpMessagePlugin {
+public class RestfulHttpMessagePlugin extends HttpMessageProtocolPlugin {
     @Override
     public boolean availableFor(HttpMessage httpMessage) {
         MediaType contentType = httpMessage.getHeaders().getContentType();

@@ -5,9 +5,9 @@ import com.jn.agileway.httpclient.core.interceptor.HttpRequestInterceptor;
 
 public class PluginBasedHttpRequestInterceptor implements HttpRequestInterceptor {
 
-    private HttpMessagePlugin plugin;
+    private HttpMessageProtocolPlugin plugin;
 
-    public PluginBasedHttpRequestInterceptor(HttpMessagePlugin plugin) {
+    public PluginBasedHttpRequestInterceptor(HttpMessageProtocolPlugin plugin) {
         this.plugin = plugin;
     }
 

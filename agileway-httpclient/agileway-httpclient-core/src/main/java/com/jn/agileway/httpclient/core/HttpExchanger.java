@@ -75,7 +75,6 @@ public class HttpExchanger extends AbstractInitializable {
     private PluginRegistry httpMessagePluginRegistry;
 
 
-
     /**
      * 该方法要在 自定义的 interceptor, readers, writers 完成之后调用
      */
@@ -91,10 +90,10 @@ public class HttpExchanger extends AbstractInitializable {
             this.httpMessagePluginRegistry = httpMessagePluginRegistry;
         }
 
-        List<HttpMessagePlugin> plugins = this.httpMessagePluginRegistry.find(HttpMessagePlugin.class);
+        List<HttpMessageProtocolPlugin> plugins = this.httpMessagePluginRegistry.find(HttpMessageProtocolPlugin.class);
 
         // requestInterceptors
-        for (HttpMessagePlugin plugin : plugins) {
+        for (HttpMessageProtocolPlugin plugin : plugins) {
             this.requestInterceptors.add(new PluginBasedHttpRequestInterceptor(plugin));
         }
         this.requestInterceptors.add(new HttpRequestMultiPartsFormInterceptor());
@@ -107,13 +106,13 @@ public class HttpExchanger extends AbstractInitializable {
 
         // responseInterceptors
         this.responseInterceptors.add(new HttpResponseLoggingInterceptor());
-        for (HttpMessagePlugin plugin : plugins) {
+        for (HttpMessageProtocolPlugin plugin : plugins) {
             this.responseInterceptors.add(new PluginBasedHttpResponseInterceptor(plugin));
         }
         this.responseInterceptors = Lists.immutableList(responseInterceptors);
 
         // requestBodyWriters
-        for (HttpMessagePlugin plugin : plugins) {
+        for (HttpMessageProtocolPlugin plugin : plugins) {
             this.requestContentWriters.add(new PluginBasedHttpRequestWriter(plugin));
         }
         this.requestContentWriters.add(new GeneralFormHttpRequestWriter());
@@ -121,7 +120,7 @@ public class HttpExchanger extends AbstractInitializable {
         this.requestContentWriters = Lists.immutableList(requestContentWriters);
 
         // responseBodyReaders
-        for (HttpMessagePlugin plugin : plugins) {
+        for (HttpMessageProtocolPlugin plugin : plugins) {
             responseContentReaders.add(new PluginBasedHttpResponseReader(plugin));
         }
         this.responseContentReaders.add(new GeneralAttachmentReader());

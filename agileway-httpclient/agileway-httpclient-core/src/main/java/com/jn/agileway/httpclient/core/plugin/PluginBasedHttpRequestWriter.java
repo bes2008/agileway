@@ -10,9 +10,9 @@ import java.io.IOException;
 
 public class PluginBasedHttpRequestWriter implements HttpRequestContentWriter {
 
-    private HttpMessagePlugin plugin;
+    private HttpMessageProtocolPlugin plugin;
 
-    public PluginBasedHttpRequestWriter(HttpMessagePlugin plugin) {
+    public PluginBasedHttpRequestWriter(HttpMessageProtocolPlugin plugin) {
         this.plugin = plugin;
     }
 

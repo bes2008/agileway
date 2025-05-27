@@ -10,7 +10,7 @@ import com.jn.langx.util.collection.Lists;
 
 import java.util.List;
 
-public abstract class HttpMessagePlugin implements Plugin<HttpMessage> {
+public abstract class HttpMessageProtocolPlugin implements Plugin<HttpMessage> {
     protected final List<HttpRequestInterceptor> requestInterceptors = Lists.newArrayList();
 
     protected final List<HttpResponseInterceptor> responseInterceptors = Lists.newArrayList();

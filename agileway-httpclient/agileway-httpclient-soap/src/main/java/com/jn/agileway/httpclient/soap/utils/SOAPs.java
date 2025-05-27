@@ -1,13 +1,13 @@
 package com.jn.agileway.httpclient.soap.utils;
 
-import com.jn.agileway.httpclient.soap.entity.SoapBody;
-import com.jn.agileway.httpclient.soap.entity.SoapEnvelope;
-import com.jn.agileway.httpclient.soap.entity.SoapHeader;
-import com.jn.agileway.httpclient.soap.entity.SoapHeaderElement;
+import com.jn.agileway.httpclient.soap.entity.*;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Unmarshaller;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -136,6 +136,28 @@ public class SOAPs {
             return children.get(0).asXML();
         }
         return "";
+    }
+
+    public static <T> T unmarshalSoapPayload(String soapEnvelopeXml, Class<T> expectedClazz) throws Exception {
+        if (Strings.isBlank(soapEnvelopeXml)) {
+            throw new RuntimeException("illegal soap envelope: it is blank");
+        }
+        String soapPayloadXml = extractSoapPayloadXml(soapEnvelopeXml);
+        if (Strings.isBlank(soapPayloadXml)) {
+            throw new RuntimeException("illegal soap body payload: it is blank");
+        }
+        return JAXBs.unmarshal(soapPayloadXml, expectedClazz);
+    }
+
+    public static SoapFault unmarshalSoapFault(String soapEnvelopeXml) throws Exception {
+        if (Strings.isBlank(soapEnvelopeXml)) {
+            throw new RuntimeException("illegal soap envelope: it is blank");
+        }
+        String soapPayloadXml = extractSoapPayloadXml(soapEnvelopeXml);
+        if (Strings.isBlank(soapPayloadXml)) {
+            throw new RuntimeException("illegal soap body payload: it is blank");
+        }
+        return JAXBs.unmarshal(soapPayloadXml, expectedClazz);
     }
 
 }

@@ -11,9 +11,9 @@ import java.lang.reflect.Type;
 
 public class PluginBasedHttpResponseReader implements HttpResponseContentReader {
 
-    private HttpMessagePlugin plugin;
+    private HttpMessageProtocolPlugin plugin;
 
-    public PluginBasedHttpResponseReader(HttpMessagePlugin plugin) {
+    public PluginBasedHttpResponseReader(HttpMessageProtocolPlugin plugin) {
         this.plugin = plugin;
     }
 
