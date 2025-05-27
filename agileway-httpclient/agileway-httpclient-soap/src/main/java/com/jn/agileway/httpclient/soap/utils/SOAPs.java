@@ -10,30 +10,38 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
 import java.io.ByteArrayInputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SOAPs {
     private SOAPs() {
     }
 
-    private static String soapEnvelopeTemplate = "<agilewaysoap:Envelope xmlns:agilewaysoap=\"{}\">" + Strings.CRLF +
-            "{}" +
-            "    <agilewaysoap:Body>" + Strings.CRLF +
-            "{}" +
-            "    </agilewaysoap:Body>" + Strings.CRLF +
-            "</agilewaysoap:Envelope>" + Strings.CRLF;
+    public static final String NAMESPACE_PREFIX_DEFAULT = "agilewaysoap";
+    private static String soapEnvelopeTemplate = "<${namespacePrefix}:Envelope xmlns:agilewaysoap=\"{namespaceUri}\">" + Strings.CRLF +
+            "    <${namespacePrefix}:Header>" + Strings.CRLF +
+            "${header}" +
+            "    </${namespacePrefix}:Header>" + Strings.CRLF +
+            "    <${namespacePrefix}:Body>" + Strings.CRLF +
+            "${payload}" +
+            "    </${namespacePrefix}:Body>" + Strings.CRLF +
+            "</${namespacePrefix}:Envelope>" + Strings.CRLF;
 
-    private static String marshalSoapHeader(SoapHeader soapHeader) {
+    private static String marshalSoapHeader(String headerAttrNamespacePrefix, SoapVersion soapVersion, SoapHeader soapHeader) {
         if (soapHeader == null) {
-            return "    <agilewaysoap:Header/>" + Strings.CRLF;
+            return Strings.CRLF;
         }
         if (Objs.isEmpty(soapHeader.getElements())) {
-            return "    <agilewaysoap:Header/>" + Strings.CRLF;
+            return Strings.CRLF;
         } else {
+            headerAttrNamespacePrefix = Strings.isBlank(headerAttrNamespacePrefix) ? NAMESPACE_PREFIX_DEFAULT : headerAttrNamespacePrefix;
             StringBuilder builder = new StringBuilder();
             for (SoapHeaderElement element : soapHeader.getElements()) {
                 String elementNamespacePrefix = element.getName().getPrefix();
                 String elementTag = Strings.isEmpty(elementNamespacePrefix) ? element.getName().getLocalPart() : (elementNamespacePrefix + ":" + element.getName().getLocalPart());
+
+                // xmlns
                 String namespaceAttrName = null;
                 String namespaceAttrValue = element.getName().getNamespaceURI();
                 if (Strings.isNotEmpty(namespaceAttrValue)) {
@@ -44,16 +52,33 @@ public class SOAPs {
                 if (namespaceAttrName != null) {
                     builder.append(" ").append(namespaceAttrName).append("=\"").append(namespaceAttrValue).append("\"");
                 }
+
+                // mustUnderstand
+                builder.append(" ")
+                        .append(headerAttrNamespacePrefix)
+                        .append(":")
+                        .append("mustUnderstand=\"")
+                        .append(element.isMustUnderstand())
+                        .append("\"");
+
+                // role, actor
                 if (Strings.isNotEmpty(element.getRole())) {
-                    if ("1.2".equals(soapHeader.getVersion())) {
-                        builder.append(" agilewaysoap:role=\"").append(element.getRole()).append("\"");
-                    } else {
-                        builder.append(" agilewaysoap:actor=\"").append(element.getActor()).append("\"");
-                    }
+                    String roleAttrName = soapVersion == SoapVersion.V1_2 ? "role" : "actor";
+                    builder.append(" ")
+                            .append(headerAttrNamespacePrefix)
+                            .append(":")
+                            .append(roleAttrName)
+                            .append("=\"").append(element.getRole()).append("\"");
                 }
-                builder.append(" agilewaysoap:mustUnderstand=\"").append("" + element.isMustUnderstand()).append("\"");
-                if ("1.2".equals(soapHeader.getVersion())) {
-                    builder.append(" agilewaysoap:relay=\"").append("" + element.isRelay()).append("\"");
+
+                // relay
+                if (soapVersion == SoapVersion.V1_2) {
+                    builder.append(" ")
+                            .append(headerAttrNamespacePrefix)
+                            .append(":")
+                            .append("relay=\"")
+                            .append(element.isRelay())
+                            .append("\"");
                 }
 
                 builder.append(" >").append(Strings.CRLF);
@@ -64,18 +89,22 @@ public class SOAPs {
     }
 
     public static String marshalSoapEnvelope(Object soapPayload) throws Throwable {
-        return marshalSoapEnvelope(null, null, soapPayload);
+        return marshalSoapEnvelope(null, null, null, soapPayload);
     }
 
     public static String marshalSoapEnvelope(SoapEnvelope soapEnvelope) throws Throwable {
-        return marshalSoapEnvelope(soapEnvelope.getVersion(), soapEnvelope.getHeader(), soapEnvelope.getBody());
+        return marshalSoapEnvelope(null, soapEnvelope);
     }
 
-    public static String marshalSoapEnvelope(SoapVersion soapVersion, SoapHeader soapHeader, SoapBody soapBody) throws Throwable {
-        return marshalSoapEnvelope(soapVersion, soapHeader, soapBody == null ? null : soapBody.getPayload());
+    public static String marshalSoapEnvelope(String namespacePrefix, SoapEnvelope soapEnvelope) throws Throwable {
+        return marshalSoapEnvelope(namespacePrefix, soapEnvelope.getVersion(), soapEnvelope.getHeader(), soapEnvelope.getBody());
     }
 
-    public static String marshalSoapEnvelope(SoapVersion soapVersion, SoapHeader soapHeader, Object soapPayload) throws Throwable {
+    public static String marshalSoapEnvelope(String namespacePrefix, SoapVersion soapVersion, SoapHeader soapHeader, SoapBody soapBody) throws Throwable {
+        return marshalSoapEnvelope(namespacePrefix, soapVersion, soapHeader, soapBody == null ? null : soapBody.getPayload());
+    }
+
+    public static String marshalSoapEnvelope(String namespacePrefix, SoapVersion soapVersion, SoapHeader soapHeader, Object soapPayload) throws Throwable {
         if (soapPayload instanceof SoapEnvelope) {
             soapPayload = ((SoapEnvelope) soapPayload).getBody().getPayload();
             if (soapHeader == null) {
@@ -94,10 +123,11 @@ public class SOAPs {
         if (soapVersion == null) {
             soapVersion = SoapVersion.V1_2;
         }
-        String header = marshalSoapHeader(soapHeader);
+        namespacePrefix = Strings.isBlank(namespacePrefix) ? NAMESPACE_PREFIX_DEFAULT : namespacePrefix;
+        String header = marshalSoapHeader(namespacePrefix, soapVersion, soapHeader);
         byte[] bytes = JAXBs.marshal(soapPayload);
         List<String> lines = IOs.readLines(new ByteArrayInputStream(bytes));
-        StringBuilder builder = new StringBuilder();
+        StringBuilder payloadBuilder = new StringBuilder();
 
         boolean first = true;
         for (String line : lines) {
@@ -107,16 +137,21 @@ public class SOAPs {
                     if (line.startsWith("<?xml")) {
                         // ignore it
                     } else {
-                        builder.append("    ").append(line).append(Strings.CRLF);
+                        payloadBuilder.append("    ").append(line).append(Strings.CRLF);
                     }
                     first = false;
                 }
             } else {
-                builder.append("    ").append(line).append(Strings.CRLF);
+                payloadBuilder.append("    ").append(line).append(Strings.CRLF);
             }
         }
 
-        String soapEnvelope = StringTemplates.formatWithPlaceholder(soapEnvelopeTemplate, soapVersion.getNamespaceUri(), header, builder.toString());
+        Map<String, String> soapEnvelopeTemplateVariables = new HashMap<String, String>();
+        soapEnvelopeTemplateVariables.put("namespaceUri", soapVersion.getNamespaceUri());
+        soapEnvelopeTemplateVariables.put("header", header);
+        soapEnvelopeTemplateVariables.put("body", payloadBuilder.toString());
+        soapEnvelopeTemplateVariables.put("namespacePrefix", namespacePrefix);
+        String soapEnvelope = StringTemplates.formatWithMap(soapEnvelopeTemplate, soapEnvelopeTemplateVariables);
         return soapEnvelope;
     }
 

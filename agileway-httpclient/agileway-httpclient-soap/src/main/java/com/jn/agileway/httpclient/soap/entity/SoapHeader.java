@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SoapHeader {
-    private String version = "1.2";
 
     private List<SoapHeaderElement> elements = new ArrayList<SoapHeaderElement>();
 
@@ -24,13 +23,5 @@ public class SoapHeader {
         if (element != null && element.isValid()) {
             this.elements.add(element);
         }
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
     }
 }
