@@ -35,7 +35,7 @@ public class SoapEnvelope {
 
     public void setMetadata(SoapMessageMetadata metadata) {
         if (metadata != null) {
-            this.metadata.setVersion(metadata.getVersion());
+            this.metadata.setBinding(metadata.getBinding());
             this.metadata.setNamespacePrefix(metadata.getNamespacePrefix());
         }
     }

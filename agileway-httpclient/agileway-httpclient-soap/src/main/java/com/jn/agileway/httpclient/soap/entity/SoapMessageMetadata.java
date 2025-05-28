@@ -3,7 +3,7 @@ package com.jn.agileway.httpclient.soap.entity;
 import static com.jn.agileway.httpclient.soap.utils.SOAPs.NAMESPACE_PREFIX_DEFAULT;
 
 public class SoapMessageMetadata {
-    private SoapBinding version;
+    private SoapBinding binding;
     /**
      * 用于自定义命名空间前缀，默认为 "agilewaysoap"
      */
@@ -15,15 +15,15 @@ public class SoapMessageMetadata {
 
     public SoapMessageMetadata(SoapBinding version, String namespacePrefix) {
         this.namespacePrefix = namespacePrefix;
-        this.version = version;
+        this.binding = version;
     }
 
-    public SoapBinding getVersion() {
-        return version;
+    public SoapBinding getBinding() {
+        return binding;
     }
 
-    public void setVersion(SoapBinding version) {
-        this.version = version;
+    public void setBinding(SoapBinding binding) {
+        this.binding = binding;
     }
 
     public String getNamespacePrefix() {

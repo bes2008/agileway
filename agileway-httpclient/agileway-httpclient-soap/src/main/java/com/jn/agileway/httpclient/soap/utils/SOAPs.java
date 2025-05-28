@@ -71,7 +71,7 @@ public class SOAPs {
         String payload = marshalSoapPayload(soapPayload);
 
         Map<String, String> soapEnvelopeTemplateVariables = new HashMap<String, String>();
-        soapEnvelopeTemplateVariables.put("namespaceUri", metadata.getVersion().getNamespaceUri());
+        soapEnvelopeTemplateVariables.put("namespaceUri", metadata.getBinding().getNamespaceUri());
         soapEnvelopeTemplateVariables.put("header", header);
         soapEnvelopeTemplateVariables.put("payload", payload);
         soapEnvelopeTemplateVariables.put("namespacePrefix", metadata.getNamespacePrefix());
@@ -88,7 +88,7 @@ public class SOAPs {
             return Strings.CRLF;
         } else {
             String headerAttrNamespacePrefix = metadata.getNamespacePrefix();
-            SoapBinding soapVersion = metadata.getVersion();
+            SoapBinding soapVersion = metadata.getBinding();
 
             headerAttrNamespacePrefix = Strings.isBlank(headerAttrNamespacePrefix) ? NAMESPACE_PREFIX_DEFAULT : headerAttrNamespacePrefix;
             StringBuilder builder = new StringBuilder();
