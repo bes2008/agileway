@@ -28,6 +28,57 @@ public class SOAPs {
             "    </${namespacePrefix}:Body>" + Strings.CRLF +
             "</${namespacePrefix}:Envelope>" + Strings.CRLF;
 
+
+
+    public static String marshalSoapEnvelope(Object soapPayload) throws Throwable {
+        return marshalSoapEnvelope(null, null, null, soapPayload);
+    }
+
+    public static String marshalSoapEnvelope(SoapEnvelope soapEnvelope) throws Throwable {
+        return marshalSoapEnvelope(null, soapEnvelope);
+    }
+
+    public static String marshalSoapEnvelope(String namespacePrefix, SoapEnvelope soapEnvelope) throws Throwable {
+        return marshalSoapEnvelope(namespacePrefix, soapEnvelope.getVersion(), soapEnvelope.getHeader(), soapEnvelope.getBody());
+    }
+
+    public static String marshalSoapEnvelope(String namespacePrefix, SoapVersion soapVersion, SoapHeader soapHeader, SoapBody soapBody) throws Throwable {
+        return marshalSoapEnvelope(namespacePrefix, soapVersion, soapHeader, soapBody == null ? null : soapBody.getPayload());
+    }
+
+    public static String marshalSoapEnvelope(String namespacePrefix, SoapVersion soapVersion, SoapHeader soapHeader, Object soapPayload) throws Throwable {
+        if (soapPayload instanceof SoapEnvelope) {
+            soapPayload = ((SoapEnvelope) soapPayload).getBody().getPayload();
+            if (soapHeader == null) {
+                soapHeader = ((SoapEnvelope) soapPayload).getHeader();
+            }
+            if (soapVersion == null) {
+                soapVersion = ((SoapEnvelope) soapPayload).getVersion();
+            }
+        }
+        if (soapPayload instanceof SoapBody) {
+            soapPayload = ((SoapBody) soapPayload).getPayload();
+        }
+        if (soapPayload == null) {
+            throw new NullPointerException("soap payload is required");
+        }
+        if (soapVersion == null) {
+            soapVersion = SoapVersion.V1_2;
+        }
+        namespacePrefix = Strings.isBlank(namespacePrefix) ? NAMESPACE_PREFIX_DEFAULT : namespacePrefix;
+        String header = marshalSoapHeader(namespacePrefix, soapVersion, soapHeader);
+
+        String payload = marshalSoapPayload(soapPayload);
+
+        Map<String, String> soapEnvelopeTemplateVariables = new HashMap<String, String>();
+        soapEnvelopeTemplateVariables.put("namespaceUri", soapVersion.getNamespaceUri());
+        soapEnvelopeTemplateVariables.put("header", header);
+        soapEnvelopeTemplateVariables.put("payload", payload);
+        soapEnvelopeTemplateVariables.put("namespacePrefix", namespacePrefix);
+        String soapEnvelope = StringTemplates.formatWithMap(soapEnvelopeTemplate, soapEnvelopeTemplateVariables);
+        return soapEnvelope;
+    }
+
     private static String marshalSoapHeader(String headerAttrNamespacePrefix, SoapVersion soapVersion, SoapHeader soapHeader) {
         if (soapHeader == null) {
             return Strings.CRLF;
@@ -89,50 +140,20 @@ public class SOAPs {
                 }
 
                 builder.append(" >").append(Strings.CRLF);
+
+
+                for (Map.Entry<String, String> property : element.getPropertySet().entrySet()) {
+                    String propertyTag = Strings.isEmpty(elementNamespacePrefix) ? property.getKey() : (elementNamespacePrefix + ":" + property.getKey());
+                    builder.append("            ").append("<").append(propertyTag).append(">").append(property.getValue()).append("</").append(propertyTag).append(">").append(Strings.CRLF);
+                }
                 builder.append("        ").append("</").append(elementTag).append(">").append(Strings.CRLF);
             }
             return builder.toString();
         }
     }
 
-    public static String marshalSoapEnvelope(Object soapPayload) throws Throwable {
-        return marshalSoapEnvelope(null, null, null, soapPayload);
-    }
 
-    public static String marshalSoapEnvelope(SoapEnvelope soapEnvelope) throws Throwable {
-        return marshalSoapEnvelope(null, soapEnvelope);
-    }
-
-    public static String marshalSoapEnvelope(String namespacePrefix, SoapEnvelope soapEnvelope) throws Throwable {
-        return marshalSoapEnvelope(namespacePrefix, soapEnvelope.getVersion(), soapEnvelope.getHeader(), soapEnvelope.getBody());
-    }
-
-    public static String marshalSoapEnvelope(String namespacePrefix, SoapVersion soapVersion, SoapHeader soapHeader, SoapBody soapBody) throws Throwable {
-        return marshalSoapEnvelope(namespacePrefix, soapVersion, soapHeader, soapBody == null ? null : soapBody.getPayload());
-    }
-
-    public static String marshalSoapEnvelope(String namespacePrefix, SoapVersion soapVersion, SoapHeader soapHeader, Object soapPayload) throws Throwable {
-        if (soapPayload instanceof SoapEnvelope) {
-            soapPayload = ((SoapEnvelope) soapPayload).getBody().getPayload();
-            if (soapHeader == null) {
-                soapHeader = ((SoapEnvelope) soapPayload).getHeader();
-            }
-            if (soapVersion == null) {
-                soapVersion = ((SoapEnvelope) soapPayload).getVersion();
-            }
-        }
-        if (soapPayload instanceof SoapBody) {
-            soapPayload = ((SoapBody) soapPayload).getPayload();
-        }
-        if (soapPayload == null) {
-            throw new NullPointerException("soap payload is required");
-        }
-        if (soapVersion == null) {
-            soapVersion = SoapVersion.V1_2;
-        }
-        namespacePrefix = Strings.isBlank(namespacePrefix) ? NAMESPACE_PREFIX_DEFAULT : namespacePrefix;
-        String header = marshalSoapHeader(namespacePrefix, soapVersion, soapHeader);
-
+    private static String marshalSoapPayload(Object soapPayload) throws Throwable {
         // payload
         byte[] bytes = JAXBs.marshal(soapPayload);
         List<String> lines = IOs.readLines(new ByteArrayInputStream(bytes));
@@ -154,14 +175,7 @@ public class SOAPs {
                 payloadBuilder.append("        ").append(line).append(Strings.CRLF);
             }
         }
-
-        Map<String, String> soapEnvelopeTemplateVariables = new HashMap<String, String>();
-        soapEnvelopeTemplateVariables.put("namespaceUri", soapVersion.getNamespaceUri());
-        soapEnvelopeTemplateVariables.put("header", header);
-        soapEnvelopeTemplateVariables.put("payload", payloadBuilder.toString());
-        soapEnvelopeTemplateVariables.put("namespacePrefix", namespacePrefix);
-        String soapEnvelope = StringTemplates.formatWithMap(soapEnvelopeTemplate, soapEnvelopeTemplateVariables);
-        return soapEnvelope;
+        return payloadBuilder.toString();
     }
 
     /**

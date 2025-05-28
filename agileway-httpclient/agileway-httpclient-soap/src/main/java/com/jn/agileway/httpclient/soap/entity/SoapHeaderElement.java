@@ -5,6 +5,8 @@ import com.jn.langx.util.Strings;
 
 import javax.xml.namespace.QName;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * SOAP Envelope 中可以有多个 SOAP Header
@@ -31,6 +33,8 @@ public class SoapHeaderElement {
      * SOAP 1.2 规范定义的。
      */
     private boolean relay = false;
+
+    private final Map<String, String> propertySet = new HashMap<String, String>();
 
     public QName getName() {
         return name;
@@ -74,5 +78,13 @@ public class SoapHeaderElement {
 
     public boolean isValid() {
         return name != null && Strings.isNotBlank(name.getLocalPart());
+    }
+
+    public Map<String, String> getPropertySet() {
+        return propertySet;
+    }
+
+    public void addProperty(String name, String value) {
+        propertySet.put(name, value);
     }
 }
