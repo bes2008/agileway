@@ -47,13 +47,15 @@ public class SOAPs {
             soapPayload = ((SoapBody) soapPayload).getPayload();
         }
         if (soapPayload instanceof SoapEnvelope) {
-            soapPayload = ((SoapEnvelope) soapPayload).getBody().getPayload();
+            SoapEnvelope soapEnvelope = (SoapEnvelope) soapPayload;
+
             if (soapHeader == null) {
                 soapHeader = ((SoapEnvelope) soapPayload).getHeader();
             }
             if (metadata == null) {
                 metadata = ((SoapEnvelope) soapPayload).getMetadata();
             }
+            soapPayload = soapEnvelope.getBody().getPayload();
         }
         if (soapPayload == null) {
             throw new NullPointerException("soap payload is required");
