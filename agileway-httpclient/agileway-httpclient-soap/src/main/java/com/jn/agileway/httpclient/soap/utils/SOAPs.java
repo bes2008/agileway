@@ -3,12 +3,14 @@ package com.jn.agileway.httpclient.soap.utils;
 import com.jn.agileway.httpclient.soap.entity.*;
 import com.jn.agileway.httpclient.soap.exception.MalformedSoapMessageException;
 import com.jn.langx.text.StringTemplates;
+import com.jn.langx.text.xml.Namespaces;
+import com.jn.langx.text.xml.Xmls;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import java.io.ByteArrayInputStream;
 import java.util.HashMap;
@@ -29,7 +31,6 @@ public class SOAPs {
             "${payload}" +
             "    </${namespacePrefix}:Body>" + Strings.CRLF +
             "</${namespacePrefix}:Envelope>" + Strings.CRLF;
-
 
 
     public static String marshalSoapEnvelope(Object soapPayload) throws Throwable {
@@ -189,20 +190,29 @@ public class SOAPs {
      * @return the soap payload
      */
     public static String extractSoapPayloadXml(String soapEnvelopeXml) throws Exception {
-        Document document = DocumentHelper.parseText(soapEnvelopeXml);
-        Element root = document.getRootElement();
-        if (!Strings.equals("Envelope", root.getName())) {
+        Document document = Xmls.getXmlDoc(new ByteArrayInputStream(soapEnvelopeXml.getBytes(Charsets.UTF_8)));
+        Element root = document.getDocumentElement();
+        if (!Strings.equals("Envelope", root.getLocalName())) {
             throw new RuntimeException("invalid soap envelope");
         }
-        Element bodyElement = root.element("Body");
-        if (bodyElement == null) {
-            throw new RuntimeException("invalid soap envelope, missing body");
+        String namespacePrefix = Namespaces.getDocumentRootNamespace(document);
+        String bodyElementTag = namespacePrefix + ":Body";
+
+        String bodyElementStartFlag = "<" + bodyElementTag;
+        String bodyElementEndFlag = "</" + bodyElementTag + ">";
+        int startIndex = soapEnvelopeXml.indexOf(bodyElementStartFlag);
+        int endIndex = soapEnvelopeXml.indexOf(bodyElementEndFlag, startIndex);
+        if (startIndex == -1 || endIndex == -1) {
+            throw new MalformedSoapMessageException("invalid soap envelope, missing /Envelope/Body");
         }
-        List<Element> children = bodyElement.elements();
-        if (Objs.isNotEmpty(children)) {
-            return children.get(0).asXML();
+
+        String payloadXml = soapEnvelopeXml.substring(startIndex, endIndex);
+        startIndex = payloadXml.indexOf(">");
+        if (startIndex != -1) {
+            throw new MalformedSoapMessageException("invalid soap envelope, missing /Envelope/Body");
         }
-        return "";
+        payloadXml = payloadXml.substring(startIndex + 1);
+        return payloadXml;
     }
 
     public static <T> T unmarshalSoapPayload(String soapEnvelopeXml, Class<T> expectedClazz) throws Exception {
