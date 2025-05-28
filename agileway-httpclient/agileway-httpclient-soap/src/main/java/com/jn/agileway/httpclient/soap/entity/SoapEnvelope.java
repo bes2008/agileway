@@ -12,8 +12,7 @@ public class SoapEnvelope {
     @NonNull
     private SoapBody body;
 
-    private SoapVersion version;
-
+    private final SoapMessageMetadata metadata = new SoapMessageMetadata();
     public SoapHeader getHeader() {
         return header;
     }
@@ -30,11 +29,14 @@ public class SoapEnvelope {
         this.body = body;
     }
 
-    public SoapVersion getVersion() {
-        return version;
+    public SoapMessageMetadata getMetadata() {
+        return metadata;
     }
 
-    public void setVersion(SoapVersion version) {
-        this.version = version;
+    public void setMetadata(SoapMessageMetadata metadata) {
+        if (metadata != null) {
+            this.metadata.setVersion(metadata.getVersion());
+            this.metadata.setNamespacePrefix(metadata.getNamespacePrefix());
+        }
     }
 }

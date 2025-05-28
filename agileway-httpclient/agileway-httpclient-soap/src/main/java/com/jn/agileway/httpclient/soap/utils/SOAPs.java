@@ -31,61 +31,61 @@ public class SOAPs {
 
 
     public static String marshalSoapEnvelope(Object soapPayload) throws Throwable {
-        return marshalSoapEnvelope(null, null, null, soapPayload);
+        return marshalSoapEnvelope(null, null, soapPayload);
     }
 
     public static String marshalSoapEnvelope(SoapEnvelope soapEnvelope) throws Throwable {
-        return marshalSoapEnvelope(null, soapEnvelope);
+        return marshalSoapEnvelope(null, null, soapEnvelope);
     }
 
-    public static String marshalSoapEnvelope(String namespacePrefix, SoapEnvelope soapEnvelope) throws Throwable {
-        return marshalSoapEnvelope(namespacePrefix, soapEnvelope.getVersion(), soapEnvelope.getHeader(), soapEnvelope.getBody());
+    public static String marshalSoapEnvelope(SoapMessageMetadata metadata, SoapHeader soapHeader, SoapBody soapBody) throws Throwable {
+        return marshalSoapEnvelope(metadata, soapHeader, soapBody == null ? null : soapBody.getPayload());
     }
 
-    public static String marshalSoapEnvelope(String namespacePrefix, SoapVersion soapVersion, SoapHeader soapHeader, SoapBody soapBody) throws Throwable {
-        return marshalSoapEnvelope(namespacePrefix, soapVersion, soapHeader, soapBody == null ? null : soapBody.getPayload());
-    }
-
-    public static String marshalSoapEnvelope(String namespacePrefix, SoapVersion soapVersion, SoapHeader soapHeader, Object soapPayload) throws Throwable {
+    public static String marshalSoapEnvelope(SoapMessageMetadata metadata, SoapHeader soapHeader, Object soapPayload) throws Throwable {
+        if (soapPayload instanceof SoapBody) {
+            soapPayload = ((SoapBody) soapPayload).getPayload();
+        }
         if (soapPayload instanceof SoapEnvelope) {
             soapPayload = ((SoapEnvelope) soapPayload).getBody().getPayload();
             if (soapHeader == null) {
                 soapHeader = ((SoapEnvelope) soapPayload).getHeader();
             }
-            if (soapVersion == null) {
-                soapVersion = ((SoapEnvelope) soapPayload).getVersion();
+            if (metadata == null) {
+                metadata = ((SoapEnvelope) soapPayload).getMetadata();
             }
-        }
-        if (soapPayload instanceof SoapBody) {
-            soapPayload = ((SoapBody) soapPayload).getPayload();
         }
         if (soapPayload == null) {
             throw new NullPointerException("soap payload is required");
         }
-        if (soapVersion == null) {
-            soapVersion = SoapVersion.V1_2;
+
+        if (metadata == null) {
+            metadata = new SoapMessageMetadata();
         }
-        namespacePrefix = Strings.isBlank(namespacePrefix) ? NAMESPACE_PREFIX_DEFAULT : namespacePrefix;
-        String header = marshalSoapHeader(namespacePrefix, soapVersion, soapHeader);
+        String header = marshalSoapHeader(metadata, soapHeader);
 
         String payload = marshalSoapPayload(soapPayload);
 
         Map<String, String> soapEnvelopeTemplateVariables = new HashMap<String, String>();
-        soapEnvelopeTemplateVariables.put("namespaceUri", soapVersion.getNamespaceUri());
+        soapEnvelopeTemplateVariables.put("namespaceUri", metadata.getVersion().getNamespaceUri());
         soapEnvelopeTemplateVariables.put("header", header);
         soapEnvelopeTemplateVariables.put("payload", payload);
-        soapEnvelopeTemplateVariables.put("namespacePrefix", namespacePrefix);
+        soapEnvelopeTemplateVariables.put("namespacePrefix", metadata.getNamespacePrefix());
         String soapEnvelope = StringTemplates.formatWithMap(soapEnvelopeTemplate, soapEnvelopeTemplateVariables);
         return soapEnvelope;
     }
 
-    private static String marshalSoapHeader(String headerAttrNamespacePrefix, SoapVersion soapVersion, SoapHeader soapHeader) {
+    private static String marshalSoapHeader(SoapMessageMetadata metadata, SoapHeader soapHeader) {
         if (soapHeader == null) {
             return Strings.CRLF;
         }
+
         if (Objs.isEmpty(soapHeader.getElements())) {
             return Strings.CRLF;
         } else {
+            String headerAttrNamespacePrefix = metadata.getNamespacePrefix();
+            SoapVersion soapVersion = metadata.getVersion();
+
             headerAttrNamespacePrefix = Strings.isBlank(headerAttrNamespacePrefix) ? NAMESPACE_PREFIX_DEFAULT : headerAttrNamespacePrefix;
             StringBuilder builder = new StringBuilder();
             for (SoapHeaderElement element : soapHeader.getElements()) {

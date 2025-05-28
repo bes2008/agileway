@@ -34,6 +34,30 @@ public class SoapHeaderElement {
      */
     private boolean relay = false;
 
+    public SoapHeaderElement() {
+
+    }
+
+    public SoapHeaderElement(QName name) {
+        this(name, null, false);
+    }
+
+    public SoapHeaderElement(QName name, URI role, boolean mustUnderstand) {
+        this(name, role, mustUnderstand, false);
+    }
+
+    public SoapHeaderElement(QName name, URI role, boolean mustUnderstand, boolean relay) {
+        this(name, role, mustUnderstand, relay, null);
+    }
+
+    public SoapHeaderElement(QName name, URI role, boolean mustUnderstand, boolean relay, Map<String, String> propertySet) {
+        setName(name);
+        setRole(role);
+        setMustUnderstand(mustUnderstand);
+        setRelay(relay);
+        setPropertySet(propertySet);
+    }
+
     private final Map<String, String> propertySet = new HashMap<String, String>();
 
     public QName getName() {
@@ -42,14 +66,6 @@ public class SoapHeaderElement {
 
     public void setName(QName name) {
         this.name = name;
-    }
-
-    public URI getActor() {
-        return getRole();
-    }
-
-    public void setActor(URI actor) {
-        this.setRole(actor);
     }
 
     public URI getRole() {
@@ -84,6 +100,12 @@ public class SoapHeaderElement {
         return propertySet;
     }
 
+    public void setPropertySet(Map<String, String> propertySet) {
+        this.propertySet.clear();
+        if (propertySet != null) {
+            this.propertySet.putAll(propertySet);
+        }
+    }
     public void addProperty(String name, String value) {
         propertySet.put(name, value);
     }
