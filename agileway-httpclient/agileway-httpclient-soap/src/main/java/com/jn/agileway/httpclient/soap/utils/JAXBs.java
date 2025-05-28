@@ -30,7 +30,7 @@ public class JAXBs {
         if (Strings.isBlank(xml)) {
             return null;
         }
-        return (T) unmarshal(new ByteArrayInputStream(xml.getBytes(Charsets.UTF_8)), expectedClazz);
+        return unmarshal(new ByteArrayInputStream(xml.getBytes(Charsets.UTF_8)), expectedClazz);
     }
 
     public static <T> T unmarshal(InputStream xml, Class<T> expectedClazz) throws Exception {

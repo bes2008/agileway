@@ -19,7 +19,7 @@ public class SOAPs {
     }
 
     public static final String NAMESPACE_PREFIX_DEFAULT = "agilewaysoap";
-    private static String soapEnvelopeTemplate = "<${namespacePrefix}:Envelope xmlns:agilewaysoap=\"{namespaceUri}\">" + Strings.CRLF +
+    private static String soapEnvelopeTemplate = "<${namespacePrefix}:Envelope xmlns:agilewaysoap=\"${namespaceUri}\">" + Strings.CRLF +
             "    <${namespacePrefix}:Header>" + Strings.CRLF +
             "${header}" +
             "    </${namespacePrefix}:Header>" + Strings.CRLF +
