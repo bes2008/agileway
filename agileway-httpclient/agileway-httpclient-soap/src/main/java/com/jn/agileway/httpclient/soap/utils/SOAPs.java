@@ -139,12 +139,12 @@ public class SOAPs {
                     if (line.startsWith("<?xml")) {
                         // ignore it
                     } else {
-                        payloadBuilder.append("    ").append(line).append(Strings.CRLF);
+                        payloadBuilder.append("        ").append(line).append(Strings.CRLF);
                     }
                     first = false;
                 }
             } else {
-                payloadBuilder.append("    ").append(line).append(Strings.CRLF);
+                payloadBuilder.append("        ").append(line).append(Strings.CRLF);
             }
         }
 
