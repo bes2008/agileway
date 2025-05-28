@@ -216,7 +216,7 @@ public class SOAPs {
         return JAXBs.unmarshal(soapPayloadXml, expectedClazz);
     }
 
-    public static SoapFault unmarshalSoapFault(String soapEnvelopeXml) throws Exception {
+    public static SoapFaultV11 unmarshalSoapFault(String soapEnvelopeXml) throws Exception {
         if (Strings.isBlank(soapEnvelopeXml)) {
             throw new RuntimeException("illegal soap envelope: it is blank");
         }
@@ -225,7 +225,7 @@ public class SOAPs {
             throw new RuntimeException("illegal soap body payload: it is blank");
         }
         // return JAXBs.unmarshal(soapPayloadXml, expectedClazz);
-        SoapFault soapFault = new SoapFault();
+        SoapFaultV11 soapFault = new SoapFaultV11();
         return soapFault;
     }
 
