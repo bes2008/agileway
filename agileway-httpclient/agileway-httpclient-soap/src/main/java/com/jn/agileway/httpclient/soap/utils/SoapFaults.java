@@ -43,6 +43,9 @@ public class SoapFaults {
         if (Strings.isBlank(faultCode)) {
             throw new MalformedSoapMessageException("illegal soap fault: <faultcode/> is required");
         }
+        if (faultCode.startsWith(documentNamespacePrefix + ":")) {
+            soapFault.setSubCode(faultCode.substring(documentNamespacePrefix.length() + 1));
+        }
         soapFault.setCode(faultCode);
 
         String faultstring = (String) soapFaultMap.get("faultstring");
@@ -66,7 +69,7 @@ public class SoapFaults {
 
     public static SoapFault unmarshalSoapFaultV12(String soapEnvelopeXml) throws Exception {
         if (Strings.isBlank(soapEnvelopeXml)) {
-            throw new MalformedSoapMessageException("illegal soap envelope: it is blank");
+            throw new MalformedSoapMessageException("malformed soap envelope: it is blank");
         }
 
         Document document = Xmls.getXmlDoc(new ByteArrayInputStream(soapEnvelopeXml.getBytes(Charsets.UTF_8)));
@@ -77,6 +80,53 @@ public class SoapFaults {
         xmlElementChildrenToMap(faultElement.getChildNodes(), soapFaultMap);
 
         SoapFault soapFault = new SoapFault();
+
+        // /Envelope/Body/Fault/Code
+        if (!soapFaultMap.containsKey("Code")) {
+            throw new MalformedSoapMessageException("malformed soap fault: /Envelope/Body/Fault/Code is required");
+        }
+        Map<String, Object> faultCode = (Map<String, Object>) soapFaultMap.get("Code");
+        // /Envelope/Body/Fault/Code/Value
+        if (!faultCode.containsKey("Value")) {
+            throw new MalformedSoapMessageException("malformed soap fault: /Envelope/Body/Fault/Code/Value is required");
+        }
+        String faultCodeValue = (String) faultCode.get("Value");
+        if (faultCodeValue.startsWith(documentNamespacePrefix + ":")) {
+            soapFault.setSubCode(faultCodeValue.substring(documentNamespacePrefix.length() + 1));
+        }
+        soapFault.setCode(faultCodeValue);
+        // /Envelope/Body/Fault/Code/Subcode
+        if (faultCode.containsKey("Subcode")) {
+            soapFault.setSubCode((String) faultCode.get("Subcode"));
+        }
+
+        // /Envelope/Body/Fault/Reason
+        if (!soapFaultMap.containsKey("Reason")) {
+            throw new MalformedSoapMessageException("malformed soap fault: /Envelope/Body/Fault/Reason is required");
+        }
+
+        Map<String, Object> faultReason = (Map<String, Object>) soapFaultMap.get("Reason");
+        if (!faultReason.containsKey("Text")) {
+            throw new MalformedSoapMessageException("malformed soap fault: /Envelope/Body/Fault/Reason/Text is required");
+        }
+        String faultReasonText = (String) faultReason.get("Text");
+        soapFault.setReason(faultReasonText);
+
+        String faultRole = (String) soapFaultMap.get("Role");
+        if (Strings.isNotBlank(faultRole)) {
+            soapFault.setRole(URI.create(faultRole));
+        }
+
+        String faultNode = (String) soapFaultMap.get("Node");
+        if (Strings.isNotBlank(faultNode)) {
+            soapFault.setNode(URI.create(faultNode));
+        }
+
+        Object detail = soapFaultMap.get("detail");
+        if (detail instanceof Map) {
+            soapFault.setDetail((Map) detail);
+        }
+
         return soapFault;
     }
 
