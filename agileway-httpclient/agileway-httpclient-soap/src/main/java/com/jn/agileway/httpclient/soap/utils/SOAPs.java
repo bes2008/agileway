@@ -151,7 +151,7 @@ public class SOAPs {
         Map<String, String> soapEnvelopeTemplateVariables = new HashMap<String, String>();
         soapEnvelopeTemplateVariables.put("namespaceUri", soapVersion.getNamespaceUri());
         soapEnvelopeTemplateVariables.put("header", header);
-        soapEnvelopeTemplateVariables.put("body", payloadBuilder.toString());
+        soapEnvelopeTemplateVariables.put("payload", payloadBuilder.toString());
         soapEnvelopeTemplateVariables.put("namespacePrefix", namespacePrefix);
         String soapEnvelope = StringTemplates.formatWithMap(soapEnvelopeTemplate, soapEnvelopeTemplateVariables);
         return soapEnvelope;
