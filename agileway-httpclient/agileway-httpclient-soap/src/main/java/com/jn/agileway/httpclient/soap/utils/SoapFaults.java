@@ -122,7 +122,7 @@ public class SoapFaults {
             soapFault.setNode(URI.create(faultNode));
         }
 
-        Object detail = soapFaultMap.get("detail");
+        Object detail = soapFaultMap.get("Detail");
         if (detail instanceof Map) {
             soapFault.setDetail((Map) detail);
         }
