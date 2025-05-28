@@ -1,6 +1,7 @@
 package com.jn.agileway.httpclient.soap.utils;
 
 import com.jn.agileway.httpclient.soap.entity.*;
+import com.jn.agileway.httpclient.soap.exception.MalformedSoapMessageException;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
@@ -59,7 +60,7 @@ public class SOAPs {
             soapPayload = soapEnvelope.getBody().getPayload();
         }
         if (soapPayload == null) {
-            throw new NullPointerException("soap payload is required");
+            throw new MalformedSoapMessageException("soap payload is required");
         }
 
         if (metadata == null) {
