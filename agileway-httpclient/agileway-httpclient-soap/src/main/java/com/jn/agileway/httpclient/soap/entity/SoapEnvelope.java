@@ -12,7 +12,6 @@ public class SoapEnvelope {
     @NonNull
     private SoapBody body;
 
-    private final SoapMessageMetadata metadata = new SoapMessageMetadata();
     public SoapHeader getHeader() {
         return header;
     }
@@ -33,10 +32,5 @@ public class SoapEnvelope {
         return metadata;
     }
 
-    public void setMetadata(SoapMessageMetadata metadata) {
-        if (metadata != null) {
-            this.metadata.setBinding(metadata.getBinding());
-            this.metadata.setNamespacePrefix(metadata.getNamespacePrefix());
-        }
-    }
+
 }

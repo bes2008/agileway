@@ -5,7 +5,14 @@ import java.util.List;
 public class SoapMessage {
     private SoapEnvelope envelope;
     private List<SoapAttachment> attachments;
-    private SoapMessageMetadata metadata;
+    private final SoapMessageMetadata metadata = new SoapMessageMetadata();
+
+    public SoapMessage() {
+    }
+
+    public SoapMessage(SoapMessageMetadata metadata) {
+        setMetadata(metadata);
+    }
 
     public SoapEnvelope getEnvelope() {
         return envelope;
@@ -28,6 +35,9 @@ public class SoapMessage {
     }
 
     public void setMetadata(SoapMessageMetadata metadata) {
-        this.metadata = metadata;
+        if (metadata != null) {
+            this.metadata.setBinding(metadata.getBinding());
+            this.metadata.setNamespacePrefix(metadata.getNamespacePrefix());
+        }
     }
 }

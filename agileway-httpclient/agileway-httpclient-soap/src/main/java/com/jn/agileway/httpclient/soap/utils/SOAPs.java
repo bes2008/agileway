@@ -12,7 +12,9 @@ import com.jn.langx.util.io.IOs;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.xml.soap.SOAPMessage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,34 +34,39 @@ public class SOAPs {
             "    </${namespacePrefix}:Body>" + Strings.CRLF +
             "</${namespacePrefix}:Envelope>" + Strings.CRLF;
 
-
-    public static String marshalSoapEnvelope(Object soapPayload) throws Throwable {
-        return marshalSoapEnvelope(null, null, soapPayload);
-    }
-
-    public static String marshalSoapEnvelope(SoapEnvelope soapEnvelope) throws Throwable {
-        return marshalSoapEnvelope(null, null, soapEnvelope);
-    }
-
-    public static String marshalSoapEnvelope(SoapMessageMetadata metadata, SoapHeader soapHeader, SoapBody soapBody) throws Throwable {
-        return marshalSoapEnvelope(metadata, soapHeader, soapBody == null ? null : soapBody.getPayload());
-    }
-
-    public static String marshalSoapEnvelope(SoapMessageMetadata metadata, SoapHeader soapHeader, Object soapPayload) throws Throwable {
-        if (soapPayload instanceof SoapBody) {
-            soapPayload = ((SoapBody) soapPayload).getPayload();
+    public static String marshalSoapEnvelope(Object obj) throws Throwable {
+        if (obj instanceof SoapMessage) {
+            return marshalSoapEnvelope((SoapMessage) obj);
         }
-        if (soapPayload instanceof SoapEnvelope) {
-            SoapEnvelope soapEnvelope = (SoapEnvelope) soapPayload;
-
-            if (soapHeader == null) {
-                soapHeader = ((SoapEnvelope) soapPayload).getHeader();
-            }
-            if (metadata == null) {
-                metadata = ((SoapEnvelope) soapPayload).getMetadata();
-            }
-            soapPayload = soapEnvelope.getBody().getPayload();
+        if (obj instanceof SoapEnvelope) {
+            return marshalSoapEnvelope(null, (SoapEnvelope) obj);
         }
+        if (obj instanceof SoapHeader) {
+            throw new MalformedSoapMessageException("soap body is required");
+        }
+        if (obj instanceof SoapBody) {
+            SoapEnvelope soapEnvelope = new SoapEnvelope();
+            soapEnvelope.setBody((SoapBody) obj);
+            return marshalSoapEnvelope(null, soapEnvelope);
+        }
+        if (obj instanceof SOAPMessage) {
+            SOAPMessage soapMessage = (SOAPMessage) obj;
+            ByteArrayOutputStream bao = new ByteArrayOutputStream();
+            soapMessage.writeTo(bao);
+            return new String(bao.toByteArray(), Charsets.UTF_8);
+        }
+
+        SoapEnvelope soapEnvelope = new SoapEnvelope();
+        soapEnvelope.setBody(new SoapBody(obj));
+        return marshalSoapEnvelope(null, soapEnvelope);
+    }
+
+    public static String marshalSoapEnvelope(SoapMessage soapMessage) throws Throwable {
+        return marshalSoapEnvelope(soapMessage.getMetadata(), soapMessage.getEnvelope());
+    }
+
+    public static String marshalSoapEnvelope(SoapMessageMetadata metadata, SoapEnvelope soapEnvelope) throws Throwable {
+        Object soapPayload = soapEnvelope.getBody().getPayload();
         if (soapPayload == null) {
             throw new MalformedSoapMessageException("soap payload is required");
         }
@@ -67,7 +74,7 @@ public class SOAPs {
         if (metadata == null) {
             metadata = new SoapMessageMetadata();
         }
-        String header = marshalSoapHeader(metadata, soapHeader);
+        String header = marshalSoapHeader(metadata, soapEnvelope.getHeader());
 
         String payload = marshalSoapPayload(soapPayload);
 
@@ -76,8 +83,8 @@ public class SOAPs {
         soapEnvelopeTemplateVariables.put("header", header);
         soapEnvelopeTemplateVariables.put("payload", payload);
         soapEnvelopeTemplateVariables.put("namespacePrefix", metadata.getNamespacePrefix());
-        String soapEnvelope = StringTemplates.formatWithMap(soapEnvelopeTemplate, soapEnvelopeTemplateVariables);
-        return soapEnvelope;
+        String soapEnvelopeXml = StringTemplates.formatWithMap(soapEnvelopeTemplate, soapEnvelopeTemplateVariables);
+        return soapEnvelopeXml;
     }
 
     private static String marshalSoapHeader(SoapMessageMetadata metadata, SoapHeader soapHeader) {
