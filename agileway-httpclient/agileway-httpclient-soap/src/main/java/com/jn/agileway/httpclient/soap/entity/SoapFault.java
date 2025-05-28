@@ -1,5 +1,9 @@
 package com.jn.agileway.httpclient.soap.entity;
 
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
+import com.jn.langx.annotation.NullableIf;
+
 import java.net.URI;
 import java.util.Map;
 
@@ -7,32 +11,38 @@ public class SoapFault {
     /**
      * SOAP Fault code, V1.1, V1.2都有，名字不一样
      */
+    @NonNull
     private String code;
     /**
      * SOAP Fault sub code, V1.2才有
      */
+    @Nullable
     String subCode;
     /**
      * SOAP Fault reason, V1.1, V1.2都有
      */
+    @NonNull
     private String reason;
     /**
      * SOAP Fault role, actor, V1.1, V1.2都有，名字不一样
      */
+    @Nullable
     private URI role;
     /**
      * SOAP Fault node, V1.2才有
      */
+    @Nullable
     private URI node;
     /**
      * SOAP Fault detail, V1.1, V1.2都有
      */
-    private Map<String, String> detail;
+    @Nullable
+    private Map<String, Object> detail;
 
     public SoapFault() {
     }
 
-    public SoapFault(String code, String subCode, String reason, URI role, URI node, Map<String, String> detail) {
+    public SoapFault(String code, String subCode, String reason, URI role, URI node, Map<String, Object> detail) {
         this.code = code;
         this.subCode = subCode;
         this.reason = reason;
@@ -41,7 +51,7 @@ public class SoapFault {
         this.detail = detail;
     }
 
-    public Map<String, String> getDetail() {
+    public Map<String, Object> getDetail() {
         return this.detail;
     }
 
@@ -85,7 +95,7 @@ public class SoapFault {
         this.node = node;
     }
 
-    public void setDetail(Map<String, String> detail) {
+    public void setDetail(Map<String, Object> detail) {
         this.detail = detail;
     }
 }

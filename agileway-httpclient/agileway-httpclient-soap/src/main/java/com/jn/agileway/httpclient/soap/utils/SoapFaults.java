@@ -2,18 +2,64 @@ package com.jn.agileway.httpclient.soap.utils;
 
 import com.jn.agileway.httpclient.soap.entity.SoapFault;
 import com.jn.agileway.httpclient.soap.exception.MalformedSoapMessageException;
+import com.jn.langx.text.xml.Namespaces;
+import com.jn.langx.text.xml.XmlAccessor;
+import com.jn.langx.text.xml.Xmls;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.io.Charsets;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import java.io.ByteArrayInputStream;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SoapFaults {
+    /**
+     * @param soapEnvelopeXml
+     * @return
+     * @throws Exception
+     * @see <a href="https://www.ibm.com/docs/en/integration-bus/10.0?topic=message-soap-fault">SOAP Fault</a>
+     */
     public static SoapFault unmarshalSoapFaultV11(String soapEnvelopeXml) throws Exception {
         if (Strings.isBlank(soapEnvelopeXml)) {
             throw new MalformedSoapMessageException("illegal soap envelope: it is blank");
         }
-        String soapPayloadXml = SOAPs.extractSoapPayloadXml(soapEnvelopeXml);
-        if (Strings.isBlank(soapPayloadXml)) {
-            throw new MalformedSoapMessageException("illegal soap body payload: it is blank");
-        }
+
+        Document document = Xmls.getXmlDoc(new ByteArrayInputStream(soapEnvelopeXml.getBytes(Charsets.UTF_8)));
+        String documentNamespacePrefix = Namespaces.getDocumentRootNamespace(document);
+        Element faultElement = new XmlAccessor(documentNamespacePrefix).getElement(document, "/Envelope/Body/Fault");
+
+        Map<String, Object> soapFaultMap = new HashMap<String, Object>();
+        xmlElementChildrenToMap(faultElement.getChildNodes(), soapFaultMap);
+
+
         SoapFault soapFault = new SoapFault();
+
+        String faultCode = (String) soapFaultMap.get("faultcode");
+        if (Strings.isBlank(faultCode)) {
+            throw new MalformedSoapMessageException("illegal soap fault: <faultcode/> is required");
+        }
+        soapFault.setCode(faultCode);
+
+        String faultstring = (String) soapFaultMap.get("faultstring");
+        if (Strings.isBlank(faultstring)) {
+            throw new MalformedSoapMessageException("illegal soap fault: <faultstring/> is required");
+        }
+        soapFault.setReason(faultstring);
+
+        String faultActor = (String) soapFaultMap.get("faultactor");
+        if (Strings.isNotBlank(faultActor)) {
+            soapFault.setRole(URI.create(faultActor));
+        }
+
+        Object detail = soapFaultMap.get("detail");
+        if (detail instanceof Map) {
+            soapFault.setDetail((Map) detail);
+        }
 
         return soapFault;
     }
@@ -22,11 +68,32 @@ public class SoapFaults {
         if (Strings.isBlank(soapEnvelopeXml)) {
             throw new MalformedSoapMessageException("illegal soap envelope: it is blank");
         }
-        String soapPayloadXml = SOAPs.extractSoapPayloadXml(soapEnvelopeXml);
-        if (Strings.isBlank(soapPayloadXml)) {
-            throw new MalformedSoapMessageException("illegal soap body payload: it is blank");
-        }
+
+        Document document = Xmls.getXmlDoc(new ByteArrayInputStream(soapEnvelopeXml.getBytes(Charsets.UTF_8)));
+        String documentNamespacePrefix = Namespaces.getDocumentRootNamespace(document);
+        Element faultElement = new XmlAccessor(documentNamespacePrefix).getElement(document, "/Envelope/Body/Fault");
+
+        Map<String, Object> soapFaultMap = new HashMap<String, Object>();
+        xmlElementChildrenToMap(faultElement.getChildNodes(), soapFaultMap);
+
         SoapFault soapFault = new SoapFault();
         return soapFault;
+    }
+
+    private static void xmlElementChildrenToMap(NodeList children, Map<String, Object> map) {
+        for (int i = 0; i < children.getLength(); i++) {
+            Node node = children.item(i);
+            if (node.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            Element element = (Element) node;
+            if (element.getChildNodes().getLength() > 0) {
+                Map<String, Object> value = new HashMap<String, Object>();
+                xmlElementChildrenToMap(element.getChildNodes(), value);
+                map.put(element.getLocalName(), value);
+            } else {
+                map.put(element.getLocalName(), element.getTextContent());
+            }
+        }
     }
 }
