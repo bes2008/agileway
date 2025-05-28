@@ -1,5 +1,7 @@
 package com.jn.agileway.httpclient.soap.entity;
 
+import com.jn.langx.util.Objs;
+
 import static com.jn.agileway.httpclient.soap.utils.SOAPs.NAMESPACE_PREFIX_DEFAULT;
 
 public class SoapMessageMetadata {
@@ -10,12 +12,16 @@ public class SoapMessageMetadata {
     private String namespacePrefix;
 
     public SoapMessageMetadata() {
-        this(SoapBinding.SOAP12_HTTP, NAMESPACE_PREFIX_DEFAULT);
+        this(SoapBinding.SOAP12_HTTP);
     }
 
-    public SoapMessageMetadata(SoapBinding version, String namespacePrefix) {
-        this.namespacePrefix = namespacePrefix;
-        this.binding = version;
+    public SoapMessageMetadata(SoapBinding binding) {
+        this(binding, null);
+    }
+
+    public SoapMessageMetadata(SoapBinding binding, String namespacePrefix) {
+        this.namespacePrefix = Objs.useValueIfEmpty(namespacePrefix, NAMESPACE_PREFIX_DEFAULT);
+        this.binding = binding;
     }
 
     public SoapBinding getBinding() {
