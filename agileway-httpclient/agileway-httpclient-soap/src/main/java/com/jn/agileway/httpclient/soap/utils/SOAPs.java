@@ -216,17 +216,5 @@ public class SOAPs {
         return JAXBs.unmarshal(soapPayloadXml, expectedClazz);
     }
 
-    public static SoapFault unmarshalSoapFault(String soapEnvelopeXml) throws Exception {
-        if (Strings.isBlank(soapEnvelopeXml)) {
-            throw new MalformedSoapMessageException("illegal soap envelope: it is blank");
-        }
-        String soapPayloadXml = extractSoapPayloadXml(soapEnvelopeXml);
-        if (Strings.isBlank(soapPayloadXml)) {
-            throw new MalformedSoapMessageException("illegal soap body payload: it is blank");
-        }
-        // return JAXBs.unmarshal(soapPayloadXml, expectedClazz);
-        SoapFault soapFault = new SoapFault();
-        return soapFault;
-    }
 
 }
