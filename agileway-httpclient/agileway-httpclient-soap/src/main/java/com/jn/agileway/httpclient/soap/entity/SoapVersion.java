@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.soap.utils;
+package com.jn.agileway.httpclient.soap.entity;
 
 public enum SoapVersion {
     V1_1("1.1", "https://schemas.xmlsoap.org/soap/envelope/"),

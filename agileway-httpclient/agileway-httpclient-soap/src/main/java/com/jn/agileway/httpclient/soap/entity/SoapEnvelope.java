@@ -1,6 +1,5 @@
 package com.jn.agileway.httpclient.soap.entity;
 
-import com.jn.agileway.httpclient.soap.utils.SoapVersion;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 
