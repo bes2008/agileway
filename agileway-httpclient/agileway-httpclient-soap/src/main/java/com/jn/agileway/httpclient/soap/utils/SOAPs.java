@@ -216,16 +216,16 @@ public class SOAPs {
         return JAXBs.unmarshal(soapPayloadXml, expectedClazz);
     }
 
-    public static SoapFaultV11 unmarshalSoapFault(String soapEnvelopeXml) throws Exception {
+    public static SoapFault unmarshalSoapFault(String soapEnvelopeXml) throws Exception {
         if (Strings.isBlank(soapEnvelopeXml)) {
-            throw new RuntimeException("illegal soap envelope: it is blank");
+            throw new MalformedSoapMessageException("illegal soap envelope: it is blank");
         }
         String soapPayloadXml = extractSoapPayloadXml(soapEnvelopeXml);
         if (Strings.isBlank(soapPayloadXml)) {
-            throw new RuntimeException("illegal soap body payload: it is blank");
+            throw new MalformedSoapMessageException("illegal soap body payload: it is blank");
         }
         // return JAXBs.unmarshal(soapPayloadXml, expectedClazz);
-        SoapFaultV11 soapFault = new SoapFaultV11();
+        SoapFault soapFault = new SoapFault();
         return soapFault;
     }
 
