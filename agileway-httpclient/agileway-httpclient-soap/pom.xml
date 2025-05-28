@@ -19,6 +19,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
+            <artifactId>agileway-httpclient-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
             <version>4.0.2</version>

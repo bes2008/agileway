@@ -1,25 +1,32 @@
-package com.jn.agileway.httpclient.protocol.restful.plugin;
+package com.jn.agileway.httpclient.soap.plugin;
 
 import com.jn.agileway.httpclient.core.HttpMessage;
 import com.jn.agileway.httpclient.core.plugin.HttpMessageProtocolPlugin;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.net.mime.MediaType;
 
-public class RestfulHttpMessagePlugin extends HttpMessageProtocolPlugin {
+public class HttpSoapMessagePlugin extends HttpMessageProtocolPlugin {
     @Override
     public boolean availableFor(HttpMessage httpMessage) {
         MediaType contentType = httpMessage.getHeaders().getContentType();
-        if (contentType != null) {
-            if (MediaType.APPLICATION_JSON.equalsTypeAndSubtype(contentType)) {
-                return true;
-            }
+        if (contentType == null) {
+            return false;
+        }
+        if (MediaType.APPLICATION_SOAP12_XML.equalsTypeAndSubtype(contentType)) {
+            return true;
+        }
+        if (MediaType.APPLICATION_ATOM_XML.equalsTypeAndSubtype(contentType)) {
+            return true;
+        }
+        if (MediaType.TEXT_XML.equalsTypeAndSubtype(contentType) && httpMessage.getHeaders().containsKey("SOAPAction")) {
+            return true;
         }
         return false;
     }
 
     @Override
     public String getName() {
-        return "RestfulMessagePlugin";
+        return "SoapMessagePlugin";
     }
 
     @Override
@@ -34,7 +41,6 @@ public class RestfulHttpMessagePlugin extends HttpMessageProtocolPlugin {
 
     @Override
     public void init() throws InitializationException {
-        this.requestContentWriters.add(new GeneralJsonHttpRequestWriter());
-        this.responseContentReaders.add(new GeneralJsonHttpResponseReader());
+
     }
 }
