@@ -88,7 +88,7 @@ public class SOAPs {
             return Strings.CRLF;
         } else {
             String headerAttrNamespacePrefix = metadata.getNamespacePrefix();
-            SoapVersion soapVersion = metadata.getVersion();
+            SoapBinding soapVersion = metadata.getVersion();
 
             headerAttrNamespacePrefix = Strings.isBlank(headerAttrNamespacePrefix) ? NAMESPACE_PREFIX_DEFAULT : headerAttrNamespacePrefix;
             StringBuilder builder = new StringBuilder();
@@ -112,7 +112,7 @@ public class SOAPs {
                 // SOAP 1.1 用 0,1 表示
                 // SOAP 1.2 用 false,true 表示
                 String mustUnderstandValue = "" + element.isMustUnderstand();
-                if (soapVersion == SoapVersion.V1_1) {
+                if (soapVersion == SoapBinding.SOAP11_HTTP) {
                     mustUnderstandValue = element.isMustUnderstand() ? "1" : "0";
                 }
 
@@ -125,7 +125,7 @@ public class SOAPs {
 
                 // role, actor
                 if (element.getRole() != null) {
-                    String roleAttrName = soapVersion == SoapVersion.V1_2 ? "role" : "actor";
+                    String roleAttrName = soapVersion == SoapBinding.SOAP12_HTTP ? "role" : "actor";
                     builder.append(" ")
                             .append(headerAttrNamespacePrefix)
                             .append(":")
@@ -134,7 +134,7 @@ public class SOAPs {
                 }
 
                 // relay, 只有 SOAP 1.2 才有
-                if (soapVersion == SoapVersion.V1_2) {
+                if (soapVersion == SoapBinding.SOAP12_HTTP) {
                     builder.append(" ")
                             .append(headerAttrNamespacePrefix)
                             .append(":")
