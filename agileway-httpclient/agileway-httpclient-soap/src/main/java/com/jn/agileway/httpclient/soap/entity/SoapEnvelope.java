@@ -28,9 +28,4 @@ public class SoapEnvelope {
         this.body = body;
     }
 
-    public SoapMessageMetadata getMetadata() {
-        return metadata;
-    }
-
-
 }

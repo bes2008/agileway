@@ -12,7 +12,8 @@ import com.jn.langx.util.io.IOs;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.xml.soap.SOAPMessage;
+import jakarta.xml.soap.SOAPMessage;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;

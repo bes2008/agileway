@@ -8,7 +8,8 @@ import com.jn.agileway.httpclient.soap.utils.SOAPs;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.io.Charsets;
 
-import javax.xml.soap.SOAPMessage;
+import jakarta.xml.soap.SOAPMessage;
+
 import java.io.IOException;
 
 class SoapHttpRequestWriter implements HttpRequestContentWriter {
