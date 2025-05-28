@@ -4,6 +4,7 @@ import com.jn.langx.annotation.NonNull;
 import com.jn.langx.util.Strings;
 
 import javax.xml.namespace.QName;
+import java.net.URI;
 
 /**
  * SOAP Envelope 中可以有多个 SOAP Header
@@ -13,12 +14,12 @@ public class SoapHeaderElement {
     private QName name;
 
     /**
-     * SOAP Header 的接收者
+     * 用于指定由服务端的哪个node来处理SOAP请求
      * <p>
      * 在 SOAP 1.2 中，SOAP Header 的接收者被定义为SOAP 1.2中的role属性
      * </p>
      */
-    private String role = "";
+    private URI role;
 
     /**
      * 是否必须被理解
@@ -39,19 +40,19 @@ public class SoapHeaderElement {
         this.name = name;
     }
 
-    public String getActor() {
+    public URI getActor() {
         return getRole();
     }
 
-    public void setActor(String actor) {
+    public void setActor(URI actor) {
         this.setRole(actor);
     }
 
-    public String getRole() {
+    public URI getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(URI role) {
         this.role = role;
     }
 

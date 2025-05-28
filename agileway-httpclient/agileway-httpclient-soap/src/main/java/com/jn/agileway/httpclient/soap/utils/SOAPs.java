@@ -54,15 +54,22 @@ public class SOAPs {
                 }
 
                 // mustUnderstand
+                // SOAP 1.1 用 0,1 表示
+                // SOAP 1.2 用 false,true 表示
+                String mustUnderstandValue = "" + element.isMustUnderstand();
+                if (soapVersion == SoapVersion.V1_1) {
+                    mustUnderstandValue = element.isMustUnderstand() ? "1" : "0";
+                }
+
                 builder.append(" ")
                         .append(headerAttrNamespacePrefix)
                         .append(":")
                         .append("mustUnderstand=\"")
-                        .append(element.isMustUnderstand())
+                        .append(mustUnderstandValue)
                         .append("\"");
 
                 // role, actor
-                if (Strings.isNotEmpty(element.getRole())) {
+                if (element.getRole() != null) {
                     String roleAttrName = soapVersion == SoapVersion.V1_2 ? "role" : "actor";
                     builder.append(" ")
                             .append(headerAttrNamespacePrefix)
@@ -71,7 +78,7 @@ public class SOAPs {
                             .append("=\"").append(element.getRole()).append("\"");
                 }
 
-                // relay
+                // relay, 只有 SOAP 1.2 才有
                 if (soapVersion == SoapVersion.V1_2) {
                     builder.append(" ")
                             .append(headerAttrNamespacePrefix)
