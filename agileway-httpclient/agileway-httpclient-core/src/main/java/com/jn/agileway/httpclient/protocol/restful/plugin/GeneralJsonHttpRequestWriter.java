@@ -9,7 +9,7 @@ import com.jn.langx.util.net.mime.MediaType;
 
 import java.io.IOException;
 
-public class GeneralJsonHttpRequestWriter implements HttpRequestContentWriter {
+class GeneralJsonHttpRequestWriter implements HttpRequestContentWriter {
     @Override
     public boolean canWrite(HttpRequest request) {
         MediaType contentType = request.getHeaders().getContentType();

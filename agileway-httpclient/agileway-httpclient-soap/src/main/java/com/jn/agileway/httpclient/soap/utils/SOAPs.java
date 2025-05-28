@@ -61,11 +61,11 @@ public class SOAPs {
         return marshalSoapEnvelope(null, soapEnvelope);
     }
 
-    public static String marshalSoapEnvelope(SoapMessage soapMessage) throws Throwable {
+    public static String marshalSoapEnvelope(SoapMessage soapMessage) throws Exception {
         return marshalSoapEnvelope(soapMessage.getMetadata(), soapMessage.getEnvelope());
     }
 
-    public static String marshalSoapEnvelope(SoapMessageMetadata metadata, SoapEnvelope soapEnvelope) throws Throwable {
+    public static String marshalSoapEnvelope(SoapMessageMetadata metadata, SoapEnvelope soapEnvelope) throws Exception {
         Object soapPayload = soapEnvelope.getBody().getPayload();
         if (soapPayload == null) {
             throw new MalformedSoapMessageException("soap payload is required");
@@ -165,7 +165,7 @@ public class SOAPs {
     }
 
 
-    private static String marshalSoapPayload(Object soapPayload) throws Throwable {
+    private static String marshalSoapPayload(Object soapPayload) throws Exception {
         // payload
         byte[] bytes = JAXBs.marshal(soapPayload);
         List<String> lines = IOs.readLines(new ByteArrayInputStream(bytes));

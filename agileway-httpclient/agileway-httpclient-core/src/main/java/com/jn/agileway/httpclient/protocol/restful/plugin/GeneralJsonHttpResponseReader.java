@@ -8,7 +8,7 @@ import com.jn.langx.util.net.mime.MediaType;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
-public class GeneralJsonHttpResponseReader implements HttpResponseContentReader {
+class GeneralJsonHttpResponseReader implements HttpResponseContentReader {
     @Override
     public boolean canRead(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) {
         if (MediaType.APPLICATION_JSON.equalsTypeAndSubtype(contentType)) {

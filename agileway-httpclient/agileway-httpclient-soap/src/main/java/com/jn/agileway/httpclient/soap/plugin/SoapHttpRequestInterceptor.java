@@ -10,7 +10,7 @@ import com.jn.langx.util.net.mime.MediaType;
 
 import javax.xml.soap.SOAPMessage;
 
-public class SoapHttpRequestInterceptor implements HttpRequestInterceptor {
+class SoapHttpRequestInterceptor implements HttpRequestInterceptor {
     @Override
     public void intercept(HttpRequest request) {
         if (request.getMethod() != HttpMethod.POST) {

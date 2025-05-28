@@ -41,6 +41,7 @@ public class HttpSoapMessagePlugin extends HttpMessageProtocolPlugin {
 
     @Override
     public void init() throws InitializationException {
-
+        this.requestInterceptors.add(new SoapHttpRequestInterceptor());
+        this.requestContentWriters.add(new SoapHttpRequestWriter());
     }
 }
