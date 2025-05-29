@@ -20,7 +20,7 @@ class GeneralJsonHttpRequestWriter implements HttpRequestContentWriter {
     }
 
     @Override
-    public void write(HttpRequest request, UnderlyingHttpRequest output) throws IOException {
+    public void write(HttpRequest request, UnderlyingHttpRequest output) throws Exception {
         Object body = request.getContent();
         output.getContent().write(JSONs.toJson(body).getBytes(Charsets.UTF_8));
     }

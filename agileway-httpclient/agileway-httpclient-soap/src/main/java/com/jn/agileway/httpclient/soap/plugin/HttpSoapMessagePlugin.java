@@ -8,7 +8,10 @@ import com.jn.langx.util.net.mime.MediaType;
 public class HttpSoapMessagePlugin extends HttpMessageProtocolPlugin {
     @Override
     public boolean availableFor(HttpMessage httpMessage) {
-        MediaType contentType = httpMessage.getHeaders().getContentType();
+        return isSoapContentType(httpMessage.getHeaders().getContentType());
+    }
+
+    private boolean isSoapContentType(MediaType contentType) {
         if (contentType == null) {
             return false;
         }
@@ -18,7 +21,7 @@ public class HttpSoapMessagePlugin extends HttpMessageProtocolPlugin {
         if (MediaType.APPLICATION_ATOM_XML.equalsTypeAndSubtype(contentType)) {
             return true;
         }
-        if (MediaType.TEXT_XML.equalsTypeAndSubtype(contentType) && httpMessage.getHeaders().containsKey("SOAPAction")) {
+        if (MediaType.TEXT_XML.equalsTypeAndSubtype(contentType)) {
             return true;
         }
         return false;
@@ -42,6 +45,9 @@ public class HttpSoapMessagePlugin extends HttpMessageProtocolPlugin {
     @Override
     public void init() throws InitializationException {
         this.requestInterceptors.add(new SoapHttpRequestInterceptor());
-        this.requestContentWriters.add(new SoapHttpRequestWriter());
+
+        this.requestContentWriters.add(new JavaxSoapMessageWriter());
+        this.requestContentWriters.add(new JakartaSoapMessageWriter());
+        this.requestContentWriters.add(new GeneralSoapHttpRequestWriter());
     }
 }

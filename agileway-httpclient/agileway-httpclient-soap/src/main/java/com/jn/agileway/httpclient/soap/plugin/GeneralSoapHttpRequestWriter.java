@@ -9,31 +9,31 @@ import com.jn.langx.util.Throwables;
 import com.jn.langx.util.io.Charsets;
 
 import jakarta.xml.soap.SOAPMessage;
+import org.w3c.dom.Element;
 
 import java.io.IOException;
 
-class SoapHttpRequestWriter implements HttpRequestContentWriter {
+class GeneralSoapHttpRequestWriter implements HttpRequestContentWriter {
     @Override
     public boolean canWrite(HttpRequest request) {
         Object body = request.getContent();
         if (body instanceof SOAPMessage) {
-            return true;
+            return false;
         }
         if (body instanceof SoapMessage) {
-            return true;
+            return false;
         }
-        return false;
+        if (body instanceof Element) {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public void write(HttpRequest request, UnderlyingHttpRequest output) throws IOException {
         Object body = request.getContent();
         try {
-            if (body instanceof SOAPMessage) {
-                SOAPMessage soapMessage = (SOAPMessage) body;
-                soapMessage.writeTo(output.getContent());
-                return;
-            }
+
 
             SoapMessage soapMessage = (SoapMessage) body;
             String soapEnvelopeXml = SOAPs.marshalSoapEnvelope(soapMessage);

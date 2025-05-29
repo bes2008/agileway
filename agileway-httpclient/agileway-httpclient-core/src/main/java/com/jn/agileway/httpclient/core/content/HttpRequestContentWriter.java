@@ -13,5 +13,5 @@ import java.io.IOException;
 public interface HttpRequestContentWriter<T> {
     boolean canWrite(HttpRequest request);
 
-    void write(HttpRequest request, UnderlyingHttpRequest output) throws IOException;
+    void write(HttpRequest request, UnderlyingHttpRequest output) throws Exception;
 }

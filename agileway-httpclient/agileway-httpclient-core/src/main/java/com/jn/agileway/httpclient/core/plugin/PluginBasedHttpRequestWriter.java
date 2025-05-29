@@ -35,7 +35,7 @@ public class PluginBasedHttpRequestWriter implements HttpRequestContentWriter {
     }
 
     @Override
-    public void write(HttpRequest request, UnderlyingHttpRequest output) throws IOException {
+    public void write(HttpRequest request, UnderlyingHttpRequest output) throws Exception {
         Pipeline.of(plugin.getRequestContentWriters()).findFirst(new Predicate<HttpRequestContentWriter>() {
             @Override
             public boolean test(HttpRequestContentWriter httpRequestContentWriter) {

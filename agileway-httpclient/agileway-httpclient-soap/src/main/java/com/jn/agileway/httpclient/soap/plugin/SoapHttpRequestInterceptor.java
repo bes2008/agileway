@@ -1,6 +1,7 @@
 package com.jn.agileway.httpclient.soap.plugin;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
+import com.jn.agileway.httpclient.core.error.exception.BadHttpRequestException;
 import com.jn.agileway.httpclient.core.interceptor.HttpRequestInterceptor;
 import com.jn.agileway.httpclient.soap.entity.*;
 import com.jn.agileway.httpclient.soap.exception.MalformedSoapMessageException;
@@ -8,7 +9,9 @@ import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
 
+import com.jn.langx.util.reflect.type.Primitives;
 import jakarta.xml.soap.SOAPMessage;
+import org.w3c.dom.Node;
 
 class SoapHttpRequestInterceptor implements HttpRequestInterceptor {
     @Override
@@ -17,7 +20,21 @@ class SoapHttpRequestInterceptor implements HttpRequestInterceptor {
             return;
         }
         Object httpContent = request.getContent();
+        if (httpContent == null) {
+            throw new BadHttpRequestException(request.getMethod(), request.getUri(), "soap payload is required");
+        }
         if (httpContent instanceof SOAPMessage) {
+            return;
+        }
+        if (httpContent instanceof Node) {
+            throw new BadHttpRequestException(request.getMethod(), request.getUri(), "unsupported soap payload class: " + httpContent.getClass().getName());
+        }
+        Class clazz = httpContent.getClass();
+        if (Primitives.isPrimitiveOrPrimitiveWrapperType(clazz)) {
+            throw new BadHttpRequestException(request.getMethod(), request.getUri(), "unsupported soap payload class: " + httpContent.getClass().getName());
+        }
+
+        if (httpContent instanceof javax.xml.soap.SOAPMessage) {
             return;
         }
         if (httpContent instanceof SoapMessage) {

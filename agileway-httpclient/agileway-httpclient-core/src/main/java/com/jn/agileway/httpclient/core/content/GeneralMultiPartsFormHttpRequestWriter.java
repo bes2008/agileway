@@ -31,7 +31,7 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestConten
     }
 
     @Override
-    public void write(HttpRequest request, UnderlyingHttpRequest output) throws IOException {
+    public void write(HttpRequest request, UnderlyingHttpRequest output) throws Exception {
         Object body = request.getContent();
         MediaType contentType = request.getHeaders().getContentType();
         MultiPartsForm form = (MultiPartsForm) body;

@@ -26,7 +26,7 @@ public class GeneralFormHttpRequestWriter implements HttpRequestContentWriter {
         return true;
     }
 
-    public void write(HttpRequest request, UnderlyingHttpRequest output) throws IOException {
+    public void write(HttpRequest request, UnderlyingHttpRequest output) throws Exception {
         Object body = request.getContent();
         MediaType contentType = request.getHeaders().getContentType();
         Charset charset = contentType.getCharset();
