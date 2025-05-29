@@ -5,12 +5,14 @@ import com.jn.agileway.httpclient.core.content.HttpRequestContentWriter;
 import com.jn.agileway.httpclient.core.content.HttpResponseContentReader;
 import com.jn.agileway.httpclient.core.interceptor.HttpRequestInterceptor;
 import com.jn.agileway.httpclient.core.interceptor.HttpResponseInterceptor;
+import com.jn.langx.lifecycle.AbstractInitializable;
+import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.plugin.Plugin;
 import com.jn.langx.util.collection.Lists;
 
 import java.util.List;
 
-public abstract class HttpMessageProtocolPlugin implements Plugin<HttpMessage> {
+public abstract class HttpMessageProtocolPlugin extends AbstractInitializable implements Plugin<HttpMessage> {
     protected final List<HttpRequestInterceptor> requestInterceptors = Lists.newArrayList();
 
     protected final List<HttpResponseInterceptor> responseInterceptors = Lists.newArrayList();
@@ -33,4 +35,11 @@ public abstract class HttpMessageProtocolPlugin implements Plugin<HttpMessage> {
     public List<HttpResponseContentReader> getResponseContentReaders() {
         return responseContentReaders;
     }
+
+    @Override
+    protected void doInit() throws InitializationException {
+        initInternal();
+    }
+
+    protected abstract void initInternal();
 }
