@@ -2,6 +2,7 @@ package com.jn.agileway.httpclient.soap.plugin;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.error.exception.BadHttpRequestException;
+import com.jn.agileway.httpclient.core.error.exception.UnsupportedHttpMethodException;
 import com.jn.agileway.httpclient.core.interceptor.HttpRequestInterceptor;
 import com.jn.agileway.httpclient.soap.entity.*;
 import com.jn.agileway.httpclient.soap.exception.MalformedSoapMessageException;
@@ -17,7 +18,7 @@ class SoapHttpRequestInterceptor implements HttpRequestInterceptor {
     @Override
     public void intercept(HttpRequest request) {
         if (request.getMethod() != HttpMethod.POST) {
-            return;
+            throw new UnsupportedHttpMethodException(request.getMethod(), request.getUri(), "only POST method is supported for SOAP message");
         }
         Object httpContent = request.getContent();
         if (httpContent == null) {
