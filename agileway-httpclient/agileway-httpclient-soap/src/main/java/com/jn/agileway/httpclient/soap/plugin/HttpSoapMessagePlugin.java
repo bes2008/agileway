@@ -15,7 +15,7 @@ public class HttpSoapMessagePlugin extends HttpMessageProtocolPlugin {
         if (contentType == null) {
             return false;
         }
-        if (MediaType.APPLICATION_SOAP12_XML.equalsTypeAndSubtype(contentType)) {
+        if (MediaType.APPLICATION_SOAP12_XML_UTF8.equalsTypeAndSubtype(contentType)) {
             return true;
         }
         if (MediaType.APPLICATION_ATOM_XML.equalsTypeAndSubtype(contentType)) {
