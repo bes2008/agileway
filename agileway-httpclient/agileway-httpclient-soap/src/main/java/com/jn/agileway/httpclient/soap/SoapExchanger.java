@@ -22,4 +22,14 @@ public class SoapExchanger {
         return httpExchanger.exchange(true, request, expectedContentType);
     }
 
+    public <T> HttpResponse<T> exchange(String uri, Object soapMessage, Class<T> expectedContentType) {
+        return this.exchangeAsync(uri, soapMessage, expectedContentType).await();
+    }
+
+    public <T> Promise<HttpResponse<T>> exchangeAsync(String uri, Object soapMessage, Class<T> expectedContentType) {
+        HttpRequest request = HttpRequest.forPost(uri, null, null, soapMessage);
+        return httpExchanger.exchange(true, request, expectedContentType);
+    }
+
+
 }
