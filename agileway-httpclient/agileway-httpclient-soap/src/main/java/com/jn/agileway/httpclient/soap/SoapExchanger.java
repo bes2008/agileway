@@ -13,9 +13,13 @@ public class SoapExchanger {
         this.httpExchanger = exchanger;
     }
 
-    public <T> Promise<HttpResponse<T>> exchange(boolean async, String uri, SoapMessage soapMessage, Class<T> expectedContentType) {
+    public <T> HttpResponse<T> exchange(String uri, SoapMessage soapMessage, Class<T> expectedContentType) {
+        return this.exchangeAsync(uri, soapMessage, expectedContentType).await();
+    }
+
+    public <T> Promise<HttpResponse<T>> exchangeAsync(String uri, SoapMessage soapMessage, Class<T> expectedContentType) {
         HttpRequest request = HttpRequest.forPost(uri, null, null, soapMessage);
-        return httpExchanger.exchange(async, request, expectedContentType);
+        return httpExchanger.exchange(true, request, expectedContentType);
     }
 
 }
