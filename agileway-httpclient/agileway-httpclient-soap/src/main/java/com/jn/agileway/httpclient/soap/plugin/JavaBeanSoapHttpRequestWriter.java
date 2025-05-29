@@ -13,7 +13,7 @@ import org.w3c.dom.Element;
 
 import java.io.IOException;
 
-class GeneralSoapHttpRequestWriter implements HttpRequestContentWriter {
+class JavaBeanSoapHttpRequestWriter implements HttpRequestContentWriter {
     @Override
     public boolean canWrite(HttpRequest request) {
         Object body = request.getContent();
@@ -33,11 +33,8 @@ class GeneralSoapHttpRequestWriter implements HttpRequestContentWriter {
     public void write(HttpRequest request, UnderlyingHttpRequest output) throws IOException {
         Object body = request.getContent();
         try {
-
-
             SoapMessage soapMessage = (SoapMessage) body;
             String soapEnvelopeXml = SOAPs.marshalSoapEnvelope(soapMessage);
-            // TODO
             output.getContent().write(soapEnvelopeXml.getBytes(Charsets.UTF_8));
         } catch (Throwable e) {
             throw Throwables.wrapAsRuntimeException(e);
