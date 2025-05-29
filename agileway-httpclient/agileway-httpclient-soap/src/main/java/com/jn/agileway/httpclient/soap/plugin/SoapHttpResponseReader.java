@@ -10,7 +10,7 @@ import java.lang.reflect.Type;
 public class SoapHttpResponseReader implements HttpResponseContentReader {
     @Override
     public boolean canRead(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) {
-        return false;
+        return response.getStatusCode() == 200;
     }
 
     @Override

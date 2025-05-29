@@ -49,5 +49,8 @@ public class HttpSoapMessagePlugin extends HttpMessageProtocolPlugin {
         this.requestContentWriters.add(new JavaxSoapMessageWriter());
         this.requestContentWriters.add(new JakartaSoapMessageWriter());
         this.requestContentWriters.add(new GeneralSoapHttpRequestWriter());
+
+        this.responseContentReaders.add(new SoapFaultResponseReader());
+        this.responseContentReaders.add(new SoapHttpResponseReader());
     }
 }

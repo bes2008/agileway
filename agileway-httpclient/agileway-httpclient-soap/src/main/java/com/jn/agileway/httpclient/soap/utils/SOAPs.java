@@ -197,14 +197,14 @@ public class SOAPs {
      * @param soapEnvelopeXml the soap envelope , in xml format
      * @return the soap payload
      */
-    public static String extractSoapPayloadXml(String soapEnvelopeXml) throws Exception {
+    private static String extractSoapPayloadXml(String soapEnvelopeXml) throws Exception {
         Document document = Xmls.getXmlDoc(new ByteArrayInputStream(soapEnvelopeXml.getBytes(Charsets.UTF_8)));
         Element root = document.getDocumentElement();
         if (!Strings.equals("Envelope", root.getLocalName())) {
             throw new RuntimeException("invalid soap envelope");
         }
         String namespacePrefix = Namespaces.getDocumentRootNamespace(document);
-        String bodyElementTag = namespacePrefix + ":Body";
+        String bodyElementTag = Strings.isBlank(namespacePrefix) ? "Body" : (namespacePrefix + ":Body");
 
         String bodyElementStartFlag = "<" + bodyElementTag;
         String bodyElementEndFlag = "</" + bodyElementTag + ">";

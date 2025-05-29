@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.soap.entity;
 
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.mime.MediaType;
 
 public enum SoapBinding {
@@ -25,5 +26,28 @@ public enum SoapBinding {
 
     public MediaType getContentType() {
         return contentType;
+    }
+
+    public static SoapBinding getByContentType(MediaType contentType) {
+        if (contentType != null) {
+            for (SoapBinding binding : values()) {
+                if (binding.contentType.equalsTypeAndSubtype(contentType)) {
+                    return binding;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static SoapBinding getByNamespaceUri(String namespaceUri) {
+        if (Strings.isBlank(namespaceUri)) {
+            return null;
+        }
+        for (SoapBinding binding : values()) {
+            if (binding.namespaceUri.equals(namespaceUri)) {
+                return binding;
+            }
+        }
+        return null;
     }
 }

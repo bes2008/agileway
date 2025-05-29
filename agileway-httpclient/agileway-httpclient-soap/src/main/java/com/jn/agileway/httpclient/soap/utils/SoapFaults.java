@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.soap.utils;
 
+import com.jn.agileway.httpclient.soap.entity.SoapBinding;
 import com.jn.agileway.httpclient.soap.entity.SoapFault;
 import com.jn.agileway.httpclient.soap.exception.MalformedSoapMessageException;
 import com.jn.langx.text.xml.Namespaces;
@@ -19,17 +20,12 @@ import java.util.Map;
 
 public class SoapFaults {
     /**
-     * @param soapEnvelopeXml
+     * @param document the soap envelope document
      * @return
      * @throws Exception
      * @see <a href="https://www.ibm.com/docs/en/integration-bus/10.0?topic=message-soap-fault">SOAP Fault</a>
      */
-    public static SoapFault unmarshalSoapFaultV11(String soapEnvelopeXml) throws Exception {
-        if (Strings.isBlank(soapEnvelopeXml)) {
-            throw new MalformedSoapMessageException("illegal soap envelope: it is blank");
-        }
-
-        Document document = Xmls.getXmlDoc(new ByteArrayInputStream(soapEnvelopeXml.getBytes(Charsets.UTF_8)));
+    public static SoapFault unmarshalSoapFaultV11(Document document) throws Exception {
         String documentNamespacePrefix = Namespaces.getDocumentRootNamespace(document);
         Element faultElement = new XmlAccessor(documentNamespacePrefix).getElement(document, "/Envelope/Body/Fault");
 
@@ -67,12 +63,30 @@ public class SoapFaults {
         return soapFault;
     }
 
-    public static SoapFault unmarshalSoapFaultV12(String soapEnvelopeXml) throws Exception {
+    public static SoapFault unmarshalSoapFault(String soapEnvelopeXml) throws Exception {
         if (Strings.isBlank(soapEnvelopeXml)) {
             throw new MalformedSoapMessageException("malformed soap envelope: it is blank");
         }
 
         Document document = Xmls.getXmlDoc(new ByteArrayInputStream(soapEnvelopeXml.getBytes(Charsets.UTF_8)));
+
+        String namespaceUri = document.getDocumentElement().getNamespaceURI();
+        if (Strings.isBlank(namespaceUri)) {
+            throw new MalformedSoapMessageException("the namespace of a soap message is required");
+        }
+
+        SoapBinding soapBinding = SoapBinding.getByNamespaceUri(namespaceUri);
+        if (soapBinding == null) {
+            throw new MalformedSoapMessageException("the namespace of a soap message is not supported: " + namespaceUri);
+        }
+        if (soapBinding.equals(SoapBinding.SOAP11_HTTP)) {
+            return unmarshalSoapFaultV11(document);
+        }
+        return unmarshalSoapFaultV12(document);
+    }
+
+    public static SoapFault unmarshalSoapFaultV12(Document document) throws Exception {
+
         String documentNamespacePrefix = Namespaces.getDocumentRootNamespace(document);
         Element faultElement = new XmlAccessor(documentNamespacePrefix).getElement(document, "/Envelope/Body/Fault");
 

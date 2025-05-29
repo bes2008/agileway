@@ -12,6 +12,10 @@ import java.util.Map;
 public class SoapExchanger {
     private HttpExchanger httpExchanger;
 
+    public SoapExchanger(HttpExchanger exchanger) {
+        this.httpExchanger = exchanger;
+    }
+
     public <T> Promise<HttpResponse<T>> exchange(boolean async, String uri, MultiValueMap<String, Object> queryParams, Map<String, Object> uriVariables, SoapMessage soapMessage, Class<T> expectedContentType) {
         HttpRequest request = HttpRequest.forPost(uri, queryParams, uriVariables, soapMessage);
         return httpExchanger.exchange(async, request, expectedContentType);
