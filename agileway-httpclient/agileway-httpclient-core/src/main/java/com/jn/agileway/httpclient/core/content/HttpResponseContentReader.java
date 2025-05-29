@@ -9,5 +9,5 @@ import java.lang.reflect.Type;
 public interface HttpResponseContentReader<T> {
     boolean canRead(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType);
 
-    T read(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) throws IOException;
+    T read(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) throws Exception;
 }

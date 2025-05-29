@@ -41,7 +41,7 @@ public class GeneralAttachmentReader extends CustomMediaTypesHttpResponseReader<
     }
 
     @Override
-    public Resource read(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) throws IOException {
+    public Resource read(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) throws Exception {
         String contentDispositionValue = response.getHeaders().getFirstHeader("Content-Disposition");
         ContentDisposition contentDisposition = ContentDisposition.parseResponseHeader(contentDispositionValue);
 

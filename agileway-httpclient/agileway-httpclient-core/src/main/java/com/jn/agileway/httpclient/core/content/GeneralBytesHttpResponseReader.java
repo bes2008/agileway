@@ -14,7 +14,7 @@ public class GeneralBytesHttpResponseReader implements HttpResponseContentReader
     }
 
     @Override
-    public byte[] read(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) throws IOException {
+    public byte[] read(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) throws Exception {
         int contentLength = (int) response.getHeaders().getContentLength();
         if (contentLength < 0) {
             throw new IOException("Content-Length header is required for Content-Type " + contentType);

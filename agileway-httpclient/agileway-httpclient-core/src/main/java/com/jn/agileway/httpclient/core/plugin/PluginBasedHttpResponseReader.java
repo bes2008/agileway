@@ -35,7 +35,7 @@ public class PluginBasedHttpResponseReader implements HttpResponseContentReader 
     }
 
     @Override
-    public Object read(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) throws IOException {
+    public Object read(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) throws Exception {
         return Pipeline.of(plugin.getResponseContentReaders())
                 .findFirst(new Predicate<HttpResponseContentReader>() {
                     @Override
