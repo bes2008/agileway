@@ -106,9 +106,10 @@ public class SoapFaults {
         }
         String faultCodeValue = (String) faultCode.get("Value");
         if (faultCodeValue.startsWith(documentNamespacePrefix + ":")) {
-            soapFault.setSubCode(faultCodeValue.substring(documentNamespacePrefix.length() + 1));
+            soapFault.setCode(faultCodeValue.substring(documentNamespacePrefix.length() + 1));
+        } else {
+            soapFault.setCode(faultCodeValue);
         }
-        soapFault.setCode(faultCodeValue);
         // /Envelope/Body/Fault/Code/Subcode
         if (faultCode.containsKey("Subcode")) {
             soapFault.setSubCode((String) faultCode.get("Subcode"));
@@ -151,7 +152,15 @@ public class SoapFaults {
                 continue;
             }
             Element element = (Element) node;
-            if (element.getChildNodes().getLength() > 0) {
+            boolean hasChildElements = false;
+            for (int j = 0; j < element.getChildNodes().getLength(); j++) {
+                Node childNode = element.getChildNodes().item(j);
+                if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+                    hasChildElements = true;
+                    break;
+                }
+            }
+            if (hasChildElements) {
                 Map<String, Object> value = new HashMap<String, Object>();
                 xmlElementChildrenToMap(element.getChildNodes(), value);
                 map.put(element.getLocalName(), value);

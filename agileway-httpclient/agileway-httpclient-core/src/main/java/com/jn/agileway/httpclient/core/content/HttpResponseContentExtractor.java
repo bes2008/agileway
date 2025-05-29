@@ -6,5 +6,5 @@ import com.jn.langx.annotation.NonNull;
 
 public interface HttpResponseContentExtractor {
     @NonNull
-    HttpResponse extract(UnderlyingHttpResponse underlyingHttpResponse);
+    HttpResponse extract(UnderlyingHttpResponse underlyingHttpResponse) throws Exception;
 }

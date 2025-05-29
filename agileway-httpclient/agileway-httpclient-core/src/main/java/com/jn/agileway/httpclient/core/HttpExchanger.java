@@ -66,7 +66,7 @@ public class HttpExchanger extends AbstractInitializable {
      * 对4xx,5xx的响应进行处理
      */
     @Nullable
-    private HttpResponseErrorHandler httpResponseErrorHandler;
+    private HttpResponseErrorHandler globalHttpResponseErrorHandler;
     /**
      * 响应拦截器
      */
@@ -130,8 +130,8 @@ public class HttpExchanger extends AbstractInitializable {
         this.responseContentReaders = Lists.immutableList(responseContentReaders);
 
         // httpResponseErrorHandler
-        if (this.httpResponseErrorHandler == null) {
-            this.httpResponseErrorHandler = new DefaultHttpResponseErrorHandler();
+        if (this.globalHttpResponseErrorHandler == null) {
+            this.globalHttpResponseErrorHandler = new DefaultHttpResponseErrorHandler();
         }
 
         if (this.requestFactory == null) {
@@ -179,15 +179,26 @@ public class HttpExchanger extends AbstractInitializable {
         }
     }
 
-    public void setHttpResponseErrorHandler(HttpResponseErrorHandler errorResponseHandler) {
-        this.httpResponseErrorHandler = errorResponseHandler;
+    public void setGlobalHttpResponseErrorHandler(HttpResponseErrorHandler errorResponseHandler) {
+        this.globalHttpResponseErrorHandler = errorResponseHandler;
     }
-
     public <O> Promise<HttpResponse<O>> exchange(boolean async, final HttpRequest request, final Type responseType) {
-        return exchange(async, request, responseType, null);
+        return exchange(async, request, responseType, null, null);
     }
 
     public <O> Promise<HttpResponse<O>> exchange(boolean async, final HttpRequest request, final Type responseType, HttpResponseContentExtractor contentExtractor) {
+        return exchange(async, request, responseType, contentExtractor, null);
+    }
+
+    /**
+     * @param async
+     * @param request
+     * @param responseType
+     * @param contentExtractor 用于覆盖默认的 HttpResponseContentReader 的能力
+     * @param <O>
+     * @return
+     */
+    public <O> Promise<HttpResponse<O>> exchange(boolean async, final HttpRequest request, final Type responseType, HttpResponseContentExtractor contentExtractor, HttpResponseContentExtractor errorContentExtractor) {
         Task<UnderlyingHttpResponse> sendRequestTask = new Task<UnderlyingHttpResponse>() {
 
             @Override
@@ -235,7 +246,12 @@ public class HttpExchanger extends AbstractInitializable {
                                   boolean needReadBody = needReadBody(underlyingHttpResponse);
                                   if (needReadBody) {
                                       if (underlyingHttpResponse.getStatusCode() >= 400) {
-                                          response = new HttpResponse<>(underlyingHttpResponse, null, true);
+                                          if (errorContentExtractor != null) {
+                                              response = errorContentExtractor.extract(underlyingHttpResponse);
+                                          }
+                                          if (response == null) {
+                                              response = new HttpResponse<>(underlyingHttpResponse, null, true);
+                                          }
                                       } else {
                                           if (contentExtractor != null) {
                                               response = contentExtractor.extract(underlyingHttpResponse);
@@ -266,8 +282,8 @@ public class HttpExchanger extends AbstractInitializable {
                                       }
                                       response = new HttpResponse<>(underlyingHttpResponse);
                                   }
-                                  if (httpResponseErrorHandler != null && httpResponseErrorHandler.isError(response)) {
-                                      httpResponseErrorHandler.handle(response);
+                                  if (globalHttpResponseErrorHandler != null && globalHttpResponseErrorHandler.isError(response)) {
+                                      globalHttpResponseErrorHandler.handle(response);
                                   }
                                   if (responseInterceptors != null) {
                                       for (HttpResponseInterceptor interceptor : responseInterceptors) {

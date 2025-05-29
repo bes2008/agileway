@@ -71,6 +71,9 @@ public class HttpResponse<T> extends BaseHttpMessage<T> {
         return errorMessage;
     }
 
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
     public boolean hasError() {
         return statusCode >= 400 || Strings.isNotEmpty(errorMessage);
     }

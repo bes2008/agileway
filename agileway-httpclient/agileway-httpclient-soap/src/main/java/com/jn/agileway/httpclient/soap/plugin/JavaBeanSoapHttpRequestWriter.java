@@ -8,25 +8,12 @@ import com.jn.agileway.httpclient.soap.utils.SOAPs;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.io.Charsets;
 
-import jakarta.xml.soap.SOAPMessage;
-import org.w3c.dom.Element;
-
 import java.io.IOException;
 
 class JavaBeanSoapHttpRequestWriter implements HttpRequestContentWriter {
     @Override
     public boolean canWrite(HttpRequest request) {
-        Object body = request.getContent();
-        if (body instanceof SOAPMessage) {
-            return false;
-        }
-        if (body instanceof SoapMessage) {
-            return false;
-        }
-        if (body instanceof Element) {
-            return false;
-        }
-        return true;
+        return (request.getContent() instanceof SoapMessage);
     }
 
     @Override
