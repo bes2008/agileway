@@ -275,8 +275,8 @@ public class HttpExchanger extends AbstractInitializable {
                                       }
                                   }
                                   return response;
-                              } catch (IOException ex) {
-                                  throw Throwables.wrapAsRuntimeIOException(ex);
+                              } catch (Exception ex) {
+                                  throw Throwables.wrapAsRuntimeException(ex);
                               } finally {
                                   underlyingHttpResponse.close();
                               }
