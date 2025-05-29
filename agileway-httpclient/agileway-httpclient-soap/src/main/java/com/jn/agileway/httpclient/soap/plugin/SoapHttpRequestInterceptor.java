@@ -47,14 +47,14 @@ class SoapHttpRequestInterceptor implements HttpRequestInterceptor {
     private SoapMessage toSoapMessage(HttpHeaders headers, Object content) {
         MediaType contentType = headers.getContentType();
         SoapBinding binding = null;
-        if (MediaType.APPLICATION_SOAP12_XML.equalsTypeAndSubtype(contentType)) {
+        if (MediaType.APPLICATION_SOAP12_XML_UTF8.equalsTypeAndSubtype(contentType)) {
             binding = SoapBinding.SOAP12_HTTP;
         }
         if (MediaType.APPLICATION_ATOM_XML.equalsTypeAndSubtype(contentType)) {
             //TODO
             binding = null;
         }
-        if (MediaType.TEXT_XML.equalsTypeAndSubtype(contentType)) {
+        if (MediaType.TEXT_XML_UTF8.equalsTypeAndSubtype(contentType)) {
             binding = SoapBinding.SOAP11_HTTP;
         }
 
