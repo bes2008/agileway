@@ -216,7 +216,7 @@ public class SOAPs {
 
         String payloadXml = soapEnvelopeXml.substring(startIndex, endIndex);
         startIndex = payloadXml.indexOf(">");
-        if (startIndex != -1) {
+        if (startIndex == -1) {
             throw new MalformedSoapMessageException("invalid soap envelope, missing /Envelope/Body");
         }
         payloadXml = payloadXml.substring(startIndex + 1);
