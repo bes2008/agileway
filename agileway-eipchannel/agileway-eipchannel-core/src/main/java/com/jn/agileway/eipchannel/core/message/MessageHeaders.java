@@ -1,6 +1,5 @@
 package com.jn.agileway.eipchannel.core.message;
 
-
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
@@ -67,10 +66,15 @@ public class MessageHeaders<H> extends LinkedHashMap<String, Object> implements 
         this(new HashMap<String, Object>());
     }
 
-    public MessageHeaders(Map<String, Object> headers) {
+    public MessageHeaders(Map<String, Object> headers, H protocolHeaders) {
         super(Collects.newHashMap(headers));
         this.put(ID, UUID.randomUUID());
-        this.put(TIMESTAMP,System.currentTimeMillis());
+        this.put(TIMESTAMP, System.currentTimeMillis());
+        this.protocolHeaders = protocolHeaders;
+    }
+
+    public MessageHeaders(Map<String, Object> headers) {
+        this(headers, null);
     }
 
 

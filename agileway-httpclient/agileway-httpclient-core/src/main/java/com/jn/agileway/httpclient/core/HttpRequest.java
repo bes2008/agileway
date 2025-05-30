@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.core;
 
+import com.jn.agileway.eipchannel.core.message.MessageHeaders;
 import com.jn.agileway.httpclient.core.payload.multipart.MultiPartsForm;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
@@ -17,7 +18,7 @@ public class HttpRequest<T> extends BaseHttpMessage<T> {
     HttpRequest(URI uri, HttpMethod method, HttpHeaders headers, T body) {
         this.uri = uri;
         this.method = method;
-        this.httpHeaders = headers == null ? new HttpHeaders() : headers;
+        this.headers = new MessageHeaders<HttpHeaders>(null, headers);
         this.payload = body;
     }
 
