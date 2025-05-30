@@ -8,7 +8,7 @@ import java.net.URI;
 public abstract class BaseHttpMessage<T> implements HttpMessage<T> {
     protected URI uri;
     protected HttpMethod method;
-    protected HttpHeaders headers;
+    protected HttpHeaders httpHeaders;
     protected T payload;
 
     public URI getUri() {
@@ -20,7 +20,7 @@ public abstract class BaseHttpMessage<T> implements HttpMessage<T> {
     }
 
     public HttpHeaders getHttpHeaders() {
-        return headers;
+        return httpHeaders;
     }
 
     public T getPayload() {

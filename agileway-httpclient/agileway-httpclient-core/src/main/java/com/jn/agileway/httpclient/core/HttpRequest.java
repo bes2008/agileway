@@ -17,7 +17,7 @@ public class HttpRequest<T> extends BaseHttpMessage<T> {
     HttpRequest(URI uri, HttpMethod method, HttpHeaders headers, T body) {
         this.uri = uri;
         this.method = method;
-        this.headers = headers == null ? new HttpHeaders() : headers;
+        this.httpHeaders = headers == null ? new HttpHeaders() : headers;
         this.payload = body;
     }
 
