@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.soap.plugin;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
-import com.jn.agileway.httpclient.core.content.HttpRequestPayloadWriter;
+import com.jn.agileway.httpclient.core.payload.HttpRequestPayloadWriter;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequest;
 import jakarta.xml.soap.SOAPMessage;
 

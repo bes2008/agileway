@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.core.content.multipart;
+package com.jn.agileway.httpclient.core.payload.multipart;
 
 import com.jn.agileway.httpclient.util.ContentDisposition;
 import com.jn.langx.annotation.NonNull;

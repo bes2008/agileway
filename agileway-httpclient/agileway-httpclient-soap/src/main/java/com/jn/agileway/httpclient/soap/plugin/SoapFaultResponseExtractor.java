@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.soap.plugin;
 
 import com.jn.agileway.httpclient.core.HttpResponse;
-import com.jn.agileway.httpclient.core.content.HttpResponsePayloadExtractor;
+import com.jn.agileway.httpclient.core.payload.HttpResponsePayloadExtractor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.soap.entity.SoapFault;
 import com.jn.agileway.httpclient.soap.utils.SoapFaults;

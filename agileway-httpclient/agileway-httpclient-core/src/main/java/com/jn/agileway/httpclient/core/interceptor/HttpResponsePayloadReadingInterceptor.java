@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.core.interceptor;
 
 import com.jn.agileway.httpclient.core.HttpResponse;
-import com.jn.agileway.httpclient.core.content.HttpResponsePayloadReader;
+import com.jn.agileway.httpclient.core.payload.HttpResponsePayloadReader;
 
 import java.util.List;
 

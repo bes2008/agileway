@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.core.interceptor;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
-import com.jn.agileway.httpclient.core.content.multipart.MultiPartsForm;
+import com.jn.agileway.httpclient.core.payload.multipart.MultiPartsForm;
 import com.jn.agileway.httpclient.core.error.exception.BadHttpRequestException;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.text.StringTemplates;

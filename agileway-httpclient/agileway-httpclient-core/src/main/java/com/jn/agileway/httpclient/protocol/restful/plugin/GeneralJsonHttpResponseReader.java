@@ -1,6 +1,6 @@
 package com.jn.agileway.httpclient.protocol.restful.plugin;
 
-import com.jn.agileway.httpclient.core.content.HttpResponsePayloadReader;
+import com.jn.agileway.httpclient.core.payload.HttpResponsePayloadReader;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.easyjson.core.util.JSONs;
 import com.jn.langx.util.net.mime.MediaType;

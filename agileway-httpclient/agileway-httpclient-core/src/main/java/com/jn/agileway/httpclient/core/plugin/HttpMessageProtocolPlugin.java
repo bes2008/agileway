@@ -1,8 +1,8 @@
 package com.jn.agileway.httpclient.core.plugin;
 
 import com.jn.agileway.httpclient.core.HttpMessage;
-import com.jn.agileway.httpclient.core.content.HttpRequestPayloadWriter;
-import com.jn.agileway.httpclient.core.content.HttpResponsePayloadReader;
+import com.jn.agileway.httpclient.core.payload.HttpRequestPayloadWriter;
+import com.jn.agileway.httpclient.core.payload.HttpResponsePayloadReader;
 import com.jn.agileway.httpclient.core.interceptor.HttpRequestInterceptor;
 import com.jn.agileway.httpclient.core.interceptor.HttpResponseInterceptor;
 import com.jn.langx.lifecycle.AbstractInitializable;

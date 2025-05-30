@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.core.content;
+package com.jn.agileway.httpclient.core.payload;
 
 import com.jn.agileway.httpclient.core.HttpResponse;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
