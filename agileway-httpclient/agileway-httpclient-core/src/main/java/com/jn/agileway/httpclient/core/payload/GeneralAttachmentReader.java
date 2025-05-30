@@ -22,7 +22,7 @@ public class GeneralAttachmentReader extends CustomMediaTypesHttpResponseReader<
     }
 
     public boolean canRead(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) {
-        String contentDispositionValue = response.getHeaders().getFirstHeader("Content-Disposition");
+        String contentDispositionValue = response.getHttpHeaders().getFirstHeader("Content-Disposition");
         if (Strings.isBlank(contentDispositionValue)) {
             return false;
         }
@@ -41,7 +41,7 @@ public class GeneralAttachmentReader extends CustomMediaTypesHttpResponseReader<
 
     @Override
     public Resource read(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) throws Exception {
-        String contentDispositionValue = response.getHeaders().getFirstHeader("Content-Disposition");
+        String contentDispositionValue = response.getHttpHeaders().getFirstHeader("Content-Disposition");
         ContentDisposition contentDisposition = ContentDisposition.parseResponseHeader(contentDispositionValue);
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();

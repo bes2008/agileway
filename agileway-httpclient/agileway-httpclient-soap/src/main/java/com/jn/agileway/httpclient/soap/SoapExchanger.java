@@ -33,7 +33,7 @@ public class SoapExchanger {
 
     public <T> Promise<HttpResponse<T>> exchangeAsync(String uri, MultiValueMap<String, Object> queryParams, Map<String, Object> uriVariables, HttpHeaders headers, SoapBinding binding, Object soapMessage, Class<T> expectedContentType) {
         HttpRequest request = HttpRequest.forPost(uri, queryParams, uriVariables, headers, soapMessage);
-        request.getHeaders().setContentType(binding.getContentType());
+        request.getHttpHeaders().setContentType(binding.getContentType());
         return httpExchanger.exchange(true, request, expectedContentType, null, soapFaultResponseExtractor);
     }
 

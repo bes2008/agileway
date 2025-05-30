@@ -63,7 +63,7 @@ class ApacheUnderlyingHttpResponse implements UnderlyingHttpResponse {
     }
 
     @Override
-    public HttpHeaders getHeaders() {
+    public HttpHeaders getHttpHeaders() {
         if (this.headers == null) {
             Header[] underlyingHeaders = this.response.getAllHeaders();
 

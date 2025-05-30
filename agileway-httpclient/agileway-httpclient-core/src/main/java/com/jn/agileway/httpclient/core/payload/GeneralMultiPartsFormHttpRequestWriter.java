@@ -20,7 +20,7 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloa
     @Override
     public boolean canWrite(HttpRequest request) {
         Object body = request.getPayload();
-        MediaType contentType = request.getHeaders().getContentType();
+        MediaType contentType = request.getHttpHeaders().getContentType();
         if (!HttpClientUtils.isMultipartForm(contentType)) {
             return false;
         }
@@ -33,7 +33,7 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloa
     @Override
     public void write(HttpRequest request, UnderlyingHttpRequest output) throws Exception {
         Object body = request.getPayload();
-        MediaType contentType = request.getHeaders().getContentType();
+        MediaType contentType = request.getHttpHeaders().getContentType();
         MultiPartsForm form = (MultiPartsForm) body;
         Charset formCharset = form.getCharset() == null ? Charsets.UTF_8 : form.getCharset();
         String boundary = contentType.getParameter("boundary");

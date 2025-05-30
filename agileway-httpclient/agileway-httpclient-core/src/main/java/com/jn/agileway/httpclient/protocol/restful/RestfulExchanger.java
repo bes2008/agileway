@@ -20,7 +20,7 @@ public class RestfulExchanger {
     }
 
     public <O> Promise<HttpResponse<O>> exchangeAsync(HttpRequest request, Type responseType) {
-        request.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
+        request.getHttpHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
         return httpExchanger.exchange(true, request, responseType);
     }
 

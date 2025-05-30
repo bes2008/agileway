@@ -18,7 +18,7 @@ import java.util.Set;
 
 public class GeneralFormHttpRequestWriter implements HttpRequestPayloadWriter {
     public boolean canWrite(HttpRequest request) {
-        MediaType contentType = request.getHeaders().getContentType();
+        MediaType contentType = request.getHttpHeaders().getContentType();
         if (!HttpClientUtils.isSimpleForm(contentType)) {
             return false;
         }
@@ -27,7 +27,7 @@ public class GeneralFormHttpRequestWriter implements HttpRequestPayloadWriter {
 
     public void write(HttpRequest request, UnderlyingHttpRequest output) throws Exception {
         Object body = request.getPayload();
-        MediaType contentType = request.getHeaders().getContentType();
+        MediaType contentType = request.getHttpHeaders().getContentType();
         Charset charset = contentType.getCharset();
         String formString = serializeSimpleForm(body, contentType.getCharset(), output);
         output.getPayload().write(formString.getBytes(charset));

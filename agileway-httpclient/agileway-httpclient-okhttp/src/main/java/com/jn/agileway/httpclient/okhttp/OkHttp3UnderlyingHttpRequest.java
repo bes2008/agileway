@@ -60,13 +60,13 @@ class OkHttp3UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<Request
 
     @Override
     protected UnderlyingHttpResponse exchangeInternal() throws IOException {
-        String rawContentType = getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
+        String rawContentType = getHttpHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
         okhttp3.MediaType contentType = Strings.isNotEmpty(rawContentType) ? okhttp3.MediaType.parse(rawContentType) : null;
         RequestBody body = null;
         if (HttpClientUtils.isWriteable(getMethod())) {
             if (computeContentLength() > 0) {
                 // 压缩处理：
-                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(getHeaders());
+                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(getHttpHeaders());
                 if (!Objs.isEmpty(contentEncodings)) {
                     ByteArrayOutputStream baos = new ByteArrayOutputStream((int) computeContentLength() / 5);
                     OutputStream out = HttpClientUtils.wrapByContentEncodings(baos, contentEncodings);

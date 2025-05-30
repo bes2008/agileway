@@ -7,7 +7,7 @@ import com.jn.langx.util.net.mime.MediaType;
 public class RestfulHttpMessagePlugin extends HttpMessageProtocolPlugin {
     @Override
     public boolean availableFor(HttpMessage httpMessage) {
-        MediaType contentType = httpMessage.getHeaders().getContentType();
+        MediaType contentType = httpMessage.getHttpHeaders().getContentType();
         if (contentType != null) {
             if (MediaType.APPLICATION_JSON.equalsTypeAndSubtype(contentType)) {
                 return true;

@@ -52,7 +52,7 @@ class OkHttp3UnderlyingHttpResponse implements UnderlyingHttpResponse {
     }
 
     @Override
-    public HttpHeaders getHeaders() {
+    public HttpHeaders getHttpHeaders() {
         if (headers == null) {
             HttpHeaders headers = new HttpHeaders();
             for (String headerName : this.response.headers().names()) {

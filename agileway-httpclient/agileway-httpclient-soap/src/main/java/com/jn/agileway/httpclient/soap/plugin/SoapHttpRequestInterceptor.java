@@ -41,7 +41,7 @@ class SoapHttpRequestInterceptor implements HttpRequestInterceptor {
         if (httpContent instanceof SoapMessage) {
             return;
         }
-        SoapMessage soapMessage = toSoapMessage(request.getHeaders(), httpContent);
+        SoapMessage soapMessage = toSoapMessage(request.getHttpHeaders(), httpContent);
         request.setContent(soapMessage);
     }
 

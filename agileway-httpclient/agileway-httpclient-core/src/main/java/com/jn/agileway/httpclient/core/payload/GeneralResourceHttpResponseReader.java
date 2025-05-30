@@ -52,7 +52,7 @@ public class GeneralResourceHttpResponseReader extends CustomMediaTypesHttpRespo
 
     @Override
     public Resource read(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) throws Exception {
-        int contentLength = (int) response.getHeaders().getContentLength();
+        int contentLength = (int) response.getHttpHeaders().getContentLength();
         if (contentLength < 0) {
             throw new IOException("Content-Length header is required for Content-Type " + contentType);
         }

@@ -8,7 +8,7 @@ import com.jn.langx.util.net.mime.MediaType;
 public class HttpSoapMessagePlugin extends HttpMessageProtocolPlugin {
     @Override
     public boolean availableFor(HttpMessage httpMessage) {
-        return isSoapContentType(httpMessage.getHeaders().getContentType());
+        return isSoapContentType(httpMessage.getHttpHeaders().getContentType());
     }
 
     private boolean isSoapContentType(MediaType contentType) {

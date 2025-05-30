@@ -1,7 +1,6 @@
 package com.jn.agileway.httpclient.core.interceptor;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
-import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
@@ -17,8 +16,8 @@ public class HttpRequestLoggingInterceptor implements HttpRequestInterceptor {
         if (logger.isDebugEnabled()) {
             StringBuilder builder = new StringBuilder();
             builder.append(request.getMethod().name()).append(" ").append(request.getUri()).append(Strings.CRLF);
-            for (String name : request.getHeaders().keySet()) {
-                Collection<String> headerValues = request.getHeaders().get(name);
+            for (String name : request.getHttpHeaders().keySet()) {
+                Collection<String> headerValues = request.getHttpHeaders().get(name);
                 for (String headerValue : headerValues) {
                     builder.append(name).append(": ").append(headerValue).append(Strings.CRLF);
                 }

@@ -10,7 +10,7 @@ public interface HttpMessage<T> {
 
     HttpMethod getMethod();
 
-    HttpHeaders getHeaders();
+    HttpHeaders getHttpHeaders();
 
     T getPayload();
 }

@@ -42,7 +42,7 @@ class JdkUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpURLConn
         }
         if (streamBody == null) {
             try {
-                long contentLength = this.getHeaders().getContentLength();
+                long contentLength = this.getHttpHeaders().getContentLength();
                 if (contentLength > 0) {
                     // 要求 提前告知长度
                     this.httpConnection.setFixedLengthStreamingMode(contentLength);
@@ -52,7 +52,7 @@ class JdkUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpURLConn
                 writeHeaders(this.httpConnection);
                 this.httpConnection.connect();
                 OutputStream outputStream = this.httpConnection.getOutputStream();
-                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(this.getHeaders());
+                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(this.getHttpHeaders());
                 outputStream = HttpClientUtils.wrapByContentEncodings(outputStream, contentEncodings);
                 this.streamBody = outputStream;
             } catch (IOException ex) {
@@ -71,7 +71,7 @@ class JdkUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpURLConn
             this.httpConnection.connect();
             if (this.httpConnection.getDoOutput()) {
                 OutputStream outputStream = this.httpConnection.getOutputStream();
-                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(this.getHeaders());
+                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(this.getHttpHeaders());
                 outputStream = HttpClientUtils.wrapByContentEncodings(outputStream, contentEncodings);
                 outputStream.write(this.bufferedBody.toByteArray());
                 outputStream.flush();

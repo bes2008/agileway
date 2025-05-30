@@ -209,7 +209,7 @@ public class HttpExchanger extends AbstractInitializable {
                     }
                 }
                 try {
-                    UnderlyingHttpRequest underlyingHttpRequest = requestFactory.create(request.getMethod(), request.getUri(), request.getHeaders());
+                    UnderlyingHttpRequest underlyingHttpRequest = requestFactory.create(request.getMethod(), request.getUri(), request.getHttpHeaders());
 
                     if (HttpClientUtils.isWriteable(request.getMethod()) && request.getPayload() != null) {
                         HttpRequestPayloadWriter requestBodyWriter = Pipeline.of(requestContentWriters)
@@ -258,7 +258,7 @@ public class HttpExchanger extends AbstractInitializable {
                                           }
 
                                           if (response == null) {
-                                              final MediaType contentType = Objs.useValueIfNull(underlyingHttpResponse.getHeaders().getContentType(), MediaType.TEXT_HTML);
+                                              final MediaType contentType = Objs.useValueIfNull(underlyingHttpResponse.getHttpHeaders().getContentType(), MediaType.TEXT_HTML);
                                               HttpResponsePayloadReader reader = Pipeline.of(responseContentReaders)
                                                       .findFirst(new Predicate<HttpResponsePayloadReader>() {
                                                           @Override
@@ -320,8 +320,8 @@ public class HttpExchanger extends AbstractInitializable {
             return false;
         }
 
-        if (!underlyingHttpResponse.getHeaders().containsKey("Transfer-Encoding")) {
-            long contentLength = underlyingHttpResponse.getHeaders().getContentLength();
+        if (!underlyingHttpResponse.getHttpHeaders().containsKey("Transfer-Encoding")) {
+            long contentLength = underlyingHttpResponse.getHttpHeaders().getContentLength();
             if (contentLength == 0L) {
                 return false;
             }

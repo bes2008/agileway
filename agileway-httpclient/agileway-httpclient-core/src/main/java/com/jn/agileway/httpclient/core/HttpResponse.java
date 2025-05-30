@@ -41,7 +41,7 @@ public class HttpResponse<T> extends BaseHttpMessage<T> {
         this.uri = response.getUri();
         this.method = response.getMethod();
         this.statusCode = response.getStatusCode();
-        this.headers = response.getHeaders();
+        this.headers = response.getHttpHeaders();
 
         if (data != null) {
             this.content = data;

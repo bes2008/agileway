@@ -71,7 +71,7 @@ class Jdk11UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpReque
         if (HttpClientUtils.isWriteable(getMethod())) {
             if (computeContentLength() > 0) {
                 // 压缩处理：
-                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(getHeaders());
+                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(getHttpHeaders());
                 if (!Objs.isEmpty(contentEncodings)) {
                     ByteArrayOutputStream baos = new ByteArrayOutputStream((int) computeContentLength() / 5);
                     OutputStream out = HttpClientUtils.wrapByContentEncodings(baos, contentEncodings);

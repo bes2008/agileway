@@ -28,13 +28,13 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
 
     private void addFixedHeaders(HttpRequest request) {
         if (fixedHeaders != null) {
-            request.getHeaders().addAll(fixedHeaders);
+            request.getHttpHeaders().addAll(fixedHeaders);
         }
     }
 
     private void handleContentType(HttpRequest request) {
         HttpMethod method = request.getMethod();
-        MediaType contentType = request.getHeaders().getContentType();
+        MediaType contentType = request.getHttpHeaders().getContentType();
 
         // 确保要上传body的请求，都设置了 Content-Type
         switch (method) {
@@ -43,42 +43,42 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
             case OPTIONS:
             case DELETE:
             case TRACE:
-                request.getHeaders().remove("Content-Type");
+                request.getHttpHeaders().remove("Content-Type");
                 break;
             case PATCH:
             case PUT:
             case POST:
             default:
                 if (request.getPayload() != null && (request.getPayload() instanceof MultiPartsForm)) {
-                    request.getHeaders().setContentType(MediaType.MULTIPART_FORM_DATA);
-                    contentType = request.getHeaders().getContentType();
+                    request.getHttpHeaders().setContentType(MediaType.MULTIPART_FORM_DATA);
+                    contentType = request.getHttpHeaders().getContentType();
                 }
                 if (contentType == null) {
-                    request.getHeaders().setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+                    request.getHttpHeaders().setContentType(MediaType.APPLICATION_FORM_URLENCODED);
                 }
-                contentType = request.getHeaders().getContentType();
+                contentType = request.getHttpHeaders().getContentType();
                 if (contentType.equalsTypeAndSubtype(MediaType.APPLICATION_FORM_URLENCODED) ||
                         contentType.equalsTypeAndSubtype(MediaType.TEXT_PLAIN) ||
                         contentType.equalsTypeAndSubtype(MediaType.TEXT_HTML)) {
-                    request.getHeaders().setContentType(new MediaType(contentType, Charsets.UTF_8));
+                    request.getHttpHeaders().setContentType(new MediaType(contentType, Charsets.UTF_8));
                     break;
                 }
         }
 
-        if (HttpClientUtils.isForm(request.getHeaders().getContentType())) {
+        if (HttpClientUtils.isForm(request.getHttpHeaders().getContentType())) {
             if (!HttpClientUtils.isWriteable(request.getMethod())) {
-                throw new BadHttpRequestException(request.getMethod(), request.getUri(), StringTemplates.formatWithPlaceholder("Http request with Content-Type {}, method {} is invalid", request.getHeaders().getContentType(), request.getMethod()));
+                throw new BadHttpRequestException(request.getMethod(), request.getUri(), StringTemplates.formatWithPlaceholder("Http request with Content-Type {}, method {} is invalid", request.getHttpHeaders().getContentType(), request.getMethod()));
             }
         }
 
-        contentType = request.getHeaders().getContentType();
+        contentType = request.getHttpHeaders().getContentType();
         if (contentType != null) {
             if (contentType.getCharset() == null) {
-                request.getHeaders().setContentType(new MediaType(contentType, Charsets.UTF_8));
+                request.getHttpHeaders().setContentType(new MediaType(contentType, Charsets.UTF_8));
             }
         }
 
         // Content-Length 由底层 http库完成
-        request.getHeaders().remove("Content-Length");
+        request.getHttpHeaders().remove("Content-Length");
     }
 }

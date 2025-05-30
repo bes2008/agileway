@@ -66,7 +66,7 @@ class JdkUnderlyingHttpResponse implements UnderlyingHttpResponse {
                 }
 
                 // 处理压缩
-                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(this.getHeaders());
+                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(this.getHttpHeaders());
                 inputStream = HttpClientUtils.wrapByContentEncodings(inputStream, contentEncodings);
                 this.responseStream = inputStream;
             }
@@ -81,7 +81,7 @@ class JdkUnderlyingHttpResponse implements UnderlyingHttpResponse {
     }
 
     @Override
-    public HttpHeaders getHeaders() {
+    public HttpHeaders getHttpHeaders() {
         if (this.headers == null) {
             this.headers = new HttpHeaders();
             // Header field 0 is the status line for most HttpURLConnections, but not on GAE

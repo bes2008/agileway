@@ -10,7 +10,7 @@ import com.jn.langx.util.net.mime.MediaType;
 class GeneralJsonHttpRequestWriter implements HttpRequestPayloadWriter {
     @Override
     public boolean canWrite(HttpRequest request) {
-        MediaType contentType = request.getHeaders().getContentType();
+        MediaType contentType = request.getHttpHeaders().getContentType();
         if (MediaType.APPLICATION_JSON.equalsTypeAndSubtype(contentType)) {
             return true;
         }

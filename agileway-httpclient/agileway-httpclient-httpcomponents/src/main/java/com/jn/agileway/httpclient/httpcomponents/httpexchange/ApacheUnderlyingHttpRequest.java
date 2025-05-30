@@ -31,11 +31,11 @@ class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpUriR
     public OutputStream getPayload() {
         if (this.contentEntity == null) {
             if (HttpClientUtils.isWriteable(this.getMethod())) {
-                String contentEncoding = getHeaders().getFirst("Content-Encoding");
+                String contentEncoding = getHttpHeaders().getFirst("Content-Encoding");
                 if (Strings.isBlank(contentEncoding)) {
-                    this.contentEntity = new BufferedHttpEntity(getHeaders().getContentType().toString());
+                    this.contentEntity = new BufferedHttpEntity(getHttpHeaders().getContentType().toString());
                 } else {
-                    this.contentEntity = new CompressedHttpEntity(getHeaders().getContentType().toString(), contentEncoding);
+                    this.contentEntity = new CompressedHttpEntity(getHttpHeaders().getContentType().toString(), contentEncoding);
                 }
             }
         }

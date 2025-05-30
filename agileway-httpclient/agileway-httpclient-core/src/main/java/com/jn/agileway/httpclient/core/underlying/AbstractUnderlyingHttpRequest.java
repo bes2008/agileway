@@ -35,7 +35,7 @@ public abstract class AbstractUnderlyingHttpRequest<TARGET> implements Underlyin
     }
 
     @Override
-    public final HttpHeaders getHeaders() {
+    public final HttpHeaders getHttpHeaders() {
         if (executed) {
             return new HttpHeaders(this.headers);
         }
@@ -53,10 +53,10 @@ public abstract class AbstractUnderlyingHttpRequest<TARGET> implements Underlyin
     protected final void writeHeaders(TARGET target) {
         HttpMethod method = getMethod();
         if (HttpClientUtils.requestBodyUseStreamMode(method, headers)) {
-            getHeaders().remove(HttpHeaders.CONTENT_LENGTH);
+            getHttpHeaders().remove(HttpHeaders.CONTENT_LENGTH);
         }
         if (!HttpClientUtils.isWriteable(method)) {
-            getHeaders().remove(HttpHeaders.CONTENT_TYPE);
+            getHttpHeaders().remove(HttpHeaders.CONTENT_TYPE);
         }
         if (method.equals(HttpMethod.PUT) || method.equals(HttpMethod.DELETE)) {
             if (Strings.isBlank(headers.getFirst(HttpHeaders.ACCEPT))) {

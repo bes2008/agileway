@@ -19,7 +19,7 @@ public abstract class BaseHttpMessage<T> implements HttpMessage<T> {
         return method;
     }
 
-    public HttpHeaders getHeaders() {
+    public HttpHeaders getHttpHeaders() {
         return headers;
     }
 

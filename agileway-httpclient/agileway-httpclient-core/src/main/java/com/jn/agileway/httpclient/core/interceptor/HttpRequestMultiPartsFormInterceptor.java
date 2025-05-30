@@ -20,17 +20,17 @@ public class HttpRequestMultiPartsFormInterceptor implements HttpRequestIntercep
             if (request.getMethod() != HttpMethod.POST) {
                 throw new BadHttpRequestException(request.getMethod(), request.getUri(), StringTemplates.formatWithPlaceholder("multipart/form-data content should use the POST, current is: {}", request.getMethod()));
             }
-            MediaType contentType = request.getHeaders().getContentType();
+            MediaType contentType = request.getHttpHeaders().getContentType();
             if (contentType != null) {
                 if (!MediaType.MULTIPART_FORM_DATA.equalsTypeAndSubtype(contentType)) {
                     throw new BadHttpRequestException(request.getMethod(), request.getUri(), StringTemplates.formatWithPlaceholder("multipart/form-data content should use the multipart/form-data content-type, current is: {}", contentType));
                 }
             } else {
-                request.getHeaders().setContentType(MediaType.MULTIPART_FORM_DATA);
+                request.getHttpHeaders().setContentType(MediaType.MULTIPART_FORM_DATA);
             }
         }
 
-        if (MediaType.MULTIPART_FORM_DATA.equalsTypeAndSubtype(request.getHeaders().getContentType())) {
+        if (MediaType.MULTIPART_FORM_DATA.equalsTypeAndSubtype(request.getHttpHeaders().getContentType())) {
             if (request.getMethod() != HttpMethod.POST) {
                 throw new BadHttpRequestException(request.getMethod(), request.getUri(), StringTemplates.formatWithPlaceholder("multipart/form-data content should use the POST, current is: {}", request.getMethod()));
             }
@@ -48,14 +48,14 @@ public class HttpRequestMultiPartsFormInterceptor implements HttpRequestIntercep
         }
 
         if (request.getPayload() instanceof MultiPartsForm) {
-            MediaType contentType = request.getHeaders().getContentType();
+            MediaType contentType = request.getHttpHeaders().getContentType();
             String boundary = HttpClientUtils.generateMultipartBoundary();
             MultiPartsForm form = (MultiPartsForm) request.getPayload();
             Charset formCharset = form.getCharset() == null ? Charsets.UTF_8 : form.getCharset();
 
             contentType = new MediaType(contentType, "boundary", boundary);
             contentType = new MediaType(contentType, "charset", formCharset.name());
-            request.getHeaders().setContentType(contentType);
+            request.getHttpHeaders().setContentType(contentType);
         }
     }
 }

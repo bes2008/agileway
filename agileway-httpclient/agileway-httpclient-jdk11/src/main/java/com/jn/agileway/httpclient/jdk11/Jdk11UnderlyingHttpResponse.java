@@ -50,7 +50,7 @@ class Jdk11UnderlyingHttpResponse implements UnderlyingHttpResponse {
     }
 
     @Override
-    public HttpHeaders getHeaders() {
+    public HttpHeaders getHttpHeaders() {
         return headers;
     }
 }
