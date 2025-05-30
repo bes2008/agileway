@@ -2,11 +2,14 @@ package com.jn.agileway.httpclient.core;
 
 import com.jn.agileway.eipchannel.core.channel.pipe.PipedDuplexChannel;
 import com.jn.agileway.eipchannel.core.endpoint.exchange.RequestReplyExchanger;
-import com.jn.agileway.eipchannel.core.message.Message;
+import com.jn.langx.exception.ErrorHandler;
 import com.jn.langx.lifecycle.AbstractLifecycle;
+import com.jn.langx.util.concurrent.promise.AsyncCallback;
 import com.jn.langx.util.concurrent.promise.Promise;
+import com.jn.langx.util.concurrent.promise.Task;
+import com.jn.langx.util.function.Handler;
 
-public class HttpRequestReplyExchanger extends AbstractLifecycle implements RequestReplyExchanger {
+public class HttpRequestReplyExchanger extends AbstractLifecycle implements RequestReplyExchanger<HttpRequest<?>, HttpResponse<?>> {
 
     /**
      * <pre>
@@ -38,14 +41,44 @@ public class HttpRequestReplyExchanger extends AbstractLifecycle implements Requ
      * </pre>
      */
     private PipedDuplexChannel requestReplyChannel;
+    private HttpExchangerConfiguration configuration;
+
 
     @Override
-    public Promise<Message<?>> exchangeAsync(Message<?> request) {
-        return null;
+    public Promise<HttpResponse<?>> exchangeAsync(HttpRequest<?> request) {
+        return exchangeInternal(true, request);
     }
 
     @Override
-    public Message<?> exchange(Message<?> request) {
-        return exchangeAsync(request).await();
+    public HttpResponse<?> exchange(HttpRequest<?> request) {
+        return exchangeInternal(false, request).await();
+    }
+
+    private Promise<HttpResponse<?>> exchangeInternal(boolean async, HttpRequest<?> request) {
+
+        Task<Boolean> sendRequestTask = new Task<Boolean>() {
+            @Override
+            public Boolean run(Handler<Boolean> handler, ErrorHandler errorHandler) {
+                return requestReplyChannel.send(request);
+            }
+        };
+
+
+        return (async ? new Promise<Boolean>(this.configuration.getExecutor(), sendRequestTask) : new Promise<Boolean>(sendRequestTask))
+                .then(new AsyncCallback<Boolean, HttpResponse<?>>() {
+                    @Override
+                    public HttpResponse<?> apply(Boolean sent) {
+                        if (sent) {
+                            return (HttpResponse<?>) requestReplyChannel.poll();
+                        }
+                        return null;
+                    }
+                }).catchError(new AsyncCallback<Throwable, HttpResponse<?>>() {
+                    @Override
+                    public HttpResponse<?> apply(Throwable throwable) {
+                        return null;
+                    }
+                });
+
     }
 }

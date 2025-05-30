@@ -4,8 +4,8 @@ import com.jn.agileway.eipchannel.core.endpoint.Endpoint;
 import com.jn.agileway.eipchannel.core.message.Message;
 import com.jn.langx.util.concurrent.promise.Promise;
 
-public interface RequestReplyExchanger extends Endpoint {
-    Promise<Message<?>> exchangeAsync(Message<?> request);
+public interface RequestReplyExchanger<REQ extends Message<?>, RESP extends Message<?>> extends Endpoint {
+    Promise<RESP> exchangeAsync(REQ request);
 
-    Message<?> exchange(Message<?> request);
+    RESP exchange(REQ request);
 }
