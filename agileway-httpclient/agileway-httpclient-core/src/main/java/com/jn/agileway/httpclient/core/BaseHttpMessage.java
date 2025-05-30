@@ -10,6 +10,11 @@ public abstract class BaseHttpMessage<T> extends BaseMessage<HttpHeaders, T> imp
     protected URI uri;
     protected HttpMethod method;
 
+    /**
+     * 自定义的期望的 payload 类型
+     */
+    public static final String HEADER_KEY_REPLY_PAYLOAD_TYPE = "agileway_http_reply_payload_type";
+
     public URI getUri() {
         return uri;
     }

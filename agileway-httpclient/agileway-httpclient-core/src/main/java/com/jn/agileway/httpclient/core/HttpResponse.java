@@ -1,6 +1,5 @@
 package com.jn.agileway.httpclient.core;
 
-import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.io.Charsets;
@@ -25,19 +24,19 @@ import java.io.InputStream;
  *
  * @param <T>
  */
-public class HttpResponse<T> extends BaseHttpMessage<T> {
+public class HttpResponse<T> extends BaseHttpMessage<T> implements HttpResponseMessage<T> {
     private int statusCode;
     private String errorMessage;
 
-    public HttpResponse(UnderlyingHttpResponse response) {
+    public HttpResponse(HttpResponseMessage response) {
         this(response, null);
     }
 
-    public HttpResponse(UnderlyingHttpResponse response, T data) {
+    public HttpResponse(HttpResponseMessage response, T data) {
         this(response, data, false);
     }
 
-    public HttpResponse(UnderlyingHttpResponse response, T data, boolean readIfDataAbsent) {
+    public HttpResponse(HttpResponseMessage response, T data, boolean readIfDataAbsent) {
         this.uri = response.getUri();
         this.method = response.getMethod();
         this.statusCode = response.getStatusCode();

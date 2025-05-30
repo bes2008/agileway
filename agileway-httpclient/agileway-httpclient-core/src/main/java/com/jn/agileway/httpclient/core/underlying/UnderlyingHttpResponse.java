@@ -1,6 +1,7 @@
 package com.jn.agileway.httpclient.core.underlying;
 
 import com.jn.agileway.httpclient.core.HttpMessage;
+import com.jn.agileway.httpclient.core.HttpResponseMessage;
 
 import java.io.Closeable;
 import java.io.InputStream;
@@ -8,8 +9,7 @@ import java.io.InputStream;
 /**
  * 代表了http响应，框架内部使用，用户不要直接使用
  */
-public interface UnderlyingHttpResponse extends HttpMessage<InputStream>, Closeable {
-    int getStatusCode();
+public interface UnderlyingHttpResponse extends HttpResponseMessage<InputStream>, Closeable {
 
     void close();
 

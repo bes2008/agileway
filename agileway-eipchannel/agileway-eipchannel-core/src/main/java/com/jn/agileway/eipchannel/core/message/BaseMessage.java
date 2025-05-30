@@ -9,7 +9,7 @@ public class BaseMessage<H, T> implements Message<T> {
     protected T payload;
 
     @NonNull
-    protected MessageHeaders<H> headers;
+    protected MessageHeaders<H> headers = new MessageHeaders<>();
 
     @Override
     public T getPayload() {

@@ -202,22 +202,22 @@ public class HttpRequestReplyExchanger extends AbstractLifecycle implements Requ
 
     private Promise<HttpResponse<?>> exchangeInternal(boolean async, HttpRequest<?> request) {
 
-        Task<Boolean> sendRequestTask = new Task<Boolean>() {
+        Task<HttpRequest<?>> sendRequestTask = new Task<HttpRequest<?>>() {
             @Override
-            public Boolean run(Handler<Boolean> handler, ErrorHandler errorHandler) {
-                return requestReplyChannel.send(request);
+            public HttpRequest<?> run(Handler<HttpRequest<?>> handler, ErrorHandler errorHandler) {
+                requestReplyChannel.send(request);
+                return request;
             }
         };
 
 
-        return (async ? new Promise<Boolean>(this.configuration.getExecutor(), sendRequestTask) : new Promise<Boolean>(sendRequestTask))
-                .then(new AsyncCallback<Boolean, HttpResponse<?>>() {
+        return (async ? new Promise<HttpRequest<?>>(this.configuration.getExecutor(), sendRequestTask) : new Promise<HttpRequest<?>>(sendRequestTask))
+                .then(new AsyncCallback<HttpRequest<?>, HttpResponse<?>>() {
                     @Override
-                    public HttpResponse<?> apply(Boolean sent) {
-                        if (sent) {
-                            return (HttpResponse<?>) requestReplyChannel.poll();
-                        }
-                        return null;
+                    public HttpResponse<?> apply(HttpRequest<?> request) {
+
+                        HttpResponse<?> response = (HttpResponse<?>) requestReplyChannel.poll();
+                        return response;
                     }
                 })
                 .then(new AsyncCallback<HttpResponse<?>, HttpResponse<?>>() {
