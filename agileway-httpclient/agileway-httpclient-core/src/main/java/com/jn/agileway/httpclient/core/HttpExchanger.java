@@ -1,6 +1,5 @@
 package com.jn.agileway.httpclient.core;
 
-import com.jn.agileway.eipchannel.core.endpoint.exchange.RequestReplyExchanger;
 import com.jn.agileway.httpclient.core.error.DefaultHttpResponseErrorHandler;
 import com.jn.agileway.httpclient.core.error.HttpResponseErrorHandler;
 import com.jn.agileway.httpclient.core.error.exception.*;
@@ -94,6 +93,24 @@ public class HttpExchanger extends AbstractLifecycle {
 
         List<HttpMessageProtocolPlugin> plugins = this.httpMessagePluginRegistry.find(HttpMessageProtocolPlugin.class);
 
+        // requestBodyWriters
+        for (HttpMessageProtocolPlugin plugin : plugins) {
+            this.requestContentWriters.add(new PluginBasedHttpRequestWriter(plugin));
+        }
+        this.requestContentWriters.add(new GeneralFormHttpRequestWriter());
+        this.requestContentWriters.add(new GeneralMultiPartsFormHttpRequestWriter());
+        this.requestContentWriters = Lists.immutableList(requestContentWriters);
+
+        // responseBodyReaders
+        for (HttpMessageProtocolPlugin plugin : plugins) {
+            responseContentReaders.add(new PluginBasedHttpResponseReader(plugin));
+        }
+        this.responseContentReaders.add(new GeneralAttachmentReader());
+        this.responseContentReaders.add(new GeneralTextHttpResponseReader());
+        this.responseContentReaders.add(new GeneralResourceHttpResponseReader());
+        this.responseContentReaders.add(0, new GeneralBytesHttpResponseReader());
+        this.responseContentReaders = Lists.immutableList(responseContentReaders);
+
         // requestInterceptors
         for (HttpMessageProtocolPlugin plugin : plugins) {
             this.requestInterceptors.add(new PluginBasedHttpRequestInterceptor(plugin));
@@ -113,23 +130,6 @@ public class HttpExchanger extends AbstractLifecycle {
         }
         this.responseInterceptors = Lists.immutableList(responseInterceptors);
 
-        // requestBodyWriters
-        for (HttpMessageProtocolPlugin plugin : plugins) {
-            this.requestContentWriters.add(new PluginBasedHttpRequestWriter(plugin));
-        }
-        this.requestContentWriters.add(new GeneralFormHttpRequestWriter());
-        this.requestContentWriters.add(new GeneralMultiPartsFormHttpRequestWriter());
-        this.requestContentWriters = Lists.immutableList(requestContentWriters);
-
-        // responseBodyReaders
-        for (HttpMessageProtocolPlugin plugin : plugins) {
-            responseContentReaders.add(new PluginBasedHttpResponseReader(plugin));
-        }
-        this.responseContentReaders.add(new GeneralAttachmentReader());
-        this.responseContentReaders.add(new GeneralTextHttpResponseReader());
-        this.responseContentReaders.add(new GeneralResourceHttpResponseReader());
-        this.responseContentReaders.add(0, new GeneralBytesHttpResponseReader());
-        this.responseContentReaders = Lists.immutableList(responseContentReaders);
 
         // httpResponseErrorHandler
         if (this.globalHttpResponseErrorHandler == null) {

@@ -25,8 +25,8 @@ public class HttpRequestReplyExchanger extends AbstractLifecycle implements Requ
      *        |                                             ^
      *        v                                             |
      *  HttpRequest&lt;ByteArrayOutputStream>      HttpResponse&lt;ByteArrayInputStream>
-     *        |
-     *        v
+     *        |                                             ^
+     *        v                                             |
      *  ---------------------                       ---------------------
      *  |   Interceptors    |                       |   Interceptors    |
      *  ---------------------                       ---------------------
@@ -73,7 +73,15 @@ public class HttpRequestReplyExchanger extends AbstractLifecycle implements Requ
                         }
                         return null;
                     }
-                }).catchError(new AsyncCallback<Throwable, HttpResponse<?>>() {
+                })
+                .then(new AsyncCallback<HttpResponse<?>, HttpResponse<?>>() {
+                    @Override
+                    public HttpResponse<?> apply(HttpResponse<?> httpResponse) {
+                        // statusCode >=400
+                        return httpResponse;
+                    }
+                })
+                .catchError(new AsyncCallback<Throwable, HttpResponse<?>>() {
                     @Override
                     public HttpResponse<?> apply(Throwable throwable) {
                         return null;
