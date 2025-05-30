@@ -30,7 +30,7 @@ class JdkUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpURLConn
     }
 
     @Override
-    public OutputStream getContent() {
+    public OutputStream getPayload() {
         if (!HttpClientUtils.isWriteable(getMethod())) {
             return null;
         }

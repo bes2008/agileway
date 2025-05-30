@@ -19,6 +19,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.github.bes2008.solution.agileway.eipchannel</groupId>
+            <artifactId>agileway-eipchannel-core</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>io.github.bes2008.solution.easyjson</groupId>
             <artifactId>easyjson-core</artifactId>
         </dependency>

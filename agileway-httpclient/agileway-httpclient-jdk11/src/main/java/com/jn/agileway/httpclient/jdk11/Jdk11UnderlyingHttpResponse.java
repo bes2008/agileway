@@ -45,7 +45,7 @@ class Jdk11UnderlyingHttpResponse implements UnderlyingHttpResponse {
     }
 
     @Override
-    public InputStream getContent() {
+    public InputStream getPayload() {
         return content;
     }
 

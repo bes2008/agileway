@@ -28,7 +28,7 @@ class ApacheUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpUriR
 
 
     @Override
-    public OutputStream getContent() {
+    public OutputStream getPayload() {
         if (this.contentEntity == null) {
             if (HttpClientUtils.isWriteable(this.getMethod())) {
                 String contentEncoding = getHeaders().getFirst("Content-Encoding");

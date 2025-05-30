@@ -12,5 +12,5 @@ public interface HttpMessage<T> {
 
     HttpHeaders getHeaders();
 
-    T getContent();
+    T getPayload();
 }

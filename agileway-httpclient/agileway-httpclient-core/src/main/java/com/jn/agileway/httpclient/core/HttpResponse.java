@@ -47,7 +47,7 @@ public class HttpResponse<T> extends BaseHttpMessage<T> {
             this.content = data;
         } else if (readIfDataAbsent) {
             try {
-                InputStream inputStream = response.getContent();
+                InputStream inputStream = response.getPayload();
                 if (inputStream != null) {
                     byte[] bytes = IOs.toByteArray(inputStream);
                     if (statusCode >= 400) {

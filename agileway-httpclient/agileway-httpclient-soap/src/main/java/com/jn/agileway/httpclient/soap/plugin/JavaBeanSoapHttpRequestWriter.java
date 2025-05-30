@@ -13,16 +13,16 @@ import java.io.IOException;
 class JavaBeanSoapHttpRequestWriter implements HttpRequestContentWriter {
     @Override
     public boolean canWrite(HttpRequest request) {
-        return (request.getContent() instanceof SoapMessage);
+        return (request.getPayload() instanceof SoapMessage);
     }
 
     @Override
     public void write(HttpRequest request, UnderlyingHttpRequest output) throws IOException {
-        Object body = request.getContent();
+        Object body = request.getPayload();
         try {
             SoapMessage soapMessage = (SoapMessage) body;
             String soapEnvelopeXml = SOAPs.marshalSoapEnvelope(soapMessage);
-            output.getContent().write(soapEnvelopeXml.getBytes(Charsets.UTF_8));
+            output.getPayload().write(soapEnvelopeXml.getBytes(Charsets.UTF_8));
         } catch (Throwable e) {
             throw Throwables.wrapAsRuntimeException(e);
         }

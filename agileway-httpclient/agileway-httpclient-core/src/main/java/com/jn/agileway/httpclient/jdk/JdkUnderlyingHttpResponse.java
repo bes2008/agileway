@@ -57,7 +57,7 @@ class JdkUnderlyingHttpResponse implements UnderlyingHttpResponse {
     }
 
     @Override
-    public InputStream getContent() {
+    public InputStream getPayload() {
         try {
             if (this.responseStream == null) {
                 InputStream inputStream = this.httpConnection.getErrorStream();

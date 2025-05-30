@@ -211,7 +211,7 @@ public class HttpExchanger extends AbstractInitializable {
                 try {
                     UnderlyingHttpRequest underlyingHttpRequest = requestFactory.create(request.getMethod(), request.getUri(), request.getHeaders());
 
-                    if (HttpClientUtils.isWriteable(request.getMethod()) && request.getContent() != null) {
+                    if (HttpClientUtils.isWriteable(request.getMethod()) && request.getPayload() != null) {
                         HttpRequestContentWriter requestBodyWriter = Pipeline.of(requestContentWriters)
                                 .findFirst(new Predicate<HttpRequestContentWriter>() {
                                     @Override
@@ -276,9 +276,9 @@ public class HttpExchanger extends AbstractInitializable {
                                       }
                                   } else {
 
-                                      if (underlyingHttpResponse.getContent() != null) {
+                                      if (underlyingHttpResponse.getPayload() != null) {
                                           // 消耗掉
-                                          IOs.readAsString(underlyingHttpResponse.getContent());
+                                          IOs.readAsString(underlyingHttpResponse.getPayload());
                                       }
                                       response = new HttpResponse<>(underlyingHttpResponse);
                                   }
@@ -316,7 +316,7 @@ public class HttpExchanger extends AbstractInitializable {
             return false;
         }
 
-        if (underlyingHttpResponse.getContent() == null) {
+        if (underlyingHttpResponse.getPayload() == null) {
             return false;
         }
 
@@ -338,7 +338,7 @@ public class HttpExchanger extends AbstractInitializable {
         Predicate<Throwable> theErrorRetryPredicate = errorRetryPredicate == null ? new Predicate<Throwable>() {
             @Override
             public boolean test(Throwable throwable) {
-                if (request.getContent() instanceof MultiPartsForm) {
+                if (request.getPayload() instanceof MultiPartsForm) {
                     return false;
                 }
                 return (throwable instanceof HttpRequestServerErrorException) || Throwables.hasCause(throwable, ConnectException.class);
@@ -347,7 +347,7 @@ public class HttpExchanger extends AbstractInitializable {
         Predicate<HttpResponse<O>> theResultRetryPredicate = resultRetryPredicate == null ? new Predicate<HttpResponse<O>>() {
             @Override
             public boolean test(HttpResponse<O> oHttpResponse) {
-                if (request.getContent() instanceof MultiPartsForm) {
+                if (request.getPayload() instanceof MultiPartsForm) {
                     return false;
                 }
                 return oHttpResponse.hasError() && oHttpResponse.getStatusCode() >= 500;

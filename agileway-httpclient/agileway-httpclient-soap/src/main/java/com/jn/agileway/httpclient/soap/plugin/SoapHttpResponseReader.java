@@ -8,7 +8,6 @@ import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.net.mime.MediaType;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 
@@ -20,7 +19,7 @@ public class SoapHttpResponseReader implements HttpResponseContentReader {
 
     @Override
     public Object read(UnderlyingHttpResponse underlyingHttpResponse, MediaType contentType, Type expectedContentType) throws Exception {
-        InputStream inputStream = underlyingHttpResponse.getContent();
+        InputStream inputStream = underlyingHttpResponse.getPayload();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         IOs.copy(inputStream, baos);
         String soapEnvelopeXml = baos.toString(Charsets.UTF_8.name());

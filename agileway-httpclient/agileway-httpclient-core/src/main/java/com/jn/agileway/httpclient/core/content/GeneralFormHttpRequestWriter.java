@@ -9,7 +9,6 @@ import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.net.uri.component.UriComponentUtils;
 import com.jn.langx.util.reflect.Reflects;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -27,11 +26,11 @@ public class GeneralFormHttpRequestWriter implements HttpRequestContentWriter {
     }
 
     public void write(HttpRequest request, UnderlyingHttpRequest output) throws Exception {
-        Object body = request.getContent();
+        Object body = request.getPayload();
         MediaType contentType = request.getHeaders().getContentType();
         Charset charset = contentType.getCharset();
         String formString = serializeSimpleForm(body, contentType.getCharset(), output);
-        output.getContent().write(formString.getBytes(charset));
+        output.getPayload().write(formString.getBytes(charset));
     }
 
     private String serializeSimpleForm(Object formData, final Charset charset, UnderlyingHttpRequest output) throws UnsupportedEncodingException {

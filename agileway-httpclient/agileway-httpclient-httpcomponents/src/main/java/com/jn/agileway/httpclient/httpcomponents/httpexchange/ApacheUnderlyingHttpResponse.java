@@ -50,7 +50,7 @@ class ApacheUnderlyingHttpResponse implements UnderlyingHttpResponse {
     }
 
     @Override
-    public InputStream getContent() {
+    public InputStream getPayload() {
         HttpEntity body = this.response.getEntity();
         if (body != null) {
             try {

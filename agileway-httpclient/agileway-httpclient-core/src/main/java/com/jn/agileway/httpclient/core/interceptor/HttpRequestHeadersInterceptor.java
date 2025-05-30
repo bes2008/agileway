@@ -49,7 +49,7 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
             case PUT:
             case POST:
             default:
-                if (request.getContent() != null && (request.getContent() instanceof MultiPartsForm)) {
+                if (request.getPayload() != null && (request.getPayload() instanceof MultiPartsForm)) {
                     request.getHeaders().setContentType(MediaType.MULTIPART_FORM_DATA);
                     contentType = request.getHeaders().getContentType();
                 }

@@ -9,7 +9,7 @@ import javax.xml.soap.SOAPMessage;
 public class JavaxSoapMessageWriter implements HttpRequestContentWriter {
     @Override
     public boolean canWrite(HttpRequest request) {
-        if (request.getContent() instanceof SOAPMessage) {
+        if (request.getPayload() instanceof SOAPMessage) {
             return true;
         }
         return false;
@@ -17,7 +17,7 @@ public class JavaxSoapMessageWriter implements HttpRequestContentWriter {
 
     @Override
     public void write(HttpRequest request, UnderlyingHttpRequest output) throws Exception {
-        SOAPMessage soapMessage = (SOAPMessage) request.getContent();
-        soapMessage.writeTo(output.getContent());
+        SOAPMessage soapMessage = (SOAPMessage) request.getPayload();
+        soapMessage.writeTo(output.getPayload());
     }
 }

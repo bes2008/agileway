@@ -20,7 +20,7 @@ class SoapHttpRequestInterceptor implements HttpRequestInterceptor {
         if (request.getMethod() != HttpMethod.POST) {
             throw new UnsupportedHttpMethodException(request.getMethod(), request.getUri(), "only POST method is supported for SOAP message");
         }
-        Object httpContent = request.getContent();
+        Object httpContent = request.getPayload();
         if (httpContent == null) {
             throw new BadHttpRequestException(request.getMethod(), request.getUri(), "soap payload is required");
         }

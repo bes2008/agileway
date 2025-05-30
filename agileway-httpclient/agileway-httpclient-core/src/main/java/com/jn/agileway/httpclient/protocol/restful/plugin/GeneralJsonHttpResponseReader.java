@@ -5,7 +5,6 @@ import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.easyjson.core.util.JSONs;
 import com.jn.langx.util.net.mime.MediaType;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 
 class GeneralJsonHttpResponseReader implements HttpResponseContentReader {
@@ -19,6 +18,6 @@ class GeneralJsonHttpResponseReader implements HttpResponseContentReader {
 
     @Override
     public Object read(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) throws Exception {
-        return JSONs.parse(response.getContent(), expectedContentType);
+        return JSONs.parse(response.getPayload(), expectedContentType);
     }
 }

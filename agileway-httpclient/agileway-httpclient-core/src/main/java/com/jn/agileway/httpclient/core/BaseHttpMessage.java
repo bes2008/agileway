@@ -23,7 +23,7 @@ public abstract class BaseHttpMessage<T> implements HttpMessage<T> {
         return headers;
     }
 
-    public T getContent() {
+    public T getPayload() {
         return content;
     }
 }

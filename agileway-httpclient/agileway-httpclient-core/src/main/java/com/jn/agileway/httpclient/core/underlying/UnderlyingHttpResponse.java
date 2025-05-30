@@ -19,6 +19,6 @@ public interface UnderlyingHttpResponse extends HttpMessage<InputStream>, Closea
      * @return 如果没有响应体，可以返回null
      */
     @Override
-    InputStream getContent();
+    InputStream getPayload();
 
 }

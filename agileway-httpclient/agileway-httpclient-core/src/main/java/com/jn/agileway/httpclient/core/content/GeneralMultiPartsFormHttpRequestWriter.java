@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets;
 public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestContentWriter {
     @Override
     public boolean canWrite(HttpRequest request) {
-        Object body = request.getContent();
+        Object body = request.getPayload();
         MediaType contentType = request.getHeaders().getContentType();
         if (!HttpClientUtils.isMultipartForm(contentType)) {
             return false;
@@ -32,7 +32,7 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestConten
 
     @Override
     public void write(HttpRequest request, UnderlyingHttpRequest output) throws Exception {
-        Object body = request.getContent();
+        Object body = request.getPayload();
         MediaType contentType = request.getHeaders().getContentType();
         MultiPartsForm form = (MultiPartsForm) body;
         Charset formCharset = form.getCharset() == null ? Charsets.UTF_8 : form.getCharset();
@@ -41,7 +41,7 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestConten
         for (Part part : form.getParts()) {
             writePart(part, output, boundary, formCharset);
         }
-        output.getContent().write(("--" + boundary + "--\r\n").getBytes(Charsets.US_ASCII));
+        output.getPayload().write(("--" + boundary + "--\r\n").getBytes(Charsets.US_ASCII));
     }
 
     private void writePart(Part part, UnderlyingHttpRequest output, String boundary, Charset formCharset) throws IOException {
@@ -49,20 +49,20 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestConten
             return;
         }
 
-        output.getContent().write(("--" + boundary + "\r\n").getBytes(Charsets.US_ASCII));
+        output.getPayload().write(("--" + boundary + "\r\n").getBytes(Charsets.US_ASCII));
         String contentDisposition = part.getContentDisposition().asString();
-        output.getContent().write((contentDisposition + "\r\n").getBytes(Charsets.US_ASCII));
-        output.getContent().write(("Content-Type: " + part.getContentType() + "\r\n").getBytes(Charsets.US_ASCII));
-        output.getContent().write("\r\n".getBytes(StandardCharsets.US_ASCII));
+        output.getPayload().write((contentDisposition + "\r\n").getBytes(Charsets.US_ASCII));
+        output.getPayload().write(("Content-Type: " + part.getContentType() + "\r\n").getBytes(Charsets.US_ASCII));
+        output.getPayload().write("\r\n".getBytes(StandardCharsets.US_ASCII));
 
 
         if (part instanceof TextPart) {
             Charset charset = part.getCharset() == null ? formCharset : part.getCharset();
-            output.getContent().write(((TextPart) part).getContent().getBytes(charset));
+            output.getPayload().write(((TextPart) part).getContent().getBytes(charset));
         } else if (part instanceof ResourcePart) {
             Resource resource = ((ResourcePart) part).getContent();
             try {
-                IOs.copy(resource.getInputStream(), output.getContent());
+                IOs.copy(resource.getInputStream(), output.getPayload());
             } finally {
                 IOs.close(resource);
             }

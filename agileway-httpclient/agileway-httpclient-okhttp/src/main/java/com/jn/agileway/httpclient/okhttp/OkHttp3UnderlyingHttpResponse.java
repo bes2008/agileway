@@ -46,7 +46,7 @@ class OkHttp3UnderlyingHttpResponse implements UnderlyingHttpResponse {
     }
 
     @Override
-    public InputStream getContent() {
+    public InputStream getPayload() {
         ResponseBody body = this.response.body();
         return body != null ? body.byteStream() : null;
     }

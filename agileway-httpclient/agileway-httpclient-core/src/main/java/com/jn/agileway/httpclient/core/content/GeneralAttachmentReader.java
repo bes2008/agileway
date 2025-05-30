@@ -10,7 +10,6 @@ import com.jn.langx.util.net.mime.MediaType;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.lang.reflect.Type;
 
 /**
@@ -46,7 +45,7 @@ public class GeneralAttachmentReader extends CustomMediaTypesHttpResponseReader<
         ContentDisposition contentDisposition = ContentDisposition.parseResponseHeader(contentDispositionValue);
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        IOs.copy(response.getContent(), bos);
+        IOs.copy(response.getPayload(), bos);
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bos.toByteArray());
 
         return new InputStreamResource(inputStream, contentDisposition.getFilename());

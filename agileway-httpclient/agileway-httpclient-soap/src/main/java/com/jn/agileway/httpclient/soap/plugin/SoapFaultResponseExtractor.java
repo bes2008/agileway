@@ -17,7 +17,7 @@ public class SoapFaultResponseExtractor implements HttpResponseContentExtractor 
 
     @Override
     public HttpResponse extract(UnderlyingHttpResponse underlyingHttpResponse) throws Exception {
-        InputStream inputStream = underlyingHttpResponse.getContent();
+        InputStream inputStream = underlyingHttpResponse.getPayload();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         IOs.copy(inputStream, baos);
         String soapEnvelopeXml = baos.toString(Charsets.UTF_8.name());

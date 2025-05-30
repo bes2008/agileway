@@ -16,7 +16,7 @@ import java.util.Map;
 public class HttpRequestMultiPartsFormInterceptor implements HttpRequestInterceptor {
     @Override
     public void intercept(HttpRequest request) {
-        if (request.getContent() instanceof MultiPartsForm) {
+        if (request.getPayload() instanceof MultiPartsForm) {
             if (request.getMethod() != HttpMethod.POST) {
                 throw new BadHttpRequestException(request.getMethod(), request.getUri(), StringTemplates.formatWithPlaceholder("multipart/form-data content should use the POST, current is: {}", request.getMethod()));
             }
@@ -34,12 +34,12 @@ public class HttpRequestMultiPartsFormInterceptor implements HttpRequestIntercep
             if (request.getMethod() != HttpMethod.POST) {
                 throw new BadHttpRequestException(request.getMethod(), request.getUri(), StringTemplates.formatWithPlaceholder("multipart/form-data content should use the POST, current is: {}", request.getMethod()));
             }
-            if (!(request.getContent() instanceof MultiPartsForm)) {
+            if (!(request.getPayload() instanceof MultiPartsForm)) {
                 try {
-                    if (request.getContent() instanceof MultiValueMap) {
-                        request.setContent(MultiPartsForm.ofMultiValueMap((MultiValueMap) request.getContent()));
-                    } else if (request.getContent() instanceof Map) {
-                        request.setContent(MultiPartsForm.ofMap((Map) request.getContent()));
+                    if (request.getPayload() instanceof MultiValueMap) {
+                        request.setContent(MultiPartsForm.ofMultiValueMap((MultiValueMap) request.getPayload()));
+                    } else if (request.getPayload() instanceof Map) {
+                        request.setContent(MultiPartsForm.ofMap((Map) request.getPayload()));
                     }
                 } catch (Throwable ex) {
                     throw new BadHttpRequestException(request.getMethod(), request.getUri(), StringTemplates.formatWithPlaceholder("invalid multipart/form-data content "));
@@ -47,10 +47,10 @@ public class HttpRequestMultiPartsFormInterceptor implements HttpRequestIntercep
             }
         }
 
-        if (request.getContent() instanceof MultiPartsForm) {
+        if (request.getPayload() instanceof MultiPartsForm) {
             MediaType contentType = request.getHeaders().getContentType();
             String boundary = HttpClientUtils.generateMultipartBoundary();
-            MultiPartsForm form = (MultiPartsForm) request.getContent();
+            MultiPartsForm form = (MultiPartsForm) request.getPayload();
             Charset formCharset = form.getCharset() == null ? Charsets.UTF_8 : form.getCharset();
 
             contentType = new MediaType(contentType, "boundary", boundary);

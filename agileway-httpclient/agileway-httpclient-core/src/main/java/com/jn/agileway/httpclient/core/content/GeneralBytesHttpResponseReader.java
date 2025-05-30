@@ -21,7 +21,7 @@ public class GeneralBytesHttpResponseReader implements HttpResponseContentReader
         }
         byte[] bytes = new byte[contentLength];
         if (contentLength > 0) {
-            IOs.read(response.getContent(), bytes);
+            IOs.read(response.getPayload(), bytes);
         }
         return bytes;
     }

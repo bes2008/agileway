@@ -18,7 +18,7 @@ public interface UnderlyingHttpRequest extends HttpMessage<OutputStream> {
      * @throws IOException 出错
      */
     @Override
-    OutputStream getContent();
+    OutputStream getPayload();
 
     UnderlyingHttpResponse exchange() throws IOException;
 
