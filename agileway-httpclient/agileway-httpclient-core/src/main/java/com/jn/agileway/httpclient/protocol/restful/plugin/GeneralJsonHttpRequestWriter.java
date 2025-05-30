@@ -1,13 +1,13 @@
 package com.jn.agileway.httpclient.protocol.restful.plugin;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
-import com.jn.agileway.httpclient.core.content.HttpRequestContentWriter;
+import com.jn.agileway.httpclient.core.content.HttpRequestPayloadWriter;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequest;
 import com.jn.easyjson.core.util.JSONs;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.net.mime.MediaType;
 
-class GeneralJsonHttpRequestWriter implements HttpRequestContentWriter {
+class GeneralJsonHttpRequestWriter implements HttpRequestPayloadWriter {
     @Override
     public boolean canWrite(HttpRequest request) {
         MediaType contentType = request.getHeaders().getContentType();

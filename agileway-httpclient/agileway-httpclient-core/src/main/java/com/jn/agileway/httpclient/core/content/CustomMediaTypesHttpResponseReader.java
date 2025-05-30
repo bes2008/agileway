@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CustomMediaTypesHttpResponseReader<T> implements HttpResponseContentReader<T> {
+public abstract class CustomMediaTypesHttpResponseReader<T> implements HttpResponsePayloadReader<T> {
     private List<MediaType> supportedMediaTypes = new ArrayList<MediaType>();
 
     public void addSupportedMediaType(MediaType mediaType) {

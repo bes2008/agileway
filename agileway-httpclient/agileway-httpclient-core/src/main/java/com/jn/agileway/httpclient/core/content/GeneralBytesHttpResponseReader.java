@@ -7,7 +7,7 @@ import com.jn.langx.util.net.mime.MediaType;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
-public class GeneralBytesHttpResponseReader implements HttpResponseContentReader<byte[]> {
+public class GeneralBytesHttpResponseReader implements HttpResponsePayloadReader<byte[]> {
     @Override
     public boolean canRead(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) {
         return expectedContentType == byte[].class;

@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.soap.plugin;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
-import com.jn.agileway.httpclient.core.content.HttpRequestContentWriter;
+import com.jn.agileway.httpclient.core.content.HttpRequestPayloadWriter;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequest;
 import com.jn.agileway.httpclient.soap.entity.SoapMessage;
 import com.jn.agileway.httpclient.soap.utils.SOAPs;
@@ -10,7 +10,7 @@ import com.jn.langx.util.io.Charsets;
 
 import java.io.IOException;
 
-class JavaBeanSoapHttpRequestWriter implements HttpRequestContentWriter {
+class JavaBeanSoapHttpRequestWriter implements HttpRequestPayloadWriter {
     @Override
     public boolean canWrite(HttpRequest request) {
         return (request.getPayload() instanceof SoapMessage);

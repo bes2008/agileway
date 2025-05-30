@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestContentWriter {
+public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloadWriter {
     @Override
     public boolean canWrite(HttpRequest request) {
         Object body = request.getPayload();

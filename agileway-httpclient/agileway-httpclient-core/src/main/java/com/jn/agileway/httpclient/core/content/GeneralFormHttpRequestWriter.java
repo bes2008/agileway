@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-public class GeneralFormHttpRequestWriter implements HttpRequestContentWriter {
+public class GeneralFormHttpRequestWriter implements HttpRequestPayloadWriter {
     public boolean canWrite(HttpRequest request) {
         MediaType contentType = request.getHeaders().getContentType();
         if (!HttpClientUtils.isSimpleForm(contentType)) {

@@ -1,6 +1,6 @@
 package com.jn.agileway.httpclient.soap.plugin;
 
-import com.jn.agileway.httpclient.core.content.HttpResponseContentReader;
+import com.jn.agileway.httpclient.core.content.HttpResponsePayloadReader;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.soap.utils.SOAPs;
 import com.jn.langx.util.io.Charsets;
@@ -11,7 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 
-public class SoapHttpResponseReader implements HttpResponseContentReader {
+public class SoapHttpResponseReader implements HttpResponsePayloadReader {
     @Override
     public boolean canRead(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) {
         return response.getStatusCode() == 200;

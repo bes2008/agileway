@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.soap.plugin;
 
 import com.jn.agileway.httpclient.core.HttpResponse;
-import com.jn.agileway.httpclient.core.content.HttpResponseContentExtractor;
+import com.jn.agileway.httpclient.core.content.HttpResponsePayloadExtractor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.soap.entity.SoapFault;
 import com.jn.agileway.httpclient.soap.utils.SoapFaults;
@@ -13,7 +13,7 @@ import com.jn.langx.util.io.IOs;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
-public class SoapFaultResponseExtractor implements HttpResponseContentExtractor {
+public class SoapFaultResponseExtractor implements HttpResponsePayloadExtractor {
 
     @Override
     public HttpResponse extract(UnderlyingHttpResponse underlyingHttpResponse) throws Exception {

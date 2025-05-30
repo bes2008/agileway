@@ -1,12 +1,12 @@
 package com.jn.agileway.httpclient.soap.plugin;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
-import com.jn.agileway.httpclient.core.content.HttpRequestContentWriter;
+import com.jn.agileway.httpclient.core.content.HttpRequestPayloadWriter;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequest;
 
 import javax.xml.soap.SOAPMessage;
 
-public class JavaxSoapMessageWriter implements HttpRequestContentWriter {
+public class JavaxSoapMessageWriter implements HttpRequestPayloadWriter {
     @Override
     public boolean canWrite(HttpRequest request) {
         if (request.getPayload() instanceof SOAPMessage) {

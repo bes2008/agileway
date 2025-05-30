@@ -1,12 +1,12 @@
 package com.jn.agileway.httpclient.core.interceptor;
 
 import com.jn.agileway.httpclient.core.HttpResponse;
-import com.jn.agileway.httpclient.core.content.HttpResponseContentReader;
+import com.jn.agileway.httpclient.core.content.HttpResponsePayloadReader;
 
 import java.util.List;
 
 public class HttpResponsePayloadReadingInterceptor implements HttpResponseInterceptor {
-    private List<HttpResponseContentReader> responseContentReaders;
+    private List<HttpResponsePayloadReader> responseContentReaders;
 
     @Override
     public void intercept(HttpResponse response) {

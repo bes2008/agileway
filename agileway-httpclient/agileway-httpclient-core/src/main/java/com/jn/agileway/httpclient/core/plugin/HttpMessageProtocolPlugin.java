@@ -1,8 +1,8 @@
 package com.jn.agileway.httpclient.core.plugin;
 
 import com.jn.agileway.httpclient.core.HttpMessage;
-import com.jn.agileway.httpclient.core.content.HttpRequestContentWriter;
-import com.jn.agileway.httpclient.core.content.HttpResponseContentReader;
+import com.jn.agileway.httpclient.core.content.HttpRequestPayloadWriter;
+import com.jn.agileway.httpclient.core.content.HttpResponsePayloadReader;
 import com.jn.agileway.httpclient.core.interceptor.HttpRequestInterceptor;
 import com.jn.agileway.httpclient.core.interceptor.HttpResponseInterceptor;
 import com.jn.langx.lifecycle.AbstractInitializable;
@@ -17,10 +17,10 @@ public abstract class HttpMessageProtocolPlugin extends AbstractInitializable im
 
     protected final List<HttpResponseInterceptor> responseInterceptors = Lists.newArrayList();
 
-    protected final List<HttpRequestContentWriter> requestContentWriters = Lists.newArrayList();
-    protected final List<HttpResponseContentReader> responseContentReaders = Lists.newArrayList();
+    protected final List<HttpRequestPayloadWriter> requestContentWriters = Lists.newArrayList();
+    protected final List<HttpResponsePayloadReader> responseContentReaders = Lists.newArrayList();
 
-    public List<HttpRequestContentWriter> getRequestContentWriters() {
+    public List<HttpRequestPayloadWriter> getRequestContentWriters() {
         return requestContentWriters;
     }
 
@@ -32,7 +32,7 @@ public abstract class HttpMessageProtocolPlugin extends AbstractInitializable im
         return responseInterceptors;
     }
 
-    public List<HttpResponseContentReader> getResponseContentReaders() {
+    public List<HttpResponsePayloadReader> getResponseContentReaders() {
         return responseContentReaders;
     }
 

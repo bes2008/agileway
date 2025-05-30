@@ -56,12 +56,12 @@ public class HttpExchanger extends AbstractInitializable {
     /**
      * 主要是将 body进行转换，顺带补充 header等，只要一个转换成功就可以。
      */
-    private List<HttpRequestContentWriter> requestContentWriters = Lists.newArrayList();
+    private List<HttpRequestPayloadWriter> requestContentWriters = Lists.newArrayList();
 
     /**
      * 对正常响应进行反序列化
      */
-    private List<HttpResponseContentReader> responseContentReaders = Lists.newArrayList();
+    private List<HttpResponsePayloadReader> responseContentReaders = Lists.newArrayList();
     /**
      * 对4xx,5xx的响应进行处理
      */
@@ -167,13 +167,13 @@ public class HttpExchanger extends AbstractInitializable {
         }
     }
 
-    public void addRequestContentWriter(HttpRequestContentWriter writer) {
+    public void addRequestContentWriter(HttpRequestPayloadWriter writer) {
         if (writer != null) {
             this.requestContentWriters.add(writer);
         }
     }
 
-    public void addResponseContentReader(HttpResponseContentReader reader) {
+    public void addResponseContentReader(HttpResponsePayloadReader reader) {
         if (reader != null) {
             this.responseContentReaders.add(reader);
         }
@@ -186,7 +186,7 @@ public class HttpExchanger extends AbstractInitializable {
         return exchange(async, request, responseType, null, null);
     }
 
-    public <O> Promise<HttpResponse<O>> exchange(boolean async, final HttpRequest request, final Type responseType, HttpResponseContentExtractor contentExtractor) {
+    public <O> Promise<HttpResponse<O>> exchange(boolean async, final HttpRequest request, final Type responseType, HttpResponsePayloadExtractor contentExtractor) {
         return exchange(async, request, responseType, contentExtractor, null);
     }
 
@@ -198,7 +198,7 @@ public class HttpExchanger extends AbstractInitializable {
      * @param <O>
      * @return
      */
-    public <O> Promise<HttpResponse<O>> exchange(boolean async, final HttpRequest request, final Type responseType, HttpResponseContentExtractor contentExtractor, HttpResponseContentExtractor errorContentExtractor) {
+    public <O> Promise<HttpResponse<O>> exchange(boolean async, final HttpRequest request, final Type responseType, HttpResponsePayloadExtractor contentExtractor, HttpResponsePayloadExtractor errorContentExtractor) {
         Task<UnderlyingHttpResponse> sendRequestTask = new Task<UnderlyingHttpResponse>() {
 
             @Override
@@ -212,10 +212,10 @@ public class HttpExchanger extends AbstractInitializable {
                     UnderlyingHttpRequest underlyingHttpRequest = requestFactory.create(request.getMethod(), request.getUri(), request.getHeaders());
 
                     if (HttpClientUtils.isWriteable(request.getMethod()) && request.getPayload() != null) {
-                        HttpRequestContentWriter requestBodyWriter = Pipeline.of(requestContentWriters)
-                                .findFirst(new Predicate<HttpRequestContentWriter>() {
+                        HttpRequestPayloadWriter requestBodyWriter = Pipeline.of(requestContentWriters)
+                                .findFirst(new Predicate<HttpRequestPayloadWriter>() {
                                     @Override
-                                    public boolean test(HttpRequestContentWriter writer) {
+                                    public boolean test(HttpRequestPayloadWriter writer) {
                                         return writer.canWrite(request);
                                     }
                                 });
@@ -259,10 +259,10 @@ public class HttpExchanger extends AbstractInitializable {
 
                                           if (response == null) {
                                               final MediaType contentType = Objs.useValueIfNull(underlyingHttpResponse.getHeaders().getContentType(), MediaType.TEXT_HTML);
-                                              HttpResponseContentReader reader = Pipeline.of(responseContentReaders)
-                                                      .findFirst(new Predicate<HttpResponseContentReader>() {
+                                              HttpResponsePayloadReader reader = Pipeline.of(responseContentReaders)
+                                                      .findFirst(new Predicate<HttpResponsePayloadReader>() {
                                                           @Override
-                                                          public boolean test(HttpResponseContentReader httpResponseBodyReader) {
+                                                          public boolean test(HttpResponsePayloadReader httpResponseBodyReader) {
                                                               return httpResponseBodyReader.canRead(underlyingHttpResponse, contentType, responseType);
                                                           }
                                                       });

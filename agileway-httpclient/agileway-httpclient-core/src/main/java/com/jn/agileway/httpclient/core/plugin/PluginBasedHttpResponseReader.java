@@ -1,15 +1,14 @@
 package com.jn.agileway.httpclient.core.plugin;
 
-import com.jn.agileway.httpclient.core.content.HttpResponseContentReader;
+import com.jn.agileway.httpclient.core.content.HttpResponsePayloadReader;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.net.mime.MediaType;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 
-public class PluginBasedHttpResponseReader implements HttpResponseContentReader {
+public class PluginBasedHttpResponseReader implements HttpResponsePayloadReader {
 
     private HttpMessageProtocolPlugin plugin;
 
@@ -26,9 +25,9 @@ public class PluginBasedHttpResponseReader implements HttpResponseContentReader 
             return false;
         }
         return Pipeline.of(plugin.getResponseContentReaders())
-                .anyMatch(new Predicate<HttpResponseContentReader>() {
+                .anyMatch(new Predicate<HttpResponsePayloadReader>() {
                     @Override
-                    public boolean test(HttpResponseContentReader reader) {
+                    public boolean test(HttpResponsePayloadReader reader) {
                         return reader.canRead(response, contentType, expectedContentType);
                     }
                 });
@@ -37,9 +36,9 @@ public class PluginBasedHttpResponseReader implements HttpResponseContentReader 
     @Override
     public Object read(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) throws Exception {
         return Pipeline.of(plugin.getResponseContentReaders())
-                .findFirst(new Predicate<HttpResponseContentReader>() {
+                .findFirst(new Predicate<HttpResponsePayloadReader>() {
                     @Override
-                    public boolean test(HttpResponseContentReader reader) {
+                    public boolean test(HttpResponsePayloadReader reader) {
                         return reader.canRead(response, contentType, expectedContentType);
                     }
                 }).read(response, contentType, expectedContentType);
