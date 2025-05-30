@@ -9,7 +9,7 @@ public abstract class BaseHttpMessage<T> implements HttpMessage<T> {
     protected URI uri;
     protected HttpMethod method;
     protected HttpHeaders headers;
-    protected T content;
+    protected T payload;
 
     public URI getUri() {
         return uri;
@@ -24,6 +24,6 @@ public abstract class BaseHttpMessage<T> implements HttpMessage<T> {
     }
 
     public T getPayload() {
-        return content;
+        return payload;
     }
 }

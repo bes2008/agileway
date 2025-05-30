@@ -44,7 +44,7 @@ public class HttpResponse<T> extends BaseHttpMessage<T> {
         this.headers = response.getHttpHeaders();
 
         if (data != null) {
-            this.content = data;
+            this.payload = data;
         } else if (readIfDataAbsent) {
             try {
                 InputStream inputStream = response.getPayload();
@@ -53,7 +53,7 @@ public class HttpResponse<T> extends BaseHttpMessage<T> {
                     if (statusCode >= 400) {
                         this.errorMessage = new String(bytes, Charsets.UTF_8);
                     } else {
-                        this.content = (T) bytes;
+                        this.payload = (T) bytes;
                     }
                 }
             } catch (IOException e) {

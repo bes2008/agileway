@@ -18,7 +18,7 @@ public class HttpRequest<T> extends BaseHttpMessage<T> {
         this.uri = uri;
         this.method = method;
         this.headers = headers == null ? new HttpHeaders() : headers;
-        this.content = body;
+        this.payload = body;
     }
 
     public void setUri(URI uri) {
@@ -30,7 +30,7 @@ public class HttpRequest<T> extends BaseHttpMessage<T> {
     }
 
     public void setContent(T content) {
-        this.content = content;
+        this.payload = content;
     }
 
     public static HttpRequest create(@NonNull HttpMethod method,
