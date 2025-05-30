@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.core;
 
+import com.jn.agileway.eipchannel.core.endpoint.exchange.RequestReplyExchanger;
 import com.jn.agileway.httpclient.core.error.DefaultHttpResponseErrorHandler;
 import com.jn.agileway.httpclient.core.error.HttpResponseErrorHandler;
 import com.jn.agileway.httpclient.core.error.exception.*;
@@ -12,7 +13,7 @@ import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.exception.ErrorHandler;
-import com.jn.langx.lifecycle.AbstractInitializable;
+import com.jn.langx.lifecycle.AbstractLifecycle;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.plugin.PluginRegistry;
 import com.jn.langx.plugin.SimpleLoadablePluginRegistry;
@@ -45,7 +46,8 @@ import java.util.concurrent.*;
 /**
  * 建议的做法是，一个系统里，只创建一个 HttpExchanger 对象即可。一个 HttpExchanger通常会关联一个 ExecutorService （线程池）
  */
-public class HttpExchanger extends AbstractInitializable {
+public class HttpExchanger extends AbstractLifecycle {
+
     @NonNull
     private UnderlyingHttpRequestFactory requestFactory;
     private HttpExchangerConfiguration configuration;
