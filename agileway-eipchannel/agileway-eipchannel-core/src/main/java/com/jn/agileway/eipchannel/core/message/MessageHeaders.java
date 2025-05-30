@@ -27,7 +27,7 @@ import java.util.*;
  * new GenericMessage("foo", headers);
  * </pre>
  */
-public final class MessageHeaders extends LinkedHashMap<String, Object> implements Serializable {
+public class MessageHeaders extends LinkedHashMap<String, Object> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -59,7 +59,9 @@ public final class MessageHeaders extends LinkedHashMap<String, Object> implemen
 
     public static final String SEQUENCE_DETAILS = "sequenceDetails";
 
-
+    public MessageHeaders() {
+        this(new HashMap<String, Object>());
+    }
 
     public MessageHeaders(Map<String, Object> headers) {
         super(Collects.newHashMap(headers));
