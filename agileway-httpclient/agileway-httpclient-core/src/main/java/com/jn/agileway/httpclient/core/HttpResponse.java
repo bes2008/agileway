@@ -1,12 +1,6 @@
 package com.jn.agileway.httpclient.core;
 
 import com.jn.langx.util.Strings;
-import com.jn.langx.util.Throwables;
-import com.jn.langx.util.io.Charsets;
-import com.jn.langx.util.io.IOs;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * 代表了Http响应，它是提供给用户直接使用的.
@@ -28,37 +22,13 @@ public class HttpResponse<T> extends BaseHttpMessage<T> implements HttpResponseM
     private int statusCode;
     private String errorMessage;
 
-    public HttpResponse(HttpResponseMessage response) {
-        this(response, null);
-    }
-
-    public HttpResponse(HttpResponseMessage response, T data) {
-        this(response, data, false);
-    }
-
-    public HttpResponse(HttpResponseMessage response, T data, boolean readIfDataAbsent) {
+    public HttpResponse(HttpResponseMessage response, String errorMessage, T data) {
         this.uri = response.getUri();
         this.method = response.getMethod();
         this.statusCode = response.getStatusCode();
         this.headers = response.getHeaders();
-
-        if (data != null) {
-            this.payload = data;
-        } else if (readIfDataAbsent) {
-            try {
-                InputStream inputStream = response.getPayload();
-                if (inputStream != null) {
-                    byte[] bytes = IOs.toByteArray(inputStream);
-                    if (statusCode >= 400) {
-                        this.errorMessage = new String(bytes, Charsets.UTF_8);
-                    } else {
-                        this.payload = (T) bytes;
-                    }
-                }
-            } catch (IOException e) {
-                throw Throwables.wrapAsRuntimeIOException(e);
-            }
-        }
+        this.errorMessage = errorMessage;
+        this.payload = data;
     }
 
 
@@ -73,6 +43,7 @@ public class HttpResponse<T> extends BaseHttpMessage<T> implements HttpResponseM
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }
+
     public boolean hasError() {
         return statusCode >= 400 || Strings.isNotEmpty(errorMessage);
     }

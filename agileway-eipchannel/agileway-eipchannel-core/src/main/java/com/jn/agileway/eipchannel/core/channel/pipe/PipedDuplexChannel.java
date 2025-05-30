@@ -6,7 +6,6 @@ import com.jn.agileway.eipchannel.core.channel.PipedOutboundChannel;
 import com.jn.agileway.eipchannel.core.message.Message;
 import com.jn.langx.lifecycle.AbstractLifecycle;
 
-import java.net.http.HttpRequest;
 
 public class PipedDuplexChannel extends AbstractLifecycle implements DuplexChannel {
     private PipedInboundChannel inboundChannel;

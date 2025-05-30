@@ -2,22 +2,23 @@ package com.jn.agileway.httpclient.core;
 
 import com.jn.agileway.eipchannel.core.endpoint.exchange.RequestReplyExecutor;
 import com.jn.agileway.eipchannel.core.message.Message;
+import com.jn.agileway.httpclient.core.error.exception.HttpTimeoutException;
 import com.jn.agileway.httpclient.core.payload.HttpResponsePayloadExtractor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequest;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactory;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
+import com.jn.langx.util.Throwables;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.retry.RetryConfig;
 import com.jn.langx.util.retry.Retryer;
 
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.concurrent.Callable;
 
-final class HttpRequestExecutor extends RequestReplyExecutor {
+final class InternalHttpRequestExecutor extends RequestReplyExecutor {
     private UnderlyingHttpRequestFactory requestFactory;
 
     private static final String REQUEST_KEY_REPLY = "agileway_http_reply";
@@ -72,49 +73,70 @@ final class HttpRequestExecutor extends RequestReplyExecutor {
         if (request == null) {
             throw new IllegalStateException("can't found the request, invoke setRequestMessage() before poll");
         }
+        waitHttpResponse(request, timeoutInMills);
+        return extractPayload(request);
+    }
 
+    private void waitHttpResponse(HttpRequest request, long timeoutInMills) {
+        UnderlyingHttpResponse underlyingHttpResponse = null;
+        long start = System.currentTimeMillis();
+        while (underlyingHttpResponse == null) {
+            underlyingHttpResponse = (UnderlyingHttpResponse) request.getHeaders().get(REQUEST_KEY_REPLY);
+            if (underlyingHttpResponse == null) {
+                long now = System.currentTimeMillis();
+                if (now - start > timeoutInMills) {
+                    throw new HttpTimeoutException(request.getMethod(), request.getUri(), "http response timeout");
+                }
+                try {
+                    Thread.sleep(5);
+                } catch (InterruptedException e) {
+                    // ignore
+                }
+            }
+        }
+    }
+
+    private HttpResponse extractPayload(HttpRequest request) {
         UnderlyingHttpResponse underlyingHttpResponse = (UnderlyingHttpResponse) request.getHeaders().get(REQUEST_KEY_REPLY);
-
-        Type responseType = (Type) request.getHeaders().get(BaseHttpMessage.HEADER_KEY_REPLY_PAYLOAD_TYPE);
+        Type expectResponseType = (Type) request.getHeaders().get(BaseHttpMessage.HEADER_KEY_REPLY_PAYLOAD_TYPE);
         HttpResponsePayloadExtractor contentExtractor = (HttpResponsePayloadExtractor) request.getHeaders().get(REQUEST_KEY_REPLY_PAYLOAD_EXTRACTOR);
         HttpResponsePayloadExtractor errorContentExtractor = (HttpResponsePayloadExtractor) request.getHeaders().get(REQUEST_KEY_REPLY_PAYLOAD_ERROR_EXTRACTOR);
 
 
         clearRequestMessage();
-        int statusCode = underlyingHttpResponse.getStatusCode();
-        if (statusCode >= 400) {
-
-        }
-
-        underlyingHttpResponse.getPayload();
-        boolean needReadBody = needReadBody(underlyingHttpResponse);
         HttpResponse response = null;
-        if (needReadBody) {
-            if (underlyingHttpResponse.getStatusCode() >= 400) {
-                if (errorContentExtractor != null) {
-                    response = errorContentExtractor.extract(underlyingHttpResponse);
-                }
-                if (response == null) {
-                    byte[] bytes = IOs.toByteArray(underlyingHttpResponse.getPayload());
-                    response = new HttpResponse<>(underlyingHttpResponse, bytes);
+        try {
+            boolean needReadBody = needReadBody(underlyingHttpResponse);
+
+            if (needReadBody) {
+                if (underlyingHttpResponse.getStatusCode() >= 400) {
+                    if (errorContentExtractor != null) {
+                        response = errorContentExtractor.extract(underlyingHttpResponse);
+                    }
+                    if (response == null) {
+                        String errorMessage = IOs.readAsString(underlyingHttpResponse.getPayload());
+                        response = new HttpResponse<>(underlyingHttpResponse, errorMessage, null);
+                    }
+                } else {
+                    if (contentExtractor != null) {
+                        response = contentExtractor.extract(underlyingHttpResponse);
+                    } else {
+                        byte[] bytes = IOs.toByteArray(underlyingHttpResponse.getPayload());
+                        response = new HttpResponse<>(underlyingHttpResponse, null, bytes);
+                    }
                 }
             } else {
-                if (contentExtractor != null) {
-                    response = contentExtractor.extract(underlyingHttpResponse);
-                } else {
-                    byte[] bytes = IOs.toByteArray(underlyingHttpResponse.getPayload());
-                    response = new HttpResponse<>(underlyingHttpResponse, bytes);
+                if (underlyingHttpResponse.getPayload() != null) {
+                    // 消耗掉
+                    IOs.toByteArray(underlyingHttpResponse.getPayload());
                 }
+                response = new HttpResponse<>(underlyingHttpResponse, null, null);
             }
-        } else {
-            if (underlyingHttpResponse.getPayload() != null) {
-                // 消耗掉
-                IOs.toByteArray(underlyingHttpResponse.getPayload());
-            }
-            response = new HttpResponse<>(underlyingHttpResponse);
+        } catch (Exception ex) {
+            throw Throwables.wrapAsRuntimeException(ex);
         }
 
-        response.getHeaders().put(BaseHttpMessage.HEADER_KEY_REPLY_PAYLOAD_TYPE, responseType);
+        response.getHeaders().put(BaseHttpMessage.HEADER_KEY_REPLY_PAYLOAD_TYPE, expectResponseType);
 
         return response;
     }
