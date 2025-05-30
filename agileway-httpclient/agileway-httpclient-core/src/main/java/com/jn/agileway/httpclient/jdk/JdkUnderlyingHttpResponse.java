@@ -26,16 +26,6 @@ class JdkUnderlyingHttpResponse extends BaseHttpMessage<InputStream> implements 
     }
 
     @Override
-    public HttpMethod getMethod() {
-        return method;
-    }
-
-    @Override
-    public URI getUri() {
-        return uri;
-    }
-
-    @Override
     public int getStatusCode() {
         try {
             return this.httpConnection.getResponseCode();

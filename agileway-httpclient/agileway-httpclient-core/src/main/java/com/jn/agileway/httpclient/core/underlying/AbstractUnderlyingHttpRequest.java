@@ -80,16 +80,6 @@ public abstract class AbstractUnderlyingHttpRequest<TARGET> extends BaseHttpMess
         }
     }
 
-    @Override
-    public HttpMethod getMethod() {
-        return method;
-    }
-
-    @Override
-    public URI getUri() {
-        return uri;
-    }
-
     /**
      * 会在写 header之前调用，当有 Content-Encoding 时，会返回 -1
      */
