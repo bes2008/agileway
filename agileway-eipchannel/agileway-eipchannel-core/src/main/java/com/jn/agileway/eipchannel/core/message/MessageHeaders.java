@@ -26,8 +26,12 @@ import java.util.*;
  * headers.put("key2", "value2");
  * new GenericMessage("foo", headers);
  * </pre>
+ *
+ *
+ * MessageHeaders本身是一个通用 Headers 集合，它用于框架层面的 Headers。
+ * 它可以包含一个 Protocol Headers 集合，用于存储与底层协议相关的消息头信息。
  */
-public class MessageHeaders extends LinkedHashMap<String, Object> implements Serializable {
+public class MessageHeaders<H> extends LinkedHashMap<String, Object> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -69,6 +73,16 @@ public class MessageHeaders extends LinkedHashMap<String, Object> implements Ser
         this.put(TIMESTAMP,System.currentTimeMillis());
     }
 
+
+    private H protocolHeaders;
+
+    public H getProtocolHeaders() {
+        return protocolHeaders;
+    }
+
+    public void setProtocolHeaders(H protocolHeaders) {
+        this.protocolHeaders = protocolHeaders;
+    }
 
     public UUID getId() {
         return this.get(ID, UUID.class);
