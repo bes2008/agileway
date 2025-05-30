@@ -1,6 +1,7 @@
 package com.jn.agileway.httpclient.httpcomponents.httpexchange;
 
 
+import com.jn.agileway.httpclient.core.BaseHttpMessage;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.net.http.HttpHeaders;
@@ -13,26 +14,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
-class ApacheUnderlyingHttpResponse implements UnderlyingHttpResponse {
+class ApacheUnderlyingHttpResponse extends BaseHttpMessage<InputStream> implements UnderlyingHttpResponse {
     private CloseableHttpResponse response;
-    private HttpMethod method;
-    private URI uri;
-    private HttpHeaders headers;
 
     public ApacheUnderlyingHttpResponse(HttpMethod method, URI uri, CloseableHttpResponse response) {
         this.response = response;
         this.method = method;
         this.uri = uri;
-    }
-
-    @Override
-    public URI getUri() {
-        return uri;
-    }
-
-    @Override
-    public HttpMethod getMethod() {
-        return method;
     }
 
     @Override
@@ -64,15 +52,16 @@ class ApacheUnderlyingHttpResponse implements UnderlyingHttpResponse {
 
     @Override
     public HttpHeaders getHttpHeaders() {
-        if (this.headers == null) {
+        HttpHeaders headers = super.getHttpHeaders();
+        if (headers == null) {
             Header[] underlyingHeaders = this.response.getAllHeaders();
 
             HttpHeaders httpHeaders = new HttpHeaders();
             for (Header underlyingHeader : underlyingHeaders) {
                 httpHeaders.add(underlyingHeader.getName(), underlyingHeader.getValue());
             }
-            this.headers = httpHeaders;
+            this.headers.setProtocolHeaders(httpHeaders);
         }
-        return this.headers;
+        return headers;
     }
 }

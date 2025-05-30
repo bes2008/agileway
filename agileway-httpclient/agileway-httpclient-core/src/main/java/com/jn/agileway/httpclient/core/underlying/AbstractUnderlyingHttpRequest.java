@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.core.underlying;
 
+import com.jn.agileway.httpclient.core.BaseHttpMessage;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
@@ -7,14 +8,12 @@ import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class AbstractUnderlyingHttpRequest<TARGET> implements UnderlyingHttpRequest {
-    private URI uri;
-    private HttpMethod method;
-    private final HttpHeaders headers = new HttpHeaders();
+public abstract class AbstractUnderlyingHttpRequest<TARGET> extends BaseHttpMessage<OutputStream> implements UnderlyingHttpRequest {
     private boolean executed = false;
 
     protected AbstractUnderlyingHttpRequest(HttpMethod method, URI uri, HttpHeaders headers) {
@@ -28,7 +27,7 @@ public abstract class AbstractUnderlyingHttpRequest<TARGET> implements Underlyin
             for (String key : headers.keySet()) {
                 List<String> values = headers.get(key);
                 for (String value : values) {
-                    this.headers.addIfValueAbsent(key, value);
+                    getHttpHeaders().addIfValueAbsent(key, value);
                 }
             }
         }
@@ -37,9 +36,9 @@ public abstract class AbstractUnderlyingHttpRequest<TARGET> implements Underlyin
     @Override
     public final HttpHeaders getHttpHeaders() {
         if (executed) {
-            return new HttpHeaders(this.headers);
+            return new HttpHeaders(super.getHttpHeaders());
         }
-        return this.headers;
+        return super.getHttpHeaders();
     }
 
     @Override
@@ -52,6 +51,7 @@ public abstract class AbstractUnderlyingHttpRequest<TARGET> implements Underlyin
 
     protected final void writeHeaders(TARGET target) {
         HttpMethod method = getMethod();
+        HttpHeaders headers = getHttpHeaders();
         if (HttpClientUtils.requestBodyUseStreamMode(method, headers)) {
             getHttpHeaders().remove(HttpHeaders.CONTENT_LENGTH);
         }

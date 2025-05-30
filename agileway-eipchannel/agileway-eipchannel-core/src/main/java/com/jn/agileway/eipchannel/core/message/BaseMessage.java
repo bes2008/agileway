@@ -2,9 +2,6 @@ package com.jn.agileway.eipchannel.core.message;
 
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.util.Objs;
-import com.jn.langx.util.collection.Collects;
-
-import java.util.Map;
 
 public class BaseMessage<H, T> implements Message<T> {
 

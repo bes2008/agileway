@@ -1,19 +1,16 @@
 package com.jn.agileway.httpclient.okhttp;
 
+import com.jn.agileway.httpclient.core.BaseHttpMessage;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
-class OkHttp3UnderlyingHttpResponse implements UnderlyingHttpResponse {
-    private URI uri;
-    private HttpMethod method;
-    private HttpHeaders headers;
+class OkHttp3UnderlyingHttpResponse extends BaseHttpMessage<InputStream> implements UnderlyingHttpResponse {
     private Response response;
 
     OkHttp3UnderlyingHttpResponse(HttpMethod method, URI uri, Response response) {
@@ -53,14 +50,15 @@ class OkHttp3UnderlyingHttpResponse implements UnderlyingHttpResponse {
 
     @Override
     public HttpHeaders getHttpHeaders() {
+        HttpHeaders headers = super.getHttpHeaders();
         if (headers == null) {
-            HttpHeaders headers = new HttpHeaders();
+            headers = new HttpHeaders();
             for (String headerName : this.response.headers().names()) {
                 for (String headerValue : this.response.headers(headerName)) {
                     headers.add(headerName, headerValue);
                 }
             }
-            this.headers = headers;
+            this.headers.setProtocolHeaders(headers);
         }
         return headers;
     }

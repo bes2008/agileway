@@ -1,37 +1,24 @@
 package com.jn.agileway.httpclient.jdk11;
 
+import com.jn.agileway.eipchannel.core.message.MessageHeaders;
+import com.jn.agileway.httpclient.core.BaseHttpMessage;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
-class Jdk11UnderlyingHttpResponse implements UnderlyingHttpResponse {
-    private URI uri;
-    private HttpMethod method;
-    private ByteArrayInputStream content;
-    private HttpHeaders headers;
-    int statusCode;
+class Jdk11UnderlyingHttpResponse extends BaseHttpMessage<InputStream> implements UnderlyingHttpResponse {
+    private int statusCode;
 
-    Jdk11UnderlyingHttpResponse(HttpMethod method, URI uri, HttpHeaders headers, int statusCode, ByteArrayInputStream content) {
+    Jdk11UnderlyingHttpResponse(HttpMethod method, URI uri, HttpHeaders headers, int statusCode, ByteArrayInputStream payload) {
         this.uri = uri;
         this.method = method;
-        this.headers = headers;
+        this.headers = new MessageHeaders<HttpHeaders>(null, headers);
         this.statusCode = statusCode;
-        this.content = content;
-    }
-
-    @Override
-    public URI getUri() {
-        return uri;
-    }
-
-    @Override
-    public HttpMethod getMethod() {
-        return method;
+        this.payload = payload;
     }
 
     @Override
@@ -44,13 +31,4 @@ class Jdk11UnderlyingHttpResponse implements UnderlyingHttpResponse {
 
     }
 
-    @Override
-    public InputStream getPayload() {
-        return content;
-    }
-
-    @Override
-    public HttpHeaders getHttpHeaders() {
-        return headers;
-    }
 }

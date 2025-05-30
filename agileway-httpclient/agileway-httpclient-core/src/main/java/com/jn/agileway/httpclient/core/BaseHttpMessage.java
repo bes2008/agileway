@@ -19,6 +19,6 @@ public abstract class BaseHttpMessage<T> extends BaseMessage<HttpHeaders, T> imp
     }
 
     public HttpHeaders getHttpHeaders() {
-        return getHeaders().getProtocolHeaders();
+        return this.getHeaders().getProtocolHeaders();
     }
 }
