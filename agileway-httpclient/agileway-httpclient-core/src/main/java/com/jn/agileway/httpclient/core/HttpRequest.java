@@ -30,7 +30,7 @@ public class HttpRequest<T> extends BaseHttpMessage<T> {
         this.method = method;
     }
 
-    public void setContent(T content) {
+    public void setPayload(T content) {
         this.payload = content;
     }
 

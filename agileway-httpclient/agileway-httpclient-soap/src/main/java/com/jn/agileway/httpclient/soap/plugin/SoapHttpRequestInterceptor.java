@@ -42,7 +42,7 @@ class SoapHttpRequestInterceptor implements HttpRequestInterceptor {
             return;
         }
         SoapMessage soapMessage = toSoapMessage(request.getHttpHeaders(), httpContent);
-        request.setContent(soapMessage);
+        request.setPayload(soapMessage);
     }
 
     private SoapMessage toSoapMessage(HttpHeaders headers, Object content) {
