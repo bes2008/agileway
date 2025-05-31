@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.jdk11;
 
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutor;
-import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactoryBuilder;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutorBuilder;
 import com.jn.langx.security.ssl.SSLContextBuilder;
 
 import javax.net.ssl.HostnameVerifier;
@@ -13,7 +13,7 @@ import java.net.http.HttpClient;
 import java.time.Duration;
 import java.util.concurrent.ExecutorService;
 
-public class Jdk11UnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpRequestFactoryBuilder {
+public class Jdk11UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecutorBuilder {
     private int connectTimeoutMills = 5000;
     private SSLContextBuilder sslContextBuilder;
     private Proxy proxy;
@@ -22,7 +22,7 @@ public class Jdk11UnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpR
     private ExecutorService executor;
 
     @Override
-    public Jdk11UnderlyingHttpRequestFactoryBuilder poolMaxIdleConnections(int maxIdleConnections) {
+    public Jdk11UnderlyingHttpExecutorBuilder poolMaxIdleConnections(int maxIdleConnections) {
         return this;
     }
 
@@ -32,41 +32,41 @@ public class Jdk11UnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpR
     }
 
     @Override
-    public Jdk11UnderlyingHttpRequestFactoryBuilder keepAliveDurationMills(int keepAliveDurationInMills) {
+    public Jdk11UnderlyingHttpExecutorBuilder keepAliveDurationMills(int keepAliveDurationInMills) {
         return this;
     }
 
     @Override
-    public Jdk11UnderlyingHttpRequestFactoryBuilder connectTimeoutMills(int connectTimeoutInMills) {
+    public Jdk11UnderlyingHttpExecutorBuilder connectTimeoutMills(int connectTimeoutInMills) {
         this.connectTimeoutMills = connectTimeoutInMills;
         return this;
     }
 
     @Override
-    public Jdk11UnderlyingHttpRequestFactoryBuilder readTimeoutMills(int readTimeoutInMills) {
+    public Jdk11UnderlyingHttpExecutorBuilder readTimeoutMills(int readTimeoutInMills) {
         this.readTimeoutMills = readTimeoutInMills;
         return this;
     }
 
     @Override
-    public Jdk11UnderlyingHttpRequestFactoryBuilder proxy(Proxy proxy) {
+    public Jdk11UnderlyingHttpExecutorBuilder proxy(Proxy proxy) {
         this.proxy = proxy;
         return this;
     }
 
     @Override
-    public Jdk11UnderlyingHttpRequestFactoryBuilder hostnameVerifier(HostnameVerifier hostnameVerifier) {
+    public Jdk11UnderlyingHttpExecutorBuilder hostnameVerifier(HostnameVerifier hostnameVerifier) {
         return this;
     }
 
     @Override
-    public Jdk11UnderlyingHttpRequestFactoryBuilder sslContextBuilder(SSLContextBuilder sslContextBuilder) {
+    public Jdk11UnderlyingHttpExecutorBuilder sslContextBuilder(SSLContextBuilder sslContextBuilder) {
         this.sslContextBuilder = sslContextBuilder;
         return this;
     }
 
     @Override
-    public Jdk11UnderlyingHttpRequestFactoryBuilder executor(ExecutorService executor) {
+    public Jdk11UnderlyingHttpExecutorBuilder executor(ExecutorService executor) {
         this.executor = executor;
         return this;
     }

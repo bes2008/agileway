@@ -14,7 +14,7 @@ import com.jn.agileway.httpclient.core.interceptor.*;
 import com.jn.agileway.httpclient.core.payload.*;
 import com.jn.agileway.httpclient.core.plugin.*;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutor;
-import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactoryBuilder;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutorBuilder;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactoryBuilderSupplier;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
@@ -193,7 +193,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
          *                          初始化 UnderlyingHttpRequestFactory
          **********************************************************************************************************/
         if (this.underlyingHttpExecutor == null) {
-            UnderlyingHttpRequestFactoryBuilder requestFactoryBuilder = UnderlyingHttpRequestFactoryBuilderSupplier.getInstance().get();
+            UnderlyingHttpExecutorBuilder requestFactoryBuilder = UnderlyingHttpRequestFactoryBuilderSupplier.getInstance().get();
             requestFactoryBuilder.connectTimeoutMills(configuration.getConnectTimeoutMillis());
             requestFactoryBuilder.readTimeoutMills(configuration.getConnectTimeoutMillis());
             requestFactoryBuilder.keepAliveDurationMills(configuration.getKeepAliveDurationMills());

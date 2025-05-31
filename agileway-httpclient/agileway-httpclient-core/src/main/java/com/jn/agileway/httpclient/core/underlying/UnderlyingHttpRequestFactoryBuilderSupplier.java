@@ -14,8 +14,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UnderlyingHttpRequestFactoryBuilderSupplier extends AbstractInitializable implements Supplier0<UnderlyingHttpRequestFactoryBuilder> {
-    private Map<String, UnderlyingHttpRequestFactoryBuilder> builders = new LinkedHashMap<String, UnderlyingHttpRequestFactoryBuilder>();
+public class UnderlyingHttpRequestFactoryBuilderSupplier extends AbstractInitializable implements Supplier0<UnderlyingHttpExecutorBuilder> {
+    private Map<String, UnderlyingHttpExecutorBuilder> builders = new LinkedHashMap<String, UnderlyingHttpExecutorBuilder>();
 
     private static final UnderlyingHttpRequestFactoryBuilderSupplier INSTANCE = new UnderlyingHttpRequestFactoryBuilderSupplier();
 
@@ -29,10 +29,10 @@ public class UnderlyingHttpRequestFactoryBuilderSupplier extends AbstractInitial
 
     @Override
     protected void doInit() throws InitializationException {
-        Pipeline.of(CommonServiceProvider.loadService(UnderlyingHttpRequestFactoryBuilder.class))
-                .forEach(new Consumer<UnderlyingHttpRequestFactoryBuilder>() {
+        Pipeline.of(CommonServiceProvider.loadService(UnderlyingHttpExecutorBuilder.class))
+                .forEach(new Consumer<UnderlyingHttpExecutorBuilder>() {
                     @Override
-                    public void accept(UnderlyingHttpRequestFactoryBuilder builder) {
+                    public void accept(UnderlyingHttpExecutorBuilder builder) {
                         builders.put(builder.getName(), builder);
                     }
                 });
@@ -41,7 +41,7 @@ public class UnderlyingHttpRequestFactoryBuilderSupplier extends AbstractInitial
     private static final List<String> recommendedBuilderNames = Lists.newArrayList("apache-httpcomponents", "okhttp3", "jdk11");
 
     @Override
-    public UnderlyingHttpRequestFactoryBuilder get() {
+    public UnderlyingHttpExecutorBuilder get() {
         String name = Pipeline.of(recommendedBuilderNames)
                 .findFirst(new Predicate<String>() {
                     @Override

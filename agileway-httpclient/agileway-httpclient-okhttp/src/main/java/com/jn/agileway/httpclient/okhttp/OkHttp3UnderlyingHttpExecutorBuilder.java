@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.okhttp;
 
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutor;
-import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactoryBuilder;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutorBuilder;
 import com.jn.langx.security.ssl.SSLContextBuilder;
 import okhttp3.ConnectionPool;
 import okhttp3.Dispatcher;
@@ -12,7 +12,7 @@ import java.net.Proxy;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class OkHttp3UnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpRequestFactoryBuilder {
+public class OkHttp3UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecutorBuilder {
     private int connectTimeoutMills = -1;
     private int readTimeoutMills = -1;
     private int poolMaxIdleConnections = 5;
@@ -29,49 +29,49 @@ public class OkHttp3UnderlyingHttpRequestFactoryBuilder implements UnderlyingHtt
     }
 
     @Override
-    public OkHttp3UnderlyingHttpRequestFactoryBuilder poolMaxIdleConnections(int maxIdleConnections) {
+    public OkHttp3UnderlyingHttpExecutorBuilder poolMaxIdleConnections(int maxIdleConnections) {
         this.poolMaxIdleConnections = maxIdleConnections;
         return this;
     }
 
     @Override
-    public OkHttp3UnderlyingHttpRequestFactoryBuilder keepAliveDurationMills(int keepAliveDurationInMills) {
+    public OkHttp3UnderlyingHttpExecutorBuilder keepAliveDurationMills(int keepAliveDurationInMills) {
         this.keepAliveDurationMills = keepAliveDurationInMills;
         return this;
     }
 
     @Override
-    public OkHttp3UnderlyingHttpRequestFactoryBuilder connectTimeoutMills(int connectTimeoutInMills) {
+    public OkHttp3UnderlyingHttpExecutorBuilder connectTimeoutMills(int connectTimeoutInMills) {
         this.connectTimeoutMills = connectTimeoutInMills;
         return this;
     }
 
     @Override
-    public OkHttp3UnderlyingHttpRequestFactoryBuilder readTimeoutMills(int readTimeoutInMills) {
+    public OkHttp3UnderlyingHttpExecutorBuilder readTimeoutMills(int readTimeoutInMills) {
         this.readTimeoutMills = readTimeoutInMills;
         return this;
     }
 
     @Override
-    public OkHttp3UnderlyingHttpRequestFactoryBuilder proxy(Proxy proxy) {
+    public OkHttp3UnderlyingHttpExecutorBuilder proxy(Proxy proxy) {
         this.proxy = proxy;
         return this;
     }
 
     @Override
-    public OkHttp3UnderlyingHttpRequestFactoryBuilder hostnameVerifier(HostnameVerifier hostnameVerifier) {
+    public OkHttp3UnderlyingHttpExecutorBuilder hostnameVerifier(HostnameVerifier hostnameVerifier) {
         this.hostnameVerifier = hostnameVerifier;
         return this;
     }
 
     @Override
-    public OkHttp3UnderlyingHttpRequestFactoryBuilder sslContextBuilder(SSLContextBuilder sslContextBuilder) {
+    public OkHttp3UnderlyingHttpExecutorBuilder sslContextBuilder(SSLContextBuilder sslContextBuilder) {
         this.sslContextBuilder = sslContextBuilder;
         return this;
     }
 
     @Override
-    public UnderlyingHttpRequestFactoryBuilder executor(ExecutorService executor) {
+    public UnderlyingHttpExecutorBuilder executor(ExecutorService executor) {
         this.executor = executor;
         return this;
     }

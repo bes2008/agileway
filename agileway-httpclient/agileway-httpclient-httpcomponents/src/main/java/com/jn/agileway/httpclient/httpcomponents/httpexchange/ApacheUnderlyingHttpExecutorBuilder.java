@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.httpcomponents.httpexchange;
 
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutor;
-import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactoryBuilder;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutorBuilder;
 import com.jn.agileway.httpclient.httpcomponents.ext.HttpClientCustomizer;
 import com.jn.agileway.httpclient.httpcomponents.ext.HttpClientProperties;
 import com.jn.agileway.httpclient.httpcomponents.ext.HttpClientProvider;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
-public class ApacheUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpRequestFactoryBuilder {
+public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecutorBuilder {
     private HttpClientProperties config = new HttpClientProperties();
     private HostnameVerifier hostnameVerifier;
     private SSLContextBuilder sslContextBuilder;
@@ -26,7 +26,7 @@ public class ApacheUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttp
     private ExecutorService executor;
 
     @Override
-    public ApacheUnderlyingHttpRequestFactoryBuilder poolMaxIdleConnections(int maxIdleConnections) {
+    public ApacheUnderlyingHttpExecutorBuilder poolMaxIdleConnections(int maxIdleConnections) {
         config.setPoolMaxIdleConnections(maxIdleConnections);
         return this;
     }
@@ -37,42 +37,42 @@ public class ApacheUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttp
     }
 
     @Override
-    public ApacheUnderlyingHttpRequestFactoryBuilder keepAliveDurationMills(int keepAliveDurationInMills) {
+    public ApacheUnderlyingHttpExecutorBuilder keepAliveDurationMills(int keepAliveDurationInMills) {
         config.setKeepAliveTimeoutInMills(keepAliveDurationInMills);
         return this;
     }
 
     @Override
-    public ApacheUnderlyingHttpRequestFactoryBuilder connectTimeoutMills(int connectTimeoutInMills) {
+    public ApacheUnderlyingHttpExecutorBuilder connectTimeoutMills(int connectTimeoutInMills) {
         config.setConnectTimeoutInMills(connectTimeoutInMills);
         return this;
     }
 
     @Override
-    public ApacheUnderlyingHttpRequestFactoryBuilder readTimeoutMills(int readTimeoutInMills) {
+    public ApacheUnderlyingHttpExecutorBuilder readTimeoutMills(int readTimeoutInMills) {
         config.setSocketTimeoutInMills(readTimeoutInMills);
         return this;
     }
 
     @Override
-    public ApacheUnderlyingHttpRequestFactoryBuilder proxy(Proxy proxy) {
+    public ApacheUnderlyingHttpExecutorBuilder proxy(Proxy proxy) {
         this.proxy = proxy;
         return this;
     }
 
     @Override
-    public ApacheUnderlyingHttpRequestFactoryBuilder hostnameVerifier(HostnameVerifier hostnameVerifier) {
+    public ApacheUnderlyingHttpExecutorBuilder hostnameVerifier(HostnameVerifier hostnameVerifier) {
         this.hostnameVerifier = hostnameVerifier;
         return this;
     }
 
     @Override
-    public ApacheUnderlyingHttpRequestFactoryBuilder sslContextBuilder(SSLContextBuilder sslContextBuilder) {
+    public ApacheUnderlyingHttpExecutorBuilder sslContextBuilder(SSLContextBuilder sslContextBuilder) {
         this.sslContextBuilder = sslContextBuilder;
         return this;
     }
 
-    public ApacheUnderlyingHttpRequestFactoryBuilder executor(ExecutorService executor) {
+    public ApacheUnderlyingHttpExecutorBuilder executor(ExecutorService executor) {
         this.executor = executor;
         return this;
     }
@@ -94,8 +94,8 @@ public class ApacheUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttp
 
                 @Override
                 public void customizeHttpClient(HttpClientBuilder httpClientBuilder) {
-                    if (ApacheUnderlyingHttpRequestFactoryBuilder.this.hostnameVerifier != null) {
-                        httpClientBuilder.setSSLHostnameVerifier(ApacheUnderlyingHttpRequestFactoryBuilder.this.hostnameVerifier);
+                    if (ApacheUnderlyingHttpExecutorBuilder.this.hostnameVerifier != null) {
+                        httpClientBuilder.setSSLHostnameVerifier(ApacheUnderlyingHttpExecutorBuilder.this.hostnameVerifier);
                     }
                     httpClientBuilder.setSSLContext(sslContext);
                 }
@@ -109,7 +109,7 @@ public class ApacheUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttp
 
                 @Override
                 public void customizeHttpClient(HttpClientBuilder httpClientBuilder) {
-                    Proxy javaProxy = ApacheUnderlyingHttpRequestFactoryBuilder.this.proxy;
+                    Proxy javaProxy = ApacheUnderlyingHttpExecutorBuilder.this.proxy;
                     InetSocketAddress proxyAddress = (InetSocketAddress) javaProxy.address();
                     HttpHost httpHost = new HttpHost(proxyAddress.getHostName(), proxyAddress.getPort(), sslContextBuilder != null ? "https" : "http");
                     httpClientBuilder.setProxy(httpHost);
