@@ -1,9 +1,9 @@
 package com.jn.agileway.httpclient.jdk;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
-import com.jn.agileway.httpclient.core.HttpResponse;
 import com.jn.agileway.httpclient.core.error.exception.UnsupportedHttpMethodException;
 import com.jn.agileway.httpclient.core.underlying.AbstractUnderlyingHttpExecutor;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.ContentEncoding;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.Strings;
@@ -73,7 +73,7 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
     }
 
     @Override
-    public HttpResponse<InputStream> execute(HttpRequest<ByteArrayOutputStream> request) throws Exception {
+    public UnderlyingHttpResponse execute(HttpRequest<ByteArrayOutputStream> request) throws Exception {
         URI uri = request.getUri();
         HttpMethod method = request.getMethod();
         HttpHeaders httpHeaders = request.getHttpHeaders();
@@ -89,7 +89,7 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
         }
     }
 
-    protected HttpResponse<InputStream> exchangeInternal(HttpRequest<ByteArrayOutputStream> request, HttpURLConnection httpConnection, boolean streamMode) throws IOException {
+    protected UnderlyingHttpResponse exchangeInternal(HttpRequest<ByteArrayOutputStream> request, HttpURLConnection httpConnection, boolean streamMode) throws IOException {
         if (!streamMode) {
             // buffered 模式
             writeHeaders(request, httpConnection);
@@ -123,19 +123,8 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
             }
         }
 
-        int statusCode = httpConnection.getResponseCode();
-
-        HttpHeaders httpHeaders = extractResponseHeader(httpConnection);
-        InputStream inputStream = extractResponseBody(httpConnection, httpHeaders);
-        HttpResponse<InputStream> response = new HttpResponse<InputStream>(
-                request.getMethod(),
-                request.getUri(),
-                statusCode,
-                httpHeaders,
-                null,
-                inputStream
-        );
-        return response;
+        httpConnection.getResponseCode();
+        return new JdkUnderlyingHttpResponse(httpConnection);
     }
 
     private InputStream extractResponseBody(HttpURLConnection httpConnection, HttpHeaders responseHeaders) throws IOException {

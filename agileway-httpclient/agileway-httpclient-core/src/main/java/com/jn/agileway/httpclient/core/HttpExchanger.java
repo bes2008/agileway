@@ -13,7 +13,7 @@ import com.jn.agileway.httpclient.core.error.exception.HttpRequestClientErrorExc
 import com.jn.agileway.httpclient.core.interceptor.*;
 import com.jn.agileway.httpclient.core.payload.*;
 import com.jn.agileway.httpclient.core.plugin.*;
-import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactory;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactoryBuilder;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactoryBuilderSupplier;
 import com.jn.langx.annotation.NonNull;
@@ -69,7 +69,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
     private HttpExchangerConfiguration configuration;
 
     @NonNull
-    private UnderlyingHttpRequestFactory requestFactory;
+    private UnderlyingHttpExecutor underlyingHttpExecutor;
     /**
      * 对请求进行拦截处理
      */
@@ -192,7 +192,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
         /**********************************************************************************************************
          *                          初始化 UnderlyingHttpRequestFactory
          **********************************************************************************************************/
-        if (this.requestFactory == null) {
+        if (this.underlyingHttpExecutor == null) {
             UnderlyingHttpRequestFactoryBuilder requestFactoryBuilder = UnderlyingHttpRequestFactoryBuilderSupplier.getInstance().get();
             requestFactoryBuilder.connectTimeoutMills(configuration.getConnectTimeoutMillis());
             requestFactoryBuilder.readTimeoutMills(configuration.getConnectTimeoutMillis());
@@ -201,14 +201,14 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
             requestFactoryBuilder.sslContextBuilder(configuration.getSslContextBuilder());
             requestFactoryBuilder.poolMaxIdleConnections(configuration.getPoolMaxIdleConnections());
             requestFactoryBuilder.executor(configuration.getExecutor());
-            this.requestFactory = requestFactoryBuilder.build();
+            this.underlyingHttpExecutor = requestFactoryBuilder.build();
         }
 
         /**********************************************************************************************************
          *                          初始化 InternalHttpRequestExecutor
          **********************************************************************************************************/
         InternalHttpRequestExecutor internalHttpRequestExecutor = new InternalHttpRequestExecutor();
-        internalHttpRequestExecutor.setRequestFactory(requestFactory);
+        internalHttpRequestExecutor.setUnderlyingHttpExecutor(underlyingHttpExecutor);
         this.internalHttpRequestExecutor = internalHttpRequestExecutor;
 
         /**********************************************************************************************************
@@ -292,12 +292,12 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
         }
     }
 
-    public void setRequestFactory(UnderlyingHttpRequestFactory requestFactory) {
+    public void setUnderlyingHttpExecutor(UnderlyingHttpExecutor underlyingHttpExecutor) {
         if (!inited) {
             return;
         }
-        if (requestFactory != null) {
-            this.requestFactory = requestFactory;
+        if (underlyingHttpExecutor != null) {
+            this.underlyingHttpExecutor = underlyingHttpExecutor;
         }
     }
 

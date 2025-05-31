@@ -8,7 +8,7 @@ import javax.net.ssl.HostnameVerifier;
 import java.net.Proxy;
 import java.util.concurrent.ExecutorService;
 
-public interface UnderlyingHttpRequestFactoryBuilder extends Builder<UnderlyingHttpRequestFactory>, Named {
+public interface UnderlyingHttpRequestFactoryBuilder extends Builder<UnderlyingHttpExecutor>, Named {
 
     UnderlyingHttpRequestFactoryBuilder poolMaxIdleConnections(int maxIdleConnections);
 
@@ -27,5 +27,5 @@ public interface UnderlyingHttpRequestFactoryBuilder extends Builder<UnderlyingH
     UnderlyingHttpRequestFactoryBuilder executor(ExecutorService executor);
 
     @Override
-    UnderlyingHttpRequestFactory build();
+    UnderlyingHttpExecutor build();
 }

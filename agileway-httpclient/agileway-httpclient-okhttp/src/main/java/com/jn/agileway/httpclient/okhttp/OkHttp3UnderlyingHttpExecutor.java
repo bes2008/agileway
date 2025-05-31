@@ -1,8 +1,8 @@
 package com.jn.agileway.httpclient.okhttp;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
-import com.jn.agileway.httpclient.core.HttpResponse;
 import com.jn.agileway.httpclient.core.underlying.AbstractUnderlyingHttpExecutor;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.ContentEncoding;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.Emptys;
@@ -13,7 +13,6 @@ import okhttp3.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
@@ -35,12 +34,12 @@ public class OkHttp3UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecuto
     }
 
     @Override
-    public HttpResponse<InputStream> execute(HttpRequest<ByteArrayOutputStream> request) throws Exception {
+    public UnderlyingHttpResponse execute(HttpRequest<ByteArrayOutputStream> request) throws Exception {
         return exchangeInternal(request);
     }
 
 
-    protected HttpResponse<InputStream> exchangeInternal(HttpRequest<ByteArrayOutputStream> request) throws IOException {
+    protected UnderlyingHttpResponse exchangeInternal(HttpRequest<ByteArrayOutputStream> request) throws IOException {
         String rawContentType = request.getHttpHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
         okhttp3.MediaType contentType = Strings.isNotEmpty(rawContentType) ? okhttp3.MediaType.parse(rawContentType) : null;
         RequestBody body = null;
@@ -63,26 +62,7 @@ public class OkHttp3UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecuto
         Request.Builder builder = new Request.Builder().url(request.getUri().toURL()).method(request.getMethod().name(), body);
         writeHeaders(request, builder);
         Request underlyingRequest = builder.build();
-        Response underlyingResponse = null;
-        try {
-            underlyingResponse = this.httpClient.newCall(underlyingRequest).execute();
-            int statusCode = underlyingResponse.code();
-            HttpHeaders responseHttpHeaders = getResponseHttpHeaders(underlyingResponse);
-
-            ResponseBody responseBody = underlyingResponse.body();
-            InputStream responsePayload = responseBody == null ? null : responseBody.byteStream();
-            return new HttpResponse<InputStream>(
-                    request.getMethod(),
-                    request.getUri(),
-                    statusCode,
-                    responseHttpHeaders,
-                    underlyingResponse.message(),
-                    responsePayload);
-        } finally {
-            if (underlyingResponse != null) {
-                underlyingResponse.close();
-            }
-        }
+        return new OkHttp3UnderlyingHttpResponse(request.getMethod(), request.getUri(), this.httpClient.newCall(underlyingRequest).execute());
     }
 
     private HttpHeaders getResponseHttpHeaders(Response response) {

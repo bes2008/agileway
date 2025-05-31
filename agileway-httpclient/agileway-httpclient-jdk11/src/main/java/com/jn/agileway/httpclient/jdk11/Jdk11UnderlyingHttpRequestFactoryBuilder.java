@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.jdk11;
 
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactory;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactoryBuilder;
 import com.jn.langx.security.ssl.SSLContextBuilder;
@@ -72,7 +73,7 @@ public class Jdk11UnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpR
     }
 
     @Override
-    public UnderlyingHttpRequestFactory build() {
+    public UnderlyingHttpExecutor build() {
         HttpClient.Builder builder = HttpClient.newBuilder();
         builder.connectTimeout(Duration.ofMillis(connectTimeoutMills));
         if (sslContextBuilder != null) {
@@ -89,11 +90,11 @@ public class Jdk11UnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpR
         builder.followRedirects(HttpClient.Redirect.NORMAL);
 
         HttpClient httpClient = builder.build();
-        Jdk11UnderlyingHttpRequestFactory factory = new Jdk11UnderlyingHttpRequestFactory();
-        factory.setHttpClient(httpClient);
+        Jdk11UnderlyingHttpExecutor httpExecutor = new Jdk11UnderlyingHttpExecutor();
+        httpExecutor.setHttpClient(httpClient);
 
         int timeoutMills = this.connectTimeoutMills + this.readTimeoutMills * 3;
-        factory.setTimeout(Duration.ofMillis(timeoutMills));
-        return factory;
+        httpExecutor.setTimeout(Duration.ofMillis(timeoutMills));
+        return httpExecutor;
     }
 }

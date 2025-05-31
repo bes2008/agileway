@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.okhttp;
 
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactoryBuilder;
 import com.jn.langx.security.ssl.SSLContextBuilder;
 import okhttp3.ConnectionPool;
@@ -76,7 +77,7 @@ public class OkHttp3UnderlyingHttpRequestFactoryBuilder implements UnderlyingHtt
     }
 
     @Override
-    public OkHttp3UnderlyingHttpRequestFactory build() {
+    public UnderlyingHttpExecutor build() {
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectionPool(new ConnectionPool(poolMaxIdleConnections, keepAliveDurationMills, TimeUnit.MILLISECONDS))
@@ -96,8 +97,8 @@ public class OkHttp3UnderlyingHttpRequestFactoryBuilder implements UnderlyingHtt
             builder.hostnameVerifier(hostnameVerifier);
         }
         OkHttpClient okHttpClient = builder.build();
-        OkHttp3UnderlyingHttpRequestFactory factory = new OkHttp3UnderlyingHttpRequestFactory();
-        factory.setHttpClient(okHttpClient);
-        return factory;
+        OkHttp3UnderlyingHttpExecutor httpExecutor = new OkHttp3UnderlyingHttpExecutor();
+        httpExecutor.setHttpClient(okHttpClient);
+        return httpExecutor;
     }
 }

@@ -1,6 +1,6 @@
 package com.jn.agileway.httpclient.httpcomponents.httpexchange;
 
-import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactory;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactoryBuilder;
 import com.jn.agileway.httpclient.httpcomponents.ext.HttpClientCustomizer;
 import com.jn.agileway.httpclient.httpcomponents.ext.HttpClientProperties;
@@ -78,8 +78,8 @@ public class ApacheUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttp
     }
 
     @Override
-    public UnderlyingHttpRequestFactory build() {
-        ApacheUnderlyingHttpRequestFactory factory = new ApacheUnderlyingHttpRequestFactory();
+    public UnderlyingHttpExecutor build() {
+        ApacheUnderlyingHttpExecutor httpExecutor = new ApacheUnderlyingHttpExecutor();
         this.config.setMaxRetry(1);
         HttpClientProvider clientProvider = new HttpClientProvider();
         clientProvider.setConfig(this.config);
@@ -118,7 +118,7 @@ public class ApacheUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttp
         }
         clientProvider.setCustomizers(customizers);
         clientProvider.startup();
-        factory.setHttpClientProvider(clientProvider);
-        return factory;
+        httpExecutor.setHttpClient(clientProvider.get());
+        return httpExecutor;
     }
 }

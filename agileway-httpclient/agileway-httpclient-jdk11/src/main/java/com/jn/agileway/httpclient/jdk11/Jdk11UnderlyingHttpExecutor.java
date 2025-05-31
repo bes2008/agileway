@@ -1,13 +1,12 @@
 package com.jn.agileway.httpclient.jdk11;
 
-import com.jn.agileway.httpclient.core.HttpResponse;
 import com.jn.agileway.httpclient.core.underlying.AbstractUnderlyingHttpExecutor;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.ContentEncoding;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.Throwables;
-import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 
@@ -45,11 +44,11 @@ public class Jdk11UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
     }
 
     @Override
-    public HttpResponse<InputStream> execute(com.jn.agileway.httpclient.core.HttpRequest<ByteArrayOutputStream> request) throws Exception {
+    public UnderlyingHttpResponse execute(com.jn.agileway.httpclient.core.HttpRequest<ByteArrayOutputStream> request) throws Exception {
         return exchangeInternal(request);
     }
 
-    protected HttpResponse<InputStream> exchangeInternal(com.jn.agileway.httpclient.core.HttpRequest<ByteArrayOutputStream> request) throws IOException {
+    protected Jdk11UnderlyingHttpResponse exchangeInternal(com.jn.agileway.httpclient.core.HttpRequest<ByteArrayOutputStream> request) throws IOException {
         HttpMethod method = request.getMethod();
         URI uri = request.getUri();
         HttpRequest.Builder builder = HttpRequest.newBuilder(uri);
@@ -84,20 +83,10 @@ public class Jdk11UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
                     responseHeaders.add(name, value);
                 }
             }
-            HttpResponse<InputStream> response = new HttpResponse(
-                    method,
-                    uri,
-                    statusCode,
-                    responseHeaders,
-                    null,
-                    new ByteArrayInputStream(underlyingHttpResponse.body()));
+            Jdk11UnderlyingHttpResponse response = new Jdk11UnderlyingHttpResponse(request.getMethod(), request.getUri(), responseHeaders, underlyingHttpResponse.statusCode(), new ByteArrayInputStream(underlyingHttpResponse.body()));
             return response;
-        } catch (IOException e) {
-            throw e;
-        } catch (Throwable e) {
+        } catch (InterruptedException e) {
             throw Throwables.wrapAsRuntimeException(e);
-        } finally {
-            IOs.close(underlyingHttpResponse);
         }
 
     }

@@ -4,22 +4,19 @@ import com.jn.agileway.eipchannel.core.endpoint.exchange.RequestReplyExecutor;
 import com.jn.agileway.eipchannel.core.message.Message;
 import com.jn.agileway.httpclient.core.error.exception.HttpTimeoutException;
 import com.jn.agileway.httpclient.core.payload.HttpResponsePayloadExtractor;
-import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequest;
-import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactory;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
-import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.retry.RetryConfig;
 import com.jn.langx.util.retry.Retryer;
 
-import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Type;
 import java.util.concurrent.Callable;
 
 final class InternalHttpRequestExecutor extends RequestReplyExecutor {
-    private UnderlyingHttpRequestFactory requestFactory;
+    private UnderlyingHttpExecutor underlyingHttpExecutor;
 
     private static final String REQUEST_KEY_REPLY = "agileway_http_reply";
     static final String REQUEST_KEY_RETRY = "agileway_http_request_retry";
@@ -34,9 +31,8 @@ final class InternalHttpRequestExecutor extends RequestReplyExecutor {
      */
     static final String REQUEST_KEY_REPLY_PAYLOAD_ERROR_EXTRACTOR = "agileway_http_reply_payload_error_extractor";
 
-
-    void setRequestFactory(UnderlyingHttpRequestFactory requestFactory) {
-        this.requestFactory = requestFactory;
+    void setUnderlyingHttpExecutor(UnderlyingHttpExecutor underlyingHttpExecutor) {
+        this.underlyingHttpExecutor = underlyingHttpExecutor;
     }
 
     @Override
@@ -49,17 +45,8 @@ final class InternalHttpRequestExecutor extends RequestReplyExecutor {
         boolean executed = retryer.execute(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-
-                UnderlyingHttpRequest underlyingHttpRequest = requestFactory.create(request.getMethod(), request.getUri(), request.getHttpHeaders());
-                if (HttpClientUtils.isWriteable(request.getMethod()) && request.getPayload() != null) {
-                    ByteArrayOutputStream payloadOutputStream = (ByteArrayOutputStream) request.getPayload();
-                    byte[] payloadBytes = payloadOutputStream.toByteArray();
-                    underlyingHttpRequest.getPayload().write(payloadBytes);
-                }
-
-                UnderlyingHttpResponse response = underlyingHttpRequest.exchange();
+                UnderlyingHttpResponse response = underlyingHttpExecutor.execute(request);
                 request.getHeaders().put(REQUEST_KEY_REPLY, response);
-
                 return true;
             }
         });

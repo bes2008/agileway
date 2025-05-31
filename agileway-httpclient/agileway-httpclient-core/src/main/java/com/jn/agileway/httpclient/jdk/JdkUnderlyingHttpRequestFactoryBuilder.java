@@ -1,6 +1,6 @@
 package com.jn.agileway.httpclient.jdk;
 
-import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactory;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactoryBuilder;
 import com.jn.langx.security.ssl.SSLContextBuilder;
 
@@ -68,16 +68,16 @@ public class JdkUnderlyingHttpRequestFactoryBuilder implements UnderlyingHttpReq
     }
 
     @Override
-    public UnderlyingHttpRequestFactory build() {
-        JdkUnderlyingHttpRequestFactory factory = new JdkUnderlyingHttpRequestFactory();
-        factory.setConnectTimeoutMills(connectTimeoutInMills);
-        factory.setReadTimeoutMills(readTimeoutInMills);
-        factory.setProxy(proxy);
-        factory.setHostnameVerifier(hostnameVerifier);
+    public UnderlyingHttpExecutor build() {
+        JdkUnderlyingHttpExecutor httpExecutor = new JdkUnderlyingHttpExecutor();
+        httpExecutor.setConnectTimeoutMills(connectTimeoutInMills);
+        httpExecutor.setReadTimeoutMills(readTimeoutInMills);
+        httpExecutor.setProxy(proxy);
+        httpExecutor.setHostnameVerifier(hostnameVerifier);
         if (sslContextBuilder != null) {
             SSLContext sslContext = sslContextBuilder.build();
-            factory.setSSLContext(sslContext);
+            httpExecutor.setSSLContext(sslContext);
         }
-        return factory;
+        return httpExecutor;
     }
 }
