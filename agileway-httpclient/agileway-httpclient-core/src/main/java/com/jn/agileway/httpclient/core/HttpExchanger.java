@@ -256,7 +256,9 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
     }
 
     private <T> Promise<HttpResponse<T>> exchangeInternal(boolean async, HttpRequest request) {
-
+        if (!this.isRunning()) {
+            startup();
+        }
         Task<HttpRequest> sendRequestTask = new Task<HttpRequest>() {
             @Override
             public HttpRequest run(Handler<HttpRequest> handler, ErrorHandler errorHandler) {

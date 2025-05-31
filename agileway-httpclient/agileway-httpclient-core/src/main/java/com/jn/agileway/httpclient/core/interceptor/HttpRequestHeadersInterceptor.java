@@ -66,7 +66,7 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
         }
 
         if (HttpClientUtils.isForm(request.getHttpHeaders().getContentType())) {
-            if (!HttpClientUtils.isWriteable(request.getMethod())) {
+            if (!HttpClientUtils.isWriteableMethod(request.getMethod())) {
                 throw new BadHttpRequestException(request.getMethod(), request.getUri(), StringTemplates.formatWithPlaceholder("Http request with Content-Type {}, method {} is invalid", request.getHttpHeaders().getContentType(), request.getMethod()));
             }
         }

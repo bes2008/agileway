@@ -53,7 +53,7 @@ public class Jdk11UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
         URI uri = request.getUri();
         HttpRequest.Builder builder = HttpRequest.newBuilder(uri);
         writeHeaders(request, builder);
-        if (HttpClientUtils.isWriteable(request.getMethod()) && request.getPayload() != null) {
+        if (HttpClientUtils.isWriteableMethod(request.getMethod()) && request.getPayload() != null) {
             // 压缩处理：
             List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
             if (!Objs.isEmpty(contentEncodings)) {

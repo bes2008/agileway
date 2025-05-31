@@ -52,16 +52,16 @@ class ApacheUnderlyingHttpResponse extends BaseHttpMessage<InputStream> implemen
 
     @Override
     public HttpHeaders getHttpHeaders() {
-        HttpHeaders headers = super.getHttpHeaders();
-        if (headers == null) {
-            Header[] underlyingHeaders = this.response.getAllHeaders();
+        HttpHeaders httpHeaders = super.getHttpHeaders();
+        if (httpHeaders == null) {
+            httpHeaders = new HttpHeaders();
+            this.headers.setProtocolHeaders(httpHeaders);
 
-            HttpHeaders httpHeaders = new HttpHeaders();
+            Header[] underlyingHeaders = this.response.getAllHeaders();
             for (Header underlyingHeader : underlyingHeaders) {
                 httpHeaders.add(underlyingHeader.getName(), underlyingHeader.getValue());
             }
-            this.headers.setProtocolHeaders(httpHeaders);
         }
-        return headers;
+        return httpHeaders;
     }
 }

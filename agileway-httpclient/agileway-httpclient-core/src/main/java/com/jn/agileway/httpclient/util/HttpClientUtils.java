@@ -2,7 +2,6 @@ package com.jn.agileway.httpclient.util;
 
 import com.jn.langx.security.Securitys;
 import com.jn.langx.util.Objs;
-import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
@@ -16,9 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.zip.DeflaterInputStream;
 import java.util.zip.DeflaterOutputStream;
@@ -130,8 +127,8 @@ public class HttpClientUtils {
         return false;
     }
 
-    public static boolean isWriteable(HttpMethod method) {
-        return method == HttpMethod.POST || method == HttpMethod.PUT || method == HttpMethod.PATCH;
+    public static boolean isWriteableMethod(HttpMethod method) {
+        return method != HttpMethod.GET && method != HttpMethod.HEAD;
     }
 
     public static String generateMultipartBoundary() {

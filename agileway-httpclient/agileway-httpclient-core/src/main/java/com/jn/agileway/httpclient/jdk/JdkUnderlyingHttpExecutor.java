@@ -6,7 +6,6 @@ import com.jn.agileway.httpclient.core.underlying.AbstractUnderlyingHttpExecutor
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.ContentEncoding;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
-import com.jn.langx.util.Strings;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
@@ -17,7 +16,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.*;
 import java.util.List;
@@ -140,7 +138,7 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
 
         httpConn.setDoInput(true);
         httpConn.setInstanceFollowRedirects(method == HttpMethod.GET);
-        httpConn.setDoOutput(HttpClientUtils.isWriteable(method));
+        httpConn.setDoOutput(HttpClientUtils.isWriteableMethod(method));
 
         if (HttpClientUtils.isSSLEnabled(uri)) {
             HttpsURLConnection httpsConn = (HttpsURLConnection) httpConn;

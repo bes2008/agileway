@@ -23,7 +23,7 @@ public class HttpRequestPayloadTransformer implements MessageTransformer {
     public Message<?> transform(Message<?> message) {
         HttpRequest request = (HttpRequest) message;
 
-        if (HttpClientUtils.isWriteable(request.getMethod()) && request.getPayload() != null) {
+        if (HttpClientUtils.isWriteableMethod(request.getMethod()) && request.getPayload() != null) {
 
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 

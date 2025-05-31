@@ -53,12 +53,12 @@ class OkHttp3UnderlyingHttpResponse extends BaseHttpMessage<InputStream> impleme
         HttpHeaders headers = super.getHttpHeaders();
         if (headers == null) {
             headers = new HttpHeaders();
+            this.headers.setProtocolHeaders(headers);
             for (String headerName : this.response.headers().names()) {
                 for (String headerValue : this.response.headers(headerName)) {
                     headers.add(headerName, headerValue);
                 }
             }
-            this.headers.setProtocolHeaders(headers);
         }
         return headers;
     }

@@ -52,7 +52,7 @@ public class ApacheUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor
     protected UnderlyingHttpResponse exchangeInternal(HttpUriRequest underlyingRequest, HttpRequest<ByteArrayOutputStream> request) throws IOException {
         writeHeaders(request, underlyingRequest);
         HttpEntity contentEntity = null;
-        if (HttpClientUtils.isWriteable(request.getMethod()) && request.getPayload() != null) {
+        if (HttpClientUtils.isWriteableMethod(request.getMethod()) && request.getPayload() != null) {
             String contentEncoding = request.getHttpHeaders().getFirst("Content-Encoding");
             if (Strings.isBlank(contentEncoding)) {
                 contentEntity = new BufferedHttpEntity(request.getHttpHeaders().getContentType().toString());

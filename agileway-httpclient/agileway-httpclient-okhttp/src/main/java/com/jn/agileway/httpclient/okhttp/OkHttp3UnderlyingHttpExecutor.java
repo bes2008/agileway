@@ -9,6 +9,7 @@ import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpHeaders;
+import com.jn.langx.util.net.http.HttpMethod;
 import okhttp3.*;
 
 import java.io.ByteArrayOutputStream;
@@ -40,10 +41,11 @@ public class OkHttp3UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecuto
 
 
     protected UnderlyingHttpResponse exchangeInternal(HttpRequest<ByteArrayOutputStream> request) throws IOException {
+        HttpMethod method = request.getMethod();
         String rawContentType = request.getHttpHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
         okhttp3.MediaType contentType = Strings.isNotEmpty(rawContentType) ? okhttp3.MediaType.parse(rawContentType) : null;
         RequestBody body = null;
-        if (HttpClientUtils.isWriteable(request.getMethod()) && request.getPayload() != null) {
+        if (HttpClientUtils.isWriteableMethod(method) && request.getPayload() != null) {
             // 压缩处理：
             List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
             if (!Objs.isEmpty(contentEncodings)) {
@@ -56,22 +58,12 @@ public class OkHttp3UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecuto
             } else {
                 body = RequestBody.create(contentType, request.getPayload().toByteArray());
             }
-        } else {
-            body = RequestBody.create(contentType, Emptys.EMPTY_BYTES);
         }
-        Request.Builder builder = new Request.Builder().url(request.getUri().toURL()).method(request.getMethod().name(), body);
+
+        Request.Builder builder = new Request.Builder().url(request.getUri().toURL()).method(method.name(), body);
         writeHeaders(request, builder);
         Request underlyingRequest = builder.build();
-        return new OkHttp3UnderlyingHttpResponse(request.getMethod(), request.getUri(), this.httpClient.newCall(underlyingRequest).execute());
+        return new OkHttp3UnderlyingHttpResponse(method, request.getUri(), this.httpClient.newCall(underlyingRequest).execute());
     }
 
-    private HttpHeaders getResponseHttpHeaders(Response response) {
-        HttpHeaders headers = new HttpHeaders();
-        for (String headerName : response.headers().names()) {
-            for (String headerValue : response.headers(headerName)) {
-                headers.add(headerName, headerValue);
-            }
-        }
-        return headers;
-    }
 }
