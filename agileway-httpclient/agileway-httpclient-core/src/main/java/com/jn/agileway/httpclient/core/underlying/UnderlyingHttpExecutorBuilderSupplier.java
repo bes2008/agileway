@@ -14,16 +14,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UnderlyingHttpRequestFactoryBuilderSupplier extends AbstractInitializable implements Supplier0<UnderlyingHttpExecutorBuilder> {
+public class UnderlyingHttpExecutorBuilderSupplier extends AbstractInitializable implements Supplier0<UnderlyingHttpExecutorBuilder> {
     private Map<String, UnderlyingHttpExecutorBuilder> builders = new LinkedHashMap<String, UnderlyingHttpExecutorBuilder>();
 
-    private static final UnderlyingHttpRequestFactoryBuilderSupplier INSTANCE = new UnderlyingHttpRequestFactoryBuilderSupplier();
+    private static final UnderlyingHttpExecutorBuilderSupplier INSTANCE = new UnderlyingHttpExecutorBuilderSupplier();
 
-    private UnderlyingHttpRequestFactoryBuilderSupplier() {
+    private UnderlyingHttpExecutorBuilderSupplier() {
         init();
     }
 
-    public static UnderlyingHttpRequestFactoryBuilderSupplier getInstance() {
+    public static UnderlyingHttpExecutorBuilderSupplier getInstance() {
         return INSTANCE;
     }
 
