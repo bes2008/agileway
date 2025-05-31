@@ -1,7 +1,6 @@
 package com.jn.agileway.httpclient.core.payload;
 
-import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
-import com.jn.langx.util.io.IOs;
+import com.jn.agileway.httpclient.core.HttpResponse;
 import com.jn.langx.util.net.mime.MediaType;
 
 import java.io.IOException;
@@ -9,20 +8,16 @@ import java.lang.reflect.Type;
 
 public class GeneralBytesHttpResponseReader implements HttpResponsePayloadReader<byte[]> {
     @Override
-    public boolean canRead(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) {
+    public boolean canRead(HttpResponse<byte[]> response, MediaType contentType, Type expectedContentType) {
         return expectedContentType == byte[].class;
     }
 
     @Override
-    public byte[] read(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) throws Exception {
+    public byte[] read(HttpResponse<byte[]> response, MediaType contentType, Type expectedContentType) throws Exception {
         int contentLength = (int) response.getHttpHeaders().getContentLength();
         if (contentLength < 0) {
             throw new IOException("Content-Length header is required for Content-Type " + contentType);
         }
-        byte[] bytes = new byte[contentLength];
-        if (contentLength > 0) {
-            IOs.read(response.getPayload(), bytes);
-        }
-        return bytes;
+        return response.getPayload();
     }
 }

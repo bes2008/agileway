@@ -1,7 +1,6 @@
 package com.jn.agileway.httpclient.core.payload;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
-import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequest;
 import com.jn.agileway.httpclient.core.payload.multipart.MultiPartsForm;
 import com.jn.agileway.httpclient.core.payload.multipart.Part;
 import com.jn.agileway.httpclient.core.payload.multipart.ResourcePart;
@@ -12,13 +11,14 @@ import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.net.mime.MediaType;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloadWriter {
     @Override
-    public boolean canWrite(HttpRequest request) {
+    public boolean canWrite(HttpRequest<?> request) {
         Object body = request.getPayload();
         MediaType contentType = request.getHttpHeaders().getContentType();
         if (!HttpClientUtils.isMultipartForm(contentType)) {
@@ -31,7 +31,7 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloa
     }
 
     @Override
-    public void write(HttpRequest request, UnderlyingHttpRequest output) throws Exception {
+    public void write(HttpRequest<?> request, ByteArrayOutputStream output) throws Exception {
         Object body = request.getPayload();
         MediaType contentType = request.getHttpHeaders().getContentType();
         MultiPartsForm form = (MultiPartsForm) body;
@@ -41,28 +41,28 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloa
         for (Part part : form.getParts()) {
             writePart(part, output, boundary, formCharset);
         }
-        output.getPayload().write(("--" + boundary + "--\r\n").getBytes(Charsets.US_ASCII));
+        output.write(("--" + boundary + "--\r\n").getBytes(Charsets.US_ASCII));
     }
 
-    private void writePart(Part part, UnderlyingHttpRequest output, String boundary, Charset formCharset) throws IOException {
+    private void writePart(Part part, ByteArrayOutputStream output, String boundary, Charset formCharset) throws IOException {
         if (part == null) {
             return;
         }
 
-        output.getPayload().write(("--" + boundary + "\r\n").getBytes(Charsets.US_ASCII));
+        output.write(("--" + boundary + "\r\n").getBytes(Charsets.US_ASCII));
         String contentDisposition = part.getContentDisposition().asString();
-        output.getPayload().write((contentDisposition + "\r\n").getBytes(Charsets.US_ASCII));
-        output.getPayload().write(("Content-Type: " + part.getContentType() + "\r\n").getBytes(Charsets.US_ASCII));
-        output.getPayload().write("\r\n".getBytes(StandardCharsets.US_ASCII));
+        output.write((contentDisposition + "\r\n").getBytes(Charsets.US_ASCII));
+        output.write(("Content-Type: " + part.getContentType() + "\r\n").getBytes(Charsets.US_ASCII));
+        output.write("\r\n".getBytes(StandardCharsets.US_ASCII));
 
 
         if (part instanceof TextPart) {
             Charset charset = part.getCharset() == null ? formCharset : part.getCharset();
-            output.getPayload().write(((TextPart) part).getContent().getBytes(charset));
+            output.write(((TextPart) part).getContent().getBytes(charset));
         } else if (part instanceof ResourcePart) {
             Resource resource = ((ResourcePart) part).getContent();
             try {
-                IOs.copy(resource.getInputStream(), output.getPayload());
+                IOs.copy(resource.getInputStream(), output);
             } finally {
                 IOs.close(resource);
             }

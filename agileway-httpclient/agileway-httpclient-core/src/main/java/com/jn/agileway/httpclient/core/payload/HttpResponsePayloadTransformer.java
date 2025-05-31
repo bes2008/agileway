@@ -5,22 +5,20 @@ import com.jn.agileway.eipchannel.core.transformer.MessageTransformer;
 import com.jn.agileway.httpclient.core.BaseHttpMessage;
 import com.jn.agileway.httpclient.core.HttpResponse;
 import com.jn.agileway.httpclient.core.error.exception.NotFoundHttpContentReaderException;
-import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
+import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Predicate;
-import com.jn.langx.util.io.IOs;
-import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
 
 public class HttpResponsePayloadTransformer implements MessageTransformer {
 
     private List<HttpResponsePayloadReader> readers;
+
     @Override
     public Message<?> transform(Message<?> message) {
         HttpResponse response = (HttpResponse) message;
@@ -42,16 +40,21 @@ public class HttpResponsePayloadTransformer implements MessageTransformer {
         }
 
         final MediaType contentType = Objs.useValueIfNull(response.getHttpHeaders().getContentType(), MediaType.TEXT_PLAIN);
+        final Type entityType = expectedType;
         HttpResponsePayloadReader reader = Pipeline.of(readers)
                 .findFirst(new Predicate<HttpResponsePayloadReader>() {
                     @Override
                     public boolean test(HttpResponsePayloadReader httpResponseBodyReader) {
-                        return httpResponseBodyReader.canRead(response, contentType, expectedType);
+                        return httpResponseBodyReader.canRead(response, contentType, entityType);
                     }
                 });
         if (reader != null) {
-            payload = reader.read(response, contentType, expectedType);
-            response.set
+            try {
+                payload = reader.read(response, contentType, entityType);
+                return new HttpResponse<>(response.getMethod(), response.getUri(), response.getStatusCode(), response.getHeaders(), null, payload);
+            } catch (Exception e) {
+                throw Throwables.wrapAsRuntimeException(e);
+            }
         } else {
             throw new NotFoundHttpContentReaderException(StringTemplates.formatWithPlaceholder("Can't find a HttpResponseBodyReader to read the response body for Content-Type {}", contentType));
         }

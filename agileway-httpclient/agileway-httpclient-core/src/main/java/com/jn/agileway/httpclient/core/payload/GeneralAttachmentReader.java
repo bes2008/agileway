@@ -1,15 +1,13 @@
 package com.jn.agileway.httpclient.core.payload;
 
-import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
+import com.jn.agileway.httpclient.core.HttpResponse;
 import com.jn.agileway.httpclient.util.ContentDisposition;
 import com.jn.langx.io.resource.InputStreamResource;
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.util.Strings;
-import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.net.mime.MediaType;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Type;
 
 /**
@@ -21,7 +19,7 @@ public class GeneralAttachmentReader extends CustomMediaTypesHttpResponseReader<
         addSupportedMediaType(MediaType.APPLICATION_OCTET_STREAM);
     }
 
-    public boolean canRead(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) {
+    public boolean canRead(HttpResponse<byte[]> response, MediaType contentType, Type expectedContentType) {
         String contentDispositionValue = response.getHttpHeaders().getFirstHeader("Content-Disposition");
         if (Strings.isBlank(contentDispositionValue)) {
             return false;
@@ -40,13 +38,10 @@ public class GeneralAttachmentReader extends CustomMediaTypesHttpResponseReader<
     }
 
     @Override
-    public Resource read(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) throws Exception {
+    public Resource read(HttpResponse<byte[]> response, MediaType contentType, Type expectedContentType) throws Exception {
         String contentDispositionValue = response.getHttpHeaders().getFirstHeader("Content-Disposition");
         ContentDisposition contentDisposition = ContentDisposition.parseResponseHeader(contentDispositionValue);
-
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        IOs.copy(response.getPayload(), bos);
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(bos.toByteArray());
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(response.getPayload());
 
         return new InputStreamResource(inputStream, contentDisposition.getFilename());
     }

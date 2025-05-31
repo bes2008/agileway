@@ -1,10 +1,9 @@
 package com.jn.agileway.httpclient.core.payload;
 
-import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
+import com.jn.agileway.httpclient.core.HttpResponse;
 import com.jn.langx.io.resource.ByteArrayResource;
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.util.Strings;
-import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.net.mime.MediaType;
 
 import java.io.IOException;
@@ -27,7 +26,7 @@ public class GeneralResourceHttpResponseReader extends CustomMediaTypesHttpRespo
     }
 
     @Override
-    public boolean canRead(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) {
+    public boolean canRead(HttpResponse<byte[]> response, MediaType contentType, Type expectedContentType) {
         if (expectedContentType == Resource.class) {
             return true;
         }
@@ -51,15 +50,11 @@ public class GeneralResourceHttpResponseReader extends CustomMediaTypesHttpRespo
     }
 
     @Override
-    public Resource read(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) throws Exception {
+    public Resource read(HttpResponse<byte[]> response, MediaType contentType, Type expectedContentType) throws Exception {
         int contentLength = (int) response.getHttpHeaders().getContentLength();
         if (contentLength < 0) {
             throw new IOException("Content-Length header is required for Content-Type " + contentType);
         }
-        byte[] bytes = new byte[contentLength];
-        if (contentLength > 0) {
-            IOs.read(response.getPayload(), bytes);
-        }
-        return new ByteArrayResource(bytes);
+        return new ByteArrayResource(response.getPayload());
     }
 }

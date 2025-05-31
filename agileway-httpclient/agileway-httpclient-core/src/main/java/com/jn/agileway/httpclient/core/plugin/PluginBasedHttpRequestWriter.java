@@ -2,9 +2,10 @@ package com.jn.agileway.httpclient.core.plugin;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.payload.HttpRequestPayloadWriter;
-import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequest;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Predicate;
+
+import java.io.ByteArrayOutputStream;
 
 public class PluginBasedHttpRequestWriter implements HttpRequestPayloadWriter {
 
@@ -16,7 +17,7 @@ public class PluginBasedHttpRequestWriter implements HttpRequestPayloadWriter {
 
 
     @Override
-    public boolean canWrite(HttpRequest request) {
+    public boolean canWrite(HttpRequest<?> request) {
         if (plugin.getRequestContentWriters().isEmpty()) {
             return false;
         }
@@ -33,7 +34,7 @@ public class PluginBasedHttpRequestWriter implements HttpRequestPayloadWriter {
     }
 
     @Override
-    public void write(HttpRequest request, UnderlyingHttpRequest output) throws Exception {
+    public void write(HttpRequest<?> request, ByteArrayOutputStream output) throws Exception {
         Pipeline.of(plugin.getRequestContentWriters()).findFirst(new Predicate<HttpRequestPayloadWriter>() {
             @Override
             public boolean test(HttpRequestPayloadWriter httpRequestContentWriter) {

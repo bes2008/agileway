@@ -1,14 +1,14 @@
 package com.jn.agileway.httpclient.core.plugin;
 
+import com.jn.agileway.httpclient.core.HttpResponse;
 import com.jn.agileway.httpclient.core.payload.HttpResponsePayloadReader;
-import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.net.mime.MediaType;
 
 import java.lang.reflect.Type;
 
-public class PluginBasedHttpResponseReader implements HttpResponsePayloadReader {
+public class PluginBasedHttpResponseReader implements HttpResponsePayloadReader<Object> {
 
     private HttpMessageProtocolPlugin plugin;
 
@@ -17,7 +17,7 @@ public class PluginBasedHttpResponseReader implements HttpResponsePayloadReader 
     }
 
     @Override
-    public boolean canRead(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) {
+    public boolean canRead(HttpResponse<byte[]> response, MediaType contentType, Type expectedContentType) {
         if (plugin.getResponseContentReaders().isEmpty()) {
             return false;
         }
@@ -34,7 +34,7 @@ public class PluginBasedHttpResponseReader implements HttpResponsePayloadReader 
     }
 
     @Override
-    public Object read(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) throws Exception {
+    public Object read(HttpResponse<byte[]> response, MediaType contentType, Type expectedContentType) throws Exception {
         return Pipeline.of(plugin.getResponseContentReaders())
                 .findFirst(new Predicate<HttpResponsePayloadReader>() {
                     @Override

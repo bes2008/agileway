@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class GeneralFormHttpRequestWriter implements HttpRequestPayloadWriter {
-    public boolean canWrite(HttpRequest request) {
+    public boolean canWrite(HttpRequest<?> request) {
         MediaType contentType = request.getHttpHeaders().getContentType();
         if (!HttpClientUtils.isSimpleForm(contentType)) {
             return false;
@@ -25,7 +25,7 @@ public class GeneralFormHttpRequestWriter implements HttpRequestPayloadWriter {
         return true;
     }
 
-    public void write(HttpRequest request, UnderlyingHttpRequest output) throws Exception {
+    public void write(HttpRequest<?> request, UnderlyingHttpRequest output) throws Exception {
         Object body = request.getPayload();
         MediaType contentType = request.getHttpHeaders().getContentType();
         Charset charset = contentType.getCharset();

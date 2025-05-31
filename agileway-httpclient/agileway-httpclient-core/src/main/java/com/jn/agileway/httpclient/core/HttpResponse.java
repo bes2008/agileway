@@ -1,6 +1,11 @@
 package com.jn.agileway.httpclient.core;
 
+import com.jn.agileway.eipchannel.core.message.MessageHeaders;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.net.http.HttpHeaders;
+import com.jn.langx.util.net.http.HttpMethod;
+
+import java.net.URI;
 
 /**
  * 代表了Http响应，它是提供给用户直接使用的.
@@ -22,11 +27,11 @@ public class HttpResponse<T> extends BaseHttpMessage<T> implements HttpResponseM
     private int statusCode;
     private String errorMessage;
 
-    public HttpResponse(HttpResponseMessage response, String errorMessage, T data) {
-        this.uri = response.getUri();
-        this.method = response.getMethod();
-        this.statusCode = response.getStatusCode();
-        this.headers = response.getHeaders();
+    public HttpResponse(HttpMethod method, URI uri, int statusCode, MessageHeaders<HttpHeaders> headers, String errorMessage, T data) {
+        this.uri = uri;
+        this.method = method;
+        this.statusCode = statusCode;
+        this.headers = headers;
         this.errorMessage = errorMessage;
         this.payload = data;
     }
@@ -38,10 +43,6 @@ public class HttpResponse<T> extends BaseHttpMessage<T> implements HttpResponseM
 
     public String getErrorMessage() {
         return errorMessage;
-    }
-
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
     }
 
     public boolean hasError() {

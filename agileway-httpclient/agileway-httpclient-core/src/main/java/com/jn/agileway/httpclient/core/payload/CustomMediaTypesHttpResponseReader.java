@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.core.payload;
 
+import com.jn.agileway.httpclient.core.HttpResponse;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Predicate;
@@ -21,7 +22,7 @@ public abstract class CustomMediaTypesHttpResponseReader<T> implements HttpRespo
     }
 
     @Override
-    public boolean canRead(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) {
+    public boolean canRead(HttpResponse<byte[]> response, MediaType contentType, Type expectedContentType) {
         return Pipeline.<MediaType>of(supportedMediaTypes)
                 .anyMatch(new Predicate<MediaType>() {
                     @Override

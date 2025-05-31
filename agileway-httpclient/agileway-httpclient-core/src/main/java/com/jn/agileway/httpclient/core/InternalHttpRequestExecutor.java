@@ -115,14 +115,22 @@ final class InternalHttpRequestExecutor extends RequestReplyExecutor {
                     }
                     if (response == null) {
                         String errorMessage = IOs.readAsString(underlyingHttpResponse.getPayload());
-                        response = new HttpResponse<>(underlyingHttpResponse, errorMessage, null);
+                        response = new HttpResponse<>(underlyingHttpResponse.getMethod(),
+                                underlyingHttpResponse.getUri(),
+                                underlyingHttpResponse.getStatusCode(),
+                                underlyingHttpResponse.getHeaders(),
+                                errorMessage, null);
                     }
                 } else {
                     if (contentExtractor != null) {
                         response = contentExtractor.extract(underlyingHttpResponse);
                     } else {
                         byte[] bytes = IOs.toByteArray(underlyingHttpResponse.getPayload());
-                        response = new HttpResponse<>(underlyingHttpResponse, null, bytes);
+                        response = new HttpResponse<>(underlyingHttpResponse.getMethod(),
+                                underlyingHttpResponse.getUri(),
+                                underlyingHttpResponse.getStatusCode(),
+                                underlyingHttpResponse.getHeaders(),
+                                null, bytes);
                     }
                 }
             } else {
@@ -130,10 +138,16 @@ final class InternalHttpRequestExecutor extends RequestReplyExecutor {
                     // 消耗掉
                     IOs.toByteArray(underlyingHttpResponse.getPayload());
                 }
-                response = new HttpResponse<>(underlyingHttpResponse, null, null);
+                response = new HttpResponse<>(underlyingHttpResponse.getMethod(),
+                        underlyingHttpResponse.getUri(),
+                        underlyingHttpResponse.getStatusCode(),
+                        underlyingHttpResponse.getHeaders(),
+                        null, null);
             }
         } catch (Exception ex) {
             throw Throwables.wrapAsRuntimeException(ex);
+        } finally {
+            underlyingHttpResponse.close();
         }
 
         response.getHeaders().put(BaseHttpMessage.HEADER_KEY_REPLY_PAYLOAD_TYPE, expectResponseType);

@@ -1,10 +1,11 @@
 package com.jn.agileway.httpclient.core.payload;
 
-import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
-import com.jn.langx.util.io.IOs;
+import com.jn.agileway.httpclient.core.HttpResponse;
+import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.net.mime.MediaType;
 
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
 
 public class GeneralTextHttpResponseReader extends CustomMediaTypesHttpResponseReader<String> {
 
@@ -13,7 +14,7 @@ public class GeneralTextHttpResponseReader extends CustomMediaTypesHttpResponseR
     }
 
     @Override
-    public boolean canRead(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) {
+    public boolean canRead(HttpResponse<byte[]> response, MediaType contentType, Type expectedContentType) {
         if ("text".equals(contentType.getType())) {
             return true;
         }
@@ -21,7 +22,11 @@ public class GeneralTextHttpResponseReader extends CustomMediaTypesHttpResponseR
     }
 
     @Override
-    public String read(UnderlyingHttpResponse response, MediaType contentType, Type expectedContentType) throws Exception {
-        return IOs.readAsString(response.getPayload());
+    public String read(HttpResponse<byte[]> response, MediaType contentType, Type expectedContentType) throws Exception {
+        Charset charset = contentType.getCharset();
+        if (charset == null) {
+            charset = Charsets.UTF_8;
+        }
+        return new String(response.getPayload(), charset);
     }
 }
