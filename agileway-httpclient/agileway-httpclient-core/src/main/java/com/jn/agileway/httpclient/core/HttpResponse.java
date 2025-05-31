@@ -27,6 +27,10 @@ public class HttpResponse<T> extends BaseHttpMessage<T> implements HttpResponseM
     private int statusCode;
     private String errorMessage;
 
+    public HttpResponse(HttpMethod method, URI uri, int statusCode, HttpHeaders headers, String errorMessage, T data) {
+        this(method, uri, statusCode, toMessageHeaders(headers), errorMessage, data);
+    }
+
     public HttpResponse(HttpMethod method, URI uri, int statusCode, MessageHeaders<HttpHeaders> headers, String errorMessage, T data) {
         this.uri = uri;
         this.method = method;
@@ -36,6 +40,11 @@ public class HttpResponse<T> extends BaseHttpMessage<T> implements HttpResponseM
         this.payload = data;
     }
 
+    private static MessageHeaders<HttpHeaders> toMessageHeaders(HttpHeaders headers) {
+        MessageHeaders<HttpHeaders> messageHeaders = new MessageHeaders<HttpHeaders>();
+        messageHeaders.setProtocolHeaders(headers);
+        return messageHeaders;
+    }
 
     public int getStatusCode() {
         return this.statusCode;

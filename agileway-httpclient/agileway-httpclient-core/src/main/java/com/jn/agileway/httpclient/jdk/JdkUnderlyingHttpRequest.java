@@ -63,15 +63,6 @@ class JdkUnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpURLConn
         return new JdkUnderlyingHttpResponse(this.httpConnection);
     }
 
-    @Override
-    protected long computeContentLength() {
-        if (!streamMode) {
-            if (this.getPayload() != null) {
-                return this.getPayload().size();
-            }
-        }
-        return -1L;
-    }
 
     @Override
     protected void setHeaderToUnderlying(HttpURLConnection target, String headerName, String headerValue) {
