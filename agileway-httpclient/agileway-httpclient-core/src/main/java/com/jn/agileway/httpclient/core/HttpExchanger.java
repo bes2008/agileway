@@ -24,6 +24,7 @@ import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.plugin.PluginRegistry;
 import com.jn.langx.plugin.SimpleLoadablePluginRegistry;
 import com.jn.langx.plugin.SpiPluginLoader;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.concurrent.promise.AsyncCallback;
 import com.jn.langx.util.concurrent.promise.Promise;
@@ -102,7 +103,9 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
         if (configuration == null) {
             configuration = new HttpExchangerConfiguration();
         }
-
+        if (Strings.isBlank(getName())) {
+            setName("AgileWay-Http-Exchanger");
+        }
         // 初始化 各种协议 Protocol 插件
         if (this.httpMessagePluginRegistry == null) {
             SimpleLoadablePluginRegistry httpMessagePluginRegistry = new SimpleLoadablePluginRegistry();
