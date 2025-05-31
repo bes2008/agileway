@@ -5,9 +5,11 @@ import com.jn.agileway.eipchannel.core.channel.PipedOutboundChannel;
 import com.jn.agileway.eipchannel.core.channel.pipe.ChannelMessageInterceptorPipeline;
 import com.jn.agileway.eipchannel.core.channel.pipe.PipedDuplexChannel;
 import com.jn.agileway.eipchannel.core.endpoint.exchange.RequestReplyExchanger;
+import com.jn.agileway.eipchannel.core.transformer.TransformerInboundMessageInterceptor;
 import com.jn.agileway.eipchannel.core.transformer.TransformerOutboundMessageInterceptor;
 import com.jn.agileway.httpclient.core.error.DefaultHttpResponseErrorHandler;
 import com.jn.agileway.httpclient.core.error.HttpResponseErrorHandler;
+import com.jn.agileway.httpclient.core.error.exception.HttpRequestClientErrorException;
 import com.jn.agileway.httpclient.core.interceptor.*;
 import com.jn.agileway.httpclient.core.payload.*;
 import com.jn.agileway.httpclient.core.plugin.*;
@@ -45,7 +47,7 @@ public class HttpRequestReplyExchanger extends AbstractLifecycle implements Requ
      *  ---------------------                       ---------------------
      *        |                                             ^
      *        v                                             |
-     *  HttpRequest&lt;ByteArrayOutputStream>      HttpResponse&lt;ByteArrayInputStream>
+     *  HttpRequest&lt;ByteArrayOutputStream>      HttpResponse&lt;byte[]>
      *        |                                             ^
      *        v                                             |
      *  ---------------------                       ---------------------
@@ -78,7 +80,7 @@ public class HttpRequestReplyExchanger extends AbstractLifecycle implements Requ
     /**
      * 对正常响应进行反序列化
      */
-    private List<HttpResponsePayloadReader> responseContentReaders = Lists.newArrayList();
+    private List<HttpResponsePayloadReader> responsePayloadReaders = Lists.newArrayList();
     /**
      * 对4xx,5xx的响应进行处理
      */
@@ -90,6 +92,8 @@ public class HttpRequestReplyExchanger extends AbstractLifecycle implements Requ
     private List<HttpResponseInterceptor> responseInterceptors = Lists.newArrayList();
 
     private PluginRegistry httpMessagePluginRegistry;
+
+    private InternalHttpRequestExecutor internalHttpRequestExecutor;
 
     @Override
     protected void doInit() throws InitializationException {
@@ -131,39 +135,49 @@ public class HttpRequestReplyExchanger extends AbstractLifecycle implements Requ
         }
         this.requestContentWriters.add(new GeneralFormHttpRequestWriter());
         this.requestContentWriters.add(new GeneralMultiPartsFormHttpRequestWriter());
-        this.requestContentWriters = Lists.immutableList(requestContentWriters);
         HttpRequestPayloadTransformer requestTransformer = new HttpRequestPayloadTransformer(this.requestContentWriters);
         TransformerOutboundMessageInterceptor transformerOutboundMessageInterceptor = new TransformerOutboundMessageInterceptor();
         transformerOutboundMessageInterceptor.setTransformer(requestTransformer);
         outboundChannelPipeline.addLast(transformerOutboundMessageInterceptor);
-        // request access log
+        // request logging
         outboundChannelPipeline.addLast(new HttpRequestInterceptorAdapter(new HttpRequestLoggingInterceptor()));
 
-        PipedOutboundChannel pipedOutboundChannel = new PipedOutboundChannel();
-        pipedOutboundChannel.setPipeline(outboundChannelPipeline);
-
-        // responseInterceptors
-        this.responseInterceptors.add(new HttpResponseLoggingInterceptor());
-        for (HttpMessageProtocolPlugin plugin : plugins) {
-            this.responseInterceptors.add(new PluginBasedHttpResponseInterceptor(plugin));
-        }
-        this.responseInterceptors = Lists.immutableList(responseInterceptors);
-
-        // responseBodyReaders
-        for (HttpMessageProtocolPlugin plugin : plugins) {
-            responseContentReaders.add(new PluginBasedHttpResponseReader(plugin));
-        }
-        this.responseContentReaders.add(new GeneralAttachmentReader());
-        this.responseContentReaders.add(new GeneralTextHttpResponseReader());
-        this.responseContentReaders.add(new GeneralResourceHttpResponseReader());
-        this.responseContentReaders.add(0, new GeneralBytesHttpResponseReader());
-        this.responseContentReaders = Lists.immutableList(responseContentReaders);
+        PipedOutboundChannel outboundChannel = new PipedOutboundChannel();
+        outboundChannel.setPipeline(outboundChannelPipeline);
 
         /**********************************************************************************************************
          *                          初始化 inbound channel
          **********************************************************************************************************/
 
+        ChannelMessageInterceptorPipeline inboundChannelPipeline = new ChannelMessageInterceptorPipeline();
+
+        // response logging
+        inboundChannelPipeline.addFirst(new HttpResponseInterceptorAdapter(new HttpResponseLoggingInterceptor()));
+
+        // 组织 requestBodyWriters ，并转换为 transformer, 作为 TransformerOutboundInterceptor 添加到拦截器链中
+        for (HttpMessageProtocolPlugin plugin : plugins) {
+            responsePayloadReaders.add(new PluginBasedHttpResponseReader(plugin));
+        }
+        this.responsePayloadReaders.add(new GeneralAttachmentReader());
+        this.responsePayloadReaders.add(new GeneralTextHttpResponseReader());
+        this.responsePayloadReaders.add(new GeneralResourceHttpResponseReader());
+
+        HttpResponsePayloadTransformer responsePayloadTransformer = new HttpResponsePayloadTransformer(responsePayloadReaders);
+        TransformerInboundMessageInterceptor transformerInboundMessageInterceptor = new TransformerInboundMessageInterceptor();
+        transformerInboundMessageInterceptor.setTransformer(responsePayloadTransformer);
+        inboundChannelPipeline.addLast(transformerInboundMessageInterceptor);
+
+        // 自定义的 responseInterceptors
+        for (HttpMessageProtocolPlugin plugin : plugins) {
+            this.responseInterceptors.add(new PluginBasedHttpResponseInterceptor(plugin));
+        }
+        for (HttpResponseInterceptor responseInterceptor : this.responseInterceptors) {
+            inboundChannelPipeline.addLast(new HttpResponseInterceptorAdapter(responseInterceptor));
+        }
+
         PipedInboundChannel inboundChannel = new PipedInboundChannel();
+        inboundChannel.setPipeline(inboundChannelPipeline);
+
 
         /**********************************************************************************************************
          *                          初始化 http response error handler
@@ -172,7 +186,6 @@ public class HttpRequestReplyExchanger extends AbstractLifecycle implements Requ
         if (this.globalHttpResponseErrorHandler == null) {
             this.globalHttpResponseErrorHandler = new DefaultHttpResponseErrorHandler();
         }
-
 
         /**********************************************************************************************************
          *                          初始化 UnderlyingHttpRequestFactory
@@ -188,6 +201,20 @@ public class HttpRequestReplyExchanger extends AbstractLifecycle implements Requ
             requestFactoryBuilder.executor(configuration.getExecutor());
             this.requestFactory = requestFactoryBuilder.build();
         }
+
+        /**********************************************************************************************************
+         *                          初始化 InternalHttpRequestExecutor
+         **********************************************************************************************************/
+        InternalHttpRequestExecutor internalHttpRequestExecutor = new InternalHttpRequestExecutor();
+        internalHttpRequestExecutor.setRequestFactory(requestFactory);
+        this.internalHttpRequestExecutor = internalHttpRequestExecutor;
+
+        /**********************************************************************************************************
+         *                          初始化 requestReplyChannel
+         **********************************************************************************************************/
+        outboundChannel.setSinker(internalHttpRequestExecutor);
+        inboundChannel.setInboundMessageSource(internalHttpRequestExecutor);
+        this.requestReplyChannel = new PipedDuplexChannel(outboundChannel, inboundChannel);
     }
 
     @Override
@@ -205,7 +232,10 @@ public class HttpRequestReplyExchanger extends AbstractLifecycle implements Requ
         Task<HttpRequest<?>> sendRequestTask = new Task<HttpRequest<?>>() {
             @Override
             public HttpRequest<?> run(Handler<HttpRequest<?>> handler, ErrorHandler errorHandler) {
-                requestReplyChannel.send(request);
+                boolean sent = requestReplyChannel.send(request);
+                if (sent) {
+                    throw new HttpRequestClientErrorException(request.getMethod(), request.getUri(), 408, "request is sent failed");
+                }
                 return request;
             }
         };
@@ -215,22 +245,12 @@ public class HttpRequestReplyExchanger extends AbstractLifecycle implements Requ
                 .then(new AsyncCallback<HttpRequest<?>, HttpResponse<?>>() {
                     @Override
                     public HttpResponse<?> apply(HttpRequest<?> request) {
-
+                        internalHttpRequestExecutor.setRequestMessage(request);
                         HttpResponse<?> response = (HttpResponse<?>) requestReplyChannel.poll();
+                        if (response.hasError()) {
+                            globalHttpResponseErrorHandler.handle(response);
+                        }
                         return response;
-                    }
-                })
-                .then(new AsyncCallback<HttpResponse<?>, HttpResponse<?>>() {
-                    @Override
-                    public HttpResponse<?> apply(HttpResponse<?> httpResponse) {
-                        // statusCode >=400
-                        return httpResponse;
-                    }
-                })
-                .catchError(new AsyncCallback<Throwable, HttpResponse<?>>() {
-                    @Override
-                    public HttpResponse<?> apply(Throwable throwable) {
-                        return null;
                     }
                 });
 
@@ -278,12 +298,12 @@ public class HttpRequestReplyExchanger extends AbstractLifecycle implements Requ
         }
     }
 
-    public void addResponseContentReader(HttpResponsePayloadReader reader) {
+    public void addResponsePayloadReader(HttpResponsePayloadReader reader) {
         if (!inited) {
             return;
         }
         if (reader != null) {
-            this.responseContentReaders.add(reader);
+            this.responsePayloadReaders.add(reader);
         }
     }
 

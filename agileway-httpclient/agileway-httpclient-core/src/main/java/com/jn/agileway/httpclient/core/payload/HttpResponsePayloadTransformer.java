@@ -19,6 +19,10 @@ public class HttpResponsePayloadTransformer implements MessageTransformer {
 
     private List<HttpResponsePayloadReader> readers;
 
+    public HttpResponsePayloadTransformer(List<HttpResponsePayloadReader> readers) {
+        this.readers = readers;
+    }
+
     @Override
     public Message<?> transform(Message<?> message) {
         HttpResponse response = (HttpResponse) message;

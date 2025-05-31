@@ -5,10 +5,10 @@ import com.jn.agileway.eipchannel.core.channel.pipe.InboundMessageInterceptor;
 import com.jn.agileway.eipchannel.core.message.Message;
 import com.jn.agileway.httpclient.core.HttpResponse;
 
-public class HttpResponseInterceptorAdaptor extends InboundMessageInterceptor {
+public class HttpResponseInterceptorAdapter extends InboundMessageInterceptor {
     private HttpResponseInterceptor interceptor;
 
-    public HttpResponseInterceptorAdaptor(HttpResponseInterceptor interceptor) {
+    public HttpResponseInterceptorAdapter(HttpResponseInterceptor interceptor) {
         this.interceptor = interceptor;
     }
 
