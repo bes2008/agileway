@@ -1,9 +1,7 @@
 package com.jn.agileway.httpclient.test.core;
 
-import com.jn.agileway.httpclient.core.HttpExchanger;
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.HttpResponse;
-import com.jn.agileway.httpclient.jdk.JdkUnderlyingHttpRequestFactory;
 import com.jn.easyjson.core.util.JSONs;
 import com.jn.langx.util.collection.multivalue.CommonMultiValueMap;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;

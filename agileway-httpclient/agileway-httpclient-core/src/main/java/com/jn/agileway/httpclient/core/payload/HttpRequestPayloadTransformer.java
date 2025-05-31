@@ -5,6 +5,7 @@ import com.jn.agileway.eipchannel.core.transformer.MessageTransformer;
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.error.exception.NotFoundHttpContentWriterException;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
+import com.jn.langx.util.Throwables;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Predicate;
 
@@ -34,8 +35,12 @@ public class HttpRequestPayloadTransformer implements MessageTransformer {
                         }
                     });
             if (requestBodyWriter != null) {
-                requestBodyWriter.write(request, buffer);
-                request.setPayload(buffer);
+                try {
+                    requestBodyWriter.write(request, buffer);
+                    request.setPayload(buffer);
+                } catch (Exception ex) {
+                    throw Throwables.wrapAsRuntimeException(ex);
+                }
             } else {
                 throw new NotFoundHttpContentWriterException();
             }

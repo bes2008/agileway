@@ -1,7 +1,6 @@
 package com.jn.agileway.httpclient.core.payload;
 
 import com.jn.agileway.httpclient.core.HttpResponse;
-import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.net.mime.MediaType;

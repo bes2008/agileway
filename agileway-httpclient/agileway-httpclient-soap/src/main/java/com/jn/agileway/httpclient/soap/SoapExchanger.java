@@ -1,6 +1,5 @@
 package com.jn.agileway.httpclient.soap;
 
-import com.jn.agileway.httpclient.core.HttpExchanger;
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.HttpResponse;
 import com.jn.agileway.httpclient.soap.entity.SoapBinding;
