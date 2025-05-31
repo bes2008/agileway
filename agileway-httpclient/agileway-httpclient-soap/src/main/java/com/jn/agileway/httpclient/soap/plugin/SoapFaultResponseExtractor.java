@@ -22,14 +22,14 @@ public class SoapFaultResponseExtractor implements HttpResponsePayloadExtractor 
         IOs.copy(inputStream, baos);
         String soapEnvelopeXml = baos.toString(Charsets.UTF_8.name());
         SoapFault soapFault = SoapFaults.unmarshalSoapFault(soapEnvelopeXml);
-        HttpResponse response = new HttpResponse(underlyingHttpResponse, soapFault);
+
         String message = null;
         if (Strings.isNotBlank(soapFault.getSubCode())) {
             message = StringTemplates.formatWithPlaceholder("soap error: Code: {}, SubCode: {}, Reason: {}", soapFault.getCode(), soapFault.getSubCode(), soapFault.getReason());
         } else {
             message = StringTemplates.formatWithPlaceholder("soap error: Code: {}, Reason: {}", soapFault.getCode(), soapFault.getReason());
         }
-        response.setErrorMessage(message);
+        HttpResponse response = new HttpResponse(underlyingHttpResponse.getMethod(), underlyingHttpResponse.getUri(), underlyingHttpResponse.getStatusCode(), underlyingHttpResponse.getHeaders(), message, soapFault);
         return response;
     }
 }

@@ -30,9 +30,10 @@ import com.jn.langx.util.concurrent.promise.Promise;
 import com.jn.langx.util.concurrent.promise.Task;
 import com.jn.langx.util.function.Handler;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
-public class HttpExchanger extends AbstractLifecycle implements RequestReplyExchanger<HttpRequest<?>, HttpResponse<?>> {
+public class HttpExchanger extends AbstractLifecycle implements RequestReplyExchanger<HttpRequest, HttpResponse> {
 
     /**
      * <pre>
@@ -218,20 +219,40 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
     }
 
     @Override
-    public Promise<HttpResponse<?>> exchangeAsync(HttpRequest<?> request) {
-        return exchangeInternal(true, request);
+    public Promise<HttpResponse> exchangeAsync(HttpRequest request) {
+        Promise promise = exchangeInternal(true, request);
+        return promise;
     }
 
     @Override
-    public HttpResponse<?> exchange(HttpRequest<?> request) {
-        return exchangeInternal(false, request).await();
+    public HttpResponse exchange(HttpRequest request) {
+        Promise promise = exchangeInternal(false, request);
+        return (HttpResponse) promise.await();
     }
 
-    private Promise<HttpResponse<?>> exchangeInternal(boolean async, HttpRequest<?> request) {
+    public Promise<HttpResponse<?>> exchange(boolean async, HttpRequest<?> request, Type responseType) {
+        return exchange(async, request, responseType, null, null);
+    }
 
-        Task<HttpRequest<?>> sendRequestTask = new Task<HttpRequest<?>>() {
+    public Promise<HttpResponse<?>> exchange(boolean async, HttpRequest<?> request, Type responseType, HttpResponsePayloadExtractor payloadExtractor, HttpResponsePayloadExtractor errorPayloadExtractor) {
+        if (payloadExtractor != null) {
+            request.getHeaders().put(HttpRequest.HEADER_KEY_REPLY_PAYLOAD_TYPE, responseType);
+        }
+        if (payloadExtractor != null) {
+            request.getHeaders().put(InternalHttpRequestExecutor.REQUEST_KEY_REPLY_PAYLOAD_EXTRACTOR, responseType);
+        }
+        if (errorPayloadExtractor != null) {
+            request.getHeaders().put(InternalHttpRequestExecutor.REQUEST_KEY_REPLY_PAYLOAD_ERROR_EXTRACTOR, errorPayloadExtractor);
+        }
+        Promise promise = exchangeInternal(async, request);
+        return promise;
+    }
+
+    private <T> Promise<HttpResponse<T>> exchangeInternal(boolean async, HttpRequest request) {
+
+        Task<HttpRequest> sendRequestTask = new Task<HttpRequest>() {
             @Override
-            public HttpRequest<?> run(Handler<HttpRequest<?>> handler, ErrorHandler errorHandler) {
+            public HttpRequest run(Handler<HttpRequest> handler, ErrorHandler errorHandler) {
                 boolean sent = requestReplyChannel.send(request);
                 if (sent) {
                     throw new HttpRequestClientErrorException(request.getMethod(), request.getUri(), 408, "request is sent failed");
@@ -241,18 +262,20 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
         };
 
 
-        return (async ? new Promise<HttpRequest<?>>(this.configuration.getExecutor(), sendRequestTask) : new Promise<HttpRequest<?>>(sendRequestTask))
-                .then(new AsyncCallback<HttpRequest<?>, HttpResponse<?>>() {
+        Promise<HttpResponse<T>> promise = (async ? new Promise<HttpRequest>(this.configuration.getExecutor(), sendRequestTask) : new Promise<HttpRequest>(sendRequestTask))
+                .then(new AsyncCallback<HttpRequest, HttpResponse<T>>() {
                     @Override
-                    public HttpResponse<?> apply(HttpRequest<?> request) {
+                    public HttpResponse<T> apply(HttpRequest request) {
                         internalHttpRequestExecutor.setRequestMessage(request);
-                        HttpResponse<?> response = (HttpResponse<?>) requestReplyChannel.poll();
+                        HttpResponse response = (HttpResponse) requestReplyChannel.poll();
                         if (response.hasError()) {
                             globalHttpResponseErrorHandler.handle(response);
                         }
                         return response;
                     }
                 });
+
+        return promise;
 
     }
 
