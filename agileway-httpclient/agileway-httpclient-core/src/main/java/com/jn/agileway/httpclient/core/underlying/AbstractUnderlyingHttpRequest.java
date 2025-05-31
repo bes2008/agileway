@@ -7,13 +7,13 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class AbstractUnderlyingHttpRequest<TARGET> extends BaseHttpMessage<OutputStream> implements UnderlyingHttpRequest {
+public abstract class AbstractUnderlyingHttpRequest<TARGET> extends BaseHttpMessage<ByteArrayOutputStream> implements UnderlyingHttpRequest {
     private boolean executed = false;
 
     protected AbstractUnderlyingHttpRequest(HttpMethod method, URI uri, HttpHeaders headers) {
@@ -31,6 +31,11 @@ public abstract class AbstractUnderlyingHttpRequest<TARGET> extends BaseHttpMess
                 }
             }
         }
+    }
+
+    @Override
+    public void setPayload(ByteArrayOutputStream payload) {
+        this.payload = payload;
     }
 
     @Override
@@ -79,11 +84,6 @@ public abstract class AbstractUnderlyingHttpRequest<TARGET> extends BaseHttpMess
             }
         }
     }
-
-    /**
-     * 会在写 header之前调用，当有 Content-Encoding 时，会返回 -1
-     */
-    protected abstract long computeContentLength();
 
     protected abstract void addHeaderToUnderlying(TARGET target, String headerName, String headerValue);
 

@@ -22,23 +22,12 @@ import okhttp3.RequestBody;
 
 class OkHttp3UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<Request.Builder> {
     private OkHttpClient httpClient;
-    private ByteArrayOutputStream bufferedContent;
-
 
     OkHttp3UnderlyingHttpRequest(HttpMethod method, URI uri, HttpHeaders httpHeaders, OkHttpClient client) {
         super(method, uri, httpHeaders);
         this.httpClient = client;
     }
 
-    @Override
-    public OutputStream getPayload() {
-        if (bufferedContent == null) {
-            if (HttpClientUtils.isWriteable(getMethod())) {
-                bufferedContent = new ByteArrayOutputStream(1024);
-            }
-        }
-        return bufferedContent;
-    }
 
     @Override
     protected void addHeaderToUnderlying(Request.Builder target, String headerName, String headerValue) {
@@ -50,36 +39,27 @@ class OkHttp3UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<Request
         target.header(headerName, headerValue);
     }
 
-    @Override
-    protected long computeContentLength() {
-        if (this.bufferedContent == null) {
-            return -1L;
-        }
-        return bufferedContent.size();
-    }
 
     @Override
     protected UnderlyingHttpResponse exchangeInternal() throws IOException {
         String rawContentType = getHttpHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
         okhttp3.MediaType contentType = Strings.isNotEmpty(rawContentType) ? okhttp3.MediaType.parse(rawContentType) : null;
         RequestBody body = null;
-        if (HttpClientUtils.isWriteable(getMethod())) {
-            if (computeContentLength() > 0) {
-                // 压缩处理：
-                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(getHttpHeaders());
-                if (!Objs.isEmpty(contentEncodings)) {
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream((int) computeContentLength() / 5);
-                    OutputStream out = HttpClientUtils.wrapByContentEncodings(baos, contentEncodings);
-                    out.write(bufferedContent.toByteArray());
-                    out.flush();
-                    body = RequestBody.create(contentType, baos.toByteArray());
-                    out.close();
-                } else {
-                    body = RequestBody.create(contentType, bufferedContent.toByteArray());
-                }
+        if (HttpClientUtils.isWriteable(getMethod()) && getPayload() != null) {
+            // 压缩处理：
+            List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(getHttpHeaders());
+            if (!Objs.isEmpty(contentEncodings)) {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream(getPayload().size() / 5);
+                OutputStream out = HttpClientUtils.wrapByContentEncodings(baos, contentEncodings);
+                out.write(getPayload().toByteArray());
+                out.flush();
+                body = RequestBody.create(contentType, baos.toByteArray());
+                out.close();
             } else {
-                body = RequestBody.create(contentType, Emptys.EMPTY_BYTES);
+                body = RequestBody.create(contentType, getPayload().toByteArray());
             }
+        } else {
+            body = RequestBody.create(contentType, Emptys.EMPTY_BYTES);
         }
         Request.Builder builder = new Request.Builder().url(getUri().toURL()).method(getMethod().name(), body);
         writeHeaders(builder);

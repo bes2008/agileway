@@ -23,23 +23,12 @@ import java.util.List;
 
 class Jdk11UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpRequest.Builder> {
     private HttpClient httpClient;
-    private ByteArrayOutputStream bufferedContent;
     private Duration timeout;
 
     Jdk11UnderlyingHttpRequest(HttpMethod method, URI uri, HttpHeaders headers, HttpClient httpClient, Duration timeout) {
         super(method, uri, headers);
         this.timeout = timeout;
         this.httpClient = httpClient;
-    }
-
-    @Override
-    public OutputStream getPayload() {
-        if (bufferedContent == null) {
-            if (HttpClientUtils.isWriteable(getMethod())) {
-                bufferedContent = new ByteArrayOutputStream(1024);
-            }
-        }
-        return bufferedContent;
     }
 
     @Override
@@ -56,34 +45,23 @@ class Jdk11UnderlyingHttpRequest extends AbstractUnderlyingHttpRequest<HttpReque
         }
     }
 
-    @Override
-    protected long computeContentLength() {
-        if (this.bufferedContent == null) {
-            return -1L;
-        }
-        return bufferedContent.size();
-    }
 
     @Override
     protected UnderlyingHttpResponse exchangeInternal() throws IOException {
         HttpRequest.Builder builder = HttpRequest.newBuilder(getUri());
         writeHeaders(builder);
-        if (HttpClientUtils.isWriteable(getMethod())) {
-            if (computeContentLength() > 0) {
-                // 压缩处理：
-                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(getHttpHeaders());
-                if (!Objs.isEmpty(contentEncodings)) {
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream((int) computeContentLength() / 5);
-                    OutputStream out = HttpClientUtils.wrapByContentEncodings(baos, contentEncodings);
-                    out.write(bufferedContent.toByteArray());
-                    out.flush();
-                    builder.method(getMethod().name(), HttpRequest.BodyPublishers.ofByteArray(baos.toByteArray()));
-                    out.close();
-                } else {
-                    builder.method(getMethod().name(), HttpRequest.BodyPublishers.ofByteArray(bufferedContent.toByteArray()));
-                }
+        if (HttpClientUtils.isWriteable(getMethod()) && getPayload() != null) {
+            // 压缩处理：
+            List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(getHttpHeaders());
+            if (!Objs.isEmpty(contentEncodings)) {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream(getPayload().size() / 5);
+                OutputStream out = HttpClientUtils.wrapByContentEncodings(baos, contentEncodings);
+                out.write(getPayload().toByteArray());
+                out.flush();
+                builder.method(getMethod().name(), HttpRequest.BodyPublishers.ofByteArray(baos.toByteArray()));
+                out.close();
             } else {
-                builder.method(getMethod().name(), HttpRequest.BodyPublishers.noBody());
+                builder.method(getMethod().name(), HttpRequest.BodyPublishers.ofByteArray(getPayload().toByteArray()));
             }
         } else {
             builder.method(getMethod().name(), HttpRequest.BodyPublishers.noBody());

@@ -26,6 +26,9 @@ public class HttpResponsePayloadTransformer implements MessageTransformer {
     @Override
     public Message<?> transform(Message<?> message) {
         HttpResponse response = (HttpResponse) message;
+        if (response.hasError()) {
+            return response;
+        }
         Object payload = response.getPayload();
         if (payload == null) {
             return response;
