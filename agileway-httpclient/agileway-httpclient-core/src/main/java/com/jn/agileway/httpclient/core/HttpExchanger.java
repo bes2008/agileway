@@ -29,6 +29,7 @@ import com.jn.langx.util.concurrent.promise.AsyncCallback;
 import com.jn.langx.util.concurrent.promise.Promise;
 import com.jn.langx.util.concurrent.promise.Task;
 import com.jn.langx.util.function.Handler;
+import com.jn.langx.util.retry.Retryer;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -235,6 +236,10 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
     }
 
     public <T> Promise<HttpResponse<T>> exchange(boolean async, HttpRequest<?> request, Type responseType, HttpResponsePayloadExtractor payloadExtractor, HttpResponsePayloadExtractor errorPayloadExtractor) {
+        return exchangeWithRetry(async, request, responseType, payloadExtractor, errorPayloadExtractor, null);
+    }
+
+    public <O> Promise<HttpResponse<O>> exchangeWithRetry(boolean async, HttpRequest request, Type responseType, HttpResponsePayloadExtractor payloadExtractor, HttpResponsePayloadExtractor errorPayloadExtractor, Retryer<Boolean> retryer) {
         if (payloadExtractor != null) {
             request.getHeaders().put(HttpRequest.HEADER_KEY_REPLY_PAYLOAD_TYPE, responseType);
         }
@@ -243,6 +248,9 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
         }
         if (errorPayloadExtractor != null) {
             request.getHeaders().put(InternalHttpRequestExecutor.REQUEST_KEY_REPLY_PAYLOAD_ERROR_EXTRACTOR, errorPayloadExtractor);
+        }
+        if (retryer != null) {
+            request.getHeaders().put(InternalHttpRequestExecutor.REQUEST_KEY_RETRY, retryer);
         }
         return exchangeInternal(async, request);
     }
