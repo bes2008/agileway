@@ -72,18 +72,25 @@ public class ApacheUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor
             underlyingRequestBase.setEntity(contentEntity);
             request.getPayload().writeTo((OutputStream) contentEntity);
         }
-        CloseableHttpResponse underlyingResponse = this.httpClient.execute(underlyingRequest);
-        int statusCode = underlyingResponse.getStatusLine().getStatusCode();
-        String errorMessage = underlyingResponse.getStatusLine().getReasonPhrase();
-        HttpHeaders responseHttpHeaders = getResponseHttpHeaders(underlyingResponse);
-        InputStream responsePayload = getResponsePayload(underlyingResponse);
-        return new HttpResponse<InputStream>(
-                request.getMethod(),
-                request.getUri(),
-                statusCode,
-                responseHttpHeaders,
-                errorMessage,
-                responsePayload);
+        CloseableHttpResponse underlyingResponse = null;
+        try {
+            underlyingResponse = this.httpClient.execute(underlyingRequest);
+            int statusCode = underlyingResponse.getStatusLine().getStatusCode();
+            String errorMessage = underlyingResponse.getStatusLine().getReasonPhrase();
+            HttpHeaders responseHttpHeaders = getResponseHttpHeaders(underlyingResponse);
+            InputStream responsePayload = getResponsePayload(underlyingResponse);
+            return new HttpResponse<InputStream>(
+                    request.getMethod(),
+                    request.getUri(),
+                    statusCode,
+                    responseHttpHeaders,
+                    errorMessage,
+                    responsePayload);
+        } finally {
+            if (underlyingResponse != null) {
+                underlyingResponse.close();
+            }
+        }
     }
 
     public HttpHeaders getResponseHttpHeaders(CloseableHttpResponse response) {

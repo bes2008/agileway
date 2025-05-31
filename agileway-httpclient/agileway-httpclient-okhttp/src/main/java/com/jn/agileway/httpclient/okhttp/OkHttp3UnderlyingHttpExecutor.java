@@ -20,6 +20,10 @@ import java.util.List;
 public class OkHttp3UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Request.Builder> {
     private OkHttpClient httpClient;
 
+    public void setHttpClient(OkHttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
+
     @Override
     protected void addHeaderToUnderlying(Request.Builder underlyingRequest, String headerName, String headerValue) {
         underlyingRequest.addHeader(headerName, headerValue);
@@ -59,19 +63,26 @@ public class OkHttp3UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecuto
         Request.Builder builder = new Request.Builder().url(request.getUri().toURL()).method(request.getMethod().name(), body);
         writeHeaders(request, builder);
         Request underlyingRequest = builder.build();
-        Response underlyingResponse = this.httpClient.newCall(underlyingRequest).execute();
-        int statusCode = underlyingResponse.code();
-        HttpHeaders responseHttpHeaders = getResponseHttpHeaders(underlyingResponse);
+        Response underlyingResponse = null;
+        try {
+            underlyingResponse = this.httpClient.newCall(underlyingRequest).execute();
+            int statusCode = underlyingResponse.code();
+            HttpHeaders responseHttpHeaders = getResponseHttpHeaders(underlyingResponse);
 
-        ResponseBody responseBody = underlyingResponse.body();
-        InputStream responsePayload = responseBody == null ? null : responseBody.byteStream();
-        return new HttpResponse<InputStream>(
-                request.getMethod(),
-                request.getUri(),
-                statusCode,
-                responseHttpHeaders,
-                underlyingResponse.message(),
-                responsePayload);
+            ResponseBody responseBody = underlyingResponse.body();
+            InputStream responsePayload = responseBody == null ? null : responseBody.byteStream();
+            return new HttpResponse<InputStream>(
+                    request.getMethod(),
+                    request.getUri(),
+                    statusCode,
+                    responseHttpHeaders,
+                    underlyingResponse.message(),
+                    responsePayload);
+        } finally {
+            if (underlyingResponse != null) {
+                underlyingResponse.close();
+            }
+        }
     }
 
     private HttpHeaders getResponseHttpHeaders(Response response) {

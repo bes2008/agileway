@@ -78,8 +78,15 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
         HttpMethod method = request.getMethod();
         HttpHeaders httpHeaders = request.getHttpHeaders();
         boolean streamMode = HttpClientUtils.requestBodyUseStreamMode(method, httpHeaders);
-        HttpURLConnection httpURLConnection = createHttpUrlConnection(method, uri);
-        return exchangeInternal(request, httpURLConnection, streamMode);
+        HttpURLConnection httpURLConnection = null;
+        try {
+            httpURLConnection = createHttpUrlConnection(method, uri);
+            return exchangeInternal(request, httpURLConnection, streamMode);
+        } finally {
+            if (httpURLConnection != null) {
+                httpURLConnection.disconnect();
+            }
+        }
     }
 
     protected HttpResponse<InputStream> exchangeInternal(HttpRequest<ByteArrayOutputStream> request, HttpURLConnection httpConnection, boolean streamMode) throws IOException {
