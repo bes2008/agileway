@@ -79,14 +79,8 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
         HttpHeaders httpHeaders = request.getHttpHeaders();
         boolean streamMode = HttpClientUtils.requestBodyUseStreamMode(method, httpHeaders);
         HttpURLConnection httpURLConnection = null;
-        try {
-            httpURLConnection = createHttpUrlConnection(method, uri);
-            return exchangeInternal(request, httpURLConnection, streamMode);
-        } finally {
-            if (httpURLConnection != null) {
-                httpURLConnection.disconnect();
-            }
-        }
+        httpURLConnection = createHttpUrlConnection(method, uri);
+        return exchangeInternal(request, httpURLConnection, streamMode);
     }
 
     protected UnderlyingHttpResponse exchangeInternal(HttpRequest<ByteArrayOutputStream> request, HttpURLConnection httpConnection, boolean streamMode) throws IOException {
@@ -125,38 +119,6 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
 
         httpConnection.getResponseCode();
         return new JdkUnderlyingHttpResponse(httpConnection);
-    }
-
-    private InputStream extractResponseBody(HttpURLConnection httpConnection, HttpHeaders responseHeaders) throws IOException {
-        InputStream inputStream = httpConnection.getErrorStream();
-        if (inputStream == null) {
-            inputStream = httpConnection.getInputStream();
-        }
-
-        // 处理压缩
-        List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(responseHeaders);
-        inputStream = HttpClientUtils.wrapByContentEncodings(inputStream, contentEncodings);
-        return inputStream;
-    }
-
-
-    private HttpHeaders extractResponseHeader(HttpURLConnection httpConnection) {
-        HttpHeaders headers = new HttpHeaders();
-        // Header field 0 is the status line for most HttpURLConnections, but not on GAE
-        String name = httpConnection.getHeaderFieldKey(0);
-        if (Strings.isNotBlank(name)) {
-            headers.add(name, httpConnection.getHeaderField(0));
-        }
-        int i = 1;
-        while (true) {
-            name = httpConnection.getHeaderFieldKey(i);
-            if (Strings.isBlank(name)) {
-                break;
-            }
-            headers.add(name, httpConnection.getHeaderField(i));
-            i++;
-        }
-        return headers;
     }
 
     private HttpURLConnection createHttpUrlConnection(HttpMethod method, URI uri) throws Exception {

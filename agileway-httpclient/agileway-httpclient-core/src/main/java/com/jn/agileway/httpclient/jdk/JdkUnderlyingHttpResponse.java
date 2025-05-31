@@ -63,6 +63,8 @@ class JdkUnderlyingHttpResponse extends BaseHttpMessage<InputStream> implements 
     public HttpHeaders getHttpHeaders() {
         HttpHeaders headers = super.getHttpHeaders();
         if (headers == null) {
+            headers = new HttpHeaders();
+            this.headers.setProtocolHeaders(headers);
             // Header field 0 is the status line for most HttpURLConnections, but not on GAE
             String name = this.httpConnection.getHeaderFieldKey(0);
             if (Strings.isNotBlank(name)) {
@@ -77,7 +79,7 @@ class JdkUnderlyingHttpResponse extends BaseHttpMessage<InputStream> implements 
                 headers.add(name, this.httpConnection.getHeaderField(i));
                 i++;
             }
-            this.headers.setProtocolHeaders(headers);
+
         }
         return headers;
     }

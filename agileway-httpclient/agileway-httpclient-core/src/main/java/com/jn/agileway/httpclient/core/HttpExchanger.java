@@ -261,7 +261,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
             @Override
             public HttpRequest run(Handler<HttpRequest> handler, ErrorHandler errorHandler) {
                 boolean sent = requestReplyChannel.send(request);
-                if (sent) {
+                if (!sent) {
                     throw new HttpRequestClientErrorException(request.getMethod(), request.getUri(), 408, "request is sent failed");
                 }
                 return request;
