@@ -77,7 +77,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
     /**
      * 主要是将 body进行转换，顺带补充 header等，只要一个转换成功就可以。
      */
-    private List<HttpRequestPayloadWriter> requestContentWriters = Lists.newArrayList();
+    private List<HttpRequestPayloadWriter> requestPayloadWriters = Lists.newArrayList();
 
     /**
      * 对正常响应进行反序列化
@@ -133,11 +133,11 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
 
         // 组织 requestBodyWriters ，并转换为 transformer, 作为 TransformerOutboundInterceptor 添加到拦截器链中
         for (HttpMessageProtocolPlugin plugin : plugins) {
-            this.requestContentWriters.add(new PluginBasedHttpRequestWriter(plugin));
+            this.requestPayloadWriters.add(new PluginBasedHttpRequestWriter(plugin));
         }
-        this.requestContentWriters.add(new GeneralFormHttpRequestWriter());
-        this.requestContentWriters.add(new GeneralMultiPartsFormHttpRequestWriter());
-        HttpRequestPayloadTransformer requestTransformer = new HttpRequestPayloadTransformer(this.requestContentWriters);
+        this.requestPayloadWriters.add(new GeneralFormHttpRequestWriter());
+        this.requestPayloadWriters.add(new GeneralMultiPartsFormHttpRequestWriter());
+        HttpRequestPayloadTransformer requestTransformer = new HttpRequestPayloadTransformer(this.requestPayloadWriters);
         TransformerOutboundMessageInterceptor transformerOutboundMessageInterceptor = new TransformerOutboundMessageInterceptor();
         transformerOutboundMessageInterceptor.setTransformer(requestTransformer);
         outboundChannelPipeline.addLast(transformerOutboundMessageInterceptor);
@@ -319,12 +319,12 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
         }
     }
 
-    public void addRequestContentWriter(HttpRequestPayloadWriter writer) {
+    public void addRequestPayloadWriter(HttpRequestPayloadWriter writer) {
         if (!inited) {
             return;
         }
         if (writer != null) {
-            this.requestContentWriters.add(writer);
+            this.requestPayloadWriters.add(writer);
         }
     }
 
