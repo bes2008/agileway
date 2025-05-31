@@ -1,7 +1,6 @@
 package com.jn.agileway.httpclient.jdk11;
 
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutor;
-import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactory;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpRequestFactoryBuilder;
 import com.jn.langx.security.ssl.SSLContextBuilder;
 
