@@ -230,11 +230,11 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
         return (HttpResponse) promise.await();
     }
 
-    public Promise<HttpResponse<?>> exchange(boolean async, HttpRequest<?> request, Type responseType) {
+    public <T> Promise<HttpResponse<T>> exchange(boolean async, HttpRequest<?> request, Type responseType) {
         return exchange(async, request, responseType, null, null);
     }
 
-    public Promise<HttpResponse<?>> exchange(boolean async, HttpRequest<?> request, Type responseType, HttpResponsePayloadExtractor payloadExtractor, HttpResponsePayloadExtractor errorPayloadExtractor) {
+    public <T> Promise<HttpResponse<T>> exchange(boolean async, HttpRequest<?> request, Type responseType, HttpResponsePayloadExtractor payloadExtractor, HttpResponsePayloadExtractor errorPayloadExtractor) {
         if (payloadExtractor != null) {
             request.getHeaders().put(HttpRequest.HEADER_KEY_REPLY_PAYLOAD_TYPE, responseType);
         }
@@ -244,8 +244,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
         if (errorPayloadExtractor != null) {
             request.getHeaders().put(InternalHttpRequestExecutor.REQUEST_KEY_REPLY_PAYLOAD_ERROR_EXTRACTOR, errorPayloadExtractor);
         }
-        Promise promise = exchangeInternal(async, request);
-        return promise;
+        return exchangeInternal(async, request);
     }
 
     private <T> Promise<HttpResponse<T>> exchangeInternal(boolean async, HttpRequest request) {
