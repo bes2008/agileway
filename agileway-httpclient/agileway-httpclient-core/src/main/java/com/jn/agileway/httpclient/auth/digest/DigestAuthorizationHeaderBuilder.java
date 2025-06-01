@@ -16,8 +16,8 @@ import com.jn.langx.validation.rule.CharData;
 import java.util.List;
 import java.util.Map;
 
-import static com.jn.agileway.httpclient.auth.WwwAuthenticate.quoted;
-import static com.jn.agileway.httpclient.auth.WwwAuthenticate.unquoted;
+import static com.jn.langx.util.Strings.quoted;
+import static com.jn.langx.util.Strings.unquoted;
 
 public class DigestAuthorizationHeaderBuilder extends AuthorizationHeaderBuilder<DigestAuthorizationHeaderBuilder, DigestWwwAuthenticate, UserPasswordCredentials> {
     @NotEmpty

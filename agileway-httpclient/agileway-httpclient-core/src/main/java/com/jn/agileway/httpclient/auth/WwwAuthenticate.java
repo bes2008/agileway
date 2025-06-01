@@ -1,11 +1,11 @@
 package com.jn.agileway.httpclient.auth;
 
 import com.jn.langx.annotation.Nullable;
-import com.jn.langx.text.StringTemplates;
-import com.jn.langx.util.Strings;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import com.jn.langx.util.Strings;
 
 /**
  * 这个是响应头。用户告诉 UserAgent ，当前请求需要使用哪种方式进行认证
@@ -43,34 +43,7 @@ public class WwwAuthenticate {
     }
 
     public final String getField(String fieldName) {
-        return unquoted(fields.get(fieldName));
-    }
-
-    public static String unquoted(String str) {
-        if (str == null) {
-            return null;
-        }
-        if (Strings.isEmpty(str)) {
-            return "";
-        }
-        return Strings.strip(str, "\"");
-    }
-
-    public static String quoted(String str) {
-        if (Strings.isBlank(str)) {
-            return "";
-        }
-        return StringTemplates.formatWithPlaceholder("\"{}\"", unquoted(str));
-    }
-
-    public static boolean isQuoted(String str) {
-        if (str == null) {
-            return false;
-        }
-        if (Strings.isEmpty(str)) {
-            return false;
-        }
-        return str.length() > 1 && str.startsWith("\"") && str.endsWith("\"");
+        return Strings.unquoted(fields.get(fieldName));
     }
 
     public final void setField(String fieldName, String fieldValue) {
@@ -78,7 +51,7 @@ public class WwwAuthenticate {
     }
 
     public final void setField(String fieldName, String fieldValue, boolean quoted) {
-        this.fields.put(fieldName, quoted ? quoted(fieldValue) : unquoted(fieldValue));
+        this.fields.put(fieldName, quoted ? Strings.quoted(fieldValue) : Strings.unquoted(fieldValue));
     }
 
     @Override
