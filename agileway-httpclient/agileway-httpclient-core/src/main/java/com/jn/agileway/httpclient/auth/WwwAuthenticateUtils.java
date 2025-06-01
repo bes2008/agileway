@@ -48,7 +48,7 @@ public class WwwAuthenticateUtils {
     /**
      * 用于构建 WWW-Authenticate 头部
      */
-    public static String buildWwwAuthenticateHeaderValue(WwwAuthenticate authenticate) {
+    static String buildWwwAuthenticateHeaderValue(WwwAuthenticate authenticate) {
         return HttpHeaderValueBuilders.buildHeaderValueWithType(authenticate.getAuthScheme(), " ", authenticate.getFields(), ", ");
     }
 
