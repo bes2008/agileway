@@ -1,7 +1,7 @@
-package com.jn.agileway.http.authc.basic;
+package com.jn.agileway.httpclient.auth.basic;
 
-import com.jn.agileway.http.authc.AuthScheme;
-import com.jn.agileway.http.authc.WwwAuthenticate;
+import com.jn.agileway.httpclient.auth.AuthScheme;
+import com.jn.agileway.httpclient.auth.WwwAuthenticate;
 import com.jn.langx.annotation.Nullable;
 
 /**

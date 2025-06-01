@@ -1,9 +1,9 @@
-package com.jn.agileway.http.authc.bearer;
+package com.jn.agileway.httpclient.auth.bearer;
 
-import com.jn.agileway.http.authc.AuthHeaders;
-import com.jn.agileway.http.authc.AuthScheme;
-import com.jn.agileway.http.authc.AuthorizationHeaderBuilder;
-import com.jn.agileway.http.authc.WwwAuthenticate;
+import com.jn.agileway.httpclient.auth.AuthHeaders;
+import com.jn.agileway.httpclient.auth.AuthScheme;
+import com.jn.agileway.httpclient.auth.AuthorizationHeaderBuilder;
+import com.jn.agileway.httpclient.auth.WwwAuthenticate;
 
 public class BearerAuthorizationHeaderBuilder extends AuthorizationHeaderBuilder<BearerAuthorizationHeaderBuilder, WwwAuthenticate, BearerCredentials> {
     @Override

@@ -1,4 +1,4 @@
-package com.jn.agileway.http.authc.test;
+package com.jn.agileway.httpclient.test.auth;
 
 import com.jn.agileway.http.authc.AuthHeaders;
 import com.jn.agileway.http.authc.WwwAuthenticate;

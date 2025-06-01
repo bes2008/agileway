@@ -1,6 +1,6 @@
-package com.jn.agileway.http.authc.bearer;
+package com.jn.agileway.httpclient.auth.bearer;
 
-import com.jn.agileway.http.authc.Credentials;
+import com.jn.agileway.httpclient.auth.Credentials;
 
 public class BearerCredentials implements Credentials {
     private String token;

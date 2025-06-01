@@ -1,4 +1,4 @@
-package com.jn.agileway.http.authc.digest;
+package com.jn.agileway.httpclient.auth.digest;
 
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.enums.base.CommonEnum;

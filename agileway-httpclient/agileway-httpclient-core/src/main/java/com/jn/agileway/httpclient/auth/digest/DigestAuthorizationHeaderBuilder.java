@@ -1,8 +1,8 @@
-package com.jn.agileway.http.authc.digest;
+package com.jn.agileway.httpclient.auth.digest;
 
-import com.jn.agileway.http.authc.AuthHeaders;
-import com.jn.agileway.http.authc.AuthorizationHeaderBuilder;
-import com.jn.agileway.http.authc.UserPasswordCredentials;
+import com.jn.agileway.httpclient.auth.AuthHeaders;
+import com.jn.agileway.httpclient.auth.AuthorizationHeaderBuilder;
+import com.jn.agileway.httpclient.auth.UserPasswordCredentials;
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.codec.StringifyFormat;
 import com.jn.langx.codec.Stringifys;
@@ -16,8 +16,8 @@ import com.jn.langx.validation.rule.CharData;
 import java.util.List;
 import java.util.Map;
 
-import static com.jn.agileway.http.authc.WwwAuthenticate.quoted;
-import static com.jn.agileway.http.authc.WwwAuthenticate.unquoted;
+import static com.jn.agileway.httpclient.auth.WwwAuthenticate.quoted;
+import static com.jn.agileway.httpclient.auth.WwwAuthenticate.unquoted;
 
 public class DigestAuthorizationHeaderBuilder extends AuthorizationHeaderBuilder<DigestAuthorizationHeaderBuilder, DigestWwwAuthenticate, UserPasswordCredentials> {
     @NotEmpty

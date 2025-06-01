@@ -1,4 +1,4 @@
-package com.jn.agileway.http.authc;
+package com.jn.agileway.httpclient.auth;
 
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.text.StringTemplates;

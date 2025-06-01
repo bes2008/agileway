@@ -1,4 +1,4 @@
-package com.jn.agileway.http.authc;
+package com.jn.agileway.httpclient.auth;
 
 public class UserPasswordCredentials implements Credentials {
     private String username;
