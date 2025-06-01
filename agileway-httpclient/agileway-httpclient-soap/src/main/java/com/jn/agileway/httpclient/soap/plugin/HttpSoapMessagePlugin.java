@@ -46,10 +46,10 @@ public class HttpSoapMessagePlugin extends HttpMessageProtocolPlugin {
     public void initInternal() throws InitializationException {
         this.requestInterceptors.add(new SoapHttpRequestInterceptor());
 
-        this.requestContentWriters.add(new JavaxSoapMessageWriter());
-        this.requestContentWriters.add(new JakartaSoapMessageWriter());
-        this.requestContentWriters.add(new JavaBeanSoapHttpRequestWriter());
+        this.requestPayloadWriters.add(new JavaxSoapMessageWriter());
+        this.requestPayloadWriters.add(new JakartaSoapMessageWriter());
+        this.requestPayloadWriters.add(new JavaBeanSoapHttpRequestWriter());
 
-        this.responseContentReaders.add(new SoapHttpResponseReader());
+        this.responsePayloadReaders.add(new SoapHttpResponseReader());
     }
 }

@@ -136,7 +136,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
 
         // 组织 requestBodyWriters ，并转换为 transformer, 作为 TransformerOutboundInterceptor 添加到拦截器链中
         for (HttpMessageProtocolPlugin plugin : plugins) {
-            this.requestPayloadWriters.add(new PluginBasedHttpRequestWriter(plugin));
+            this.requestPayloadWriters.add(new PluginBasedHttpRequestPayloadWriter(plugin));
         }
         this.requestPayloadWriters.add(new GeneralFormHttpRequestWriter());
         this.requestPayloadWriters.add(new GeneralMultiPartsFormHttpRequestWriter());
@@ -161,7 +161,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
 
         // 组织 requestBodyWriters ，并转换为 transformer, 作为 TransformerOutboundInterceptor 添加到拦截器链中
         for (HttpMessageProtocolPlugin plugin : plugins) {
-            responsePayloadReaders.add(new PluginBasedHttpResponseReader(plugin));
+            responsePayloadReaders.add(new PluginBasedHttpResponsePayloadReader(plugin));
         }
         this.responsePayloadReaders.add(new GeneralAttachmentReader());
         this.responsePayloadReaders.add(new GeneralTextHttpResponseReader());

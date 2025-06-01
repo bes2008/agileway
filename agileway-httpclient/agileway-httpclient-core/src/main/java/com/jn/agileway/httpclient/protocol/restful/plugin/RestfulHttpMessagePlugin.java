@@ -33,7 +33,7 @@ public class RestfulHttpMessagePlugin extends HttpMessageProtocolPlugin {
 
     @Override
     public void initInternal() {
-        this.requestContentWriters.add(new GeneralJsonHttpRequestWriter());
-        this.responseContentReaders.add(new GeneralJsonHttpResponseReader());
+        this.requestPayloadWriters.add(new GeneralJsonHttpRequestWriter());
+        this.responsePayloadReaders.add(new GeneralJsonHttpResponseReader());
     }
 }

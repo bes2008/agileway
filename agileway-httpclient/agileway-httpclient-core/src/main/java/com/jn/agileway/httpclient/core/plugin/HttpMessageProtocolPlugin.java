@@ -17,23 +17,23 @@ public abstract class HttpMessageProtocolPlugin extends AbstractInitializable im
 
     protected final List<HttpResponseInterceptor> responseInterceptors = Lists.newArrayList();
 
-    protected final List<HttpRequestPayloadWriter> requestContentWriters = Lists.newArrayList();
-    protected final List<HttpResponsePayloadReader> responseContentReaders = Lists.newArrayList();
+    protected final List<HttpRequestPayloadWriter> requestPayloadWriters = Lists.newArrayList();
+    protected final List<HttpResponsePayloadReader> responsePayloadReaders = Lists.newArrayList();
 
-    public List<HttpRequestPayloadWriter> getRequestContentWriters() {
-        return requestContentWriters;
+    List<HttpRequestPayloadWriter> getRequestPayloadWriters() {
+        return requestPayloadWriters;
     }
 
-    public List<HttpRequestInterceptor> getRequestInterceptors() {
+    List<HttpRequestInterceptor> getRequestInterceptors() {
         return requestInterceptors;
     }
 
-    public List<HttpResponseInterceptor> getResponseInterceptors() {
+    List<HttpResponseInterceptor> getResponseInterceptors() {
         return responseInterceptors;
     }
 
-    public List<HttpResponsePayloadReader> getResponseContentReaders() {
-        return responseContentReaders;
+    List<HttpResponsePayloadReader> getResponsePayloadReaders() {
+        return responsePayloadReaders;
     }
 
     @Override

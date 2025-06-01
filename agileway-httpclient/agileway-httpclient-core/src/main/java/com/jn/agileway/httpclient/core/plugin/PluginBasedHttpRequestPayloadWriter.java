@@ -7,24 +7,24 @@ import com.jn.langx.util.function.Predicate;
 
 import java.io.ByteArrayOutputStream;
 
-public class PluginBasedHttpRequestWriter implements HttpRequestPayloadWriter {
+public class PluginBasedHttpRequestPayloadWriter implements HttpRequestPayloadWriter {
 
     private HttpMessageProtocolPlugin plugin;
 
-    public PluginBasedHttpRequestWriter(HttpMessageProtocolPlugin plugin) {
+    public PluginBasedHttpRequestPayloadWriter(HttpMessageProtocolPlugin plugin) {
         this.plugin = plugin;
     }
 
 
     @Override
     public boolean canWrite(HttpRequest<?> request) {
-        if (plugin.getRequestContentWriters().isEmpty()) {
+        if (plugin.getRequestPayloadWriters().isEmpty()) {
             return false;
         }
         if (!plugin.availableFor(request)) {
             return false;
         }
-        return Pipeline.of(plugin.getRequestContentWriters())
+        return Pipeline.of(plugin.getRequestPayloadWriters())
                 .anyMatch(new Predicate<HttpRequestPayloadWriter>() {
                     @Override
                     public boolean test(HttpRequestPayloadWriter writer) {
@@ -35,7 +35,7 @@ public class PluginBasedHttpRequestWriter implements HttpRequestPayloadWriter {
 
     @Override
     public void write(HttpRequest<?> request, ByteArrayOutputStream output) throws Exception {
-        Pipeline.of(plugin.getRequestContentWriters()).findFirst(new Predicate<HttpRequestPayloadWriter>() {
+        Pipeline.of(plugin.getRequestPayloadWriters()).findFirst(new Predicate<HttpRequestPayloadWriter>() {
             @Override
             public boolean test(HttpRequestPayloadWriter httpRequestContentWriter) {
                 return httpRequestContentWriter.canWrite(request);

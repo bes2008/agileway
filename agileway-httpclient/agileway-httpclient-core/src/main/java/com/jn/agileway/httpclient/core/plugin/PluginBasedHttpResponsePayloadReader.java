@@ -8,23 +8,23 @@ import com.jn.langx.util.net.mime.MediaType;
 
 import java.lang.reflect.Type;
 
-public class PluginBasedHttpResponseReader implements HttpResponsePayloadReader<Object> {
+public class PluginBasedHttpResponsePayloadReader implements HttpResponsePayloadReader<Object> {
 
     private HttpMessageProtocolPlugin plugin;
 
-    public PluginBasedHttpResponseReader(HttpMessageProtocolPlugin plugin) {
+    public PluginBasedHttpResponsePayloadReader(HttpMessageProtocolPlugin plugin) {
         this.plugin = plugin;
     }
 
     @Override
     public boolean canRead(HttpResponse<byte[]> response, MediaType contentType, Type expectedContentType) {
-        if (plugin.getResponseContentReaders().isEmpty()) {
+        if (plugin.getResponsePayloadReaders().isEmpty()) {
             return false;
         }
         if (!plugin.availableFor(response)) {
             return false;
         }
-        return Pipeline.of(plugin.getResponseContentReaders())
+        return Pipeline.of(plugin.getResponsePayloadReaders())
                 .anyMatch(new Predicate<HttpResponsePayloadReader>() {
                     @Override
                     public boolean test(HttpResponsePayloadReader reader) {
@@ -35,7 +35,7 @@ public class PluginBasedHttpResponseReader implements HttpResponsePayloadReader<
 
     @Override
     public Object read(HttpResponse<byte[]> response, MediaType contentType, Type expectedContentType) throws Exception {
-        return Pipeline.of(plugin.getResponseContentReaders())
+        return Pipeline.of(plugin.getResponsePayloadReaders())
                 .findFirst(new Predicate<HttpResponsePayloadReader>() {
                     @Override
                     public boolean test(HttpResponsePayloadReader reader) {
