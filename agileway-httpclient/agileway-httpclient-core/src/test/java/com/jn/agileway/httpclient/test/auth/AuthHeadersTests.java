@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.test.auth;
 
-import com.jn.agileway.http.authc.AuthHeaders;
-import com.jn.agileway.http.authc.WwwAuthenticate;
+import com.jn.agileway.httpclient.auth.AuthHeaders;
+import com.jn.agileway.httpclient.auth.WwwAuthenticate;
 import org.junit.Test;
 
 public class AuthHeadersTests {
