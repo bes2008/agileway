@@ -1,6 +1,5 @@
 package com.jn.agileway.httpclient.auth.digest;
 
-import com.jn.agileway.httpclient.auth.AuthHeaders;
 import com.jn.agileway.httpclient.auth.AuthorizationHeaderBuilder;
 import com.jn.agileway.httpclient.auth.UserPasswordCredentials;
 import com.jn.langx.annotation.NotEmpty;
@@ -10,6 +9,7 @@ import com.jn.langx.security.crypto.digest.MessageDigests;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.io.Charsets;
+import com.jn.langx.util.net.http.HttpHeaderValueBuilders;
 import com.jn.langx.util.random.Randoms;
 import com.jn.langx.validation.rule.CharData;
 
@@ -85,7 +85,7 @@ public class DigestAuthorizationHeaderBuilder extends AuthorizationHeaderBuilder
         fields.put("opaque", quoted(this.wwwAuthenticate.getOpaque()));
         fields.put("userhash", "" + this.wwwAuthenticate.isUserhash());
 
-        String template = AuthHeaders.buildAuthHeaderString("Digest", fields);
+        String template = HttpHeaderValueBuilders.buildHeaderValueWithType("Digest", " ", fields, ", ");
         return template;
     }
 

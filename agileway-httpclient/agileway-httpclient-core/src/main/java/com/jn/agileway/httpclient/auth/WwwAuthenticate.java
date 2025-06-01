@@ -7,6 +7,11 @@ import com.jn.langx.util.Strings;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * 这个是响应头。用户告诉 UserAgent ，当前请求需要使用哪种方式进行认证
+ * <p>
+ * https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Reference/Headers/WWW-Authenticate
+ */
 public class WwwAuthenticate {
     private String authScheme;
     private Map<String, String> fields = new LinkedHashMap<String, String>();
@@ -82,6 +87,6 @@ public class WwwAuthenticate {
     }
 
     public String toHeaderValue() {
-        return AuthHeaders.buildWwwAuthenticate(this);
+        return WwwAuthenticateUtils.buildWwwAuthenticateHeaderValue(this);
     }
 }

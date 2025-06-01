@@ -4,14 +4,14 @@ import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.net.http.HttpHeaderValueBuilders;
 import com.jn.langx.util.regexp.Regexp;
 import com.jn.langx.util.regexp.RegexpMatcher;
 import com.jn.langx.util.regexp.Regexps;
 
 import java.util.List;
-import java.util.Map;
 
-public class AuthHeaders {
+public class WwwAuthenticateUtils {
     public static WwwAuthenticate parseWwwAuthenticate(String header) {
         Preconditions.checkNotEmpty(header, "WWW-Authenticate header is empty");
 
@@ -45,27 +45,11 @@ public class AuthHeaders {
         return wwwAuthenticate;
     }
 
-    public static String buildWwwAuthenticate(WwwAuthenticate authenticate) {
-        return buildAuthHeaderString(authenticate.getAuthScheme(), authenticate.getFields());
-    }
-
-    public static String buildAuthHeaderString(String authScheme, String encoded) {
-        return authScheme + " " + encoded;
-    }
-
-    public static String buildAuthHeaderString(String authScheme, Map<String, String> fields) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(authScheme);
-        int i = 0;
-        for (Map.Entry<String, String> entry : fields.entrySet()) {
-            if (i > 0) {
-                builder.append(",");
-            }
-            builder.append(" ");
-            builder.append(entry.getKey()).append("=").append(entry.getValue());
-            i++;
-        }
-        return builder.toString();
+    /**
+     * 用于构建 WWW-Authenticate 头部
+     */
+    public static String buildWwwAuthenticateHeaderValue(WwwAuthenticate authenticate) {
+        return HttpHeaderValueBuilders.buildHeaderValueWithType(authenticate.getAuthScheme(), " ", authenticate.getFields(), ", ");
     }
 
     public static List<String> getFieldAsList(String fieldValue, String separator) {
@@ -74,5 +58,6 @@ public class AuthHeaders {
         }
         return Lists.immutableList();
     }
+
 
 }

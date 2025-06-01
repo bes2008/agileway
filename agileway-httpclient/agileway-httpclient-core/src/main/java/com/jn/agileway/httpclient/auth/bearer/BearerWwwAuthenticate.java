@@ -1,6 +1,6 @@
 package com.jn.agileway.httpclient.auth.bearer;
 
-import com.jn.agileway.httpclient.auth.AuthHeaders;
+import com.jn.agileway.httpclient.auth.WwwAuthenticateUtils;
 import com.jn.agileway.httpclient.auth.AuthScheme;
 import com.jn.agileway.httpclient.auth.WwwAuthenticate;
 
@@ -18,6 +18,6 @@ public class BearerWwwAuthenticate extends WwwAuthenticate {
 
     public List<String> getScopeAsList() {
         String scope = getScope();
-        return AuthHeaders.getFieldAsList(scope, " ");
+        return WwwAuthenticateUtils.getFieldAsList(scope, " ");
     }
 }

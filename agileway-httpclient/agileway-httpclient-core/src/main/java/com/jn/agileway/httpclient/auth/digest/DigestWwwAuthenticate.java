@@ -1,6 +1,6 @@
 package com.jn.agileway.httpclient.auth.digest;
 
-import com.jn.agileway.httpclient.auth.AuthHeaders;
+import com.jn.agileway.httpclient.auth.WwwAuthenticateUtils;
 import com.jn.agileway.httpclient.auth.AuthScheme;
 import com.jn.agileway.httpclient.auth.WwwAuthenticate;
 import com.jn.langx.annotation.NotEmpty;
@@ -39,7 +39,7 @@ public class DigestWwwAuthenticate extends WwwAuthenticate {
 
     public List<String> getDomainAsList() {
         String domain = getDomain();
-        return AuthHeaders.getFieldAsList(domain, " ");
+        return WwwAuthenticateUtils.getFieldAsList(domain, " ");
     }
 
     /**
@@ -124,7 +124,7 @@ public class DigestWwwAuthenticate extends WwwAuthenticate {
 
     public List<String> getQopAsList() {
         String qop = getQop();
-        return AuthHeaders.getFieldAsList(qop, ",");
+        return WwwAuthenticateUtils.getFieldAsList(qop, ",");
     }
 
     /**
