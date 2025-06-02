@@ -1,6 +1,7 @@
 package com.jn.agileway.httpclient.core.interceptor;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
+import com.jn.agileway.httpclient.core.MessageHeaderConstants;
 import com.jn.agileway.httpclient.core.error.exception.BadHttpRequestException;
 import com.jn.agileway.httpclient.core.payload.multipart.MultiPartsForm;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
@@ -55,5 +56,7 @@ public class HttpRequestMultiPartsFormInterceptor implements HttpRequestIntercep
         contentType = new MediaType(contentType, "boundary", boundary);
         contentType = new MediaType(contentType, "charset", formCharset.name());
         request.getHttpHeaders().setContentType(contentType);
+
+        request.getHeaders().put(MessageHeaderConstants.REQUEST_KEY_IS_ATTACHMENT_UPLOAD, true);
     }
 }

@@ -6,12 +6,11 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 
-import java.io.ByteArrayOutputStream;
 import java.util.Collection;
 
 public abstract class AbstractUnderlyingHttpExecutor<UnderlyingRequest> implements UnderlyingHttpExecutor<UnderlyingRequest> {
 
-    protected final void writeHeaders(HttpRequest<ByteArrayOutputStream> request, UnderlyingRequest underlyingRequest) {
+    protected final void writeHeaders(HttpRequest<?> request, UnderlyingRequest underlyingRequest) {
         HttpMethod method = request.getMethod();
         HttpHeaders headers = request.getHttpHeaders();
         if (HttpClientUtils.requestBodyUseStreamMode(method, headers)) {

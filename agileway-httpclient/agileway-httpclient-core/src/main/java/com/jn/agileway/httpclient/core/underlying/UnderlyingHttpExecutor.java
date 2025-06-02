@@ -1,9 +1,11 @@
 package com.jn.agileway.httpclient.core.underlying;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
-
-import java.io.ByteArrayOutputStream;
+import com.jn.agileway.httpclient.core.payload.multipart.MultiPartsForm;
 
 public interface UnderlyingHttpExecutor<TARGET> {
-    UnderlyingHttpResponse execute(HttpRequest<ByteArrayOutputStream> request) throws Exception;
+    UnderlyingHttpResponse executeBufferedRequest(HttpRequest<byte[]> request) throws Exception;
+
+    UnderlyingHttpResponse executeAttachmentUploadRequest(HttpRequest<MultiPartsForm> request) throws Exception;
+
 }

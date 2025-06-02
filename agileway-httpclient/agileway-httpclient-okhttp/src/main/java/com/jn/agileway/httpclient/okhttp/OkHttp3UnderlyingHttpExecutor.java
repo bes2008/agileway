@@ -1,6 +1,7 @@
 package com.jn.agileway.httpclient.okhttp;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
+import com.jn.agileway.httpclient.core.payload.multipart.MultiPartsForm;
 import com.jn.agileway.httpclient.core.underlying.AbstractUnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.ContentEncoding;
@@ -14,7 +15,6 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
@@ -36,12 +36,7 @@ public class OkHttp3UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecuto
     }
 
     @Override
-    public UnderlyingHttpResponse execute(HttpRequest<ByteArrayOutputStream> request) throws Exception {
-        return exchangeInternal(request);
-    }
-
-
-    protected UnderlyingHttpResponse exchangeInternal(HttpRequest<ByteArrayOutputStream> request) throws IOException {
+    public UnderlyingHttpResponse executeBufferedRequest(HttpRequest<byte[]> request) throws Exception {
         HttpMethod method = request.getMethod();
         String rawContentType = request.getHttpHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
         okhttp3.MediaType contentType = Strings.isNotEmpty(rawContentType) ? okhttp3.MediaType.parse(rawContentType) : null;
@@ -50,14 +45,14 @@ public class OkHttp3UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecuto
             // 压缩处理：
             List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
             if (!Objs.isEmpty(contentEncodings)) {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream(request.getPayload().size() / 5);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream(request.getPayload().length / 3);
                 OutputStream out = HttpClientUtils.wrapByContentEncodings(baos, contentEncodings);
-                out.write(request.getPayload().toByteArray());
+                out.write(request.getPayload());
                 out.flush();
                 body = RequestBody.create(contentType, baos.toByteArray());
                 out.close();
             } else {
-                body = RequestBody.create(contentType, request.getPayload().toByteArray());
+                body = RequestBody.create(contentType, request.getPayload());
             }
         }
 
@@ -67,4 +62,8 @@ public class OkHttp3UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecuto
         return new OkHttp3UnderlyingHttpResponse(method, request.getUri(), this.httpClient.newCall(underlyingRequest).execute());
     }
 
+    @Override
+    public UnderlyingHttpResponse executeAttachmentUploadRequest(HttpRequest<MultiPartsForm> request) throws Exception {
+        return null;
+    }
 }

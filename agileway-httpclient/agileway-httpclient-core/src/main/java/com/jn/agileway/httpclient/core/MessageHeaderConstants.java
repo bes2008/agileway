@@ -28,6 +28,11 @@ public class MessageHeaderConstants {
      */
     static final String REQUEST_KEY_REPLY_PAYLOAD_ERROR_EXTRACTOR = REQUEST_HEADER_KEY_PREFIX + "reply_payload_error_extractor";
 
+    /**
+     * 标记是否为附件上传请求
+     */
+    public static final String REQUEST_KEY_IS_ATTACHMENT_UPLOAD = REQUEST_HEADER_KEY_PREFIX + "is_attachment_upload";
+
     public static final String REQUEST_KEY_LOGGING_PAYLOAD = REQUEST_HEADER_KEY_PREFIX + "logging_payload";
 
     //*********************************************************************************************************

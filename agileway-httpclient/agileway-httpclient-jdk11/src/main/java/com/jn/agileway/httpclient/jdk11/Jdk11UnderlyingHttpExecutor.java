@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.jdk11;
 
+import com.jn.agileway.httpclient.core.payload.multipart.MultiPartsForm;
 import com.jn.agileway.httpclient.core.underlying.AbstractUnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.ContentEncoding;
@@ -12,7 +13,6 @@ import com.jn.langx.util.net.http.HttpMethod;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -47,11 +47,12 @@ public class Jdk11UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
     }
 
     @Override
-    public UnderlyingHttpResponse execute(com.jn.agileway.httpclient.core.HttpRequest<ByteArrayOutputStream> request) throws Exception {
-        return exchangeInternal(request);
+    public UnderlyingHttpResponse executeAttachmentUploadRequest(com.jn.agileway.httpclient.core.HttpRequest<MultiPartsForm> request) throws Exception {
+        return null;
     }
 
-    protected Jdk11UnderlyingHttpResponse exchangeInternal(com.jn.agileway.httpclient.core.HttpRequest<ByteArrayOutputStream> request) throws IOException {
+    @Override
+    public UnderlyingHttpResponse executeBufferedRequest(com.jn.agileway.httpclient.core.HttpRequest<byte[]> request) throws Exception {
         HttpMethod method = request.getMethod();
         URI uri = request.getUri();
         HttpRequest.Builder builder = HttpRequest.newBuilder(uri);
@@ -60,14 +61,14 @@ public class Jdk11UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
             // 压缩处理：
             List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
             if (!Objs.isEmpty(contentEncodings)) {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream(request.getPayload().size() / 5);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream(request.getPayload().length / 3);
                 OutputStream out = HttpClientUtils.wrapByContentEncodings(baos, contentEncodings);
-                out.write(request.getPayload().toByteArray());
+                out.write(request.getPayload());
                 out.flush();
                 builder.method(method.name(), HttpRequest.BodyPublishers.ofByteArray(baos.toByteArray()));
                 out.close();
             } else {
-                builder.method(method.name(), HttpRequest.BodyPublishers.ofByteArray(request.getPayload().toByteArray()));
+                builder.method(method.name(), HttpRequest.BodyPublishers.ofByteArray(request.getPayload()));
             }
         } else {
             builder.method(method.name(), HttpRequest.BodyPublishers.noBody());

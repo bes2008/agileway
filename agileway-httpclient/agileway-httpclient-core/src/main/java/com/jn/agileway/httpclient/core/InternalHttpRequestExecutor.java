@@ -33,7 +33,12 @@ final class InternalHttpRequestExecutor extends RequestReplyExecutor {
         boolean executed = retryer.execute(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                UnderlyingHttpResponse response = underlyingHttpExecutor.execute(request);
+                UnderlyingHttpResponse response;
+                if (Boolean.TRUE.equals(request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_IS_ATTACHMENT_UPLOAD))) {
+                    response = underlyingHttpExecutor.executeAttachmentUploadRequest(request);
+                } else {
+                    response = underlyingHttpExecutor.executeBufferedRequest(request);
+                }
                 request.getHeaders().put(MessageHeaderConstants.REQUEST_KEY_UNDERLYING_RESPONSE, response);
                 return true;
             }
