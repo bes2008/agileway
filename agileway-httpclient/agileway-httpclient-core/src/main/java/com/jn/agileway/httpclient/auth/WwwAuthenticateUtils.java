@@ -36,7 +36,7 @@ public class WwwAuthenticateUtils {
                 }
                 value = Strings.trim(value);
                 if (Strings.isNotBlank(value)) {
-                    wwwAuthenticate.setField(key, value, WwwAuthenticate.isQuoted(value));
+                    wwwAuthenticate.setField(key, value, Strings.isQuoted(value));
                 }
             }
 

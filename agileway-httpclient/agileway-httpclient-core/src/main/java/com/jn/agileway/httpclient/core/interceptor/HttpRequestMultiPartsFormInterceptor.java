@@ -29,33 +29,31 @@ public class HttpRequestMultiPartsFormInterceptor implements HttpRequestIntercep
                 request.getHttpHeaders().setContentType(MediaType.MULTIPART_FORM_DATA);
             }
         }
-
-        if (MediaType.MULTIPART_FORM_DATA.equalsTypeAndSubtype(request.getHttpHeaders().getContentType())) {
-            if (request.getMethod() != HttpMethod.POST) {
-                throw new BadHttpRequestException(request.getMethod(), request.getUri(), StringTemplates.formatWithPlaceholder("multipart/form-data content should use the POST, current is: {}", request.getMethod()));
-            }
-            if (!(request.getPayload() instanceof MultiPartsForm)) {
-                try {
-                    if (request.getPayload() instanceof MultiValueMap) {
-                        request.setPayload(MultiPartsForm.ofMultiValueMap((MultiValueMap) request.getPayload()));
-                    } else if (request.getPayload() instanceof Map) {
-                        request.setPayload(MultiPartsForm.ofMap((Map) request.getPayload()));
-                    }
-                } catch (Throwable ex) {
-                    throw new BadHttpRequestException(request.getMethod(), request.getUri(), StringTemplates.formatWithPlaceholder("invalid multipart/form-data content "));
+        MediaType contentType = request.getHttpHeaders().getContentType();
+        if (!MediaType.MULTIPART_FORM_DATA.equalsTypeAndSubtype(contentType)) {
+            return;
+        }
+        if (request.getMethod() != HttpMethod.POST) {
+            throw new BadHttpRequestException(request.getMethod(), request.getUri(), StringTemplates.formatWithPlaceholder("multipart/form-data content should use the POST, current is: {}", request.getMethod()));
+        }
+        if (!(request.getPayload() instanceof MultiPartsForm)) {
+            try {
+                if (request.getPayload() instanceof MultiValueMap) {
+                    request.setPayload(MultiPartsForm.ofMultiValueMap((MultiValueMap) request.getPayload()));
+                } else if (request.getPayload() instanceof Map) {
+                    request.setPayload(MultiPartsForm.ofMap((Map) request.getPayload()));
                 }
+            } catch (Throwable ex) {
+                throw new BadHttpRequestException(request.getMethod(), request.getUri(), StringTemplates.formatWithPlaceholder("invalid multipart/form-data content "));
             }
         }
 
-        if (request.getPayload() instanceof MultiPartsForm) {
-            MediaType contentType = request.getHttpHeaders().getContentType();
-            String boundary = HttpClientUtils.generateMultipartBoundary();
-            MultiPartsForm form = (MultiPartsForm) request.getPayload();
-            Charset formCharset = form.getCharset() == null ? Charsets.UTF_8 : form.getCharset();
+        String boundary = HttpClientUtils.generateMultipartBoundary();
+        MultiPartsForm form = (MultiPartsForm) request.getPayload();
+        Charset formCharset = form.getCharset() == null ? Charsets.UTF_8 : form.getCharset();
 
-            contentType = new MediaType(contentType, "boundary", boundary);
-            contentType = new MediaType(contentType, "charset", formCharset.name());
-            request.getHttpHeaders().setContentType(contentType);
-        }
+        contentType = new MediaType(contentType, "boundary", boundary);
+        contentType = new MediaType(contentType, "charset", formCharset.name());
+        request.getHttpHeaders().setContentType(contentType);
     }
 }
