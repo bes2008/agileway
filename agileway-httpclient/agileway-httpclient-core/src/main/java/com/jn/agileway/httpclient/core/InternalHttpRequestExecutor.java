@@ -18,18 +18,6 @@ import java.util.concurrent.Callable;
 final class InternalHttpRequestExecutor extends RequestReplyExecutor {
     private UnderlyingHttpExecutor underlyingHttpExecutor;
 
-    private static final String REQUEST_KEY_REPLY = "agileway_http_reply";
-    static final String REQUEST_KEY_RETRY = "agileway_http_request_retry";
-
-
-    /**
-     * 请求中，自定义的 正常的 payload extractor
-     */
-    static final String REQUEST_KEY_REPLY_PAYLOAD_EXTRACTOR = "agileway_http_reply_payload_extractor";
-    /**
-     * 请求中，自定义的 statusCode >= 400时的 payload extractor
-     */
-    static final String REQUEST_KEY_REPLY_PAYLOAD_ERROR_EXTRACTOR = "agileway_http_reply_payload_error_extractor";
 
     void setUnderlyingHttpExecutor(UnderlyingHttpExecutor underlyingHttpExecutor) {
         this.underlyingHttpExecutor = underlyingHttpExecutor;
@@ -38,7 +26,7 @@ final class InternalHttpRequestExecutor extends RequestReplyExecutor {
     @Override
     public boolean sink(Message<?> message) {
         HttpRequest<?> request = (HttpRequest<?>) message;
-        Retryer<Boolean> retryer = (Retryer<Boolean>) request.getHeaders().get(REQUEST_KEY_RETRY);
+        Retryer<Boolean> retryer = (Retryer<Boolean>) request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_RETRY);
         retryer = retryer == null ? new Retryer(RetryConfig.noneRetryConfig()) : retryer;
 
         // 返回请求是否被 执行了
@@ -46,7 +34,7 @@ final class InternalHttpRequestExecutor extends RequestReplyExecutor {
             @Override
             public Boolean call() throws Exception {
                 UnderlyingHttpResponse response = underlyingHttpExecutor.execute(request);
-                request.getHeaders().put(REQUEST_KEY_REPLY, response);
+                request.getHeaders().put(MessageHeaderConstants.REQUEST_KEY_UNDERLYING_RESPONSE, response);
                 return true;
             }
         });
@@ -68,7 +56,7 @@ final class InternalHttpRequestExecutor extends RequestReplyExecutor {
         UnderlyingHttpResponse underlyingHttpResponse = null;
         long start = System.currentTimeMillis();
         while (underlyingHttpResponse == null) {
-            underlyingHttpResponse = (UnderlyingHttpResponse) request.getHeaders().get(REQUEST_KEY_REPLY);
+            underlyingHttpResponse = (UnderlyingHttpResponse) request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_UNDERLYING_RESPONSE);
             if (underlyingHttpResponse == null) {
                 long now = System.currentTimeMillis();
                 if (now - start > timeoutInMills) {
@@ -84,10 +72,10 @@ final class InternalHttpRequestExecutor extends RequestReplyExecutor {
     }
 
     private HttpResponse extractPayload(HttpRequest request) {
-        UnderlyingHttpResponse underlyingHttpResponse = (UnderlyingHttpResponse) request.getHeaders().get(REQUEST_KEY_REPLY);
-        Type expectResponseType = (Type) request.getHeaders().get(BaseHttpMessage.HEADER_KEY_REPLY_PAYLOAD_TYPE);
-        HttpResponsePayloadExtractor contentExtractor = (HttpResponsePayloadExtractor) request.getHeaders().get(REQUEST_KEY_REPLY_PAYLOAD_EXTRACTOR);
-        HttpResponsePayloadExtractor errorContentExtractor = (HttpResponsePayloadExtractor) request.getHeaders().get(REQUEST_KEY_REPLY_PAYLOAD_ERROR_EXTRACTOR);
+        UnderlyingHttpResponse underlyingHttpResponse = (UnderlyingHttpResponse) request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_UNDERLYING_RESPONSE);
+        Type expectResponseType = (Type) request.getHeaders().get(MessageHeaderConstants.RESPONSE_KEY_REPLY_PAYLOAD_TYPE);
+        HttpResponsePayloadExtractor contentExtractor = (HttpResponsePayloadExtractor) request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_REPLY_PAYLOAD_EXTRACTOR);
+        HttpResponsePayloadExtractor errorContentExtractor = (HttpResponsePayloadExtractor) request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_REPLY_PAYLOAD_ERROR_EXTRACTOR);
 
 
         clearRequestMessage();
@@ -137,7 +125,7 @@ final class InternalHttpRequestExecutor extends RequestReplyExecutor {
             underlyingHttpResponse.close();
         }
 
-        response.getHeaders().put(BaseHttpMessage.HEADER_KEY_REPLY_PAYLOAD_TYPE, expectResponseType);
+        response.getHeaders().put(MessageHeaderConstants.RESPONSE_KEY_REPLY_PAYLOAD_TYPE, expectResponseType);
 
         return response;
     }

@@ -3,6 +3,7 @@ package com.jn.agileway.httpclient.core.payload;
 import com.jn.agileway.eipchannel.core.message.Message;
 import com.jn.agileway.eipchannel.core.transformer.MessageTransformer;
 import com.jn.agileway.httpclient.core.HttpRequest;
+import com.jn.agileway.httpclient.core.MessageHeaderConstants;
 import com.jn.agileway.httpclient.core.error.exception.NotFoundHttpContentWriterException;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.Throwables;
@@ -26,7 +27,8 @@ public class HttpRequestPayloadTransformer implements MessageTransformer {
         if (HttpClientUtils.isWriteableMethod(request.getMethod()) && request.getPayload() != null) {
 
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-
+            Object loggingPayload = request.getPayload();
+            request.getHeaders().put(MessageHeaderConstants.REQUEST_KEY_LOGGING_PAYLOAD, loggingPayload);
             HttpRequestPayloadWriter requestBodyWriter = Pipeline.of(writers)
                     .findFirst(new Predicate<HttpRequestPayloadWriter>() {
                         @Override

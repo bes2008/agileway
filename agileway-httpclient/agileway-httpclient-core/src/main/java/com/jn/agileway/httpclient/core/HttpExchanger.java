@@ -127,7 +127,6 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
 
         this.requestInterceptors.add(0, new HttpRequestUriInterceptor(configuration.getAllowedSchemes(), configuration.getAllowedAuthorities(), configuration.getNotAllowedAuthorities()));
         this.requestInterceptors.add(0, new HttpRequestMethodInterceptor(configuration.getAllowedMethods(), configuration.getNotAllowedMethods()));
-        this.requestInterceptors = Lists.immutableList(requestInterceptors);
 
         ChannelMessageInterceptorPipeline outboundChannelPipeline = new ChannelMessageInterceptorPipeline();
         for (HttpRequestInterceptor requestInterceptor : this.requestInterceptors) {
@@ -244,16 +243,16 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
 
     public <O> Promise<HttpResponse<O>> exchangeWithRetry(boolean async, HttpRequest request, Type responseType, HttpResponsePayloadExtractor payloadExtractor, HttpResponsePayloadExtractor errorPayloadExtractor, Retryer<Boolean> retryer) {
         if (payloadExtractor != null) {
-            request.getHeaders().put(HttpRequest.HEADER_KEY_REPLY_PAYLOAD_TYPE, responseType);
+            request.getHeaders().put(MessageHeaderConstants.RESPONSE_KEY_REPLY_PAYLOAD_TYPE, responseType);
         }
         if (payloadExtractor != null) {
-            request.getHeaders().put(InternalHttpRequestExecutor.REQUEST_KEY_REPLY_PAYLOAD_EXTRACTOR, responseType);
+            request.getHeaders().put(MessageHeaderConstants.REQUEST_KEY_REPLY_PAYLOAD_EXTRACTOR, responseType);
         }
         if (errorPayloadExtractor != null) {
-            request.getHeaders().put(InternalHttpRequestExecutor.REQUEST_KEY_REPLY_PAYLOAD_ERROR_EXTRACTOR, errorPayloadExtractor);
+            request.getHeaders().put(MessageHeaderConstants.REQUEST_KEY_REPLY_PAYLOAD_ERROR_EXTRACTOR, errorPayloadExtractor);
         }
         if (retryer != null) {
-            request.getHeaders().put(InternalHttpRequestExecutor.REQUEST_KEY_RETRY, retryer);
+            request.getHeaders().put(MessageHeaderConstants.REQUEST_KEY_RETRY, retryer);
         }
         return exchangeInternal(async, request);
     }

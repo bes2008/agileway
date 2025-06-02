@@ -23,7 +23,7 @@ public class DigestAuthorizationHeaderBuilder extends AuthorizationHeaderBuilder
     @NotEmpty
     private String requestUri;
     private String requestMethod;
-    private String requestEntityBody;
+    private byte[] requestEntityBody;
 
     public DigestAuthorizationHeaderBuilder() {
         super();
@@ -39,7 +39,7 @@ public class DigestAuthorizationHeaderBuilder extends AuthorizationHeaderBuilder
         return this;
     }
 
-    public DigestAuthorizationHeaderBuilder withRequestEntityBody(String requestEntityBody) {
+    public DigestAuthorizationHeaderBuilder withRequestEntityBody(byte[] requestEntityBody) {
         this.requestEntityBody = requestEntityBody;
         return this;
     }
@@ -93,11 +93,18 @@ public class DigestAuthorizationHeaderBuilder extends AuthorizationHeaderBuilder
      * H(data)
      */
     private String hash(String data) {
+        return hash(data.getBytes(Charsets.UTF_8));
+    }
+
+    /**
+     * H(data)
+     */
+    private String hash(byte[] data) {
         String digestAlgorithm = this.wwwAuthenticate.getAlgorithm().getName();
         if (Strings.endsWith(digestAlgorithm, "-sess")) {
             digestAlgorithm = Strings.substring(digestAlgorithm, 0, digestAlgorithm.length() - 5);
         }
-        return MessageDigests.digestToString(digestAlgorithm, data.getBytes(), null, 1, StringifyFormat.HEX);
+        return MessageDigests.digestToString(digestAlgorithm, data, null, 1, StringifyFormat.HEX);
     }
 
     private String generateCNonce() {

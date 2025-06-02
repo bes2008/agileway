@@ -2,8 +2,8 @@ package com.jn.agileway.httpclient.core.payload;
 
 import com.jn.agileway.eipchannel.core.message.Message;
 import com.jn.agileway.eipchannel.core.transformer.MessageTransformer;
-import com.jn.agileway.httpclient.core.BaseHttpMessage;
 import com.jn.agileway.httpclient.core.HttpResponse;
+import com.jn.agileway.httpclient.core.MessageHeaderConstants;
 import com.jn.agileway.httpclient.core.error.exception.NotFoundHttpContentReaderException;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
@@ -38,7 +38,7 @@ public class HttpResponsePayloadTransformer implements MessageTransformer {
         if (deserialized) {
             return response;
         }
-        Type expectedType = (Type) response.getHeaders().get(BaseHttpMessage.HEADER_KEY_REPLY_PAYLOAD_TYPE);
+        Type expectedType = (Type) response.getHeaders().get(MessageHeaderConstants.RESPONSE_KEY_REPLY_PAYLOAD_TYPE);
         if (expectedType == null) {
             expectedType = Object.class;
         }
