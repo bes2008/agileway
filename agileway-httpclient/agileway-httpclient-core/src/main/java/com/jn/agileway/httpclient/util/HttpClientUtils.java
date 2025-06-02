@@ -144,6 +144,23 @@ public class HttpClientUtils {
         return new String(boundary, Charsets.US_ASCII);
     }
 
+    public static boolean isAttachmentResponse(String contentDispositionValue) {
+        if (Strings.isBlank(contentDispositionValue)) {
+            return false;
+        }
+
+        ContentDisposition contentDisposition = ContentDisposition.parseResponseHeader(contentDispositionValue);
+        if (contentDisposition == null) {
+            return false;
+        }
+
+        if (!contentDisposition.isAttachment()) {
+            return false;
+        }
+        return true;
+    }
+
+
     private static final byte[] BOUNDARY_ALPHABET =
             new byte[]{'-', '_', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f', 'g',
                     'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A',

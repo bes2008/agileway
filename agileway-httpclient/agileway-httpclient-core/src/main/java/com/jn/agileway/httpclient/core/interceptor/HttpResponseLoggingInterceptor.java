@@ -1,10 +1,14 @@
 package com.jn.agileway.httpclient.core.interceptor;
 
 import com.jn.agileway.httpclient.core.HttpResponse;
+import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.logging.Loggers;
+import com.jn.langx.util.net.mime.MediaType;
 import org.slf4j.Logger;
 
+import java.nio.charset.Charset;
 import java.util.Collection;
 
 public class HttpResponseLoggingInterceptor implements HttpResponseInterceptor {
@@ -21,7 +25,21 @@ public class HttpResponseLoggingInterceptor implements HttpResponseInterceptor {
                     builder.append(name).append(": ").append(headerValue).append(Strings.CRLF);
                 }
             }
+            Object payload = response.getPayload();
+            if (payload != null && payload.getClass() == byte[].class) {
+                MediaType contentType = response.getHttpHeaders().getContentType();
+                String contentDispositionValue = response.getHttpHeaders().getFirstHeader("Content-Disposition");
+                if (!HttpClientUtils.isAttachmentResponse(contentDispositionValue)) {
+                    builder.append(Strings.CRLF);
+                    Charset charset = contentType.getCharset();
+                    if (charset == null) {
+                        charset = Charsets.UTF_8;
+                    }
+                    builder.append(new String((byte[]) payload, charset));
+                    builder.append(Strings.CRLF);
+                }
 
+            }
             logger.debug("<<<<" + Strings.CRLF + builder.toString());
         }
     }

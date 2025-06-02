@@ -2,6 +2,7 @@ package com.jn.agileway.httpclient.core.payload;
 
 import com.jn.agileway.httpclient.core.HttpResponse;
 import com.jn.agileway.httpclient.util.ContentDisposition;
+import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.io.resource.InputStreamResource;
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.util.Strings;
@@ -21,20 +22,7 @@ public class GeneralAttachmentReader extends CustomMediaTypesHttpResponseReader<
 
     public boolean canRead(HttpResponse<byte[]> response, MediaType contentType, Type expectedContentType) {
         String contentDispositionValue = response.getHttpHeaders().getFirstHeader("Content-Disposition");
-        if (Strings.isBlank(contentDispositionValue)) {
-            return false;
-        }
-
-        ContentDisposition contentDisposition = ContentDisposition.parseResponseHeader(contentDispositionValue);
-        if (contentDisposition == null) {
-            return false;
-        }
-
-        if (!contentDisposition.isAttachment()) {
-            return false;
-        }
-
-        return true;
+        return HttpClientUtils.isAttachmentResponse(contentDispositionValue);
     }
 
     @Override
