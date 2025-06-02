@@ -1,8 +1,8 @@
 package com.jn.agileway.httpclient.auth.digest;
 
-import com.jn.agileway.httpclient.auth.WwwAuthenticateUtils;
 import com.jn.agileway.httpclient.auth.AuthScheme;
 import com.jn.agileway.httpclient.auth.WwwAuthenticate;
+import com.jn.agileway.httpclient.auth.WwwAuthenticateUtils;
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Strings;

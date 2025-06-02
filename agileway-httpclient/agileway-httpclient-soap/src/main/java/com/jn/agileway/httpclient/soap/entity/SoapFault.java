@@ -2,7 +2,6 @@ package com.jn.agileway.httpclient.soap.entity;
 
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
-import com.jn.langx.annotation.NullableIf;
 
 import java.net.URI;
 import java.util.Map;

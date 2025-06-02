@@ -1,8 +1,8 @@
 package com.jn.agileway.httpclient.auth.bearer;
 
-import com.jn.agileway.httpclient.auth.WwwAuthenticateUtils;
 import com.jn.agileway.httpclient.auth.AuthScheme;
 import com.jn.agileway.httpclient.auth.WwwAuthenticate;
+import com.jn.agileway.httpclient.auth.WwwAuthenticateUtils;
 
 import java.util.List;
 

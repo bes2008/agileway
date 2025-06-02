@@ -1,6 +1,5 @@
 package com.jn.agileway.httpclient.core.underlying;
 
-import com.jn.agileway.httpclient.core.HttpMessage;
 import com.jn.agileway.httpclient.core.HttpResponseMessage;
 
 import java.io.Closeable;

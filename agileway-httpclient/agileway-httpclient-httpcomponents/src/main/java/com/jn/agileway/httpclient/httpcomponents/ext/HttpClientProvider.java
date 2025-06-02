@@ -1,9 +1,7 @@
 package com.jn.agileway.httpclient.httpcomponents.ext;
 
-import com.jn.langx.lifecycle.AbstractInitializable;
 import com.jn.langx.lifecycle.AbstractLifecycle;
 import com.jn.langx.lifecycle.InitializationException;
-import com.jn.langx.lifecycle.Lifecycle;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Numbers;
 import com.jn.langx.util.Preconditions;
@@ -21,7 +19,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.ConnectionKeepAliveStrategy;
-import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.HttpClientBuilder;

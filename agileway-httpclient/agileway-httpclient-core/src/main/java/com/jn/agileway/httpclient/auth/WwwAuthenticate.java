@@ -1,11 +1,10 @@
 package com.jn.agileway.httpclient.auth;
 
 import com.jn.langx.annotation.Nullable;
+import com.jn.langx.util.Strings;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import com.jn.langx.util.Strings;
 
 /**
  * 这个是响应头。用户告诉 UserAgent ，当前请求需要使用哪种方式进行认证

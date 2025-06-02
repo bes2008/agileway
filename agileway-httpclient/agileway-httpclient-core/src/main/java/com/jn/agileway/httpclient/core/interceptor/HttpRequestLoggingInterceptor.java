@@ -1,9 +1,7 @@
 package com.jn.agileway.httpclient.core.interceptor;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
-import com.jn.agileway.httpclient.core.MessageHeaderConstants;
 import com.jn.langx.util.Strings;
-import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.net.mime.MediaType;
 import org.slf4j.Logger;
