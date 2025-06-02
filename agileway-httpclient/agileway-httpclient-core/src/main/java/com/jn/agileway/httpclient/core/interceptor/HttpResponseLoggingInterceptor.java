@@ -18,7 +18,7 @@ public class HttpResponseLoggingInterceptor implements HttpResponseInterceptor {
     public void intercept(HttpResponse response) {
         if (logger.isDebugEnabled()) {
             StringBuilder builder = new StringBuilder();
-            builder.append(response.getMethod().name()).append(" ").append(response.getUri()).append(Strings.CRLF);
+            builder.append(response.getMethod().name()).append(" ").append(response.getUri()).append(Strings.CRLF).append(Strings.CRLF);
             for (String name : response.getHttpHeaders().keySet()) {
                 Collection<String> headerValues = response.getHttpHeaders().get(name);
                 for (String headerValue : headerValues) {

@@ -19,7 +19,7 @@ public class HttpRequestLoggingInterceptor implements HttpRequestInterceptor {
     public void intercept(HttpRequest request) {
         if (logger.isDebugEnabled()) {
             StringBuilder builder = new StringBuilder();
-            builder.append(request.getMethod().name()).append(" ").append(request.getUri()).append(Strings.CRLF);
+            builder.append(request.getMethod().name()).append(" ").append(request.getUri()).append(Strings.CRLF).append(Strings.CRLF);
             for (String name : request.getHttpHeaders().keySet()) {
                 Collection<String> headerValues = request.getHttpHeaders().get(name);
                 for (String headerValue : headerValues) {
