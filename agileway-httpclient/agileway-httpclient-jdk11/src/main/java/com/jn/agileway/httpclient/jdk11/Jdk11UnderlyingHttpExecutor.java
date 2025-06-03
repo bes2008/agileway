@@ -52,12 +52,13 @@ public class Jdk11UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
         URI uri = request.getUri();
         HttpRequest.Builder builder = HttpRequest.newBuilder(uri);
         writeHeaders(request, builder);
+        Thread writePayload = null;
         if (HttpClientUtils.isWriteableMethod(request.getMethod()) && request.getPayload() != null) {
 
             PipedInputStream pipedInputStream = new PipedInputStream();
             PipedOutputStream pipedOutputStream = new PipedOutputStream(pipedInputStream);
 
-            new Thread(new Runnable() {
+            writePayload = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -68,7 +69,7 @@ public class Jdk11UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
                         IOs.close(pipedOutputStream);
                     }
                 }
-            }).start();
+            });
             builder.method(method.name(), HttpRequest.BodyPublishers.ofInputStream(() -> pipedInputStream));
 
         } else {
@@ -80,6 +81,9 @@ public class Jdk11UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
         java.net.http.HttpResponse<byte[]> underlyingHttpResponse = null;
         try {
             underlyingHttpResponse = this.httpClient.send(underlyingRequest, java.net.http.HttpResponse.BodyHandlers.ofByteArray());
+            if (writePayload != null) {
+                writePayload.start();
+            }
             underlyingHttpResponse.statusCode();
             java.net.http.HttpHeaders headers = underlyingHttpResponse.headers();
             HttpHeaders responseHeaders = new HttpHeaders();
