@@ -69,7 +69,7 @@ public class OkHttp3UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecuto
         okhttp3.MediaType contentType = Strings.isNotEmpty(rawContentType) ? okhttp3.MediaType.parse(rawContentType) : null;
         RequestBody body = null;
         if (HttpClientUtils.isWriteableMethod(method) && request.getPayload() != null) {
-            body = new HttpRequestPayload(request, payloadWriter, contentType);
+            body = new HttpRequestAttachmentPayload(request, payloadWriter, contentType);
         }
 
         Request.Builder builder = new Request.Builder().url(request.getUri().toURL()).method(method.name(), body);

@@ -10,12 +10,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
-class HttpRequestPayload extends RequestBody {
+class HttpRequestAttachmentPayload extends RequestBody {
     private HttpRequestPayloadWriter writer;
     private HttpRequest request;
     private MediaType mediaType;
 
-    public HttpRequestPayload(HttpRequest request, HttpRequestPayloadWriter writer, MediaType mediaType) {
+    public HttpRequestAttachmentPayload(HttpRequest request, HttpRequestPayloadWriter writer, MediaType mediaType) {
         this.writer = writer;
         this.request = request;
         this.mediaType = mediaType;

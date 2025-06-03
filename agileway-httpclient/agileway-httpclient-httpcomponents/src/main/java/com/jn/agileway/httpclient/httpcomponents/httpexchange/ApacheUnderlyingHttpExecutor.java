@@ -12,7 +12,6 @@ import org.apache.http.client.methods.*;
 import org.apache.http.impl.client.CloseableHttpClient;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
 
@@ -46,15 +45,7 @@ public class ApacheUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor
     @Override
     public UnderlyingHttpResponse executeBufferedRequest(HttpRequest<ByteArrayOutputStream> request) throws Exception {
         HttpUriRequest underlyingRequest = createHttpUriRequest(request.getMethod(), request.getUri());
-        return exchangeInternal(underlyingRequest, request);
-    }
 
-    @Override
-    public UnderlyingHttpResponse executeAttachmentUploadRequest(HttpRequest<?> request, HttpRequestPayloadWriter payloadWriter) throws Exception {
-        return null;
-    }
-
-    protected UnderlyingHttpResponse exchangeInternal(HttpUriRequest underlyingRequest, HttpRequest<ByteArrayOutputStream> request) throws IOException {
         writeHeaders(request, underlyingRequest);
         HttpEntity contentEntity = null;
         if (HttpClientUtils.isWriteableMethod(request.getMethod()) && request.getPayload() != null) {
@@ -64,13 +55,30 @@ public class ApacheUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor
             } else {
                 contentEntity = new CompressedBufferedHttpEntity(request.getHttpHeaders().getContentType().toString(), contentEncoding);
             }
-
+            ((OutputStream) contentEntity).write(request.getPayload().toByteArray());
         }
 
         if (underlyingRequest instanceof HttpEntityEnclosingRequestBase && contentEntity != null) {
             HttpEntityEnclosingRequestBase underlyingRequestBase = (HttpEntityEnclosingRequestBase) underlyingRequest;
             underlyingRequestBase.setEntity(contentEntity);
-            ((OutputStream) contentEntity).write(request.getPayload().toByteArray());
+        }
+        CloseableHttpResponse underlyingResponse = this.httpClient.execute(underlyingRequest);
+        return new ApacheUnderlyingHttpResponse(request.getMethod(), request.getUri(), underlyingResponse);
+    }
+
+    @Override
+    public UnderlyingHttpResponse executeAttachmentUploadRequest(HttpRequest<?> request, HttpRequestPayloadWriter payloadWriter) throws Exception {
+        HttpUriRequest underlyingRequest = createHttpUriRequest(request.getMethod(), request.getUri());
+
+        writeHeaders(request, underlyingRequest);
+        HttpEntity contentEntity = null;
+        if (HttpClientUtils.isWriteableMethod(request.getMethod()) && request.getPayload() != null) {
+            contentEntity = new HttpRequestAttachmentHttpEntity(request, payloadWriter, request.getHttpHeaders().getContentType().toString());
+        }
+
+        if (underlyingRequest instanceof HttpEntityEnclosingRequestBase && contentEntity != null) {
+            HttpEntityEnclosingRequestBase underlyingRequestBase = (HttpEntityEnclosingRequestBase) underlyingRequest;
+            underlyingRequestBase.setEntity(contentEntity);
         }
         CloseableHttpResponse underlyingResponse = this.httpClient.execute(underlyingRequest);
         return new ApacheUnderlyingHttpResponse(request.getMethod(), request.getUri(), underlyingResponse);
