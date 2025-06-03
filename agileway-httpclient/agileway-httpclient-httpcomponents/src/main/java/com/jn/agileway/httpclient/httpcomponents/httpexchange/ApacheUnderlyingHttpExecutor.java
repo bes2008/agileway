@@ -7,6 +7,7 @@ import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpMethod;
+import com.jn.langx.util.net.mime.MediaType;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -51,11 +52,12 @@ public class ApacheUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor
         if (HttpClientUtils.isWriteableMethod(request.getMethod()) && request.getPayload() != null) {
             String contentEncoding = request.getHttpHeaders().getFirst("Content-Encoding");
             if (Strings.isBlank(contentEncoding)) {
-                contentEntity = new BufferedHttpEntity(request.getHttpHeaders().getContentType().toString());
+                MediaType contentType = request.getHttpHeaders().getContentType();
+                contentEntity = new BufferedHttpEntity(request.getPayload(), contentType.toString());
             } else {
                 contentEntity = new CompressedBufferedHttpEntity(request.getHttpHeaders().getContentType().toString(), contentEncoding);
+                request.getPayload().writeTo((OutputStream) contentEntity);
             }
-            ((OutputStream) contentEntity).write(request.getPayload().toByteArray());
         }
 
         if (underlyingRequest instanceof HttpEntityEnclosingRequestBase && contentEntity != null) {

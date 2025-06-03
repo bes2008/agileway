@@ -7,12 +7,12 @@ import org.apache.http.message.BasicHeader;
 
 import java.io.*;
 
-class BufferedHttpEntity extends OutputStream implements HttpEntity {
+class BufferedHttpEntity implements HttpEntity {
     private Header contentType;
     private ByteArrayOutputStream buffer;
 
-    public BufferedHttpEntity(String contentType) {
-        this.buffer = new ByteArrayOutputStream();
+    public BufferedHttpEntity(ByteArrayOutputStream buffer, String contentType) {
+        this.buffer = buffer;
         if (Strings.isNotEmpty(contentType)) {
             this.contentType = new BasicHeader("Content-Type", contentType);
         }
@@ -54,6 +54,7 @@ class BufferedHttpEntity extends OutputStream implements HttpEntity {
     public void writeTo(OutputStream outStream) throws IOException {
         byte[] bytes = this.buffer.toByteArray();
         outStream.write(bytes);
+        outStream.flush();
     }
 
     @Override
@@ -64,10 +65,5 @@ class BufferedHttpEntity extends OutputStream implements HttpEntity {
     @Override
     public void consumeContent() throws IOException {
 
-    }
-
-    @Override
-    public void write(int b) throws IOException {
-        buffer.write(b);
     }
 }
