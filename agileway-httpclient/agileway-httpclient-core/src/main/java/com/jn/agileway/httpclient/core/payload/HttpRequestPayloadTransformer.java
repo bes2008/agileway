@@ -23,13 +23,10 @@ public class HttpRequestPayloadTransformer implements MessageTransformer {
     @Override
     public Message<?> transform(Message<?> message) {
         HttpRequest request = (HttpRequest) message;
-        // 如果是附件上传请求，则不需要进行 payload 转换，直接返回即可
-        if (Boolean.TRUE.equals(request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_IS_ATTACHMENT_UPLOAD))) {
-            return request;
-        }
-        
+
         if (HttpClientUtils.isWriteableMethod(request.getMethod()) && request.getPayload() != null) {
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+
             Object loggingPayload = request.getPayload();
             request.getHeaders().put(MessageHeaderConstants.REQUEST_KEY_LOGGING_PAYLOAD, loggingPayload);
             HttpRequestPayloadWriter requestBodyWriter = Pipeline.of(writers)
@@ -40,11 +37,19 @@ public class HttpRequestPayloadTransformer implements MessageTransformer {
                         }
                     });
             if (requestBodyWriter != null) {
-                try {
-                    requestBodyWriter.write(request, buffer);
-                    request.setPayload(buffer);
-                } catch (Exception ex) {
-                    throw Throwables.wrapAsRuntimeException(ex);
+
+                // 如果是附件上传请求，则不需要进行 payload 转换，不需要当下就进行write操作，只是记录 Writer
+                boolean isAttachmentUpload = Boolean.TRUE.equals(request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_IS_ATTACHMENT_UPLOAD));
+                if (isAttachmentUpload) {
+                    request.getHeaders().put(MessageHeaderConstants.REQUEST_KEY_ATTACHMENT_UPLOAD_WRITER, requestBodyWriter);
+                } else {
+                    try {
+                        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                        requestBodyWriter.write(request, buffer);
+                        request.setPayload(buffer);
+                    } catch (Exception ex) {
+                        throw Throwables.wrapAsRuntimeException(ex);
+                    }
                 }
             } else {
                 throw new NotFoundHttpContentWriterException();

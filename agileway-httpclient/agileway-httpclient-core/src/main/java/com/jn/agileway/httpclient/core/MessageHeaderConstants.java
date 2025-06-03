@@ -32,6 +32,7 @@ public class MessageHeaderConstants {
      * 标记是否为附件上传请求
      */
     public static final String REQUEST_KEY_IS_ATTACHMENT_UPLOAD = REQUEST_HEADER_KEY_PREFIX + "is_attachment_upload";
+    public static final String REQUEST_KEY_ATTACHMENT_UPLOAD_WRITER = REQUEST_HEADER_KEY_PREFIX + "attachment_upload_writer";
 
     public static final String REQUEST_KEY_LOGGING_PAYLOAD = REQUEST_HEADER_KEY_PREFIX + "logging_payload";
 
