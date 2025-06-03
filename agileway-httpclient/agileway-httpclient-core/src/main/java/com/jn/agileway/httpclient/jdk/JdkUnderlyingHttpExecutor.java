@@ -15,6 +15,7 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.*;
@@ -71,7 +72,7 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
     }
 
     @Override
-    public UnderlyingHttpResponse executeBufferedRequest(HttpRequest<byte[]> request) throws Exception {
+    public UnderlyingHttpResponse executeBufferedRequest(HttpRequest<ByteArrayOutputStream> request) throws Exception {
         URI uri = request.getUri();
         HttpMethod method = request.getMethod();
         HttpHeaders httpHeaders = request.getHttpHeaders();
@@ -85,7 +86,7 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
         return null;
     }
 
-    protected UnderlyingHttpResponse exchangeInternal(HttpRequest<byte[]> request, HttpURLConnection httpConnection, boolean streamMode) throws IOException {
+    protected UnderlyingHttpResponse exchangeInternal(HttpRequest<ByteArrayOutputStream> request, HttpURLConnection httpConnection, boolean streamMode) throws IOException {
         if (!streamMode) {
             // buffered 模式
             writeHeaders(request, httpConnection);
@@ -95,7 +96,7 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
                 List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
 
                 outputStream = HttpClientUtils.wrapByContentEncodings(outputStream, contentEncodings);
-                outputStream.write(request.getPayload());
+                outputStream.write(request.getPayload().toByteArray());
                 outputStream.flush();
             }
         } else {
@@ -112,7 +113,7 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
                 OutputStream outputStream = httpConnection.getOutputStream();
                 List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
                 outputStream = HttpClientUtils.wrapByContentEncodings(outputStream, contentEncodings);
-                outputStream.write(request.getPayload());
+                outputStream.write(request.getPayload().toByteArray());
                 outputStream.flush();
             } catch (IOException ex) {
                 throw Throwables.wrapAsRuntimeIOException(ex);

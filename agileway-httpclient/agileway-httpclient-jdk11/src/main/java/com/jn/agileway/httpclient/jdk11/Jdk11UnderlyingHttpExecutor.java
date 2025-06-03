@@ -52,7 +52,7 @@ public class Jdk11UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
     }
 
     @Override
-    public UnderlyingHttpResponse executeBufferedRequest(com.jn.agileway.httpclient.core.HttpRequest<byte[]> request) throws Exception {
+    public UnderlyingHttpResponse executeBufferedRequest(com.jn.agileway.httpclient.core.HttpRequest<ByteArrayOutputStream> request) throws Exception {
         HttpMethod method = request.getMethod();
         URI uri = request.getUri();
         HttpRequest.Builder builder = HttpRequest.newBuilder(uri);
@@ -61,14 +61,14 @@ public class Jdk11UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
             // 压缩处理：
             List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
             if (!Objs.isEmpty(contentEncodings)) {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream(request.getPayload().length / 3);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream(request.getPayload().size() / 3);
                 OutputStream out = HttpClientUtils.wrapByContentEncodings(baos, contentEncodings);
-                out.write(request.getPayload());
+                out.write(request.getPayload().toByteArray());
                 out.flush();
                 builder.method(method.name(), HttpRequest.BodyPublishers.ofByteArray(baos.toByteArray()));
                 out.close();
             } else {
-                builder.method(method.name(), HttpRequest.BodyPublishers.ofByteArray(request.getPayload()));
+                builder.method(method.name(), HttpRequest.BodyPublishers.ofByteArray(request.getPayload().toByteArray()));
             }
         } else {
             builder.method(method.name(), HttpRequest.BodyPublishers.noBody());

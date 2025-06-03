@@ -36,7 +36,7 @@ public class OkHttp3UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecuto
     }
 
     @Override
-    public UnderlyingHttpResponse executeBufferedRequest(HttpRequest<byte[]> request) throws Exception {
+    public UnderlyingHttpResponse executeBufferedRequest(HttpRequest<ByteArrayOutputStream> request) throws Exception {
         HttpMethod method = request.getMethod();
         String rawContentType = request.getHttpHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
         okhttp3.MediaType contentType = Strings.isNotEmpty(rawContentType) ? okhttp3.MediaType.parse(rawContentType) : null;
@@ -45,14 +45,14 @@ public class OkHttp3UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecuto
             // 压缩处理：
             List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
             if (!Objs.isEmpty(contentEncodings)) {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream(request.getPayload().length / 3);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream(request.getPayload().size() / 3);
                 OutputStream out = HttpClientUtils.wrapByContentEncodings(baos, contentEncodings);
-                out.write(request.getPayload());
+                out.write(request.getPayload().toByteArray());
                 out.flush();
                 body = RequestBody.create(contentType, baos.toByteArray());
                 out.close();
             } else {
-                body = RequestBody.create(contentType, request.getPayload());
+                body = RequestBody.create(contentType, request.getPayload().toByteArray());
             }
         }
 
