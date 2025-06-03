@@ -64,6 +64,17 @@ public class OkHttp3UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecuto
 
     @Override
     public UnderlyingHttpResponse executeAttachmentUploadRequest(HttpRequest<?> request, HttpRequestPayloadWriter payloadWriter) throws Exception {
-        return null;
+        HttpMethod method = request.getMethod();
+        String rawContentType = request.getHttpHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
+        okhttp3.MediaType contentType = Strings.isNotEmpty(rawContentType) ? okhttp3.MediaType.parse(rawContentType) : null;
+        RequestBody body = null;
+        if (HttpClientUtils.isWriteableMethod(method) && request.getPayload() != null) {
+            body = new HttpRequestPayload(request, payloadWriter, contentType);
+        }
+
+        Request.Builder builder = new Request.Builder().url(request.getUri().toURL()).method(method.name(), body);
+        writeHeaders(request, builder);
+        Request underlyingRequest = builder.build();
+        return new OkHttp3UnderlyingHttpResponse(method, request.getUri(), this.httpClient.newCall(underlyingRequest).execute());
     }
 }
