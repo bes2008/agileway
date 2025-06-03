@@ -69,7 +69,7 @@ public class Jdk11UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
                     }
                 }
             }).start();
-            builder.POST(HttpRequest.BodyPublishers.ofInputStream(() -> pipedInputStream));
+            builder.method(method.name(), HttpRequest.BodyPublishers.ofInputStream(() -> pipedInputStream));
 
         } else {
             builder.method(method.name(), HttpRequest.BodyPublishers.noBody());
