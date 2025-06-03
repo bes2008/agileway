@@ -75,15 +75,42 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
     public UnderlyingHttpResponse executeBufferedRequest(HttpRequest<ByteArrayOutputStream> request) throws Exception {
         URI uri = request.getUri();
         HttpMethod method = request.getMethod();
-        HttpHeaders httpHeaders = request.getHttpHeaders();
-        boolean streamMode = HttpClientUtils.requestBodyUseStreamMode(method, httpHeaders);
-        HttpURLConnection httpURLConnection = createHttpUrlConnection(method, uri);
-        return exchangeInternal(request, httpURLConnection, streamMode);
+        HttpURLConnection httpConnection = createHttpUrlConnection(method, uri);
+
+        // buffered 模式
+        writeHeaders(request, httpConnection);
+        httpConnection.connect();
+        if (httpConnection.getDoOutput() && request.getPayload() != null) {
+            OutputStream outputStream = httpConnection.getOutputStream();
+            List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
+
+            outputStream = HttpClientUtils.wrapByContentEncodings(outputStream, contentEncodings);
+            outputStream.write(request.getPayload().toByteArray());
+            outputStream.flush();
+        }
+        httpConnection.getResponseCode();
+        return new JdkUnderlyingHttpResponse(httpConnection);
     }
 
     @Override
-    public UnderlyingHttpResponse executeAttachmentUploadRequest(HttpRequest<MultiPartsForm> request) throws Exception {
-        return null;
+    public UnderlyingHttpResponse executeAttachmentUploadRequest(HttpRequest<?> request) throws Exception {
+        URI uri = request.getUri();
+        HttpMethod method = request.getMethod();
+        HttpURLConnection httpConnection = createHttpUrlConnection(method, uri);
+
+        // buffered 模式
+        writeHeaders(request, httpConnection);
+        httpConnection.connect();
+        if (httpConnection.getDoOutput() && request.getPayload() != null) {
+            OutputStream outputStream = httpConnection.getOutputStream();
+            List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
+            outputStream = HttpClientUtils.wrapByContentEncodings(outputStream, contentEncodings);
+
+
+            outputStream.flush();
+        }
+        httpConnection.getResponseCode();
+        return new JdkUnderlyingHttpResponse(httpConnection);
     }
 
     protected UnderlyingHttpResponse exchangeInternal(HttpRequest<ByteArrayOutputStream> request, HttpURLConnection httpConnection, boolean streamMode) throws IOException {

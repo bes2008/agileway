@@ -6,7 +6,7 @@ import com.jn.easyjson.core.util.JSONs;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.net.mime.MediaType;
 
-import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 
 class GeneralJsonHttpRequestWriter implements HttpRequestPayloadWriter {
     @Override
@@ -19,7 +19,7 @@ class GeneralJsonHttpRequestWriter implements HttpRequestPayloadWriter {
     }
 
     @Override
-    public void write(HttpRequest<?> request, ByteArrayOutputStream output) throws Exception {
+    public void write(HttpRequest<?> request, OutputStream output) throws Exception {
         Object body = request.getPayload();
         output.write(JSONs.toJson(body).getBytes(Charsets.UTF_8));
     }

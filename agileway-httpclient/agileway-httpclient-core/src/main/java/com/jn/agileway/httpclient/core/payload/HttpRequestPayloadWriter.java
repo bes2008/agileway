@@ -2,7 +2,7 @@ package com.jn.agileway.httpclient.core.payload;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
 
-import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 
 
 /**
@@ -11,5 +11,5 @@ import java.io.ByteArrayOutputStream;
 public interface HttpRequestPayloadWriter {
     boolean canWrite(HttpRequest<?> request);
 
-    void write(HttpRequest<?> request, ByteArrayOutputStream output) throws Exception;
+    void write(HttpRequest<?> request, OutputStream output) throws Exception;
 }

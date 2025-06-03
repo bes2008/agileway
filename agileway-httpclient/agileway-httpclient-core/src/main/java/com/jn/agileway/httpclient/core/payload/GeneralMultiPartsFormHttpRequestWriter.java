@@ -11,8 +11,8 @@ import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.net.mime.MediaType;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -31,7 +31,7 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloa
     }
 
     @Override
-    public void write(HttpRequest<?> request, ByteArrayOutputStream output) throws Exception {
+    public void write(HttpRequest<?> request, OutputStream output) throws Exception {
         Object body = request.getPayload();
         MediaType contentType = request.getHttpHeaders().getContentType();
         MultiPartsForm form = (MultiPartsForm) body;
@@ -44,7 +44,7 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloa
         output.write(("--" + boundary + "--\r\n").getBytes(Charsets.US_ASCII));
     }
 
-    private void writePart(Part part, ByteArrayOutputStream output, String boundary, Charset formCharset) throws IOException {
+    private void writePart(Part part, OutputStream output, String boundary, Charset formCharset) throws IOException {
         if (part == null) {
             return;
         }

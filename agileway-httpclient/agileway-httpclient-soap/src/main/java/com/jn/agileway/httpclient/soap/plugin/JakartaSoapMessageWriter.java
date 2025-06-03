@@ -4,7 +4,8 @@ import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.payload.HttpRequestPayloadWriter;
 import jakarta.xml.soap.SOAPMessage;
 
-import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+
 
 public class JakartaSoapMessageWriter implements HttpRequestPayloadWriter {
     @Override
@@ -16,7 +17,7 @@ public class JakartaSoapMessageWriter implements HttpRequestPayloadWriter {
     }
 
     @Override
-    public void write(HttpRequest<?> request, ByteArrayOutputStream output) throws Exception {
+    public void write(HttpRequest<?> request, OutputStream output) throws Exception {
         SOAPMessage soapMessage = (SOAPMessage) request.getPayload();
         soapMessage.writeTo(output);
     }

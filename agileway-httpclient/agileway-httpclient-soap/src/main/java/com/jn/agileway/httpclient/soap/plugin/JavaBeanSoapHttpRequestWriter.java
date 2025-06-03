@@ -7,8 +7,8 @@ import com.jn.agileway.httpclient.soap.utils.SOAPs;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.io.Charsets;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 class JavaBeanSoapHttpRequestWriter implements HttpRequestPayloadWriter {
     @Override
@@ -17,7 +17,7 @@ class JavaBeanSoapHttpRequestWriter implements HttpRequestPayloadWriter {
     }
 
     @Override
-    public void write(HttpRequest<?> request, ByteArrayOutputStream output) throws IOException {
+    public void write(HttpRequest<?> request, OutputStream output) throws IOException {
         Object body = request.getPayload();
         try {
             SoapMessage soapMessage = (SoapMessage) body;
