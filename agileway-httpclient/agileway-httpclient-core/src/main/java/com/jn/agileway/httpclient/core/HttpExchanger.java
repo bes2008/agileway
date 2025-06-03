@@ -58,7 +58,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
      *  ---------------------                       ---------------------
      *        |                                             ^
      *        v                                             |
-     *  UnderlyingHttpRequest                      UnderlyingHttpResponse
+     *   HttpRequest&lt;ByteArrayOutputStream>      UnderlyingHttpResponse
      *        |                                             ^
      *        v                                             |
      * ---------------------------------------------------------------------------
