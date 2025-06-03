@@ -1,6 +1,7 @@
 package com.jn.agileway.httpclient.core.payload;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
+import com.jn.agileway.httpclient.core.MessageHeaderConstants;
 import com.jn.agileway.httpclient.core.payload.multipart.MultiPartsForm;
 import com.jn.agileway.httpclient.core.payload.multipart.Part;
 import com.jn.agileway.httpclient.core.payload.multipart.ResourcePart;
@@ -10,6 +11,8 @@ import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
+import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.net.mime.MediaType;
@@ -43,18 +46,20 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloa
         Charset formCharset = form.getCharset() == null ? Charsets.UTF_8 : form.getCharset();
         String boundary = contentType.getParameter("boundary");
 
+        boolean fileCompressDisabled = request.getHeaders().getIfAbsent(MessageHeaderConstants.REQUEST_KEY_ATTACHMENT_UPLOAD_TEXT_COMPRESS_DISABLED, false);
+
         for (Part part : form.getParts()) {
-            writePart(part, output, boundary, formCharset);
+            writePart(part, output, boundary, formCharset, fileCompressDisabled);
         }
         output.write(("--" + boundary + "--\r\n").getBytes(Charsets.US_ASCII));
     }
 
-    private void writePart(Part part, OutputStream output, String boundary, Charset formCharset) throws IOException {
+    private void writePart(Part part, OutputStream output, String boundary, Charset formCharset, boolean fileCompressDisabled) throws IOException {
         if (part == null) {
             return;
         }
 
-        boolean isCompressibleResourcePart = isCompressibleResourcePart(part);
+        boolean isCompressibleResourcePart = !fileCompressDisabled && isCompressibleResourcePart(part);
 
         output.write(("--" + boundary + Strings.CRLF).getBytes(Charsets.US_ASCII));
         String contentDisposition = part.getContentDisposition().asString();
@@ -125,12 +130,22 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloa
 
         String filename = resourcePart.getContentDisposition().getFilename();
         if (Strings.isNotBlank(filename)) {
-            for (String extension : COMPRESSIBLE_FILE_EXTENSIONS) {
-                if (filename.endsWith(extension)) {
-                    return true;
+            if (Pipeline.of(COMPRESSIBLE_FILE_EXTENSIONS).noneMatch(new Predicate<String>() {
+                @Override
+                public boolean test(String extension) {
+                    return filename.endsWith(extension);
                 }
+            })) {
+                return false;
             }
         }
-        return false;
+
+        // > 100 KB时才启用
+        long fileLength = resourcePart.getContent().contentLength();
+        if (fileLength >= 0 && fileLength < 100 * 1024) {
+            return false;
+        }
+
+        return true;
     }
 }

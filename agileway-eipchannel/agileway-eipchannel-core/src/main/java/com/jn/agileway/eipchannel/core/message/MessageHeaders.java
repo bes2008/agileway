@@ -127,7 +127,7 @@ public class MessageHeaders<H> extends LinkedHashMap<String, Object> implements 
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T get(Object key, Class<T> type) {
+    public <T> T get(String key, Class<T> type) {
         Object value = this.get(key);
         if (value == null) {
             return null;
@@ -135,6 +135,14 @@ public class MessageHeaders<H> extends LinkedHashMap<String, Object> implements 
         if (!type.isAssignableFrom(value.getClass())) {
             throw new IllegalArgumentException("Incorrect type specified for header '" + key + "'. Expected [" + type
                     + "] but actual type is [" + value.getClass() + "]");
+        }
+        return (T) value;
+    }
+
+    public <T> T getIfAbsent(String key, T defaultValue) {
+        Object value = this.get(key);
+        if (value == null) {
+            value = defaultValue;
         }
         return (T) value;
     }
