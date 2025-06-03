@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.okhttp;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
-import com.jn.agileway.httpclient.core.payload.multipart.MultiPartsForm;
+import com.jn.agileway.httpclient.core.payload.HttpRequestPayloadWriter;
 import com.jn.agileway.httpclient.core.underlying.AbstractUnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.ContentEncoding;
@@ -63,7 +63,7 @@ public class OkHttp3UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecuto
     }
 
     @Override
-    public UnderlyingHttpResponse executeAttachmentUploadRequest(HttpRequest<MultiPartsForm> request) throws Exception {
+    public UnderlyingHttpResponse executeAttachmentUploadRequest(HttpRequest<?> request, HttpRequestPayloadWriter payloadWriter) throws Exception {
         return null;
     }
 }

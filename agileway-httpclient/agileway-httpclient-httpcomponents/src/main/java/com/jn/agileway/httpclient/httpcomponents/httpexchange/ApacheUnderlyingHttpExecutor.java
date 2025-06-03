@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.httpcomponents.httpexchange;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
-import com.jn.agileway.httpclient.core.payload.multipart.MultiPartsForm;
+import com.jn.agileway.httpclient.core.payload.HttpRequestPayloadWriter;
 import com.jn.agileway.httpclient.core.underlying.AbstractUnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
@@ -50,7 +50,7 @@ public class ApacheUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor
     }
 
     @Override
-    public UnderlyingHttpResponse executeAttachmentUploadRequest(HttpRequest<MultiPartsForm> request) throws Exception {
+    public UnderlyingHttpResponse executeAttachmentUploadRequest(HttpRequest<?> request, HttpRequestPayloadWriter payloadWriter) throws Exception {
         return null;
     }
 
@@ -62,7 +62,7 @@ public class ApacheUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor
             if (Strings.isBlank(contentEncoding)) {
                 contentEntity = new BufferedHttpEntity(request.getHttpHeaders().getContentType().toString());
             } else {
-                contentEntity = new CompressedHttpEntity(request.getHttpHeaders().getContentType().toString(), contentEncoding);
+                contentEntity = new CompressedBufferedHttpEntity(request.getHttpHeaders().getContentType().toString(), contentEncoding);
             }
 
         }

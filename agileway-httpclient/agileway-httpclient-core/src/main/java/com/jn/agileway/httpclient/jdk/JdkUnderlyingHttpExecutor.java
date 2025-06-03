@@ -2,13 +2,12 @@ package com.jn.agileway.httpclient.jdk;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.error.exception.UnsupportedHttpMethodException;
-import com.jn.agileway.httpclient.core.payload.multipart.MultiPartsForm;
+import com.jn.agileway.httpclient.core.payload.HttpRequestPayloadWriter;
 import com.jn.agileway.httpclient.core.underlying.AbstractUnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.ContentEncoding;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.Throwables;
-import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 
 import javax.net.ssl.HostnameVerifier;
@@ -93,7 +92,7 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
     }
 
     @Override
-    public UnderlyingHttpResponse executeAttachmentUploadRequest(HttpRequest<?> request) throws Exception {
+    public UnderlyingHttpResponse executeAttachmentUploadRequest(HttpRequest<?> request, HttpRequestPayloadWriter payloadWriter) throws Exception {
         URI uri = request.getUri();
         HttpMethod method = request.getMethod();
         HttpURLConnection httpConnection = createHttpUrlConnection(method, uri);
@@ -105,8 +104,7 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
             OutputStream outputStream = httpConnection.getOutputStream();
             List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
             outputStream = HttpClientUtils.wrapByContentEncodings(outputStream, contentEncodings);
-
-
+            payloadWriter.write(request, outputStream);
             outputStream.flush();
         }
         httpConnection.getResponseCode();

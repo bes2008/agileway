@@ -11,13 +11,13 @@ import org.apache.http.message.BasicHeader;
 
 import java.io.*;
 
-public class CompressedHttpEntity extends OutputStream implements HttpEntity {
+public class CompressedBufferedHttpEntity extends OutputStream implements HttpEntity {
     private Header contentType;
     private Header contentEncoding;
     private ByteArrayOutputStream underlying;
     private OutputStream compressedOutputStream;
 
-    public CompressedHttpEntity(String contentType, String contentEncoding) {
+    public CompressedBufferedHttpEntity(String contentType, String contentEncoding) {
         Preconditions.checkNotEmpty(contentEncoding, "the argument contentEncoding is required");
         this.underlying = new ByteArrayOutputStream();
         if (Strings.isNotEmpty(contentType)) {

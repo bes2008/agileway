@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.jdk11;
 
+import com.jn.agileway.httpclient.core.payload.HttpRequestPayloadWriter;
 import com.jn.agileway.httpclient.core.payload.multipart.MultiPartsForm;
 import com.jn.agileway.httpclient.core.underlying.AbstractUnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
@@ -47,7 +48,7 @@ public class Jdk11UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
     }
 
     @Override
-    public UnderlyingHttpResponse executeAttachmentUploadRequest(com.jn.agileway.httpclient.core.HttpRequest<MultiPartsForm> request) throws Exception {
+    public UnderlyingHttpResponse executeAttachmentUploadRequest(com.jn.agileway.httpclient.core.HttpRequest<?> request, HttpRequestPayloadWriter payloadWriter) throws Exception {
         return null;
     }
 
