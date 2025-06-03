@@ -3,6 +3,7 @@ package com.jn.agileway.httpclient.core;
 import com.jn.agileway.eipchannel.core.endpoint.exchange.RequestReplyExecutor;
 import com.jn.agileway.eipchannel.core.message.Message;
 import com.jn.agileway.httpclient.core.error.exception.HttpTimeoutException;
+import com.jn.agileway.httpclient.core.payload.HttpRequestPayloadWriter;
 import com.jn.agileway.httpclient.core.payload.HttpResponsePayloadExtractor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
@@ -35,7 +36,8 @@ final class InternalHttpRequestExecutor extends RequestReplyExecutor {
             public Boolean call() throws Exception {
                 UnderlyingHttpResponse response;
                 if (Boolean.TRUE.equals(request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_IS_ATTACHMENT_UPLOAD))) {
-                    response = underlyingHttpExecutor.executeAttachmentUploadRequest(request);
+                    HttpRequestPayloadWriter payloadWriter = (HttpRequestPayloadWriter) request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_ATTACHMENT_UPLOAD_WRITER);
+                    response = underlyingHttpExecutor.executeAttachmentUploadRequest(request, payloadWriter);
                 } else {
                     response = underlyingHttpExecutor.executeBufferedRequest(request);
                 }

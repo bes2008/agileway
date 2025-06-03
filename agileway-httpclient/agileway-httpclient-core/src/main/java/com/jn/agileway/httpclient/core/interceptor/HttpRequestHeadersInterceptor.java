@@ -80,5 +80,8 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
 
         // Content-Length 由底层 http库完成
         request.getHttpHeaders().remove("Content-Length");
+
+        // Transfer-Encoding 在 UnderlyingHttpExecutor 中处理
+        request.getHttpHeaders().remove("Transfer-Encoding");
     }
 }

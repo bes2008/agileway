@@ -12,6 +12,7 @@ public class ResourcePart extends Part<Resource> {
         setName(Preconditions.checkNotEmpty(fieldName));
         setContent(resource);
         setContentType(Objs.useValueIfEmpty(contentType, "application/octet-stream"));
+
         setContentDisposition(ContentDisposition.forFormData(fieldName, filename));
     }
 }

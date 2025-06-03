@@ -7,7 +7,6 @@ import com.jn.agileway.httpclient.core.underlying.AbstractUnderlyingHttpExecutor
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.ContentEncoding;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
-import com.jn.langx.util.Throwables;
 import com.jn.langx.util.net.http.HttpMethod;
 
 import javax.net.ssl.HostnameVerifier;
@@ -15,7 +14,6 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.net.*;
 import java.util.List;
@@ -96,54 +94,15 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
         URI uri = request.getUri();
         HttpMethod method = request.getMethod();
         HttpURLConnection httpConnection = createHttpUrlConnection(method, uri);
-
-        // buffered 模式
+        httpConnection.setChunkedStreamingMode(4096);
         writeHeaders(request, httpConnection);
         httpConnection.connect();
-        if (httpConnection.getDoOutput() && request.getPayload() != null) {
-            OutputStream outputStream = httpConnection.getOutputStream();
-            List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
-            outputStream = HttpClientUtils.wrapByContentEncodings(outputStream, contentEncodings);
-            payloadWriter.write(request, outputStream);
-            outputStream.flush();
-        }
-        httpConnection.getResponseCode();
-        return new JdkUnderlyingHttpResponse(httpConnection);
-    }
+        OutputStream outputStream = httpConnection.getOutputStream();
 
-    protected UnderlyingHttpResponse exchangeInternal(HttpRequest<ByteArrayOutputStream> request, HttpURLConnection httpConnection, boolean streamMode) throws IOException {
-        if (!streamMode) {
-            // buffered 模式
-            writeHeaders(request, httpConnection);
-            httpConnection.connect();
-            if (httpConnection.getDoOutput() && request.getPayload() != null) {
-                OutputStream outputStream = httpConnection.getOutputStream();
-                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
-
-                outputStream = HttpClientUtils.wrapByContentEncodings(outputStream, contentEncodings);
-                outputStream.write(request.getPayload().toByteArray());
-                outputStream.flush();
-            }
-        } else {
-            try {
-                long contentLength = request.getHttpHeaders().getContentLength();
-                if (contentLength > 0) {
-                    // 要求 提前告知长度
-                    httpConnection.setFixedLengthStreamingMode(contentLength);
-                } else {
-                    httpConnection.setChunkedStreamingMode(4096);
-                }
-                writeHeaders(request, httpConnection);
-                httpConnection.connect();
-                OutputStream outputStream = httpConnection.getOutputStream();
-                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
-                outputStream = HttpClientUtils.wrapByContentEncodings(outputStream, contentEncodings);
-                outputStream.write(request.getPayload().toByteArray());
-                outputStream.flush();
-            } catch (IOException ex) {
-                throw Throwables.wrapAsRuntimeIOException(ex);
-            }
-        }
+        List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
+        outputStream = HttpClientUtils.wrapByContentEncodings(outputStream, contentEncodings);
+        payloadWriter.write(request, outputStream);
+        outputStream.flush();
 
         httpConnection.getResponseCode();
         return new JdkUnderlyingHttpResponse(httpConnection);
