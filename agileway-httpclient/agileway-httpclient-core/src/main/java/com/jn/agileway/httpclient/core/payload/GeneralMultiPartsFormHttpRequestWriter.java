@@ -24,7 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
-public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloadWriter {
+public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloadWriter, HttpRequestAttachmentPayloadLogging {
     @Override
     public boolean canWrite(HttpRequest<?> request) {
         Object body = request.getPayload();
@@ -39,7 +39,20 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloa
     }
 
     @Override
+    public void loggingPayload(HttpRequest<?> request, OutputStream output) {
+        try {
+            write(request, output, true);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void write(HttpRequest<?> request, OutputStream output) throws Exception {
+        write(request, output, false);
+    }
+
+    private void write(HttpRequest<?> request, OutputStream output, boolean loggingMode) throws Exception {
         Object body = request.getPayload();
         MediaType contentType = request.getHttpHeaders().getContentType();
         MultiPartsForm form = (MultiPartsForm) body;
@@ -49,12 +62,12 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloa
         boolean fileCompressDisabled = request.getHeaders().getIfAbsent(MessageHeaderConstants.REQUEST_KEY_ATTACHMENT_UPLOAD_TEXT_COMPRESS_DISABLED, false);
 
         for (Part part : form.getParts()) {
-            writePart(part, output, boundary, formCharset, fileCompressDisabled);
+            writePart(part, output, boundary, formCharset, fileCompressDisabled, loggingMode);
         }
         output.write(("--" + boundary + Strings.CRLF).getBytes(Charsets.US_ASCII));
     }
 
-    private void writePart(Part part, OutputStream output, String boundary, Charset formCharset, boolean fileCompressDisabled) throws IOException {
+    private void writePart(Part part, OutputStream output, String boundary, Charset formCharset, boolean fileCompressDisabled, boolean loggingMode) throws IOException {
         if (part == null) {
             return;
         }
@@ -75,19 +88,23 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloa
             Charset charset = part.getCharset() == null ? formCharset : part.getCharset();
             output.write(((TextPart) part).getContent().getBytes(charset));
         } else if (part instanceof ResourcePart) {
-            Resource resource = ((ResourcePart) part).getContent();
-            if (!isCompressibleResourcePart) {
-                try {
-                    IOs.copy(resource.getInputStream(), output);
-                } finally {
-                    IOs.close(resource);
-                }
+            if (loggingMode) {
+                output.write(("<binary>" + Strings.CRLF).getBytes(Charsets.UTF_8));
             } else {
-                OutputStream fileOutput = new GZIPOutputStream(output);
-                try {
-                    IOs.copy(resource.getInputStream(), fileOutput);
-                } finally {
-                    IOs.close(resource);
+                Resource resource = ((ResourcePart) part).getContent();
+                if (!isCompressibleResourcePart) {
+                    try {
+                        IOs.copy(resource.getInputStream(), output);
+                    } finally {
+                        IOs.close(resource);
+                    }
+                } else {
+                    OutputStream fileOutput = new GZIPOutputStream(output);
+                    try {
+                        IOs.copy(resource.getInputStream(), fileOutput);
+                    } finally {
+                        IOs.close(resource);
+                    }
                 }
             }
         }

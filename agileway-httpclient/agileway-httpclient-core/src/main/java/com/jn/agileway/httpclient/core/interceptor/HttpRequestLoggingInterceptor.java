@@ -2,6 +2,8 @@ package com.jn.agileway.httpclient.core.interceptor;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.MessageHeaderConstants;
+import com.jn.agileway.httpclient.core.payload.HttpRequestAttachmentPayloadLogging;
+import com.jn.agileway.httpclient.core.payload.HttpRequestPayloadWriter;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.net.mime.MediaType;
@@ -27,6 +29,14 @@ public class HttpRequestLoggingInterceptor implements HttpRequestInterceptor {
             }
             boolean isAttachmentUpload = Boolean.TRUE.equals(request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_IS_ATTACHMENT_UPLOAD));
             if (isAttachmentUpload) {
+                HttpRequestPayloadWriter writer = (HttpRequestPayloadWriter) request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_ATTACHMENT_UPLOAD_WRITER);
+                if (writer instanceof HttpRequestAttachmentPayloadLogging) {
+                    HttpRequestAttachmentPayloadLogging payloadLogging = (HttpRequestAttachmentPayloadLogging) writer;
+                    ByteArrayOutputStream payloadBuffer = new ByteArrayOutputStream();
+                    payloadLogging.loggingPayload(request, payloadBuffer);
+                    builder.append(new String(payloadBuffer.toByteArray()));
+                    builder.append(Strings.CRLF);
+                }
             } else {
                 ByteArrayOutputStream payload = (ByteArrayOutputStream) request.getPayload();
                 if (payload != null && payload.size() > 0) {
