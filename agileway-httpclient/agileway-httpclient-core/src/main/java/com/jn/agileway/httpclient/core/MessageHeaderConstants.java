@@ -39,9 +39,6 @@ public class MessageHeaderConstants {
     public static final String REQUEST_KEY_ATTACHMENT_UPLOAD_TEXT_COMPRESS_DISABLED = REQUEST_HEADER_KEY_PREFIX + "attachment_update_text_compress_disabled";
 
 
-    public static final String REQUEST_KEY_LOGGING_PAYLOAD = REQUEST_HEADER_KEY_PREFIX + "logging_payload";
-
-
     //*********************************************************************************************************
 
     private static String RESPONSE_HEADER_KEY_PREFIX = "agileway_http_response_key_";

@@ -51,7 +51,7 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloa
         for (Part part : form.getParts()) {
             writePart(part, output, boundary, formCharset, fileCompressDisabled);
         }
-        output.write(("--" + boundary + "--\r\n").getBytes(Charsets.US_ASCII));
+        output.write(("--" + boundary + Strings.CRLF).getBytes(Charsets.US_ASCII));
     }
 
     private void writePart(Part part, OutputStream output, String boundary, Charset formCharset, boolean fileCompressDisabled) throws IOException {

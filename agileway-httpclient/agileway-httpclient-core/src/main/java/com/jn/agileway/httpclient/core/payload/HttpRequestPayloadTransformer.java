@@ -26,9 +26,6 @@ public class HttpRequestPayloadTransformer implements MessageTransformer {
 
         if (HttpClientUtils.isWriteableMethod(request.getMethod()) && request.getPayload() != null) {
 
-
-            Object loggingPayload = request.getPayload();
-            request.getHeaders().put(MessageHeaderConstants.REQUEST_KEY_LOGGING_PAYLOAD, loggingPayload);
             HttpRequestPayloadWriter requestBodyWriter = Pipeline.of(writers)
                     .findFirst(new Predicate<HttpRequestPayloadWriter>() {
                         @Override
