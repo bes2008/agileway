@@ -4,7 +4,9 @@ import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.MessageHeaderConstants;
 import com.jn.agileway.httpclient.core.payload.HttpRequestAttachmentPayloadLogging;
 import com.jn.agileway.httpclient.core.payload.HttpRequestPayloadWriter;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.net.mime.MediaType;
 import org.slf4j.Logger;
@@ -42,12 +44,8 @@ public class HttpRequestLoggingInterceptor implements HttpRequestInterceptor {
                 if (payload != null && payload.size() > 0) {
                     builder.append(Strings.CRLF);
                     MediaType contentType = request.getHttpHeaders().getContentType();
-                    if (MediaType.MULTIPART_FORM_DATA.equalsTypeAndSubtype(contentType)) {
-                        // ignore it
-                    } else {
-                        builder.append(new String(payload.toByteArray()));
-                        builder.append(Strings.CRLF);
-                    }
+                    builder.append(new String(payload.toByteArray(), Objs.useValueIfEmpty(contentType.getCharset(), Charsets.UTF_8)));
+                    builder.append(Strings.CRLF);
                 }
             }
 
