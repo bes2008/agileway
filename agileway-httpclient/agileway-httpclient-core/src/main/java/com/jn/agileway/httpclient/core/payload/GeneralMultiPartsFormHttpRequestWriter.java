@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.core.payload;
 
+import com.jn.agileway.eipchannel.core.endpoint.mapper.UnsupportedObjectException;
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.payload.multipart.MultiPartsForm;
 import com.jn.agileway.httpclient.core.payload.multipart.Part;
@@ -62,6 +63,8 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloa
                     writeTextPart((TextPart) part, output, boundary, formCharset);
                 } else if (part instanceof ResourcePart) {
                     writeFilePart((ResourcePart) part, output, boundary, loggingMode);
+                } else {
+                    throw new UnsupportedObjectException("unsupported multiple part type: " + part.getClass());
                 }
             }
         }
