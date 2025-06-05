@@ -6,7 +6,6 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
-import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
@@ -131,17 +130,19 @@ public class HttpClientUtils {
         return method != HttpMethod.GET && method != HttpMethod.HEAD;
     }
 
+    private static final String BOUNDARY_ALPHABET = "-_1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     public static String generateMultipartBoundary() {
         Random random = Securitys.getSecureRandom();
-        int prefixLength = random.nextInt(7);
-        byte[] boundary = new byte[prefixLength + 7];
-        for (int i = 0; i < prefixLength; i++) {
-            boundary[i] = '-';
+        // 生成 5-31 个字符的 boundary
+        int boundaryLength = random.nextInt(32);
+        while (boundaryLength < 5) {
+            boundaryLength = random.nextInt(32);
         }
-        for (int i = prefixLength; i < boundary.length; i++) {
-            boundary[i] = BOUNDARY_ALPHABET[random.nextInt(BOUNDARY_ALPHABET.length)];
+        char[] boundary = new char[boundaryLength];
+        for (int i = 0; i < boundaryLength; i++) {
+            boundary[i] = BOUNDARY_ALPHABET.charAt(random.nextInt(BOUNDARY_ALPHABET.length()));
         }
-        return new String(boundary, Charsets.US_ASCII);
+        return new String(boundary);
     }
 
     public static boolean isAttachmentResponse(String contentDispositionValue) {
@@ -159,13 +160,5 @@ public class HttpClientUtils {
         }
         return true;
     }
-
-
-    private static final byte[] BOUNDARY_ALPHABET =
-            new byte[]{'-', '_', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f', 'g',
-                    'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A',
-                    'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
-                    'V', 'W', 'X', 'Y', 'Z'};
-
 
 }
