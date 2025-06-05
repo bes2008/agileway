@@ -57,12 +57,14 @@ public class Jdk11UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
 
             PipedInputStream pipedInputStream = new PipedInputStream();
             PipedOutputStream pipedOutputStream = new PipedOutputStream(pipedInputStream);
+            List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
 
+            OutputStream out = !Objs.isEmpty(contentEncodings) ? HttpClientUtils.wrapByContentEncodings(pipedOutputStream, contentEncodings) : pipedOutputStream;
             writePayload = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        payloadWriter.write(request, pipedOutputStream);
+                        payloadWriter.write(request, out);
                     } catch (Exception e) {
                         Loggers.getLogger(Jdk11UnderlyingHttpExecutor.class).error("file upload failed: {}", e.getMessage(), e);
                     } finally {
