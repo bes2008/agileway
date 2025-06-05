@@ -2,6 +2,9 @@ package com.jn.agileway.httpclient.httpcomponents.httpexchange;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.payload.HttpRequestPayloadWriter;
+import com.jn.agileway.httpclient.util.ContentEncoding;
+import com.jn.agileway.httpclient.util.HttpClientUtils;
+import com.jn.langx.util.Strings;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.message.BasicHeader;
@@ -9,6 +12,7 @@ import org.apache.http.message.BasicHeader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 class HttpRequestAttachmentHttpEntity implements HttpEntity {
     private HttpRequestPayloadWriter writer;
@@ -45,7 +49,8 @@ class HttpRequestAttachmentHttpEntity implements HttpEntity {
 
     @Override
     public Header getContentEncoding() {
-        return null;
+        String contentEncoding = request.getHttpHeaders().getFirst("Content-Encoding");
+        return Strings.isBlank(contentEncoding) ? null : new BasicHeader("Content-Encoding", contentEncoding);
     }
 
     @Override
@@ -56,7 +61,9 @@ class HttpRequestAttachmentHttpEntity implements HttpEntity {
     @Override
     public void writeTo(OutputStream outStream) throws IOException {
         try {
-            writer.write(request, outStream);
+            List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
+            OutputStream out = HttpClientUtils.wrapByContentEncodings(outStream, contentEncodings);
+            writer.write(request, out);
         } catch (Exception ex) {
             throw new IOException(ex);
         }

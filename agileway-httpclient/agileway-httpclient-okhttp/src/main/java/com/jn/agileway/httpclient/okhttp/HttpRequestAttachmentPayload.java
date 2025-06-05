@@ -2,6 +2,8 @@ package com.jn.agileway.httpclient.okhttp;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.payload.HttpRequestPayloadWriter;
+import com.jn.agileway.httpclient.util.ContentEncoding;
+import com.jn.agileway.httpclient.util.HttpClientUtils;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okio.BufferedSink;
@@ -9,6 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.List;
 
 class HttpRequestAttachmentPayload extends RequestBody {
     private HttpRequestPayloadWriter writer;
@@ -30,7 +34,9 @@ class HttpRequestAttachmentPayload extends RequestBody {
     @Override
     public void writeTo(@NotNull BufferedSink bufferedSink) throws IOException {
         try {
-            writer.write(request, bufferedSink.outputStream());
+            List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
+            OutputStream out = HttpClientUtils.wrapByContentEncodings(bufferedSink.outputStream(), contentEncodings);
+            writer.write(request, out);
         } catch (Exception ex) {
             throw new IOException(ex);
         }

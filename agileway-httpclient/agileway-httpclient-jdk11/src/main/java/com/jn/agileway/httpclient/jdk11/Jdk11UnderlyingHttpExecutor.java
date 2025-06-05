@@ -59,7 +59,7 @@ public class Jdk11UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
             PipedOutputStream pipedOutputStream = new PipedOutputStream(pipedInputStream);
             List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
 
-            OutputStream out = !Objs.isEmpty(contentEncodings) ? HttpClientUtils.wrapByContentEncodings(pipedOutputStream, contentEncodings) : pipedOutputStream;
+            OutputStream out = HttpClientUtils.wrapByContentEncodings(pipedOutputStream, contentEncodings);
             writePayload = new Thread(new Runnable() {
                 @Override
                 public void run() {
