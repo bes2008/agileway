@@ -1,12 +1,10 @@
 package com.jn.agileway.httpclient.core.payload;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
-import com.jn.agileway.httpclient.core.MessageHeaderConstants;
 import com.jn.agileway.httpclient.core.payload.multipart.MultiPartsForm;
 import com.jn.agileway.httpclient.core.payload.multipart.Part;
 import com.jn.agileway.httpclient.core.payload.multipart.ResourcePart;
 import com.jn.agileway.httpclient.core.payload.multipart.TextPart;
-import com.jn.agileway.httpclient.util.ContentEncoding;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.io.resource.Resource;
 import com.jn.langx.util.Strings;
@@ -22,7 +20,6 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.zip.GZIPOutputStream;
 
 public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloadWriter, HttpRequestAttachmentPayloadLogging {
     @Override
@@ -59,53 +56,47 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloa
         Charset formCharset = form.getCharset() == null ? Charsets.UTF_8 : form.getCharset();
         String boundary = contentType.getParameter("boundary");
 
-        boolean fileCompressDisabled = request.getHeaders().getIfAbsent(MessageHeaderConstants.REQUEST_KEY_ATTACHMENT_UPLOAD_TEXT_COMPRESS_DISABLED, false);
-
         for (Part part : form.getParts()) {
-            writePart(part, output, boundary, formCharset, fileCompressDisabled, loggingMode);
+            if (part != null) {
+                if (part instanceof TextPart) {
+                    writeTextPart((TextPart) part, output, boundary, formCharset);
+                } else if (part instanceof ResourcePart) {
+                    writeFilePart((ResourcePart) part, output, boundary, loggingMode);
+                }
+            }
         }
         output.write(("--" + boundary + Strings.CRLF).getBytes(Charsets.US_ASCII));
     }
 
-    private void writePart(Part part, OutputStream output, String boundary, Charset formCharset, boolean fileCompressDisabled, boolean loggingMode) throws IOException {
-        if (part == null) {
-            return;
-        }
 
-        boolean isCompressibleResourcePart = !fileCompressDisabled && isCompressibleResourcePart(part);
+    private void writeTextPart(TextPart part, OutputStream output, String boundary, Charset formCharset) throws IOException {
+        output.write(("--" + boundary + Strings.CRLF).getBytes(Charsets.US_ASCII));
+        String contentDisposition = part.getContentDisposition().asString();
+        output.write((contentDisposition + Strings.CRLF).getBytes(Charsets.US_ASCII));
+        Charset charset = part.getCharset() == null ? formCharset : part.getCharset();
+        output.write(("Content-Type: " + part.getContentType() + "; charset=" + charset.name() + Strings.CRLF).getBytes(Charsets.US_ASCII));
+        output.write("Content-Transfer-Encoding: 8bit".getBytes(Charsets.US_ASCII));
+        output.write(Strings.CRLF.getBytes(StandardCharsets.US_ASCII));
+        output.write(part.getContent().getBytes(charset));
+    }
+
+    private void writeFilePart(ResourcePart part, OutputStream output, String boundary, boolean loggingMode) throws IOException {
 
         output.write(("--" + boundary + Strings.CRLF).getBytes(Charsets.US_ASCII));
         String contentDisposition = part.getContentDisposition().asString();
         output.write((contentDisposition + Strings.CRLF).getBytes(Charsets.US_ASCII));
         output.write(("Content-Type: " + part.getContentType() + Strings.CRLF).getBytes(Charsets.US_ASCII));
-        if (isCompressibleResourcePart) {
-            output.write(("Content-Encoding: " + ContentEncoding.GZIP.getName() + Strings.CRLF).getBytes(Charsets.US_ASCII));
-        }
+        output.write(("Content-Transfer-Encoding: binary" + Strings.CRLF).getBytes(Charsets.US_ASCII));
         output.write("\r\n".getBytes(StandardCharsets.US_ASCII));
 
-
-        if (part instanceof TextPart) {
-            Charset charset = part.getCharset() == null ? formCharset : part.getCharset();
-            output.write(((TextPart) part).getContent().getBytes(charset));
-        } else if (part instanceof ResourcePart) {
-            if (loggingMode) {
-                output.write(("<binary>" + Strings.CRLF).getBytes(Charsets.UTF_8));
-            } else {
-                Resource resource = ((ResourcePart) part).getContent();
-                if (!isCompressibleResourcePart) {
-                    try {
-                        IOs.copy(resource.getInputStream(), output);
-                    } finally {
-                        IOs.close(resource);
-                    }
-                } else {
-                    OutputStream fileOutput = new GZIPOutputStream(output);
-                    try {
-                        IOs.copy(resource.getInputStream(), fileOutput);
-                    } finally {
-                        IOs.close(resource);
-                    }
-                }
+        if (loggingMode) {
+            output.write(("<binary>" + Strings.CRLF).getBytes(Charsets.UTF_8));
+        } else {
+            Resource resource = part.getContent();
+            try {
+                IOs.copy(resource.getInputStream(), output);
+            } finally {
+                IOs.close(resource);
             }
         }
     }
