@@ -1,4 +1,4 @@
-package com.jn.agileway.redis.locks;
+package com.jn.agileway.distributed.locks;
 
 import com.jn.langx.Builder;
 import com.jn.langx.util.concurrent.threadlocal.GlobalThreadLocalMap;

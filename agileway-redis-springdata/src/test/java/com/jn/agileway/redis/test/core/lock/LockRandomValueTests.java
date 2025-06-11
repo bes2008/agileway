@@ -1,6 +1,6 @@
 package com.jn.agileway.redis.test.core.lock;
 
-import com.jn.agileway.redis.locks.LockRandomValueBuilder;
+import com.jn.agileway.distributed.locks.LockRandomValueBuilder;
 import org.junit.Test;
 
 public class LockRandomValueTests {

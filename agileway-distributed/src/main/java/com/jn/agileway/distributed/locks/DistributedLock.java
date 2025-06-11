@@ -1,5 +1,6 @@
 package com.jn.agileway.distributed.locks;
 
+import com.jn.langx.Builder;
 import com.jn.langx.util.Dates;
 import com.jn.langx.util.Maths;
 import com.jn.langx.util.logging.Loggers;
@@ -17,6 +18,34 @@ public abstract class DistributedLock extends AbstractDLock {
             }
         }
     };
+
+    /**
+     * 需要对 resource上锁
+     */
+    private String resource;
+    /**
+     * 资源的值，各个客户端解锁时需要验证
+     */
+    private String value;
+
+    private Builder<String> lockRandomValueBuilder = new LockRandomValueBuilder();
+
+    protected String getKey() {
+        return this.resource;
+    }
+
+    protected String getValue() {
+        String v = value;
+        if (v == null) {
+            v = lockRandomValueBuilder.build();
+        }
+        return v;
+    }
+
+    protected void setValue(String o) {
+        this.value = (String) o;
+    }
+
 
     public void setWaitStrategy(WaitStrategy waitStrategy) {
         this.waitStrategy = waitStrategy;
@@ -60,12 +89,23 @@ public abstract class DistributedLock extends AbstractDLock {
     }
 
 
-    protected abstract String getKey();
-
-    protected abstract String getValue();
-
-    protected abstract void setValue(String value);
-
     protected abstract boolean doLock(String value, long ttl, TimeUnit ttlUnit);
 
+    public String getResource() {
+        return resource;
+    }
+
+    public void setResource(String resource) {
+        this.resource = resource;
+    }
+
+    public Builder<String> getLockRandomValueBuilder() {
+        return lockRandomValueBuilder;
+    }
+
+    public void setLockRandomValueBuilder(Builder<String> lockRandomValueBuilder) {
+        if (lockRandomValueBuilder != null) {
+            this.lockRandomValueBuilder = lockRandomValueBuilder;
+        }
+    }
 }
