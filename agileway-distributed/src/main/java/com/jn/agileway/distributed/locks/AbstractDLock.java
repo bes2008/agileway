@@ -1,5 +1,7 @@
 package com.jn.agileway.distributed.locks;
 
+import com.jn.langx.util.Maths;
+
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 
@@ -39,12 +41,12 @@ public abstract class AbstractDLock implements DLock {
 
     @Override
     public boolean tryLock(long tryTime, TimeUnit tryTimeUnit) {
-        return tryLock(tryTime, tryTimeUnit, -1, TimeUnit.MILLISECONDS);
+        return tryLock(Maths.maxLong(tryTime, 1), tryTimeUnit, -1, TimeUnit.MILLISECONDS);
     }
 
     @Override
     public boolean tryLock() {
-        return tryLock(-1, TimeUnit.MILLISECONDS);
+        return tryLock(5L, TimeUnit.MILLISECONDS);
     }
 
     @Override

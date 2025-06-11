@@ -31,7 +31,7 @@ public interface DLock extends Lock {
     /**
      * 拿到锁之前，最多尝试 lockTime 时间，拿到锁之后，锁在 ttl 后过期
      *
-     * @param tryTime     尝试获取锁的时间
+     * @param tryTime     尝试获取锁的时间，如果值小于等于0，则表示一直尝试
      * @param tryTimeUnit 单位
      * @param ttl         拿到锁之后，锁的过期时间
      * @param ttlUnit     单位
