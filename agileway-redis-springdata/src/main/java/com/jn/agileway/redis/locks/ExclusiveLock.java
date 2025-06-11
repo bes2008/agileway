@@ -1,9 +1,9 @@
 package com.jn.agileway.redis.locks;
 
+import com.jn.agileway.distributed.locks.DistributedLock;
 import com.jn.agileway.redis.core.RedisTemplate;
 import com.jn.langx.Builder;
 import com.jn.langx.annotation.NotThreadSafe;
-import com.jn.agileway.distributed.locks.DistributedLock;
 import com.jn.langx.util.collection.Collects;
 
 import java.util.concurrent.TimeUnit;
@@ -31,7 +31,7 @@ public class ExclusiveLock extends DistributedLock {
     }
 
     @Override
-    protected Object getValue() {
+    protected String getValue() {
         String v = value;
         if (v == null) {
             v = lockRandomValueBuilder.build();
@@ -40,12 +40,12 @@ public class ExclusiveLock extends DistributedLock {
     }
 
     @Override
-    protected void setValue(Object o) {
+    protected void setValue(String o) {
         this.value = (String) o;
     }
 
     @Override
-    protected boolean doLock(Object o, long ttl, TimeUnit ttlTime) {
+    protected boolean doLock(String o, long ttl, TimeUnit ttlTime) {
         String expectedValue = (String) o;
         boolean locked = false;
         if (ttl > 0) {

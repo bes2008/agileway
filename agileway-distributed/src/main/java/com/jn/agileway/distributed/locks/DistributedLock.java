@@ -24,7 +24,7 @@ public abstract class DistributedLock extends AbstractDLock {
 
     @Override
     public boolean tryLock(long tryTime, TimeUnit tryUnit, long ttl, TimeUnit ttlUnit, boolean interruptibly) throws InterruptedException {
-        Object v = getValue();
+        String v = getValue();
         tryUnit = tryUnit == null ? TimeUnit.MILLISECONDS : tryUnit;
         ttlUnit = ttlUnit == null ? TimeUnit.MILLISECONDS : ttlUnit;
 
@@ -61,8 +61,11 @@ public abstract class DistributedLock extends AbstractDLock {
 
 
     protected abstract String getKey();
-    protected abstract Object getValue();
-    protected abstract void setValue(Object value);
-    protected abstract boolean doLock(Object value, long ttl, TimeUnit ttlUnit);
+
+    protected abstract String getValue();
+
+    protected abstract void setValue(String value);
+
+    protected abstract boolean doLock(String value, long ttl, TimeUnit ttlUnit);
 
 }
