@@ -3,11 +3,24 @@ package com.jn.agileway.distributed.locks;
 import com.jn.langx.util.Dates;
 import com.jn.langx.util.Maths;
 import com.jn.langx.util.logging.Loggers;
+import com.jn.langx.util.retry.WaitStrategy;
 
 import java.util.concurrent.TimeUnit;
 
 public abstract class DistributedLock extends AbstractDLock {
 
+    private WaitStrategy waitStrategy = new WaitStrategy() {
+        @Override
+        public void await(long waitTimeMills) throws InterruptedException {
+            synchronized (this) {
+                this.wait(Maths.minLong(50L, waitTimeMills));
+            }
+        }
+    };
+
+    public void setWaitStrategy(WaitStrategy waitStrategy) {
+        this.waitStrategy = waitStrategy;
+    }
 
     @Override
     public boolean tryLock(long tryTime, TimeUnit tryUnit, long ttl, TimeUnit ttlUnit, boolean interruptibly) throws InterruptedException {
@@ -27,9 +40,7 @@ public abstract class DistributedLock extends AbstractDLock {
             waitTime = tryTime > 0 ? (endTime - now) : Long.MAX_VALUE;
             if (!locked && waitTime > 0) {
                 try {
-                    synchronized (this) {
-                        this.wait(Maths.minLong(50L, waitTime));
-                    }
+                    waitStrategy.await(waitTime);
                 } catch (InterruptedException ex) {
                     if (interruptibly) {
                         throw ex;
