@@ -43,6 +43,8 @@ public class HttpRequestMultiPartsFormInterceptor implements HttpRequestIntercep
                     request.setPayload(MultiPartsForm.ofMultiValueMap((MultiValueMap) request.getPayload()));
                 } else if (request.getPayload() instanceof Map) {
                     request.setPayload(MultiPartsForm.ofMap((Map) request.getPayload()));
+                } else {
+                    throw new BadHttpRequestException(request.getMethod(), request.getUri(), StringTemplates.formatWithPlaceholder("invalid multipart/form-data content "));
                 }
             } catch (Throwable ex) {
                 throw new BadHttpRequestException(request.getMethod(), request.getUri(), StringTemplates.formatWithPlaceholder("invalid multipart/form-data content "));

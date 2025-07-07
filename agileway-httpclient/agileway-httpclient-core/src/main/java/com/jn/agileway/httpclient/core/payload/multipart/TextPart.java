@@ -4,6 +4,7 @@ import com.jn.agileway.httpclient.util.ContentDisposition;
 import com.jn.langx.annotation.NotEmpty;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Preconditions;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.mime.MediaType;
 
 public class TextPart extends Part<String> {
@@ -16,10 +17,12 @@ public class TextPart extends Part<String> {
         setName(Preconditions.checkNotEmpty(fieldName));
         setContent(content);
 
-        MediaType mediaType = MediaType.parseMediaType(contentType);
-        setContentType(mediaType.getType() + "/" + mediaType.getSubtype());
-        if (mediaType.getCharset() != null) {
-            setCharset(mediaType.getCharset());
+        MediaType mediaType = Strings.isBlank(contentType) ? null : MediaType.parseMediaType(contentType);
+        if (mediaType != null) {
+            setContentType(mediaType.getType() + "/" + mediaType.getSubtype());
+            if (mediaType.getCharset() != null) {
+                setCharset(mediaType.getCharset());
+            }
         }
         setContentDisposition(ContentDisposition.forFormData(fieldName, null));
     }

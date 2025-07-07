@@ -2,7 +2,6 @@ package com.jn.agileway.httpclient.core.interceptor;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.error.exception.BadHttpRequestException;
-import com.jn.agileway.httpclient.core.payload.multipart.MultiPartsForm;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
@@ -49,10 +48,6 @@ public class HttpRequestHeadersInterceptor implements HttpRequestInterceptor {
             case PUT:
             case POST:
             default:
-                if (request.getPayload() != null && (request.getPayload() instanceof MultiPartsForm)) {
-                    request.getHttpHeaders().setContentType(MediaType.MULTIPART_FORM_DATA);
-                    contentType = request.getHttpHeaders().getContentType();
-                }
                 if (contentType == null) {
                     request.getHttpHeaders().setContentType(MediaType.APPLICATION_FORM_URLENCODED);
                 }
