@@ -143,7 +143,7 @@ public class HttpRequest<T> extends BaseHttpMessage<T> {
     ) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        return create(HttpMethod.HEAD, uriTemplate, queryParams, uriVariables, headers, body);
+        return create(HttpMethod.POST, uriTemplate, queryParams, uriVariables, headers, body);
     }
 
     public static HttpRequest forPostMultiParts(
@@ -154,7 +154,7 @@ public class HttpRequest<T> extends BaseHttpMessage<T> {
     ) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        return create(HttpMethod.HEAD, uriTemplate, queryParams, uriVariables, headers, body);
+        return create(HttpMethod.POST, uriTemplate, queryParams, uriVariables, headers, body);
     }
 
     public static HttpRequest forPostMultiParts(
@@ -165,6 +165,6 @@ public class HttpRequest<T> extends BaseHttpMessage<T> {
     ) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        return create(HttpMethod.HEAD, uriTemplate, queryParams, uriVariables, headers, body);
+        return create(HttpMethod.POST, uriTemplate, queryParams, uriVariables, headers, body);
     }
 }
