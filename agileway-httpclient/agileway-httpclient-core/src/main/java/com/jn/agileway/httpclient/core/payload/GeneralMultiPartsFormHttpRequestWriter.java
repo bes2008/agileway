@@ -66,9 +66,10 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloa
                 } else {
                     throw new UnsupportedObjectException("unsupported multiple part type: " + part.getClass());
                 }
+                output.write(Strings.CRLF.getBytes(StandardCharsets.US_ASCII));
             }
         }
-        output.write(("--" + boundary + Strings.CRLF).getBytes(Charsets.US_ASCII));
+        output.write(("--" + boundary + "--" + Strings.CRLF).getBytes(Charsets.US_ASCII));
     }
 
 
@@ -78,7 +79,7 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloa
         output.write((contentDisposition + Strings.CRLF).getBytes(Charsets.US_ASCII));
         Charset charset = part.getCharset() == null ? formCharset : part.getCharset();
         output.write(("Content-Type: " + part.getContentType() + "; charset=" + charset.name() + Strings.CRLF).getBytes(Charsets.US_ASCII));
-        output.write("Content-Transfer-Encoding: 8bit".getBytes(Charsets.US_ASCII));
+        output.write(("Content-Transfer-Encoding: 8bit" + Strings.CRLF).getBytes(Charsets.US_ASCII));
         output.write(Strings.CRLF.getBytes(StandardCharsets.US_ASCII));
         output.write(part.getContent().getBytes(charset));
     }
@@ -90,10 +91,10 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloa
         output.write((contentDisposition + Strings.CRLF).getBytes(Charsets.US_ASCII));
         output.write(("Content-Type: " + part.getContentType() + Strings.CRLF).getBytes(Charsets.US_ASCII));
         output.write(("Content-Transfer-Encoding: binary" + Strings.CRLF).getBytes(Charsets.US_ASCII));
-        output.write("\r\n".getBytes(StandardCharsets.US_ASCII));
+        output.write(Strings.CRLF.getBytes(StandardCharsets.US_ASCII));
 
         if (loggingMode) {
-            output.write(("<binary>" + Strings.CRLF).getBytes(Charsets.UTF_8));
+            output.write(("<binary>").getBytes(Charsets.UTF_8));
         } else {
             Resource resource = part.getContent();
             try {
