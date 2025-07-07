@@ -80,7 +80,7 @@ final class InternalHttpRequestExecutor extends RequestReplyExecutor {
 
     private HttpResponse extractPayload(HttpRequest request) {
         UnderlyingHttpResponse underlyingHttpResponse = (UnderlyingHttpResponse) request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_UNDERLYING_RESPONSE);
-        Type expectResponseType = (Type) request.getHeaders().get(MessageHeaderConstants.RESPONSE_KEY_REPLY_PAYLOAD_TYPE);
+        Type expectedResponseType = (Type) request.getHeaders().get(MessageHeaderConstants.RESPONSE_KEY_REPLY_PAYLOAD_TYPE);
         HttpResponsePayloadExtractor contentExtractor = (HttpResponsePayloadExtractor) request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_REPLY_PAYLOAD_EXTRACTOR);
         HttpResponsePayloadExtractor errorContentExtractor = (HttpResponsePayloadExtractor) request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_REPLY_PAYLOAD_ERROR_EXTRACTOR);
 
@@ -132,7 +132,7 @@ final class InternalHttpRequestExecutor extends RequestReplyExecutor {
             underlyingHttpResponse.close();
         }
 
-        response.getHeaders().put(MessageHeaderConstants.RESPONSE_KEY_REPLY_PAYLOAD_TYPE, expectResponseType);
+        response.getHeaders().put(MessageHeaderConstants.RESPONSE_KEY_REPLY_PAYLOAD_TYPE, expectedResponseType);
 
         return response;
     }

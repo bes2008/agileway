@@ -242,11 +242,11 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
     }
 
     public <O> Promise<HttpResponse<O>> exchangeWithRetry(boolean async, HttpRequest request, Type responseType, HttpResponsePayloadExtractor payloadExtractor, HttpResponsePayloadExtractor errorPayloadExtractor, Retryer<Boolean> retryer) {
-        if (payloadExtractor != null) {
+        if (responseType != null) {
             request.getHeaders().put(MessageHeaderConstants.RESPONSE_KEY_REPLY_PAYLOAD_TYPE, responseType);
         }
         if (payloadExtractor != null) {
-            request.getHeaders().put(MessageHeaderConstants.REQUEST_KEY_REPLY_PAYLOAD_EXTRACTOR, responseType);
+            request.getHeaders().put(MessageHeaderConstants.REQUEST_KEY_REPLY_PAYLOAD_EXTRACTOR, payloadExtractor);
         }
         if (errorPayloadExtractor != null) {
             request.getHeaders().put(MessageHeaderConstants.REQUEST_KEY_REPLY_PAYLOAD_ERROR_EXTRACTOR, errorPayloadExtractor);
