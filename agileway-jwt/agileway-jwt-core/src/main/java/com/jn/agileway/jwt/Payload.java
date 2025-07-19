@@ -7,12 +7,21 @@ import com.jn.langx.util.io.Charsets;
 import java.util.Map;
 
 public class Payload extends ClaimSet {
+    private String encoded;
     public Payload(Map<String, Object> payload) {
         super(payload);
     }
 
+    public Payload(String encoded) {
+        this(JSONs.<Map<String, Object>>parse(Base64.decodeBase64ToString(encoded), Map.class));
+        this.encoded = encoded;
+    }
+
     public String toBase64UrlEncoded() {
-        return Base64.encodeBase64URLSafeString(JSONs.toJson(getAllClaims()).getBytes(Charsets.UTF_8));
+        if (encoded == null) {
+            this.encoded = Base64.encodeBase64URLSafeString(JSONs.toJson(getAllClaims()).getBytes(Charsets.UTF_8));
+        }
+        return this.encoded;
     }
 
 }

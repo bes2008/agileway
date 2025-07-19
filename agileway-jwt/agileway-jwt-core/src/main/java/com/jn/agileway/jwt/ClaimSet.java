@@ -7,6 +7,7 @@ import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Predicate2;
 import com.jn.langx.util.valuegetter.ValueGetter2;
 
+import java.util.HashMap;
 import java.util.Map;
 
 class ClaimSet implements ValueGetter2<String> {
@@ -16,7 +17,7 @@ class ClaimSet implements ValueGetter2<String> {
         if (map == null) {
             map = Maps.newHashMap();
         }
-        this.claimsAccessor = new MapAccessor(map);
+        this.claimsAccessor = new MapAccessor(new HashMap<String, Object>(map));
     }
 
     public final Map<String, Object> getAllClaims() {

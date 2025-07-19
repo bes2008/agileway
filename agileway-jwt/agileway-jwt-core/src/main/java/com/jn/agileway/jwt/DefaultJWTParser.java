@@ -46,15 +46,7 @@ class DefaultJWTParser implements JWTParser {
         }
         String headerBase64Url = parts[0];
         String payloadBase64Url = parts[1];
-
-
-        String headerJson = Base64.decodeBase64ToString(headerBase64Url);
-        String payloadJson = Base64.decodeBase64ToString(payloadBase64Url);
-
-        Map<String, Object> header = JSONs.parse(headerJson, Map.class);
-        Map<String, Object> payload = JSONs.parse(payloadJson, Map.class);
-
-        JWSToken token = new JWSToken(header, payload);
+        JWSToken token = new JWSToken(headerBase64Url, payloadBase64Url);
         if (!plainToken) {
             String signatureBase64Url = parts[2];
             token.setSignature(signatureBase64Url);

@@ -19,6 +19,11 @@ public class JWSToken implements JWT {
         this(new Header(header), new Payload(payload));
     }
 
+    public JWSToken(String headerBase64Url, String payloadBase64Url) {
+        this.header = new Header(headerBase64Url);
+        this.payload = new Payload(payloadBase64Url);
+    }
+
     @Override
     public Header getHeader() {
         return this.header;

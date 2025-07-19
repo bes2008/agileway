@@ -8,8 +8,15 @@ import java.util.Map;
 import java.util.Set;
 
 public class Header extends ClaimSet {
+    private String encoded;
+
     public Header(Map<String, Object> claims) {
         super(claims);
+    }
+
+    public Header(String encoded) {
+        this(JSONs.<Map<String, Object>>parse(Base64.decodeBase64ToString(encoded), Map.class));
+        this.encoded = encoded;
     }
 
     public String getType() {
@@ -29,7 +36,10 @@ public class Header extends ClaimSet {
     }
 
     public String toBase64UrlEncoded() {
-        return Base64.encodeBase64URLSafeString(JSONs.toJson(getAllClaims()).getBytes(Charsets.UTF_8));
+        if (encoded == null) {
+            this.encoded = Base64.encodeBase64URLSafeString(JSONs.toJson(getAllClaims()).getBytes(Charsets.UTF_8));
+        }
+        return encoded;
     }
 
 }
