@@ -10,10 +10,16 @@ import java.util.Set;
 public class Header extends ClaimSet {
     private String encoded;
 
+    /**
+     * 该构造方法通常用于生成
+     */
     public Header(Map<String, Object> claims) {
         super(claims);
     }
 
+    /**
+     * 该构造方法通常用于解析
+     */
     public Header(String encoded) {
         this(JSONs.<Map<String, Object>>parse(Base64.decodeBase64ToString(encoded), Map.class));
         this.encoded = encoded;

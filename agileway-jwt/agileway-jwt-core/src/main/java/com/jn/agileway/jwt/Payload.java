@@ -8,10 +8,17 @@ import java.util.Map;
 
 public class Payload extends ClaimSet {
     private String encoded;
+
+    /**
+     * 该构造方法通常用于生成
+     */
     public Payload(Map<String, Object> payload) {
         super(payload);
     }
 
+    /**
+     * 该构造方法通常用于解析
+     */
     public Payload(String encoded) {
         this(JSONs.<Map<String, Object>>parse(Base64.decodeBase64ToString(encoded), Map.class));
         this.encoded = encoded;
