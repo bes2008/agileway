@@ -10,6 +10,8 @@ public class JWSToken implements JWT {
     Header header;
     Payload payload;
 
+    private String signature;
+
     /**
      * 该构造方法通常用于生成
      */
@@ -43,8 +45,6 @@ public class JWSToken implements JWT {
         return this.payload;
     }
 
-
-    private String signature;
 
     public String getSignature() {
         return signature;

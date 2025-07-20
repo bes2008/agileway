@@ -72,6 +72,9 @@ public class JWTs {
 
         /**
          * Used in JWS Header and JWE Header.
+         * <p>
+         * 一个public key的 URL，用于获取 the X.509 public key certificate or certificate
+         * chain
          *
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.5">RFC 7515 "x5u" (X.509 Certificate URL) Header Parameter</a>
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7516#section-4.1.7">RFC 7516 "x5u" (X.509 Certificate URL) Header Parameter</a>
@@ -80,6 +83,8 @@ public class JWTs {
 
         /**
          * Used in JWS Header and JWE Header.
+         * <p>
+         * the X.509 public key certificate or certificate chain
          *
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.6">RFC 7515 "x5c" (X.509 Certificate Chain) Header Parameter</a>
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7516#section-4.1.8">RFC 7516 "x5c" (X.509 Certificate Chain) Header Parameter</a>
