@@ -2,8 +2,11 @@ package com.jn.agileway.jwt;
 
 import com.jn.easyjson.core.util.JSONs;
 import com.jn.langx.codec.base64.Base64;
+import com.jn.langx.util.Objs;
+import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.io.Charsets;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -43,9 +46,22 @@ public class Header extends KeyValueSet {
 
     public String toBase64UrlEncoded() {
         if (encoded == null) {
-            this.encoded = Base64.encodeBase64URLSafeString(JSONs.toJson(getAllClaims()).getBytes(Charsets.UTF_8));
+            this.encoded = Base64.encodeBase64URLSafeString(JSONs.toJson(getAll()).getBytes(Charsets.UTF_8));
         }
         return encoded;
     }
 
+
+    public Set<String> getHeaderNames() {
+        return getKeys();
+    }
+
+    public Map<String, String> getAllHeaders() {
+        Map<String, Object> map = getAll();
+        Map<String, String> result = new HashMap<String, String>();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            result.put(entry.getKey(), Objs.useValueIfNull(entry.getValue(), "").toString());
+        }
+        return Collects.immutableMap(result);
+    }
 }

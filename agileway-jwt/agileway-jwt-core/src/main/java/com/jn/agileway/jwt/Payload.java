@@ -5,6 +5,7 @@ import com.jn.langx.codec.base64.Base64;
 import com.jn.langx.util.io.Charsets;
 
 import java.util.Map;
+import java.util.Set;
 
 public class Payload extends KeyValueSet {
     private String encoded;
@@ -26,9 +27,16 @@ public class Payload extends KeyValueSet {
 
     public String toBase64UrlEncoded() {
         if (encoded == null) {
-            this.encoded = Base64.encodeBase64URLSafeString(JSONs.toJson(getAllClaims()).getBytes(Charsets.UTF_8));
+            this.encoded = Base64.encodeBase64URLSafeString(JSONs.toJson(getAll()).getBytes(Charsets.UTF_8));
         }
         return this.encoded;
     }
 
+    public Set<String> getClaimNames() {
+        return getKeys();
+    }
+
+    public Map<String, Object> getAllClaims() {
+        return getAll();
+    }
 }

@@ -14,190 +14,190 @@ import java.util.Map;
 import java.util.Set;
 
 class KeyValueSet implements ValueGetter2<String> {
-    private MapAccessor claimsAccessor;
+    private MapAccessor keyvalueAccessor;
 
     public KeyValueSet(Map<String, Object> map) {
         if (map == null) {
             map = Maps.newHashMap();
         }
-        this.claimsAccessor = new MapAccessor(new HashMap<String, Object>(map));
+        this.keyvalueAccessor = new MapAccessor(new HashMap<String, Object>(map));
     }
 
-    public final Map<String, Object> getAll() {
-        return Collects.immutableMap(claimsAccessor.getTarget());
+    protected final Map<String, Object> getAll() {
+        return Collects.immutableMap(keyvalueAccessor.getTarget());
     }
 
-    public final Set<String> getKeys() {
+    protected final Set<String> getKeys() {
         return Sets.immutableSet(getAll().keySet());
     }
 
     @Override
     public Object get(String key) {
-        return claimsAccessor.get(key);
+        return keyvalueAccessor.get(key);
     }
 
     @Override
     public boolean isNull(String key) {
-        return claimsAccessor.isNull(key);
+        return keyvalueAccessor.isNull(key);
     }
 
     @Override
     public boolean isEmpty(String key) {
-        return claimsAccessor.isEmpty(key);
+        return keyvalueAccessor.isEmpty(key);
     }
 
     @Override
     public boolean has(String key) {
-        return claimsAccessor.has(key);
+        return keyvalueAccessor.has(key);
     }
 
     @Override
     public String getString(String key) {
-        return claimsAccessor.getString(key);
+        return keyvalueAccessor.getString(key);
     }
 
     @Override
     public String getString(String key, String defaultValue) {
-        return claimsAccessor.getString(key, defaultValue);
+        return keyvalueAccessor.getString(key, defaultValue);
     }
 
     @Override
     public Character getCharacter(String key) {
-        return claimsAccessor.getCharacter(key);
+        return keyvalueAccessor.getCharacter(key);
     }
 
     @Override
     public Character getCharacter(String key, Character defaultValue) {
-        return claimsAccessor.getCharacter(key);
+        return keyvalueAccessor.getCharacter(key);
     }
 
     @Override
     public Byte getByte(String key) {
-        return claimsAccessor.getByte(key);
+        return keyvalueAccessor.getByte(key);
     }
 
     @Override
     public Byte getByte(String key, Byte defaultValue) {
-        return claimsAccessor.getByte(key, defaultValue);
+        return keyvalueAccessor.getByte(key, defaultValue);
     }
 
     @Override
     public Short getShort(String key) {
-        return claimsAccessor.getShort(key);
+        return keyvalueAccessor.getShort(key);
     }
 
     @Override
     public Short getShort(String key, Short defaultValue) {
-        return claimsAccessor.getShort(key, defaultValue);
+        return keyvalueAccessor.getShort(key, defaultValue);
     }
 
     @Override
     public Integer getInteger(String key) {
-        return claimsAccessor.getInteger(key);
+        return keyvalueAccessor.getInteger(key);
     }
 
     @Override
     public Integer getInteger(String key, Integer defaultValue) {
-        return claimsAccessor.getInteger(key, defaultValue);
+        return keyvalueAccessor.getInteger(key, defaultValue);
     }
 
     @Override
     public Double getDouble(String key) {
-        return claimsAccessor.getDouble(key);
+        return keyvalueAccessor.getDouble(key);
     }
 
     @Override
     public Double getDouble(String key, Double defaultValue) {
-        return claimsAccessor.getDouble(key, defaultValue);
+        return keyvalueAccessor.getDouble(key, defaultValue);
     }
 
     @Override
     public Float getFloat(String key) {
-        return claimsAccessor.getFloat(key);
+        return keyvalueAccessor.getFloat(key);
     }
 
     @Override
     public Float getFloat(String key, Float defaultValue) {
-        return claimsAccessor.getFloat(key, defaultValue);
+        return keyvalueAccessor.getFloat(key, defaultValue);
     }
 
     @Override
     public Long getLong(String key) {
-        return claimsAccessor.getLong(key);
+        return keyvalueAccessor.getLong(key);
     }
 
     @Override
     public Long getLong(String key, Long defaultValue) {
-        return claimsAccessor.getLong(key, defaultValue);
+        return keyvalueAccessor.getLong(key, defaultValue);
     }
 
     @Override
     public Boolean getBoolean(String key) {
-        return claimsAccessor.getBoolean(key);
+        return keyvalueAccessor.getBoolean(key);
     }
 
     @Override
     public Boolean getBoolean(String key, Boolean defaultValue) {
-        return claimsAccessor.getBoolean(key, defaultValue);
+        return keyvalueAccessor.getBoolean(key, defaultValue);
     }
 
     @Override
     public Object get(String key, Function<Object, Object> mapper) {
-        return claimsAccessor.get(key, mapper);
+        return keyvalueAccessor.get(key, mapper);
     }
 
     @Override
     public String getString(String key, Function<Object, String> mapper) {
-        return claimsAccessor.getString(key, mapper);
+        return keyvalueAccessor.getString(key, mapper);
     }
 
     @Override
     public Character getCharacter(String key, Function<Object, Character> mapper) {
-        return claimsAccessor.getCharacter(key, mapper);
+        return keyvalueAccessor.getCharacter(key, mapper);
     }
 
     @Override
     public Byte getByte(String key, Function<Object, Byte> mapper) {
-        return claimsAccessor.getByte(key, mapper);
+        return keyvalueAccessor.getByte(key, mapper);
     }
 
     @Override
     public Short getShort(String key, Function<Object, Short> mapper) {
-        return claimsAccessor.getShort(key, mapper);
+        return keyvalueAccessor.getShort(key, mapper);
     }
 
     @Override
     public Integer getInteger(String key, Function<Object, Integer> mapper) {
-        return claimsAccessor.getInteger(key, mapper);
+        return keyvalueAccessor.getInteger(key, mapper);
     }
 
     @Override
     public Double getDouble(String key, Function<Object, Double> mapper) {
-        return claimsAccessor.getDouble(key, mapper);
+        return keyvalueAccessor.getDouble(key, mapper);
     }
 
     @Override
     public Float getFloat(String key, Function<Object, Float> mapper) {
-        return claimsAccessor.getFloat(key, mapper);
+        return keyvalueAccessor.getFloat(key, mapper);
     }
 
     @Override
     public Long getLong(String key, Function<Object, Long> mapper) {
-        return claimsAccessor.getLong(key, mapper);
+        return keyvalueAccessor.getLong(key, mapper);
     }
 
     @Override
     public Boolean getBoolean(String key, Function<Object, Boolean> mapper) {
-        return claimsAccessor.getBoolean(key, mapper);
+        return keyvalueAccessor.getBoolean(key, mapper);
     }
 
     @Override
     public <E> E getAny(String... keys) {
-        return claimsAccessor.getAny(keys);
+        return keyvalueAccessor.getAny(keys);
     }
 
     @Override
     public <E> E getAny(Predicate2<String, E> predicate, String... keys) {
-        return claimsAccessor.getAny(predicate, keys);
+        return keyvalueAccessor.getAny(predicate, keys);
     }
 }
