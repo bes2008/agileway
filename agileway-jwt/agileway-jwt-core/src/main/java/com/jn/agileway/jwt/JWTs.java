@@ -33,6 +33,7 @@ public class JWTs {
 
         /**
          * Used in JWS Header and JWE Header.
+         * 签名算法名称
          *
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.1">RFC 7515 "alg" (JWS Algorithm) Header Parameter</a>
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7516#section-4.1.1">RFC 7516 "alg" (JWE Algorithm) Header Parameter</a>
@@ -41,6 +42,8 @@ public class JWTs {
 
         /**
          * Used in JWS Header and JWE Header.
+         * <p>
+         * JSON-encoded 的公钥的 URL .它的值是个URL，用于获取 JWK，需要是 遵循 <a href="https://www.rfc-editor.org/rfc/rfc7517">JWK 规范</a>的 JSON 对象
          *
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.2">RFC 7515 "jku" (JWK Set URL) Header Parameter</a>
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7516#section-4.1.4">RFC 7516 "jku" (JWK Set URL) Header Parameter</a>
@@ -49,6 +52,7 @@ public class JWTs {
 
         /**
          * Used in JWS Header and JWE Header.
+         * 直接就是 JWK内容。
          *
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.3">RFC 7515 "jwk" (JSON Web Key) Header Parameter</a>
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7516#section-4.1.5">RFC 7516 "jwk" (JSON Web Key) Header Parameter</a>
@@ -57,7 +61,9 @@ public class JWTs {
 
         /**
          * Used in JWS Header and JWE Header.
+         * 指定要使用 JWK中的key id
          *
+         * @see <a href="https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.4">RFC 7515 "jwk" (JSON Web Key) Header Parameter</a>
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.4">RFC 7515 "kid" (Key ID) Header Parameter</a>
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7516#section-4.1.6">RFC 7516 "kid" (Key ID) Header Parameter</a>
          */
