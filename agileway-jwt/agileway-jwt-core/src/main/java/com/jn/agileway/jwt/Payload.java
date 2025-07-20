@@ -6,7 +6,7 @@ import com.jn.langx.util.io.Charsets;
 
 import java.util.Map;
 
-public class Payload extends ClaimSet {
+public class Payload extends KeyValueSet {
     private String encoded;
 
     /**

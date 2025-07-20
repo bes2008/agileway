@@ -1,27 +1,34 @@
 package com.jn.agileway.jwt;
 
 
+import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.MapAccessor;
 import com.jn.langx.util.collection.Maps;
+import com.jn.langx.util.collection.Sets;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Predicate2;
 import com.jn.langx.util.valuegetter.ValueGetter2;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
-class ClaimSet implements ValueGetter2<String> {
+class KeyValueSet implements ValueGetter2<String> {
     private MapAccessor claimsAccessor;
 
-    public ClaimSet(Map<String, Object> map) {
+    public KeyValueSet(Map<String, Object> map) {
         if (map == null) {
             map = Maps.newHashMap();
         }
         this.claimsAccessor = new MapAccessor(new HashMap<String, Object>(map));
     }
 
-    public final Map<String, Object> getAllClaims() {
-        return claimsAccessor.getTarget();
+    public final Map<String, Object> getAll() {
+        return Collects.immutableMap(claimsAccessor.getTarget());
+    }
+
+    public final Set<String> getKeys() {
+        return Sets.immutableSet(getAll().keySet());
     }
 
     @Override

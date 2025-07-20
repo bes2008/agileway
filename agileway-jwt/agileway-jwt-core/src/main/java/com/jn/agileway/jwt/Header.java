@@ -7,7 +7,7 @@ import com.jn.langx.util.io.Charsets;
 import java.util.Map;
 import java.util.Set;
 
-public class Header extends ClaimSet {
+public class Header extends KeyValueSet {
     private String encoded;
 
     /**
