@@ -56,7 +56,7 @@ final class InternalHttpRequestExecutor extends RequestReplyExecutor {
             throw new IllegalStateException("can't found the request, invoke setRequestMessage() before poll");
         }
         waitHttpResponse(request, timeoutInMills);
-        return extractPayload(request);
+        return extractResponsePayload(request);
     }
 
     private void waitHttpResponse(HttpRequest request, long timeoutInMills) {
@@ -78,7 +78,7 @@ final class InternalHttpRequestExecutor extends RequestReplyExecutor {
         }
     }
 
-    private HttpResponse extractPayload(HttpRequest request) {
+    private HttpResponse extractResponsePayload(HttpRequest request) {
         UnderlyingHttpResponse underlyingHttpResponse = (UnderlyingHttpResponse) request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_UNDERLYING_RESPONSE);
         Type expectedResponseType = (Type) request.getHeaders().get(MessageHeaderConstants.RESPONSE_KEY_REPLY_PAYLOAD_TYPE);
         HttpResponsePayloadExtractor contentExtractor = (HttpResponsePayloadExtractor) request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_REPLY_PAYLOAD_EXTRACTOR);
