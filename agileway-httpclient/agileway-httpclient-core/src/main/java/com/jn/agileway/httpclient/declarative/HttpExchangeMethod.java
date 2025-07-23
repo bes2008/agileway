@@ -26,6 +26,8 @@ public class HttpExchangeMethod {
 
     private Map<String, ArrayValueGetter<Object>> bodyParts;
 
+    private ArrayValueGetter<Object> body;
+
     public String getUriTemplate() {
         return uriTemplate;
     }
@@ -90,6 +92,14 @@ public class HttpExchangeMethod {
         this.bodyParts = bodyParts;
     }
 
+    public ArrayValueGetter<Object> getBody() {
+        return body;
+    }
+
+    public void setBody(ArrayValueGetter<Object> body) {
+        this.body = body;
+    }
+
     public void checkValid() throws HttpExchangeMethodDeclaringException {
         if (javaMethod == null) {
             throw new HttpExchangeMethodDeclaringException("The java method is null");
@@ -99,6 +109,9 @@ public class HttpExchangeMethod {
         }
         if (Strings.isBlank(uriTemplate)) {
             throw new HttpExchangeMethodDeclaringException(StringTemplates.formatWithPlaceholder("The uriTemplate is blank, http exchange java method: {}", TypeSignatures.toMethodSignature(javaMethod)));
+        }
+        if (body != null && bodyParts != null) {
+            throw new HttpExchangeMethodDeclaringException(StringTemplates.formatWithPlaceholder("The body and bodyParts are both set, http exchange java method: {}", TypeSignatures.toMethodSignature(javaMethod)));
         }
     }
 }
