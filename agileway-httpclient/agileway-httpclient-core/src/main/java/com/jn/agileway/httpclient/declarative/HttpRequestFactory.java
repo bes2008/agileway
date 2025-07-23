@@ -2,9 +2,12 @@ package com.jn.agileway.httpclient.declarative;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.langx.Factory;
+import com.jn.langx.util.collection.multivalue.LinkedMultiValueMap;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.net.http.HttpHeaders;
+import com.jn.langx.util.valuegetter.ArrayValueGetter;
 
+import java.util.Collection;
 import java.util.Map;
 
 public class HttpRequestFactory implements Factory<Object[], HttpRequest<?>> {
@@ -30,6 +33,23 @@ public class HttpRequestFactory implements Factory<Object[], HttpRequest<?>> {
 
     private MultiValueMap<String, Object> resolveQueryParams(Object[] methodArgs) {
         MultiValueMap<String, Object> queryParams = null;
+        Map<String, ArrayValueGetter<Object>> queryParamsDefinitionMap = httpExchangeMethod.getQueryParams();
+        if (queryParamsDefinitionMap == null) {
+            return queryParams;
+        }
+        queryParams = new LinkedMultiValueMap<>();
+        for (Map.Entry<String, ArrayValueGetter<Object>> entry : queryParamsDefinitionMap.entrySet()) {
+            String queryParamName = entry.getKey();
+            ArrayValueGetter<Object> valuesGetter = entry.getValue();
+            Object values = valuesGetter.get(methodArgs);
+            if (values == null) {
+                queryParams.add(queryParamName, "");
+            } else if (values instanceof Object[]) {
+                queryParams.addAll(queryParamName, (Object[]) values);
+            } else if (values instanceof Collection) {
+                queryParams.addAll(queryParamName, (Collection) values);
+            }
+        }
         return queryParams;
     }
 
