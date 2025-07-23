@@ -9,6 +9,7 @@ import com.jn.langx.util.collection.multivalue.LinkedMultiValueMap;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.net.http.HttpHeaders;
+import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.valuegetter.ArrayValueGetter;
 
 import java.util.Collection;
@@ -38,12 +39,12 @@ public class HttpRequestFactory implements Factory<Object[], HttpRequest<?>> {
 
     private MultiValueMap<String, Object> resolveQueryParams(Object[] methodArgs) {
         MultiValueMap<String, Object> queryParams = null;
-        Map<String, ArrayValueGetter<Object>> queryParamsDefinitionMap = httpExchangeMethod.getQueryParams();
+        Map<String, QueryParamValueGetter> queryParamsDefinitionMap = httpExchangeMethod.getQueryParams();
         if (Objs.isEmpty(queryParamsDefinitionMap)) {
             return queryParams;
         }
         queryParams = new LinkedMultiValueMap<>();
-        for (Map.Entry<String, ArrayValueGetter<Object>> entry : queryParamsDefinitionMap.entrySet()) {
+        for (Map.Entry<String, QueryParamValueGetter> entry : queryParamsDefinitionMap.entrySet()) {
             String queryParamName = entry.getKey();
             ArrayValueGetter<Object> valuesGetter = entry.getValue();
             Object values = valuesGetter.get(methodArgs);
@@ -119,12 +120,27 @@ public class HttpRequestFactory implements Factory<Object[], HttpRequest<?>> {
     }
 
     private HttpHeaders resolveHeaders(Object[] methodArgs) {
-        HttpHeaders headers = null;
+        HttpHeaders headers = new HttpHeaders();
+
+        String[] accept = httpExchangeMethod.getAccept();
+        if (Objs.isNotEmpty(accept)) {
+            headers.setAccept(Pipeline.of(accept).map(new Function<String, MediaType>() {
+                @Override
+                public MediaType apply(String v) {
+                    return MediaType.valueOf(v);
+                }
+            }).asList());
+        }
+
+        MediaType contentType = httpExchangeMethod.getContentType();
+        if (contentType != null) {
+            headers.setContentType(contentType);
+        }
+
         Map<String, ArrayValueGetter<Object>> headersDefinitionMap = httpExchangeMethod.getHeaders();
         if (Objs.isEmpty(headersDefinitionMap)) {
             return headers;
         }
-        headers = new HttpHeaders();
         for (Map.Entry<String, ArrayValueGetter<Object>> entry : headersDefinitionMap.entrySet()) {
             String headerName = entry.getKey();
             ArrayValueGetter<Object> valuesGetter = entry.getValue();

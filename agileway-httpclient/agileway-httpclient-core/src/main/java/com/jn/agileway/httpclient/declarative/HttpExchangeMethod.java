@@ -3,10 +3,12 @@ package com.jn.agileway.httpclient.declarative;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpMethod;
+import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.reflect.signature.TypeSignatures;
 import com.jn.langx.util.valuegetter.ArrayValueGetter;
 
 import java.lang.reflect.Method;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class HttpExchangeMethod {
@@ -16,9 +18,13 @@ public class HttpExchangeMethod {
 
     private Method javaMethod;
 
-    private Map<String, ArrayValueGetter<Object>> queryParams;
+    private MediaType contentType;
 
-    private Map<String, ArrayValueGetter<Object>> uriVariables;
+    private String[] accept;
+
+    private Map<String, QueryParamValueGetter> queryParams = new LinkedHashMap<>();
+
+    private Map<String, ArrayValueGetter<Object>> uriVariables = new LinkedHashMap<>();
 
     private Map<String, ArrayValueGetter<Object>> headers;
 
@@ -52,11 +58,11 @@ public class HttpExchangeMethod {
         this.javaMethod = javaMethod;
     }
 
-    public Map<String, ArrayValueGetter<Object>> getQueryParams() {
+    public Map<String, QueryParamValueGetter> getQueryParams() {
         return queryParams;
     }
 
-    public void setQueryParams(Map<String, ArrayValueGetter<Object>> queryParams) {
+    public void setQueryParams(Map<String, QueryParamValueGetter> queryParams) {
         this.queryParams = queryParams;
     }
 
@@ -94,6 +100,22 @@ public class HttpExchangeMethod {
 
     public ArrayValueGetter<Object> getBody() {
         return body;
+    }
+
+    public MediaType getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(MediaType contentType) {
+        this.contentType = contentType;
+    }
+
+    public String[] getAccept() {
+        return accept;
+    }
+
+    public void setAccept(String[] accept) {
+        this.accept = accept;
     }
 
     public void setBody(ArrayValueGetter<Object> body) {
