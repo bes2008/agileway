@@ -1,4 +1,4 @@
 package com.jn.agileway.httpclient.declarative.anno;
 
-public @interface PathVariable {
+public @interface UriVariable {
 }
