@@ -26,11 +26,11 @@ public class HttpExchangeMethod {
 
     private Map<String, ArrayValueGetter<Object>> uriVariables = new LinkedHashMap<>();
 
-    private Map<String, ArrayValueGetter<Object>> headers;
+    private Map<String, ArrayValueGetter<Object>> headers = new LinkedHashMap<>();
 
-    private Map<String, ArrayValueGetter<Object>> cookies;
+    private Map<String, ArrayValueGetter<Object>> cookies = new LinkedHashMap<>();
 
-    private Map<String, ArrayValueGetter<Object>> bodyParts;
+    private Map<String, ArrayValueGetter<Object>> bodyParts = new LinkedHashMap<>();
 
     private ArrayValueGetter<Object> body;
 
