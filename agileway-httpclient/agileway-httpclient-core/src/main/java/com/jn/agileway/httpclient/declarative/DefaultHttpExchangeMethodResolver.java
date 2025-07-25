@@ -67,6 +67,14 @@ public class DefaultHttpExchangeMethodResolver implements HttpExchangeMethodReso
                 annoResolved = true;
             }
         }
+
+        if (!annoResolved) {
+            Cookie cookie = parameter.getAnnotation(Cookie.class);
+            if (cookie != null) {
+                resolveCookie(exchangeMethod, parameter, cookie, parameterIndex);
+                annoResolved = true;
+            }
+        }
         
         if (!annoResolved) {
             BodyPart bodyPart = parameter.getAnnotation(BodyPart.class);
@@ -83,6 +91,13 @@ public class DefaultHttpExchangeMethodResolver implements HttpExchangeMethodReso
             }
         }
 
+        if (!annoResolved) {
+            throw new HttpExchangeMethodDeclaringException("The method " + exchangeMethod.getJavaMethod().getName() + " has no annotated parameter");
+        }
+
+    }
+
+    private void resolveCookie(HttpExchangeMethod exchangeMethod, Parameter parameter, Cookie cookie, int parameterIndex) {
     }
 
     private void resolveHeader(HttpExchangeMethod exchangeMethod, Parameter parameter, Header header, int parameterIndex) {
