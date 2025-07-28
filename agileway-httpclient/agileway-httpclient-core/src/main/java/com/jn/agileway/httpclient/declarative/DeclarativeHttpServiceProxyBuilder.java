@@ -1,11 +1,13 @@
 package com.jn.agileway.httpclient.declarative;
 
 import com.jn.agileway.httpclient.Exchanger;
+import com.jn.agileway.httpclient.declarative.anno.*;
 import com.jn.langx.Builder;
+import com.jn.langx.util.reflect.Reflects;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.Map;
+import java.util.*;
 
 public class DeclarativeHttpServiceProxyBuilder<S> implements Builder<S> {
     private Exchanger exchanger;
@@ -39,7 +41,24 @@ public class DeclarativeHttpServiceProxyBuilder<S> implements Builder<S> {
     }
 
     private Map<Method, HttpExchangeMethod> resolveServiceMethods() {
-        return null;
+        Map<Method, HttpExchangeMethod> httpExchangeMethods = new HashMap<Method, HttpExchangeMethod>();
+        List<Class> interfaces = new ArrayList<>(Reflects.getAllInterfaces(serviceInterface));
+        Collections.reverse(interfaces);
+        interfaces.add(serviceInterface);
+        for (Class interfaceClass : interfaces) {
+            if (!Reflects.hasAnnotation(interfaceClass, HttpExchange.class)) {
+                continue;
+            }
+            Collection<Method> declaredMethods = Reflects.getAllDeclaredMethods(interfaceClass, false);
+            for (Method method : declaredMethods) {
+                if (!Reflects.isAnnotatedWith(method, Get.class, Post.class, Put.class, Delete.class, Patch.class)) {
+                    continue;
+                }
+                HttpExchangeMethod httpExchangeMethod = this.methodResolver.resolve(method);
+                httpExchangeMethods.put(method, httpExchangeMethod);
+            }
+        }
+        return httpExchangeMethods;
     }
 
 }
