@@ -84,7 +84,7 @@ public class DefaultHttpExchangeMethodResolver implements HttpExchangeMethodReso
                 annoResolved = true;
             }
         }
-        
+
         if (!annoResolved) {
             BodyPart bodyPart = parameter.getAnnotation(BodyPart.class);
             if (bodyPart != null) {
