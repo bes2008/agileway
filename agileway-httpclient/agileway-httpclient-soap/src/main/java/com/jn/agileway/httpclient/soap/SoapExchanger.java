@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.soap;
 
+import com.jn.agileway.httpclient.Exchanger;
 import com.jn.agileway.httpclient.core.HttpExchanger;
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.HttpResponse;
@@ -9,9 +10,10 @@ import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.concurrent.promise.Promise;
 import com.jn.langx.util.net.http.HttpHeaders;
 
+import java.lang.reflect.Type;
 import java.util.Map;
 
-public class SoapExchanger {
+public class SoapExchanger implements Exchanger {
     private HttpExchanger httpExchanger;
     private SoapFaultResponseExtractor soapFaultResponseExtractor = new SoapFaultResponseExtractor();
 
@@ -34,8 +36,12 @@ public class SoapExchanger {
     public <T> Promise<HttpResponse<T>> exchangeAsync(String uri, MultiValueMap<String, Object> queryParams, Map<String, Object> uriVariables, HttpHeaders headers, SoapBinding binding, Object soapMessage, Class<T> expectedContentType) {
         HttpRequest request = HttpRequest.forPost(uri, queryParams, uriVariables, headers, soapMessage);
         request.getHttpHeaders().setContentType(binding.getContentType());
-        return httpExchanger.exchange(true, request, expectedContentType, null, soapFaultResponseExtractor);
+        return exchange(true, request, expectedContentType);
     }
 
+    @Override
+    public <T> Promise<HttpResponse<T>> exchange(boolean async, HttpRequest<?> request, Type expectedContentType) {
+        return httpExchanger.exchange(async, request, expectedContentType, null, soapFaultResponseExtractor);
+    }
 
 }

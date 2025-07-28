@@ -7,6 +7,7 @@ import com.jn.agileway.eipchannel.core.channel.pipe.PipedDuplexChannel;
 import com.jn.agileway.eipchannel.core.endpoint.exchange.RequestReplyExchanger;
 import com.jn.agileway.eipchannel.core.transformer.TransformerInboundMessageInterceptor;
 import com.jn.agileway.eipchannel.core.transformer.TransformerOutboundMessageInterceptor;
+import com.jn.agileway.httpclient.Exchanger;
 import com.jn.agileway.httpclient.core.error.DefaultHttpResponseErrorHandler;
 import com.jn.agileway.httpclient.core.error.HttpResponseErrorHandler;
 import com.jn.agileway.httpclient.core.error.exception.HttpRequestClientErrorException;
@@ -35,7 +36,7 @@ import com.jn.langx.util.retry.Retryer;
 import java.lang.reflect.Type;
 import java.util.List;
 
-public class HttpExchanger extends AbstractLifecycle implements RequestReplyExchanger<HttpRequest, HttpResponse> {
+public class HttpExchanger extends AbstractLifecycle implements RequestReplyExchanger<HttpRequest, HttpResponse>, Exchanger {
 
     /**
      * <pre>
@@ -233,6 +234,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
         return (HttpResponse) promise.await();
     }
 
+    @Override
     public <T> Promise<HttpResponse<T>> exchange(boolean async, HttpRequest<?> request, Type responseType) {
         return exchange(async, request, responseType, null, null);
     }

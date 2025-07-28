@@ -34,6 +34,8 @@ public class HttpExchangeMethod {
 
     private ArrayValueGetter<Object> body;
 
+    private Class expectedResponseType;
+
     public String getUriTemplate() {
         return uriTemplate;
     }
@@ -120,6 +122,14 @@ public class HttpExchangeMethod {
 
     public void setBody(ArrayValueGetter<Object> body) {
         this.body = body;
+    }
+
+    public Class getExpectedResponseType() {
+        return expectedResponseType;
+    }
+
+    public void setExpectedResponseType(Class expectedResponseType) {
+        this.expectedResponseType = expectedResponseType;
     }
 
     public void checkValid() throws HttpExchangeMethodDeclaringException {
