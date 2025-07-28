@@ -18,16 +18,16 @@ public class DefaultHttpExchangeMethodResolver implements HttpExchangeMethodReso
         exchangeMethod.setJavaMethod(javaMethod);
 
         Class<?> declaringClass = javaMethod.getDeclaringClass();
-        HttpEndpoint httpExchange = declaringClass.getAnnotation(HttpEndpoint.class);
-        if (httpExchange == null) {
+        HttpEndpoint httpEndpoint = declaringClass.getAnnotation(HttpEndpoint.class);
+        if (httpEndpoint == null) {
             throw new HttpExchangeMethodDeclaringException("The class " + declaringClass.getName() + " is not annotated with @HttpExchange");
         }
-        String uriPrefix = httpExchange.value();
-        if (Strings.isNotBlank(uriPrefix)) {
+        String uriPrefix = httpEndpoint.value();
+        if (Strings.isBlank(uriPrefix)) {
             uriPrefix = "";
         }
-        String[] defaultAccept = httpExchange.accept();
-        String contentTypeString = httpExchange.contentType();
+        String[] defaultAccept = httpEndpoint.accept();
+        String contentTypeString = httpEndpoint.contentType();
         MediaType defaultContentType = null;
         if (Strings.isNotBlank(contentTypeString)) {
             defaultContentType = MediaType.valueOf(contentTypeString);
