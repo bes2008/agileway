@@ -106,11 +106,12 @@ public class DefaultHttpExchangeMethodResolver implements HttpExchangeMethodReso
     }
 
     private void resolveHeader(HttpExchangeMethod exchangeMethod, Parameter parameter, Header header, int parameterIndex) {
-        String headerName = header.name();
+        String headerName = header.value();
         if (Strings.isBlank(headerName)) {
             headerName = parameter.getName();
         }
-        exchangeMethod.getHeaders().put(headerName, new ArrayValueGetter<>(parameterIndex));
+        String defaultValue = header.defaultValue();
+        exchangeMethod.getHeaders().put(headerName, new DefaultValueSupportedValueGetter(parameterIndex, defaultValue));
     }
 
     private void resolveBody(HttpExchangeMethod exchangeMethod, Parameter parameter, Body body, int parameterIndex) {
