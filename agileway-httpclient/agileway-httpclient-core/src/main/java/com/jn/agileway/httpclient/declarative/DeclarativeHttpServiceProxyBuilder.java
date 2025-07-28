@@ -57,7 +57,7 @@ public class DeclarativeHttpServiceProxyBuilder<S> implements Builder<S> {
         Collections.reverse(interfaces);
         interfaces.add(serviceInterface);
         for (Class interfaceClass : interfaces) {
-            if (!Reflects.hasAnnotation(interfaceClass, HttpExchange.class)) {
+            if (!Reflects.hasAnnotation(interfaceClass, HttpEndpoint.class)) {
                 continue;
             }
             Collection<Method> declaredMethods = Reflects.getAllDeclaredMethods(interfaceClass, false);

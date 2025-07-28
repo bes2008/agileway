@@ -16,7 +16,7 @@ public class DefaultHttpExchangeMethodResolver implements HttpExchangeMethodReso
         exchangeMethod.setJavaMethod(javaMethod);
 
         Class<?> declaringClass = javaMethod.getDeclaringClass();
-        HttpExchange httpExchange = declaringClass.getAnnotation(HttpExchange.class);
+        HttpEndpoint httpExchange = declaringClass.getAnnotation(HttpEndpoint.class);
         if (httpExchange == null) {
             throw new HttpExchangeMethodDeclaringException("The class " + declaringClass.getName() + " is not annotated with @HttpExchange");
         }

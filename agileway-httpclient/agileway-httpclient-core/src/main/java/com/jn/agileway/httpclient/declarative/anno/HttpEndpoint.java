@@ -10,7 +10,10 @@ import static java.lang.annotation.ElementType.TYPE;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Target(value = {TYPE})
-public @interface HttpExchange {
+public @interface HttpEndpoint {
+    /**
+     * 端点的url
+     */
     String value() default "";
 
     String[] accept();
