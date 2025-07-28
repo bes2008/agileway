@@ -14,14 +14,13 @@ import java.util.Map;
 class HttpExchangeMethodInvocationHandler implements InvocationHandler {
 
     private Map<Method, HttpExchangeMethod> httpExchangeMethods;
-    private DeclarativeHttpRequestFactory declarativeHttpRequestFactory;
-
+    private String baseUri;
     private Exchanger exchanger;
 
 
-    HttpExchangeMethodInvocationHandler(Map<Method, HttpExchangeMethod> httpExchangeMethods, DeclarativeHttpRequestFactory declarativeHttpRequestFactory, Exchanger httpExchanger) {
+    HttpExchangeMethodInvocationHandler(String baseUri, Map<Method, HttpExchangeMethod> httpExchangeMethods, Exchanger httpExchanger) {
+        this.baseUri = baseUri;
         this.httpExchangeMethods = httpExchangeMethods;
-        this.declarativeHttpRequestFactory = declarativeHttpRequestFactory;
         this.exchanger = httpExchanger;
     }
 
@@ -29,7 +28,7 @@ class HttpExchangeMethodInvocationHandler implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         HttpExchangeMethod httpExchangeMethod = httpExchangeMethods.get(method);
         if (httpExchangeMethod != null) {
-            HttpRequest<?> request = declarativeHttpRequestFactory.get(args);
+            HttpRequest<?> request = new DeclarativeHttpRequestFactory(baseUri, httpExchangeMethod).get(args);
             Promise<HttpResponse<Object>> promise = exchanger.exchange(true, request, httpExchangeMethod.getExpectedResponseType());
             if (method.getReturnType() == HttpResponse.class) {
                 return promise.await();

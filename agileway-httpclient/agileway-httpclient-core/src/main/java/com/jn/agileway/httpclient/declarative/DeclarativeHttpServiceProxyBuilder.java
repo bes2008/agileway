@@ -3,6 +3,7 @@ package com.jn.agileway.httpclient.declarative;
 import com.jn.agileway.httpclient.Exchanger;
 import com.jn.agileway.httpclient.declarative.anno.*;
 import com.jn.langx.Builder;
+import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.signature.TypeSignatures;
 import org.slf4j.Logger;
@@ -16,7 +17,7 @@ public class DeclarativeHttpServiceProxyBuilder<S> implements Builder<S> {
     private static final Logger logger = LoggerFactory.getLogger(DeclarativeHttpServiceProxyBuilder.class);
     private Exchanger exchanger;
     private HttpExchangeMethodResolver methodResolver;
-    private DeclarativeHttpRequestFactory requestFactory;
+    private String baseUri;
 
     private Class<S> serviceInterface;
 
@@ -34,14 +35,20 @@ public class DeclarativeHttpServiceProxyBuilder<S> implements Builder<S> {
         return this;
     }
 
-    public final DeclarativeHttpServiceProxyBuilder<S> requestFactory(DeclarativeHttpRequestFactory requestFactory) {
-        this.requestFactory = requestFactory;
+    public final DeclarativeHttpServiceProxyBuilder withBaseUri(String baseUri) {
+        this.baseUri = baseUri;
+        return this;
+    }
+
+    public final DeclarativeHttpServiceProxyBuilder<S> withService(Class<S> serviceInterface) {
+        Preconditions.checkArgument(serviceInterface.isInterface());
+        this.serviceInterface = serviceInterface;
         return this;
     }
 
     public final S build() {
         Map<Method, HttpExchangeMethod> httpExchangeMethods = resolveServiceMethods();
-        return (S) Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[]{serviceInterface}, new HttpExchangeMethodInvocationHandler(httpExchangeMethods, requestFactory, exchanger));
+        return (S) Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[]{serviceInterface}, new HttpExchangeMethodInvocationHandler(baseUri, httpExchangeMethods, exchanger));
     }
 
     private Map<Method, HttpExchangeMethod> resolveServiceMethods() {

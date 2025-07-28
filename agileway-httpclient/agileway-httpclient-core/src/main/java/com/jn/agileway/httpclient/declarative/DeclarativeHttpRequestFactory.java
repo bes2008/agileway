@@ -17,9 +17,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DeclarativeHttpRequestFactory implements Factory<Object[], HttpRequest<?>> {
+    private String baseUri;
     private HttpExchangeMethod httpExchangeMethod;
 
-    public DeclarativeHttpRequestFactory(HttpExchangeMethod httpExchangeMethod) {
+    public DeclarativeHttpRequestFactory(String baseUri, HttpExchangeMethod httpExchangeMethod) {
+        this.baseUri = baseUri;
         this.httpExchangeMethod = httpExchangeMethod;
     }
 
@@ -28,9 +30,11 @@ public class DeclarativeHttpRequestFactory implements Factory<Object[], HttpRequ
         Map<String, Object> uriVariables = buildUriVariables(methodArgs);
         HttpHeaders headers = buildHeaders(methodArgs);
         Object body = buildBody(methodArgs);
+
+        String uri = Strings.stripEnd(baseUri, "/") + "/" + Strings.stripStart(httpExchangeMethod.getUriTemplate(), "/");
         return HttpRequest.create(
                 httpExchangeMethod.getHttpMethod(),
-                httpExchangeMethod.getUriTemplate(),
+                uri,
                 queryParams,
                 uriVariables,
                 headers,
