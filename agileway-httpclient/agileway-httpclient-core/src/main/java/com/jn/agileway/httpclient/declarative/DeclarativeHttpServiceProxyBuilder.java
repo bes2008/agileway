@@ -4,12 +4,16 @@ import com.jn.agileway.httpclient.Exchanger;
 import com.jn.agileway.httpclient.declarative.anno.*;
 import com.jn.langx.Builder;
 import com.jn.langx.util.reflect.Reflects;
+import com.jn.langx.util.reflect.signature.TypeSignatures;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.*;
 
 public class DeclarativeHttpServiceProxyBuilder<S> implements Builder<S> {
+    private static final Logger logger = LoggerFactory.getLogger(DeclarativeHttpServiceProxyBuilder.class);
     private Exchanger exchanger;
     private HttpExchangeMethodResolver methodResolver;
     private DeclarativeHttpRequestFactory requestFactory;
@@ -52,6 +56,7 @@ public class DeclarativeHttpServiceProxyBuilder<S> implements Builder<S> {
             Collection<Method> declaredMethods = Reflects.getAllDeclaredMethods(interfaceClass, false);
             for (Method method : declaredMethods) {
                 if (!Reflects.isAnnotatedWith(method, Get.class, Post.class, Put.class, Delete.class, Patch.class)) {
+                    logger.debug("The method {} is not annotated with @Get, @Post, @Put, @Delete, @Patch, ignore it", TypeSignatures.toMethodSignature(method));
                     continue;
                 }
                 HttpExchangeMethod httpExchangeMethod = this.methodResolver.resolve(method);

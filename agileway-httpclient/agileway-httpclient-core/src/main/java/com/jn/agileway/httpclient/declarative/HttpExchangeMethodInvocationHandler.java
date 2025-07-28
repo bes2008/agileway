@@ -3,7 +3,9 @@ package com.jn.agileway.httpclient.declarative;
 import com.jn.agileway.httpclient.Exchanger;
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.HttpResponse;
+import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.concurrent.promise.Promise;
+import com.jn.langx.util.reflect.signature.TypeSignatures;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -35,6 +37,6 @@ class HttpExchangeMethodInvocationHandler implements InvocationHandler {
                 return promise.await().getPayload();
             }
         }
-        throw new UnsupportedOperationException("Unsupported method: " + method.getName());
+        throw new UnsupportedOperationException(StringTemplates.formatWithPlaceholder("Method {} is not a http exchange method", TypeSignatures.toMethodSignature(method)));
     }
 }
