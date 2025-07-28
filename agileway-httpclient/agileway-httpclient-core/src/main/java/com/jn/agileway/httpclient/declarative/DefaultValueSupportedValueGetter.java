@@ -2,10 +2,10 @@ package com.jn.agileway.httpclient.declarative;
 
 import com.jn.langx.util.valuegetter.ArrayValueGetter;
 
-public class QueryParamValueGetter extends ArrayValueGetter<Object> {
+public class DefaultValueSupportedValueGetter extends ArrayValueGetter<Object> {
     private String defaultValue;
 
-    public QueryParamValueGetter(int index, String defaultValue) {
+    public DefaultValueSupportedValueGetter(int index, String defaultValue) {
         super(index);
         this.defaultValue = defaultValue;
     }

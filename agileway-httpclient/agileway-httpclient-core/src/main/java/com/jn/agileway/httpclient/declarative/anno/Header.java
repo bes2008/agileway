@@ -14,6 +14,7 @@ public @interface Header {
     /**
      * header name
      */
+    String name() default "";
     String value() default "";
 
     String defaultValue() default "";

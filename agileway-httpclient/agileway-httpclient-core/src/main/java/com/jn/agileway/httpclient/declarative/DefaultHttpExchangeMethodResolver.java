@@ -106,7 +106,7 @@ public class DefaultHttpExchangeMethodResolver implements HttpExchangeMethodReso
     }
 
     private void resolveHeader(HttpExchangeMethod exchangeMethod, Parameter parameter, Header header, int parameterIndex) {
-        String headerName = header.value();
+        String headerName = header.name();
         if (Strings.isBlank(headerName)) {
             headerName = parameter.getName();
         }
@@ -151,7 +151,7 @@ public class DefaultHttpExchangeMethodResolver implements HttpExchangeMethodReso
             throw new HttpExchangeMethodDeclaringException("The query param " + queryParamName + " is already defined");
         }
         String defaultValue = queryParam.defaultValue();
-        exchangeMethod.getQueryParams().put(queryParamName, new QueryParamValueGetter(parameterIndex, defaultValue));
+        exchangeMethod.getQueryParams().put(queryParamName, new DefaultValueSupportedValueGetter(parameterIndex, defaultValue));
     }
 
     private void resolveMethodAnnotation(HttpExchangeMethod exchangeMethod, String uriPrefix, String[] defaultAccept, MediaType defaultContentType, Method javaMethod) {

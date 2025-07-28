@@ -22,7 +22,7 @@ public class HttpExchangeMethod {
 
     private String[] accept;
 
-    private Map<String, QueryParamValueGetter> queryParams = new LinkedHashMap<>();
+    private Map<String, DefaultValueSupportedValueGetter> queryParams = new LinkedHashMap<>();
 
     private Map<String, ArrayValueGetter<Object>> uriVariables = new LinkedHashMap<>();
 
@@ -60,11 +60,11 @@ public class HttpExchangeMethod {
         this.javaMethod = javaMethod;
     }
 
-    public Map<String, QueryParamValueGetter> getQueryParams() {
+    public Map<String, DefaultValueSupportedValueGetter> getQueryParams() {
         return queryParams;
     }
 
-    public void setQueryParams(Map<String, QueryParamValueGetter> queryParams) {
+    public void setQueryParams(Map<String, DefaultValueSupportedValueGetter> queryParams) {
         this.queryParams = queryParams;
     }
 

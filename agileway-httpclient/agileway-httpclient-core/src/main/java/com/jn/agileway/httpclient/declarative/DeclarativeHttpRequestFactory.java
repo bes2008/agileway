@@ -39,12 +39,12 @@ public class DeclarativeHttpRequestFactory implements Factory<Object[], HttpRequ
 
     private MultiValueMap<String, Object> buildQueryParams(Object[] methodArgs) {
         MultiValueMap<String, Object> queryParams = null;
-        Map<String, QueryParamValueGetter> queryParamsDefinitionMap = httpExchangeMethod.getQueryParams();
+        Map<String, DefaultValueSupportedValueGetter> queryParamsDefinitionMap = httpExchangeMethod.getQueryParams();
         if (Objs.isEmpty(queryParamsDefinitionMap)) {
             return queryParams;
         }
         queryParams = new LinkedMultiValueMap<>();
-        for (Map.Entry<String, QueryParamValueGetter> entry : queryParamsDefinitionMap.entrySet()) {
+        for (Map.Entry<String, DefaultValueSupportedValueGetter> entry : queryParamsDefinitionMap.entrySet()) {
             String queryParamName = entry.getKey();
             ArrayValueGetter<Object> valuesGetter = entry.getValue();
             Object values = valuesGetter.get(methodArgs);
