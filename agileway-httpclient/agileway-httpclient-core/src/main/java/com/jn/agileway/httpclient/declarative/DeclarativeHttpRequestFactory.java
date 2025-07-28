@@ -16,18 +16,18 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HttpRequestFactory implements Factory<Object[], HttpRequest<?>> {
+public class DeclarativeHttpRequestFactory implements Factory<Object[], HttpRequest<?>> {
     private HttpExchangeMethod httpExchangeMethod;
 
-    public HttpRequestFactory(HttpExchangeMethod httpExchangeMethod) {
+    public DeclarativeHttpRequestFactory(HttpExchangeMethod httpExchangeMethod) {
         this.httpExchangeMethod = httpExchangeMethod;
     }
 
     public HttpRequest<?> get(Object[] methodArgs) {
-        MultiValueMap<String, Object> queryParams = resolveQueryParams(methodArgs);
-        Map<String, Object> uriVariables = resolveUriVariables(methodArgs);
-        HttpHeaders headers = resolveHeaders(methodArgs);
-        Object body = resolveBody(methodArgs);
+        MultiValueMap<String, Object> queryParams = buildQueryParams(methodArgs);
+        Map<String, Object> uriVariables = buildUriVariables(methodArgs);
+        HttpHeaders headers = buildHeaders(methodArgs);
+        Object body = buildBody(methodArgs);
         return HttpRequest.create(
                 httpExchangeMethod.getHttpMethod(),
                 httpExchangeMethod.getUriTemplate(),
@@ -37,7 +37,7 @@ public class HttpRequestFactory implements Factory<Object[], HttpRequest<?>> {
                 body);
     }
 
-    private MultiValueMap<String, Object> resolveQueryParams(Object[] methodArgs) {
+    private MultiValueMap<String, Object> buildQueryParams(Object[] methodArgs) {
         MultiValueMap<String, Object> queryParams = null;
         Map<String, QueryParamValueGetter> queryParamsDefinitionMap = httpExchangeMethod.getQueryParams();
         if (Objs.isEmpty(queryParamsDefinitionMap)) {
@@ -61,7 +61,7 @@ public class HttpRequestFactory implements Factory<Object[], HttpRequest<?>> {
         return queryParams;
     }
 
-    private Map<String, Object> resolveUriVariables(Object[] methodArgs) {
+    private Map<String, Object> buildUriVariables(Object[] methodArgs) {
         Map<String, Object> uriVariables = null;
 
         Map<String, ArrayValueGetter<Object>> uriVariablesDefinitionMap = httpExchangeMethod.getUriVariables();
@@ -88,7 +88,7 @@ public class HttpRequestFactory implements Factory<Object[], HttpRequest<?>> {
     }
 
 
-    private Object resolveBody(Object[] methodArgs) {
+    private Object buildBody(Object[] methodArgs) {
         Object body = null;
 
         ArrayValueGetter<Object> bodyGetter = httpExchangeMethod.getBody();
@@ -119,7 +119,7 @@ public class HttpRequestFactory implements Factory<Object[], HttpRequest<?>> {
         return bodyPartMap;
     }
 
-    private HttpHeaders resolveHeaders(Object[] methodArgs) {
+    private HttpHeaders buildHeaders(Object[] methodArgs) {
         HttpHeaders headers = new HttpHeaders();
 
         String[] accept = httpExchangeMethod.getAccept();
