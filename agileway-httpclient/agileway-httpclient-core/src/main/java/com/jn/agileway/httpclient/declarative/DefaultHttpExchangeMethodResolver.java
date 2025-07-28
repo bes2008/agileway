@@ -1,6 +1,8 @@
 package com.jn.agileway.httpclient.declarative;
 
 import com.jn.agileway.httpclient.declarative.anno.*;
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpMethod;
@@ -92,12 +94,12 @@ public class DefaultHttpExchangeMethodResolver implements HttpExchangeMethodReso
         }
 
         if (!annoResolved) {
-            throw new HttpExchangeMethodDeclaringException("The method " + exchangeMethod.getJavaMethod().getName() + " has no annotated parameter " + parameter.getName());
+            resolveQueryParam(exchangeMethod, parameter, null, parameterIndex);
         }
 
     }
 
-    private void resolveCookie(HttpExchangeMethod exchangeMethod, Parameter parameter, Cookie cookie, int parameterIndex) {
+    private void resolveCookie(HttpExchangeMethod exchangeMethod, Parameter parameter, @NonNull Cookie cookie, int parameterIndex) {
         String cookieName = cookie.value();
         if (Strings.isBlank(cookieName)) {
             cookieName = parameter.getName();
@@ -105,7 +107,7 @@ public class DefaultHttpExchangeMethodResolver implements HttpExchangeMethodReso
         exchangeMethod.getCookies().put(cookieName, new ArrayValueGetter(parameterIndex));
     }
 
-    private void resolveHeader(HttpExchangeMethod exchangeMethod, Parameter parameter, Header header, int parameterIndex) {
+    private void resolveHeader(HttpExchangeMethod exchangeMethod, Parameter parameter, @NonNull Header header, int parameterIndex) {
         String headerName = header.value();
         if (Strings.isBlank(headerName)) {
             headerName = parameter.getName();
@@ -114,14 +116,14 @@ public class DefaultHttpExchangeMethodResolver implements HttpExchangeMethodReso
         exchangeMethod.getHeaders().put(headerName, new DefaultValueSupportedValueGetter(parameterIndex, defaultValue));
     }
 
-    private void resolveBody(HttpExchangeMethod exchangeMethod, Parameter parameter, Body body, int parameterIndex) {
+    private void resolveBody(HttpExchangeMethod exchangeMethod, Parameter parameter, @NonNull Body body, int parameterIndex) {
         if (exchangeMethod.getBody() != null) {
             throw new HttpExchangeMethodDeclaringException("The method " + exchangeMethod.getJavaMethod().getName() + " has already a body");
         }
         exchangeMethod.setBody(new ArrayValueGetter<Object>(parameterIndex));
     }
 
-    private void resolveBodyPart(HttpExchangeMethod exchangeMethod, Parameter parameter, BodyPart bodyPart, int parameterIndex) {
+    private void resolveBodyPart(HttpExchangeMethod exchangeMethod, Parameter parameter, @NonNull BodyPart bodyPart, int parameterIndex) {
         String bodyPartName = bodyPart.value();
         if (Strings.isBlank(bodyPartName)) {
             bodyPartName = parameter.getName();
@@ -132,7 +134,7 @@ public class DefaultHttpExchangeMethodResolver implements HttpExchangeMethodReso
         exchangeMethod.getBodyParts().put(bodyPartName, new ArrayValueGetter<Object>(parameterIndex));
     }
 
-    private void resolveUriVariable(HttpExchangeMethod exchangeMethod, Parameter parameter, UriVariable uriVariable, int parameterIndex) {
+    private void resolveUriVariable(HttpExchangeMethod exchangeMethod, Parameter parameter, @NonNull UriVariable uriVariable, int parameterIndex) {
         String uriVariableName = uriVariable.value();
         if (Strings.isBlank(uriVariableName)) {
             uriVariableName = parameter.getName();
@@ -143,15 +145,18 @@ public class DefaultHttpExchangeMethodResolver implements HttpExchangeMethodReso
         exchangeMethod.getUriVariables().put(uriVariableName, new ArrayValueGetter<Object>(parameterIndex));
     }
 
-    private void resolveQueryParam(HttpExchangeMethod exchangeMethod, Parameter parameter, QueryParam queryParam, int parameterIndex) {
-        String queryParamName = queryParam.value();
+    private void resolveQueryParam(HttpExchangeMethod exchangeMethod, Parameter parameter, @Nullable QueryParam queryParam, int parameterIndex) {
+        String queryParamName = null;
+        if (queryParam != null) {
+            queryParamName = queryParam.value();
+        }
         if (Strings.isBlank(queryParamName)) {
             queryParamName = parameter.getName();
         }
         if (exchangeMethod.getQueryParams().containsKey(queryParamName)) {
             throw new HttpExchangeMethodDeclaringException("The query param " + queryParamName + " is already defined");
         }
-        String defaultValue = queryParam.defaultValue();
+        String defaultValue = queryParam == null ? null : queryParam.defaultValue();
         exchangeMethod.getQueryParams().put(queryParamName, new DefaultValueSupportedValueGetter(parameterIndex, defaultValue));
     }
 
@@ -329,7 +334,4 @@ public class DefaultHttpExchangeMethodResolver implements HttpExchangeMethodReso
         exchangeMethod.setHttpMethod(HttpMethod.GET);
     }
 
-    private void resolveMethodArgument(HttpExchangeMethod exchangeMethod, Method javaMethod) {
-
-    }
 }
