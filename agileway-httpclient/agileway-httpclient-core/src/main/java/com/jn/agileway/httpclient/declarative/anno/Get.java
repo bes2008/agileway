@@ -13,6 +13,6 @@ import static java.lang.annotation.ElementType.METHOD;
 public @interface Get {
     String value() default "";
 
-    String[] accept();
+    String[] accept() default {};
 
 }

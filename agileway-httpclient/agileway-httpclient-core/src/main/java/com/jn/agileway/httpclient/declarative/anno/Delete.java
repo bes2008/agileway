@@ -13,7 +13,7 @@ import static java.lang.annotation.ElementType.METHOD;
 public @interface Delete {
     String value() default "";
 
-    String[] accept();
+    String[] accept() default {};
 
     String contentType() default "";
 }

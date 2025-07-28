@@ -16,7 +16,7 @@ public @interface HttpEndpoint {
      */
     String value() default "";
 
-    String[] accept();
+    String[] accept() default {};
 
     String contentType() default "";
 }
