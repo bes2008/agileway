@@ -3,6 +3,8 @@ package com.jn.agileway.httpclient.declarative;
 import com.jn.agileway.httpclient.Exchanger;
 import com.jn.agileway.httpclient.declarative.anno.*;
 import com.jn.langx.Builder;
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.signature.TypeSignatures;
@@ -15,14 +17,18 @@ import java.util.*;
 
 public class DeclarativeHttpServiceProxyBuilder<S> implements Builder<S> {
     private static final Logger logger = LoggerFactory.getLogger(DeclarativeHttpServiceProxyBuilder.class);
+    @NonNull
     private Exchanger exchanger;
-    private HttpExchangeMethodResolver methodResolver;
+    @NonNull
+    private HttpExchangeMethodResolver methodResolver = new DefaultHttpExchangeMethodResolver();
+    @Nullable
     private String baseUri;
 
+    @NonNull
     private Class<S> serviceInterface;
 
-    public DeclarativeHttpServiceProxyBuilder() {
-
+    public DeclarativeHttpServiceProxyBuilder(Class<S> serviceInterface) {
+        this.serviceInterface = serviceInterface;
     }
 
     public final DeclarativeHttpServiceProxyBuilder<S> withExchanger(Exchanger exchanger) {
@@ -35,14 +41,8 @@ public class DeclarativeHttpServiceProxyBuilder<S> implements Builder<S> {
         return this;
     }
 
-    public final DeclarativeHttpServiceProxyBuilder withBaseUri(String baseUri) {
+    public final DeclarativeHttpServiceProxyBuilder<S> withBaseUri(String baseUri) {
         this.baseUri = baseUri;
-        return this;
-    }
-
-    public final DeclarativeHttpServiceProxyBuilder<S> withService(Class<S> serviceInterface) {
-        Preconditions.checkArgument(serviceInterface.isInterface());
-        this.serviceInterface = serviceInterface;
         return this;
     }
 
@@ -52,6 +52,8 @@ public class DeclarativeHttpServiceProxyBuilder<S> implements Builder<S> {
     }
 
     private Map<Method, HttpExchangeMethod> resolveServiceMethods() {
+        Preconditions.checkNotNull(serviceInterface, "service interface is required");
+
         Map<Method, HttpExchangeMethod> httpExchangeMethods = new HashMap<Method, HttpExchangeMethod>();
         List<Class> interfaces = new ArrayList<>(Reflects.getAllInterfaces(serviceInterface));
         Collections.reverse(interfaces);
