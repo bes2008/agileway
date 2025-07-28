@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.declarative.anno;
 
 public @interface Cookie {
-    String name() default "";
+    String value() default "";
 
     String defaultValue() default "";
 }

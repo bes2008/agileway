@@ -92,18 +92,32 @@ public class DefaultHttpExchangeMethodResolver implements HttpExchangeMethodReso
         }
 
         if (!annoResolved) {
-            throw new HttpExchangeMethodDeclaringException("The method " + exchangeMethod.getJavaMethod().getName() + " has no annotated parameter");
+            throw new HttpExchangeMethodDeclaringException("The method " + exchangeMethod.getJavaMethod().getName() + " has no annotated parameter " + parameter.getName());
         }
 
     }
 
     private void resolveCookie(HttpExchangeMethod exchangeMethod, Parameter parameter, Cookie cookie, int parameterIndex) {
+        String cookieName = cookie.value();
+        if (Strings.isBlank(cookieName)) {
+            cookieName = parameter.getName();
+        }
+        exchangeMethod.getCookies().put(cookieName, new ArrayValueGetter(parameterIndex));
     }
 
     private void resolveHeader(HttpExchangeMethod exchangeMethod, Parameter parameter, Header header, int parameterIndex) {
+        String headerName = header.value();
+        if (Strings.isBlank(headerName)) {
+            headerName = parameter.getName();
+        }
+        exchangeMethod.getHeaders().put(headerName, new ArrayValueGetter<>(parameterIndex));
     }
 
     private void resolveBody(HttpExchangeMethod exchangeMethod, Parameter parameter, Body body, int parameterIndex) {
+        if (exchangeMethod.getBody() != null) {
+            throw new HttpExchangeMethodDeclaringException("The method " + exchangeMethod.getJavaMethod().getName() + " has already a body");
+        }
+        exchangeMethod.setBody(new ArrayValueGetter<Object>(parameterIndex));
     }
 
     private void resolveBodyPart(HttpExchangeMethod exchangeMethod, Parameter parameter, BodyPart bodyPart, int parameterIndex) {
