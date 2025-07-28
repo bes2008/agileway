@@ -8,6 +8,7 @@ import com.jn.langx.util.reflect.signature.TypeSignatures;
 import com.jn.langx.util.valuegetter.ArrayValueGetter;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ public class HttpExchangeMethod {
 
     private ArrayValueGetter<Object> body;
 
-    private Class expectedResponseType;
+    private Type expectedResponseType;
 
     public String getUriTemplate() {
         return uriTemplate;
@@ -124,11 +125,11 @@ public class HttpExchangeMethod {
         this.body = body;
     }
 
-    public Class getExpectedResponseType() {
+    public Type getExpectedResponseType() {
         return expectedResponseType;
     }
 
-    public void setExpectedResponseType(Class expectedResponseType) {
+    public void setExpectedResponseType(Type expectedResponseType) {
         this.expectedResponseType = expectedResponseType;
     }
 

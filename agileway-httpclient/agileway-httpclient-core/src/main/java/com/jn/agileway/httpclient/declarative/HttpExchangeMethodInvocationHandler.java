@@ -30,10 +30,17 @@ class HttpExchangeMethodInvocationHandler implements InvocationHandler {
         if (httpExchangeMethod != null) {
             HttpRequest<?> request = new DeclarativeHttpRequestFactory(baseUri, httpExchangeMethod).get(args);
             Promise<HttpResponse<Object>> promise = exchanger.exchange(true, request, httpExchangeMethod.getExpectedResponseType());
+            Object result = promise.await();
+            if (method.getReturnType() == void.class) {
+                return null;
+            }
+            if (method.getReturnType() == Promise.class) {
+                return promise;
+            }
             if (method.getReturnType() == HttpResponse.class) {
-                return promise.await();
+                return result;
             } else {
-                return promise.await().getPayload();
+                return ((HttpResponse) result).getPayload();
             }
         }
         throw new UnsupportedOperationException(StringTemplates.formatWithPlaceholder("Method {} is not a http exchange method", TypeSignatures.toMethodSignature(method)));
