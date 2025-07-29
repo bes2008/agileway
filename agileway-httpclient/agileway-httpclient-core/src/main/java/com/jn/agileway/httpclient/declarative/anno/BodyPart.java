@@ -11,5 +11,8 @@ import static java.lang.annotation.ElementType.PARAMETER;
 @Documented
 @Target(value = {PARAMETER})
 public @interface BodyPart {
+    /**
+     * body part name
+     */
     String value() default "";
 }
