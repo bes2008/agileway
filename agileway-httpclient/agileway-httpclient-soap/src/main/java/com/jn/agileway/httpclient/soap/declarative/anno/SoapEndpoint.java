@@ -21,4 +21,6 @@ public @interface SoapEndpoint {
     String value() default "";
 
     SoapBinding binding() default SoapBinding.SOAP12_HTTP;
+
+    String uriEncoding() default "";
 }
