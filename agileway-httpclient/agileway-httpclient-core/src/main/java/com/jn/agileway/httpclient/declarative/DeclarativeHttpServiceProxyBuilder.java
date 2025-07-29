@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.declarative;
 
 import com.jn.agileway.httpclient.Exchanger;
-import com.jn.agileway.httpclient.declarative.anno.*;
+import com.jn.agileway.httpclient.declarative.anno.HttpEndpoint;
 import com.jn.langx.Builder;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
@@ -17,6 +17,9 @@ import java.util.*;
 
 public class DeclarativeHttpServiceProxyBuilder<S> implements Builder<S> {
     private static final Logger logger = LoggerFactory.getLogger(DeclarativeHttpServiceProxyBuilder.class);
+    /**
+     * 当前支持 HttpExchanger, SoapExchanger
+     */
     @NonNull
     private Exchanger exchanger;
     @NonNull
@@ -64,8 +67,8 @@ public class DeclarativeHttpServiceProxyBuilder<S> implements Builder<S> {
             }
             Collection<Method> declaredMethods = Reflects.getAllDeclaredMethods(interfaceClass, false);
             for (Method method : declaredMethods) {
-                if (!Reflects.isAnnotatedWith(method, Get.class, Post.class, Put.class, Delete.class, Patch.class)) {
-                    logger.debug("The method {} is not annotated with @Get, @Post, @Put, @Delete, @Patch, ignore it", TypeSignatures.toMethodSignature(method));
+                if (!Reflects.isAnnotatedWith(method, this.methodResolver.requiredMethodAnnotations())) {
+                    logger.debug("The method {} is not annotated as http exchange method, ignore it", TypeSignatures.toMethodSignature(method));
                     continue;
                 }
                 HttpExchangeMethod httpExchangeMethod = this.methodResolver.resolve(method);

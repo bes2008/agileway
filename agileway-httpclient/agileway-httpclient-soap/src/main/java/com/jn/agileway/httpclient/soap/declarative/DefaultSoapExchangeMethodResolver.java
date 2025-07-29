@@ -10,10 +10,17 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.reflect.Reflects;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 public class DefaultSoapExchangeMethodResolver extends AbstractHttpExchangeMethodResolver {
 
+    private static final Class<? extends Annotation>[] REQUIRED_METHOD_ANNOTATIONS = new Class[]{Soap.class};
+
+    @Override
+    public Class<? extends Annotation>[] requiredMethodAnnotations() {
+        return REQUIRED_METHOD_ANNOTATIONS;
+    }
     @Override
     protected void resolveInternal(HttpExchangeMethod exchangeMethod, Method javaMethod) {
 

@@ -9,6 +9,7 @@ import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.valuegetter.ArrayValueGetter;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
@@ -329,4 +330,10 @@ public class DefaultHttpExchangeMethodResolver extends AbstractHttpExchangeMetho
         exchangeMethod.setHttpMethod(HttpMethod.GET);
     }
 
+    private static final Class<? extends Annotation>[] REQUIRED_METHOD_ANNOTATIONS = new Class[]{Get.class, Post.class, Put.class, Patch.class, Delete.class};
+
+    @Override
+    public Class<? extends Annotation>[] requiredMethodAnnotations() {
+        return REQUIRED_METHOD_ANNOTATIONS;
+    }
 }
