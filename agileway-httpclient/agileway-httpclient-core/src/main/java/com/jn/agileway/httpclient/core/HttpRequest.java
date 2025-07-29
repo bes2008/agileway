@@ -5,6 +5,7 @@ import com.jn.agileway.httpclient.core.payload.multipart.MultiPartsForm;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
+import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
@@ -47,7 +48,7 @@ public class HttpRequest<T> extends BaseHttpMessage<T> {
         if (uriVariables != null) {
             uriBuilder.uriVariables(uriVariables);
         }
-        URI uri = uriBuilder.build().toUri();
+        URI uri = uriBuilder.enableEncode(Charsets.ISO_8859_1).build().toUri();
 
         return new HttpRequest(uri, method, headers, body);
     }
