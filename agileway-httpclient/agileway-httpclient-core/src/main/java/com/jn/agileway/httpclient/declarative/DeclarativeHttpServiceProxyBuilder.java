@@ -31,6 +31,8 @@ public class DeclarativeHttpServiceProxyBuilder<S> implements Builder<S> {
     private Class<S> serviceInterface;
 
     public DeclarativeHttpServiceProxyBuilder(Class<S> serviceInterface) {
+        Preconditions.checkNotNull(serviceInterface, "service interface is required");
+        Preconditions.checkArgument(serviceInterface.isInterface(), "service interface must be interface");
         this.serviceInterface = serviceInterface;
     }
 
