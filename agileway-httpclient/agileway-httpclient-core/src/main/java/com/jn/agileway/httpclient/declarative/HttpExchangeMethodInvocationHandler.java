@@ -29,7 +29,10 @@ class HttpExchangeMethodInvocationHandler implements InvocationHandler {
         HttpExchangeMethod httpExchangeMethod = httpExchangeMethods.get(method);
         if (httpExchangeMethod != null) {
             HttpRequest<?> request = new DeclarativeHttpRequestFactory(baseUri, httpExchangeMethod).get(args);
-            Promise<HttpResponse<Object>> promise = exchanger.exchange(true, request, httpExchangeMethod.getExpectedResponseType());
+
+            boolean async = method.getReturnType() == Promise.class;
+
+            Promise<HttpResponse<Object>> promise = exchanger.exchange(async, request, httpExchangeMethod.getExpectedResponseType());
             Object result = promise.await();
             if (method.getReturnType() == void.class) {
                 return null;
