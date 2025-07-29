@@ -5,6 +5,7 @@ import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.valuegetter.ArrayValueGetter;
@@ -12,6 +13,7 @@ import com.jn.langx.util.valuegetter.ArrayValueGetter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.nio.charset.Charset;
 
 public class DefaultHttpExchangeMethodResolver extends AbstractHttpExchangeMethodResolver {
     @Override
@@ -38,6 +40,14 @@ public class DefaultHttpExchangeMethodResolver extends AbstractHttpExchangeMetho
             for (int parameterIndex = 0; parameterIndex < parameters.length; parameterIndex++) {
                 Parameter parameter = parameters[parameterIndex];
                 resolveMethodParameter(exchangeMethod, parameter, parameterIndex);
+            }
+        }
+
+        if (exchangeMethod.getUriEncoding() == null) {
+            String uriEncoding = httpEndpoint.uriEncoding();
+            if (Strings.isNotBlank(uriEncoding)) {
+                Charset charset = Charsets.getCharset(uriEncoding);
+                exchangeMethod.setUriEncoding(charset);
             }
         }
     }
@@ -207,6 +217,11 @@ public class DefaultHttpExchangeMethodResolver extends AbstractHttpExchangeMetho
         String[] accept = deleteAnno.accept();
         accept = Objs.useValueIfEmpty(accept, defaultAccept);
 
+        String uriEncoding = deleteAnno.uriEncoding();
+        if (Strings.isNotBlank(uriEncoding)) {
+            Charset charset = Charsets.getCharset(uriEncoding);
+            exchangeMethod.setUriEncoding(charset);
+        }
 
         String contentTypeString = deleteAnno.contentType();
         MediaType contentType = null;
@@ -235,6 +250,11 @@ public class DefaultHttpExchangeMethodResolver extends AbstractHttpExchangeMetho
         String[] accept = patchAnno.accept();
         accept = Objs.useValueIfEmpty(accept, defaultAccept);
 
+        String uriEncoding = patchAnno.uriEncoding();
+        if (Strings.isNotBlank(uriEncoding)) {
+            Charset charset = Charsets.getCharset(uriEncoding);
+            exchangeMethod.setUriEncoding(charset);
+        }
 
         String contentTypeString = patchAnno.contentType();
         MediaType contentType = null;
@@ -262,6 +282,12 @@ public class DefaultHttpExchangeMethodResolver extends AbstractHttpExchangeMetho
 
         String[] accept = putAnno.accept();
         accept = Objs.useValueIfEmpty(accept, defaultAccept);
+
+        String uriEncoding = putAnno.uriEncoding();
+        if (Strings.isNotBlank(uriEncoding)) {
+            Charset charset = Charsets.getCharset(uriEncoding);
+            exchangeMethod.setUriEncoding(charset);
+        }
 
 
         String contentTypeString = putAnno.contentType();
@@ -291,6 +317,11 @@ public class DefaultHttpExchangeMethodResolver extends AbstractHttpExchangeMetho
         String[] accept = postAnno.accept();
         accept = Objs.useValueIfEmpty(accept, defaultAccept);
 
+        String uriEncoding = postAnno.uriEncoding();
+        if (Strings.isNotBlank(uriEncoding)) {
+            Charset charset = Charsets.getCharset(uriEncoding);
+            exchangeMethod.setUriEncoding(charset);
+        }
 
         String contentTypeString = postAnno.contentType();
         MediaType contentType = null;
@@ -318,6 +349,12 @@ public class DefaultHttpExchangeMethodResolver extends AbstractHttpExchangeMetho
 
         String[] accept = getAnno.accept();
         accept = Objs.useValueIfEmpty(accept, defaultAccept);
+
+        String uriEncoding = getAnno.uriEncoding();
+        if (Strings.isNotBlank(uriEncoding)) {
+            Charset charset = Charsets.getCharset(uriEncoding);
+            exchangeMethod.setUriEncoding(charset);
+        }
 
         exchangeMethod.setAccept(accept);
         exchangeMethod.setUriTemplate(uri);

@@ -32,7 +32,10 @@ public class DeclarativeHttpRequestFactory implements Factory<Object[], HttpRequ
         Map<String, Object> uriVariables = buildUriVariables(methodArgs);
         HttpHeaders headers = buildHeaders(methodArgs);
         Object body = buildBody(methodArgs);
-        Charset uriEncoding = this.uriEncoding;
+        Charset uriEncoding = httpExchangeMethod.getUriEncoding();
+        if (uriEncoding == null) {
+            uriEncoding = this.uriEncoding;
+        }
         String uri = Strings.stripEnd(baseUri, "/") + "/" + Strings.stripStart(httpExchangeMethod.getUriTemplate(), "/");
         return HttpRequest.create(
                 httpExchangeMethod.getHttpMethod(),
