@@ -6,6 +6,7 @@ import com.jn.langx.Builder;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Preconditions;
+import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.signature.TypeSignatures;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.nio.charset.Charset;
 import java.util.*;
 
 public class DeclarativeHttpServiceProxyBuilder<S> implements Builder<S> {
@@ -26,6 +28,8 @@ public class DeclarativeHttpServiceProxyBuilder<S> implements Builder<S> {
     private HttpExchangeMethodResolver methodResolver = new DefaultHttpExchangeMethodResolver();
     @Nullable
     private String baseUri;
+
+    private Charset uriEncoding = Charsets.UTF_8;
 
     @NonNull
     private Class<S> serviceInterface;
@@ -51,9 +55,14 @@ public class DeclarativeHttpServiceProxyBuilder<S> implements Builder<S> {
         return this;
     }
 
+    public final DeclarativeHttpServiceProxyBuilder withUriEncoding(Charset uriEncoding) {
+        this.uriEncoding = uriEncoding;
+        return this;
+    }
+
     public final S build() {
         Map<Method, HttpExchangeMethod> httpExchangeMethods = resolveServiceMethods();
-        return (S) Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[]{serviceInterface}, new HttpExchangeMethodInvocationHandler(baseUri, httpExchangeMethods, exchanger));
+        return (S) Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[]{serviceInterface}, new HttpExchangeMethodInvocationHandler(baseUri, this.uriEncoding, httpExchangeMethods, exchanger));
     }
 
     private Map<Method, HttpExchangeMethod> resolveServiceMethods() {

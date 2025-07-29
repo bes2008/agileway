@@ -1,6 +1,7 @@
 package com.jn.agileway.httpclient.declarative;
 
 import com.jn.agileway.httpclient.core.HttpResponse;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.concurrent.promise.Promise;
 import com.jn.langx.util.net.http.HttpMethod;
@@ -11,6 +12,7 @@ import com.jn.langx.util.valuegetter.ArrayValueGetter;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -24,6 +26,9 @@ public class HttpExchangeMethod {
     private MediaType contentType;
 
     private String[] accept;
+
+    @Nullable
+    private Charset uriEncoding;
 
     private final Map<String, DefaultValueSupportedValueGetter> queryParams = new LinkedHashMap<>();
 
@@ -152,5 +157,13 @@ public class HttpExchangeMethod {
                 }
             }
         }
+    }
+
+    public Charset getUriEncoding() {
+        return uriEncoding;
+    }
+
+    public void setUriEncoding(Charset uriEncoding) {
+        this.uriEncoding = uriEncoding;
     }
 }

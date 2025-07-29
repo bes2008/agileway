@@ -9,17 +9,21 @@ import com.jn.langx.util.reflect.signature.TypeSignatures;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
 import java.util.Map;
 
 class HttpExchangeMethodInvocationHandler implements InvocationHandler {
 
     private Map<Method, HttpExchangeMethod> httpExchangeMethods;
     private String baseUri;
+
+    private Charset uriEncoding;
     private Exchanger exchanger;
 
 
-    HttpExchangeMethodInvocationHandler(String baseUri, Map<Method, HttpExchangeMethod> httpExchangeMethods, Exchanger httpExchanger) {
+    HttpExchangeMethodInvocationHandler(String baseUri, Charset uriEncoding, Map<Method, HttpExchangeMethod> httpExchangeMethods, Exchanger httpExchanger) {
         this.baseUri = baseUri;
+        this.uriEncoding = uriEncoding;
         this.httpExchangeMethods = httpExchangeMethods;
         this.exchanger = httpExchanger;
     }

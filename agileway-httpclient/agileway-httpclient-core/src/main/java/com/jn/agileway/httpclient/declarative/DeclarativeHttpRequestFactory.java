@@ -12,15 +12,17 @@ import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.valuegetter.ArrayValueGetter;
 
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DeclarativeHttpRequestFactory implements Factory<Object[], HttpRequest<?>> {
     private String baseUri;
+    private Charset uriEncoding;
     private HttpExchangeMethod httpExchangeMethod;
 
-    public DeclarativeHttpRequestFactory(String baseUri, HttpExchangeMethod httpExchangeMethod) {
+    public DeclarativeHttpRequestFactory(String baseUri, Charset uriEncoding, HttpExchangeMethod httpExchangeMethod) {
         this.baseUri = baseUri;
         this.httpExchangeMethod = httpExchangeMethod;
     }
@@ -30,11 +32,12 @@ public class DeclarativeHttpRequestFactory implements Factory<Object[], HttpRequ
         Map<String, Object> uriVariables = buildUriVariables(methodArgs);
         HttpHeaders headers = buildHeaders(methodArgs);
         Object body = buildBody(methodArgs);
-
+        Charset uriEncoding = this.uriEncoding;
         String uri = Strings.stripEnd(baseUri, "/") + "/" + Strings.stripStart(httpExchangeMethod.getUriTemplate(), "/");
         return HttpRequest.create(
                 httpExchangeMethod.getHttpMethod(),
                 uri,
+                uriEncoding,
                 queryParams,
                 uriVariables,
                 headers,
