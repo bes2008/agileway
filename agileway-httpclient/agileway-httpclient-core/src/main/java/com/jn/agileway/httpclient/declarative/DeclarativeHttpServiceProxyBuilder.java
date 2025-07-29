@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.declarative;
 
+import com.jn.agileway.eipchannel.core.endpoint.mapper.UnsupportedObjectException;
 import com.jn.agileway.httpclient.Exchanger;
 import com.jn.langx.Builder;
 import com.jn.langx.annotation.NonNull;
@@ -73,6 +74,9 @@ public class DeclarativeHttpServiceProxyBuilder<S> implements Builder<S> {
         Collections.reverse(interfaces);
         interfaces.add(serviceInterface);
         Class<? extends Annotation> endpointAnnotation = methodResolver.endpointAnnotation();
+        if (endpointAnnotation == null) {
+            throw new UnsupportedObjectException("invalid method resolver, the endpoint annotation is required");
+        }
         for (Class interfaceClass : interfaces) {
             if (!Reflects.hasAnnotation(interfaceClass, endpointAnnotation)) {
                 continue;
