@@ -24,11 +24,18 @@ public abstract class AbstractHttpExchangeMethodResolver implements HttpExchange
 
     protected abstract void resolveInternal(HttpExchangeMethod exchangeMethod, Method javaMethod);
 
+    /**
+     * 解析期望的响应类型，解析出的类型，不能是 Promise, HttpResponse。
+     *
+     * @param exchangeMethod
+     * @param javaMethod
+     */
     protected void resolveResponseType(HttpExchangeMethod exchangeMethod, Method javaMethod) {
-        Type returnType = javaMethod.getGenericReturnType();
-        if (returnType == void.class) {
+        if (javaMethod.getReturnType() == void.class) {
             exchangeMethod.setExpectedResponseType(null);
         }
+        Type returnType = javaMethod.getGenericReturnType();
+
         if (returnType instanceof Class) {
             if (returnType != Promise.class && returnType != HttpResponse.class) {
                 exchangeMethod.setExpectedResponseType((Class) returnType);
