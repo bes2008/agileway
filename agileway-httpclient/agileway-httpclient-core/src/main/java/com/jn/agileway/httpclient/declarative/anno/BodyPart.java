@@ -12,6 +12,4 @@ import static java.lang.annotation.ElementType.PARAMETER;
 @Target(value = {PARAMETER})
 public @interface BodyPart {
     String value() default "";
-
-    String encoding() default "UTF-8";
 }
