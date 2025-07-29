@@ -33,13 +33,13 @@ class HttpExchangeMethodInvocationHandler implements InvocationHandler {
             boolean async = method.getReturnType() == Promise.class;
 
             Promise<HttpResponse<Object>> promise = exchanger.exchange(async, request, httpExchangeMethod.getExpectedResponseType());
-            Object result = promise.await();
             if (method.getReturnType() == void.class) {
                 return null;
             }
             if (method.getReturnType() == Promise.class) {
                 return promise;
             }
+            Object result = promise.await();
             if (method.getReturnType() == HttpResponse.class) {
                 return result;
             } else {
