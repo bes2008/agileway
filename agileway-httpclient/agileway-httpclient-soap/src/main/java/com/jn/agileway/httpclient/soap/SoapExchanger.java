@@ -34,7 +34,7 @@ public class SoapExchanger implements Exchanger {
     }
 
     public <T> Promise<HttpResponse<T>> exchangeAsync(String uri, MultiValueMap<String, Object> queryParams, Map<String, Object> uriVariables, HttpHeaders headers, SoapBinding binding, Object soapMessage, Class<T> expectedContentType) {
-        HttpRequest request = HttpRequest.forPost(uri, queryParams, uriVariables, headers, soapMessage);
+        HttpRequest request = HttpRequest.forPost(uri, null, queryParams, uriVariables, headers, soapMessage);
         request.getHttpHeaders().setContentType(binding.getContentType());
         return exchange(true, request, expectedContentType);
     }

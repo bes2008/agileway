@@ -38,7 +38,7 @@ public class NacosApiTests {
         requestHeaders.add("Accept-Encoding", "deflate");
         requestHeaders.add("Accept-Encoding", "br");
 
-        HttpRequest request = HttpRequest.forGet(baseUri + "/v1/core/cluster/nodes", params, null, requestHeaders);
+        HttpRequest request = HttpRequest.forGet(baseUri + "/v1/core/cluster/nodes", null, params, null, requestHeaders);
         HttpResponse response = httpExchanger.exchange(false, request, Map.class)
                 .await();
         System.out.println(JSONs.toJson(response, true));
