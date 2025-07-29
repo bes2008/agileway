@@ -195,6 +195,7 @@ public class DefaultHttpExchangeMethodResolver extends AbstractHttpExchangeMetho
             Delete deleteAnno = javaMethod.getAnnotation(Delete.class);
             if (deleteAnno != null) {
                 resolveDelete(exchangeMethod, deleteAnno, uriPrefix, defaultAccept, defaultContentType);
+                annoResolved = true;
             }
         }
 
