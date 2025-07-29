@@ -24,6 +24,7 @@ public class DeclarativeHttpRequestFactory implements Factory<Object[], HttpRequ
 
     public DeclarativeHttpRequestFactory(String baseUri, Charset uriEncoding, HttpExchangeMethod httpExchangeMethod) {
         this.baseUri = baseUri;
+        this.uriEncoding = uriEncoding;
         this.httpExchangeMethod = httpExchangeMethod;
     }
 
