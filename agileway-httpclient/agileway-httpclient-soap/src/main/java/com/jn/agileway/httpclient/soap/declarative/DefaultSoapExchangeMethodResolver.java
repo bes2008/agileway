@@ -1,8 +1,8 @@
 package com.jn.agileway.httpclient.soap.declarative;
 
+import com.jn.agileway.httpclient.declarative.AbstractHttpExchangeMethodResolver;
 import com.jn.agileway.httpclient.declarative.HttpExchangeMethod;
 import com.jn.agileway.httpclient.declarative.HttpExchangeMethodDeclaringException;
-import com.jn.agileway.httpclient.declarative.HttpExchangeMethodResolver;
 import com.jn.agileway.httpclient.soap.declarative.anno.Soap;
 import com.jn.agileway.httpclient.soap.declarative.anno.SoapEndpoint;
 import com.jn.agileway.httpclient.soap.entity.SoapBinding;
@@ -12,16 +12,14 @@ import com.jn.langx.util.reflect.Reflects;
 
 import java.lang.reflect.Method;
 
-public class DefaultSoapExchangeMethodResolver implements HttpExchangeMethodResolver {
+public class DefaultSoapExchangeMethodResolver extends AbstractHttpExchangeMethodResolver {
+
     @Override
-    public HttpExchangeMethod resolve(Method javaMethod) {
+    protected void resolveInternal(HttpExchangeMethod exchangeMethod, Method javaMethod) {
+
         if (!Reflects.isAnnotationPresent(javaMethod, Soap.class)) {
             throw new HttpExchangeMethodDeclaringException("The method " + javaMethod.getName() + " is not annotated with @Soap");
         }
-
-        HttpExchangeMethod exchangeMethod = new HttpExchangeMethod();
-        exchangeMethod.setJavaMethod(javaMethod);
-
         Class<?> declaringClass = javaMethod.getDeclaringClass();
         SoapEndpoint soapEndpoint = declaringClass.getAnnotation(SoapEndpoint.class);
         if (soapEndpoint == null) {
@@ -40,14 +38,6 @@ public class DefaultSoapExchangeMethodResolver implements HttpExchangeMethodReso
         exchangeMethod.setHttpMethod(HttpMethod.POST);
 
         resolveMethodParameter();
-        resolveMethodReturnType();
-
-        exchangeMethod.checkValid();
-
-        return exchangeMethod;
-    }
-
-    private void resolveMethodReturnType() {
     }
 
     private void resolveMethodParameter() {
