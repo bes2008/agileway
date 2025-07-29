@@ -40,11 +40,11 @@ public class GeneralFormHttpRequestWriter implements HttpRequestPayloadWriter {
         if (formData instanceof StringBuilder) {
             return formData.toString();
         }
-        if (formData instanceof Map) {
-            return serializeMap((Map) formData, charset);
-        }
         if (formData instanceof MultiValueMap) {
             return serializeMultiValueMap((MultiValueMap) formData, charset);
+        }
+        if (formData instanceof Map) {
+            return serializeMap((Map) formData, charset);
         }
         throw new BadHttpRequestException(request.getMethod(), request.getUri(), "the form data type is not supported, the type is " + Reflects.getFQNClassName(formData.getClass()));
     }
