@@ -15,4 +15,6 @@ public @interface Get {
 
     String[] accept() default {};
 
+    String uriEncoding() default "";
+
 }

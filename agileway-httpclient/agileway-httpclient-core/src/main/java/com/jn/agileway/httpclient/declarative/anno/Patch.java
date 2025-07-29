@@ -14,6 +14,6 @@ public @interface Patch {
     String value() default "";
 
     String[] accept() default {};
-
+    String uriEncoding() default "";
     String contentType() default "";
 }

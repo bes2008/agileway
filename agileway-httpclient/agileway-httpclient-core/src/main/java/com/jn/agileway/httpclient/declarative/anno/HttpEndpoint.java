@@ -18,5 +18,7 @@ public @interface HttpEndpoint {
 
     String[] accept() default {};
 
+    String uriEncoding() default "";
+
     String contentType() default "";
 }

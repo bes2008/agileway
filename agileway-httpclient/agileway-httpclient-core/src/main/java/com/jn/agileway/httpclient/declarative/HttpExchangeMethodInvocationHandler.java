@@ -32,7 +32,7 @@ class HttpExchangeMethodInvocationHandler implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         HttpExchangeMethod httpExchangeMethod = httpExchangeMethods.get(method);
         if (httpExchangeMethod != null) {
-            HttpRequest<?> request = new DeclarativeHttpRequestFactory(baseUri, httpExchangeMethod).get(args);
+            HttpRequest<?> request = new DeclarativeHttpRequestFactory(baseUri, this.uriEncoding, httpExchangeMethod).get(args);
 
             boolean async = method.getReturnType() == Promise.class;
 
