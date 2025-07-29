@@ -86,6 +86,8 @@ public class Jdk11UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecuto
             builder.executor(executor);
         }
 
+        builder.version(HttpClient.Version.HTTP_1_1);
+
         builder.followRedirects(HttpClient.Redirect.NORMAL);
 
         HttpClient httpClient = builder.build();
