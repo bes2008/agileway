@@ -17,6 +17,11 @@ import java.nio.charset.Charset;
 
 public class DefaultHttpExchangeMethodResolver extends AbstractHttpExchangeMethodResolver {
     @Override
+    public Class<? extends Annotation> endpointAnnotation() {
+        return HttpEndpoint.class;
+    }
+
+    @Override
     protected void resolveInternal(HttpExchangeMethod exchangeMethod, Method javaMethod) {
         Class<?> declaringClass = javaMethod.getDeclaringClass();
         HttpEndpoint httpEndpoint = declaringClass.getAnnotation(HttpEndpoint.class);

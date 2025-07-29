@@ -31,6 +31,12 @@ public class DefaultSoapExchangeMethodResolver extends AbstractHttpExchangeMetho
     public Class<? extends Annotation>[] requiredMethodAnnotations() {
         return REQUIRED_METHOD_ANNOTATIONS;
     }
+
+    @Override
+    public Class<? extends Annotation> endpointAnnotation() {
+        return SoapEndpoint.class;
+    }
+
     @Override
     protected void resolveInternal(HttpExchangeMethod exchangeMethod, Method javaMethod) {
 

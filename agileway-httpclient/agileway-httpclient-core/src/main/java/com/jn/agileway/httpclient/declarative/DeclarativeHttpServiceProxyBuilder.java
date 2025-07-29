@@ -1,7 +1,6 @@
 package com.jn.agileway.httpclient.declarative;
 
 import com.jn.agileway.httpclient.Exchanger;
-import com.jn.agileway.httpclient.declarative.anno.HttpEndpoint;
 import com.jn.langx.Builder;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
@@ -12,6 +11,7 @@ import com.jn.langx.util.reflect.signature.TypeSignatures;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.nio.charset.Charset;
@@ -72,8 +72,9 @@ public class DeclarativeHttpServiceProxyBuilder<S> implements Builder<S> {
         List<Class> interfaces = new ArrayList<>(Reflects.getAllInterfaces(serviceInterface));
         Collections.reverse(interfaces);
         interfaces.add(serviceInterface);
+        Class<? extends Annotation> endpointAnnotation = methodResolver.endpointAnnotation();
         for (Class interfaceClass : interfaces) {
-            if (!Reflects.hasAnnotation(interfaceClass, HttpEndpoint.class)) {
+            if (!Reflects.hasAnnotation(interfaceClass, endpointAnnotation)) {
                 continue;
             }
             Collection<Method> declaredMethods = Reflects.getAllDeclaredMethods(interfaceClass, false);
