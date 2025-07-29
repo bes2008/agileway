@@ -124,9 +124,6 @@ public class DefaultHttpExchangeMethodResolver extends AbstractHttpExchangeMetho
         if (Strings.isBlank(bodyPartName)) {
             bodyPartName = parameter.getName();
         }
-        if (exchangeMethod.getBodyParts().containsKey(bodyPartName)) {
-            throw new HttpExchangeMethodDeclaringException("The body part " + bodyPartName + " is already defined");
-        }
         exchangeMethod.getBodyParts().put(bodyPartName, new ArrayValueGetter<Object>(parameterIndex));
     }
 
@@ -134,9 +131,6 @@ public class DefaultHttpExchangeMethodResolver extends AbstractHttpExchangeMetho
         String uriVariableName = uriVariable.value();
         if (Strings.isBlank(uriVariableName)) {
             uriVariableName = parameter.getName();
-        }
-        if (exchangeMethod.getUriVariables().containsKey(uriVariableName)) {
-            throw new HttpExchangeMethodDeclaringException("The uri variable " + uriVariableName + " is already defined");
         }
         exchangeMethod.getUriVariables().put(uriVariableName, new ArrayValueGetter<Object>(parameterIndex));
     }
