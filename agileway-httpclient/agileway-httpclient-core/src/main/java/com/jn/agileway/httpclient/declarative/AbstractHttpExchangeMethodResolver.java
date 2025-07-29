@@ -30,23 +30,26 @@ public abstract class AbstractHttpExchangeMethodResolver implements HttpExchange
             exchangeMethod.setExpectedResponseType(null);
         }
         if (returnType instanceof Class) {
-            if (returnType == Promise.class || returnType == HttpResponse.class) {
-                return;
-            } else {
+            if (returnType != Promise.class && returnType != HttpResponse.class) {
                 exchangeMethod.setExpectedResponseType((Class) returnType);
             }
+            return;
         }
         if (returnType instanceof ParameterizedType) {
             ParameterizedType prt = ((ParameterizedType) returnType);
-            Type ownerType = prt.getOwnerType();
-            if (ownerType == Promise.class) {
+            Type rawType = prt.getRawType();
+            if (rawType == Promise.class) {
                 Type[] args = prt.getActualTypeArguments();
                 if (args.length == 1) {
                     Type promiseArgType = args[0];
                     if (!(promiseArgType instanceof ParameterizedType)) {
-                        return;
+                        if (promiseArgType != HttpResponse.class) {
+                            throw new HttpExchangeMethodDeclaringException("Unsupported method return type :" + TypeSignatures.toMethodSignature(javaMethod));
+                        } else {
+                            return;
+                        }
                     } else {
-                        if (((ParameterizedType) promiseArgType).getOwnerType() != HttpResponse.class) {
+                        if (((ParameterizedType) promiseArgType).getRawType() != HttpResponse.class) {
                             throw new HttpExchangeMethodDeclaringException("Unsupported method return type :" + TypeSignatures.toMethodSignature(javaMethod));
                         } else {
                             returnType = promiseArgType;
@@ -60,15 +63,17 @@ public abstract class AbstractHttpExchangeMethodResolver implements HttpExchange
 
         if (returnType instanceof ParameterizedType) {
             ParameterizedType prt = ((ParameterizedType) returnType);
-            Type ownerType = prt.getOwnerType();
-            if (ownerType == HttpResponse.class) {
+            Type rawType = prt.getRawType();
+            if (rawType == HttpResponse.class) {
                 Type[] args = prt.getActualTypeArguments();
                 if (args.length == 1) {
                     Type httpResponsePayloadType = args[0];
                     exchangeMethod.setExpectedResponseType(httpResponsePayloadType);
+                    return;
                 }
             }
         }
+
         exchangeMethod.setExpectedResponseType(returnType);
     }
 }
