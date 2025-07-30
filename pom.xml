@@ -1001,6 +1001,8 @@
                         <configuration>
                             <publishingServerId>central</publishingServerId>
                             <autoPublish>true</autoPublish>
+                            <deploymentName>${project.name}</deploymentName>
+                            <failOnBuildFailure>true</failOnBuildFailure>
                         </configuration>
                     </plugin>
                     <plugin>
