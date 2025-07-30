@@ -835,7 +835,10 @@
         <profile>
             <id>envHome</id>
             <properties>
+                <gpg.executable>D:/Program Files (x86)/GNU/GnuPG/gpg2.exe</gpg.executable>
+                <!--
                 <gpg.executable>D:/Program Files (x86)/GnuPG/bin/gpg</gpg.executable>
+                -->
                 <gpg.homedir>C:/Users/Administrator/AppData/Roaming/gnupg</gpg.homedir>
                 <!--
                 <gpg.passphrase>YOUR GPG PASSPHRASE</gpg.passphrase>
