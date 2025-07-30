@@ -83,7 +83,7 @@ public class DeclarativeHttpServiceProxyBuilder<S> implements Builder<S> {
             }
             Collection<Method> declaredMethods = Reflects.getAllDeclaredMethods(interfaceClass, false);
             for (Method method : declaredMethods) {
-                if (!Reflects.isAnnotatedWith(method, this.methodResolver.requiredMethodAnnotations())) {
+                if (!Reflects.isAnnotatedWithAny(method, this.methodResolver.requiredMethodAnnotations())) {
                     logger.debug("The method {} is not annotated as http exchange method, ignore it", TypeSignatures.toMethodSignature(method));
                     continue;
                 }
