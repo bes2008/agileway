@@ -6,6 +6,8 @@
   + 支持 JDK 11 HttpClient
   + 支持 OkHttp3
   + 支持 apache httpcomponents
+  + 支持 SOAP
+  + 支持 @HttpEndpoint
 + 将 langx-java-distributed 模块迁移为 agileway-distributed模块
 + 提供 agileway-zookeeper模块 
 + 对agileway-jwt 模块进行优化，确保签名验证时，使用的是接收到的数据
