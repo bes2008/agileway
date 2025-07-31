@@ -4,9 +4,11 @@ import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.langx.Factory;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.Arrs;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.collection.multivalue.LinkedMultiValueMap;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
+import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.mime.MediaType;
@@ -49,22 +51,27 @@ public class DeclarativeHttpRequestFactory implements Factory<Object[], HttpRequ
     }
 
     private MultiValueMap<String, Object> buildQueryParams(Object[] methodArgs) {
-        MultiValueMap<String, Object> queryParams = null;
+
         Map<String, DefaultValueSupportedValueGetter> queryParamsDefinitionMap = httpExchangeMethod.getQueryParams();
         if (Objs.isEmpty(queryParamsDefinitionMap)) {
-            return queryParams;
+            return null;
         }
-        queryParams = new LinkedMultiValueMap<>();
+        final MultiValueMap<String, Object> queryParams = new LinkedMultiValueMap<>();
         for (Map.Entry<String, DefaultValueSupportedValueGetter> entry : queryParamsDefinitionMap.entrySet()) {
             String queryParamName = entry.getKey();
             ArrayValueGetter<Object> valuesGetter = entry.getValue();
             Object values = valuesGetter.get(methodArgs);
             if (values == null) {
                 queryParams.add(queryParamName, "");
-            } else if (values instanceof Object[]) {
-                queryParams.addAll(queryParamName, (Object[]) values);
             } else if (values instanceof Collection) {
                 queryParams.addAll(queryParamName, (Collection) values);
+            } else if (Arrs.isArray(values)) {
+                Pipeline.of(values).forEach(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object v) {
+                        queryParams.add(queryParamName, v);
+                    }
+                });
             } else {
                 queryParams.add(queryParamName, values);
             }
@@ -86,10 +93,8 @@ public class DeclarativeHttpRequestFactory implements Factory<Object[], HttpRequ
             Object values = valuesGetter.get(methodArgs);
             if (values == null) {
                 uriVariables.put(uriVariableName, "");
-            } else if (values instanceof Object[]) {
-                uriVariables.put(uriVariableName, Strings.join(",", (Object[]) values));
-            } else if (values instanceof Collection) {
-                uriVariables.put(uriVariableName, Strings.join(",", (Collection) values));
+            } else if (values instanceof Collection || Arrs.isArray(values)) {
+                uriVariables.put(uriVariableName, Strings.join(",", values));
             } else {
                 uriVariables.put(uriVariableName, values);
             }
@@ -119,10 +124,25 @@ public class DeclarativeHttpRequestFactory implements Factory<Object[], HttpRequ
             Object values = valuesGetter.get(methodArgs);
             if (values == null) {
                 bodyPartMap.add(bodyPartName, "");
-            } else if (values instanceof Object[]) {
-                bodyPartMap.addAll(bodyPartName, (Object[]) values);
+            } else if (values instanceof MultiValueMap) {
+                MultiValueMap<String, ?> valuesMap = (MultiValueMap<String, ?>) values;
+                for (String key : valuesMap.keySet()) {
+                    bodyPartMap.addAll(key, valuesMap.get(key));
+                }
+            } else if (values instanceof Map) {
+                Map<String, ?> map = (Map<String, ?>) values;
+                for (String key : map.keySet()) {
+                    bodyPartMap.add(key, map.get(key));
+                }
             } else if (values instanceof Collection) {
                 bodyPartMap.addAll(bodyPartName, (Collection) values);
+            } else if (Arrs.isArray(values)) {
+                Pipeline.of(values).forEach(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object v) {
+                        bodyPartMap.add(bodyPartName, v);
+                    }
+                });
             } else {
                 bodyPartMap.add(bodyPartName, values);
             }
@@ -160,28 +180,17 @@ public class DeclarativeHttpRequestFactory implements Factory<Object[], HttpRequ
                 headers.add(headerName, "");
             } else if (values instanceof MultiValueMap) {
                 MultiValueMap<String, ?> multiValueMap = (MultiValueMap<String, ?>) values;
-                for (Map.Entry<String, ?> entry1 : multiValueMap.entrySet()) {
-                    headers.add(entry1.getKey(), entry1.getValue().toString());
+                for (String key : multiValueMap.keySet()) {
+                    Collection<?> values1 = multiValueMap.get(key);
+                    headers.addAll(key, Pipeline.<Object>of(values1).map(toStringFunction).asList());
                 }
             } else if (values instanceof Map) {
                 Map<String, ?> map = (Map<String, ?>) values;
                 for (Map.Entry<String, ?> entry1 : map.entrySet()) {
                     headers.add(entry1.getKey(), entry1.getValue().toString());
                 }
-            } else if (values instanceof Object[]) {
-                headers.addAll(headerName, Pipeline.of((Object[]) values).map(new Function<Object, String>() {
-                    @Override
-                    public String apply(Object v) {
-                        return Objs.toStringOrNull(v);
-                    }
-                }).clearEmptys().asList());
-            } else if (values instanceof Collection) {
-                headers.addAll(headerName, Pipeline.of((Collection<Object>) values).map(new Function<Object, String>() {
-                    @Override
-                    public String apply(Object v) {
-                        return Objs.toStringOrNull(v);
-                    }
-                }).clearEmptys().asList());
+            } else if (values instanceof Collection || Arrs.isArray(values)) {
+                headers.addAll(headerName, Pipeline.of(values).map(toStringFunction).clearEmptys().asList());
             } else {
                 headers.add(headerName, Objs.toStringOrNull(values));
             }
@@ -189,4 +198,10 @@ public class DeclarativeHttpRequestFactory implements Factory<Object[], HttpRequ
         return headers;
     }
 
+    private static final Function<Object, String> toStringFunction = new Function<Object, String>() {
+        @Override
+        public String apply(Object v) {
+            return Objs.toStringOrNull(v);
+        }
+    };
 }
