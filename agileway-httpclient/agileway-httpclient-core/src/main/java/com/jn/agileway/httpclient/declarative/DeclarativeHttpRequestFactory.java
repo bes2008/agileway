@@ -158,6 +158,16 @@ public class DeclarativeHttpRequestFactory implements Factory<Object[], HttpRequ
             Object values = valuesGetter.get(methodArgs);
             if (values == null) {
                 headers.add(headerName, "");
+            } else if (values instanceof MultiValueMap) {
+                MultiValueMap<String, ?> multiValueMap = (MultiValueMap<String, ?>) values;
+                for (Map.Entry<String, ?> entry1 : multiValueMap.entrySet()) {
+                    headers.add(entry1.getKey(), entry1.getValue().toString());
+                }
+            } else if (values instanceof Map) {
+                Map<String, ?> map = (Map<String, ?>) values;
+                for (Map.Entry<String, ?> entry1 : map.entrySet()) {
+                    headers.add(entry1.getKey(), entry1.getValue().toString());
+                }
             } else if (values instanceof Object[]) {
                 headers.addAll(headerName, Pipeline.of((Object[]) values).map(new Function<Object, String>() {
                     @Override
