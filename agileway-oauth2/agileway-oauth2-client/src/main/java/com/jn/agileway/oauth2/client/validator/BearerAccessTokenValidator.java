@@ -39,9 +39,16 @@ public class BearerAccessTokenValidator implements OAuth2AccessTokenValidator<JW
             }
         }
         Long expiration = payload.getExpiration();
-        if (expiration != null && iat != null) {
-            if ((iat + expiration) * 1000 <= now.getTime()) {
+        if (expiration != null) {
+            if (now.after(new Date(expiration * 1000))) {
                 throw new ExpiredAccessTokenException("access token is expired");
+            }
+        } else {
+            Long duration = payload.getLong("expires");
+            if (duration != null && iat != null) {
+                if ((iat + duration) * 1000 <= now.getTime()) {
+                    throw new ExpiredAccessTokenException("access token is expired");
+                }
             }
         }
 
