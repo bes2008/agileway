@@ -1,18 +1,23 @@
 package com.jn.agileway.oauth2.authz.springboot.starter;
 
+import com.jn.agileway.oauth2.authz.OAuth2AuthzFilter;
+import com.jn.agileway.oauth2.authz.OAuth2AuthzHandler;
+import com.jn.agileway.oauth2.authz.OAuth2Properties;
+import com.jn.agileway.oauth2.authz.userinfo.*;
+import com.jn.agileway.oauth2.authz.validator.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableConfigurationProperties(OAuth2Properties.class)
 public class OAuth2Configuration {
     private OAuth2Properties oAuth2Properties;
 
     @Autowired
+    @ConfigurationProperties(prefix = "agileway.oauth2")
     public void setoAuth2Properties(OAuth2Properties oAuth2Properties) {
         this.oAuth2Properties = oAuth2Properties;
     }
