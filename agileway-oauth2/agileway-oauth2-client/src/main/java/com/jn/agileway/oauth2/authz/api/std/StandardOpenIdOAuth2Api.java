@@ -26,10 +26,10 @@ public interface StandardOpenIdOAuth2Api {
     @Post(value = "/token", contentType = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     HttpResponse<Map<String, ?>> getToken(
             @Header("Authorization") String basicAuthToken,
-            @QueryParam(value = "grant_type", defaultValue = "authorization_code") String grantType,
-            @QueryParam("code") String code,
-            @QueryParam("redirect_uri") String redirectUri,
-            @QueryParam("client_id") String clientId
+            @BodyPart(value = "grant_type") String grantType,//  值为： "authorization_code"
+            @BodyPart("code") String code,
+            @BodyPart("redirect_uri") String redirectUri,
+            @BodyPart("client_id") String clientId
     );
 
     /**
