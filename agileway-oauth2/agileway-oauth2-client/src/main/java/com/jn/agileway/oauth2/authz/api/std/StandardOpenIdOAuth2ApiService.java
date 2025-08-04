@@ -1,6 +1,8 @@
 package com.jn.agileway.oauth2.authz.api.std;
 
-import com.bes.um3rd.utils.HttpHeaderUtils;
+import com.jn.agileway.httpclient.auth.AuthorizationHeaders;
+import com.jn.agileway.httpclient.core.HttpResponse;
+import com.jn.agileway.httpclient.core.error.exception.UnauthorizedException;
 import com.jn.agileway.oauth2.authz.GrantType;
 import com.jn.agileway.oauth2.authz.IntrospectResult;
 import com.jn.agileway.oauth2.authz.OAuth2Properties;
@@ -13,8 +15,6 @@ import com.jn.agileway.oauth2.authz.exception.OAuth2Exception;
 import com.jn.agileway.oauth2.authz.userinfo.OpenIdUserinfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,9 +42,9 @@ public class StandardOpenIdOAuth2ApiService implements OAuth2ApiService {
 
     @Override
     public OAuth2Token authorizeToken(String clientId, String clientSecret, String code, String redirectUri) {
-        String basicAuthToken = HttpHeaderUtils.newBasicAuthToken(clientId, clientSecret);
+        String basicAuthToken = AuthorizationHeaders.newBasicAuthToken(clientId, clientSecret);
         try {
-            ResponseEntity<Map<String, ?>> result = api.getToken(basicAuthToken,
+            HttpResponse<Map<String, ?>> result = api.getToken(basicAuthToken,
                     GrantType.AUTHORIZATION_CODE.getName(),
                     code,
                     redirectUri,
@@ -52,7 +52,7 @@ public class StandardOpenIdOAuth2ApiService implements OAuth2ApiService {
             );
             logger.info("Get OAuth2 token : {}", result);
             return this.oAuth2ApiResponseConverter.convertAuthorizationCodeTokenResponse(result);
-        } catch (WebClientResponseException.Unauthorized e) {
+        } catch (UnauthorizedException e) {
             throw new InvalidAccessTokenException("Get OAuth2 token failed, unauthorized, check your clientId, clientSecret", e);
         } catch (Exception e) {
             throw new OAuth2Exception("Get OAuth2 token failed", e);
@@ -61,15 +61,15 @@ public class StandardOpenIdOAuth2ApiService implements OAuth2ApiService {
 
     @Override
     public OAuth2Token refreshToken(String clientId, String clientSecret, String refreshToken) {
-        String basicAuthToken = HttpHeaderUtils.newBasicAuthToken(clientId, clientSecret);
+        String basicAuthToken = AuthorizationHeaders.newBasicAuthToken(clientId, clientSecret);
         try {
-            ResponseEntity<Map<String, ?>> result = api.refreshToken(basicAuthToken,
+            HttpResponse<Map<String, ?>> result = api.refreshToken(basicAuthToken,
                     GrantType.REFRESH_TOKEN.getName(),
                     refreshToken,
                     clientId);
             logger.info("Refreshed OAuth2 token: {}", result);
             return this.oAuth2ApiResponseConverter.convertRefreshTokenResponse(result);
-        } catch (WebClientResponseException.Unauthorized e) {
+        } catch (UnauthorizedException e) {
             throw new InvalidAccessTokenException("invalid access token", e);
         } catch (Exception e) {
             throw new OAuth2Exception("Refresh OAuth2 token failed", e);
@@ -89,14 +89,14 @@ public class StandardOpenIdOAuth2ApiService implements OAuth2ApiService {
         if (!userInfoEndpointEnabled()) {
             throw new IllegalStateException("userinfo endpoint is disabled");
         }
-        ResponseEntity<Map<String, ?>> response = null;
+        HttpResponse<Map<String, ?>> response = null;
         try {
             if (oAuth2Properties.getStandard().isUserinfoEndpointPostEnabled()) {
-                response = api.getUserInfoByPost(HttpHeaderUtils.newBearerAuthToken(accessToken));
+                response = api.getUserInfoByPost(AuthorizationHeaders.newBearerAuthToken(accessToken));
             } else {
                 response = api.getUserInfoByGet(accessToken);
             }
-        } catch (WebClientResponseException.Unauthorized e) {
+        } catch (UnauthorizedException e) {
             throw new InvalidAccessTokenException("Get userinfo failed, invalid access token", e);
         } catch (Exception e) {
             throw new OAuth2Exception("Get userinfo failed", e);
@@ -111,7 +111,7 @@ public class StandardOpenIdOAuth2ApiService implements OAuth2ApiService {
             throw new InvalidAccessTokenException("introspect endpoint is disabled");
         }
 
-        ResponseEntity<Map<String, ?>> response = null;
+        HttpResponse<Map<String, ?>> response = null;
         String authToken = introspectEndpointAuthTokenSupplier.get();
         try {
             if (oAuth2Properties.getStandard().isIntrospectEndpointPostEnabled()) {
@@ -121,7 +121,7 @@ public class StandardOpenIdOAuth2ApiService implements OAuth2ApiService {
             } else {
                 response = api.introspectByGet(authToken, oAuth2Properties.getStandard().getIntrospectEndpointTokenParameterName(), accessTokenReference, tokenTypeHint);
             }
-        } catch (WebClientResponseException.Unauthorized e) {
+        } catch (UnauthorizedException e) {
             throw new InvalidAccessTokenException("Introspect access-token failed, invalid access token", e);
         } catch (Exception e) {
             throw new OAuth2Exception("Introspect access-token failed", e);

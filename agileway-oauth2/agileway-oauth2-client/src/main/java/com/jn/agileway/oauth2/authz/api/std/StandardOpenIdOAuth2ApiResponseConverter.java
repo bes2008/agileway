@@ -1,12 +1,12 @@
 package com.jn.agileway.oauth2.authz.api.std;
 
+import com.jn.agileway.httpclient.core.HttpResponse;
 import com.jn.agileway.oauth2.authz.IntrospectResult;
 import com.jn.agileway.oauth2.authz.OAuth2Token;
 import com.jn.agileway.oauth2.authz.api.OAuth2ApiResponseConverter;
 import com.jn.agileway.oauth2.authz.exception.OAuth2ErrorResponseException;
 import com.jn.agileway.oauth2.authz.exception.OAuth2Exception;
 import com.jn.agileway.oauth2.authz.userinfo.OpenIdUserinfo;
-import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -20,19 +20,19 @@ public class StandardOpenIdOAuth2ApiResponseConverter implements OAuth2ApiRespon
      * @see <a href="https://www.rfc-editor.org/rfc/rfc6749#section-5.2">Error Response</a>
      */
     @Override
-    public OAuth2Token convertAuthorizationCodeTokenResponse(ResponseEntity<Map<String, ?>> response) throws OAuth2Exception {
+    public OAuth2Token convertAuthorizationCodeTokenResponse(HttpResponse<Map<String, ?>> response) throws OAuth2Exception {
         return convertTokenResponseInternal(response, false);
     }
 
     @Override
-    public OAuth2Token convertRefreshTokenResponse(ResponseEntity<Map<String, ?>> response) throws OAuth2Exception {
+    public OAuth2Token convertRefreshTokenResponse(HttpResponse<Map<String, ?>> response) throws OAuth2Exception {
         return convertTokenResponseInternal(response, true);
     }
 
 
-    protected OAuth2Token convertTokenResponseInternal(ResponseEntity<Map<String, ?>> response, boolean refresh) throws OAuth2Exception {
-        boolean success = response.getStatusCode().value() == 200;
-        Map<String, ?> payload = response.getBody();
+    protected OAuth2Token convertTokenResponseInternal(HttpResponse<Map<String, ?>> response, boolean refresh) throws OAuth2Exception {
+        boolean success = response.getStatusCode() == 200;
+        Map<String, ?> payload = response.getPayload();
         if (success) {
             if (!payload.containsKey("access_token")) {
                 throw new OAuth2Exception("Illegal " + (refresh ? "refresh" : "get") + " OAuth2 token response, `access_token` field is missing");
@@ -61,7 +61,7 @@ public class StandardOpenIdOAuth2ApiResponseConverter implements OAuth2ApiRespon
             return oAuth2Token;
         }
 
-        if (response.getStatusCode().value() == 400) {
+        if (response.getStatusCode() == 400) {
             if (!payload.containsKey("error")) {
                 throw new OAuth2Exception("Illegal" + (refresh ? "get" : "refresh") + "OAuth2 token error response, `error` field is missing");
             }
@@ -72,7 +72,7 @@ public class StandardOpenIdOAuth2ApiResponseConverter implements OAuth2ApiRespon
             OAuth2ErrorResponseException exception = new OAuth2ErrorResponseException("Got access-token failed", error, error_description, error_uri);
             throw exception;
         }
-        throw new RuntimeException("Error occur when " + (refresh ? "get" : "refresh") + " OAuth2 token: status-code" + response.getStatusCode() + ", error: " + response.getBody());
+        throw new RuntimeException("Error occur when " + (refresh ? "get" : "refresh") + " OAuth2 token: status-code" + response.getStatusCode() + ", error: " + response.getPayload());
     }
 
     private static final Set<String> STANDARD_INTROSPECT_RESPONSE_FIELDS = new HashSet<>(Arrays.asList(
@@ -83,16 +83,16 @@ public class StandardOpenIdOAuth2ApiResponseConverter implements OAuth2ApiRespon
      * @see <a href="https://tools.ietf.org/html/rfc7662#section-2.2">RFC7662</a>
      */
     @Override
-    public IntrospectResult convertIntrospectResponse(ResponseEntity<Map<String, ?>> response) throws OAuth2Exception {
-        int statusCode = response.getStatusCode().value();
+    public IntrospectResult convertIntrospectResponse(HttpResponse<Map<String, ?>> response) throws OAuth2Exception {
+        int statusCode = response.getStatusCode();
 
 
         if (statusCode >= 400) {
-            throw new OAuth2ErrorResponseException("Error occur when introspect OAuth2 access token, status-code: " + statusCode + "error: " + response.getBody());
+            throw new OAuth2ErrorResponseException("Error occur when introspect OAuth2 access token, status-code: " + statusCode + "error: " + response.getPayload());
         }
 
         boolean success = statusCode == 200;
-        Map<String, ?> payload = response.getBody();
+        Map<String, ?> payload = response.getPayload();
 
         if (success) {
             if (!payload.containsKey("active")) {
@@ -156,12 +156,12 @@ public class StandardOpenIdOAuth2ApiResponseConverter implements OAuth2ApiRespon
      * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#UserInfo">UserInfo</a>
      */
     @Override
-    public OpenIdUserinfo convertUserInfoResponse(ResponseEntity<Map<String, ?>> response) throws OAuth2Exception {
-        int statusCode = response.getStatusCode().value();
+    public OpenIdUserinfo convertUserInfoResponse(HttpResponse<Map<String, ?>> response) throws OAuth2Exception {
+        int statusCode = response.getStatusCode();
         if (statusCode == 200) {
-            return new OpenIdUserinfo(response.getBody());
+            return new OpenIdUserinfo(response.getPayload());
         }
-        throw new OAuth2Exception("Error occur when get userinfo, status-code: " + statusCode + ", error: " + response.getBody());
+        throw new OAuth2Exception("Error occur when get userinfo, status-code: " + statusCode + ", error: " + response.getPayload());
     }
 
 }
