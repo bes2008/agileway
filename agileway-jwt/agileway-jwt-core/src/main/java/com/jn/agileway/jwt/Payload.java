@@ -39,4 +39,44 @@ public class Payload extends KeyValueSet {
     public Map<String, Object> getAllClaims() {
         return getAll();
     }
+
+    /**
+     * 获取Issuer ，颁发者
+     */
+    public String getIssuer() {
+        return getString(JWTs.ClaimKeys.ISSUER);
+    }
+
+    /**
+     * 令牌的subject，主题，通常是登录用户
+     */
+    public String getSubject() {
+        return getString(JWTs.ClaimKeys.SUBJECT);
+    }
+
+    /**
+     * 获取令牌接收者，即接收该令牌的用户，或者 resource server
+     */
+    public String getAudience() {
+        return getString(JWTs.ClaimKeys.AUDIENCE);
+    }
+
+    /**
+     * 获取令牌ID，通常用于标识该令牌
+     */
+    public String getJwtId() {
+        return getString(JWTs.ClaimKeys.JWT_ID);
+    }
+
+    public Long getIssuedAt() {
+        return getLong(JWTs.ClaimKeys.ISSUED_AT);
+    }
+
+    public Long getNotBefore() {
+        return getLong(JWTs.ClaimKeys.NOT_BEFORE);
+    }
+
+    public Long getExpiration() {
+        return getLong(JWTs.ClaimKeys.EXPIRATION);
+    }
 }
