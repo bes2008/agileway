@@ -1,8 +1,7 @@
 package com.jn.agileway.oauth2.client.springboot.starter;
 
-import com.jn.agileway.oauth2.client.OAuth2AuthzFilter;
-import com.jn.agileway.oauth2.client.OAuth2AuthzHandler;
-import com.jn.agileway.oauth2.client.OAuth2Properties;
+import com.jn.agileway.oauth2.client.*;
+import com.jn.agileway.oauth2.client.api.OAuth2ApiService;
 import com.jn.agileway.oauth2.client.userinfo.*;
 import com.jn.agileway.oauth2.client.validator.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +61,37 @@ public class OAuth2Configuration {
     @ConditionalOnMissingBean
     public IntrospectResultUserInfoExtractor introspectResultUserInfoExtractor() {
         return new DefaultIntrospectResultUserInfoExtractor();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public OAuth2CallbackUriSupplier oauth2CallbackUriSupplier() {
+        return new DefaultOAuth2CallbackUriSupplier();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public OAuth2AuthzHandler oAuth2AuthzHandler(
+            OAuth2ApiService oAuth2ApiService,
+            OAuth2StateValidator oAuth2StateValidator,
+            OAuth2TokenValidator oAuth2TokenValidator,
+            BearerAccessTokenValidator bearerAccessTokenValidator,
+            IntrospectAccessTokenValidator introspectAccessTokenValidator,
+            OpenIdTokenParser openIdTokenParser,
+            OpenIdTokenUserinfoExtractor openIdTokenUserInfoExtractor,
+            IntrospectResultUserInfoExtractor introspectResultUserInfoExtractor,
+            OAuth2CallbackUriSupplier oauth2CallbackUriSupplier) {
+        return new OAuth2AuthzHandler(
+                oAuth2Properties,
+                oAuth2ApiService,
+                oAuth2StateValidator,
+                oAuth2TokenValidator,
+                bearerAccessTokenValidator,
+                introspectAccessTokenValidator,
+                openIdTokenParser,
+                openIdTokenUserInfoExtractor,
+                introspectResultUserInfoExtractor,
+                oauth2CallbackUriSupplier);
     }
 
     @Bean
