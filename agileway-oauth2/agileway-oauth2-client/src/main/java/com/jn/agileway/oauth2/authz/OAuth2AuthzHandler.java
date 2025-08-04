@@ -1,7 +1,5 @@
 package com.jn.agileway.oauth2.authz;
 
-import com.bes.um3rd.multichannel.HttpRequestChannelExtractor;
-import com.bes.um3rd.multichannel.MultipleChannelsUriProvider;
 import com.jn.agileway.jwt.JWT;
 import com.jn.agileway.jwt.JWTException;
 import com.jn.agileway.jwt.JWTs;
@@ -76,8 +74,7 @@ public class OAuth2AuthzHandler {
     public static final String SESSION_KEY_OAUTH2_ORIGINAL_REQUEST = "oauth2_authorize_original_request";
     public static final String REQUEST_KEY_OAUTH2_AUTHORIZED_USER = "oauth2_authorized_userinfo";
 
-    private MultipleChannelsUriProvider multipleChannelsUriProvider;
-    private HttpRequestChannelExtractor httpRequestChannelExtractor;
+    private OAuth2CallbackUriSupplier callbackUriSupplier;
 
     private OAuth2Properties oauth2Properties;
 
@@ -105,8 +102,7 @@ public class OAuth2AuthzHandler {
      */
     private final Map<String, OAuth2TokenCachedValue> tokenCache = new ConcurrentHashMap<>();
 
-    public OAuth2AuthzHandler(MultipleChannelsUriProvider multipleChannelsUriProvider,
-                              HttpRequestChannelExtractor httpRequestChannelExtractor,
+    public OAuth2AuthzHandler(
                               OAuth2Properties oauth2Properties,
                               OAuth2ApiService oauth2ApiService,
                               OAuth2StateValidator oAuth2StateValidator,
@@ -115,10 +111,9 @@ public class OAuth2AuthzHandler {
                               IntrospectAccessTokenValidator introspectAccessTokenValidator,
                               OpenIdTokenParser openIdTokenParser,
                               OpenIdTokenUserinfoExtractor openIdTokenUserExtractor,
-                              IntrospectResultUserInfoExtractor introspectResultUserInfoExtractor
+                              IntrospectResultUserInfoExtractor introspectResultUserInfoExtractor,
+                              OAuth2CallbackUriSupplier oauth2CallbackUriSupplier
     ) {
-        this.multipleChannelsUriProvider = multipleChannelsUriProvider;
-        this.httpRequestChannelExtractor = httpRequestChannelExtractor;
 
         this.oauth2Properties = oauth2Properties;
         this.oauth2ApiService = oauth2ApiService;
@@ -135,6 +130,8 @@ public class OAuth2AuthzHandler {
         this.introspectResultUserInfoExtractor = introspectResultUserInfoExtractor;
 
         this.authorizeUriTemplate = oauth2Properties.getBaseUri() + oauth2Properties.getAuthorizeUriTemplate();
+
+        this.callbackUriSupplier = oauth2CallbackUriSupplier;
         logger.info("authorizeUriTemplate: {}", authorizeUriTemplate);
     }
 
@@ -419,22 +416,13 @@ public class OAuth2AuthzHandler {
     }
 
     private String buildOAuth2CallbackUri(HttpServletRequest request) {
-        final String channel = httpRequestChannelExtractor.extractChannel(request);
         final String path = oauth2Properties.getCallbackUri();
         String callbackUri = path;
-
-        String um3rdClientId = oauth2Properties.getClientId();
         if (Strings.startsWith(callbackUri, "http://") || Strings.startsWith(callbackUri, "https://")) {
             return callbackUri;
         }
-        if (multipleChannelsUriProvider.hasApplicationConfig(um3rdClientId)) {
-            callbackUri = multipleChannelsUriProvider.getUri(um3rdClientId, channel, path);
-        } else {
-            logger.info("the multipleChannelsUriProvider has no clientServerConfig for um3rd, will use the request's scheme, localAddr, localPort, path");
-            callbackUri = request.getScheme() + "://" + request.getLocalAddr() + ":" + request.getLocalPort()
-                    + request.getContextPath()
-                    + (Strings.startsWith(path, "/") ? path : ("/" + path));
-        }
+        callbackUri = callbackUriSupplier.get(path, request);
+        logger.info("the callback uri is {}", callbackUri);
         return callbackUri;
     }
 
