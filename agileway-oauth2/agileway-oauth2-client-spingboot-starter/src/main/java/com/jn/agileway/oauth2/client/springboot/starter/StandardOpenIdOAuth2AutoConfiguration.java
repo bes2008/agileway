@@ -16,6 +16,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.nio.charset.Charset;
+
 @ConditionalOnMissingBean(OAuth2ApiService.class)
 @Configuration
 public class StandardOpenIdOAuth2AutoConfiguration {
@@ -54,6 +56,8 @@ public class StandardOpenIdOAuth2AutoConfiguration {
         Class theApiInterface = apiInterface;
         StandardOpenIdOAuth2Api api = (StandardOpenIdOAuth2Api) new DeclarativeHttpServiceProxyBuilder(theApiInterface)
                 .withExchanger(httpExchanger)
+                .withBaseUri(oAuth2Properties.getBaseUri())
+                .withUriEncoding(Charset.forName(oAuth2Properties.getAuthorizeUriEncoding()))
                 .build();
         StandardOpenIdOAuth2ApiService standardOAuth2ApiService = new StandardOpenIdOAuth2ApiService(api,
                 oAuth2Properties,

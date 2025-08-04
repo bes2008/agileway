@@ -4,7 +4,6 @@ import com.jn.agileway.oauth2.client.*;
 import com.jn.agileway.oauth2.client.api.OAuth2ApiService;
 import com.jn.agileway.oauth2.client.userinfo.*;
 import com.jn.agileway.oauth2.client.validator.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -16,12 +15,10 @@ import java.util.Set;
 
 @Configuration
 public class OAuth2ClientConfiguration {
-    private OAuth2ClientProperties oAuth2Properties;
-
-    @Autowired
+    @Bean
     @ConfigurationProperties(prefix = "agileway.oauth2.client")
-    public void setoAuth2Properties(OAuth2ClientProperties oAuth2Properties) {
-        this.oAuth2Properties = oAuth2Properties;
+    public OAuth2ClientProperties oauth2Properties() {
+        return new OAuth2ClientProperties();
     }
 
     @Bean
@@ -75,6 +72,7 @@ public class OAuth2ClientConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public OAuth2AuthzHandler oAuth2AuthzHandler(
+            OAuth2ClientProperties oAuth2Properties,
             OAuth2ApiService oAuth2ApiService,
             OAuth2StateValidator oAuth2StateValidator,
             OAuth2TokenValidator oAuth2TokenValidator,
@@ -99,15 +97,16 @@ public class OAuth2ClientConfiguration {
 
 
     @Bean
-    public FilterRegistrationBean<OAuth2AuthzFilter> oAuth2AuthzFilterRegistrationBean(OAuth2AuthzHandler oAuth2AuthzHandler, OAuth2ClientProperties oAuth2ClientProperties) {
+    public FilterRegistrationBean<OAuth2AuthzFilter> oAuth2AuthzFilterRegistrationBean(
+            OAuth2AuthzHandler oAuth2AuthzHandler, OAuth2ClientProperties oAuth2ClientProperties) {
         OAuth2ClientProperties.FilterConfig filterConfig = oAuth2ClientProperties.getFilter();
 
-        OAuth2AuthzFilter filter = new OAuth2AuthzFilter(oAuth2Properties, oAuth2AuthzHandler);
+        OAuth2AuthzFilter filter = new OAuth2AuthzFilter(oAuth2ClientProperties, oAuth2AuthzHandler);
         FilterRegistrationBean<OAuth2AuthzFilter> registrationBean = new FilterRegistrationBean<>(filter);
         registrationBean.setOrder(filterConfig.getOrder());
 
         Set<String> urlPatterns = new HashSet<>(filterConfig.getUrlPatterns());
-        urlPatterns.add(oAuth2Properties.getCallbackUri());
+        urlPatterns.add(oAuth2ClientProperties.getCallbackUri());
 
         registrationBean.addUrlPatterns(urlPatterns.toArray(new String[0]));
         registrationBean.setName(filterConfig.getName());
