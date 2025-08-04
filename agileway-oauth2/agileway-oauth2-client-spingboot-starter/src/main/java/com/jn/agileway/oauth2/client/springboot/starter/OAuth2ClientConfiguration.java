@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class OAuth2Configuration {
+public class OAuth2ClientConfiguration {
     private OAuth2Properties oAuth2Properties;
 
     @Autowired
