@@ -11,6 +11,8 @@
 
     <groupId>io.github.bes2008.solution.agileway.oauth2</groupId>
     <artifactId>agileway-oauth2</artifactId>
+    <name>${project.groupId}:${project.artifactId}:${project.version}</name>
+
     <packaging>pom</packaging>
     <modules>
         <module>agileway-oauth2-client</module>

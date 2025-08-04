@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>agileway-oauth2-client-spingboot-starter</artifactId>
+    <name>${project.groupId}:${project.artifactId}:${project.version}</name>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
