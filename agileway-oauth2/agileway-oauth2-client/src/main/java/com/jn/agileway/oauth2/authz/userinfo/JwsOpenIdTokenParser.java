@@ -1,26 +1,26 @@
 package com.jn.agileway.oauth2.authz.userinfo;
 
+import com.jn.agileway.jwt.JWT;
+import com.jn.agileway.jwt.JWTException;
+import com.jn.agileway.jwt.JWTs;
+import com.jn.agileway.jwt.jwe.JWEToken;
 import com.jn.agileway.oauth2.authz.exception.OAuth2Exception;
-import com.nimbusds.jwt.EncryptedJWT;
-import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.JWTParser;
 
-import java.text.ParseException;
+import java.util.Map;
 
 public class JwsOpenIdTokenParser implements OpenIdTokenParser {
     @Override
     public OpenIdToken parse(String idTokenString) {
         try {
-            JWT jwt = JWTParser.parse(idTokenString);
-            if (jwt instanceof EncryptedJWT) {
+            JWT jwt = JWTs.parse(idTokenString);
+            if (jwt instanceof JWEToken) {
                 // TODO 解密
                 return null;
             }
 
-            JWTClaimsSet claimsSet = jwt.getJWTClaimsSet();
+            Map<String, Object> claimsSet = jwt.getPayload().getAllClaims();
             return new OpenIdToken(claimsSet);
-        } catch (ParseException e) {
+        } catch (JWTException e) {
             throw new OAuth2Exception("malformed id token");
         }
     }
