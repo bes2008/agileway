@@ -19,7 +19,7 @@ public class OAuth2ClientConfiguration {
     private OAuth2ClientProperties oAuth2Properties;
 
     @Autowired
-    @ConfigurationProperties(prefix = "agileway.oauth2.resourceserver")
+    @ConfigurationProperties(prefix = "agileway.oauth2.client")
     public void setoAuth2Properties(OAuth2ClientProperties oAuth2Properties) {
         this.oAuth2Properties = oAuth2Properties;
     }

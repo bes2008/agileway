@@ -36,7 +36,7 @@ public class StandardOpenIdOAuth2AutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(name = "agileway.oauth2.resourceserver.standard.introspect-endpoint-auth-type", havingValue = "Basic", matchIfMissing = true)
+    @ConditionalOnProperty(name = "agileway.oauth2.client.standard.introspect-endpoint-auth-type", havingValue = "Basic", matchIfMissing = true)
     public IntrospectEndpointAuthTokenSupplier introspectEndpointAuthTokenSupplier(OAuth2ClientProperties oAuth2Properties) {
         return new BasicIntrospectEndpointAuthTokenSupplier(oAuth2Properties);
     }
