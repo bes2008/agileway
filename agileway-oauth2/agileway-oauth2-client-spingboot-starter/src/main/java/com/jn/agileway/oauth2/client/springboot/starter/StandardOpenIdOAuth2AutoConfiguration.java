@@ -10,8 +10,6 @@ import com.jn.agileway.oauth2.client.api.std.BasicIntrospectEndpointAuthTokenSup
 import com.jn.agileway.oauth2.client.api.std.StandardOpenIdOAuth2Api;
 import com.jn.agileway.oauth2.client.api.std.StandardOpenIdOAuth2ApiResponseConverter;
 import com.jn.agileway.oauth2.client.api.std.StandardOpenIdOAuth2ApiService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -21,7 +19,6 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnMissingBean(OAuth2ApiService.class)
 @Configuration
 public class StandardOpenIdOAuth2AutoConfiguration {
-    private static final Logger logger = LoggerFactory.getLogger(StandardOpenIdOAuth2AutoConfiguration.class);
 
     @ConditionalOnMissingBean
     @Bean("httpExchanger")
