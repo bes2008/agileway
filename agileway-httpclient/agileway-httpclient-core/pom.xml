@@ -27,14 +27,10 @@
             <groupId>io.github.bes2008.solution.easyjson</groupId>
             <artifactId>easyjson-core</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>io.github.bes2008.solution.easyjson</groupId>
-            <artifactId>easyjson-jackson</artifactId>
-            <version>${easyjson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
+            <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
+            <artifactId>agileway-httpclient-auth</artifactId>
         </dependency>
     </dependencies>
 </project>

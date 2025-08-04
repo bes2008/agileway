@@ -2,7 +2,6 @@ package com.jn.agileway.httpclient.auth.basic;
 
 import com.jn.agileway.httpclient.auth.AuthScheme;
 import com.jn.agileway.httpclient.auth.AuthorizationHeaderBuilder;
-import com.jn.agileway.httpclient.auth.UserPasswordCredentials;
 import com.jn.langx.codec.StringifyFormat;
 import com.jn.langx.codec.Stringifys;
 import com.jn.langx.util.io.Charsets;

@@ -1,6 +1,6 @@
 package com.jn.agileway.oauth2.authz.api.std;
 
-import com.bes.um3rd.utils.HttpHeaderUtils;
+import com.jn.agileway.httpclient.auth.AuthorizationHeaders;
 import com.jn.agileway.oauth2.authz.OAuth2Properties;
 import com.jn.agileway.oauth2.authz.api.IntrospectEndpointAuthTokenSupplier;
 
@@ -13,7 +13,7 @@ public class BasicIntrospectEndpointAuthTokenSupplier implements IntrospectEndpo
 
     @Override
     public String get() {
-        String basicAuthToken = HttpHeaderUtils.newBasicAuthToken(oauth2Properties.getClientId(), oauth2Properties.getClientSecret());
+        String basicAuthToken = AuthorizationHeaders.newBasicAuthToken(oauth2Properties.getClientId(), oauth2Properties.getClientSecret());
         return basicAuthToken;
     }
 }

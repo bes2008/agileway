@@ -1,6 +1,7 @@
 package com.jn.agileway.oauth2.authz.api.std;
 
-import com.bes.um3rd.utils.AuthcType;
+
+import com.jn.agileway.httpclient.auth.AuthScheme;
 
 public class StandardOpenOAuth2Properties {
 
@@ -10,7 +11,7 @@ public class StandardOpenOAuth2Properties {
 
     private String introspectEndpointTokenParameterName = "token";
 
-    private AuthcType introspectEndpointAuthType = AuthcType.Basic;
+    private AuthScheme introspectEndpointAuthType = AuthScheme.BASIC;
 
     private Class<? extends StandardOpenIdOAuth2Api> apiInterface = StandardOpenIdOAuth2Api.class;
 
@@ -47,11 +48,11 @@ public class StandardOpenOAuth2Properties {
         this.apiInterface = apiInterface;
     }
 
-    public AuthcType getIntrospectEndpointAuthType() {
+    public AuthScheme getIntrospectEndpointAuthType() {
         return introspectEndpointAuthType;
     }
 
-    public void setIntrospectEndpointAuthType(AuthcType introspectEndpointAuthType) {
+    public void setIntrospectEndpointAuthType(AuthScheme introspectEndpointAuthType) {
         this.introspectEndpointAuthType = introspectEndpointAuthType;
     }
 }
