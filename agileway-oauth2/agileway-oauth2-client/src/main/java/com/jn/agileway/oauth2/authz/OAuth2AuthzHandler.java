@@ -2,6 +2,9 @@ package com.jn.agileway.oauth2.authz;
 
 import com.bes.um3rd.multichannel.HttpRequestChannelExtractor;
 import com.bes.um3rd.multichannel.MultipleChannelsUriProvider;
+import com.jn.agileway.jwt.JWT;
+import com.jn.agileway.jwt.JWTException;
+import com.jn.agileway.jwt.JWTs;
 import com.jn.agileway.oauth2.authz.api.OAuth2ApiService;
 import com.jn.agileway.oauth2.authz.exception.ExpiredAccessTokenException;
 import com.jn.agileway.oauth2.authz.exception.InvalidAccessTokenException;
@@ -14,8 +17,6 @@ import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.id.uuidv7.UUIDv7Generator;
 import com.jn.langx.util.net.uri.component.UriComponentsBuilder;
-import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTParser;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -390,9 +390,9 @@ public class OAuth2AuthzHandler {
         JWT jwt = null;
         if (Strings.isBlank(tokenType)) {
             try {
-                jwt = JWTParser.parse(accessToken);
+                jwt = JWTs.parse(accessToken);
                 tokenType = "bearer";
-            } catch (ParseException e) {
+            } catch (JWTException e) {
                 logger.info("access token is not jwt format: {}", accessToken);
             }
         }
@@ -400,8 +400,8 @@ public class OAuth2AuthzHandler {
         if (Strings.equalsIgnoreCase("bearer", tokenType)) {
             if (jwt == null) {
                 try {
-                    jwt = JWTParser.parse(accessToken);
-                } catch (ParseException e) {
+                    jwt = JWTs.parse(accessToken);
+                } catch (JWTException e) {
                     throw new InvalidAccessTokenException("illegal bearer type access token, it is not jwt format");
                 }
             }

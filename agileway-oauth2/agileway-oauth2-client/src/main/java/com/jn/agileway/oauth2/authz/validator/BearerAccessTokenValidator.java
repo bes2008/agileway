@@ -26,25 +26,24 @@ public class BearerAccessTokenValidator implements OAuth2AccessTokenValidator<JW
         }
 
         Date now = new Date();
-
-        Date expiresDate = payload.get("expires");
-        if (expiresDate != null) {
-            if (now.after(expiresDate)) {
+        Long iat = payload.getIssuedAt();
+        if (iat != null) {
+            if (now.before(new Date(iat * 1000))) {
+                throw new InvalidAccessTokenException("access token is not yet valid");
+            }
+        }
+        Long nbf = payload.getNotBefore();
+        if (nbf != null) {
+            if (now.before(new Date(nbf * 1000))) {
+                throw new InvalidAccessTokenException("access token is not yet valid");
+            }
+        }
+        Long expiration = payload.getExpiration();
+        if (expiration != null && iat != null) {
+            if ((iat + expiration) * 1000 <= now.getTime()) {
                 throw new ExpiredAccessTokenException("access token is expired");
             }
         }
 
-        Date nbf = payload.getNotBeforeTime();
-        if (nbf != null) {
-            if (now.before(nbf)) {
-                throw new InvalidAccessTokenException("access token is not yet valid");
-            }
-        }
-        Date iat = payload.getIssueTime();
-        if (iat != null) {
-            if (now.before(iat)) {
-                throw new InvalidAccessTokenException("access token is not yet valid");
-            }
-        }
     }
 }

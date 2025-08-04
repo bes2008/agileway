@@ -68,14 +68,23 @@ public class Payload extends KeyValueSet {
         return getString(JWTs.ClaimKeys.JWT_ID);
     }
 
+    /**
+     * 获取令牌颁发时间，unix 时间戳 ，单位：s
+     */
     public Long getIssuedAt() {
         return getLong(JWTs.ClaimKeys.ISSUED_AT);
     }
 
+    /**
+     * 获取令牌开始生效时间，unix 时间戳 ，单位：s
+     */
     public Long getNotBefore() {
         return getLong(JWTs.ClaimKeys.NOT_BEFORE);
     }
 
+    /**
+     * 获取令牌有效期，unix 时间戳 ，单位：s
+     */
     public Long getExpiration() {
         return getLong(JWTs.ClaimKeys.EXPIRATION);
     }
