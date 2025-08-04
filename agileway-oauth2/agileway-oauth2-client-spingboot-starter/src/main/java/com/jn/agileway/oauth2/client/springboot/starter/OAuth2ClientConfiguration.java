@@ -11,6 +11,9 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Configuration
 public class OAuth2ClientConfiguration {
     private OAuth2ClientProperties oAuth2Properties;
@@ -96,16 +99,19 @@ public class OAuth2ClientConfiguration {
 
 
     @Bean
-    public FilterRegistrationBean<OAuth2AuthzFilter> oAuth2AuthzFilterRegistrationBean(OAuth2AuthzHandler oAuth2AuthzHandler) {
+    public FilterRegistrationBean<OAuth2AuthzFilter> oAuth2AuthzFilterRegistrationBean(OAuth2AuthzHandler oAuth2AuthzHandler, OAuth2ClientProperties oAuth2ClientProperties) {
+        OAuth2ClientProperties.FilterConfig filterConfig = oAuth2ClientProperties.getFilter();
+
         OAuth2AuthzFilter filter = new OAuth2AuthzFilter(oAuth2Properties, oAuth2AuthzHandler);
         FilterRegistrationBean<OAuth2AuthzFilter> registrationBean = new FilterRegistrationBean<>(filter);
-        registrationBean.setOrder(10);
-        registrationBean.addUrlPatterns(
-                oAuth2Properties.getCallbackUri(),
-                "/auth/oauth2/login_to_um"
-        );
-        registrationBean.setName("OAuth2AuthzFilter");
-        registrationBean.setEnabled(true);
+        registrationBean.setOrder(filterConfig.getOrder());
+
+        Set<String> urlPatterns = new HashSet<>(filterConfig.getUrlPatterns());
+        urlPatterns.add(oAuth2Properties.getCallbackUri());
+
+        registrationBean.addUrlPatterns(urlPatterns.toArray(new String[0]));
+        registrationBean.setName(filterConfig.getName());
+        registrationBean.setEnabled(filterConfig.isEnabled());
         return registrationBean;
     }
 }

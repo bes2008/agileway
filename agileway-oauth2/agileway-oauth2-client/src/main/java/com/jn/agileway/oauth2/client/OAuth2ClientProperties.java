@@ -61,6 +61,16 @@ public class OAuth2ClientProperties {
 
     private StandardOpenOAuth2Properties standard = new StandardOpenOAuth2Properties();
 
+    private FilterConfig filter = new FilterConfig();
+
+    public FilterConfig getFilter() {
+        return filter;
+    }
+
+    public void setFilter(FilterConfig filter) {
+        this.filter = filter;
+    }
+
     public String getBaseUri() {
         return baseUri;
     }
@@ -173,5 +183,44 @@ public class OAuth2ClientProperties {
 
     public void setExtractUserinfoWithIntrospectResult(boolean extractUserinfoWithIntrospectResult) {
         this.extractUserinfoWithIntrospectResult = extractUserinfoWithIntrospectResult;
+    }
+
+    public static class FilterConfig {
+        private int order = 10;
+        private String name = "OAuth2AuthzFilter";
+        private boolean enabled = true;
+        private List<String> urlPatterns = Lists.newArrayList();
+
+        public int getOrder() {
+            return order;
+        }
+
+        public void setOrder(int order) {
+            this.order = order;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public List<String> getUrlPatterns() {
+            return urlPatterns;
+        }
+
+        public void setUrlPatterns(List<String> urlPatterns) {
+            this.urlPatterns = urlPatterns;
+        }
     }
 }
