@@ -36,6 +36,7 @@
         <module>agileway-shell</module>
         <module>agileway-distributed</module>
         <module>agileway-zookeeper</module>
+        <module>agileway-oauth2</module>
     </modules>
 
     <description>
