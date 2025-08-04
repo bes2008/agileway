@@ -5,7 +5,7 @@ import com.jn.agileway.httpclient.core.HttpResponse;
 import com.jn.agileway.httpclient.core.error.exception.UnauthorizedException;
 import com.jn.agileway.oauth2.client.GrantType;
 import com.jn.agileway.oauth2.client.IntrospectResult;
-import com.jn.agileway.oauth2.client.OAuth2Properties;
+import com.jn.agileway.oauth2.client.OAuth2ClientProperties;
 import com.jn.agileway.oauth2.client.OAuth2Token;
 import com.jn.agileway.oauth2.client.api.IntrospectEndpointAuthTokenSupplier;
 import com.jn.agileway.oauth2.client.api.OAuth2ApiResponseConverter;
@@ -23,14 +23,14 @@ public class StandardOpenIdOAuth2ApiService implements OAuth2ApiService {
     private static final Logger logger = LoggerFactory.getLogger(StandardOpenIdOAuth2ApiService.class);
     private StandardOpenIdOAuth2Api api;
 
-    private OAuth2Properties oAuth2Properties;
+    private OAuth2ClientProperties oAuth2Properties;
 
     private OAuth2ApiResponseConverter oAuth2ApiResponseConverter;
 
     private IntrospectEndpointAuthTokenSupplier introspectEndpointAuthTokenSupplier;
 
     public StandardOpenIdOAuth2ApiService(StandardOpenIdOAuth2Api api,
-                                          OAuth2Properties oAuth2Properties,
+                                          OAuth2ClientProperties oAuth2Properties,
                                           IntrospectEndpointAuthTokenSupplier introspectEndpointAuthTokenSupplier,
                                           OAuth2ApiResponseConverter oAuth2ApiResponseConverter
     ) {

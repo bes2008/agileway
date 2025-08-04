@@ -5,7 +5,7 @@ import com.jn.langx.util.collection.Lists;
 
 import java.util.List;
 
-public class OAuth2Properties {
+public class OAuth2ClientProperties {
     /**
      * OAuth2 服务器的地址
      */

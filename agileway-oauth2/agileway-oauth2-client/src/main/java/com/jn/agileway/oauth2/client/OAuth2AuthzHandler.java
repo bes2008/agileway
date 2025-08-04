@@ -76,7 +76,7 @@ public class OAuth2AuthzHandler {
 
     private OAuth2CallbackUriSupplier callbackUriSupplier;
 
-    private OAuth2Properties oauth2Properties;
+    private OAuth2ClientProperties oauth2Properties;
 
     private String authorizeUriTemplate;
     private OAuth2ApiService oauth2ApiService;
@@ -103,7 +103,7 @@ public class OAuth2AuthzHandler {
     private final Map<String, OAuth2TokenCachedValue> tokenCache = new ConcurrentHashMap<>();
 
     public OAuth2AuthzHandler(
-                              OAuth2Properties oauth2Properties,
+            OAuth2ClientProperties oauth2Properties,
                               OAuth2ApiService oauth2ApiService,
                               OAuth2StateValidator oAuth2StateValidator,
                               OAuth2TokenValidator oAuth2TokenValidator,

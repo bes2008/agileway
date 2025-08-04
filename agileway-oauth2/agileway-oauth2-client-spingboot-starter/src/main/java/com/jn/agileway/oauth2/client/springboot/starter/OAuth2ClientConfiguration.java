@@ -13,11 +13,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class OAuth2ClientConfiguration {
-    private OAuth2Properties oAuth2Properties;
+    private OAuth2ClientProperties oAuth2Properties;
 
     @Autowired
     @ConfigurationProperties(prefix = "agileway.oauth2.resourceserver")
-    public void setoAuth2Properties(OAuth2Properties oAuth2Properties) {
+    public void setoAuth2Properties(OAuth2ClientProperties oAuth2Properties) {
         this.oAuth2Properties = oAuth2Properties;
     }
 
@@ -93,6 +93,7 @@ public class OAuth2ClientConfiguration {
                 introspectResultUserInfoExtractor,
                 oauth2CallbackUriSupplier);
     }
+
 
     @Bean
     public FilterRegistrationBean<OAuth2AuthzFilter> oAuth2AuthzFilterRegistrationBean(OAuth2AuthzHandler oAuth2AuthzHandler) {

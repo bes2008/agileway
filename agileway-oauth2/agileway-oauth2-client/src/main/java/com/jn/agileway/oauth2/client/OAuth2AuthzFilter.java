@@ -17,9 +17,9 @@ import java.util.Arrays;
 public class OAuth2AuthzFilter extends OncePerRequestFilter {
 
     private final OAuth2AuthzHandler oauth2AuthzHandler;
-    private final OAuth2Properties oauth2Properties;
+    private final OAuth2ClientProperties oauth2Properties;
 
-    public OAuth2AuthzFilter(OAuth2Properties oauth2Properties, OAuth2AuthzHandler oauth2AuthzHandler) {
+    public OAuth2AuthzFilter(OAuth2ClientProperties oauth2Properties, OAuth2AuthzHandler oauth2AuthzHandler) {
         this.oauth2AuthzHandler = oauth2AuthzHandler;
         this.oauth2Properties = oauth2Properties;
     }

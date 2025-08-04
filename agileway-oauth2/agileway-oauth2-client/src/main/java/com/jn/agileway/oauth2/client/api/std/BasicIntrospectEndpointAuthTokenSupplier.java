@@ -1,13 +1,13 @@
 package com.jn.agileway.oauth2.client.api.std;
 
 import com.jn.agileway.httpclient.auth.AuthorizationHeaders;
-import com.jn.agileway.oauth2.client.OAuth2Properties;
+import com.jn.agileway.oauth2.client.OAuth2ClientProperties;
 import com.jn.agileway.oauth2.client.api.IntrospectEndpointAuthTokenSupplier;
 
 public class BasicIntrospectEndpointAuthTokenSupplier implements IntrospectEndpointAuthTokenSupplier {
-    private OAuth2Properties oauth2Properties;
+    private OAuth2ClientProperties oauth2Properties;
 
-    public BasicIntrospectEndpointAuthTokenSupplier(OAuth2Properties oauth2Properties) {
+    public BasicIntrospectEndpointAuthTokenSupplier(OAuth2ClientProperties oauth2Properties) {
         this.oauth2Properties = oauth2Properties;
     }
 

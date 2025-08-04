@@ -2,7 +2,7 @@ package com.jn.agileway.oauth2.client.springboot.starter;
 
 import com.jn.agileway.httpclient.core.HttpExchanger;
 import com.jn.agileway.httpclient.declarative.DeclarativeHttpServiceProxyBuilder;
-import com.jn.agileway.oauth2.client.OAuth2Properties;
+import com.jn.agileway.oauth2.client.OAuth2ClientProperties;
 import com.jn.agileway.oauth2.client.api.IntrospectEndpointAuthTokenSupplier;
 import com.jn.agileway.oauth2.client.api.OAuth2ApiResponseConverter;
 import com.jn.agileway.oauth2.client.api.OAuth2ApiService;
@@ -22,7 +22,7 @@ public class StandardOpenIdOAuth2AutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean("httpExchanger")
-    public HttpExchanger httpExchanger(OAuth2Properties oAuth2Properties) {
+    public HttpExchanger httpExchanger(OAuth2ClientProperties oAuth2Properties) {
         HttpExchanger exchanger = new HttpExchanger();
         exchanger.init();
         return exchanger;
@@ -37,14 +37,14 @@ public class StandardOpenIdOAuth2AutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(name = "agileway.oauth2.resourceserver.standard.introspect-endpoint-auth-type", havingValue = "Basic", matchIfMissing = true)
-    public IntrospectEndpointAuthTokenSupplier introspectEndpointAuthTokenSupplier(OAuth2Properties oAuth2Properties) {
+    public IntrospectEndpointAuthTokenSupplier introspectEndpointAuthTokenSupplier(OAuth2ClientProperties oAuth2Properties) {
         return new BasicIntrospectEndpointAuthTokenSupplier(oAuth2Properties);
     }
 
     @Bean
     public OAuth2ApiService oauth2ApiService(@Qualifier("httpExchanger")
                                              HttpExchanger httpExchanger,
-                                             OAuth2Properties oAuth2Properties,
+                                             OAuth2ClientProperties oAuth2Properties,
                                              IntrospectEndpointAuthTokenSupplier introspectEndpointAuthTokenSupplier,
                                              OAuth2ApiResponseConverter apiResponsePayloadHandler) {
         Class<? extends StandardOpenIdOAuth2Api> apiInterface = oAuth2Properties.getStandard().getApiInterface();
