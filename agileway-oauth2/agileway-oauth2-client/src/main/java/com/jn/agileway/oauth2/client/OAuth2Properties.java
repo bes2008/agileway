@@ -3,7 +3,6 @@ package com.jn.agileway.oauth2.client;
 import com.jn.agileway.oauth2.client.api.std.StandardOpenOAuth2Properties;
 import com.jn.langx.util.collection.Lists;
 
-import java.time.Duration;
 import java.util.List;
 
 public class OAuth2Properties {
@@ -31,12 +30,12 @@ public class OAuth2Properties {
     private String authorizeUriEncoding = "ISO-8859-1";
 
     /**
-     * UM3rd 在OAuth2 服务器中的clientId
+     * 当前 Resource Server 在OAuth2 服务器中的clientId
      */
     private String clientId;
 
     /**
-     * UM3rd 在OAuth2 服务器中的clientSecret
+     * 当前 Resource Server 在OAuth2 服务器中的clientSecret
      */
     private String clientSecret;
 
@@ -54,16 +53,12 @@ public class OAuth2Properties {
     private boolean extractUserinfoWithIntrospectResult = true;
 
     /**
-     * Um3rd 提供的登录的uri 中的access-token参数名
+     * 当前 Resource Server 提供的登录的uri 中的access-token参数名
      */
     private String accessTokenParameterName = "access_token";
 
     private String accessTokenCookieName = "OAUTH2_ACCESS_TOKEN";
 
-    /**
-     * 访问 CAS的 API 的请求超时时间
-     */
-    private Duration readTimeout = Duration.ofSeconds(30);
     private StandardOpenOAuth2Properties standard = new StandardOpenOAuth2Properties();
 
     public String getBaseUri() {
@@ -138,14 +133,6 @@ public class OAuth2Properties {
 
     public void setStandard(StandardOpenOAuth2Properties standard) {
         this.standard = standard;
-    }
-
-    public Duration getReadTimeout() {
-        return readTimeout;
-    }
-
-    public void setReadTimeout(Duration readTimeout) {
-        this.readTimeout = readTimeout;
     }
 
     public boolean isUserinfoEndpointEnabled() {
