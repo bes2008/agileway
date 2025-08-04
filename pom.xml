@@ -242,26 +242,7 @@
                 <artifactId>agileway-feign</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
-                <artifactId>agileway-httpclient-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
-                <artifactId>agileway-httpclient-jodd</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
-                <artifactId>agileway-httpclient-okhttp</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
-                <artifactId>agileway-httpclient-httpcomponents</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+
             <dependency>
                 <groupId>io.github.bes2008.solution.agileway</groupId>
                 <artifactId>agileway-redis-springdata</artifactId>
@@ -363,6 +344,27 @@
                 <artifactId>agileway-eipchannel-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
+                <artifactId>agileway-httpclient-auth</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
+                <artifactId>agileway-httpclient-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
+                <artifactId>agileway-httpclient-okhttp</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
+                <artifactId>agileway-httpclient-httpcomponents</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>io.github.bes2008.solution.langx</groupId>
                 <artifactId>langx-java</artifactId>

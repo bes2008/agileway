@@ -1,0 +1,445 @@
+package com.jn.agileway.oauth2.authz;
+
+import com.bes.um3rd.multichannel.HttpRequestChannelExtractor;
+import com.bes.um3rd.multichannel.MultipleChannelsUriProvider;
+import com.bes.um3rd.utils.Strings;
+import com.bes.um3rd.utils.UUIDv7;
+import com.jn.agileway.oauth2.authz.api.OAuth2ApiService;
+import com.jn.agileway.oauth2.authz.exception.ExpiredAccessTokenException;
+import com.jn.agileway.oauth2.authz.exception.InvalidAccessTokenException;
+import com.jn.agileway.oauth2.authz.userinfo.*;
+import com.jn.agileway.oauth2.authz.validator.BearerAccessTokenValidator;
+import com.jn.agileway.oauth2.authz.validator.IntrospectAccessTokenValidator;
+import com.jn.agileway.oauth2.authz.validator.OAuth2StateValidator;
+import com.jn.agileway.oauth2.authz.validator.OAuth2TokenValidator;
+import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTParser;
+import jakarta.annotation.Nullable;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * <pre>
+ *      +----------+
+ *      | Resource |
+ *      |   Owner  |
+ *      |          |
+ *      +----------+
+ *           ^
+ *           |
+ *          (B)
+ *      +----|-----+          Client Identifier      +---------------+
+ *      |         -+----(A)-- & Redirection URI ---->|               |
+ *      |  User-   |                                 | Authorization |
+ *      |  Agent  -+----(B)-- User authenticates --->|     Server    |
+ *      |          |                                 |               |
+ *      |         -+----(C)-- Authorization Code ---<|               |
+ *      +-|----|---+                                 +---------------+
+ *        |    |                                         ^      v
+ *       (A)  (C)                                        |      |
+ *        |    |                                         |      |
+ *        ^    v                                         |      |
+ *      +---------+                                      |      |
+ *      |         |>---(D)-- Authorization Code ---------'      |
+ *      |  Client |          & Redirection URI                  |
+ *      |         |                                             |
+ *      |         |<---(E)----- Access Token -------------------'
+ *      +---------+       (w/ Optional Refresh Token)
+ *
+ *    Note: The lines illustrating steps (A), (B), and (C) are broken into
+ *    two parts as they pass through the user-agent.
+ *
+ *                      Figure 3: Authorization Code Flow
+ *
+ * </pre>
+ */
+@Component
+public class OAuth2AuthzHandler {
+    private static final Logger logger = LoggerFactory.getLogger(OAuth2AuthzHandler.class);
+    private static final String SESSION_KEY_OAUTH2_CODE_STATE = "oauth2_code_state";
+    /**
+     * key: oauth2_login_channel
+     * value: HttpServletRequest
+     * 用于存储引发授权的请求
+     */
+    public static final String SESSION_KEY_OAUTH2_ORIGINAL_REQUEST = "oauth2_authorize_original_request";
+    public static final String REQUEST_KEY_OAUTH2_AUTHORIZED_USER = "oauth2_authorized_userinfo";
+
+    private MultipleChannelsUriProvider multipleChannelsUriProvider;
+    private HttpRequestChannelExtractor httpRequestChannelExtractor;
+
+    private OAuth2Properties oauth2Properties;
+
+    private String authorizeUriTemplate;
+    private OAuth2ApiService oauth2ApiService;
+
+    private OAuth2StateValidator oAuth2StateValidator;
+
+    private OAuth2TokenValidator oAuth2TokenValidator;
+
+    private BearerAccessTokenValidator bearerAccessTokenValidator;
+
+    private IntrospectAccessTokenValidator introspectAccessTokenValidator;
+
+
+    private OpenIdTokenParser openIdTokenParser;
+
+    private OpenIdTokenUserinfoExtractor openIdTokenUserInfoExtractor;
+
+    private IntrospectResultUserInfoExtractor introspectResultUserInfoExtractor;
+
+    /**
+     * key: access_token
+     * value: OAuth2Token
+     */
+    private final Map<String, OAuth2TokenCachedValue> tokenCache = new ConcurrentHashMap<>();
+
+    public OAuth2AuthzHandler(MultipleChannelsUriProvider multipleChannelsUriProvider,
+                              HttpRequestChannelExtractor httpRequestChannelExtractor,
+                              OAuth2Properties oauth2Properties,
+                              OAuth2ApiService oauth2ApiService,
+                              OAuth2StateValidator oAuth2StateValidator,
+                              OAuth2TokenValidator oAuth2TokenValidator,
+                              BearerAccessTokenValidator bearerAccessTokenValidator,
+                              IntrospectAccessTokenValidator introspectAccessTokenValidator,
+                              OpenIdTokenParser openIdTokenParser,
+                              OpenIdTokenUserinfoExtractor openIdTokenUserExtractor,
+                              IntrospectResultUserInfoExtractor introspectResultUserInfoExtractor
+    ) {
+        this.multipleChannelsUriProvider = multipleChannelsUriProvider;
+        this.httpRequestChannelExtractor = httpRequestChannelExtractor;
+
+        this.oauth2Properties = oauth2Properties;
+        this.oauth2ApiService = oauth2ApiService;
+
+        this.oAuth2StateValidator = oAuth2StateValidator;
+
+        this.oAuth2TokenValidator = oAuth2TokenValidator;
+        this.bearerAccessTokenValidator = bearerAccessTokenValidator;
+        this.introspectAccessTokenValidator = introspectAccessTokenValidator;
+
+        this.openIdTokenParser = openIdTokenParser;
+
+        this.openIdTokenUserInfoExtractor = openIdTokenUserExtractor;
+        this.introspectResultUserInfoExtractor = introspectResultUserInfoExtractor;
+
+        this.authorizeUriTemplate = oauth2Properties.getBaseUri() + oauth2Properties.getAuthorizeUriTemplate();
+        logger.info("authorizeUriTemplate: {}", authorizeUriTemplate);
+    }
+
+    /**
+     * 接收授权码，并登录。
+     * 该uri 要作为 redirect_uri 注册到 oauth2 服务中
+     *
+     * @see <a href="https://www.rfc-editor.org/rfc/rfc6749#section-4.1.2">Authorization Code Response</a>
+     * @see <a href="https://www.rfc-editor.org/rfc/rfc6749#section-4.1.2.1">Error Response</a>
+     */
+    void handleAuthorizationCodeResponse(HttpServletRequest request,
+                                         HttpServletResponse response,
+                                         String state
+    ) throws IOException {
+        if (!validateState(request, response, state)) {
+            return;
+        }
+        String error = request.getParameter("error");
+        if (StringUtils.isNotBlank(error)) {
+            // OPTIONAL
+            String errorDescription = request.getParameter("error_description");
+            // OPTIONAL
+            String errorUri = request.getParameter("error_uri");
+            response.setStatus(403);
+            response.getWriter().write("error occur when got authorization code, error: " + error + " error_description: " + errorDescription + ", error_uri: " + errorUri);
+        }
+
+        String code = request.getParameter("code");
+        if (StringUtils.isNotBlank(code)) {
+            String callbackUri = buildOAuth2CallbackUri(request);
+            logger.info("built callback uri for access token request is: {}", callbackUri);
+            OAuth2Token oAuth2Token = oauth2ApiService.authorizeToken(
+                    oauth2Properties.getClientId(),
+                    oauth2Properties.getClientSecret(),
+                    code,
+                    callbackUri);
+            if (oAuth2Token == null) {
+                response.setStatus(403);
+                response.getWriter().write("Got oauth2 token by authorization_code is null");
+                return;
+            }
+            tokenCache.put(oAuth2Token.getAccessToken(), new OAuth2TokenCachedValue(oAuth2Token));
+            logger.info("Got oauth2 token by authorization_code is {}", oAuth2Token);
+            validateAccessTokenAndExtractUserInfo(request, response, oAuth2Token.getAccessToken(), false);
+
+            String originalRequest = (String) request.getSession().getAttribute(SESSION_KEY_OAUTH2_ORIGINAL_REQUEST);
+            response.addCookie(new Cookie(oauth2Properties.getAccessTokenCookieName(), oAuth2Token.getAccessToken()));
+            if (StringUtils.isNotBlank(originalRequest)) {
+                response.sendRedirect(originalRequest);
+            } else {
+                int index = callbackUri.indexOf("?");
+                if (index > 0) {
+                    callbackUri = callbackUri.substring(0, index);
+                }
+                String redirectUri = callbackUri.replace(oauth2Properties.getCallbackUri(), "/auth/oauth2/login_to_um");
+                response.sendRedirect(redirectUri);
+            }
+        } else {
+            response.setStatus(403);
+            response.getWriter().write("Got authorization code is null");
+        }
+    }
+
+    /**
+     * 在收到 Authorization Code时，要先验证 state
+     *
+     * @param state 状态码
+     * @return 返回验证结果
+     */
+    private boolean validateState(HttpServletRequest request,
+                                  HttpServletResponse response,
+                                  String state) throws IOException {
+        String stateInSession = (String) request.getSession().getAttribute(SESSION_KEY_OAUTH2_CODE_STATE);
+        request.getSession().removeAttribute(SESSION_KEY_OAUTH2_CODE_STATE); // state is only used once
+        if (oAuth2StateValidator.validate(stateInSession, state)) {
+            return true;
+        }
+        response.setStatus(403);
+        response.getWriter().write("invalid state, may be it is an CSRF attack");
+        return false;
+    }
+
+    private String createState(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+
+        String csrfToken = UUIDv7.randomUUID().toString();
+        session.setAttribute(SESSION_KEY_OAUTH2_CODE_STATE, csrfToken);
+        return csrfToken;
+    }
+
+    private void redirectToAuthorizeUri(HttpServletRequest request,
+                                        HttpServletResponse response
+    ) throws IOException {
+        String callbackUri = buildOAuth2CallbackUri(request);
+        logger.info("the callback uri was provided to oauth2 server is {}", callbackUri);
+
+
+        Map<String, Object> uriVariables = new HashMap<>();
+        uriVariables.put("client_id", oauth2Properties.getClientId());
+        uriVariables.put("state", createState(request));
+        uriVariables.put("redirect_uri", callbackUri);
+        uriVariables.put("scope", Strings.join(" ", oauth2Properties.getAuthorizeUriScopes()));
+
+        String authorizeUri = UriComponentsBuilder.fromUriString(this.authorizeUriTemplate)
+                .uriVariables(uriVariables)
+                .encode(Charset.forName(oauth2Properties.getAuthorizeUriEncoding()))
+                .build()
+                .toUriString();
+        logger.info("redirect to oauth server authorize uri: {}", authorizeUri);
+        response.sendRedirect(authorizeUri);
+    }
+
+
+    boolean validateAccessTokenAndExtractUserInfo(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            String accessToken,
+            boolean recordOriginalRequestIfUnauthorized) throws IOException {
+
+        try {
+            IntrospectResult introspectResult = validateOrRefreshAccessToken(accessToken);
+            Userinfo userInfo = getUserInfo(accessToken, introspectResult);
+            request.setAttribute(REQUEST_KEY_OAUTH2_AUTHORIZED_USER, userInfo);
+            return true;
+        } catch (InvalidAccessTokenException e) {
+            String uri = request.getRequestURI();
+            String queryString = request.getQueryString();
+            String originalRequest = uri;
+            if (StringUtils.isNotBlank(queryString)) {
+                originalRequest = uri + "?" + queryString;
+            }
+            if (recordOriginalRequestIfUnauthorized) {
+                logger.info("record original request uri: {}", originalRequest);
+                request.getSession().setAttribute(OAuth2AuthzHandler.SESSION_KEY_OAUTH2_ORIGINAL_REQUEST, originalRequest);
+            }
+            logger.info("access token is invalid, error: {}, uri: {}", e.getMessage(), originalRequest);
+            redirectToAuthorizeUri(request, response);
+            return false;
+        }
+    }
+
+    private Userinfo getUserInfo(String accessToken,
+                                 @Nullable IntrospectResult introspectResult) {
+
+        Userinfo userInfo = null;
+        if (oauth2Properties.isExtractUserinfoWithIdToken()) {
+
+            OpenIdToken idToken = null;
+            OAuth2TokenCachedValue oAuth2TokenCachedValue = tokenCache.get(accessToken);
+            OAuth2Token oAuth2Token = oAuth2TokenCachedValue == null ? null : oAuth2TokenCachedValue.getOauth2Token();
+            if (oAuth2Token != null) {
+                idToken = oAuth2Token.getIdTokenObject();
+                if (idToken == null) {
+                    String idTokenString = oAuth2Token.getIdToken();
+                    if (StringUtils.isNotBlank(idTokenString)) {
+                        try {
+                            idToken = openIdTokenParser.parse(idTokenString);
+                            oAuth2Token.setIdTokenObject(idToken);
+                        } catch (Exception e) {
+                            logger.error("parse id token error", e);
+                        }
+                    }
+                }
+            }
+
+            if (idToken != null) {
+                try {
+                    userInfo = openIdTokenUserInfoExtractor.extract(idToken);
+                    return userInfo;
+                } catch (Exception e) {
+                    logger.error("extract user info with idToken error", e);
+                }
+            }
+        }
+
+        if (oauth2Properties.isExtractUserinfoWithIntrospectResult()) {
+            if (introspectResult != null) {
+                try {
+                    userInfo = introspectResultUserInfoExtractor.extract(introspectResult);
+                    return userInfo;
+                } catch (Exception e) {
+                    logger.error("extract user info with introspectResult error", e);
+                }
+            }
+        }
+
+        userInfo = oauth2ApiService.userInfo(accessToken);
+        return userInfo;
+    }
+
+
+    /**
+     * 验证 access_token
+     * <ul>
+     *     <li>bearer类型的token，会调用 bearerAccessTokenValidator 进行验证</li>
+     *     <li>introspect类型的token，会调用 introspectAccessTokenValidator 进行验证</li>
+     * </ul>
+     *
+     * @see <a href="https://www.rfc-editor.org/rfc/rfc6749#section-7">Accessing Protected Resources</a>
+     * @see <a href="https://www.rfc-editor.org/rfc/rfc6750">Access token 格式规范</a>
+     */
+    private IntrospectResult validateOrRefreshAccessToken(String accessToken) {
+        IntrospectResult result = null;
+        try {
+            result = validateAccessTokenInternal(accessToken);
+        } catch (ExpiredAccessTokenException e) {
+            logger.warn("access-token expired, will refresh it");
+            OAuth2TokenCachedValue oAuth2TokenCachedValue = tokenCache.get(accessToken);
+            OAuth2Token oAuth2Token = oAuth2TokenCachedValue == null ? null : oAuth2TokenCachedValue.getOauth2Token();
+            String refreshToken = oAuth2Token == null ? null : oAuth2Token.getRefreshToken();
+            tokenCache.remove(accessToken);
+            if (StringUtils.isBlank(refreshToken)) {
+                logger.info("the refresh token was not found");
+                throw new ExpiredAccessTokenException("access-token expired, it's refresh token was not found");
+            }
+            logger.info("the refresh token was found, will refresh it");
+            try {
+                oAuth2Token = oauth2ApiService.refreshToken(oauth2Properties.getClientId(), oauth2Properties.getClientSecret(), refreshToken);
+            } catch (Throwable ex) {
+                logger.info("refresh token failed, will redirect to authorize uri. error: {}", ex.getMessage(), ex);
+                throw new ExpiredAccessTokenException("access-token expired, refresh failed: " + ex.getMessage());
+            }
+            tokenCache.put(oAuth2Token.getAccessToken(), new OAuth2TokenCachedValue(oAuth2Token));
+            try {
+                result = validateAccessTokenInternal(oAuth2Token.getAccessToken());
+            } catch (InvalidAccessTokenException ex2) {
+                logger.warn("validate refreshed access token failed: {}", ex2.getMessage(), ex2);
+            }
+        }
+
+        return result;
+    }
+
+
+    /**
+     * 验证access_token,
+     * 要么返回 null，要么返回 IntrospectResult
+     */
+    private IntrospectResult validateAccessTokenInternal(String accessToken) throws InvalidAccessTokenException {
+        if (StringUtils.isBlank(accessToken)) {
+            throw new InvalidAccessTokenException("access token is missing");
+        }
+        OAuth2TokenCachedValue oAuth2TokenCachedValue = tokenCache.get(accessToken);
+        OAuth2Token oAuth2Token = oAuth2TokenCachedValue == null ? null : oAuth2TokenCachedValue.getOauth2Token();
+        String tokenType = null;
+        if (oAuth2Token != null) {
+            tokenType = oAuth2Token.getTokenType();
+            oAuth2TokenValidator.validate(oAuth2TokenCachedValue);
+        } else {
+            logger.info("the oauth2 token is not found for access-token {}", accessToken);
+        }
+
+        JWT jwt = null;
+        if (StringUtils.isBlank(tokenType)) {
+            try {
+                jwt = JWTParser.parse(accessToken);
+                tokenType = "bearer";
+            } catch (ParseException e) {
+                logger.info("access token is not jwt format: {}", accessToken);
+            }
+        }
+
+        if (StringUtils.equalsIgnoreCase("bearer", tokenType)) {
+            if (jwt == null) {
+                try {
+                    jwt = JWTParser.parse(accessToken);
+                } catch (ParseException e) {
+                    throw new InvalidAccessTokenException("illegal bearer type access token, it is not jwt format");
+                }
+            }
+            bearerAccessTokenValidator.validate(jwt);
+            return null;
+        } else {
+            if (oauth2ApiService.tokenIntrospectionEndpointEnabled()) {
+                IntrospectResult introspectResult = oauth2ApiService.introspect(accessToken, "access_token");
+                introspectAccessTokenValidator.validate(introspectResult);
+                return introspectResult;
+            } else {
+                throw new IllegalStateException("validate access token failed, the access token is not a bearer token , and the token introspection is disabled or unsupported");
+            }
+        }
+    }
+
+    private String buildOAuth2CallbackUri(HttpServletRequest request) {
+        final String channel = httpRequestChannelExtractor.extractChannel(request);
+        final String path = oauth2Properties.getCallbackUri();
+        String callbackUri = path;
+
+        String um3rdClientId = oauth2Properties.getClientId();
+        if (StringUtils.startsWith(callbackUri, "http://") || StringUtils.startsWith(callbackUri, "https://")) {
+            return callbackUri;
+        }
+        if (multipleChannelsUriProvider.hasApplicationConfig(um3rdClientId)) {
+            callbackUri = multipleChannelsUriProvider.getUri(um3rdClientId, channel, path);
+        } else {
+            logger.info("the multipleChannelsUriProvider has no clientServerConfig for um3rd, will use the request's scheme, localAddr, localPort, path");
+            callbackUri = request.getScheme() + "://" + request.getLocalAddr() + ":" + request.getLocalPort()
+                    + request.getContextPath()
+                    + (StringUtils.startsWith(path, "/") ? path : ("/" + path));
+        }
+        return callbackUri;
+    }
+
+
+}

@@ -16,6 +16,7 @@
         <module>agileway-httpclient-okhttp</module>
         <module>agileway-httpclient-jdk11</module>
         <module>agileway-httpclient-soap</module>
+        <module>agileway-httpclient-auth</module>
     </modules>
 
     <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
