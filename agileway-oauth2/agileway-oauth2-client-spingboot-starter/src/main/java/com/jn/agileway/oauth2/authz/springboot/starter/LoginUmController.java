@@ -1,4 +1,4 @@
-package com.jn.agileway.oauth2.authz;
+package com.jn.agileway.oauth2.authz.springboot.starter;
 
 import com.bes.um3rd.umclient.tpauthc.TpAuthc;
 import com.jn.agileway.oauth2.authz.userinfo.Userinfo;

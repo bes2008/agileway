@@ -4,18 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>io.github.bes2008.solution.agileway</groupId>
-        <artifactId>agileway</artifactId>
+        <groupId>io.github.bes2008.solution.agileway.oauth2</groupId>
+        <artifactId>agileway-oauth2</artifactId>
         <version>5.2.1</version>
     </parent>
 
-    <groupId>io.github.bes2008.solution.agileway.oauth2</groupId>
-    <artifactId>agileway-oauth2</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>agileway-oauth2-client</module>
-        <module>agileway-oauth2-client-spingboot-starter</module>
-    </modules>
+    <artifactId>agileway-oauth2-client-spingboot-starter</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

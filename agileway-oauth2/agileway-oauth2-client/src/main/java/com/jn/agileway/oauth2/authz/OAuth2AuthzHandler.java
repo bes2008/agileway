@@ -2,8 +2,6 @@ package com.jn.agileway.oauth2.authz;
 
 import com.bes.um3rd.multichannel.HttpRequestChannelExtractor;
 import com.bes.um3rd.multichannel.MultipleChannelsUriProvider;
-import com.bes.um3rd.utils.Strings;
-import com.bes.um3rd.utils.UUIDv7;
 import com.jn.agileway.oauth2.authz.api.OAuth2ApiService;
 import com.jn.agileway.oauth2.authz.exception.ExpiredAccessTokenException;
 import com.jn.agileway.oauth2.authz.exception.InvalidAccessTokenException;
@@ -12,18 +10,18 @@ import com.jn.agileway.oauth2.authz.validator.BearerAccessTokenValidator;
 import com.jn.agileway.oauth2.authz.validator.IntrospectAccessTokenValidator;
 import com.jn.agileway.oauth2.authz.validator.OAuth2StateValidator;
 import com.jn.agileway.oauth2.authz.validator.OAuth2TokenValidator;
+import com.jn.langx.annotation.Nullable;
+import com.jn.langx.util.Strings;
+import com.jn.langx.util.id.uuidv7.UUIDv7Generator;
+import com.jn.langx.util.net.uri.component.UriComponentsBuilder;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
-import jakarta.annotation.Nullable;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -67,7 +65,6 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * </pre>
  */
-@Component
 public class OAuth2AuthzHandler {
     private static final Logger logger = LoggerFactory.getLogger(OAuth2AuthzHandler.class);
     private static final String SESSION_KEY_OAUTH2_CODE_STATE = "oauth2_code_state";
@@ -156,7 +153,7 @@ public class OAuth2AuthzHandler {
             return;
         }
         String error = request.getParameter("error");
-        if (StringUtils.isNotBlank(error)) {
+        if (Strings.isNotBlank(error)) {
             // OPTIONAL
             String errorDescription = request.getParameter("error_description");
             // OPTIONAL
@@ -166,7 +163,7 @@ public class OAuth2AuthzHandler {
         }
 
         String code = request.getParameter("code");
-        if (StringUtils.isNotBlank(code)) {
+        if (Strings.isNotBlank(code)) {
             String callbackUri = buildOAuth2CallbackUri(request);
             logger.info("built callback uri for access token request is: {}", callbackUri);
             OAuth2Token oAuth2Token = oauth2ApiService.authorizeToken(
@@ -185,7 +182,7 @@ public class OAuth2AuthzHandler {
 
             String originalRequest = (String) request.getSession().getAttribute(SESSION_KEY_OAUTH2_ORIGINAL_REQUEST);
             response.addCookie(new Cookie(oauth2Properties.getAccessTokenCookieName(), oAuth2Token.getAccessToken()));
-            if (StringUtils.isNotBlank(originalRequest)) {
+            if (Strings.isNotBlank(originalRequest)) {
                 response.sendRedirect(originalRequest);
             } else {
                 int index = callbackUri.indexOf("?");
@@ -223,7 +220,7 @@ public class OAuth2AuthzHandler {
     private String createState(HttpServletRequest request) {
         HttpSession session = request.getSession();
 
-        String csrfToken = UUIDv7.randomUUID().toString();
+        String csrfToken = new UUIDv7Generator().get();
         session.setAttribute(SESSION_KEY_OAUTH2_CODE_STATE, csrfToken);
         return csrfToken;
     }
@@ -243,7 +240,7 @@ public class OAuth2AuthzHandler {
 
         String authorizeUri = UriComponentsBuilder.fromUriString(this.authorizeUriTemplate)
                 .uriVariables(uriVariables)
-                .encode(Charset.forName(oauth2Properties.getAuthorizeUriEncoding()))
+                .enableEncode(Charset.forName(oauth2Properties.getAuthorizeUriEncoding()))
                 .build()
                 .toUriString();
         logger.info("redirect to oauth server authorize uri: {}", authorizeUri);
@@ -266,7 +263,7 @@ public class OAuth2AuthzHandler {
             String uri = request.getRequestURI();
             String queryString = request.getQueryString();
             String originalRequest = uri;
-            if (StringUtils.isNotBlank(queryString)) {
+            if (Strings.isNotBlank(queryString)) {
                 originalRequest = uri + "?" + queryString;
             }
             if (recordOriginalRequestIfUnauthorized) {
@@ -292,7 +289,7 @@ public class OAuth2AuthzHandler {
                 idToken = oAuth2Token.getIdTokenObject();
                 if (idToken == null) {
                     String idTokenString = oAuth2Token.getIdToken();
-                    if (StringUtils.isNotBlank(idTokenString)) {
+                    if (Strings.isNotBlank(idTokenString)) {
                         try {
                             idToken = openIdTokenParser.parse(idTokenString);
                             oAuth2Token.setIdTokenObject(idToken);
@@ -349,7 +346,7 @@ public class OAuth2AuthzHandler {
             OAuth2Token oAuth2Token = oAuth2TokenCachedValue == null ? null : oAuth2TokenCachedValue.getOauth2Token();
             String refreshToken = oAuth2Token == null ? null : oAuth2Token.getRefreshToken();
             tokenCache.remove(accessToken);
-            if (StringUtils.isBlank(refreshToken)) {
+            if (Strings.isBlank(refreshToken)) {
                 logger.info("the refresh token was not found");
                 throw new ExpiredAccessTokenException("access-token expired, it's refresh token was not found");
             }
@@ -377,7 +374,7 @@ public class OAuth2AuthzHandler {
      * 要么返回 null，要么返回 IntrospectResult
      */
     private IntrospectResult validateAccessTokenInternal(String accessToken) throws InvalidAccessTokenException {
-        if (StringUtils.isBlank(accessToken)) {
+        if (Strings.isBlank(accessToken)) {
             throw new InvalidAccessTokenException("access token is missing");
         }
         OAuth2TokenCachedValue oAuth2TokenCachedValue = tokenCache.get(accessToken);
@@ -391,7 +388,7 @@ public class OAuth2AuthzHandler {
         }
 
         JWT jwt = null;
-        if (StringUtils.isBlank(tokenType)) {
+        if (Strings.isBlank(tokenType)) {
             try {
                 jwt = JWTParser.parse(accessToken);
                 tokenType = "bearer";
@@ -400,7 +397,7 @@ public class OAuth2AuthzHandler {
             }
         }
 
-        if (StringUtils.equalsIgnoreCase("bearer", tokenType)) {
+        if (Strings.equalsIgnoreCase("bearer", tokenType)) {
             if (jwt == null) {
                 try {
                     jwt = JWTParser.parse(accessToken);
@@ -427,7 +424,7 @@ public class OAuth2AuthzHandler {
         String callbackUri = path;
 
         String um3rdClientId = oauth2Properties.getClientId();
-        if (StringUtils.startsWith(callbackUri, "http://") || StringUtils.startsWith(callbackUri, "https://")) {
+        if (Strings.startsWith(callbackUri, "http://") || Strings.startsWith(callbackUri, "https://")) {
             return callbackUri;
         }
         if (multipleChannelsUriProvider.hasApplicationConfig(um3rdClientId)) {
@@ -436,7 +433,7 @@ public class OAuth2AuthzHandler {
             logger.info("the multipleChannelsUriProvider has no clientServerConfig for um3rd, will use the request's scheme, localAddr, localPort, path");
             callbackUri = request.getScheme() + "://" + request.getLocalAddr() + ":" + request.getLocalPort()
                     + request.getContextPath()
-                    + (StringUtils.startsWith(path, "/") ? path : ("/" + path));
+                    + (Strings.startsWith(path, "/") ? path : ("/" + path));
         }
         return callbackUri;
     }

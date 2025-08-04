@@ -1,7 +1,5 @@
-package com.jn.agileway.oauth2.authz;
+package com.jn.agileway.oauth2.authz.springboot.starter;
 
-import com.jn.agileway.oauth2.authz.userinfo.*;
-import com.jn.agileway.oauth2.authz.validator.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
