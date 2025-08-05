@@ -13,6 +13,7 @@ import com.jn.agileway.oauth2.client.api.OAuth2ApiService;
 import com.jn.agileway.oauth2.client.exception.InvalidAccessTokenException;
 import com.jn.agileway.oauth2.client.exception.OAuth2Exception;
 import com.jn.agileway.oauth2.client.userinfo.OpenIdUserinfo;
+import com.jn.easyjson.core.util.JSONs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +51,7 @@ public class StandardOpenIdOAuth2ApiService implements OAuth2ApiService {
                     redirectUri,
                     clientId
             );
-            logger.info("Get OAuth2 token : {}", result);
+            logger.info("Get OAuth2 token : {}", JSONs.toJson(result.getPayload()));
             return this.oAuth2ApiResponseConverter.convertAuthorizationCodeTokenResponse(result);
         } catch (UnauthorizedException e) {
             throw new InvalidAccessTokenException("Get OAuth2 token failed, unauthorized, check your clientId, clientSecret", e);
@@ -67,7 +68,7 @@ public class StandardOpenIdOAuth2ApiService implements OAuth2ApiService {
                     GrantType.REFRESH_TOKEN.getName(),
                     refreshToken,
                     clientId);
-            logger.info("Refreshed OAuth2 token: {}", result);
+            logger.info("Refreshed OAuth2 token: {}", JSONs.toJson(result.getPayload()));
             return this.oAuth2ApiResponseConverter.convertRefreshTokenResponse(result);
         } catch (UnauthorizedException e) {
             throw new InvalidAccessTokenException("invalid access token", e);
