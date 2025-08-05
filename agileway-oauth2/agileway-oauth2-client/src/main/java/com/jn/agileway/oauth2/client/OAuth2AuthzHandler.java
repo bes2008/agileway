@@ -182,11 +182,18 @@ public class OAuth2AuthzHandler {
             if (Strings.isNotBlank(originalRequest)) {
                 response.sendRedirect(originalRequest);
             } else {
+                String homeUri = oauth2Properties.getHomeUri();
+                if (Strings.isBlank(homeUri)) {
+                    homeUri = "/";
+                }
+                if (Strings.startsWith(homeUri, "http://") || Strings.startsWith(homeUri, "https://")) {
+                    response.sendRedirect(homeUri);
+                }
                 int index = callbackUri.indexOf("?");
                 if (index > 0) {
                     callbackUri = callbackUri.substring(0, index);
                 }
-                String redirectUri = callbackUri.replace(oauth2Properties.getCallbackUri(), "/auth/oauth2/login_to_um");
+                String redirectUri = callbackUri.replace(oauth2Properties.getCallbackUri(), homeUri);
                 response.sendRedirect(redirectUri);
             }
         } else {

@@ -1,12 +1,8 @@
 package com.jn.agileway.oauth2.client;
 
 import com.jn.agileway.httpclient.auth.AuthorizationHeaders;
-import com.jn.agileway.web.filter.OncePerRequestFilter;
 import com.jn.langx.util.Strings;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
+import jakarta.servlet.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,7 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class OAuth2AuthzFilter extends OncePerRequestFilter {
+public class OAuth2AuthzFilter implements Filter {
 
     private final OAuth2AuthzHandler oauth2AuthzHandler;
     private final OAuth2ClientProperties oauth2Properties;
@@ -25,7 +21,7 @@ public class OAuth2AuthzFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(ServletRequest httpRequest, ServletResponse httpResponse, FilterChain filterChain) throws ServletException, IOException {
+    public void doFilter(ServletRequest httpRequest, ServletResponse httpResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) httpRequest;
         HttpServletResponse response = (HttpServletResponse) httpResponse;
         if (isCallbackUri(request)) {

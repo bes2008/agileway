@@ -27,12 +27,13 @@
             <artifactId>agileway-httpclient-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.github.bes2008.solution.agileway</groupId>
-            <artifactId>agileway-web-jakarta</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.github.bes2008.solution.agileway.jwt</groupId>
             <artifactId>agileway-jwt-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${jakarta.servlet.version}</version>
         </dependency>
     </dependencies>
 

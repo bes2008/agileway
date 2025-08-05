@@ -44,6 +44,11 @@ public class OAuth2ClientProperties {
      */
     private String callbackUri = "/auth/oauth2/callback";
 
+    /**
+     * 当前  Resource Server 的 home uri，在登录OAuth2 授权成功后，默认会跳转到这个 uri。
+     */
+    private String homeUri = "/";
+
 
     private boolean userinfoEndpointEnabled = true;
     private boolean introspectEndpointEnabled = true;
@@ -183,6 +188,14 @@ public class OAuth2ClientProperties {
 
     public void setExtractUserinfoWithIntrospectResult(boolean extractUserinfoWithIntrospectResult) {
         this.extractUserinfoWithIntrospectResult = extractUserinfoWithIntrospectResult;
+    }
+
+    public String getHomeUri() {
+        return homeUri;
+    }
+
+    public void setHomeUri(String homeUri) {
+        this.homeUri = homeUri;
     }
 
     public static class FilterConfig {
