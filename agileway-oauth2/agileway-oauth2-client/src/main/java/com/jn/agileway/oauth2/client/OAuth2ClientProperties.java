@@ -40,7 +40,7 @@ public class OAuth2ClientProperties {
     private String clientSecret;
 
     /**
-     * 获取授权码的回调地址，它是um3rd提供的endpoint，需要注册在oauth2 服务器中
+     * 获取授权码的回调地址，它是 Resource Server 的提供的endpoint，需要注册在oauth2 服务器中
      */
     private String callbackUri = "/auth/oauth2/callback";
 
