@@ -6,6 +6,7 @@ import com.jn.agileway.httpclient.core.underlying.AbstractUnderlyingHttpExecutor
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.ContentEncoding;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
+import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.http.HttpHeaders;
@@ -41,18 +42,22 @@ public class OkHttp3UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecuto
         String rawContentType = request.getHttpHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
         okhttp3.MediaType contentType = Strings.isNotEmpty(rawContentType) ? okhttp3.MediaType.parse(rawContentType) : null;
         RequestBody body = null;
-        if (HttpClientUtils.isWriteableMethod(method) && request.getPayload() != null) {
-            // 压缩处理：
-            List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
-            if (!Objs.isEmpty(contentEncodings)) {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream(request.getPayload().size() / 3);
-                OutputStream out = HttpClientUtils.wrapByContentEncodings(baos, contentEncodings);
-                out.write(request.getPayload().toByteArray());
-                out.flush();
-                body = RequestBody.create(contentType, baos.toByteArray());
-                out.close();
+        if (HttpClientUtils.isWriteableMethod(method)) {
+            if (request.getPayload() != null) {
+                // 压缩处理：
+                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
+                if (!Objs.isEmpty(contentEncodings)) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream(request.getPayload().size() / 3);
+                    OutputStream out = HttpClientUtils.wrapByContentEncodings(baos, contentEncodings);
+                    out.write(request.getPayload().toByteArray());
+                    out.flush();
+                    body = RequestBody.create(contentType, baos.toByteArray());
+                    out.close();
+                } else {
+                    body = RequestBody.create(contentType, request.getPayload().toByteArray());
+                }
             } else {
-                body = RequestBody.create(contentType, request.getPayload().toByteArray());
+                body = RequestBody.create(contentType, Emptys.EMPTY_BYTES);
             }
         }
 
@@ -68,8 +73,12 @@ public class OkHttp3UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecuto
         String rawContentType = request.getHttpHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
         okhttp3.MediaType contentType = Strings.isNotEmpty(rawContentType) ? okhttp3.MediaType.parse(rawContentType) : null;
         RequestBody body = null;
-        if (HttpClientUtils.isWriteableMethod(method) && request.getPayload() != null) {
-            body = new HttpRequestAttachmentPayload(request, payloadWriter, contentType);
+        if (HttpClientUtils.isWriteableMethod(method)) {
+            if (request.getPayload() != null) {
+                body = new HttpRequestAttachmentPayload(request, payloadWriter, contentType);
+            } else {
+                body = RequestBody.create(contentType, Emptys.EMPTY_BYTES);
+            }
         }
 
         Request.Builder builder = new Request.Builder().url(request.getUri().toURL()).method(method.name(), body);
