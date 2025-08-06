@@ -63,7 +63,7 @@ public class StandardOpenIdOAuth2ApiResponseConverter implements OAuth2ApiRespon
 
         if (response.getStatusCode() >= 400) {
             if (!payload.containsKey("error")) {
-                throw new OAuth2Exception("Illegal" + (refresh ? "get" : "refresh") + "OAuth2 token error response, `error` field is missing");
+                throw new OAuth2Exception("Illegal" + (refresh ? "refresh" : "get") + "OAuth2 token error response, `error` field is missing");
             }
             String error = payload.get("error").toString();
             String error_description = payload.containsKey("error_description") ? payload.get("error_description").toString() : null;
@@ -72,7 +72,7 @@ public class StandardOpenIdOAuth2ApiResponseConverter implements OAuth2ApiRespon
             OAuth2ErrorResponseException exception = new OAuth2ErrorResponseException("Got access-token failed", error, error_description, error_uri);
             throw exception;
         }
-        throw new RuntimeException("Error occur when " + (refresh ? "get" : "refresh") + " OAuth2 token: status-code" + response.getStatusCode() + ", error: " + response.getPayload());
+        throw new RuntimeException("Error occur when " + (refresh ? "refresh" : "get") + " OAuth2 token: status-code" + response.getStatusCode() + ", error: " + response.getPayload());
     }
 
     private static final Set<String> STANDARD_INTROSPECT_RESPONSE_FIELDS = new HashSet<>(Arrays.asList(
