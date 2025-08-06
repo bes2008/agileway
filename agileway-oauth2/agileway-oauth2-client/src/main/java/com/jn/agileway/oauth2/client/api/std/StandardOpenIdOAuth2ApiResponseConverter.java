@@ -46,7 +46,7 @@ public class StandardOpenIdOAuth2ApiResponseConverter implements OAuth2ApiRespon
             oAuth2Token.setAccessToken(payload.get("access_token").toString());
             oAuth2Token.setTokenType(payload.get("token_type").toString());
             if (payload.containsKey("expires_in")) {
-                oAuth2Token.setExpiresIn(Double.valueOf(payload.get("expires_in").toString()).longValue());
+                oAuth2Token.setExpiresIn(Long.parseLong(payload.get("expires_in").toString()));
             }
             if (payload.containsKey("refresh_token")) {
                 oAuth2Token.setRefreshToken(payload.get("refresh_token").toString());
