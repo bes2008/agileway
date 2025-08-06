@@ -8,6 +8,7 @@ import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.function.Supplier0;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.spi.CommonServiceProvider;
 
 import java.util.LinkedHashMap;
@@ -52,6 +53,7 @@ public class UnderlyingHttpExecutorBuilderSupplier extends AbstractInitializable
         if (Strings.isBlank(name)) {
             name = Pipeline.of(builders.keySet()).findFirst();
         }
+        Loggers.info(this.getClass(), "use underlying http executor builder: {}", name);
         return builders.get(name);
     }
 }
