@@ -7,7 +7,6 @@ import com.jn.langx.util.concurrent.promise.Promise;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.reflect.signature.TypeSignatures;
-import com.jn.langx.util.reflect.type.ParameterizedTypeImpl;
 import com.jn.langx.util.valuegetter.ArrayValueGetter;
 
 import java.lang.reflect.Method;
@@ -125,12 +124,7 @@ public class HttpExchangeMethod {
     }
 
     public void setExpectedResponseType(Type expectedResponseType) {
-        if (expectedResponseType instanceof ParameterizedType) {
-            ParameterizedType prt = (ParameterizedType) expectedResponseType;
-            this.expectedResponseType = new ParameterizedTypeImpl(prt.getOwnerType(), prt.getRawType(), prt.getActualTypeArguments());
-        } else {
-            this.expectedResponseType = expectedResponseType;
-        }
+        this.expectedResponseType = expectedResponseType;
     }
 
     public void checkValid() throws HttpExchangeMethodDeclaringException {
