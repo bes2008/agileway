@@ -1018,7 +1018,7 @@
                         <configuration>
                             <publishingServerId>central</publishingServerId>
                             <autoPublish>true</autoPublish>
-                            <deploymentName>${project.name}</deploymentName>
+                            <deploymentName>agileway-${project.version}</deploymentName>
                             <failOnBuildFailure>true</failOnBuildFailure>
                         </configuration>
                     </plugin>
