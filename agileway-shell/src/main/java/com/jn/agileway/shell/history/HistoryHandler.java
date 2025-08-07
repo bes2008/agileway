@@ -36,6 +36,7 @@ public final class HistoryHandler extends AbstractInitializable {
         Preconditions.checkNotNull(file);
         this.file = file;
         this.records = new BoundedQueue<Record>(maxRecords, true, true);
+        this.transformer = Preconditions.checkNotNull(transformer);
     }
 
     @Override
