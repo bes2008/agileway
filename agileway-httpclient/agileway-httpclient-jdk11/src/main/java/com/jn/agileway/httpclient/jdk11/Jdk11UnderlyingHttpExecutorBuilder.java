@@ -3,6 +3,7 @@ package com.jn.agileway.httpclient.jdk11;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutorBuilder;
 import com.jn.langx.security.ssl.SSLContextBuilder;
+import com.jn.langx.util.timing.TimeDuration;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -95,7 +96,7 @@ public class Jdk11UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecuto
         httpExecutor.setHttpClient(httpClient);
 
         int timeoutMills = this.connectTimeoutMills + this.readTimeoutMills * 3;
-        httpExecutor.setTimeout(Duration.ofMillis(timeoutMills));
+        httpExecutor.setTimeout(TimeDuration.ofMillis(timeoutMills));
         return httpExecutor;
     }
 }
