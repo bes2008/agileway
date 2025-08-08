@@ -10,7 +10,7 @@ import java.util.Collection;
 
 public abstract class AbstractUnderlyingHttpExecutor<UnderlyingRequest> implements UnderlyingHttpExecutor<UnderlyingRequest> {
 
-    protected final void writeHeaders(HttpRequest<?> request, UnderlyingRequest underlyingRequest) {
+    protected final void completeHeaders(HttpRequest<?> request, UnderlyingRequest underlyingRequest) {
         HttpMethod method = request.getMethod();
         HttpHeaders headers = request.getHttpHeaders();
         if (HttpClientUtils.requestBodyUseStreamMode(method, headers)) {

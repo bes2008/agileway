@@ -62,7 +62,7 @@ public class OkHttp3UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecuto
         }
 
         Request.Builder builder = new Request.Builder().url(request.getUri().toURL()).method(method.name(), body);
-        writeHeaders(request, builder);
+        completeHeaders(request, builder);
         Request underlyingRequest = builder.build();
         return new OkHttp3UnderlyingHttpResponse(method, request.getUri(), this.httpClient.newCall(underlyingRequest).execute());
     }
@@ -82,7 +82,7 @@ public class OkHttp3UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecuto
         }
 
         Request.Builder builder = new Request.Builder().url(request.getUri().toURL()).method(method.name(), body);
-        writeHeaders(request, builder);
+        completeHeaders(request, builder);
         Request underlyingRequest = builder.build();
         return new OkHttp3UnderlyingHttpResponse(method, request.getUri(), this.httpClient.newCall(underlyingRequest).execute());
     }

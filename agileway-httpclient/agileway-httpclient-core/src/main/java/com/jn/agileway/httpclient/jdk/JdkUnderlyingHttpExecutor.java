@@ -75,7 +75,7 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
         HttpURLConnection httpConnection = createHttpUrlConnection(method, uri);
 
         // buffered 模式
-        writeHeaders(request, httpConnection);
+        completeHeaders(request, httpConnection);
         httpConnection.connect();
         if (httpConnection.getDoOutput() && request.getPayload() != null) {
             OutputStream outputStream = httpConnection.getOutputStream();
@@ -95,7 +95,7 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
         HttpMethod method = request.getMethod();
         HttpURLConnection httpConnection = createHttpUrlConnection(method, uri);
         httpConnection.setChunkedStreamingMode(4096);
-        writeHeaders(request, httpConnection);
+        completeHeaders(request, httpConnection);
         httpConnection.connect();
         OutputStream outputStream = httpConnection.getOutputStream();
 

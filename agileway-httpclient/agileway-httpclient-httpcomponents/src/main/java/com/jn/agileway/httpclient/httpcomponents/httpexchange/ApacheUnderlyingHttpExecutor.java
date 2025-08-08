@@ -47,7 +47,7 @@ public class ApacheUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor
     public UnderlyingHttpResponse executeBufferedRequest(HttpRequest<ByteArrayOutputStream> request) throws Exception {
         HttpUriRequest underlyingRequest = createHttpUriRequest(request.getMethod(), request.getUri());
 
-        writeHeaders(request, underlyingRequest);
+        completeHeaders(request, underlyingRequest);
         HttpEntity contentEntity = null;
         if (HttpClientUtils.isWriteableMethod(request.getMethod()) && request.getPayload() != null) {
             String contentEncoding = request.getHttpHeaders().getFirst("Content-Encoding");
@@ -72,7 +72,7 @@ public class ApacheUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor
     public UnderlyingHttpResponse executeAttachmentUploadRequest(HttpRequest<?> request, HttpRequestPayloadWriter payloadWriter) throws Exception {
         HttpUriRequest underlyingRequest = createHttpUriRequest(request.getMethod(), request.getUri());
 
-        writeHeaders(request, underlyingRequest);
+        completeHeaders(request, underlyingRequest);
         HttpEntity contentEntity = null;
         if (HttpClientUtils.isWriteableMethod(request.getMethod()) && request.getPayload() != null) {
             contentEntity = new HttpRequestAttachmentHttpEntity(request, payloadWriter, request.getHttpHeaders().getContentType().toString());
