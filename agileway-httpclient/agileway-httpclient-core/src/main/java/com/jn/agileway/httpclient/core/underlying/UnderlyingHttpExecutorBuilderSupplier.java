@@ -39,7 +39,7 @@ public class UnderlyingHttpExecutorBuilderSupplier extends AbstractInitializable
                 });
     }
 
-    private static final List<String> recommendedBuilderNames = Lists.newArrayList("apache-httpcomponents", "okhttp3", "jdk11");
+    private static final List<String> recommendedBuilderNames = Lists.newArrayList("jetty", "apache-httpcomponents", "okhttp3", "jdk11");
 
     @Override
     public UnderlyingHttpExecutorBuilder get() {
