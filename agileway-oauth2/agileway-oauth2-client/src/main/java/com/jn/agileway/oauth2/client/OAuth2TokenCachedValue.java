@@ -4,9 +4,6 @@ public class OAuth2TokenCachedValue {
     private OAuth2Token oauth2Token;
     private long createdTime;
 
-    public OAuth2TokenCachedValue() {
-
-    }
 
     public OAuth2TokenCachedValue(OAuth2Token oauth2Token) {
         this.oauth2Token = oauth2Token;
