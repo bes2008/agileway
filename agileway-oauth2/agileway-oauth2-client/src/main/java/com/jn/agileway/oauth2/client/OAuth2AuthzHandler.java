@@ -208,7 +208,11 @@ public class OAuth2AuthzHandler {
         if (index > 0) {
             callbackUriOfResourceServer = callbackUriOfResourceServer.substring(0, index);
         }
-        // redirect to home page
+
+        String callbackPath = oauth2Properties.getCallbackUri();
+        if (Strings.startsWith(callbackPath, "http://") || Strings.startsWith(callbackPath, "https://")) {
+            return redirectUri;
+        }
         redirectUri = callbackUriOfResourceServer.replace(oauth2Properties.getCallbackUri(), redirectUri);
         return redirectUri;
     }
