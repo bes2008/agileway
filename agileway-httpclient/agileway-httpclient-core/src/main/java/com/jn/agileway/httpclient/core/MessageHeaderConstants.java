@@ -38,6 +38,10 @@ public class MessageHeaderConstants {
      */
     public static final String REQUEST_KEY_ATTACHMENT_UPLOAD_TEXT_COMPRESS_DISABLED = REQUEST_HEADER_KEY_PREFIX + "attachment_update_text_compress_disabled";
 
+    /**
+     * 从发起请求到收到响应的时间
+     */
+    public static final String REQUEST_KEY_TIMEOUT = REQUEST_HEADER_KEY_PREFIX + "timeout";
 
     //*********************************************************************************************************
 

@@ -1,6 +1,7 @@
 package com.jn.agileway.httpclient.jdk;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
+import com.jn.agileway.httpclient.core.MessageHeaderConstants;
 import com.jn.agileway.httpclient.core.error.exception.UnsupportedHttpMethodException;
 import com.jn.agileway.httpclient.core.payload.HttpRequestPayloadWriter;
 import com.jn.agileway.httpclient.core.underlying.AbstractUnderlyingHttpExecutor;
@@ -8,6 +9,7 @@ import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.ContentEncoding;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.net.http.HttpMethod;
+import com.jn.langx.util.timing.TimeDuration;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -25,11 +27,11 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
     /**
      * 创建http连接的超时时间
      */
-    protected int connectTimeoutMills;
+    private int connectTimeoutMills;
     /**
      * 从http连接中读取数据的超时时间
      */
-    protected int readTimeoutMills;
+    private TimeDuration timeout = TimeDuration.ofMinutes(2);
 
     private SSLContext sslContext;
 
@@ -43,7 +45,7 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
     }
 
     public void setReadTimeoutMills(int readTimeoutMills) {
-        this.readTimeoutMills = readTimeoutMills;
+        this.timeout = TimeDuration.ofMillis(readTimeoutMills);
     }
 
     public void setSSLContext(SSLContext sslContext) {
@@ -74,6 +76,14 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
         HttpMethod method = request.getMethod();
         HttpURLConnection httpConnection = createHttpUrlConnection(method, uri);
 
+        TimeDuration requestTimeout = request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_TIMEOUT, TimeDuration.class);
+        if (requestTimeout == null) {
+            requestTimeout = this.timeout;
+        }
+        if (requestTimeout != null) {
+            httpConnection.setReadTimeout((int) requestTimeout.toMillis());
+        }
+
         // buffered 模式
         completeHeaders(request, httpConnection);
         httpConnection.connect();
@@ -96,6 +106,17 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
         HttpURLConnection httpConnection = createHttpUrlConnection(method, uri);
         httpConnection.setChunkedStreamingMode(4096);
         completeHeaders(request, httpConnection);
+
+
+        TimeDuration requestTimeout = request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_TIMEOUT, TimeDuration.class);
+        if (requestTimeout == null) {
+            requestTimeout = this.timeout;
+        }
+        if (requestTimeout != null) {
+            httpConnection.setReadTimeout((int) requestTimeout.toMillis());
+        }
+
+
         httpConnection.connect();
         OutputStream outputStream = httpConnection.getOutputStream();
 
@@ -118,9 +139,6 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
         HttpURLConnection httpConn = (HttpURLConnection) connection;
         if (this.connectTimeoutMills >= 0) {
             httpConn.setConnectTimeout(this.connectTimeoutMills);
-        }
-        if (this.readTimeoutMills >= 0) {
-            httpConn.setReadTimeout(this.readTimeoutMills);
         }
         // 需要注意的是， JDK http client ，不支持 PATCH方法
         httpConn.setRequestMethod(method.name());

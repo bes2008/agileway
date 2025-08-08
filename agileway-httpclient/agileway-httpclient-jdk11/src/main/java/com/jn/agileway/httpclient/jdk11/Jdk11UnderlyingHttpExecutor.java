@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.jdk11;
 
+import com.jn.agileway.httpclient.core.MessageHeaderConstants;
 import com.jn.agileway.httpclient.core.payload.HttpRequestPayloadWriter;
 import com.jn.agileway.httpclient.core.underlying.AbstractUnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
@@ -12,6 +13,7 @@ import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
+import com.jn.langx.util.timing.TimeDuration;
 
 import java.io.*;
 import java.net.URI;
@@ -22,13 +24,13 @@ import java.util.List;
 
 public class Jdk11UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<HttpRequest.Builder> {
     private HttpClient httpClient;
-    private Duration timeout = Duration.ofMinutes(2);
+    private TimeDuration timeout = TimeDuration.ofMinutes(2);
 
     public void setHttpClient(HttpClient httpClient) {
         this.httpClient = httpClient;
     }
 
-    public void setTimeout(Duration timeout) {
+    public void setTimeout(TimeDuration timeout) {
         this.timeout = timeout;
     }
 
@@ -77,7 +79,12 @@ public class Jdk11UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
         } else {
             builder.method(method.name(), HttpRequest.BodyPublishers.noBody());
         }
-        builder.timeout(timeout == null ? Duration.ofSeconds(60) : timeout);
+
+        TimeDuration requestTimeout = request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_TIMEOUT, TimeDuration.class);
+        if (requestTimeout == null) {
+            requestTimeout = this.timeout;
+        }
+        builder.timeout(Duration.ofMillis(requestTimeout.toMillis()));
         HttpRequest underlyingRequest = builder.build();
 
         java.net.http.HttpResponse<byte[]> underlyingHttpResponse = null;
@@ -124,7 +131,12 @@ public class Jdk11UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
         } else {
             builder.method(method.name(), HttpRequest.BodyPublishers.noBody());
         }
-        builder.timeout(timeout == null ? Duration.ofSeconds(60) : timeout);
+
+        TimeDuration requestTimeout = request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_TIMEOUT, TimeDuration.class);
+        if (requestTimeout == null) {
+            requestTimeout = this.timeout;
+        }
+        builder.timeout(Duration.ofMillis(requestTimeout.toMillis()));
         HttpRequest underlyingRequest = builder.build();
 
         java.net.http.HttpResponse<byte[]> underlyingHttpResponse = null;
