@@ -24,7 +24,7 @@ public class HttpRequestPayloadTransformer implements MessageTransformer {
     public Message<?> transform(Message<?> message) {
         HttpRequest request = (HttpRequest) message;
 
-        if (HttpClientUtils.isWriteableMethod(request.getMethod()) && request.getPayload() != null) {
+        if (HttpClientUtils.isSupportContentMethod(request.getMethod()) && request.getPayload() != null) {
 
             HttpRequestPayloadWriter requestBodyWriter = Pipeline.of(writers)
                     .findFirst(new Predicate<HttpRequestPayloadWriter>() {

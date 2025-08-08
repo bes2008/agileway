@@ -127,7 +127,7 @@ public class JdkUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<Ht
 
         httpConn.setDoInput(true);
         httpConn.setInstanceFollowRedirects(method == HttpMethod.GET);
-        httpConn.setDoOutput(HttpClientUtils.isWriteableMethod(method));
+        httpConn.setDoOutput(HttpClientUtils.isSupportContentMethod(method));
 
         if (HttpClientUtils.isSSLEnabled(uri)) {
             HttpsURLConnection httpsConn = (HttpsURLConnection) httpConn;

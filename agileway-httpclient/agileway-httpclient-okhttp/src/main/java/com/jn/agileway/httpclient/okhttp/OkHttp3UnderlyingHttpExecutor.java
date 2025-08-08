@@ -42,7 +42,7 @@ public class OkHttp3UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecuto
         String rawContentType = request.getHttpHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
         okhttp3.MediaType contentType = Strings.isNotEmpty(rawContentType) ? okhttp3.MediaType.parse(rawContentType) : null;
         RequestBody body = null;
-        if (HttpClientUtils.isWriteableMethod(method)) {
+        if (HttpClientUtils.isSupportContentMethod(method)) {
             if (request.getPayload() != null) {
                 // 压缩处理：
                 List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
@@ -73,7 +73,7 @@ public class OkHttp3UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecuto
         String rawContentType = request.getHttpHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
         okhttp3.MediaType contentType = Strings.isNotEmpty(rawContentType) ? okhttp3.MediaType.parse(rawContentType) : null;
         RequestBody body = null;
-        if (HttpClientUtils.isWriteableMethod(method)) {
+        if (HttpClientUtils.isSupportContentMethod(method)) {
             if (request.getPayload() != null) {
                 body = new HttpRequestAttachmentPayload(request, payloadWriter, contentType);
             } else {

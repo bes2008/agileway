@@ -16,7 +16,7 @@ public abstract class AbstractUnderlyingHttpExecutor<UnderlyingRequest> implemen
         if (HttpClientUtils.requestBodyUseStreamMode(method, headers)) {
             request.getHttpHeaders().remove(HttpHeaders.CONTENT_LENGTH);
         }
-        if (!HttpClientUtils.isWriteableMethod(method)) {
+        if (!HttpClientUtils.isSupportContentMethod(method)) {
             request.getHttpHeaders().remove(HttpHeaders.CONTENT_TYPE);
         }
         if (method.equals(HttpMethod.PUT) || method.equals(HttpMethod.DELETE)) {

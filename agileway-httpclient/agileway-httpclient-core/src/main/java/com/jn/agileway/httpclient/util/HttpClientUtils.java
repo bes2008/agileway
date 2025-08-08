@@ -126,7 +126,7 @@ public class HttpClientUtils {
         return false;
     }
 
-    public static boolean isWriteableMethod(HttpMethod method) {
+    public static boolean isSupportContentMethod(HttpMethod method) {
         return method != HttpMethod.GET && method != HttpMethod.HEAD;
     }
 

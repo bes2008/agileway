@@ -49,7 +49,7 @@ public class ApacheUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor
 
         completeHeaders(request, underlyingRequest);
         HttpEntity contentEntity = null;
-        if (HttpClientUtils.isWriteableMethod(request.getMethod()) && request.getPayload() != null) {
+        if (HttpClientUtils.isSupportContentMethod(request.getMethod()) && request.getPayload() != null) {
             String contentEncoding = request.getHttpHeaders().getFirst("Content-Encoding");
             if (Strings.isBlank(contentEncoding)) {
                 MediaType contentType = request.getHttpHeaders().getContentType();
@@ -74,7 +74,7 @@ public class ApacheUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor
 
         completeHeaders(request, underlyingRequest);
         HttpEntity contentEntity = null;
-        if (HttpClientUtils.isWriteableMethod(request.getMethod()) && request.getPayload() != null) {
+        if (HttpClientUtils.isSupportContentMethod(request.getMethod()) && request.getPayload() != null) {
             contentEntity = new HttpRequestAttachmentHttpEntity(request, payloadWriter, request.getHttpHeaders().getContentType().toString());
         }
 
