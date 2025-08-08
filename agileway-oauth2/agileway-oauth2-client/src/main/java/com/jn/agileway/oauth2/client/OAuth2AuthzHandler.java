@@ -177,29 +177,40 @@ public class OAuth2AuthzHandler {
             logger.info("Got oauth2 token by authorization_code is {}", oAuth2Token);
             validateAccessTokenAndExtractUserInfo(request, response, oAuth2Token.getAccessToken(), false);
 
-            String originalRequest = (String) request.getSession().getAttribute(SESSION_KEY_OAUTH2_ORIGINAL_REQUEST);
             response.addCookie(new Cookie(oauth2Properties.getAccessTokenCookieName(), oAuth2Token.getAccessToken()));
-            if (Strings.isNotBlank(originalRequest)) {
-                response.sendRedirect(originalRequest);
-            } else {
-                String homeUri = oauth2Properties.getHomeUri();
-                if (Strings.isBlank(homeUri)) {
-                    homeUri = "/";
-                }
-                if (Strings.startsWith(homeUri, "http://") || Strings.startsWith(homeUri, "https://")) {
-                    response.sendRedirect(homeUri);
-                }
-                int index = callbackUri.indexOf("?");
-                if (index > 0) {
-                    callbackUri = callbackUri.substring(0, index);
-                }
-                String redirectUri = callbackUri.replace(oauth2Properties.getCallbackUri(), homeUri);
-                response.sendRedirect(redirectUri);
-            }
+
+            String redirectUri = getRedirectUriAfterAuthorized(request, callbackUri);
+            response.sendRedirect(redirectUri);
         } else {
             response.setStatus(403);
             response.getWriter().write("Got authorization code is null");
         }
+    }
+
+    private String getRedirectUriAfterAuthorized(HttpServletRequest request, String callbackUriOfResourceServer) {
+        // 优先取 /oauth2/callback?redirect_uri 参数
+        String redirectUri = request.getParameter("redirect_uri");
+        if (Strings.isBlank(redirectUri)) {
+            // 从 session 中获取
+            redirectUri = (String) request.getSession().getAttribute(SESSION_KEY_OAUTH2_ORIGINAL_REQUEST);
+        }
+        if (Strings.isBlank(redirectUri)) {
+            // ResourceServer的首页
+            redirectUri = oauth2Properties.getHomeUri();
+        }
+        if (redirectUri == null) {
+            redirectUri = "";
+        }
+        if (Strings.startsWith(redirectUri, "http://") || Strings.startsWith(redirectUri, "https://")) {
+            return redirectUri;
+        }
+        int index = callbackUriOfResourceServer.indexOf("?");
+        if (index > 0) {
+            callbackUriOfResourceServer = callbackUriOfResourceServer.substring(0, index);
+        }
+        // redirect to home page
+        redirectUri = callbackUriOfResourceServer.replace(oauth2Properties.getCallbackUri(), redirectUri);
+        return redirectUri;
     }
 
     /**
@@ -422,6 +433,9 @@ public class OAuth2AuthzHandler {
         }
     }
 
+    /**
+     * 创建当前 Resource Server 提供的 callback-uri
+     */
     private String buildOAuth2CallbackUri(HttpServletRequest request) {
         final String path = oauth2Properties.getCallbackUri();
         String callbackUri = path;
