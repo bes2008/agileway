@@ -30,6 +30,11 @@ public class JettyUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
     private HttpClient httpClient;
     private TimeDuration timeout;
 
+    JettyUnderlyingHttpExecutor(HttpClient httpClient, TimeDuration timeout) {
+        this.httpClient = httpClient;
+        this.timeout = timeout;
+    }
+
     @Override
     protected void addHeaderToUnderlying(Request request, String headerName, String headerValue) {
         HttpFields.Mutable mutableHeaders = (HttpFields.Mutable) request.getHeaders();

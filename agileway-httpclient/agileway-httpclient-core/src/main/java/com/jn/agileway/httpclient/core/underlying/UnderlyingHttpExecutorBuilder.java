@@ -16,7 +16,7 @@ public interface UnderlyingHttpExecutorBuilder extends Builder<UnderlyingHttpExe
 
     UnderlyingHttpExecutorBuilder connectTimeoutMills(int connectTimeoutInMills);
 
-    UnderlyingHttpExecutorBuilder readTimeoutMills(int readTimeoutInMills);
+    UnderlyingHttpExecutorBuilder requestTimeoutMills(int readTimeoutInMills);
 
     UnderlyingHttpExecutorBuilder proxy(Proxy proxy);
 

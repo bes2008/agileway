@@ -44,7 +44,7 @@ public class Jdk11UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecuto
     }
 
     @Override
-    public Jdk11UnderlyingHttpExecutorBuilder readTimeoutMills(int readTimeoutInMills) {
+    public Jdk11UnderlyingHttpExecutorBuilder requestTimeoutMills(int readTimeoutInMills) {
         this.readTimeoutMills = readTimeoutInMills;
         return this;
     }

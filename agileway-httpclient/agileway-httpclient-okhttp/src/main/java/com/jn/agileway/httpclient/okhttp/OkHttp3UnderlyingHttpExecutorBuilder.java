@@ -47,7 +47,7 @@ public class OkHttp3UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecu
     }
 
     @Override
-    public OkHttp3UnderlyingHttpExecutorBuilder readTimeoutMills(int readTimeoutInMills) {
+    public OkHttp3UnderlyingHttpExecutorBuilder requestTimeoutMills(int readTimeoutInMills) {
         this.readTimeoutMills = readTimeoutInMills;
         return this;
     }

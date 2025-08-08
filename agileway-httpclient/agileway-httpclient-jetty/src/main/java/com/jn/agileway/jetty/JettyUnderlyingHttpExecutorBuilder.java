@@ -3,6 +3,7 @@ package com.jn.agileway.jetty;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutorBuilder;
 import com.jn.langx.security.ssl.SSLContextBuilder;
+import org.eclipse.jetty.client.HttpClient;
 
 import javax.net.ssl.HostnameVerifier;
 import java.net.Proxy;
@@ -25,7 +26,7 @@ public class JettyUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecuto
     }
 
     @Override
-    public UnderlyingHttpExecutorBuilder readTimeoutMills(int readTimeoutInMills) {
+    public UnderlyingHttpExecutorBuilder requestTimeoutMills(int readTimeoutInMills) {
         return null;
     }
 
@@ -51,11 +52,14 @@ public class JettyUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecuto
 
     @Override
     public UnderlyingHttpExecutor build() {
-        return null;
+        HttpClient httpClient = new HttpClient();
+
+        JettyUnderlyingHttpExecutor httpExecutor = new JettyUnderlyingHttpExecutor(httpClient);
+        return httpExecutor;
     }
 
     @Override
     public String getName() {
-        return null;
+        return "jetty";
     }
 }

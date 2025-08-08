@@ -39,7 +39,7 @@ public class JdkUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecutorB
     }
 
     @Override
-    public JdkUnderlyingHttpExecutorBuilder readTimeoutMills(int readTimeoutInMills) {
+    public JdkUnderlyingHttpExecutorBuilder requestTimeoutMills(int readTimeoutInMills) {
         this.readTimeoutInMills = readTimeoutInMills;
         return this;
     }

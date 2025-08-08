@@ -49,7 +49,7 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
     }
 
     @Override
-    public ApacheUnderlyingHttpExecutorBuilder readTimeoutMills(int readTimeoutInMills) {
+    public ApacheUnderlyingHttpExecutorBuilder requestTimeoutMills(int readTimeoutInMills) {
         config.setSocketTimeoutInMills(readTimeoutInMills);
         return this;
     }
