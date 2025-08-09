@@ -37,8 +37,9 @@ public class HttpRequest<T> extends BaseHttpMessage<T> {
         this.payload = content;
     }
 
-    public void timeout(TimeDuration timeout) {
+    public HttpRequest timeout(TimeDuration timeout) {
         getHeaders().put(MessageHeaderConstants.REQUEST_KEY_TIMEOUT, timeout);
+        return this;
     }
 
     public static HttpRequest create(
