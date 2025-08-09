@@ -17,6 +17,8 @@ public class HttpExchangerConfiguration {
     /***********************************************************************
      * HttpExchanger interceptor 所需的相关配置
      ***********************************************************************/
+    private HttpProtocolVersion protocolVersion = HttpProtocolVersion.HTTP_1_1;
+
     /**
      * 对 HTTP(s) scheme 的限制
      */
@@ -176,5 +178,13 @@ public class HttpExchangerConfiguration {
 
     public MultiValueMap<String, String> getFixedHeaders() {
         return fixedHeaders;
+    }
+
+    public HttpProtocolVersion getProtocolVersion() {
+        return protocolVersion;
+    }
+
+    public void setProtocolVersion(HttpProtocolVersion protocolVersion) {
+        this.protocolVersion = protocolVersion;
     }
 }

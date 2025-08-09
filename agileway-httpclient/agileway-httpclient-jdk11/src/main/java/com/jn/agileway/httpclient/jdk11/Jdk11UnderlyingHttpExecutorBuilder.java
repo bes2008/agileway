@@ -1,8 +1,10 @@
 package com.jn.agileway.httpclient.jdk11;
 
+import com.jn.agileway.httpclient.core.HttpProtocolVersion;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutorBuilder;
 import com.jn.langx.security.ssl.SSLContextBuilder;
+import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.timing.TimeDuration;
 
 import javax.net.ssl.HostnameVerifier;
@@ -12,6 +14,7 @@ import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.http.HttpClient;
 import java.time.Duration;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 public class Jdk11UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecutorBuilder {
@@ -71,6 +74,23 @@ public class Jdk11UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecuto
         this.executor = executor;
         return this;
     }
+
+
+    private static final List<HttpProtocolVersion> supportedProtocols = Lists.newArrayList(
+            HttpProtocolVersion.HTTP_1_1,
+            HttpProtocolVersion.HTTP_2
+    );
+
+    @Override
+    public List<HttpProtocolVersion> supportedProtocols() {
+        return supportedProtocols;
+    }
+
+    @Override
+    public int minJdkVersion() {
+        return 11;
+    }
+
 
     @Override
     public UnderlyingHttpExecutor build() {

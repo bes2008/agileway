@@ -1,14 +1,17 @@
 package com.jn.agileway.httpclient.okhttp;
 
+import com.jn.agileway.httpclient.core.HttpProtocolVersion;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutorBuilder;
 import com.jn.langx.security.ssl.SSLContextBuilder;
+import com.jn.langx.util.collection.Lists;
 import okhttp3.ConnectionPool;
 import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
 
 import javax.net.ssl.HostnameVerifier;
 import java.net.Proxy;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -75,6 +78,23 @@ public class OkHttp3UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecu
         this.executor = executor;
         return this;
     }
+
+
+    private static final List<HttpProtocolVersion> supportedProtocols = Lists.newArrayList(
+            HttpProtocolVersion.HTTP_1_1,
+            HttpProtocolVersion.HTTP_2
+    );
+
+    @Override
+    public List<HttpProtocolVersion> supportedProtocols() {
+        return supportedProtocols;
+    }
+
+    @Override
+    public int minJdkVersion() {
+        return 8;
+    }
+
 
     @Override
     public UnderlyingHttpExecutor build() {

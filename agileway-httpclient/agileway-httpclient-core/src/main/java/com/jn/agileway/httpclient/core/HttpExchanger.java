@@ -196,7 +196,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
          *                          初始化 UnderlyingHttpRequestFactory
          **********************************************************************************************************/
         if (this.underlyingHttpExecutor == null) {
-            UnderlyingHttpExecutorBuilder requestFactoryBuilder = UnderlyingHttpExecutorBuilderSupplier.getInstance().get();
+            UnderlyingHttpExecutorBuilder requestFactoryBuilder = UnderlyingHttpExecutorBuilderSupplier.getInstance().get(configuration.getProtocolVersion());
             requestFactoryBuilder.connectTimeoutMills(configuration.getConnectTimeoutMillis());
             requestFactoryBuilder.requestTimeoutMills(configuration.getConnectTimeoutMillis());
             requestFactoryBuilder.keepAliveDurationMills(configuration.getKeepAliveDurationMills());

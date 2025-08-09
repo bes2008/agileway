@@ -1,11 +1,13 @@
 package com.jn.agileway.httpclient.httpcomponents.httpexchange;
 
+import com.jn.agileway.httpclient.core.HttpProtocolVersion;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutorBuilder;
 import com.jn.agileway.httpclient.httpcomponents.ext.HttpClientCustomizer;
 import com.jn.agileway.httpclient.httpcomponents.ext.HttpClientProperties;
 import com.jn.agileway.httpclient.httpcomponents.ext.HttpClientProvider;
 import com.jn.langx.security.ssl.SSLContextBuilder;
+import com.jn.langx.util.collection.Lists;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -75,6 +77,21 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
     public ApacheUnderlyingHttpExecutorBuilder executor(ExecutorService executor) {
         this.executor = executor;
         return this;
+    }
+
+    private static final List<HttpProtocolVersion> supportedProtocols = Lists.newArrayList(
+            HttpProtocolVersion.HTTP_1_1,
+            HttpProtocolVersion.HTTP_2
+    );
+
+    @Override
+    public List<HttpProtocolVersion> supportedProtocols() {
+        return supportedProtocols;
+    }
+
+    @Override
+    public int minJdkVersion() {
+        return 6;
     }
 
     @Override

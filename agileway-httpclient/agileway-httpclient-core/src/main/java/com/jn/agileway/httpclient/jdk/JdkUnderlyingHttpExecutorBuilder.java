@@ -1,12 +1,15 @@
 package com.jn.agileway.httpclient.jdk;
 
+import com.jn.agileway.httpclient.core.HttpProtocolVersion;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutorBuilder;
 import com.jn.langx.security.ssl.SSLContextBuilder;
+import com.jn.langx.util.collection.Lists;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import java.net.Proxy;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 public class JdkUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecutorBuilder {
@@ -65,6 +68,18 @@ public class JdkUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecutorB
     @Override
     public JdkUnderlyingHttpExecutorBuilder executor(ExecutorService executor) {
         return this;
+    }
+
+    private static final List<HttpProtocolVersion> supportedProtocols = Lists.newArrayList(HttpProtocolVersion.HTTP_1_1);
+
+    @Override
+    public List<HttpProtocolVersion> supportedProtocols() {
+        return supportedProtocols;
+    }
+
+    @Override
+    public int minJdkVersion() {
+        return 5;
     }
 
     @Override
