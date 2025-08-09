@@ -119,4 +119,8 @@ public class Jdk11UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecuto
         httpExecutor.setTimeout(TimeDuration.ofMillis(timeoutMills));
         return httpExecutor;
     }
+
+    public UnderlyingHttpExecutorBuilder get() {
+        return new Jdk11UnderlyingHttpExecutorBuilder();
+    }
 }

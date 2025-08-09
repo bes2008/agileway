@@ -138,4 +138,8 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
         httpExecutor.setHttpClient(clientProvider.get());
         return httpExecutor;
     }
+
+    public UnderlyingHttpExecutorBuilder get() {
+        return new ApacheUnderlyingHttpExecutorBuilder();
+    }
 }

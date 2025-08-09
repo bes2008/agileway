@@ -121,4 +121,8 @@ public class OkHttp3UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecu
         httpExecutor.setHttpClient(okHttpClient);
         return httpExecutor;
     }
+
+    public UnderlyingHttpExecutorBuilder get() {
+        return new OkHttp3UnderlyingHttpExecutorBuilder();
+    }
 }

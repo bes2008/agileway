@@ -4,13 +4,14 @@ import com.jn.agileway.httpclient.core.HttpProtocolVersion;
 import com.jn.langx.Builder;
 import com.jn.langx.Named;
 import com.jn.langx.security.ssl.SSLContextBuilder;
+import com.jn.langx.util.function.Supplier0;
 
 import javax.net.ssl.HostnameVerifier;
 import java.net.Proxy;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
-public interface UnderlyingHttpExecutorBuilder extends Builder<UnderlyingHttpExecutor>, Named {
+public interface UnderlyingHttpExecutorBuilder extends Builder<UnderlyingHttpExecutor>, Named, Supplier0<UnderlyingHttpExecutorBuilder> {
 
     UnderlyingHttpExecutorBuilder poolMaxIdleConnections(int maxIdleConnections);
 

@@ -76,6 +76,6 @@ public class UnderlyingHttpExecutorBuilderSupplier extends AbstractInitializable
             name = Pipeline.of(candidateBuilderNames).findFirst();
         }
         Loggers.info(this.getClass(), "use underlying http executor builder: {}", name);
-        return builders.get(name);
+        return builders.get(name).get();
     }
 }

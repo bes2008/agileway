@@ -95,4 +95,8 @@ public class JdkUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecutorB
         }
         return httpExecutor;
     }
+
+    public UnderlyingHttpExecutorBuilder get() {
+        return new JdkUnderlyingHttpExecutorBuilder();
+    }
 }

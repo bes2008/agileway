@@ -111,4 +111,8 @@ public class JettyUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecuto
     public String getName() {
         return "jetty";
     }
+
+    public UnderlyingHttpExecutorBuilder get() {
+        return new JettyUnderlyingHttpExecutorBuilder();
+    }
 }
