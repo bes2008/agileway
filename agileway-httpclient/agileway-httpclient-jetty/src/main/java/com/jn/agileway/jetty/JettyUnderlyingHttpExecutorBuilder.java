@@ -79,6 +79,11 @@ public class JettyUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecuto
         httpClient.setMaxConnectionsPerDestination(1000);
 
         JettyUnderlyingHttpExecutor httpExecutor = new JettyUnderlyingHttpExecutor(httpClient, requestTimeout);
+        try {
+            httpClient.start();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return httpExecutor;
     }
 
