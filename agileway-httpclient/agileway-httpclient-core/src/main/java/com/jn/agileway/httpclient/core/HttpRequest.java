@@ -10,6 +10,7 @@ import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.net.uri.component.UriComponentsBuilder;
+import com.jn.langx.util.timing.TimeDuration;
 
 import java.net.URI;
 import java.nio.charset.Charset;
@@ -34,6 +35,10 @@ public class HttpRequest<T> extends BaseHttpMessage<T> {
 
     public void setPayload(T content) {
         this.payload = content;
+    }
+
+    public void timeout(TimeDuration timeout) {
+        getHeaders().put(MessageHeaderConstants.REQUEST_KEY_TIMEOUT, timeout);
     }
 
     public static HttpRequest create(
