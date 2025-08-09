@@ -1,10 +1,11 @@
 ## 5.2.2
-+ 提供 agileway-httpclient-jetty模块
-+ 完善 agileway-httpclient-jdk11 文件上传功能
 + 增强 agileway-httpclient:
   + 支持基于http protocol version 选择对应的 http request executor
   + 支持基于JDK 版本选择对应的 http request executor
   + 支持设置请求的timeout
++ 提供 agileway-httpclient-jetty模块
++ 完善 agileway-httpclient-jdk11 文件上传功能
++ 完善 agileway-oauth2-client-springboot-starter，支持autoconfiguration
 
 ## 5.2.1
 + 优化 jwt模块，支持从 Payload 直接获取 默认注册的 claims
