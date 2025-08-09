@@ -89,10 +89,10 @@ public class Jdk11UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
 
         java.net.http.HttpResponse<byte[]> underlyingHttpResponse = null;
         try {
-            underlyingHttpResponse = this.httpClient.send(underlyingRequest, java.net.http.HttpResponse.BodyHandlers.ofByteArray());
             if (writePayload != null) {
                 writePayload.start();
             }
+            underlyingHttpResponse = this.httpClient.send(underlyingRequest, java.net.http.HttpResponse.BodyHandlers.ofByteArray());
             underlyingHttpResponse.statusCode();
             java.net.http.HttpHeaders headers = underlyingHttpResponse.headers();
             HttpHeaders responseHeaders = new HttpHeaders();
