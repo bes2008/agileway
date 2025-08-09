@@ -6,6 +6,7 @@
 + 提供 agileway-httpclient-jetty模块
 + 完善 agileway-httpclient-jdk11 文件上传功能
 + 完善 agileway-oauth2-client-springboot-starter，支持autoconfiguration
++ 完善 agileway-shell 模块的 HistoryHandler
 
 ## 5.2.1
 + 优化 jwt模块，支持从 Payload 直接获取 默认注册的 claims
