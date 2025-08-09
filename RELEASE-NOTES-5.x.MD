@@ -1,11 +1,13 @@
 ## 5.2.1
-1. 优化 jwt模块，支持从 Payload 直接获取 默认注册的 claims
-2. 提供 oauth2-client 模块
-3. 增强 httpclient declarative 模块的注解数据赋值能力
-4. 优化 httpclient-okhttp：
++ 优化 jwt模块，支持从 Payload 直接获取 默认注册的 claims
++ 提供 oauth2-client 模块
++ 增强 httpclient declarative 模块的注解数据赋值能力
++ 优化 httpclient-okhttp：
   + 对于 POST 等方法，没有 body 时，使用 new byte[0]
-5. 优化 根pom.xml
-6. 提取 agileway-httpclient-auth模块
++ 优化 根pom.xml
++ 提取 agileway-httpclient-auth模块
++ 提供 agileway-httpclient-jetty模块
++ 完善 agileway-httpclient-jdk11 文件上传功能
 
 ## 5.2.0
 + 升级 Spring 6.x
