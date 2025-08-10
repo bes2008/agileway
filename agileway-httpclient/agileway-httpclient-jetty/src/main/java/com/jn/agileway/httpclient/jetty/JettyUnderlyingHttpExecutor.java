@@ -123,36 +123,38 @@ public class JettyUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
             requestTimeout = this.timeout;
         }
         if (requestTimeout != null) {
-            jettyHttpRequest.timeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
+            requestTimeout = TimeDuration.ofMinutes(2);
         }
+        jettyHttpRequest.timeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
+        InputStreamResponseListener responseListener = new InputStreamResponseListener();
+        final Holder<Result> resultHolder = new Holder<Result>();
+        jettyHttpRequest.send(responseListener);
 
+        Exception ex = null;
         if (!outHolder.isEmpty()) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        payloadWriter.write(request, outHolder.get());
-                    } catch (Exception e) {
-                        Loggers.getLogger(JettyUnderlyingHttpExecutor.class).error("file upload failed: {}", e.getMessage(), e);
-                    } finally {
-                        IOs.close(outHolder.get());
-                    }
-                }
-            }).start();
+            try {
+                payloadWriter.write(request, outHolder.get());
+            } catch (Exception e) {
+                ex = e;
+                Loggers.getLogger(JettyUnderlyingHttpExecutor.class).error("file upload failed: {}", e.getMessage(), e);
+            } finally {
+                IOs.close(outHolder.get());
+            }
         }
-        ContentResponse contentResponse = jettyHttpRequest.send();
 
-        int statusCode = contentResponse.getStatus();
+        Response response = responseListener.get(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
+
+        int statusCode = response.getStatus();
         HttpHeaders responseHeaders = new HttpHeaders();
-        Pipeline.of(contentResponse.getHeaders())
+        Pipeline.of(response.getHeaders())
                 .forEach(new Consumer<HttpField>() {
                     @Override
                     public void accept(HttpField header) {
                         responseHeaders.add(header.getName(), header.getValue());
                     }
                 });
-        byte[] responseContent = contentResponse.getContent();
-        InputStream responseContentInputStream = responseContent == null ? null : new ByteArrayInputStream(responseContent);
+        InputStream responseContentInputStream = responseListener.getInputStream();
         return new JettyUnderlyingHttpResponse(method, uri, responseHeaders, statusCode, responseContentInputStream);
+
     }
 }
