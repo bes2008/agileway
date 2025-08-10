@@ -7,12 +7,14 @@ import com.jn.agileway.httpclient.core.underlying.AbstractUnderlyingHttpExecutor
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.ContentEncoding;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
-import com.jn.langx.util.Emptys;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.io.IOs;
+import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
+import com.jn.langx.util.struct.Holder;
 import com.jn.langx.util.timing.TimeDuration;
 import org.eclipse.jetty.client.*;
 import org.eclipse.jetty.http.HttpField;
@@ -69,8 +71,6 @@ public class JettyUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
                 } else {
                     jettyHttpRequest.body(new BytesRequestContent(request.getHttpHeaders().getContentType().toString(), request.getPayload().toByteArray()));
                 }
-            } else {
-                jettyHttpRequest.body(new BytesRequestContent(request.getHttpHeaders().getContentType().toString(), Emptys.EMPTY_BYTES));
             }
         }
 
@@ -99,7 +99,7 @@ public class JettyUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
     }
 
     @Override
-    public UnderlyingHttpResponse executeAttachmentUploadRequest(HttpRequest<?> request, HttpRequestPayloadWriter payloadWriter) throws Exception {
+    public UnderlyingHttpResponse executeAttachmentUploadRequest(HttpRequest<?> request, final HttpRequestPayloadWriter payloadWriter) throws Exception {
         HttpMethod method = request.getMethod();
         URI uri = request.getUri();
 
@@ -107,22 +107,16 @@ public class JettyUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
         jettyHttpRequest.method(method.name());
 
         completeHeaders(request, jettyHttpRequest);
-        if (HttpClientUtils.isSupportContentMethod(method)) {
-            if (request.getPayload() != null) {
-                List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
-
-
-                OutputStreamRequestContent content = new OutputStreamRequestContent(request.getHttpHeaders().getContentType().toString());
-                OutputStream out = content.getOutputStream();
-                if (!Objs.isEmpty(contentEncodings)) {
-                    out = HttpClientUtils.wrapByContentEncodings(out, contentEncodings);
-                }
-                payloadWriter.write(request, out);
-                jettyHttpRequest.body(content);
-                content.close();
-            } else {
-                jettyHttpRequest.body(new BytesRequestContent(request.getHttpHeaders().getContentType().toString(), Emptys.EMPTY_BYTES));
+        Holder<OutputStream> outHolder = new Holder<OutputStream>();
+        if (HttpClientUtils.isSupportContentMethod(method) && request.getPayload() != null) {
+            List<ContentEncoding> contentEncodings = HttpClientUtils.getContentEncodings(request.getHttpHeaders());
+            OutputStreamRequestContent content = new OutputStreamRequestContent(request.getHttpHeaders().getContentType().toString());
+            OutputStream out = content.getOutputStream();
+            if (!Objs.isEmpty(contentEncodings)) {
+                out = HttpClientUtils.wrapByContentEncodings(out, contentEncodings);
             }
+            jettyHttpRequest.body(content);
+            outHolder.set(out);
         }
         TimeDuration requestTimeout = request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_TIMEOUT, TimeDuration.class);
         if (requestTimeout == null) {
@@ -130,6 +124,21 @@ public class JettyUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
         }
         if (requestTimeout != null) {
             jettyHttpRequest.timeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
+        }
+
+        if (!outHolder.isEmpty()) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        payloadWriter.write(request, outHolder.get());
+                    } catch (Exception e) {
+                        Loggers.getLogger(JettyUnderlyingHttpExecutor.class).error("file upload failed: {}", e.getMessage(), e);
+                    } finally {
+                        IOs.close(outHolder.get());
+                    }
+                }
+            }).start();
         }
         ContentResponse contentResponse = jettyHttpRequest.send();
 

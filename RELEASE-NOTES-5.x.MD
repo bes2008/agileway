@@ -1,9 +1,11 @@
+## 5.2.3
++ 提供 agileway-httpclient-jetty模块
++ 增强 agileway-eipchannel-core模块，提供 P2pRouter, PubSubRouter
 ## 5.2.2
 + 增强 agileway-httpclient:
   + 支持基于http protocol version 选择对应的 http request executor
   + 支持基于JDK 版本选择对应的 http request executor
   + 支持设置请求的timeout
-+ 提供 agileway-httpclient-jetty模块
 + 完善 agileway-httpclient-jdk11 文件上传功能
 + 完善 agileway-oauth2-client-springboot-starter，支持autoconfiguration
 + 完善 agileway-shell 模块的 HistoryHandler
