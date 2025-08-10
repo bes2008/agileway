@@ -74,7 +74,7 @@ public abstract class AbstractPollingConsumer extends DefaultMessageConsumer {
 
     @Override
     protected void doStart() {
-        // 延时出发调用
+        // 延时发出调用
         super.doStart();
         this.runningTask = ScheduledExecutors.timeoutTask(timer, poller, trigger, errorHandler);
     }
