@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @deprecated
+ */
 public abstract class AbstractMessageRouter extends AbstractLifecycle implements MessageRouter {
     protected Logger logger = Loggers.getLogger(getClass());
     private volatile OutboundChannel defaultOutputChannel;
