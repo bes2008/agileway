@@ -136,7 +136,7 @@
 
         <!-- JavaEE, JakartaEE-->
         <javax.servlet.version>3.0.1</javax.servlet.version>
-        <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
+        <jakarta.servlet.version>5.0.0</jakarta.servlet.version>
 
         <!-- Tests -->
         <junit.version>4.13.1</junit.version>
@@ -1020,6 +1020,9 @@
                             <autoPublish>true</autoPublish>
                             <deploymentName>agileway-${project.version}</deploymentName>
                             <failOnBuildFailure>true</failOnBuildFailure>
+                            <excludeArtifacts>
+                                <excludeArtifact>agileway-sshclient-tests</excludeArtifact>
+                            </excludeArtifacts>
                         </configuration>
                     </plugin>
                     <plugin>
