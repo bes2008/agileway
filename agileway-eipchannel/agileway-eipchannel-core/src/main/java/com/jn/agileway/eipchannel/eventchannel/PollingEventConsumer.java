@@ -5,8 +5,8 @@ import com.jn.agileway.eipchannel.core.channel.PipedOutboundChannel;
 import com.jn.agileway.eipchannel.core.channel.pipe.ChannelMessageInterceptorPipeline;
 import com.jn.agileway.eipchannel.core.endpoint.pubsub.PollingConsumer;
 import com.jn.agileway.eipchannel.core.endpoint.sourcesink.source.InboundChannelMessageSource;
-import com.jn.agileway.eipchannel.core.router.DirectOutboundRouter;
 import com.jn.agileway.eipchannel.core.router.MessageRouter;
+import com.jn.agileway.eipchannel.core.router.Point2PointMessageRouter;
 import com.jn.agileway.eipchannel.eventchannel.mapper.DomainEventMapper;
 import com.jn.agileway.eipchannel.eventchannel.sink.EventOutboundLocalSinker;
 import com.jn.langx.annotation.NonNull;
@@ -34,19 +34,19 @@ public class PollingEventConsumer extends AbstractLifecycle {
      */
     public PollingEventConsumer(
             @NotEmpty
-                    String name,
+            String name,
             @Nullable Trigger trigger,
             @NonNull Executor channelExecutor,
             @NonNull
-                    EventPublisher eventPublisher,
+            EventPublisher eventPublisher,
             @NonNull
-                    DomainEventMapper domainEventMapper,
+            DomainEventMapper domainEventMapper,
             @NonNull
-                    InboundChannelMessageSource inboundChannelMessageSource,
+            InboundChannelMessageSource inboundChannelMessageSource,
             @Nullable
-                    ChannelMessageInterceptorPipeline inboundPipeline,
+            ChannelMessageInterceptorPipeline inboundPipeline,
             @Nullable
-                    ChannelMessageInterceptorPipeline outboundPipeline
+            ChannelMessageInterceptorPipeline outboundPipeline
     ) {
         this(name,
                 new ScheduledExecutorTimer(ScheduledExecutors.getScheduledExecutor(), channelExecutor),
@@ -64,18 +64,18 @@ public class PollingEventConsumer extends AbstractLifecycle {
      */
     public PollingEventConsumer(
             @NotEmpty
-                    String name,
+            String name,
             @Nullable Trigger trigger,
             @NonNull
-                    EventPublisher eventPublisher,
+            EventPublisher eventPublisher,
             @NonNull
-                    DomainEventMapper domainEventMapper,
+            DomainEventMapper domainEventMapper,
             @NonNull
-                    InboundChannelMessageSource inboundChannelMessageSource,
+            InboundChannelMessageSource inboundChannelMessageSource,
             @Nullable
-                    ChannelMessageInterceptorPipeline inboundPipeline,
+            ChannelMessageInterceptorPipeline inboundPipeline,
             @Nullable
-                    ChannelMessageInterceptorPipeline outboundPipeline
+            ChannelMessageInterceptorPipeline outboundPipeline
     ) {
         this(name, (Timer) null, trigger, eventPublisher, domainEventMapper, inboundChannelMessageSource, inboundPipeline, outboundPipeline);
     }
@@ -86,19 +86,19 @@ public class PollingEventConsumer extends AbstractLifecycle {
      */
     public PollingEventConsumer(
             @NotEmpty
-                    String name,
+            String name,
             @NonNull Timer timer,
             @Nullable Trigger trigger,
             @NonNull
-                    EventPublisher eventPublisher,
+            EventPublisher eventPublisher,
             @NonNull
-                    DomainEventMapper domainEventMapper,
+            DomainEventMapper domainEventMapper,
             @NonNull
-                    InboundChannelMessageSource inboundChannelMessageSource,
+            InboundChannelMessageSource inboundChannelMessageSource,
             @Nullable
-                    ChannelMessageInterceptorPipeline inboundPipeline,
+            ChannelMessageInterceptorPipeline inboundPipeline,
             @Nullable
-                    ChannelMessageInterceptorPipeline outboundPipeline
+            ChannelMessageInterceptorPipeline outboundPipeline
     ) {
         Preconditions.checkNotNull(inboundChannelMessageSource, "inboundChannelMessageSource is required");
         Preconditions.checkNotNull(eventPublisher, "the local event publisher is required");
@@ -121,7 +121,7 @@ public class PollingEventConsumer extends AbstractLifecycle {
         outboundChannel.setName(name + "-outbound-channel");
 
         // router
-        MessageRouter router = new DirectOutboundRouter(outboundChannel);
+        MessageRouter router = new Point2PointMessageRouter(outboundChannel);
 
         delegate.setMessageHandler(router);
 
