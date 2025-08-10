@@ -5,7 +5,7 @@
     <parent>
         <groupId>io.github.bes2008.solution.agileway.audit.entityloader</groupId>
         <artifactId>agileway-audit-entityloader</artifactId>
-        <version>5.2.2</version>
+        <version>5.2.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
