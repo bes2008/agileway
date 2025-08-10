@@ -1,4 +1,4 @@
-package com.jn.agileway.jetty;
+package com.jn.agileway.httpclient.jetty;
 
 import com.jn.agileway.httpclient.core.HttpProtocolVersion;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutor;
