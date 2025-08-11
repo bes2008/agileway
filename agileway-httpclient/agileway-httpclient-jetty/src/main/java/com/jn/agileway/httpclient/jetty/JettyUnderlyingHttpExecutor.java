@@ -20,7 +20,6 @@ import org.eclipse.jetty.client.*;
 import org.eclipse.jetty.http.HttpField;
 import org.eclipse.jetty.http.HttpFields;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -77,24 +76,27 @@ public class JettyUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
         TimeDuration requestTimeout = request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_TIMEOUT, TimeDuration.class);
         if (requestTimeout == null) {
             requestTimeout = this.timeout;
+            if (requestTimeout == null) {
+                requestTimeout = TimeDuration.ofMinutes(2);
+            }
         }
-        if (requestTimeout != null) {
-            jettyHttpRequest.timeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
-        }
+        jettyHttpRequest.timeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
 
-        ContentResponse contentResponse = jettyHttpRequest.send();
+        InputStreamResponseListener responseListener = new InputStreamResponseListener();
+        jettyHttpRequest.send(responseListener);
 
-        int statusCode = contentResponse.getStatus();
+        Response response = responseListener.get(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
+
+        int statusCode = response.getStatus();
         HttpHeaders responseHeaders = new HttpHeaders();
-        Pipeline.of(contentResponse.getHeaders())
+        Pipeline.of(response.getHeaders())
                 .forEach(new Consumer<HttpField>() {
                     @Override
                     public void accept(HttpField header) {
                         responseHeaders.add(header.getName(), header.getValue());
                     }
                 });
-        byte[] responseContent = contentResponse.getContent();
-        InputStream responseContentInputStream = responseContent == null ? null : new ByteArrayInputStream(responseContent);
+        InputStream responseContentInputStream = responseListener.getInputStream();
         return new JettyUnderlyingHttpResponse(method, uri, responseHeaders, statusCode, responseContentInputStream);
     }
 
@@ -121,13 +123,12 @@ public class JettyUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
         TimeDuration requestTimeout = request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_TIMEOUT, TimeDuration.class);
         if (requestTimeout == null) {
             requestTimeout = this.timeout;
-        }
-        if (requestTimeout != null) {
-            requestTimeout = TimeDuration.ofMinutes(2);
+            if (requestTimeout == null) {
+                requestTimeout = TimeDuration.ofMinutes(2);
+            }
         }
         jettyHttpRequest.timeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
         InputStreamResponseListener responseListener = new InputStreamResponseListener();
-        final Holder<Result> resultHolder = new Holder<Result>();
         jettyHttpRequest.send(responseListener);
 
         Exception ex = null;
