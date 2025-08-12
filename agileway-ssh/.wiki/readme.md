@@ -37,7 +37,7 @@ Java版开源ssh框架功能对比：
 
 [标准规范](https://datatracker.ietf.org/wg/secsh/documents/)
 
-![data_stream](./img/data_stream.png)
+![data_stream](img/data_stream.png)
 
 [参考连接](http://web.mit.edu/rhel-doc/4/RH-DOCS/rhel-rg-en-4/s1-ssh-conn.html)
 
