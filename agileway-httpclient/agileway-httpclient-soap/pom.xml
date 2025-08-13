@@ -25,12 +25,14 @@
             <artifactId>agileway-httpclient-core</artifactId>
         </dependency>
 
+        <!--
+        安全传输时需要引入它
         <dependency>
             <groupId>org.apache.wss4j</groupId>
             <artifactId>wss4j-ws-security-common</artifactId>
             <version>${wss4j.version}</version>
         </dependency>
-
+        -->
         <!-- 用于适配 javax.xml.soap.SOAPMessage -->
         <dependency>
             <groupId>javax.xml.soap</groupId>

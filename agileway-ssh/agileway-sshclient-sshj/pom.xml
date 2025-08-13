@@ -12,7 +12,7 @@
     <artifactId>agileway-sshclient-sshj</artifactId>
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
     <properties>
-        <sshj.version>0.38.0</sshj.version>
+        <sshj.version>0.40.0</sshj.version>
     </properties>
 
     <dependencies>
