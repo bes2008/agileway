@@ -3,6 +3,7 @@ package com.jn.agileway.ssh.client.sftp;
 import com.jn.agileway.ssh.client.SshConnection;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.exception.SftpException;
+import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Functions;
 import com.jn.langx.util.function.Predicate;
@@ -27,6 +28,18 @@ public abstract class AbstractSftpSession implements SftpSession {
 
     public List<SftpResourceInfo> listFiles(String directory) throws SftpException {
         return listFiles(directory, null);
+    }
+
+    public void mkdirs(String directory, FileAttrs attributes) throws SftpException {
+        String[] segments = Strings.split(directory, "/");
+        boolean isAbsolutePath = Strings.startsWith(directory, "/");
+        String path = isAbsolutePath ? "/" : "";
+        for (int i = 0; i < segments.length; i++) {
+            path += segments[i] + "/";
+            if (!Sftps.exists(this, path)) {
+                mkdir(path, attributes);
+            }
+        }
     }
 
     @Override

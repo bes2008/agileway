@@ -7,7 +7,6 @@ import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.exception.NoSuchFileSftpException;
 import com.jn.agileway.ssh.client.sftp.exception.SftpException;
 import com.jn.langx.text.StringTemplates;
-import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Predicate;
@@ -134,24 +133,13 @@ public class JschSftpSession extends AbstractSftpSession {
         }
     }
 
-    @Override
     public void mkdir(String directory, FileAttrs attributes) throws SftpException {
-        String[] segments = Strings.split(directory, "/");
-
-        boolean isAbsolutePath = Strings.startsWith(directory, "/");
-        String path = isAbsolutePath ? "/" : "";
-        for (int i = 0; i < segments.length; i++) {
-            path += segments[i] + "/";
-            if (!Sftps.exists(this, path)) {
-                try {
-                    channel.mkdir(path);
-                } catch (com.jcraft.jsch.SftpException ex) {
-                    throw JschSftps.wrapSftpException(ex);
-                }
-            }
+        try {
+            channel.mkdir(directory);
+        } catch (com.jcraft.jsch.SftpException ex) {
+            throw JschSftps.wrapSftpException(ex);
         }
     }
-
     @Override
     public void rmdir(String directory) throws SftpException {
         try {
