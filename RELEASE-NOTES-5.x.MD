@@ -1,6 +1,13 @@
+## 5.2.4
++ 移除 agileway-sshclient-j2ssh 模块
++ 完善 agileway-sshclient-jsch， 支持默认的 Config
++ 支持 sshclient 一次性创建多级目录
+
+
 ## 5.2.3
 + 提供 agileway-httpclient-jetty模块
 + 增强 agileway-eipchannel-core模块，提供 P2pRouter, PubSubRouter
+
 ## 5.2.2
 + 增强 agileway-httpclient:
   + 支持基于http protocol version 选择对应的 http request executor
