@@ -4,15 +4,16 @@ import com.jn.agileway.ssh.client.sftp.SftpFile;
 import com.jn.agileway.ssh.client.sftp.SftpSession;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.exception.SftpException;
+import com.sshtools.client.sftp.SftpHandle;
 
 import java.io.IOException;
 
 public class SynergySftpFile extends SftpFile {
-    private com.sshtools.client.sftp.SftpHandle handle;
+    private final SftpHandle handle;
 
-    SynergySftpFile(SftpSession session, String path, com.sshtools.client.sftp.SftpHandle delegate) {
+    SynergySftpFile(SftpSession session, String path, SftpHandle handle) {
         super(session, path);
-        this.handle = delegate;
+        this.handle = handle;
     }
 
     @Override

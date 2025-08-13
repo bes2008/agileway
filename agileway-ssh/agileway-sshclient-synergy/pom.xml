@@ -11,6 +11,13 @@
 
     <artifactId>agileway-sshclient-synergy</artifactId>
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+    </properties>
+
     <dependencies>
 
         <dependency>
