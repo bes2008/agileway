@@ -3,8 +3,6 @@ package com.jn.agileway.ssh.test.channel.direct.session.command;
 import com.jn.agileway.ssh.client.*;
 import com.jn.agileway.ssh.client.impl.ganymedssh2.Ssh2ConnectionConfig;
 import com.jn.agileway.ssh.client.impl.ganymedssh2.Ssh2ConnectionFactory;
-import com.jn.agileway.ssh.client.impl.j2ssh.J2sshConnectionConfig;
-import com.jn.agileway.ssh.client.impl.j2ssh.J2sshConnectionFactory;
 import com.jn.agileway.ssh.client.impl.jsch.JschConnectionConfig;
 import com.jn.agileway.ssh.client.impl.jsch.JschConnectionFactory;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionConfig;
@@ -50,16 +48,6 @@ public class SshClients_CommandLineTests extends BaseSshTests {
     public void testSynergy() throws Throwable {
         testExec(new SynergyConnectionFactory(), new SynergyConnectionConfig());
     }
-
-    /**
-     * J2ssh 问题较多，目前无法进行测试
-     * @throws Throwable
-     */
-    //@Test
-    public void testJ2ssh() throws Throwable {
-        testExec(new J2sshConnectionFactory(), new J2sshConnectionConfig());
-    }
-
 
     private void testExec(SshConnectionFactory connectionFactory, AbstractSshConnectionConfig connectionConfig) throws SshException, IOException {
         connectionConfig.setHost(host); //pc

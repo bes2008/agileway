@@ -48,7 +48,7 @@ public class JschConnectionFactory extends AbstractSshConnectionFactory<JschConn
                     if (host.equals(sshConfig.getHost())) {
                         return sshConfig;
                     }
-                    return null;
+                    return ConfigRepository.defaultConfig;
                 }
             });
 

@@ -9,8 +9,6 @@ import com.jn.agileway.ssh.client.SshConnectionFactory;
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.impl.ganymedssh2.Ssh2ConnectionConfig;
 import com.jn.agileway.ssh.client.impl.ganymedssh2.Ssh2ConnectionFactory;
-import com.jn.agileway.ssh.client.impl.j2ssh.J2sshConnectionConfig;
-import com.jn.agileway.ssh.client.impl.j2ssh.J2sshConnectionFactory;
 import com.jn.agileway.ssh.client.impl.jsch.JschConnectionConfig;
 import com.jn.agileway.ssh.client.impl.jsch.JschConnectionFactory;
 import com.jn.agileway.ssh.client.impl.sshj.SshjConnectionConfig;
@@ -19,6 +17,7 @@ import com.jn.agileway.ssh.client.impl.synergy.SynergyConnectionConfig;
 import com.jn.agileway.ssh.client.impl.synergy.SynergyConnectionFactory;
 import com.jn.agileway.ssh.client.supports.command.executor.SshCommandLineExecutor;
 import com.jn.agileway.ssh.test.BaseSshTests;
+import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.logging.Loggers;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -53,10 +52,6 @@ public class SshCommandLineExecutorTest extends BaseSshTests {
         testExec(new SshjConnectionFactory(), new SshjConnectionConfig());
     }
 
-    @Test
-    public void testJ2ssh() throws Throwable {
-        testExec(new J2sshConnectionFactory(), new J2sshConnectionConfig());
-    }
 
     @Test
     public void testSynergy() throws Throwable {
@@ -73,7 +68,7 @@ public class SshCommandLineExecutorTest extends BaseSshTests {
         SshConnection connection = connectionFactory.get(connectionConfig);
 
         SshCommandLineExecutor executor = new SshCommandLineExecutor(connection);
-        executor.setWorkingDirectory(new File("~/.java"));
+        executor.setWorkingDirectory(new File("~"));
 
 
         OutputAsStringExecuteStreamHandler output = new OutputAsStringExecuteStreamHandler();
@@ -96,11 +91,12 @@ public class SshCommandLineExecutorTest extends BaseSshTests {
         if (resultHandler.hasResult()) {
             Throwable exception = resultHandler.getException();
             if (exception != null) {
-                logger.error(exception.getMessage(), exception);
+                String error = StringTemplates.formatWithPlaceholder("{}, {}", exception.getMessage(), exception);
+                System.err.println(error);
             } else {
                 OutputAsStringExecuteStreamHandler output = (OutputAsStringExecuteStreamHandler) executor.getStreamHandler();
                 String str = output.getOutputContent();
-                logger.info(str);
+                System.out.println(str);
             }
         }
     }
