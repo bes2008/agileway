@@ -18,6 +18,7 @@
         <module>agileway-httpclient-soap</module>
         <module>agileway-httpclient-auth</module>
         <module>agileway-httpclient-jetty</module>
+        <module>agileway-httpclient-proto3</module>
     </modules>
 
     <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
