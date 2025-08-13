@@ -2,8 +2,6 @@ package com.jn.agileway.distributed.cluster.loadbalance;
 
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.util.Emptys;
-import com.jn.langx.util.collection.Pipeline;
-import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
 
@@ -54,15 +52,8 @@ public abstract class AbstractLoadBalanceStrategy<NODE extends Node, INVOCATION>
 
     @Override
     public NODE select(List<NODE> reachableNodes, INVOCATION invocation) {
-        // 过滤掉没有注册的 node
-        reachableNodes = Pipeline.of(reachableNodes).filter(new Predicate<NODE>() {
-            @Override
-            public boolean test(NODE node) {
-                return getLoadBalancer().hasNode(node);
-            }
-        }).asList();
 
-        if (Emptys.isEmpty(reachableNodes) || getLoadBalancer().isEmpty()) {
+        if (Emptys.isEmpty(reachableNodes)) {
             Logger logger = Loggers.getLogger(getClass());
             logger.warn("Can't find any reachable nodes");
             return null;
