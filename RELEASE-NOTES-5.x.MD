@@ -1,7 +1,10 @@
 ## 5.2.4
 + 移除 agileway-sshclient-j2ssh 模块
-+ 完善 agileway-sshclient-jsch， 支持默认的 Config
++ 完善 agileway-sshclient-jsch, 支持默认的 Config
 + 支持 sshclient 一次性创建多级目录
++ 依赖变更：
+  + 升级 maverick-synergy-client 到 3.1.0
+  + 升级 eddsa 到 0.3.1
 
 
 ## 5.2.3
