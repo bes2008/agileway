@@ -111,6 +111,7 @@
         <commons-compress.version>1.27.1</commons-compress.version>
         <commons-io.version>2.20.0</commons-io.version>
         <comomons-text.version>1.12.0</comomons-text.version>
+        <comomons-codec.version>1.17.1</comomons-codec.version>
         <commons-configuration.version>1.10</commons-configuration.version>
         <commons-configuration2.version>2.11.0</commons-configuration2.version>
 
@@ -414,6 +415,12 @@
                 <artifactId>commons-io</artifactId>
                 <version>${commons-io.version}</version>
             </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${comomons-codec.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-text</artifactId>
