@@ -36,7 +36,7 @@ public class SynergySftpSession extends AbstractSftpSession {
                         @Override
                         public SftpResourceInfo apply(com.sshtools.client.sftp.SftpFile sftpFile) {
                             try {
-                                SftpResourceInfo resourceInfo = new SftpResourceInfo(sftpFile.getAbsolutePath(), SynergySftps.fromSftpFileAttributes(sftpFile.getAttributes()));
+                                SftpResourceInfo resourceInfo = new SftpResourceInfo(sftpFile.getAbsolutePath(), SynergySftps.fromSftpFileAttributes(sftpFile.attributes()));
                                 return resourceInfo;
                             } catch (Throwable ex) {
                                 throw new SftpException(ex);
