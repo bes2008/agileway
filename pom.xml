@@ -270,11 +270,6 @@
             </dependency>
             <dependency>
                 <groupId>io.github.bes2008.solution.agileway.ssh</groupId>
-                <artifactId>agileway-sshclient-j2ssh</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.bes2008.solution.agileway.ssh</groupId>
                 <artifactId>agileway-sshclient-ganymedssh2</artifactId>
                 <version>${project.version}</version>
             </dependency>

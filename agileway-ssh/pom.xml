@@ -15,7 +15,6 @@
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
     <modules>
         <module>agileway-sshclient</module>
-        <module>agileway-sshclient-j2ssh</module>
         <module>agileway-sshclient-tests</module>
         <module>agileway-sshclient-ganymedssh2</module>
         <module>agileway-sshclient-trileadssh2</module>

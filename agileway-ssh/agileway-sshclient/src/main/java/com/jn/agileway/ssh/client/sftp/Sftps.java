@@ -64,7 +64,7 @@ public class Sftps {
     public static boolean exists(SftpSession session, String filepath, FileType fileType) throws SftpException {
         FileType type = getFileType(session, filepath);
         if (fileType == null) {
-            return type != null;
+            return type != FileType.UNKNOWN && type != null;
         }
         return type == fileType;
     }

@@ -66,11 +66,11 @@ public class SftpTests extends BaseSshTests {
 
             // 确保testWorkingDirectory 存在，并且是 empty的
             boolean testWorkingDirectoryExist = Sftps.existDirectory(session, testWorkingDirectory);
-            logger.info("directory exist? {}", testWorkingDirectoryExist);
+            System.out.println(StringTemplates.formatWithPlaceholder("directory exist? {}", testWorkingDirectoryExist));
             if (!testWorkingDirectoryExist) {
                 session.mkdir(testWorkingDirectory, null);
                 testWorkingDirectoryExist = Sftps.existDirectory(session, testWorkingDirectory);
-                logger.info("directory exist? {}", testWorkingDirectoryExist);
+                System.out.println(StringTemplates.formatWithPlaceholder("directory exist? {}", testWorkingDirectoryExist));
             }
             List<SftpResourceInfo> children = session.listFiles(testWorkingDirectory);
             if (!children.isEmpty()) {
@@ -82,7 +82,7 @@ public class SftpTests extends BaseSshTests {
             File localRootDir = new File(localRootPath);
             Sftps.copy(session, localRootDir, testWorkingDirectory);
         } catch (Throwable ex) {
-            logger.error(ex.getMessage(), ex);
+            ex.printStackTrace();
         } finally {
             IOs.close(_session);
             IOs.close(connection);
