@@ -40,7 +40,8 @@ public class Sftps {
         SSH_CONNECTION_FACTORY_REGISTRY.init();
     }
 
-    private Sftps(){}
+    private Sftps() {
+    }
 
     /**
      * @return null 代表该路径不存在
@@ -180,7 +181,7 @@ public class Sftps {
     public static void copyDir(final SftpSession session, File localDirectory, final String remoteDir) throws SftpException {
         boolean remoteDirExist = Sftps.existDirectory(session, remoteDir);
         if (!remoteDirExist) {
-            session.mkdir(remoteDir, null);
+            session.mkdirs(remoteDir, null);
         }
         Collects.forEach(localDirectory.listFiles(), new Consumer<File>() {
             @Override
@@ -304,7 +305,7 @@ public class Sftps {
         session.setStat(path, attrs2);
     }
 
-    public static void chown(final SftpSession session, String path, int uid)  {
+    public static void chown(final SftpSession session, String path, int uid) {
         FileAttrs attrs = session.stat(path);
         FileAttrs attrs2 = new FileAttrs();
         attrs2.setUid(uid);
