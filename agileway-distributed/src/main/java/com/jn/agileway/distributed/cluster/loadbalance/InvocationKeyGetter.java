@@ -1,5 +1,5 @@
 package com.jn.agileway.distributed.cluster.loadbalance;
 
-public interface InvocationKeyGetter<NODE extends Node, INVOCATION> {
-    String get(NODE node, INVOCATION invocation);
+public interface InvocationKeyGetter<INVOCATION> {
+    String get(Node node, INVOCATION invocation);
 }

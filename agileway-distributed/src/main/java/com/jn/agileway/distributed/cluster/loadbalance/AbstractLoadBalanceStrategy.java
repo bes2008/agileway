@@ -8,11 +8,10 @@ import org.slf4j.Logger;
 import java.util.List;
 
 @SuppressWarnings("ALL")
-public abstract class AbstractLoadBalanceStrategy<NODE extends Node, INVOCATION> implements LoadBalanceStrategy<NODE, INVOCATION> {
+public abstract class AbstractLoadBalanceStrategy<INVOCATION> implements LoadBalanceStrategy<INVOCATION> {
     private String name;
     @Nullable
     private Weighter weighter;
-    private LoadBalancer<NODE, INVOCATION> loadBalancer;
 
     @Override
     public String getName() {
@@ -28,30 +27,20 @@ public abstract class AbstractLoadBalanceStrategy<NODE extends Node, INVOCATION>
         this.weighter = weighter;
     }
 
-    @Override
-    public LoadBalancer<NODE, INVOCATION> getLoadBalancer() {
-        return loadBalancer;
-    }
-
-    @SuppressWarnings("unchecked")
-    public void setLoadBalancer(LoadBalancer loadBalancer) {
-        this.loadBalancer = loadBalancer;
-    }
-
     /**
      * 获取node的权重
      */
-    public int getWeight(NODE node, INVOCATION invocation) {
+    public int getWeight(Node node, INVOCATION invocation) {
         if (weighter != null) {
             return weighter.getWeight(node, invocation);
         }
         return 0;
     }
 
-    protected abstract NODE doSelect(List<NODE> reachableNodes, INVOCATION invocation);
+    protected abstract Node doSelect(List<Node> reachableNodes, INVOCATION invocation);
 
     @Override
-    public NODE select(List<NODE> reachableNodes, INVOCATION invocation) {
+    public Node select(List<Node> reachableNodes, INVOCATION invocation) {
 
         if (Emptys.isEmpty(reachableNodes)) {
             Logger logger = Loggers.getLogger(getClass());

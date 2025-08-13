@@ -1,5 +1,5 @@
 package com.jn.agileway.distributed.cluster.loadbalance;
 
-public interface Weighter<NODE extends Node, INVOCATION> {
-    int getWeight(NODE node, INVOCATION invocation);
+public interface Weighter<INVOCATION> {
+    int getWeight(Node node, INVOCATION invocation);
 }

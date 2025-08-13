@@ -1,8 +1,8 @@
 package com.jn.agileway.distributed.cluster.loadbalance;
 
-public class UndefinedInvocationKeyGetter<NODE extends Node, INVOCATION> implements InvocationKeyGetter<NODE, INVOCATION> {
+public class UndefinedInvocationKeyGetter<INVOCATION> implements InvocationKeyGetter<INVOCATION> {
     @Override
-    public String get(NODE node, INVOCATION invocation) {
+    public String get(Node node, INVOCATION invocation) {
         return "undefined";
     }
 }

@@ -4,7 +4,7 @@ import com.jn.langx.util.concurrent.threadlocal.GlobalThreadLocalMap;
 
 import java.util.List;
 
-public class RandomLoadBalanceStrategy<NODE extends Node, INVOCATION> extends AbstractLoadBalanceStrategy<NODE, INVOCATION> {
+public class RandomLoadBalanceStrategy<INVOCATION> extends AbstractLoadBalanceStrategy<INVOCATION> {
 
     public RandomLoadBalanceStrategy() {
         setName("Random");
@@ -12,7 +12,7 @@ public class RandomLoadBalanceStrategy<NODE extends Node, INVOCATION> extends Ab
 
 
     @Override
-    protected NODE doSelect(List<NODE> aliveNodes, INVOCATION invocation) {
+    protected Node doSelect(List<Node> aliveNodes, INVOCATION invocation) {
         int length = aliveNodes.size();
         // Every invoker has the same weight?
         boolean sameWeight = true;
