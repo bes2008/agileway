@@ -4,14 +4,13 @@ import com.jn.agileway.ssh.client.sftp.OpenMode;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.attrs.FileMode;
 import com.jn.agileway.ssh.client.sftp.attrs.FileType;
-import com.jn.langx.util.Numbers;
 import com.sshtools.common.sftp.SftpFileAttributes;
 import com.sshtools.common.util.UnsignedInteger32;
 import com.sshtools.common.util.UnsignedInteger64;
 
 class SynergySftps {
 
-    public static int toOpenFlags(OpenMode openMode){
+    public static int toOpenFlags(OpenMode openMode) {
         return openMode.getCode();
     }
 
@@ -22,27 +21,23 @@ class SynergySftps {
         FileAttrs attrs = new FileAttrs();
 
         if (attributes.hasSize()) {
-            attrs.setSize(attributes.getSize().longValue());
+            attrs.setSize(attributes.size().longValue());
         }
 
-        if (attributes.hasAccessTime()) {
-            attrs.setAccessTime(attributes.getAccessedTime().bigIntValue().intValue());
+        if (attributes.hasLastAccessTime()) {
+            attrs.setAccessTime((int) attributes.lastAccessTime().toMillis() / 1000);
         }
-        if (attributes.hasModifiedTime()) {
-            attrs.setModifyTime(attributes.getModifiedTime().bigIntValue().intValue());
+        if (attributes.hasLastModifiedTime()) {
+            attrs.setModifyTime((int) attributes.lastModifiedTime().toMillis() / 1000);
         }
 
-        if (attributes.hasUID()) {
-            String uid = attributes.getUID();
-            if (Numbers.isNumber(uid)) {
-                attrs.setUid(Integer.parseInt(uid));
-            }
+        if (attributes.hasUid()) {
+            int uid = attributes.uid();
+            attrs.setUid(uid);
         }
-        if (attributes.hasGID()) {
-            String gid = attributes.getGID();
-            if (Numbers.isNumber(gid)) {
-                attrs.setGid(Integer.parseInt(gid));
-            }
+        if (attributes.hasGid()) {
+            int gid = attributes.gid();
+            attrs.setGid(gid);
         }
 
         FileType fileType = FileType.UNKNOWN;

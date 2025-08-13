@@ -8,17 +8,17 @@ import com.jn.agileway.ssh.client.sftp.exception.SftpException;
 import java.io.IOException;
 
 public class SynergySftpFile extends SftpFile {
-    private com.sshtools.client.sftp.SftpFile delegate;
+    private com.sshtools.client.sftp.SftpHandle handle;
 
-    SynergySftpFile(SftpSession session, String path, com.sshtools.client.sftp.SftpFile delegate) {
+    SynergySftpFile(SftpSession session, String path, com.sshtools.client.sftp.SftpHandle delegate) {
         super(session, path);
-        this.delegate = delegate;
+        this.handle = delegate;
     }
 
     @Override
     public int read(long fileOffset, byte[] buffer, int bufferOffset, int length) throws IOException {
         try {
-            return delegate.read(fileOffset, buffer, bufferOffset, length);
+            return handle.read(fileOffset, buffer, bufferOffset, length);
         } catch (Throwable ex) {
             throw new IOException(ex);
         }
@@ -27,7 +27,7 @@ public class SynergySftpFile extends SftpFile {
     @Override
     public void write(long fileOffset, byte[] data, int offset, int length) throws IOException {
         try {
-            delegate.write(fileOffset, data, offset, length);
+            handle.write(fileOffset, data, offset, length);
         } catch (Throwable ex) {
             throw new IOException(ex);
         }
@@ -45,7 +45,7 @@ public class SynergySftpFile extends SftpFile {
     @Override
     public FileAttrs getAttributes() throws IOException {
         try {
-            return SynergySftps.fromSftpFileAttributes(delegate.getAttributes());
+            return SynergySftps.fromSftpFileAttributes(handle.getAttributes());
         } catch (Throwable ex) {
             throw new IOException(ex);
         }
@@ -54,7 +54,7 @@ public class SynergySftpFile extends SftpFile {
     @Override
     public void close() throws IOException {
         try {
-            delegate.close();
+            handle.close();
         } catch (Throwable ex) {
             throw new IOException(ex);
         }
