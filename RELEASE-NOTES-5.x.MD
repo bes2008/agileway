@@ -2,9 +2,24 @@
 + 移除 agileway-sshclient-j2ssh 模块
 + 完善 agileway-sshclient-jsch, 支持默认的 Config
 + 支持 sshclient 一次性创建多级目录
++ 优化 loadbalancer 模块
+  + 支持自定义负载均衡算法
+  + 支持自定义节点检查
+  + 支持自定义节点提供商
 + 依赖变更：
-  + 升级 maverick-synergy-client 到 3.1.0
-  + 升级 eddsa 到 0.3.1
+  + 升级 maverick-synergy-client：3.0.1 => 3.1.0
+  + 升级 eddsa: 0.3.0 => 0.3.1
+  + 升级 commons-lang3: 3.17.0 -> 3.18.0
+  + 升级 commons-compress: 1.27.1 -> 1.28.0
+  + 升级 commons-vfs: 2.2.0 => 2.10.0
+  + 升级 jackson: 2.13.5 => 2.15.3
+  + 升级 snakeyaml: 1.33 => 2.0
+  + 升级 zookeeper: 3.9.2 => 3.9.3
+  + 升级 curator: 5.8.0 => 5.9.0
+  + 升级 logback: 1.5.0 => 1.5.18
+  + 升级 spring: 6.0.14 => 6.1.21
+  + 升级 spring-boot: 3.1.6 => 3.3.13
+  + 升级 spring-data-redis: 2.3.4 => 3.5.2
 
 
 ## 5.2.3

@@ -16,8 +16,8 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <zookeeper.version>3.9.2</zookeeper.version>
-        <curator.version>5.8.0</curator.version>
+        <zookeeper.version>3.9.3</zookeeper.version>
+        <curator.version>5.9.0</curator.version>
     </properties>
 
     <dependencies>
@@ -44,6 +44,10 @@
                 <exclusion>
                     <groupId>ch.qos.logback</groupId>
                     <artifactId>logback-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
