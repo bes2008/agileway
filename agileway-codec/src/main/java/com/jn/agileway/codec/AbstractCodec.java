@@ -10,7 +10,8 @@ import com.jn.langx.util.reflect.Reflects;
 public abstract class AbstractCodec<T> implements Codec<T> {
     /**
      * 当指定了 target type， 则序列化之前，进行类型判断，反序列后进行类型验证 。
-     * 若不知道，则为通用的 序列化工具
+     * 它不能是 Object.class
+     * 若不知道，则为通用的 序列化工具。
      */
     private Class<T> expectedTargetType;
 
@@ -45,7 +46,7 @@ public abstract class AbstractCodec<T> implements Codec<T> {
         if (canSerialize(targetType)) {
             T t = doDecode(bytes, isCommonCodec(), targetType);
             if (!isCommonCodec()) {
-                if (t != null && !Reflects.isInstance(t, targetType)) {
+                if (t != null && targetType != null && !Reflects.isInstance(t, targetType)) {
                     throw new CodecException("error target type: {}" + Reflects.getFQNClassName(targetType));
                 }
             }
@@ -62,6 +63,9 @@ public abstract class AbstractCodec<T> implements Codec<T> {
 
     @Override
     public final boolean canSerialize(Class type) {
+        if (type == null) {
+            return true;
+        }
         if (!isCommonCodec()) {
             if (!Reflects.isSubClassOrEquals(expectedTargetType, type)) {
                 return false;
