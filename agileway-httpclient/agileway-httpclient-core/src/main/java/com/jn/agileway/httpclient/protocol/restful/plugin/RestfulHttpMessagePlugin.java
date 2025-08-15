@@ -23,7 +23,7 @@ public class RestfulHttpMessagePlugin extends HttpMessageProtocolPlugin {
 
     @Override
     public int getOrder() {
-        return 0;
+        return Integer.MAX_VALUE;
     }
 
     @Override

@@ -42,7 +42,7 @@ public class HttpProtobufMessagePlugin extends HttpMessageProtocolPlugin {
 
     @Override
     public int getOrder() {
-        return 0;
+        return Integer.MAX_VALUE - 100;
     }
 
     @Override
