@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
         <artifactId>agileway-httpclient</artifactId>
-        <version>5.2.3</version>
+        <version>5.2.4</version>
     </parent>
 
     <artifactId>agileway-httpclient-core</artifactId>
