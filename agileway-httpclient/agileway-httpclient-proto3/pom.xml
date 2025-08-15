@@ -9,7 +9,6 @@
         <version>5.2.4</version>
     </parent>
 
-    <groupId>com.jn.agileway.zookeeper</groupId>
     <artifactId>agileway-httpclient-proto3</artifactId>
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
     <properties>
