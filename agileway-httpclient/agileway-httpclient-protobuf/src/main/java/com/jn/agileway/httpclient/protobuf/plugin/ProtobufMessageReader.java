@@ -18,25 +18,28 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Map;
 
+/**
+ * 支持 将 响应 Content-Type 为 application/x-protobuf, application/json; 的响应，转为 protobuf message 对象
+ */
 public class ProtobufMessageReader implements HttpResponsePayloadReader<GeneratedMessage> {
 
 
     private static final Map<Class<?>, Method> newBuilderMethodCache = new ConcurrentReferenceHashMap<>();
     private ExtensionRegistry extensionRegistry = ExtensionRegistry.newInstance();
 
-    private JsonFormat.Parser jsonParser = JsonFormat.parser();
+    private JsonFormat.Parser jsonReader = JsonFormat.parser();
     @Override
-    public boolean canRead(HttpResponse<byte[]> response, MediaType contentType, Type expectedContentType) {
-        if (expectedContentType == null || contentType == null) {
+    public boolean canRead(HttpResponse<byte[]> response, MediaType contentType, Type expectedMessageType) {
+        if (expectedMessageType == null || contentType == null) {
             return false;
         }
         if (!contentType.equalsTypeAndSubtype(MediaType.APPLICATION_PROTOBUF) && !contentType.equalsTypeAndSubtype(MediaType.APPLICATION_JSON)) {
             return false;
         }
-        if (!(expectedContentType instanceof Class)) {
+        if (!(expectedMessageType instanceof Class)) {
             return false;
         }
-        Class clazz = (Class) expectedContentType;
+        Class clazz = (Class) expectedMessageType;
         if (!Reflects.isSubClass(GeneratedMessage.class, clazz)) {
             return false;
         }
@@ -47,12 +50,11 @@ public class ProtobufMessageReader implements HttpResponsePayloadReader<Generate
     public GeneratedMessage read(HttpResponse<byte[]> response, MediaType contentType, Type expectedContentType) throws Exception {
         Message.Builder builder = getMessageBuilder((Class<? extends Message>) expectedContentType);
 
-
         if (MediaType.APPLICATION_PROTOBUF.isCompatibleWith(contentType)) {
             builder.mergeFrom(response.getPayload(), extensionRegistry);
         } else if (MediaType.APPLICATION_JSON.isCompatibleWith(contentType)) {
             InputStreamReader reader = new InputStreamReader(new ByteArrayInputStream(response.getPayload()), Charsets.UTF_8);
-            jsonParser.merge(reader, builder);
+            jsonReader.merge(reader, builder);
         }
         return (GeneratedMessage) builder.build();
     }
