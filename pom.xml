@@ -114,6 +114,7 @@
         <comomons-codec.version>1.17.1</comomons-codec.version>
         <commons-configuration.version>1.10</commons-configuration.version>
         <commons-configuration2.version>2.11.0</commons-configuration2.version>
+        <commons-beanutils.version>1.11.0</commons-beanutils.version>
 
         <!-- JSON, YAML -->
         <easyjson.version>4.1.7</easyjson.version>
@@ -144,7 +145,7 @@
 
 
         <!-- Security-->
-        <bouncycastle-jdk18on.version>1.78.1</bouncycastle-jdk18on.version>
+        <bouncycastle-jdk18on.version>1.81</bouncycastle-jdk18on.version>
 
 
         <knife4j.version>3.0.3</knife4j.version>
@@ -420,7 +421,11 @@
                 <artifactId>commons-codec</artifactId>
                 <version>${comomons-codec.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${commons-beanutils.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-text</artifactId>

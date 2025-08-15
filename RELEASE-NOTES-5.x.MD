@@ -12,6 +12,7 @@
   + 升级 commons-lang3: 3.17.0 -> 3.18.0
   + 升级 commons-compress: 1.27.1 -> 1.28.0
   + 升级 commons-vfs: 2.2.0 => 2.10.0
+  + 升级 commons-beanutils: 1.9.4 => 1.11.0
   + 升级 jackson: 2.13.5 => 2.15.3
   + 升级 snakeyaml: 1.33 => 2.0
   + 升级 zookeeper: 3.9.2 => 3.9.3
@@ -20,6 +21,7 @@
   + 升级 spring: 6.0.14 => 6.1.21
   + 升级 spring-boot: 3.1.6 => 3.3.13
   + 升级 spring-data-redis: 2.3.4 => 3.5.2
+  + 升级 bouncycastle-jdk18on: 1.78.1 => 1.81
 
 
 ## 5.2.3
