@@ -14,7 +14,7 @@ public class ProtobufMessageReader implements HttpResponsePayloadReader<Generate
         if (expectedContentType == null || contentType == null) {
             return false;
         }
-        if (!contentType.equalsTypeAndSubtype(MediaType.APPLICATION_PROTOBUF)) {
+        if (!contentType.equalsTypeAndSubtype(MediaType.APPLICATION_PROTOBUF) && !contentType.equalsTypeAndSubtype(MediaType.APPLICATION_JSON)) {
             return false;
         }
         if (!(expectedContentType instanceof Class)) {
