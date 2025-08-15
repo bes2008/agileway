@@ -15,12 +15,20 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <protobuf.version>4.31.1</protobuf.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
             <artifactId>agileway-httpclient-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>${protobuf.version}</version>
         </dependency>
     </dependencies>
 </project>
