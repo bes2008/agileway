@@ -9,7 +9,7 @@
         <version>5.2.4</version>
     </parent>
 
-    <artifactId>agileway-httpclient-proto3</artifactId>
+    <artifactId>agileway-httpclient-protobuf</artifactId>
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
