@@ -12,7 +12,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 public class ProtobufMessageWriter implements HttpRequestPayloadWriter {
-    private JsonFormat.Printer jsonWriter;
+    private JsonFormat.Printer jsonWriter = JsonFormat.printer();
+
     @Override
     public boolean canWrite(HttpRequest<?> request) {
         if (!(request.getPayload() instanceof GeneratedMessage)) {
