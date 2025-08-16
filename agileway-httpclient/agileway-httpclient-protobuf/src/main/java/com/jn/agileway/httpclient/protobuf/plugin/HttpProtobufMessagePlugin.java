@@ -10,6 +10,7 @@ public class HttpProtobufMessagePlugin extends HttpMessageProtocolPlugin {
 
     @Override
     protected void initInternal() {
+        this.requestInterceptors.add(new ProtobufHttpRequestInterceptor());
         this.requestPayloadWriters.add(new ProtobufMessageWriter());
         this.responsePayloadReaders.add(new ProtobufMessageReader());
     }
