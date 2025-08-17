@@ -73,7 +73,7 @@ public class MultiPartsForm {
                 FormPartAdapter adapter = Pipeline.of(adapters).findFirst(new Predicate<FormPartAdapter>() {
                     @Override
                     public boolean test(FormPartAdapter adapter) {
-                        List<Class> supportedTypes = adapter.supportedTypes();
+                        Class[] supportedTypes = adapter.supportedTypes();
                         return Pipeline.of(supportedTypes)
                                 .anyMatch(new Predicate<Class>() {
                                     @Override
@@ -94,7 +94,9 @@ public class MultiPartsForm {
     }
 
     static Part ofPart(String fieldName, Object value) throws IOException {
-        if (value instanceof byte[]) {
+        if (value instanceof Part) {
+            return (Part) value;
+        } else if (value instanceof byte[]) {
             return new ResourcePart(fieldName, null, Resources.asByteArrayResource((byte[]) value), null);
         } else if (value instanceof File) {
             return new ResourcePart(fieldName, ((File) value).getName(), Resources.loadFileResource((File) value), null);
@@ -120,7 +122,7 @@ public class MultiPartsForm {
                     FormPartAdapter adapter = Pipeline.of(adapters).findFirst(new Predicate<FormPartAdapter>() {
                         @Override
                         public boolean test(FormPartAdapter adapter) {
-                            List<Class> supportedTypes = adapter.supportedTypes();
+                            Class[] supportedTypes = adapter.supportedTypes();
                             return Pipeline.of(supportedTypes)
                                     .anyMatch(new Predicate<Class>() {
                                         @Override
