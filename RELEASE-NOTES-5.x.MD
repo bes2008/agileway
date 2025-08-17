@@ -2,6 +2,7 @@
 + 移除 agileway-sshclient-j2ssh 模块
 + 完善 agileway-sshclient-jsch, 支持默认的 Config
 + 支持 sshclient 一次性创建多级目录
++ 支持 Protobuf Over Http (agileway-httpclient-protobuf)
 + 优化 loadbalancer 模块
   + 支持自定义负载均衡算法
   + 支持自定义节点检查
