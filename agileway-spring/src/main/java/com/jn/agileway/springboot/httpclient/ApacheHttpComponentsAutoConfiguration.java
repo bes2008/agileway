@@ -19,9 +19,9 @@ import java.util.List;
 
 @ConditionalOnClass(HttpClient.class)
 @ConditionalOnProperty(name = "agileway.httpclient.enabled", havingValue = "true", matchIfMissing = false)
-@ConditionalOnMissingBean(HttpClientAutoConfiguration.class)
+@ConditionalOnMissingBean(ApacheHttpComponentsAutoConfiguration.class)
 @Configuration
-public class HttpClientAutoConfiguration {
+public class ApacheHttpComponentsAutoConfiguration {
 
     @ConditionalOnMissingBean(name = "agilewayHttpClientProperties")
     @Bean(name = "agilewayHttpClientProperties")

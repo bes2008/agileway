@@ -3,6 +3,6 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.jn.agileway.springboot.json.JsonConfiguration,\
   com.jn.agileway.springboot.redis.RedisLuaScriptRepositoryAutoConfiguration,\
   com.jn.agileway.springboot.redis.RedisGlobalTemplateAutoConfiguration,\
-  com.jn.agileway.springboot.httpclient.HttpClientAutoConfiguration,\
+  com.jn.agileway.springboot.httpclient.ApacheHttpComponentsAutoConfiguration,\
   com.jn.agileway.springboot.vfs.ArtifactRepositoryConfiguration,\
   com.jn.agileway.springboot.shell.SpringCommandComponentFactoryConfiguration
