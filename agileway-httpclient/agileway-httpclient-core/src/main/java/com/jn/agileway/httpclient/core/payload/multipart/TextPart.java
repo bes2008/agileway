@@ -7,7 +7,7 @@ import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.mime.MediaType;
 
-public class TextPart extends Part<String> {
+public final class TextPart extends Part<String> {
     public TextPart(String fieldName, String content) {
         this(fieldName, content, null);
     }

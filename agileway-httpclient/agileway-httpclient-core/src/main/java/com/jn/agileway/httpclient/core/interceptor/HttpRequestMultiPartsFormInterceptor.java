@@ -3,18 +3,28 @@ package com.jn.agileway.httpclient.core.interceptor;
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.MessageHeaderConstants;
 import com.jn.agileway.httpclient.core.error.exception.BadHttpRequestException;
+import com.jn.agileway.httpclient.core.payload.multipart.FormPartAdapter;
 import com.jn.agileway.httpclient.core.payload.multipart.MultiPartsForm;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.text.StringTemplates;
+import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
+import com.jn.langx.util.spi.CommonServiceProvider;
 
 import java.nio.charset.Charset;
 import java.util.Map;
 
 public class HttpRequestMultiPartsFormInterceptor implements HttpRequestInterceptor {
+    private FormPartAdapter[] adapters;
+
+    public HttpRequestMultiPartsFormInterceptor() {
+        this.adapters = Pipeline.of(CommonServiceProvider.<FormPartAdapter>loadService(FormPartAdapter.class))
+                .toArray(FormPartAdapter[].class);
+    }
+
     @Override
     public void intercept(HttpRequest request) {
         if (request.getPayload() instanceof MultiPartsForm) {
@@ -40,9 +50,9 @@ public class HttpRequestMultiPartsFormInterceptor implements HttpRequestIntercep
         if (!(request.getPayload() instanceof MultiPartsForm)) {
             try {
                 if (request.getPayload() instanceof MultiValueMap) {
-                    request.setPayload(MultiPartsForm.ofMultiValueMap((MultiValueMap) request.getPayload()));
+                    request.setPayload(MultiPartsForm.ofMultiValueMap((MultiValueMap) request.getPayload(), adapters));
                 } else if (request.getPayload() instanceof Map) {
-                    request.setPayload(MultiPartsForm.ofMap((Map) request.getPayload()));
+                    request.setPayload(MultiPartsForm.ofMap((Map) request.getPayload(), adapters));
                 } else {
                     throw new BadHttpRequestException(request.getMethod(), request.getUri(), StringTemplates.formatWithPlaceholder("invalid multipart/form-data content "));
                 }

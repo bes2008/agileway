@@ -6,8 +6,12 @@ import com.jn.langx.io.resource.Resource;
 import com.jn.langx.io.resource.Resources;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
+import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
+import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.io.Charsets;
+import com.jn.langx.util.reflect.Reflects;
+import com.jn.langx.util.struct.Holder;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,12 +63,32 @@ public class MultiPartsForm {
         return parts;
     }
 
-    public static MultiPartsForm ofMap(Map<String, ?> form) throws IOException {
+    public static MultiPartsForm ofMap(Map<String, ?> form, FormPartAdapter... adapters) throws IOException {
         MultiPartsForm result = new MultiPartsForm();
         for (Map.Entry<String, ?> entry : form.entrySet()) {
             String fieldName = entry.getKey();
-            Object value = entry.getValue();
-            result.addPart(ofPart(fieldName, value));
+            final Holder<Object> valueHolder = new Holder<>(entry.getValue());
+
+            if (!valueHolder.isNull() && adapters != null) {
+                FormPartAdapter adapter = Pipeline.of(adapters).findFirst(new Predicate<FormPartAdapter>() {
+                    @Override
+                    public boolean test(FormPartAdapter adapter) {
+                        List<Class> supportedTypes = adapter.supportedTypes();
+                        return Pipeline.of(supportedTypes)
+                                .anyMatch(new Predicate<Class>() {
+                                    @Override
+                                    public boolean test(Class supportedType) {
+                                        return Reflects.isSubClassOrEquals(supportedType, valueHolder.get().getClass());
+                                    }
+                                });
+                    }
+                });
+                if (adapter != null) {
+                    valueHolder.set(adapter.adapt(valueHolder.get()));
+                }
+            }
+
+            result.addPart(ofPart(fieldName, valueHolder.get()));
         }
         return result;
     }
@@ -85,13 +109,33 @@ public class MultiPartsForm {
         }
     }
 
-    public static MultiPartsForm ofMultiValueMap(MultiValueMap<String, ?> form) throws IOException {
+    public static MultiPartsForm ofMultiValueMap(MultiValueMap<String, ?> form, FormPartAdapter... adapters) throws IOException {
         MultiPartsForm result = new MultiPartsForm();
         Set<String> fieldNames = form.keySet();
         for (String fieldName : fieldNames) {
             Collection values = form.get(fieldName);
             for (Object value : values) {
-                result.addPart(ofPart(fieldName, value));
+                Holder<Object> valueHolder = new Holder<>(value);
+                if (!valueHolder.isNull() && adapters != null) {
+                    FormPartAdapter adapter = Pipeline.of(adapters).findFirst(new Predicate<FormPartAdapter>() {
+                        @Override
+                        public boolean test(FormPartAdapter adapter) {
+                            List<Class> supportedTypes = adapter.supportedTypes();
+                            return Pipeline.of(supportedTypes)
+                                    .anyMatch(new Predicate<Class>() {
+                                        @Override
+                                        public boolean test(Class supportedType) {
+                                            return Reflects.isSubClassOrEquals(supportedType, valueHolder.get().getClass());
+                                        }
+                                    });
+                        }
+                    });
+                    if (adapter != null) {
+                        valueHolder.set(adapter.adapt(valueHolder.get()));
+                    }
+                }
+
+                result.addPart(ofPart(fieldName, valueHolder.get()));
             }
         }
         return result;

@@ -6,7 +6,7 @@ import com.jn.langx.util.Objs;
 import com.jn.langx.util.Preconditions;
 
 
-public class ResourcePart extends Part<Resource> {
+public final class ResourcePart extends Part<Resource> {
     public ResourcePart(String fieldName, String filename, Resource resource, String contentType) {
         super();
         setName(Preconditions.checkNotEmpty(fieldName));
