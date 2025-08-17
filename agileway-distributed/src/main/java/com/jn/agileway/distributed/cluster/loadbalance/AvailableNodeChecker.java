@@ -1,5 +1,5 @@
 package com.jn.agileway.distributed.cluster.loadbalance;
 
-public interface AvailableNodeChecker {
-    boolean isAvailable(Node node);
+public interface AvailableNodeChecker<NODE extends Node> {
+    boolean isAvailable(NODE node);
 }

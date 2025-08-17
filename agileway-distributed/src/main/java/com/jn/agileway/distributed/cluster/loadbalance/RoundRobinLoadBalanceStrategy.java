@@ -10,14 +10,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class RoundRobinLoadBalanceStrategy<INVOCATION> extends AbstractLoadBalanceStrategy<INVOCATION> {
+public class RoundRobinLoadBalanceStrategy<NODE extends Node, INVOCATION> extends AbstractLoadBalanceStrategy<NODE, INVOCATION> {
 
     public RoundRobinLoadBalanceStrategy() {
         setName("RoundRobin");
     }
 
     private static final int RECYCLE_PERIOD = 60000;
-    private InvocationKeyGetter<INVOCATION> invocationKeyGetter = new UndefinedInvocationKeyGetter<INVOCATION>();
+    private InvocationKeyGetter<NODE, INVOCATION> invocationKeyGetter = new UndefinedInvocationKeyGetter<NODE, INVOCATION>();
 
     protected static class WeightedRoundRobin {
         private int weight;
@@ -60,7 +60,7 @@ public class RoundRobinLoadBalanceStrategy<INVOCATION> extends AbstractLoadBalan
 
 
     @Override
-    protected Node doSelect(List<Node> reachableNodes, INVOCATION invocation) {
+    protected NODE doSelect(List<NODE> reachableNodes, INVOCATION invocation) {
         String key = invocationKeyGetter.get(reachableNodes.get(0), invocation);
         ConcurrentMap<String, WeightedRoundRobin> map = Maps.putIfAbsent(invocationWeightMap, key, new Supplier<String, ConcurrentMap<String, WeightedRoundRobin>>() {
             @Override
@@ -72,9 +72,9 @@ public class RoundRobinLoadBalanceStrategy<INVOCATION> extends AbstractLoadBalan
         int totalWeight = 0;
         long maxCurrent = Long.MIN_VALUE;
         final long now = System.currentTimeMillis();
-        Node selectedNode = null;
+        NODE selectedNode = null;
         WeightedRoundRobin selectedWRR = null;
-        for (Node reachableNode : reachableNodes) {
+        for (NODE reachableNode : reachableNodes) {
             String identifyString = reachableNode.getId();
             final int weight = getWeight(reachableNode, invocation);
             WeightedRoundRobin weightedRoundRobin = Maps.putIfAbsent(map, identifyString, new Supplier<String, WeightedRoundRobin>() {

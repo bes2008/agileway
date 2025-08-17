@@ -1,5 +1,5 @@
 package com.jn.agileway.distributed.cluster.loadbalance;
 
-public interface LoadBalancer<INVOCATION> {
-    Node select(INVOCATION invocation);
+public interface LoadBalancer<NODE extends Node, INVOCATION> {
+    NODE select(INVOCATION invocation);
 }
