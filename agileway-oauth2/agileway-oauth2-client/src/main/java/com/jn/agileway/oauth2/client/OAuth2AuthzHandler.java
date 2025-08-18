@@ -184,7 +184,6 @@ public class OAuth2AuthzHandler {
             request.getSession().removeAttribute(SESSION_KEY_OAUTH2_ORIGINAL_REQUEST);
             response.sendRedirect(redirectUri);
         } else {
-            request.getSession().removeAttribute(SESSION_KEY_OAUTH2_ORIGINAL_REQUEST);
             response.setStatus(403);
             response.getWriter().write("Got authorization code is null");
         }
