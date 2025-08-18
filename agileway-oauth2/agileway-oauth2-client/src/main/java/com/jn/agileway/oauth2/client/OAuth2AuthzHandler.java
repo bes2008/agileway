@@ -180,6 +180,8 @@ public class OAuth2AuthzHandler {
             response.addCookie(new Cookie(oauth2Properties.getAccessTokenCookieName(), oAuth2Token.getAccessToken()));
 
             String redirectUri = getRedirectUriAfterAuthorized(request, callbackUri);
+            logger.info("redirect to {}", redirectUri);
+            request.getSession().removeAttribute(SESSION_KEY_OAUTH2_ORIGINAL_REQUEST);
             response.sendRedirect(redirectUri);
         } else {
             response.setStatus(403);
