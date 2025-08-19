@@ -95,7 +95,7 @@ public class StandardOpenIdOAuth2ApiService implements OAuth2ApiService {
             if (oAuth2Properties.getStandard().isUserinfoEndpointPostEnabled()) {
                 response = api.getUserInfoByPost(AuthorizationHeaders.newBearerAuthToken(accessToken));
             } else {
-                response = api.getUserInfoByGet(accessToken);
+                response = api.getUserInfoByGet(AuthorizationHeaders.newBearerAuthToken(accessToken));
             }
         } catch (UnauthorizedException e) {
             throw new InvalidAccessTokenException("Get userinfo failed, invalid access token", e);
