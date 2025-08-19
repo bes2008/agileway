@@ -26,9 +26,16 @@ public class OkHttp3UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecu
 
     private ExecutorService executor;
 
+    private HttpProtocolVersion protocolVersion;
     @Override
     public String getName() {
         return "okhttp3";
+    }
+
+    @Override
+    public UnderlyingHttpExecutorBuilder protocolVersion(HttpProtocolVersion protocolVersion) {
+        this.protocolVersion = protocolVersion;
+        return this;
     }
 
     @Override

@@ -21,6 +21,11 @@ public class JdkUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecutorB
     private SSLContextBuilder sslContextBuilder;
 
     @Override
+    public UnderlyingHttpExecutorBuilder protocolVersion(HttpProtocolVersion protocolVersion) {
+        return this;
+    }
+
+    @Override
     public String getName() {
         return "jdk";
     }

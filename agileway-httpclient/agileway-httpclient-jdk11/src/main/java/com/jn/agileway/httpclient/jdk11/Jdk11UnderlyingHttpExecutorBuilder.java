@@ -25,6 +25,14 @@ public class Jdk11UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecuto
 
     private ExecutorService executor;
 
+    private HttpProtocolVersion protocolVersion;
+
+    @Override
+    public UnderlyingHttpExecutorBuilder protocolVersion(HttpProtocolVersion protocolVersion) {
+        this.protocolVersion = protocolVersion;
+        return this;
+    }
+
     @Override
     public Jdk11UnderlyingHttpExecutorBuilder poolMaxIdleConnections(int maxIdleConnections) {
         return this;

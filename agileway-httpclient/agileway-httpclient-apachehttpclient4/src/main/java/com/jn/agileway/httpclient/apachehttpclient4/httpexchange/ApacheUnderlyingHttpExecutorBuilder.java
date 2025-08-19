@@ -27,6 +27,11 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
     private Proxy proxy;
 
     @Override
+    public UnderlyingHttpExecutorBuilder protocolVersion(HttpProtocolVersion protocolVersion) {
+        return this;
+    }
+
+    @Override
     public ApacheUnderlyingHttpExecutorBuilder poolMaxIdleConnections(int maxIdleConnections) {
         config.setPoolMaxIdleConnections(maxIdleConnections);
         return this;

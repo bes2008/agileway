@@ -20,6 +20,14 @@ public class JettyUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecuto
     private SSLContextBuilder sslContextBuilder;
     private Proxy proxy;
 
+    private HttpProtocolVersion protocolVersion;
+
+    @Override
+    public UnderlyingHttpExecutorBuilder protocolVersion(HttpProtocolVersion protocolVersion) {
+        this.protocolVersion = protocolVersion;
+        return this;
+    }
+
     @Override
     public UnderlyingHttpExecutorBuilder poolMaxIdleConnections(int maxIdleConnections) {
         return null;

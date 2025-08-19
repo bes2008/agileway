@@ -13,6 +13,8 @@ import java.util.concurrent.ExecutorService;
 
 public interface UnderlyingHttpExecutorBuilder extends Builder<UnderlyingHttpExecutor>, Named, Supplier0<UnderlyingHttpExecutorBuilder> {
 
+    UnderlyingHttpExecutorBuilder protocolVersion(HttpProtocolVersion protocolVersion);
+
     UnderlyingHttpExecutorBuilder poolMaxIdleConnections(int maxIdleConnections);
 
     UnderlyingHttpExecutorBuilder keepAliveDurationMills(int keepAliveDurationInMills);
