@@ -5,10 +5,14 @@ import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutorBuilder;
 import com.jn.langx.security.ssl.SSLContextBuilder;
 import com.jn.langx.util.collection.Lists;
+import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.async.CloseableHttpAsyncClient;
 import org.apache.hc.client5.http.impl.async.HttpAsyncClients;
+import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManagerBuilder;
 import org.apache.hc.core5.http.HttpVersion;
 import org.apache.hc.core5.http.config.Http1Config;
+import org.apache.hc.core5.util.TimeValue;
+import org.apache.hc.core5.util.Timeout;
 
 import javax.net.ssl.HostnameVerifier;
 import java.net.Proxy;
@@ -18,6 +22,15 @@ import java.util.concurrent.ExecutorService;
 public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecutorBuilder {
 
     private HttpProtocolVersion protocolVersion;
+    private int maxIdleConnections;
+    private int keepAliveDurationInMills;
+    private int connectTimeoutInMills = -1;
+    private int readTimeoutInMills;
+    private Proxy proxy;
+    private HostnameVerifier hostnameVerifier;
+    private SSLContextBuilder sslContextBuilder;
+    private ExecutorService executor;
+
 
     @Override
     public UnderlyingHttpExecutorBuilder protocolVersion(HttpProtocolVersion protocolVersion) {
@@ -27,41 +40,49 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
 
     @Override
     public ApacheUnderlyingHttpExecutorBuilder poolMaxIdleConnections(int maxIdleConnections) {
+        this.maxIdleConnections = maxIdleConnections;
         return this;
     }
 
     @Override
     public ApacheUnderlyingHttpExecutorBuilder keepAliveDurationMills(int keepAliveDurationInMills) {
+        this.keepAliveDurationInMills = keepAliveDurationInMills;
         return this;
     }
 
     @Override
     public ApacheUnderlyingHttpExecutorBuilder connectTimeoutMills(int connectTimeoutInMills) {
+        this.connectTimeoutInMills = connectTimeoutInMills;
         return this;
     }
 
     @Override
     public ApacheUnderlyingHttpExecutorBuilder requestTimeoutMills(int readTimeoutInMills) {
+        this.readTimeoutInMills = readTimeoutInMills;
         return this;
     }
 
     @Override
     public ApacheUnderlyingHttpExecutorBuilder proxy(Proxy proxy) {
+        this.proxy = proxy;
         return this;
     }
 
     @Override
     public ApacheUnderlyingHttpExecutorBuilder hostnameVerifier(HostnameVerifier hostnameVerifier) {
+        this.hostnameVerifier = hostnameVerifier;
         return this;
     }
 
     @Override
     public ApacheUnderlyingHttpExecutorBuilder sslContextBuilder(SSLContextBuilder sslContextBuilder) {
+        this.sslContextBuilder = sslContextBuilder;
         return this;
     }
 
     @Override
     public ApacheUnderlyingHttpExecutorBuilder executor(ExecutorService executor) {
+        this.executor = executor;
         return this;
     }
 
@@ -82,7 +103,7 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
     @Override
     public UnderlyingHttpExecutor build() {
         CloseableHttpAsyncClient httpClient = protocolVersion == HttpProtocolVersion.HTTP_2 ? buildHttp2AsyncHttpClient() : buildHttp11AsyncHttpClient();
-        return new ApacheUnderlyingHttpExecutor(httpClient);
+        return new ApacheUnderlyingHttpExecutor();
     }
 
     private CloseableHttpAsyncClient buildHttp2AsyncHttpClient() {
@@ -93,7 +114,13 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
     private CloseableHttpAsyncClient buildHttp11AsyncHttpClient() {
         return HttpAsyncClients.custom()
                 .setHttp1Config(Http1Config.custom().setVersion(HttpVersion.HTTP_1_1).build())
-
+                .setConnectionManagerShared(true)
+                .setConnectionManager(PoolingAsyncClientConnectionManagerBuilder.create().build())
+                .setDefaultRequestConfig(RequestConfig.custom()
+                        .setAuthenticationEnabled(true)
+                        .setConnectionKeepAlive(TimeValue.ofMilliseconds(keepAliveDurationInMills))
+                        .setResponseTimeout(Timeout.ofMilliseconds(readTimeoutInMills))
+                        .build())
                 .build();
     }
 
