@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.httpcomponents.ext;
+package com.jn.agileway.httpclient.apachehttpclient4.ext;
 
 import com.jn.langx.lifecycle.AbstractLifecycle;
 import com.jn.langx.lifecycle.InitializationException;
@@ -9,21 +9,21 @@ import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Supplier0;
-import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
 import org.apache.http.HttpResponse;
 import org.apache.http.NoHttpResponseException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.ConnectionKeepAliveStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
-import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
-import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeaderElementIterator;
-import org.apache.http.nio.client.HttpAsyncClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;
@@ -32,18 +32,18 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.SocketTimeoutException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-public class HttpAsyncClientProvider extends AbstractLifecycle implements Supplier0<HttpAsyncClient> {
+public class HttpClientProvider extends AbstractLifecycle implements Supplier0<HttpClient> {
     private static final Logger logger = Loggers.getLogger(HttpClientProvider.class);
 
-    private CloseableHttpAsyncClient httpClient;
-
+    private CloseableHttpClient httpClient;
 
     private HttpClientProperties config;
 
-    private final List<HttpAsyncClientCustomizer> customizers = Collects.emptyArrayList();
+    private final List<HttpClientCustomizer> customizers = Collects.emptyArrayList();
 
-    public HttpAsyncClient get() {
+    public CloseableHttpClient get() {
         if (!isRunning()) {
             return null;
         }
@@ -60,7 +60,7 @@ public class HttpAsyncClientProvider extends AbstractLifecycle implements Suppli
         }
     }
 
-    public void setCustomizers(List<HttpAsyncClientCustomizer> customizers) {
+    public void setCustomizers(List<HttpClientCustomizer> customizers) {
         if (Emptys.isNotEmpty(customizers)) {
             this.customizers.addAll(customizers);
         }
@@ -82,26 +82,26 @@ public class HttpAsyncClientProvider extends AbstractLifecycle implements Suppli
             Reflects.invoke(method, requestConfigBuilder, new Object[]{true}, true, true);
         }
 
-        Pipeline.of(this.customizers).forEach(new Consumer<HttpAsyncClientCustomizer>() {
+        Pipeline.of(this.customizers).forEach(new Consumer<HttpClientCustomizer>() {
             @Override
-            public void accept(HttpAsyncClientCustomizer httpClientCustomizer) {
+            public void accept(HttpClientCustomizer httpClientCustomizer) {
                 httpClientCustomizer.customizeHttpRequest(requestConfigBuilder);
             }
         });
 
         RequestConfig requestConfig = requestConfigBuilder.build();
-
-        final HttpAsyncClientBuilder httpClientBuilder = HttpAsyncClientBuilder.create()
+        final HttpClientBuilder httpClientBuilder = HttpClients.custom()
                 .setDefaultRequestConfig(requestConfig)
+                .setRetryHandler(new AgilewayRetryHandler(config.getMaxRetry()))
                 .setKeepAliveStrategy(new AgilewayConnectionKeepAliveStrategy())
                 .setMaxConnPerRoute(config.getPoolMaxPerRoute())
-                .setMaxConnTotal(config.getPoolMaxConnections())
-                .setDefaultCookieSpecRegistry(CookieSpecs.createDefaultCookieSpecProviderBuilder().build());
+                .setMaxConnTotal(config.getPoolMaxConnections());
 
-        Pipeline.of(this.customizers).forEach(new Consumer<HttpAsyncClientCustomizer>() {
+
+        Pipeline.of(this.customizers).forEach(new Consumer<HttpClientCustomizer>() {
             @Override
-            public void accept(HttpAsyncClientCustomizer httpClientCustomizer) {
-                httpClientCustomizer.customizeAsyncHttpClient(httpClientBuilder);
+            public void accept(HttpClientCustomizer httpClientCustomizer) {
+                httpClientCustomizer.customizeHttpClient(httpClientBuilder);
             }
         });
         httpClient = httpClientBuilder.build();
@@ -111,7 +111,7 @@ public class HttpAsyncClientProvider extends AbstractLifecycle implements Suppli
     @Override
     public void doStop() {
         if (httpClient != null) {
-            IOs.close(this.httpClient);
+            this.httpClient.getConnectionManager().shutdown();
         }
     }
 
@@ -136,7 +136,7 @@ public class HttpAsyncClientProvider extends AbstractLifecycle implements Suppli
         }
     }
 
-    private static class AgilewayRetryHandler extends DefaultHttpRequestRetryHandler {
+    private class AgilewayRetryHandler extends DefaultHttpRequestRetryHandler {
         private int retry;
 
         public AgilewayRetryHandler(int retry) {
@@ -157,7 +157,14 @@ public class HttpAsyncClientProvider extends AbstractLifecycle implements Suppli
                 return true;
             }
 
+            try {
+                httpClient.getConnectionManager().closeExpiredConnections();
+                httpClient.getConnectionManager().closeIdleConnections(config.getIdleConnectionTimeoutInMills(), TimeUnit.MILLISECONDS);
+            } catch (Exception ex) {
+                // ignore it
+            }
             return super.retryRequest(exception, executionCount, context);
         }
     }
+
 }

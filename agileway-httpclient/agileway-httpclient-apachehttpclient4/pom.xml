@@ -9,7 +9,7 @@
         <version>5.2.4</version>
     </parent>
 
-    <artifactId>agileway-httpclient-httpcomponents</artifactId>
+    <artifactId>agileway-httpclient-apachehttpclient4</artifactId>
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>

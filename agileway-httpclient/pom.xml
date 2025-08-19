@@ -12,13 +12,14 @@
     <packaging>pom</packaging>
     <modules>
         <module>agileway-httpclient-core</module>
-        <module>agileway-httpclient-httpcomponents</module>
+        <module>agileway-httpclient-apachehttpclient4</module>
         <module>agileway-httpclient-okhttp</module>
         <module>agileway-httpclient-jdk11</module>
         <module>agileway-httpclient-soap</module>
         <module>agileway-httpclient-auth</module>
         <module>agileway-httpclient-jetty</module>
         <module>agileway-httpclient-protobuf</module>
+        <module>agileway-httpclient-apachehttpclient5</module>
     </modules>
 
     <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>

@@ -358,7 +358,7 @@
             </dependency>
             <dependency>
                 <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
-                <artifactId>agileway-httpclient-httpcomponents</artifactId>
+                <artifactId>agileway-httpclient-apachehttpclient4</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

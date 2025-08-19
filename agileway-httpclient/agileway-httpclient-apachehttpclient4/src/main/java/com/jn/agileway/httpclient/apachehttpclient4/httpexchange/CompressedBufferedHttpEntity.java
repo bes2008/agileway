@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.httpcomponents.httpexchange;
+package com.jn.agileway.httpclient.apachehttpclient4.httpexchange;
 
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.Preconditions;
