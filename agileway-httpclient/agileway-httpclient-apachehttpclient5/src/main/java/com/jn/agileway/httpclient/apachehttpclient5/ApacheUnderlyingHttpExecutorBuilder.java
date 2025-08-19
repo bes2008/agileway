@@ -7,6 +7,8 @@ import com.jn.langx.security.ssl.SSLContextBuilder;
 import com.jn.langx.util.collection.Lists;
 import org.apache.hc.client5.http.impl.async.CloseableHttpAsyncClient;
 import org.apache.hc.client5.http.impl.async.HttpAsyncClients;
+import org.apache.hc.core5.http.HttpVersion;
+import org.apache.hc.core5.http.config.Http1Config;
 
 import javax.net.ssl.HostnameVerifier;
 import java.net.Proxy;
@@ -25,42 +27,42 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
 
     @Override
     public ApacheUnderlyingHttpExecutorBuilder poolMaxIdleConnections(int maxIdleConnections) {
-        return null;
+        return this;
     }
 
     @Override
     public ApacheUnderlyingHttpExecutorBuilder keepAliveDurationMills(int keepAliveDurationInMills) {
-        return null;
+        return this;
     }
 
     @Override
     public ApacheUnderlyingHttpExecutorBuilder connectTimeoutMills(int connectTimeoutInMills) {
-        return null;
+        return this;
     }
 
     @Override
     public ApacheUnderlyingHttpExecutorBuilder requestTimeoutMills(int readTimeoutInMills) {
-        return null;
+        return this;
     }
 
     @Override
     public ApacheUnderlyingHttpExecutorBuilder proxy(Proxy proxy) {
-        return null;
+        return this;
     }
 
     @Override
     public ApacheUnderlyingHttpExecutorBuilder hostnameVerifier(HostnameVerifier hostnameVerifier) {
-        return null;
+        return this;
     }
 
     @Override
     public ApacheUnderlyingHttpExecutorBuilder sslContextBuilder(SSLContextBuilder sslContextBuilder) {
-        return null;
+        return this;
     }
 
     @Override
     public ApacheUnderlyingHttpExecutorBuilder executor(ExecutorService executor) {
-        return null;
+        return this;
     }
 
     private static final List<HttpProtocolVersion> supportedProtocols = Lists.newArrayList(
@@ -79,11 +81,20 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
 
     @Override
     public UnderlyingHttpExecutor build() {
+        CloseableHttpAsyncClient httpClient = protocolVersion == HttpProtocolVersion.HTTP_2 ? buildHttp2AsyncHttpClient() : buildHttp11AsyncHttpClient();
+        return new ApacheUnderlyingHttpExecutor(httpClient);
+    }
 
-        CloseableHttpAsyncClient asyncClient = HttpAsyncClients.custom()
+    private CloseableHttpAsyncClient buildHttp2AsyncHttpClient() {
+        return HttpAsyncClients.customHttp2()
                 .build();
+    }
 
-        return null;
+    private CloseableHttpAsyncClient buildHttp11AsyncHttpClient() {
+        return HttpAsyncClients.custom()
+                .setHttp1Config(Http1Config.custom().setVersion(HttpVersion.HTTP_1_1).build())
+
+                .build();
     }
 
     @Override
