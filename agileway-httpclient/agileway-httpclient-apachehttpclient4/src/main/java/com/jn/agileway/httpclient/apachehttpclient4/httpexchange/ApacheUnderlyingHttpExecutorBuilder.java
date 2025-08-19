@@ -25,7 +25,6 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
     private HostnameVerifier hostnameVerifier;
     private SSLContextBuilder sslContextBuilder;
     private Proxy proxy;
-    private ExecutorService executor;
 
     @Override
     public ApacheUnderlyingHttpExecutorBuilder poolMaxIdleConnections(int maxIdleConnections) {
@@ -35,7 +34,7 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
 
     @Override
     public String getName() {
-        return "apache-httpcomponents";
+        return "apache-httpclient4";
     }
 
     @Override
@@ -75,13 +74,11 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
     }
 
     public ApacheUnderlyingHttpExecutorBuilder executor(ExecutorService executor) {
-        this.executor = executor;
         return this;
     }
 
     private static final List<HttpProtocolVersion> supportedProtocols = Lists.newArrayList(
-            HttpProtocolVersion.HTTP_1_1,
-            HttpProtocolVersion.HTTP_2
+            HttpProtocolVersion.HTTP_1_1
     );
 
     @Override
