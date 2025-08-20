@@ -112,6 +112,11 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
     }
 
     private CloseableHttpAsyncClient buildHttp2AsyncHttpClient() {
+        TlsStrategy tlsStrategy = null;
+        if (sslContextBuilder != null) {
+            tlsStrategy = new DefaultClientTlsStrategy(sslContextBuilder.build(), this.hostnameVerifier);
+        }
+
         return HttpAsyncClients.customHttp2()
                 .setH2Config(H2Config.custom().setCompressionEnabled(true).build())
                 .setDefaultRequestConfig(RequestConfig.custom()
@@ -120,6 +125,7 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
                         .setResponseTimeout(Timeout.ofMilliseconds(readTimeoutInMills))
                         .build())
                 .setUserAgent("agileway-" + getName())
+                .setTlsStrategy(tlsStrategy)
                 .setIOReactorConfig(IOReactorConfig.custom()
                         .setSoTimeout(Timeout.ofMilliseconds(readTimeoutInMills + connectTimeoutInMills))
                         .setSoKeepAlive(true)
