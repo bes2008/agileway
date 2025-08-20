@@ -10,7 +10,6 @@ import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.config.TlsConfig;
 import org.apache.hc.client5.http.impl.async.CloseableHttpAsyncClient;
 import org.apache.hc.client5.http.impl.async.HttpAsyncClients;
-import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManager;
 import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManagerBuilder;
 import org.apache.hc.client5.http.ssl.DefaultClientTlsStrategy;
 import org.apache.hc.core5.http.HttpVersion;
@@ -151,11 +150,10 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
                             .build());
         }
 
-        PoolingAsyncClientConnectionManager connectionPoolManager = connectionPoolManagerBuilder.build();
         return HttpAsyncClients.custom()
                 .setHttp1Config(Http1Config.custom().setVersion(HttpVersion.HTTP_1_1).build())
                 .setConnectionManagerShared(true)
-                .setConnectionManager(connectionPoolManager)
+                .setConnectionManager(connectionPoolManagerBuilder.build())
                 .setDefaultRequestConfig(RequestConfig.custom()
                         .setAuthenticationEnabled(true)
                         .setConnectionKeepAlive(TimeValue.ofMilliseconds(keepAliveDurationInMills))
