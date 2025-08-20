@@ -80,7 +80,7 @@ public class Jdk11UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecuto
     }
 
     @Override
-    public Jdk11UnderlyingHttpExecutorBuilder executor(int workerThreads) {
+    public Jdk11UnderlyingHttpExecutorBuilder workThreads(int workerThreads) {
         this.workerThreads = workerThreads;
         return this;
     }

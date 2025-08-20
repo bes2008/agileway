@@ -70,7 +70,7 @@ public class JettyUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecuto
     }
 
     @Override
-    public UnderlyingHttpExecutorBuilder executor(int workerThreads) {
+    public UnderlyingHttpExecutorBuilder workThreads(int workerThreads) {
         this.workerThreads = workerThreads;
         return this;
     }

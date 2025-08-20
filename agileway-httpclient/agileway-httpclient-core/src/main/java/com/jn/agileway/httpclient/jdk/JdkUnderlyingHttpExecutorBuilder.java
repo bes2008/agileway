@@ -70,7 +70,7 @@ public class JdkUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecutorB
     }
 
     @Override
-    public JdkUnderlyingHttpExecutorBuilder executor(int workerThreads) {
+    public JdkUnderlyingHttpExecutorBuilder workThreads(int workerThreads) {
         return this;
     }
 

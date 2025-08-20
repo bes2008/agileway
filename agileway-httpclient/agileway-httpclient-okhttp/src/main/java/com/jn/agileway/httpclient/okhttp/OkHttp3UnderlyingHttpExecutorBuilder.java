@@ -82,7 +82,7 @@ public class OkHttp3UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecu
     }
 
     @Override
-    public UnderlyingHttpExecutorBuilder executor(int workerThreads) {
+    public UnderlyingHttpExecutorBuilder workThreads(int workerThreads) {
         this.workerThreads = workerThreads;
         return this;
     }

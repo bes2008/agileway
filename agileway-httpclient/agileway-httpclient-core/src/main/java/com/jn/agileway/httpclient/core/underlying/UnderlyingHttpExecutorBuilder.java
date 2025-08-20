@@ -28,7 +28,7 @@ public interface UnderlyingHttpExecutorBuilder extends Builder<UnderlyingHttpExe
 
     UnderlyingHttpExecutorBuilder sslContextBuilder(SSLContextBuilder sslContextBuilder);
 
-    UnderlyingHttpExecutorBuilder executor(int workerThreads);
+    UnderlyingHttpExecutorBuilder workThreads(int workerThreads);
 
     List<HttpProtocolVersion> supportedProtocols();
 

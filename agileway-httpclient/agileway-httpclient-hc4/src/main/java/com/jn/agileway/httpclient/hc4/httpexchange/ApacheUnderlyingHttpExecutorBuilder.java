@@ -18,7 +18,6 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecutorBuilder {
     private HttpClientProperties config = new HttpClientProperties();
@@ -78,7 +77,7 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
         return this;
     }
 
-    public ApacheUnderlyingHttpExecutorBuilder executor(ExecutorService executor) {
+    public ApacheUnderlyingHttpExecutorBuilder workThreads(int workerThreads) {
         return this;
     }
 

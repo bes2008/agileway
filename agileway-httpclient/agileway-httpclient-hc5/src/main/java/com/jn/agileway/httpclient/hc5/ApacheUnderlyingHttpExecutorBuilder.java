@@ -82,7 +82,7 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
     }
 
     @Override
-    public ApacheUnderlyingHttpExecutorBuilder executor(int workerThreads) {
+    public ApacheUnderlyingHttpExecutorBuilder workThreads(int workerThreads) {
         this.workerThreads = workerThreads;
         return this;
     }

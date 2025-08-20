@@ -203,7 +203,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
             requestFactoryBuilder.hostnameVerifier(configuration.getHostnameVerifier());
             requestFactoryBuilder.sslContextBuilder(configuration.getSslContextBuilder());
             requestFactoryBuilder.poolMaxIdleConnections(configuration.getPoolMaxIdleConnections());
-            requestFactoryBuilder.executor(configuration.getWorkerThreads());
+            requestFactoryBuilder.workThreads(configuration.getWorkerThreads());
             requestFactoryBuilder.protocolVersion(configuration.getProtocolVersion());
             this.underlyingHttpExecutor = requestFactoryBuilder.build();
         }
