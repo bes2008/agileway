@@ -117,8 +117,11 @@ public class Jdk11UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecuto
             builder.executor(new ThreadPoolExecutor(workerThreads, workerThreads, 120L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>()));
         }
 
-        builder.version(HttpClient.Version.HTTP_1_1);
-
+        if (protocolVersion == HttpProtocolVersion.HTTP_2) {
+            builder.version(HttpClient.Version.HTTP_2);
+        } else {
+            builder.version(HttpClient.Version.HTTP_1_1);
+        }
         builder.followRedirects(HttpClient.Redirect.NORMAL);
 
         HttpClient httpClient = builder.build();

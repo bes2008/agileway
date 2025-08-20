@@ -8,6 +8,7 @@ import com.jn.langx.util.collection.Lists;
 import okhttp3.ConnectionPool;
 import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 
 import javax.net.ssl.HostnameVerifier;
 import java.net.Proxy;
@@ -124,6 +125,11 @@ public class OkHttp3UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecu
         if (hostnameVerifier != null) {
             builder.hostnameVerifier(hostnameVerifier);
         }
+        List<Protocol> protocols = Lists.newArrayList(Protocol.HTTP_1_1);
+        if (protocolVersion == HttpProtocolVersion.HTTP_2) {
+            protocols.add(Protocol.HTTP_2);
+        }
+        builder.protocols(protocols);
         OkHttpClient okHttpClient = builder.build();
         OkHttp3UnderlyingHttpExecutor httpExecutor = new OkHttp3UnderlyingHttpExecutor();
         httpExecutor.setHttpClient(okHttpClient);

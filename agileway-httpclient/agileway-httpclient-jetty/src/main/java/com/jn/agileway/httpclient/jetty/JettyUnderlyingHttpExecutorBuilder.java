@@ -94,6 +94,13 @@ public class JettyUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecuto
 
     @Override
     public UnderlyingHttpExecutor build() {
+        if (protocolVersion != HttpProtocolVersion.HTTP_2) {
+            return buildHttp11UnderlyingHttpExecutor();
+        }
+        return buildHttp12UnderlyingHttpExecutor();
+    }
+
+    private JettyUnderlyingHttpExecutor buildHttp11UnderlyingHttpExecutor() {
         HttpClient httpClient = new HttpClient();
         if (workerThreads > 0) {
             httpClient.setExecutor(workerThreads < 8 ? new ExecutorThreadPool(workerThreads, workerThreads) : new ExecutorThreadPool(workerThreads));
@@ -113,6 +120,10 @@ public class JettyUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecuto
             throw new RuntimeException(e);
         }
         return httpExecutor;
+    }
+
+    private JettyUnderlyingHttp2Executor buildHttp12UnderlyingHttpExecutor() {
+        return new JettyUnderlyingHttp2Executor();
     }
 
     @Override
