@@ -9,8 +9,8 @@
         <version>5.2.4</version>
     </parent>
 
-    <groupId>org.example</groupId>
     <artifactId>agileway-httpclient-hc5</artifactId>
+    <name>${project.groupId}:${project.artifactId}:${project.version}</name>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
