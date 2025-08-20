@@ -6,11 +6,16 @@ import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutorBuilder;
 import com.jn.langx.security.ssl.SSLContextBuilder;
 import com.jn.langx.util.collection.Lists;
 import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.config.TlsConfig;
 import org.apache.hc.client5.http.impl.async.CloseableHttpAsyncClient;
 import org.apache.hc.client5.http.impl.async.HttpAsyncClients;
 import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.ssl.DefaultClientTlsStrategy;
 import org.apache.hc.core5.http.HttpVersion;
 import org.apache.hc.core5.http.config.Http1Config;
+import org.apache.hc.core5.http.nio.ssl.TlsStrategy;
+import org.apache.hc.core5.http.ssl.TLS;
+import org.apache.hc.core5.http2.HttpVersionPolicy;
 import org.apache.hc.core5.http2.config.H2Config;
 import org.apache.hc.core5.reactor.IOReactorConfig;
 import org.apache.hc.core5.util.TimeValue;
@@ -117,7 +122,7 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
                         .build())
                 .setUserAgent("agileway-" + getName())
                 .setIOReactorConfig(IOReactorConfig.custom()
-                        .setSoTimeout(Timeout.ofMilliseconds(readTimeoutInMills))
+                        .setSoTimeout(Timeout.ofMilliseconds(readTimeoutInMills + connectTimeoutInMills))
                         .setSoKeepAlive(true)
                         .setIoThreadCount(workerThreads)
                         .build())
@@ -127,10 +132,21 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
     }
 
     private CloseableHttpAsyncClient buildHttp11AsyncHttpClient() {
+        TlsStrategy tlsStrategy = null;
+        if (sslContextBuilder != null) {
+            tlsStrategy = new DefaultClientTlsStrategy(sslContextBuilder.build(), this.hostnameVerifier);
+        }
+
         return HttpAsyncClients.custom()
                 .setHttp1Config(Http1Config.custom().setVersion(HttpVersion.HTTP_1_1).build())
                 .setConnectionManagerShared(true)
-                .setConnectionManager(PoolingAsyncClientConnectionManagerBuilder.create().build())
+                .setConnectionManager(PoolingAsyncClientConnectionManagerBuilder.create()
+                        .setTlsStrategy(tlsStrategy)
+                        .setDefaultTlsConfig(TlsConfig.custom()
+                                .setSupportedProtocols(TLS.V_1_2, TLS.V_1_3)
+                                .setVersionPolicy(HttpVersionPolicy.FORCE_HTTP_1)
+                                .build())
+                        .build())
                 .setDefaultRequestConfig(RequestConfig.custom()
                         .setAuthenticationEnabled(true)
                         .setConnectionKeepAlive(TimeValue.ofMilliseconds(keepAliveDurationInMills))
@@ -138,7 +154,7 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
                         .build())
                 .setUserAgent("agileway-" + getName())
                 .setIOReactorConfig(IOReactorConfig.custom()
-                        .setSoTimeout(Timeout.ofMilliseconds(readTimeoutInMills))
+                        .setSoTimeout(Timeout.ofMilliseconds(readTimeoutInMills + connectTimeoutInMills))
                         .setSoKeepAlive(true)
                         .setIoThreadCount(workerThreads)
                         .build())

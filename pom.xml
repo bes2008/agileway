@@ -362,6 +362,11 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
+                <artifactId>agileway-httpclient-hc5</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>io.github.bes2008.solution.agileway.oauth2</groupId>
                 <artifactId>agileway-oauth2-client</artifactId>
                 <version>${project.version}</version>
