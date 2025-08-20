@@ -8,10 +8,7 @@ import com.jn.langx.util.concurrent.CommonThreadFactory;
 import javax.net.ssl.HostnameVerifier;
 import java.net.Proxy;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class HttpExchangerConfiguration {
     /***********************************************************************
@@ -64,6 +61,7 @@ public class HttpExchangerConfiguration {
      * 底层 http client 的工作线程数
      */
     private int workerThreads = 8;
+    private ExecutorService executor;
 
     public int getConnectTimeoutMillis() {
         return connectTimeoutMillis;
@@ -116,9 +114,15 @@ public class HttpExchangerConfiguration {
         this.sslContextBuilder = sslContextBuilder;
     }
 
+    public void setExecutor(ExecutorService executor) {
+        this.executor = executor;
+    }
 
     Executor getExecutor() {
-        return new ThreadPoolExecutor(8, 16, 120, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(10000), new CommonThreadFactory("http-exchanger", false));
+        if (executor == null) {
+            executor = new ThreadPoolExecutor(8, 16, 120, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(10000), new CommonThreadFactory("http-exchanger", false));
+        }
+        return executor;
     }
 
     public Proxy getProxy() {
