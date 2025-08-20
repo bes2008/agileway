@@ -5,6 +5,7 @@ import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutorBuilder;
 import com.jn.langx.security.ssl.SSLContextBuilder;
 import com.jn.langx.util.collection.Lists;
+import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.config.TlsConfig;
 import org.apache.hc.client5.http.impl.async.CloseableHttpAsyncClient;
@@ -28,7 +29,6 @@ import java.util.List;
 public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecutorBuilder {
 
     private HttpProtocolVersion protocolVersion;
-    private int maxIdleConnections;
     private int keepAliveDurationInMills;
     private int connectTimeoutInMills = -1;
     private int readTimeoutInMills;
@@ -46,7 +46,6 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
 
     @Override
     public ApacheUnderlyingHttpExecutorBuilder poolMaxIdleConnections(int maxIdleConnections) {
-        this.maxIdleConnections = maxIdleConnections;
         return this;
     }
 
@@ -145,6 +144,12 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
                         .setDefaultTlsConfig(TlsConfig.custom()
                                 .setSupportedProtocols(TLS.V_1_2, TLS.V_1_3)
                                 .setVersionPolicy(HttpVersionPolicy.FORCE_HTTP_1)
+                                .setHandshakeTimeout(Timeout.ofSeconds(30))
+                                .build())
+                        .setMaxConnTotal(500)
+                        .setDefaultConnectionConfig(ConnectionConfig.custom()
+                                .setConnectTimeout(Timeout.ofMilliseconds(connectTimeoutInMills))
+                                .setSocketTimeout(Timeout.ofMilliseconds(readTimeoutInMills + connectTimeoutInMills))
                                 .build())
                         .build())
                 .setDefaultRequestConfig(RequestConfig.custom()
@@ -153,11 +158,6 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
                         .setResponseTimeout(Timeout.ofMilliseconds(readTimeoutInMills))
                         .build())
                 .setUserAgent("agileway-" + getName())
-                .setIOReactorConfig(IOReactorConfig.custom()
-                        .setSoTimeout(Timeout.ofMilliseconds(readTimeoutInMills + connectTimeoutInMills))
-                        .setSoKeepAlive(true)
-                        .setIoThreadCount(workerThreads)
-                        .build())
                 .evictIdleConnections(TimeValue.ofSeconds(60))
                 .disableAutomaticRetries()
                 .build();
