@@ -10,6 +10,7 @@ import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.config.TlsConfig;
 import org.apache.hc.client5.http.impl.async.CloseableHttpAsyncClient;
 import org.apache.hc.client5.http.impl.async.HttpAsyncClients;
+import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManager;
 import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManagerBuilder;
 import org.apache.hc.client5.http.ssl.DefaultClientTlsStrategy;
 import org.apache.hc.core5.http.HttpVersion;
@@ -131,27 +132,30 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
     }
 
     private CloseableHttpAsyncClient buildHttp11AsyncHttpClient() {
-        TlsStrategy tlsStrategy = null;
-        if (sslContextBuilder != null) {
-            tlsStrategy = new DefaultClientTlsStrategy(sslContextBuilder.build(), this.hostnameVerifier);
-        }
 
-        return HttpAsyncClients.custom()
-                .setHttp1Config(Http1Config.custom().setVersion(HttpVersion.HTTP_1_1).build())
-                .setConnectionManagerShared(true)
-                .setConnectionManager(PoolingAsyncClientConnectionManagerBuilder.create()
-                        .setTlsStrategy(tlsStrategy)
-                        .setDefaultTlsConfig(TlsConfig.custom()
-                                .setSupportedProtocols(TLS.V_1_2, TLS.V_1_3)
-                                .setVersionPolicy(HttpVersionPolicy.FORCE_HTTP_1)
-                                .setHandshakeTimeout(Timeout.ofSeconds(30))
-                                .build())
+        PoolingAsyncClientConnectionManagerBuilder connectionPoolManagerBuilder =
+                PoolingAsyncClientConnectionManagerBuilder.create()
                         .setMaxConnTotal(500)
                         .setDefaultConnectionConfig(ConnectionConfig.custom()
                                 .setConnectTimeout(Timeout.ofMilliseconds(connectTimeoutInMills))
                                 .setSocketTimeout(Timeout.ofMilliseconds(readTimeoutInMills + connectTimeoutInMills))
-                                .build())
-                        .build())
+                                .build());
+        if (sslContextBuilder != null) {
+            TlsStrategy tlsStrategy = new DefaultClientTlsStrategy(sslContextBuilder.build(), this.hostnameVerifier);
+            connectionPoolManagerBuilder.setTlsStrategy(tlsStrategy);
+            connectionPoolManagerBuilder.setTlsStrategy(tlsStrategy)
+                    .setDefaultTlsConfig(TlsConfig.custom()
+                            .setSupportedProtocols(TLS.V_1_2, TLS.V_1_3)
+                            .setVersionPolicy(HttpVersionPolicy.FORCE_HTTP_1)
+                            .setHandshakeTimeout(Timeout.ofSeconds(30))
+                            .build());
+        }
+
+        PoolingAsyncClientConnectionManager connectionPoolManager = connectionPoolManagerBuilder.build();
+        return HttpAsyncClients.custom()
+                .setHttp1Config(Http1Config.custom().setVersion(HttpVersion.HTTP_1_1).build())
+                .setConnectionManagerShared(true)
+                .setConnectionManager(connectionPoolManager)
                 .setDefaultRequestConfig(RequestConfig.custom()
                         .setAuthenticationEnabled(true)
                         .setConnectionKeepAlive(TimeValue.ofMilliseconds(keepAliveDurationInMills))
