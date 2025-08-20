@@ -43,7 +43,7 @@
 
         <dependency>
             <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
-            <artifactId>agileway-httpclient-apachehttpclient4</artifactId>
+            <artifactId>agileway-httpclient-hc4</artifactId>
         </dependency>
 
         <dependency>

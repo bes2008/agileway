@@ -1,8 +1,8 @@
 package com.jn.agileway.springboot.httpclient;
 
-import com.jn.agileway.httpclient.apachehttpclient4.ext.HttpClientCustomizer;
-import com.jn.agileway.httpclient.apachehttpclient4.ext.HttpClientProperties;
-import com.jn.agileway.httpclient.apachehttpclient4.ext.HttpClientProvider;
+import com.jn.agileway.httpclient.hc4.ext.HttpClientCustomizer;
+import com.jn.agileway.httpclient.hc4.ext.HttpClientProperties;
+import com.jn.agileway.httpclient.hc4.ext.HttpClientProvider;
 import com.jn.langx.util.Emptys;
 import org.apache.http.client.HttpClient;
 import org.springframework.beans.factory.ObjectProvider;
