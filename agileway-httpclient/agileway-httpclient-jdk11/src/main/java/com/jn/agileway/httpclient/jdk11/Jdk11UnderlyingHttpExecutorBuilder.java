@@ -15,7 +15,9 @@ import java.net.ProxySelector;
 import java.net.http.HttpClient;
 import java.time.Duration;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class Jdk11UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecutorBuilder {
     private int connectTimeoutMills = 5000;
@@ -23,7 +25,7 @@ public class Jdk11UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecuto
     private Proxy proxy;
     private int readTimeoutMills = 5000;
 
-    private ExecutorService executor;
+    private int workerThreads;
 
     private HttpProtocolVersion protocolVersion;
 
@@ -78,8 +80,8 @@ public class Jdk11UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecuto
     }
 
     @Override
-    public Jdk11UnderlyingHttpExecutorBuilder executor(ExecutorService executor) {
-        this.executor = executor;
+    public Jdk11UnderlyingHttpExecutorBuilder executor(int workerThreads) {
+        this.workerThreads = workerThreads;
         return this;
     }
 
@@ -111,8 +113,8 @@ public class Jdk11UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecuto
         if (proxy != null) {
             builder.proxy(ProxySelector.of((InetSocketAddress) proxy.address()));
         }
-        if (executor != null) {
-            builder.executor(executor);
+        if (workerThreads > 0) {
+            builder.executor(new ThreadPoolExecutor(workerThreads, workerThreads, 120L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>()));
         }
 
         builder.version(HttpClient.Version.HTTP_1_1);

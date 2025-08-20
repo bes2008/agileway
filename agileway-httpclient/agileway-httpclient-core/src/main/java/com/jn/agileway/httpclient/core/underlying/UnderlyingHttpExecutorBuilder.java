@@ -9,7 +9,6 @@ import com.jn.langx.util.function.Supplier0;
 import javax.net.ssl.HostnameVerifier;
 import java.net.Proxy;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 public interface UnderlyingHttpExecutorBuilder extends Builder<UnderlyingHttpExecutor>, Named, Supplier0<UnderlyingHttpExecutorBuilder> {
 
@@ -29,7 +28,7 @@ public interface UnderlyingHttpExecutorBuilder extends Builder<UnderlyingHttpExe
 
     UnderlyingHttpExecutorBuilder sslContextBuilder(SSLContextBuilder sslContextBuilder);
 
-    UnderlyingHttpExecutorBuilder executor(ExecutorService executor);
+    UnderlyingHttpExecutorBuilder executor(int workerThreads);
 
     List<HttpProtocolVersion> supportedProtocols();
 

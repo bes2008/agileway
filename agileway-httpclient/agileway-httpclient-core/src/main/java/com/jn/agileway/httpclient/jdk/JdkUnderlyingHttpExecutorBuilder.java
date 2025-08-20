@@ -10,7 +10,6 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import java.net.Proxy;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 public class JdkUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecutorBuilder {
 
@@ -71,7 +70,7 @@ public class JdkUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecutorB
     }
 
     @Override
-    public JdkUnderlyingHttpExecutorBuilder executor(ExecutorService executor) {
+    public JdkUnderlyingHttpExecutorBuilder executor(int workerThreads) {
         return this;
     }
 

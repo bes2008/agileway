@@ -12,13 +12,13 @@ import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManagerBu
 import org.apache.hc.core5.http.HttpVersion;
 import org.apache.hc.core5.http.config.Http1Config;
 import org.apache.hc.core5.http2.config.H2Config;
+import org.apache.hc.core5.reactor.IOReactorConfig;
 import org.apache.hc.core5.util.TimeValue;
 import org.apache.hc.core5.util.Timeout;
 
 import javax.net.ssl.HostnameVerifier;
 import java.net.Proxy;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecutorBuilder {
 
@@ -30,7 +30,7 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
     private Proxy proxy;
     private HostnameVerifier hostnameVerifier;
     private SSLContextBuilder sslContextBuilder;
-    private ExecutorService executor;
+    private int workerThreads;
 
 
     @Override
@@ -82,8 +82,8 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
     }
 
     @Override
-    public ApacheUnderlyingHttpExecutorBuilder executor(ExecutorService executor) {
-        this.executor = executor;
+    public ApacheUnderlyingHttpExecutorBuilder executor(int workerThreads) {
+        this.workerThreads = workerThreads;
         return this;
     }
 
@@ -116,6 +116,13 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
                         .setResponseTimeout(Timeout.ofMilliseconds(readTimeoutInMills))
                         .build())
                 .setUserAgent("agileway-" + getName())
+                .setIOReactorConfig(IOReactorConfig.custom()
+                        .setSoTimeout(Timeout.ofMilliseconds(readTimeoutInMills))
+                        .setSoKeepAlive(true)
+                        .setIoThreadCount(workerThreads)
+                        .build())
+                .evictIdleConnections(TimeValue.ofSeconds(60))
+                .disableAutomaticRetries()
                 .build();
     }
 
@@ -130,6 +137,13 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
                         .setResponseTimeout(Timeout.ofMilliseconds(readTimeoutInMills))
                         .build())
                 .setUserAgent("agileway-" + getName())
+                .setIOReactorConfig(IOReactorConfig.custom()
+                        .setSoTimeout(Timeout.ofMilliseconds(readTimeoutInMills))
+                        .setSoKeepAlive(true)
+                        .setIoThreadCount(workerThreads)
+                        .build())
+                .evictIdleConnections(TimeValue.ofSeconds(60))
+                .disableAutomaticRetries()
                 .build();
     }
 

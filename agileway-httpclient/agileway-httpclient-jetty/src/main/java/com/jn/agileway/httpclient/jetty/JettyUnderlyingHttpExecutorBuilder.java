@@ -7,16 +7,16 @@ import com.jn.langx.security.ssl.SSLContextBuilder;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.timing.TimeDuration;
 import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.util.thread.ExecutorThreadPool;
 
 import javax.net.ssl.HostnameVerifier;
 import java.net.Proxy;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 public class JettyUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecutorBuilder {
     private TimeDuration requestTimeout = TimeDuration.ofMinutes(2);
     private TimeDuration connectTimeout;
-    private ExecutorService executor;
+    private int workerThreads;
     private SSLContextBuilder sslContextBuilder;
     private Proxy proxy;
 
@@ -70,8 +70,8 @@ public class JettyUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecuto
     }
 
     @Override
-    public UnderlyingHttpExecutorBuilder executor(ExecutorService executor) {
-        this.executor = executor;
+    public UnderlyingHttpExecutorBuilder executor(int workerThreads) {
+        this.workerThreads = workerThreads;
         return this;
     }
 
@@ -95,8 +95,8 @@ public class JettyUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecuto
     @Override
     public UnderlyingHttpExecutor build() {
         HttpClient httpClient = new HttpClient();
-        if (executor != null) {
-            httpClient.setExecutor(executor);
+        if (workerThreads > 0) {
+            httpClient.setExecutor(workerThreads < 8 ? new ExecutorThreadPool(workerThreads, workerThreads) : new ExecutorThreadPool(workerThreads));
         }
         if (proxy != null) {
             // httpClient.getProxyConfiguration().getProxies().add(proxy);

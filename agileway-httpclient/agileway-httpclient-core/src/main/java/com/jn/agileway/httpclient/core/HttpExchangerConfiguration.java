@@ -8,7 +8,7 @@ import com.jn.langx.util.concurrent.CommonThreadFactory;
 import javax.net.ssl.HostnameVerifier;
 import java.net.Proxy;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -60,7 +60,10 @@ public class HttpExchangerConfiguration {
 
     private Proxy proxy;
 
-    private ExecutorService executor;
+    /**
+     * 底层 http client 的工作线程数
+     */
+    private int workerThreads = 8;
 
     public int getConnectTimeoutMillis() {
         return connectTimeoutMillis;
@@ -113,6 +116,11 @@ public class HttpExchangerConfiguration {
         this.sslContextBuilder = sslContextBuilder;
     }
 
+
+    Executor getExecutor() {
+        return new ThreadPoolExecutor(8, 16, 120, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(10000), new CommonThreadFactory("http-exchanger", false));
+    }
+
     public Proxy getProxy() {
         return proxy;
     }
@@ -121,15 +129,12 @@ public class HttpExchangerConfiguration {
         this.proxy = proxy;
     }
 
-    public ExecutorService getExecutor() {
-        if (executor == null) {
-            executor = new ThreadPoolExecutor(5, 10, 120, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(Integer.MAX_VALUE), new CommonThreadFactory("http-exchange", true));
-        }
-        return executor;
+    public int getWorkerThreads() {
+        return Math.max(workerThreads, 1);
     }
 
-    public void setExecutor(ExecutorService executor) {
-        this.executor = executor;
+    public void setWorkerThreads(int workerThreads) {
+        this.workerThreads = workerThreads;
     }
 
     public List<String> getAllowedSchemes() {

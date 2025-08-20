@@ -12,7 +12,8 @@ import okhttp3.OkHttpClient;
 import javax.net.ssl.HostnameVerifier;
 import java.net.Proxy;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class OkHttp3UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecutorBuilder {
@@ -24,7 +25,7 @@ public class OkHttp3UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecu
     private SSLContextBuilder sslContextBuilder;
     private HostnameVerifier hostnameVerifier;
 
-    private ExecutorService executor;
+    private int workerThreads;
 
     private HttpProtocolVersion protocolVersion;
     @Override
@@ -81,8 +82,8 @@ public class OkHttp3UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecu
     }
 
     @Override
-    public UnderlyingHttpExecutorBuilder executor(ExecutorService executor) {
-        this.executor = executor;
+    public UnderlyingHttpExecutorBuilder executor(int workerThreads) {
+        this.workerThreads = workerThreads;
         return this;
     }
 
@@ -114,8 +115,8 @@ public class OkHttp3UnderlyingHttpExecutorBuilder implements UnderlyingHttpExecu
         if (sslContextBuilder != null) {
             builder.sslSocketFactory(sslContextBuilder.build().getSocketFactory());
         }
-        if (executor != null) {
-            builder.dispatcher(new Dispatcher(executor));
+        if (workerThreads > 0) {
+            builder.dispatcher(new Dispatcher(new ThreadPoolExecutor(workerThreads, workerThreads, 120L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>())));
         }
         if (proxy != null) {
             builder.proxy(proxy);
