@@ -1,3 +1,5 @@
+## 5.2.5
++ 简化rest result
 ## 5.2.4
 + 移除 agileway-sshclient-j2ssh 模块
 + 完善 agileway-sshclient-jsch, 支持默认的 Config
