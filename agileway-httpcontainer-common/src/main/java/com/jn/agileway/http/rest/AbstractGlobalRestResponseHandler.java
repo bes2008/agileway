@@ -1,7 +1,6 @@
 package com.jn.agileway.http.rest;
 
 
-import com.jn.agileway.http.rr.HttpRRs;
 import com.jn.agileway.http.rr.HttpRequest;
 import com.jn.agileway.http.rr.HttpResponse;
 import com.jn.langx.http.rest.RestRespBody;
@@ -36,7 +35,7 @@ public abstract class AbstractGlobalRestResponseHandler<ACTION, ACTION_RESULT> e
         return map;
     }
 
-    protected void beforeConvert(HttpRequest request, HttpResponse response, ACTION action, RestRespBody respBody){
+    protected void beforeConvert(HttpRequest request, HttpResponse response, ACTION action, RestRespBody respBody) {
         if (respBody.getStatusCode() >= 400) {
             try {
                 context.getRestErrorMessageHandler().handler(request.getLocale(), respBody);
@@ -53,18 +52,10 @@ public abstract class AbstractGlobalRestResponseHandler<ACTION, ACTION_RESULT> e
             respBody.setData(null);
         }
          */
-        if (!context.getConfiguration().isIgnoredField(RestRespBody.GLOBAL_REST_FIELD_URL)) {
-            respBody.setUrl(request.getRequestURL().toString());
-        }
-        if (!context.getConfiguration().isIgnoredField(RestRespBody.GLOBAL_REST_FIELD_METHOD)) {
-            respBody.setMethod(HttpRRs.getMethod(request));
-        }
-        if (!context.getConfiguration().isIgnoredField(RestRespBody.GLOBAL_REST_FIELD_REQUEST_HEADERS)) {
-            respBody.withRequestHeaders(HttpRRs.headersToMultiValueMap(request));
-        }
 
     }
 
-    protected void writeResponse(HttpRequest request, HttpResponse response, ACTION action, RestRespBody respBody){}
+    protected void writeResponse(HttpRequest request, HttpResponse response, ACTION action, RestRespBody respBody) {
+    }
 
 }

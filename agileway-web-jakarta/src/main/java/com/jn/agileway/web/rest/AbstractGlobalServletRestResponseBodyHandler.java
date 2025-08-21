@@ -1,7 +1,6 @@
 package com.jn.agileway.web.rest;
 
 import com.jn.agileway.http.rest.AbstractGlobalRestResponseHandler;
-import com.jn.agileway.http.rr.HttpRRs;
 import com.jn.agileway.http.rr.HttpRequest;
 import com.jn.agileway.http.rr.HttpResponse;
 import com.jn.agileway.web.security.WAFs;
@@ -28,15 +27,6 @@ public abstract class AbstractGlobalServletRestResponseBodyHandler<ACTION> exten
         String xssFilteredData = WAFs.clearIfContainsJavaScript(context.getJsonFactory().get().toJson(respBody.getData()));
         if (Objs.isEmpty(xssFilteredData)) {
             respBody.setData(null);
-        }
-        if (!context.getConfiguration().isIgnoredField(RestRespBody.GLOBAL_REST_FIELD_URL)) {
-            respBody.setUrl(request.getRequestURL().toString());
-        }
-        if (!context.getConfiguration().isIgnoredField(RestRespBody.GLOBAL_REST_FIELD_METHOD)) {
-            respBody.setMethod(HttpRRs.getMethod(request));
-        }
-        if (!context.getConfiguration().isIgnoredField(RestRespBody.GLOBAL_REST_FIELD_REQUEST_HEADERS)) {
-            respBody.withRequestHeaders(HttpRRs.headersToMultiValueMap(request));
         }
 
     }
