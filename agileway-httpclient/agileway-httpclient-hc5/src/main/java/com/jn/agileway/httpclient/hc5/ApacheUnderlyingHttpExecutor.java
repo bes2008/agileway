@@ -18,8 +18,12 @@ import org.apache.hc.core5.http.io.entity.HttpEntities;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
-public class ApacheUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<HttpUriRequestBase> {
+class ApacheUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<HttpUriRequestBase> {
     private CloseableHttpAsyncClient httpClient;
+
+    ApacheUnderlyingHttpExecutor(CloseableHttpAsyncClient httpClient) {
+        this.httpClient = httpClient;
+    }
     @Override
     protected void addHeaderToUnderlying(HttpUriRequestBase underlyingRequest, String headerName, String headerValue) {
         underlyingRequest.addHeader(headerName, headerValue);
@@ -50,11 +54,22 @@ public class ApacheUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor
 
         ClassicToAsyncAdaptor classicHttpClient = new ClassicToAsyncAdaptor(this.httpClient, null);
         CloseableHttpResponse response = classicHttpClient.execute(underlyingRequest);
-        return null;
+        return new ApacheUnderlyingHttpResponse(request.getMethod(), request.getUri(), response);
     }
 
     @Override
-    public UnderlyingHttpResponse executeAttachmentUploadRequest(HttpRequest request, HttpRequestPayloadWriter payloadWriter) throws Exception {
-        return null;
+    public UnderlyingHttpResponse executeAttachmentUploadRequest(HttpRequest<?> request, HttpRequestPayloadWriter payloadWriter) throws Exception {
+        HttpUriRequestBase underlyingRequest = new HttpUriRequestBase(request.getMethod().name(), request.getUri());
+
+        completeHeaders(request, underlyingRequest);
+        HttpEntity contentEntity = null;
+        if (HttpClientUtils.isSupportContentMethod(request.getMethod()) && request.getPayload() != null) {
+            contentEntity = new HttpRequestAttachmentHttpEntity(request, payloadWriter, request.getHttpHeaders().getContentType().toString());
+        }
+
+        underlyingRequest.setEntity(contentEntity);
+        ClassicToAsyncAdaptor classicHttpClient = new ClassicToAsyncAdaptor(this.httpClient, null);
+        CloseableHttpResponse response = classicHttpClient.execute(underlyingRequest);
+        return new ApacheUnderlyingHttpResponse(request.getMethod(), request.getUri(), response);
     }
 }

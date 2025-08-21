@@ -31,7 +31,7 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
     private HttpProtocolVersion protocolVersion;
     private int keepAliveDurationInMills;
     private int connectTimeoutInMills = -1;
-    private int readTimeoutInMills;
+    private int requestTimeoutInMills;
     private Proxy proxy;
     private HostnameVerifier hostnameVerifier;
     private SSLContextBuilder sslContextBuilder;
@@ -62,8 +62,8 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
     }
 
     @Override
-    public ApacheUnderlyingHttpExecutorBuilder requestTimeoutMills(int readTimeoutInMills) {
-        this.readTimeoutInMills = readTimeoutInMills;
+    public ApacheUnderlyingHttpExecutorBuilder requestTimeoutMills(int requestTimeoutInMills) {
+        this.requestTimeoutInMills = requestTimeoutInMills;
         return this;
     }
 
@@ -108,7 +108,7 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
     @Override
     public UnderlyingHttpExecutor build() {
         CloseableHttpAsyncClient httpClient = protocolVersion == HttpProtocolVersion.HTTP_2 ? buildHttp2AsyncHttpClient() : buildHttp11AsyncHttpClient();
-        return new ApacheUnderlyingHttpExecutor();
+        return new ApacheUnderlyingHttpExecutor(httpClient);
     }
 
     private CloseableHttpAsyncClient buildHttp2AsyncHttpClient() {
@@ -122,12 +122,12 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
                 .setDefaultRequestConfig(RequestConfig.custom()
                         .setAuthenticationEnabled(true)
                         .setConnectionKeepAlive(TimeValue.ofMilliseconds(keepAliveDurationInMills))
-                        .setResponseTimeout(Timeout.ofMilliseconds(readTimeoutInMills))
+                        .setResponseTimeout(Timeout.ofMilliseconds(requestTimeoutInMills))
                         .build())
                 .setUserAgent("agileway-" + getName())
                 .setTlsStrategy(tlsStrategy)
                 .setIOReactorConfig(IOReactorConfig.custom()
-                        .setSoTimeout(Timeout.ofMilliseconds(readTimeoutInMills + connectTimeoutInMills))
+                        .setSoTimeout(Timeout.ofMilliseconds(requestTimeoutInMills + connectTimeoutInMills))
                         .setSoKeepAlive(true)
                         .setIoThreadCount(workerThreads)
                         .build())
@@ -143,7 +143,7 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
                         .setMaxConnTotal(500)
                         .setDefaultConnectionConfig(ConnectionConfig.custom()
                                 .setConnectTimeout(Timeout.ofMilliseconds(connectTimeoutInMills))
-                                .setSocketTimeout(Timeout.ofMilliseconds(readTimeoutInMills + connectTimeoutInMills))
+                                .setSocketTimeout(Timeout.ofMilliseconds(requestTimeoutInMills + connectTimeoutInMills))
                                 .build());
         if (sslContextBuilder != null) {
             TlsStrategy tlsStrategy = new DefaultClientTlsStrategy(sslContextBuilder.build(), this.hostnameVerifier);
@@ -163,7 +163,7 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
                 .setDefaultRequestConfig(RequestConfig.custom()
                         .setAuthenticationEnabled(true)
                         .setConnectionKeepAlive(TimeValue.ofMilliseconds(keepAliveDurationInMills))
-                        .setResponseTimeout(Timeout.ofMilliseconds(readTimeoutInMills))
+                        .setResponseTimeout(Timeout.ofMilliseconds(requestTimeoutInMills))
                         .build())
                 .setUserAgent("agileway-" + getName())
                 .evictIdleConnections(TimeValue.ofSeconds(60))
