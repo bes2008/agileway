@@ -46,7 +46,7 @@ public class HttpExchangerConfiguration {
     /**
      * 读超时时间
      */
-    private int readTimeoutMillis = 60000;
+    private int requestTimeoutMillis = 60000;
     private int keepAliveDurationMills = 60000;
 
     private int poolMaxIdleConnections = 5;
@@ -68,15 +68,17 @@ public class HttpExchangerConfiguration {
     }
 
     public void setConnectTimeoutMillis(int connectTimeoutMillis) {
-        this.connectTimeoutMillis = connectTimeoutMillis;
+        if (connectTimeoutMillis > 5000) {
+            this.connectTimeoutMillis = connectTimeoutMillis;
+        }
     }
 
-    public int getReadTimeoutMillis() {
-        return readTimeoutMillis;
+    public int getRequestTimeoutMillis() {
+        return requestTimeoutMillis;
     }
 
-    public void setReadTimeoutMillis(int readTimeoutMillis) {
-        this.readTimeoutMillis = readTimeoutMillis;
+    public void setRequestTimeoutMillis(int requestTimeoutMillis) {
+        this.requestTimeoutMillis = requestTimeoutMillis;
     }
 
     public int getKeepAliveDurationMills() {

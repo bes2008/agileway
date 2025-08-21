@@ -5,6 +5,7 @@ import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpExecutorBuilder;
 import com.jn.langx.security.ssl.SSLContextBuilder;
 import com.jn.langx.util.collection.Lists;
+import com.jn.langx.util.timing.TimeDuration;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.config.TlsConfig;
@@ -108,7 +109,7 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
     @Override
     public UnderlyingHttpExecutor build() {
         CloseableHttpAsyncClient httpClient = protocolVersion == HttpProtocolVersion.HTTP_2 ? buildHttp2AsyncHttpClient() : buildHttp11AsyncHttpClient();
-        return new ApacheUnderlyingHttpExecutor(httpClient);
+        return new ApacheUnderlyingHttpExecutor(httpClient, TimeDuration.ofMillis(requestTimeoutInMills));
     }
 
     private CloseableHttpAsyncClient buildHttp2AsyncHttpClient() {
@@ -127,7 +128,7 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
                 .setUserAgent("agileway-" + getName())
                 .setTlsStrategy(tlsStrategy)
                 .setIOReactorConfig(IOReactorConfig.custom()
-                        .setSoTimeout(Timeout.ofMilliseconds(requestTimeoutInMills + connectTimeoutInMills))
+                        .setSoTimeout(Timeout.ofMilliseconds(requestTimeoutInMills))
                         .setSoKeepAlive(true)
                         .setIoThreadCount(workerThreads)
                         .build())
@@ -143,7 +144,7 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
                         .setMaxConnTotal(500)
                         .setDefaultConnectionConfig(ConnectionConfig.custom()
                                 .setConnectTimeout(Timeout.ofMilliseconds(connectTimeoutInMills))
-                                .setSocketTimeout(Timeout.ofMilliseconds(requestTimeoutInMills + connectTimeoutInMills))
+                                .setSocketTimeout(Timeout.ofMilliseconds(requestTimeoutInMills))
                                 .build());
         if (sslContextBuilder != null) {
             TlsStrategy tlsStrategy = new DefaultClientTlsStrategy(sslContextBuilder.build(), this.hostnameVerifier);

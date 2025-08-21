@@ -1,12 +1,14 @@
 package com.jn.agileway.httpclient.hc5;
 
 import com.jn.agileway.httpclient.core.HttpRequest;
+import com.jn.agileway.httpclient.core.MessageHeaderConstants;
 import com.jn.agileway.httpclient.core.payload.HttpRequestPayloadWriter;
 import com.jn.agileway.httpclient.core.underlying.AbstractUnderlyingHttpExecutor;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.net.mime.MediaType;
+import com.jn.langx.util.timing.TimeDuration;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.impl.async.CloseableHttpAsyncClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
@@ -14,15 +16,18 @@ import org.apache.hc.client5.http.impl.compat.ClassicToAsyncAdaptor;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.io.entity.HttpEntities;
+import org.apache.hc.core5.util.Timeout;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 class ApacheUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<HttpUriRequestBase> {
     private CloseableHttpAsyncClient httpClient;
+    private TimeDuration requestTimeout;
 
-    ApacheUnderlyingHttpExecutor(CloseableHttpAsyncClient httpClient) {
+    ApacheUnderlyingHttpExecutor(CloseableHttpAsyncClient httpClient, TimeDuration timeout) {
         this.httpClient = httpClient;
+        this.requestTimeout = timeout;
     }
     @Override
     protected void addHeaderToUnderlying(HttpUriRequestBase underlyingRequest, String headerName, String headerValue) {
@@ -52,7 +57,15 @@ class ApacheUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<HttpUr
         }
         underlyingRequest.setEntity(contentEntity);
 
-        ClassicToAsyncAdaptor classicHttpClient = new ClassicToAsyncAdaptor(this.httpClient, null);
+        TimeDuration requestTimeout = request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_TIMEOUT, TimeDuration.class);
+        if (requestTimeout == null) {
+            requestTimeout = this.requestTimeout;
+            if (requestTimeout == null) {
+                requestTimeout = TimeDuration.ofMinutes(2);
+            }
+        }
+
+        ClassicToAsyncAdaptor classicHttpClient = new ClassicToAsyncAdaptor(this.httpClient, Timeout.ofMilliseconds(requestTimeout.toMillis()));
         CloseableHttpResponse response = classicHttpClient.execute(underlyingRequest);
         return new ApacheUnderlyingHttpResponse(request.getMethod(), request.getUri(), response);
     }
@@ -67,8 +80,15 @@ class ApacheUnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<HttpUr
             contentEntity = new HttpRequestAttachmentHttpEntity(request, payloadWriter, request.getHttpHeaders().getContentType().toString());
         }
 
+        TimeDuration requestTimeout = request.getHeaders().get(MessageHeaderConstants.REQUEST_KEY_TIMEOUT, TimeDuration.class);
+        if (requestTimeout == null) {
+            requestTimeout = this.requestTimeout;
+            if (requestTimeout == null) {
+                requestTimeout = TimeDuration.ofMinutes(2);
+            }
+        }
         underlyingRequest.setEntity(contentEntity);
-        ClassicToAsyncAdaptor classicHttpClient = new ClassicToAsyncAdaptor(this.httpClient, null);
+        ClassicToAsyncAdaptor classicHttpClient = new ClassicToAsyncAdaptor(this.httpClient, Timeout.ofMilliseconds(requestTimeout.toMillis()));
         CloseableHttpResponse response = classicHttpClient.execute(underlyingRequest);
         return new ApacheUnderlyingHttpResponse(request.getMethod(), request.getUri(), response);
     }
