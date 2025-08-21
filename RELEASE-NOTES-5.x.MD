@@ -4,6 +4,9 @@
 + 支持 sshclient 一次性创建多级目录
 + 支持 Protobuf Over Http (agileway-httpclient-protobuf)
 + 支持 spring 中的 resource, multivaluemap 转为 form 表单的body
++ 重构 agileway-httpclient-httpcomponents => agileway-httpclient-hc4
++ 添加 agileway-httpclient-hc5 模块
++ 按照 http protocol version 区分不同的 http executor
 + 优化 loadbalancer 模块
   + 支持自定义负载均衡算法
   + 支持自定义节点检查
