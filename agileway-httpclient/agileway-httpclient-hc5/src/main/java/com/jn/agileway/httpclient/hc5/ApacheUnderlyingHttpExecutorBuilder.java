@@ -109,6 +109,7 @@ public class ApacheUnderlyingHttpExecutorBuilder implements UnderlyingHttpExecut
     @Override
     public UnderlyingHttpExecutor build() {
         CloseableHttpAsyncClient httpClient = protocolVersion == HttpProtocolVersion.HTTP_2 ? buildHttp2AsyncHttpClient() : buildHttp11AsyncHttpClient();
+        httpClient.start();
         return new ApacheUnderlyingHttpExecutor(httpClient, TimeDuration.ofMillis(requestTimeoutInMills));
     }
 
