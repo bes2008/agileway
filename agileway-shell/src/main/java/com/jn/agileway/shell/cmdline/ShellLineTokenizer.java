@@ -9,14 +9,15 @@ import java.util.List;
 
 class ShellLineTokenizer extends CommonTokenizer<String> implements CmdlineTokenizer {
     private List<Character> quoteStack = Lists.newArrayListWithCapacity(10);
+
     public ShellLineTokenizer(String cmdline) {
         super(removeSemicolon(cmdline), false);
 
         this.tokenFactory = new TokenFactory<String>() {
             @Override
             public String get(String tokenContent, Boolean isDelimiter) {
-                if(tokenContent.length()>2 && Strings.startsWith(tokenContent,"\"") && Strings.endsWith(tokenContent, "\"")){
-                    return Strings.substring(tokenContent,1,tokenContent.length()-1);
+                if (tokenContent.length() > 2 && Strings.startsWith(tokenContent, "\"") && Strings.endsWith(tokenContent, "\"")) {
+                    return Strings.substring(tokenContent, 1, tokenContent.length() - 1);
                 }
                 return tokenContent;
             }
@@ -26,13 +27,13 @@ class ShellLineTokenizer extends CommonTokenizer<String> implements CmdlineToken
     /**
      * 移除分号
      */
-    private static String removeSemicolon(String cmdline){
-        if(cmdline==null || Strings.isBlank( cmdline)){
+    private static String removeSemicolon(String cmdline) {
+        if (cmdline == null || Strings.isBlank(cmdline)) {
             return "";
         }
         cmdline = Strings.trim(cmdline);
-        if(Strings.endsWith(cmdline,";")){
-            cmdline = Strings.substring(cmdline, 0, cmdline.length()-1);
+        if (Strings.endsWith(cmdline, ";")) {
+            cmdline = Strings.substring(cmdline, 0, cmdline.length() - 1);
         }
         return cmdline;
     }
@@ -40,21 +41,23 @@ class ShellLineTokenizer extends CommonTokenizer<String> implements CmdlineToken
     @Override
     protected String getIfDelimiterStart(long position, char ch) {
         String result = null;
-        switch(ch){
+        switch (ch) {
             case '"':
             case '\'':
-                if(quoteStack.isEmpty()) {
+                if (quoteStack.isEmpty()) {
                     // 进入 " " 或者 ' '引号区域
                     quoteStack.add(ch);
-                }else {
+                } else {
                     int index = quoteStack.lastIndexOf(ch);
-                    if(index<0){
+                    if (index < 0) {
                         // 进入另一个引号
                         quoteStack.add(ch);
-                    }else{
+                    } else {
                         // 引号结束
-                        for (int removedIndex = quoteStack.size()-1; removedIndex>=index; removedIndex--){
+                        int removedIndex = quoteStack.size() - 1;
+                        while (removedIndex >= index) {
                             quoteStack.remove(removedIndex);
+                            removedIndex--;
                         }
                     }
 
@@ -62,11 +65,11 @@ class ShellLineTokenizer extends CommonTokenizer<String> implements CmdlineToken
                 break;
             case '\t':
             case ' ':
-                if(!quoteStack.isEmpty()){
+                if (!quoteStack.isEmpty()) {
                     // 当前字符是在 引号范围之内
                     // ignore it
-                }else{
-                    result = ch+"";
+                } else {
+                    result = ch + "";
                 }
                 break;
             default:

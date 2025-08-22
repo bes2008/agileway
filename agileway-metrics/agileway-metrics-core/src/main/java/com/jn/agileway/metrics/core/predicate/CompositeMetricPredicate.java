@@ -2,6 +2,7 @@ package com.jn.agileway.metrics.core.predicate;
 
 import com.jn.agileway.metrics.core.Meter;
 import com.jn.agileway.metrics.core.Metric;
+import com.jn.langx.util.collection.Collects;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +24,7 @@ public class CompositeMetricPredicate implements MetricMeterPredicate {
         List<MetricMeterPredicate> predicateList = new ArrayList<MetricMeterPredicate>(Arrays.asList(predicates));
         predicateList.remove(FixedPredicate.TRUE);
         if (!predicateList.isEmpty()) {
-            this.predicates = predicateList.toArray(new MetricMeterPredicate[predicateList.size()]);
+            this.predicates = Collects.toArray(predicateList, MetricMeterPredicate[].class);
         }
     }
 

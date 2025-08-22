@@ -24,7 +24,6 @@ import static java.lang.Math.min;
  * @see <a href="http://dimacs.rutgers.edu/~graham/pubs/papers/fwddecay.pdf">
  * Cormode et al. Forward Decay: A Practical Time Decay Model for Streaming Systems. ICDE '09:
  * Proceedings of the 2009 IEEE International Conference on Data Engineering (2009)</a>
- *
  * @since 4.1.0
  */
 public class ExponentiallyDecayingReservoir implements Reservoir {
@@ -75,7 +74,7 @@ public class ExponentiallyDecayingReservoir implements Reservoir {
      * @param clock the clock used to timestamp samples and track rescaling
      */
     public ExponentiallyDecayingReservoir(int size, double alpha, Clock clock) {
-        clock = clock==null ? Clocks.defaultClock(): clock;
+        clock = clock == null ? Clocks.defaultClock() : clock;
         this.values = new ConcurrentSkipListMap<Double, WeightedSample>();
         this.lock = new ReentrantReadWriteLock();
         this.alpha = alpha;
@@ -235,7 +234,7 @@ public class ExponentiallyDecayingReservoir implements Reservoir {
     /**
      * This class is created due to:
      */
-    private class InvalidSnapshot implements Snapshot {
+    private static class InvalidSnapshot implements Snapshot {
 
         final long[] data = new long[0];
 

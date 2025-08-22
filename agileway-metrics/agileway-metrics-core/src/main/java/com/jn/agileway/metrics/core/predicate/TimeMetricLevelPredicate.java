@@ -103,7 +103,7 @@ public class TimeMetricLevelPredicate implements MetricMeterPredicate {
         return levelInfos[name.getMetricLevel().ordinal()].allow;
     }
 
-    class MetricsLevelInfo {
+    static class MetricsLevelInfo {
         /**
          * 是否允许report
          */
@@ -112,6 +112,7 @@ public class TimeMetricLevelPredicate implements MetricMeterPredicate {
          * 上一次report的时间点
          */
         Long lastReportTimeStamp;
+
         public MetricsLevelInfo(boolean allow, long lastReportTimeStamp) {
             this.allow = allow;
             this.lastReportTimeStamp = lastReportTimeStamp;

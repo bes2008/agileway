@@ -49,7 +49,7 @@ public class KnownHosts {
     public static final int HOSTKEY_IS_NEW = 1;
     public static final int HOSTKEY_HAS_CHANGED = 2;
 
-    class KnownHostsEntry {
+    static class KnownHostsEntry {
         private String[] patterns;
         Object key;
 
@@ -114,8 +114,8 @@ public class KnownHosts {
                     if (hostnameMatches(entry.patterns, host)) {
                         Object key = entry.key;
                         if (key instanceof RSAPublicKey || key instanceof DSAPublicKey) {
-                            String currentKeyType = key instanceof RSAPublicKey ? "ssh-rsa":"ssh-dss";
-                            if(Objs.equals(currentKeyType, keyType)) {
+                            String currentKeyType = key instanceof RSAPublicKey ? "ssh-rsa" : "ssh-dss";
+                            if (Objs.equals(currentKeyType, keyType)) {
                                 String[] newPatterns = Pipeline.of(entry.patterns)
                                         .remove(host)
                                         .toArray(String[].class);
@@ -261,7 +261,7 @@ public class KnownHosts {
                         public boolean test(KnownHostsEntry ke) {
                             return hostnameMatches(ke.patterns, hostname);
                         }
-                    }).map(new Function<KnownHostsEntry,Object>() {
+                    }).map(new Function<KnownHostsEntry, Object>() {
                         @Override
                         public Object apply(KnownHostsEntry ke) {
                             return ke.key;
@@ -353,8 +353,8 @@ public class KnownHosts {
     private void initialize(File knownHosts) throws IOException {
         char[] buff = new char[512];
         CharArrayWriter cw = new CharArrayWriter();
-        boolean actionResult= knownHosts.createNewFile();
-        if(!actionResult){
+        boolean actionResult = knownHosts.createNewFile();
+        if (!actionResult) {
             Loggers.getLogger("create known_hosts failed");
         }
         FileReader fr = null;
@@ -368,7 +368,7 @@ public class KnownHosts {
                 cw.write(buff, 0, len);
             }
             initialize(cw.toCharArray());
-        }finally {
+        } finally {
             IOs.close(fr);
         }
     }
@@ -545,7 +545,7 @@ public class KnownHosts {
                 }
             }
             raf.write(new String(entry).getBytes());
-        }finally {
+        } finally {
             IOs.close(raf);
         }
 

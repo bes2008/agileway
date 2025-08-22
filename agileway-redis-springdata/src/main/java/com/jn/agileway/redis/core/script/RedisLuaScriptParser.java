@@ -66,7 +66,7 @@ public class RedisLuaScriptParser implements InputStreamConfigurationParser<Redi
                             returnTypeHolder.set(Long.class);
                         } else if (isListType(returnTypeString)) {
                             returnTypeHolder.set(List.class);
-                        } else if(isObjectType(returnTypeString)){
+                        } else if (isObjectType(returnTypeString)) {
                             // returnTypeHolder不能设置Object类型。
                             // 如果是Object,那么会选择成ReturnType.MULTI(list对应的类型).所以用此内部类来标记用来选择是ReturnType.VALUE
                             /** {@link org.springframework.data.redis.connection.ReturnType#fromJavaType(Class)}*/
@@ -120,7 +120,7 @@ public class RedisLuaScriptParser implements InputStreamConfigurationParser<Redi
         });
     }
 
-    class ValueReturnType {
+    static class ValueReturnType {
 
     }
 }

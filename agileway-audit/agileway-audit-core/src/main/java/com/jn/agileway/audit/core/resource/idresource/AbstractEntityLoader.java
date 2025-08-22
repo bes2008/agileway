@@ -82,7 +82,7 @@ public abstract class AbstractEntityLoader<E> implements EntityLoader<E>, Destro
 
             }
         });
-        CompletableFuture.allOf(futures.toArray(new CompletableFuture[futures.size()])).join();
+        CompletableFuture.allOf(Collects.toArray(futures, CompletableFuture[].class)).join();
         return Collects.newArrayList(entitiesVector);
     }
 
