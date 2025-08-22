@@ -55,7 +55,7 @@ public class KnownHostsVerifier implements HostKeyVerifier {
                 }
                 return true;
             } catch (IOException ioe) {
-                logger.error("Error with {}: {}", e, ioe);
+                logger.error("Error with {}", e, ioe);
                 return false;
             }
         }

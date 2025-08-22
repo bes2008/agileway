@@ -57,6 +57,7 @@ public class ExclusiveLock extends DistributedLock {
                         this.wait(50);
                     }
                 } catch (InterruptedException ex) {
+                    // ignore it
                 }
             }
         }

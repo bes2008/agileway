@@ -60,6 +60,7 @@ public class Watchdog implements Runnable {
                 try {
                     wait(timeLeft);
                 } catch (final InterruptedException e) {
+                    // ignore it
                 }
                 timeLeft = timeout - (System.currentTimeMillis() - startTime);
                 isWaiting = timeLeft > 0;

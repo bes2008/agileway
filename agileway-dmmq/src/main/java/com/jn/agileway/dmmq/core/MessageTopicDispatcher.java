@@ -31,7 +31,6 @@ public class MessageTopicDispatcher extends GenericRegistry<MessageTopic> implem
     }
 
     /**
-     *
      * @param messageTopic
      * @see #register(MessageTopic)
      */
@@ -125,7 +124,7 @@ public class MessageTopicDispatcher extends GenericRegistry<MessageTopic> implem
                 try {
                     value.shutdown();
                 } catch (Throwable ex) {
-                    logger.error("error:{}, stack:{}", ex.getMessage(), ex);
+                    logger.error("error:{}", ex.getMessage(), ex);
                 }
             }
         });

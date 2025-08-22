@@ -21,17 +21,17 @@ public class DebugConsumer<M> implements Consumer<M> {
 
     @Override
     public void handleEventException(Throwable ex, long sequence, Holder<M> event) {
-        logger.warn("error when handle sequence: {}, message: {}, error:{} ", sequence, event.get().toString(), ex);
+        logger.warn("error when handle sequence: {}, message: {} ", sequence, event.get().toString(), ex);
     }
 
     @Override
     public void handleOnStartException(Throwable ex) {
-        logger.error("error on start the DEBUG consumer, error message: {}, stack:{}", ex.getMessage(), ex);
+        logger.error("error on start the DEBUG consumer, error message: {}", ex.getMessage(), ex);
     }
 
     @Override
     public void handleOnShutdownException(Throwable ex) {
-        logger.error("error on shutdown the DEBUG consumer, error message: {}, stack:{}", ex.getMessage(), ex);
+        logger.error("error on shutdown the DEBUG consumer, error message: {}", ex.getMessage(), ex);
     }
 
     @Override
