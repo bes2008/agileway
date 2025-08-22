@@ -164,12 +164,7 @@ public class AdaptedMultipleValueMap<K, V> implements com.jn.langx.util.collecti
 
     @Override
     public Collection<Collection<V>> values() {
-        Collection<List<V>> r = this.delegate.values();
-        Collection<Collection<V>> result = new ArrayList<Collection<V>>();
-        for (List<V> vs : r) {
-            result.add(vs);
-        }
-        return result;
+        return new ArrayList<Collection<V>>(this.delegate.values());
     }
 
     @Override

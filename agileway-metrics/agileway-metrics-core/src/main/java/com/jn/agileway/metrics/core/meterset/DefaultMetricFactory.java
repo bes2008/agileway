@@ -118,9 +118,7 @@ public class DefaultMetricFactory implements MetricMeterFactory {
         if (!this.enabled) {
             return Collections.emptyList();
         }
-        List<String> groups = new ArrayList<String>();
-        groups.addAll(metricRegistryMap.keySet());
-        return groups;
+        return new ArrayList<String>(metricRegistryMap.keySet());
     }
 
     @Override
