@@ -153,9 +153,7 @@ public class MetricObject {
 
         public Builder withTags(Map<String, String> tags) {
             if (tags != null) {
-                for (Map.Entry<String, String> entry : tags.entrySet()) {
-                    metric.tags.put(entry.getKey(), entry.getValue());
-                }
+                metric.tags.putAll(tags);
             }
             return this;
         }

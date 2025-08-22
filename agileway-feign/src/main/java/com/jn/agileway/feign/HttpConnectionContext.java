@@ -33,7 +33,7 @@ public class HttpConnectionContext {
         }
         nodes = new ClusterAddressParser(configuration.getDefaultPort()).parse(configuration.getNodes());
         if (nodes == null) {
-            Collects.emptyArrayList();
+            return Collects.emptyArrayList();
         }
         return nodes;
     }

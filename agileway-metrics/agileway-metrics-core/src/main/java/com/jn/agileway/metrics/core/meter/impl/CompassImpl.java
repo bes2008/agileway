@@ -270,11 +270,7 @@ public class CompassImpl implements Compass {
     }
 
     public Map<String, BucketCounter> getErrorCodeCounts() {
-        Map<String, BucketCounter> errorCodeMap = new HashMap<String, BucketCounter>();
-        for (Map.Entry<String, BucketCounter> entry : errorCodes.entrySet()) {
-            errorCodeMap.put(entry.getKey(), entry.getValue());
-        }
-        return errorCodeMap;
+        return new HashMap<String, BucketCounter>(errorCodes);
     }
 
 

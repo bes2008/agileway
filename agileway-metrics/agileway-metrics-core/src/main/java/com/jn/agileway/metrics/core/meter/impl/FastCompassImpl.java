@@ -67,7 +67,7 @@ public class FastCompassImpl implements FastCompass {
     public FastCompassImpl(int bucketInterval, int numberOfBuckets, Clock clock, int maxCategoryCount) {
         this.bucketInterval = bucketInterval;
         this.numberOfBuckets = numberOfBuckets;
-        clock = clock==null ? Clocks.defaultClock(): clock;
+        clock = clock == null ? Clocks.defaultClock() : clock;
         this.clock = clock;
         this.maxCategoryCount = maxCategoryCount;
         this.subCategories = new ConcurrentHashMap<String, BucketCounter>();
@@ -141,10 +141,7 @@ public class FastCompassImpl implements FastCompass {
         Map<String, Map<Long, Long>> countAndRtPerCategory = new HashMap<String, Map<Long, Long>>();
 
         for (Map.Entry<String, BucketCounter> entry : subCategories.entrySet()) {
-            Map<Long, Long> bucketCount = new HashMap<Long, Long>();
-            for (Map.Entry<Long, Long> bucket : entry.getValue().getBucketCounts(startTime).entrySet()) {
-                bucketCount.put(bucket.getKey(), bucket.getValue());
-            }
+            Map<Long, Long> bucketCount = new HashMap<Long, Long>(entry.getValue().getBucketCounts(startTime));
             countAndRtPerCategory.put(entry.getKey(), bucketCount);
         }
         return countAndRtPerCategory;
