@@ -59,7 +59,7 @@ public class KnownHosts {
         }
     }
 
-    private LinkedList publicKeys = new LinkedList();
+    private final LinkedList publicKeys = new LinkedList();
 
     public KnownHosts() {
     }

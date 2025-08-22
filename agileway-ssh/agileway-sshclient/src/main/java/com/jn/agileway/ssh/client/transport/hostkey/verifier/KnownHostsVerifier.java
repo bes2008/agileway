@@ -23,7 +23,7 @@ import java.util.List;
 public class KnownHostsVerifier implements HostKeyVerifier {
     private static final Logger logger = Loggers.getLogger(KnownHostsVerifier.class);
     private StrictHostKeyChecking strictHostKeyChecking;
-    private HostsKeyRepository repository;
+    private final HostsKeyRepository repository;
 
     public KnownHostsVerifier(HostsKeyRepository repository, StrictHostKeyChecking strictHostKeyChecking) {
         this.repository = repository;
