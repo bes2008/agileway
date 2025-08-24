@@ -27,7 +27,7 @@
   + 升级 logback: 1.5.0 => 1.5.18
   + 升级 spring: 6.0.14 => 6.1.21
   + 升级 spring-boot: 3.1.6 => 3.3.13
-  + 升级 spring-data-redis: 2.3.4 => 3.5.2
+  + 升级 spring-data-redis: 2.3.4 => 3.3.13
   + 升级 bouncycastle-jdk18on: 1.78.1 => 1.81
 
 

@@ -25,7 +25,6 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
-        <spring.data.redis.version>3.5.2</spring.data.redis.version>
     </properties>
 
     <dependencyManagement>
@@ -38,7 +37,7 @@
             <dependency>
                 <groupId>org.springframework.data</groupId>
                 <artifactId>spring-data-redis</artifactId>
-                <version>${spring.data.redis.version}</version>
+                <version>${spring.boot3.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
