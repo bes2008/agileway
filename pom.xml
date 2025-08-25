@@ -50,15 +50,6 @@
         </developer>
     </developers>
     <distributionManagement>
-        <!--
-        <snapshotRepository>
-            <id>sonatype_oss</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>sonatype_oss</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-        </repository>-->
         <snapshotRepository>
             <id>central</id>
             <url>https://central.sonatype.com/repository/maven-snapshots/</url>
@@ -110,8 +101,8 @@
         <guava.version>33.3.0-jre</guava.version>
         <commons-compress.version>1.28.0</commons-compress.version>
         <commons-io.version>2.20.0</commons-io.version>
-        <comomons-text.version>1.12.0</comomons-text.version>
-        <comomons-codec.version>1.17.1</comomons-codec.version>
+        <commons-text.version>1.12.0</commons-text.version>
+        <commons-codec.version>1.17.1</commons-codec.version>
         <commons-configuration.version>1.10</commons-configuration.version>
         <commons-configuration2.version>2.11.0</commons-configuration2.version>
         <commons-beanutils.version>1.11.0</commons-beanutils.version>
@@ -424,7 +415,7 @@
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>${comomons-codec.version}</version>
+                <version>${commons-codec.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-beanutils</groupId>
@@ -434,7 +425,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-text</artifactId>
-                <version>${comomons-text.version}</version>
+                <version>${commons-text.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
