@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * Copies all data from an System.input stream to an output stream of the executed process.
+ * Copies all data from System.in stream to an output stream of the executed process.
  */
 public class InputStreamPumper implements Runnable {
 
