@@ -16,6 +16,6 @@ public class ExistsFileFilter implements FileObjectFilter {
 
     @Override
     public boolean test(FileObject fileObject) {
-        return FileObjects.isExists(fileObject) ? exists : !exists;
+        return FileObjects.isExists(fileObject) == exists;
     }
 }

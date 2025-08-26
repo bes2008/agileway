@@ -4,44 +4,47 @@ import com.jn.agileway.ssh.client.SshConnection;
 import com.jn.agileway.ssh.client.SshConnectionConfig;
 import com.jn.agileway.ssh.client.SshConnectionFactory;
 import com.jn.agileway.ssh.client.SshConnectionFactoryRegistry;
-import com.jn.agileway.ssh.client.sftp.*;
+import com.jn.agileway.ssh.client.sftp.SftpResourceInfo;
+import com.jn.agileway.ssh.client.sftp.SftpSession;
+import com.jn.agileway.ssh.client.sftp.Sftps;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.test.BaseSshTests;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.SystemPropertys;
 import com.jn.langx.util.io.IOs;
-import com.jn.langx.util.logging.Loggers;
 import org.junit.Test;
-import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 public class SftpTests extends BaseSshTests {
-    private static final Logger logger = Loggers.getLogger(SftpTests.class);
     private SshConnectionFactoryRegistry registry = new SshConnectionFactoryRegistry();
 
     @Test
-    public void testSftp_trilead_ssh2() throws IOException {
-        _test(registry.get("trileadssh2"), StringTemplates.formatWithPlaceholder("/home/{}/Templates/test_sftp_trilead_ssh2", user));
+    public void testSftp_ganymed_ssh2() throws IOException {
+        _test(registry.get("ganymedssh2"), StringTemplates.formatWithPlaceholder("/home/{}/Templates/test001/test_sftp_trilead_ssh2", user));
     }
-
 
     @Test
     public void testSftp_jsch() throws IOException {
-        _test(registry.get("jsch"), StringTemplates.formatWithPlaceholder("/home/{}/Templates/test_sftp_jsch", user));
+        _test(registry.get("jsch"), StringTemplates.formatWithPlaceholder("/home/{}/Templates/test002/test_sftp_jsch", user));
     }
 
     @Test
     public void testSftp_sshj() throws IOException {
-        _test(registry.get("sshj"), StringTemplates.formatWithPlaceholder("/home/{}/Templates/test_sftp_sshj", user));
+        _test(registry.get("sshj"), StringTemplates.formatWithPlaceholder("/home/{}/Templates/test003/test_sftp_sshj", user));
     }
 
     @Test
     public void testSftp_synergy() throws IOException {
-        _test(registry.get("synergy"), StringTemplates.formatWithPlaceholder("/home/{}/Templates/test_sftp_synergy", user));
+        _test(registry.get("synergy"), StringTemplates.formatWithPlaceholder("/home/{}/Templates/test004/test_sftp_synergy", user));
     }
+    @Test
+    public void testSftp_trilead_ssh2() throws IOException {
+        _test(registry.get("trileadssh2"), StringTemplates.formatWithPlaceholder("/home/{}/Templates/test005/test_sftp_trilead_ssh2", user));
+    }
+
 
     void _test(SshConnectionFactory connectionFactory, final String testWorkingDirectory) throws IOException {
         SshConnectionConfig connectionConfig = connectionFactory.newConfig();
@@ -64,11 +67,11 @@ public class SftpTests extends BaseSshTests {
 
             // 确保testWorkingDirectory 存在，并且是 empty的
             boolean testWorkingDirectoryExist = Sftps.existDirectory(session, testWorkingDirectory);
-            logger.info("directory exist? {}", testWorkingDirectoryExist);
+            System.out.println(StringTemplates.formatWithPlaceholder("directory exist? {}", testWorkingDirectoryExist));
             if (!testWorkingDirectoryExist) {
-                session.mkdir(testWorkingDirectory, null);
+                session.mkdirs(testWorkingDirectory, null);
                 testWorkingDirectoryExist = Sftps.existDirectory(session, testWorkingDirectory);
-                logger.info("directory exist? {}", testWorkingDirectoryExist);
+                System.out.println(StringTemplates.formatWithPlaceholder("directory exist? {}", testWorkingDirectoryExist));
             }
             List<SftpResourceInfo> children = session.listFiles(testWorkingDirectory);
             if (!children.isEmpty()) {
@@ -80,7 +83,7 @@ public class SftpTests extends BaseSshTests {
             File localRootDir = new File(localRootPath);
             Sftps.copy(session, localRootDir, testWorkingDirectory);
         } catch (Throwable ex) {
-            logger.error(ex.getMessage(), ex);
+            ex.printStackTrace();
         } finally {
             IOs.close(_session);
             IOs.close(connection);

@@ -1,6 +1,6 @@
 package com.jn.agileway.feign;
 
-import com.jn.agileway.httpclient.CookieSpecs;
+import com.jn.agileway.httpclient.hc4.ext.CookieSpecs;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Emptys;
@@ -33,7 +33,7 @@ public class HttpConnectionContext {
         }
         nodes = new ClusterAddressParser(configuration.getDefaultPort()).parse(configuration.getNodes());
         if (nodes == null) {
-            Collects.emptyArrayList();
+            return Collects.emptyArrayList();
         }
         return nodes;
     }
@@ -83,8 +83,8 @@ public class HttpConnectionContext {
         if (Strings.isBlank(urlPrefix)) {
             return url;
         }
-        if(!urlPrefix.startsWith("/")){
-            urlPrefix="/" + urlPrefix;
+        if (!urlPrefix.startsWith("/")) {
+            urlPrefix = "/" + urlPrefix;
         }
         return url + urlPrefix;
     }

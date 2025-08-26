@@ -1,0 +1,239 @@
+package com.jn.agileway.oauth2.client;
+
+import com.jn.agileway.oauth2.client.api.std.StandardOpenOAuth2Properties;
+import com.jn.langx.util.collection.Lists;
+
+import java.util.List;
+
+public class OAuth2ClientProperties {
+    /**
+     * OAuth2 服务器的地址
+     */
+    private String baseUri;
+
+
+    /**
+     * 获取授权码的uri模板
+     *
+     * @see <a href="https://www.rfc-editor.org/rfc/rfc6749#section-4.1.1">rfc6749</a>
+     * @see #authorizeUriEncoding
+     */
+    private String authorizeUriTemplate = "/authorize?response_type=code&client_id={client_id}&redirect_uri={redirect_uri}&state={state}&scope={scope}";
+
+    private List<String> authorizeUriScopes = Lists.newArrayList("userinfo", "openid");
+
+    /**
+     * OAuth2 服务器的 /authorize uri 的编码
+     *
+     * @see #authorizeUriTemplate
+     */
+    private String authorizeUriEncoding = "ISO-8859-1";
+
+    /**
+     * 当前 Resource Server 在OAuth2 服务器中的clientId
+     */
+    private String clientId;
+
+    /**
+     * 当前 Resource Server 在OAuth2 服务器中的clientSecret
+     */
+    private String clientSecret;
+
+    /**
+     * 获取授权码的回调地址，它是 Resource Server 的提供的endpoint，需要注册在oauth2 服务器中
+     */
+    private String callbackUri = "/auth/oauth2/callback";
+
+    /**
+     * 当前  Resource Server 的 home uri，在登录OAuth2 授权成功后，默认会跳转到这个 uri。
+     */
+    private String homeUri = "/";
+
+
+    private boolean userinfoEndpointEnabled = true;
+    private boolean introspectEndpointEnabled = true;
+
+
+    private boolean extractUserinfoWithIdToken = true;
+    private boolean extractUserinfoWithIntrospectResult = true;
+
+    /**
+     * 当前 Resource Server 提供的登录的uri 中的access-token参数名
+     */
+    private String accessTokenParameterName = "access_token";
+
+    private String accessTokenCookieName = "OAUTH2_ACCESS_TOKEN";
+
+    private StandardOpenOAuth2Properties standard = new StandardOpenOAuth2Properties();
+
+    private FilterConfig filter = new FilterConfig();
+
+    public FilterConfig getFilter() {
+        return filter;
+    }
+
+    public void setFilter(FilterConfig filter) {
+        this.filter = filter;
+    }
+
+    public String getBaseUri() {
+        return baseUri;
+    }
+
+    public void setBaseUri(String baseUri) {
+        this.baseUri = baseUri;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public String getClientSecret() {
+        return clientSecret;
+    }
+
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
+    }
+
+    public String getAuthorizeUriTemplate() {
+        return authorizeUriTemplate;
+    }
+
+    public void setAuthorizeUriTemplate(String authorizeUriTemplate) {
+        this.authorizeUriTemplate = authorizeUriTemplate;
+    }
+
+
+    public String getAuthorizeUriEncoding() {
+        return authorizeUriEncoding;
+    }
+
+    public void setAuthorizeUriEncoding(String authorizeUriEncoding) {
+        this.authorizeUriEncoding = authorizeUriEncoding;
+    }
+
+    public String getAccessTokenParameterName() {
+        return accessTokenParameterName;
+    }
+
+    public void setAccessTokenParameterName(String accessTokenParameterName) {
+        this.accessTokenParameterName = accessTokenParameterName;
+    }
+
+    public String getAccessTokenCookieName() {
+        return accessTokenCookieName;
+    }
+
+    public void setAccessTokenCookieName(String accessTokenCookieName) {
+        this.accessTokenCookieName = accessTokenCookieName;
+    }
+
+    public String getCallbackUri() {
+        return callbackUri;
+    }
+
+    public void setCallbackUri(String callbackUri) {
+        this.callbackUri = callbackUri;
+    }
+
+
+    public StandardOpenOAuth2Properties getStandard() {
+        return standard;
+    }
+
+    public void setStandard(StandardOpenOAuth2Properties standard) {
+        this.standard = standard;
+    }
+
+    public boolean isUserinfoEndpointEnabled() {
+        return userinfoEndpointEnabled;
+    }
+
+    public void setUserinfoEndpointEnabled(boolean userinfoEndpointEnabled) {
+        this.userinfoEndpointEnabled = userinfoEndpointEnabled;
+    }
+
+    public boolean isIntrospectEndpointEnabled() {
+        return introspectEndpointEnabled;
+    }
+
+    public void setIntrospectEndpointEnabled(boolean introspectEndpointEnabled) {
+        this.introspectEndpointEnabled = introspectEndpointEnabled;
+    }
+
+    public List<String> getAuthorizeUriScopes() {
+        return authorizeUriScopes;
+    }
+
+    public void setAuthorizeUriScopes(List<String> authorizeUriScopes) {
+        this.authorizeUriScopes = authorizeUriScopes;
+    }
+
+    public boolean isExtractUserinfoWithIdToken() {
+        return extractUserinfoWithIdToken;
+    }
+
+    public void setExtractUserinfoWithIdToken(boolean extractUserinfoWithIdToken) {
+        this.extractUserinfoWithIdToken = extractUserinfoWithIdToken;
+    }
+
+    public boolean isExtractUserinfoWithIntrospectResult() {
+        return extractUserinfoWithIntrospectResult;
+    }
+
+    public void setExtractUserinfoWithIntrospectResult(boolean extractUserinfoWithIntrospectResult) {
+        this.extractUserinfoWithIntrospectResult = extractUserinfoWithIntrospectResult;
+    }
+
+    public String getHomeUri() {
+        return homeUri;
+    }
+
+    public void setHomeUri(String homeUri) {
+        this.homeUri = homeUri;
+    }
+
+    public static class FilterConfig {
+        private int order = 10;
+        private String name = "OAuth2AuthzFilter";
+        private boolean enabled = true;
+        private List<String> urlPatterns = Lists.newArrayList();
+
+        public int getOrder() {
+            return order;
+        }
+
+        public void setOrder(int order) {
+            this.order = order;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public List<String> getUrlPatterns() {
+            return urlPatterns;
+        }
+
+        public void setUrlPatterns(List<String> urlPatterns) {
+            this.urlPatterns = urlPatterns;
+        }
+    }
+}

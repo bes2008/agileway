@@ -3,7 +3,7 @@ package com.jn.agileway.jwt.ec;
 
 import java.io.Serializable;
 import java.security.spec.ECParameterSpec;
-import java.util.*;
+import java.util.Objects;
 
 /**
  * Cryptographic curve. This class is immutable.

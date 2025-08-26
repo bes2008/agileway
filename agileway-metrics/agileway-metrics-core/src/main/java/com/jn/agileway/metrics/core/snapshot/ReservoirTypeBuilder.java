@@ -1,8 +1,8 @@
 package com.jn.agileway.metrics.core.snapshot;
 
 import com.jn.agileway.metrics.core.Meter;
-import com.jn.agileway.metrics.core.meterset.MetricMeterBuilder;
 import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.meterset.MetricMeterBuilder;
 
 /**
  * @since 4.1.0

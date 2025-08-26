@@ -1,7 +1,5 @@
 package com.jn.agileway.metrics.core.snapshot;
 
-import com.jn.langx.util.Preconditions;
-
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;

@@ -16,8 +16,6 @@
 
 package com.jn.agileway.eipchannel.core.message;
 
-import com.jn.langx.annotation.NonNull;
-import com.jn.langx.util.Objs;
 import com.jn.langx.util.collection.Collects;
 
 import java.util.Map;
@@ -26,16 +24,9 @@ import java.util.Map;
  * Base Message class defining common properties such as id, payload, and headers.
  * Once created this object is immutable.
  */
-public class GenericMessage<T> implements Message<T> {
+public class GenericMessage<T> extends BaseMessage<Object, T> {
 
     private static final long serialVersionUID = 1L;
-
-    @NonNull
-    private T payload;
-
-    @NonNull
-    private MessageHeaders headers;
-
 
     public GenericMessage() {
 
@@ -62,17 +53,6 @@ public class GenericMessage<T> implements Message<T> {
         setHeaders(headers);
         setPayload(payload);
     }
-
-
-    public MessageHeaders getHeaders() {
-        return this.headers;
-    }
-
-    public T getPayload() {
-        return this.payload;
-    }
-
-
     public void setPayload(T payload) {
         this.payload = payload;
     }
@@ -80,29 +60,8 @@ public class GenericMessage<T> implements Message<T> {
     public void setHeaders(Map<String, Object> headers) {
         this.headers = new MessageHeaders(Collects.newHashMap(headers));
     }
-
     public String toString() {
         return "[Payload=" + this.payload + "][Headers=" + this.headers + "]";
-    }
-
-    public int hashCode() {
-        return this.headers.hashCode() * 23 + Objs.hashCode(this.payload);
-    }
-
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj != null) {
-            if (obj instanceof GenericMessage<?>) {
-                GenericMessage<?> other = (GenericMessage<?>) obj;
-                if (!this.headers.getId().equals(other.headers.getId())) {
-                    return false;
-                }
-                return this.headers.equals(other.headers) && this.payload.equals(other.payload);
-            }
-        }
-        return false;
     }
 
 }

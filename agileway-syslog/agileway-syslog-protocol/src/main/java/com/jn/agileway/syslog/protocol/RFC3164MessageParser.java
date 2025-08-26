@@ -56,11 +56,13 @@ public class RFC3164MessageParser extends MessageParser {
 
 
         final Integer priority = Strings.isEmpty(groupPriority) ? null : Integer.parseInt(groupPriority);
-        final Integer facility = Priority.getFacility(priority);
-        final Severity severity = Priority.getSeverity(priority, facility);
-        syslogMessage.setSeverity(severity);
-        syslogMessage.setFacility(facility);
-        syslogMessage.setPriority(priority);
+        if (priority != null) {
+            final int facility = Priority.getFacility(priority);
+            final Severity severity = Priority.getSeverity(priority, facility);
+            syslogMessage.setSeverity(severity);
+            syslogMessage.setFacility(facility);
+            syslogMessage.setPriority(priority);
+        }
 
         DateTimeParsedResult parsedResult = parseDate(groupDate);
         syslogMessage.setTimestamp(parsedResult.getTimestamp());

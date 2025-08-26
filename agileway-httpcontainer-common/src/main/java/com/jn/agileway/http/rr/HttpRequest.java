@@ -6,9 +6,19 @@ import java.util.Locale;
 public interface HttpRequest<D> {
     D getContainerRequest();
 
+    String getContextPath();
+
     String getRemoteAddr();
 
     String getRemoteHost();
+
+    int getRemotePort();
+
+    String getServerName();
+
+    int getServerPort();
+
+    String getScheme();
 
     String getMethod();
 
@@ -105,8 +115,8 @@ public interface HttpRequest<D> {
      * The returned URL not contains a protocol, server name, port
      * number, and context path, and it does not include query
      * string parameters.
-     *
-     *
+     * <p>
+     * <p>
      * getBaseURL() + getPath() = getRequestURL()
      *
      * <p>If this request has been forwarded using

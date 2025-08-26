@@ -3,7 +3,6 @@ package com.jn.agileway.jaxrs.rr.requestmapping;
 import com.jn.agileway.http.rr.requestmapping.RequestMappingAccessor;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
-import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;

@@ -2,7 +2,6 @@ package com.jn.agileway.cmd.launcher;
 
 import com.jn.agileway.cmd.CommandLine;
 import com.jn.agileway.cmd.ProcessAdapter;
-import com.jn.agileway.cmd.environment.EnvironmentUtils;
 
 import java.io.File;
 import java.io.IOException;

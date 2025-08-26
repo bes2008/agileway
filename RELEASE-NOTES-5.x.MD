@@ -1,4 +1,78 @@
-## 5.0.5 （进行中）
+## 5.2.5
++ 简化rest result
+## 5.2.4
++ 移除 agileway-sshclient-j2ssh 模块
++ 完善 agileway-sshclient-jsch, 支持默认的 Config
++ 支持 sshclient 一次性创建多级目录
++ 支持 Protobuf Over Http (agileway-httpclient-protobuf)
++ 支持 spring 中的 resource, multivaluemap 转为 form 表单的body
++ 重构 agileway-httpclient-httpcomponents => agileway-httpclient-hc4
++ 添加 agileway-httpclient-hc5 模块
++ 按照 http protocol version 区分不同的 http executor
++ 优化 loadbalancer 模块
+  + 支持自定义负载均衡算法
+  + 支持自定义节点检查
+  + 支持自定义节点提供商
++ 依赖变更(解决安全漏洞)：
+  + 升级 maverick-synergy-client：3.0.1 => 3.1.0
+  + 升级 eddsa: 0.3.0 => 0.3.1
+  + 升级 commons-lang3: 3.17.0 -> 3.18.0
+  + 升级 commons-compress: 1.27.1 -> 1.28.0
+  + 升级 commons-vfs: 2.2.0 => 2.10.0
+  + 升级 commons-beanutils: 1.9.4 => 1.11.0
+  + 升级 jackson: 2.13.5 => 2.15.3
+  + 升级 snakeyaml: 1.33 => 2.0
+  + 升级 zookeeper: 3.9.2 => 3.9.3
+  + 升级 curator: 5.8.0 => 5.9.0
+  + 升级 logback: 1.5.0 => 1.5.18
+  + 升级 spring: 6.0.14 => 6.1.21
+  + 升级 spring-boot: 3.1.6 => 3.3.13
+  + 升级 spring-data-redis: 2.3.4 => 3.3.13
+  + 升级 bouncycastle-jdk18on: 1.78.1 => 1.81
+
+
+## 5.2.3
++ 提供 agileway-httpclient-jetty模块
++ 增强 agileway-eipchannel-core模块，提供 P2pRouter, PubSubRouter
+
+## 5.2.2
++ 增强 agileway-httpclient:
+  + 支持基于http protocol version 选择对应的 http request executor
+  + 支持基于JDK 版本选择对应的 http request executor
+  + 支持设置请求的timeout
++ 完善 agileway-httpclient-jdk11 文件上传功能
++ 完善 agileway-oauth2-client-springboot-starter，支持autoconfiguration
++ 完善 agileway-shell 模块的 HistoryHandler
+
+## 5.2.1
++ 优化 jwt模块，支持从 Payload 直接获取 默认注册的 claims
++ 提供 oauth2-client 模块
++ 增强 httpclient declarative 模块的注解数据赋值能力
++ 优化 httpclient-okhttp：
+  + 对于 POST 等方法，没有 body 时，使用 new byte[0]
++ 优化 根pom.xml
++ 提取 agileway-httpclient-auth模块
+
+## 5.2.0
++ 升级 Spring 6.x
++ 升级 Spring Boot 3.x
++ 支持 httpclient 模块
+  + 升级 JDK 11 之前的 HttpURLConnection
+  + 支持 JDK 11 HttpClient
+  + 支持 OkHttp3
+  + 支持 apache httpcomponents
+  + 支持 SOAP
+  + 支持 @HttpEndpoint
++ 将 langx-java-distributed 模块迁移为 agileway-distributed模块
++ 提供 agileway-zookeeper模块 
++ 对agileway-jwt 模块进行优化，确保签名验证时，使用的是接收到的数据
++ 对aigleway-audit 模块改造，使用 Promise API 替代 CompletableFuture
+
+## 5.1.0
++ 新特性：
+  + 提供 agileway-shell：用于支持 CLI 程序开发
++ 依赖：langx-java: 5.4.5 -> 5.4.6
+
 
 ## 5.0.4
 + BugFix：

@@ -148,7 +148,7 @@ public class SpringRestTemplateEntityLoader extends AbstractEntityLoader<Object>
     protected HttpMethod findHttpMethod(ResourceDefinition resourceDefinition) {
         MapAccessor mapAccessor = resourceDefinition.getDefinitionAccessor();
         String httpMethod = mapAccessor.getString("httpMethod", "GET").toUpperCase();
-        return HttpMethod.resolve(httpMethod);
+        return HttpMethod.valueOf(httpMethod);
     }
 
     public void setEnvironment(Environment environment) {

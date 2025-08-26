@@ -2,6 +2,8 @@
 
 [![Enterprise Integration Patterns](./images/eip.png)](https://www.enterpriseintegrationpatterns.com/patterns/messaging/)
 
+[EIP 规范](https://camel.apache.org/components/4.10.x/eips/enterprise-integration-patterns.html)
+
 # 常见通信模式
 
 ## 1、PubSub 模式 （event message常用）

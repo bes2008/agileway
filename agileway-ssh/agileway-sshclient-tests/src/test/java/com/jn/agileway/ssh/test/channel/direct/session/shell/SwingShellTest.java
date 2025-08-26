@@ -10,7 +10,9 @@ package com.jn.agileway.ssh.test.channel.direct.session.shell;
  * be ugly because of lacks of terminal-emulation, but you can issue commands.
  *
  */
+
 import com.jcraft.jsch.*;
+
 import javax.swing.*;
 
 public class SwingShellTest {

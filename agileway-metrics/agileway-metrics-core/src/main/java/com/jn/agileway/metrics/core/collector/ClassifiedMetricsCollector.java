@@ -1,18 +1,19 @@
 package com.jn.agileway.metrics.core.collector;
 
-import com.jn.agileway.metrics.core.*;
-import com.jn.agileway.metrics.core.meter.impl.BucketCounter;
-import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
+import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.meter.*;
+import com.jn.agileway.metrics.core.meter.impl.BucketCounter;
 import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
+import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
 import com.jn.agileway.metrics.core.snapshot.Snapshot;
-import static com.jn.agileway.metrics.core.Metric.MetricLevel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import static com.jn.agileway.metrics.core.Metric.MetricLevel;
 
 /**
  * @since 4.1.0

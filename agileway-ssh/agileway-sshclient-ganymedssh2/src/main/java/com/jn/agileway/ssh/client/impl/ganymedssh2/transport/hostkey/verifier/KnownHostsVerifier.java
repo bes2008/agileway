@@ -13,7 +13,7 @@ import java.util.List;
 
 public class KnownHostsVerifier implements ServerHostKeyVerifier {
     private static final Logger logger = Loggers.getLogger(KnownHostsVerifier.class);
-    private KnownHosts knownHosts = new KnownHosts();
+    private final KnownHosts knownHosts = new KnownHosts();
     private final List<File> knownHostsFiles = Collects.emptyArrayList();
     private StrictHostKeyChecking strictHostKeyChecking;
 

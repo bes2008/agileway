@@ -14,7 +14,7 @@ public interface OutboundChannel extends MessageChannel {
      * sent successfully, it will return 'true'.
      *
      * <p>Depending on the implementation, this method may block indefinitely.
-     * To provide a maximum wait time, use {@link #send(Message, long)}.
+     * To provide a maximum wait time, use {@link #send(Message)}.
      *
      * @param message the {@link Message} to send
      * @return whether the Message has been sent successfully

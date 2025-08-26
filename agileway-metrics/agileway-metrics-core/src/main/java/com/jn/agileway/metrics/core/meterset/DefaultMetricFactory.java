@@ -1,11 +1,13 @@
 package com.jn.agileway.metrics.core.meterset;
 
-import com.jn.agileway.metrics.core.*;
+import com.jn.agileway.metrics.core.Meter;
+import com.jn.agileway.metrics.core.Meters;
+import com.jn.agileway.metrics.core.Metric;
+import com.jn.agileway.metrics.core.meter.Timer;
+import com.jn.agileway.metrics.core.meter.*;
+import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 import com.jn.agileway.metrics.core.predicate.FixedPredicate;
 import com.jn.agileway.metrics.core.predicate.MetricMeterPredicate;
-import com.jn.agileway.metrics.core.meter.*;
-import com.jn.agileway.metrics.core.meter.Timer;
-import com.jn.agileway.metrics.core.meter.impl.ClusterHistogram;
 import com.jn.agileway.metrics.core.snapshot.ReservoirType;
 import com.jn.langx.util.Emptys;
 
@@ -116,9 +118,7 @@ public class DefaultMetricFactory implements MetricMeterFactory {
         if (!this.enabled) {
             return Collections.emptyList();
         }
-        List<String> groups = new ArrayList<String>();
-        groups.addAll(metricRegistryMap.keySet());
-        return groups;
+        return new ArrayList<String>(metricRegistryMap.keySet());
     }
 
     @Override

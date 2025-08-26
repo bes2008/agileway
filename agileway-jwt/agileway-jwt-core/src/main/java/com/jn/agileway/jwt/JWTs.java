@@ -33,50 +33,37 @@ public class JWTs {
 
         /**
          * Used in JWS Header and JWE Header.
+         * 签名算法名称
          *
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.1">RFC 7515 "alg" (JWS Algorithm) Header Parameter</a>
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7516#section-4.1.1">RFC 7516 "alg" (JWE Algorithm) Header Parameter</a>
          */
         public static final String ALGORITHM = "alg";
 
-
-        /**
-         * Used in JWE Header.
-         *
-         * @see <a href="https://datatracker.ietf.org/doc/html/rfc7516#section-4.1.2">RFC 7516 "enc" (Encryption Algorithm) Header Parameter</a>
-         */
-        public static final String ENCRYPTION_ALGORITHM = "enc";
-
-
-        /**
-         * Used in JWE Header.
-         *
-         * @see <a href="https://datatracker.ietf.org/doc/html/rfc7516#section-4.1.3">RFC 7516 "zip" (Compression Algorithm) Header Parameter</a>
-         */
-        public static final String COMPRESSION_ALGORITHM = "zip";
-
-
         /**
          * Used in JWS Header and JWE Header.
+         * <p>
+         * JSON-encoded 的公钥的 URL .它的值是个URL，用于获取 JWK，需要是 遵循 <a href="https://www.rfc-editor.org/rfc/rfc7517">JWK 规范</a>的 JSON 对象
          *
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.2">RFC 7515 "jku" (JWK Set URL) Header Parameter</a>
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7516#section-4.1.4">RFC 7516 "jku" (JWK Set URL) Header Parameter</a>
          */
         public static final String JWK_SET_URL = "jku";
 
-
         /**
          * Used in JWS Header and JWE Header.
+         * 直接就是 JWK内容。
          *
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.3">RFC 7515 "jwk" (JSON Web Key) Header Parameter</a>
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7516#section-4.1.5">RFC 7516 "jwk" (JSON Web Key) Header Parameter</a>
          */
         public static final String JWK = "jwk";
 
-
         /**
          * Used in JWS Header and JWE Header.
+         * 指定要使用 JWK中的key id
          *
+         * @see <a href="https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.4">RFC 7515 "jwk" (JSON Web Key) Header Parameter</a>
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.4">RFC 7515 "kid" (Key ID) Header Parameter</a>
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7516#section-4.1.6">RFC 7516 "kid" (Key ID) Header Parameter</a>
          */
@@ -85,39 +72,24 @@ public class JWTs {
 
         /**
          * Used in JWS Header and JWE Header.
+         * <p>
+         * 一个public key的 URL，用于获取 the X.509 public key certificate or certificate
+         * chain
          *
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.5">RFC 7515 "x5u" (X.509 Certificate URL) Header Parameter</a>
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7516#section-4.1.7">RFC 7516 "x5u" (X.509 Certificate URL) Header Parameter</a>
          */
         public static final String X_509_CERT_URL = "x5u";
 
-
         /**
          * Used in JWS Header and JWE Header.
+         * <p>
+         * the X.509 public key certificate or certificate chain
          *
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.6">RFC 7515 "x5c" (X.509 Certificate Chain) Header Parameter</a>
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7516#section-4.1.8">RFC 7516 "x5c" (X.509 Certificate Chain) Header Parameter</a>
          */
         public static final String X_509_CERT_CHAIN = "x5c";
-
-
-        /**
-         * Used in JWS Header and JWE Header.
-         *
-         * @see <a href="https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.7">RFC 7515 "x5t" (X.509 Certificate SHA-1 Thumbprint) Header Parameter</a>
-         * @see <a href="https://datatracker.ietf.org/doc/html/rfc7516#section-4.1.9">RFC 7516 "x5t" (X.509 Certificate SHA-1 Thumbprint) Header Parameter</a>
-         */
-        public static final String X_509_CERT_SHA_1_THUMBPRINT = "x5t";
-
-
-        /**
-         * Used in JWS Header and JWE Header.
-         *
-         * @see <a href="https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.8">RFC 7515 "x5t#S256" (X.509 Certificate SHA-256 Thumbprint) Header Parameter</a>
-         * @see <a href="https://datatracker.ietf.org/doc/html/rfc7516#section-4.1.10">RFC 7516 "x5t#S256" (X.509 Certificate SHA-256 Thumbprint) Header Parameter</a>
-         */
-        public static final String X_509_CERT_SHA_256_THUMBPRINT = "x5t#S256";
-
 
         /**
          * Used in JWS Header and JWE Header.
@@ -145,10 +117,38 @@ public class JWTs {
          */
         public static final String CRITICAL = "crit";
 
+        /**
+         * Used in JWS Header and JWE Header.
+         *
+         * @see <a href="https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.7">RFC 7515 "x5t" (X.509 Certificate SHA-1 Thumbprint) Header Parameter</a>
+         * @see <a href="https://datatracker.ietf.org/doc/html/rfc7516#section-4.1.9">RFC 7516 "x5t" (X.509 Certificate SHA-1 Thumbprint) Header Parameter</a>
+         */
+        public static final String X_509_CERT_SHA_1_THUMBPRINT = "x5t";
 
-        ////////////////////////////////////////////////////////////////////////////////
-        // Algorithm-Specific Header Parameters
-        ////////////////////////////////////////////////////////////////////////////////
+
+        /**
+         * Used in JWS Header and JWE Header.
+         *
+         * @see <a href="https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.8">RFC 7515 "x5t#S256" (X.509 Certificate SHA-256 Thumbprint) Header Parameter</a>
+         * @see <a href="https://datatracker.ietf.org/doc/html/rfc7516#section-4.1.10">RFC 7516 "x5t#S256" (X.509 Certificate SHA-256 Thumbprint) Header Parameter</a>
+         */
+        public static final String X_509_CERT_SHA_256_THUMBPRINT = "x5t#S256";
+
+
+        /**
+         * Used in JWE Header.
+         *
+         * @see <a href="https://datatracker.ietf.org/doc/html/rfc7516#section-4.1.2">RFC 7516 "enc" (Encryption Algorithm) Header Parameter</a>
+         */
+        public static final String JWE_HEADER_ENCRYPTION_ALGORITHM = "enc";
+
+
+        /**
+         * Used in JWE Header.
+         *
+         * @see <a href="https://datatracker.ietf.org/doc/html/rfc7516#section-4.1.3">RFC 7516 "zip" (Compression Algorithm) Header Parameter</a>
+         */
+        public static final String JWE_HEADER_COMPRESSION_ALGORITHM = "zip";
 
 
         /**
@@ -156,7 +156,7 @@ public class JWTs {
          *
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7518#section-4.6.1.1">RFC 7518 "epk" (Ephemeral Public Key) Header Parameter</a>
          */
-        public static final String EPHEMERAL_PUBLIC_KEY = "epk";
+        public static final String JWE_HEADER_EPHEMERAL_PUBLIC_KEY = "epk";
 
 
         /**
@@ -164,7 +164,7 @@ public class JWTs {
          *
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7518#section-4.6.1.2">RFC 7518 "apu" (Agreement PartyUInfo) Header Parameter</a>
          */
-        public static final String AGREEMENT_PARTY_U_INFO = "apu";
+        public static final String JWE_HEADER_AGREEMENT_PARTY_U_INFO = "apu";
 
 
         /**
@@ -172,7 +172,7 @@ public class JWTs {
          *
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7518#section-4.6.1.3">RFC 7518 "apv" (Agreement PartyVInfo) Header Parameter</a>
          */
-        public static final String AGREEMENT_PARTY_V_INFO = "apv";
+        public static final String JWE_HEADER_AGREEMENT_PARTY_V_INFO = "apv";
 
 
         /**
@@ -180,7 +180,7 @@ public class JWTs {
          *
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7518#section-4.7.1.1">RFC 7518 "iv" (Initialization Vector) Header Parameter</a>
          */
-        public static final String INITIALIZATION_VECTOR = "iv";
+        public static final String JWE_HEADER_INITIALIZATION_VECTOR = "iv";
 
 
         /**
@@ -188,7 +188,7 @@ public class JWTs {
          *
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7518#section-4.7.1.2">RFC 7518 "tag" (Authentication Tag) Header Parameter</a>
          */
-        public static final String AUTHENTICATION_TAG = "tag";
+        public static final String JWE_HEADER_AUTHENTICATION_TAG = "tag";
 
 
         /**
@@ -196,7 +196,7 @@ public class JWTs {
          *
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7518#section-4.8.1.1">RFC 7518 "p2s" (PBES2 Salt Input) Header Parameter</a>
          */
-        public static final String PBES2_SALT_INPUT = "p2s";
+        public static final String JWE_HEADER_PBES2_SALT_INPUT = "p2s";
 
 
         /**
@@ -204,7 +204,7 @@ public class JWTs {
          *
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7518#section-4.8.1.2">RFC 7518 "p2c" (PBES2 Count) Header Parameter</a>
          */
-        public static final String PBES2_COUNT = "p2c";
+        public static final String JWE_HEADER_PBES2_COUNT = "p2c";
 
 
         /**
@@ -212,7 +212,7 @@ public class JWTs {
          *
          * @see <a href="https://datatracker.ietf.org/doc/html/draft-madden-jose-ecdh-1pu-04#section-2.2.1">"skid" Header Parameter</a>
          */
-        public static final String SENDER_KEY_ID = "skid";
+        public static final String JWE_HEADER_SENDER_KEY_ID = "skid";
 
 
         ////////////////////////////////////////////////////////////////////////////////
@@ -225,83 +225,83 @@ public class JWTs {
          *
          * @see <a href="https://datatracker.ietf.org/doc/html/rfc7797#section-3">RFC 7797 "b64" (base64url-encode payload) Header Parameter</a>
          */
-        public static final String BASE64_URL_ENCODE_PAYLOAD = "b64";
+        public static final String JWS_HEADER_BASE64_URL_ENCODE_PAYLOAD = "b64";
 
     }
 
     public static final class ClaimKeys {
         /**
          * The "iss" (issuer) claim identifies the principal that issued the JWT.
-         *    The processing of this claim is generally application specific.
-         *    The "iss" value is a case-sensitive string containing a StringOrURI value.
-         *    Use of this claim is OPTIONAL.
+         * The processing of this claim is generally application specific.
+         * The "iss" value is a case-sensitive string containing a StringOrURI value.
+         * Use of this claim is OPTIONAL.
          */
         public static final String ISSUER = "iss";
 
         /**
-         *  The "sub" (subject) claim identifies the principal that is the subject of the JWT.
-         *      The claims in a JWT are normally statements about the subject.
-         *      The subject value MUST either be scoped to be locally unique in the context of the issuer or be globally unique.
-         *      The processing of this claim is generally application specific.
-         *      The "sub" value is a case-sensitive string containing a StringOrURI value.
-         *      Use of this claim is OPTIONAL.
+         * The "sub" (subject) claim identifies the principal that is the subject of the JWT.
+         * The claims in a JWT are normally statements about the subject.
+         * The subject value MUST either be scoped to be locally unique in the context of the issuer or be globally unique.
+         * The processing of this claim is generally application specific.
+         * The "sub" value is a case-sensitive string containing a StringOrURI value.
+         * Use of this claim is OPTIONAL.
          */
         public static final String SUBJECT = "sub";
 
         /**
          * The "aud" (audience) claim identifies the recipients that the JWT is intended for.
-         *      Each principal intended to process the JWT MUST identify itself with a value in the audience claim.
-         *      If the principal processing the claim does not identify itself with a value in the "aud" claim when this claim is present, then the JWT MUST be rejected.
-         *      In the general case, the "aud" value is an array of case-sensitive strings, each containing a StringOrURI value.
-         *      In the special case when the JWT has one audience, the "aud" value MAY be a single case-sensitive string containing a StringOrURI value.
-         *      The interpretation of audience values is generally application specific.
-         *      Use of this claim is OPTIONAL.
+         * Each principal intended to process the JWT MUST identify itself with a value in the audience claim.
+         * If the principal processing the claim does not identify itself with a value in the "aud" claim when this claim is present, then the JWT MUST be rejected.
+         * In the general case, the "aud" value is an array of case-sensitive strings, each containing a StringOrURI value.
+         * In the special case when the JWT has one audience, the "aud" value MAY be a single case-sensitive string containing a StringOrURI value.
+         * The interpretation of audience values is generally application specific.
+         * Use of this claim is OPTIONAL.
          */
         public static final String AUDIENCE = "aud";
 
         /**
          * The "exp" (expiration time) claim identifies the expiration time on
-         *    or after which the JWT MUST NOT be accepted for processing.  The
-         *    processing of the "exp" claim requires that the current date/time
-         *    MUST be before the expiration date/time listed in the "exp" claim.
-         *    Implementers MAY provide for some small leeway, usually no more than
-         *    a few minutes, to account for clock skew.
-         *    Its value MUST be a number containing a NumericDate value (unit: seconds).
-         *    Use of this claim is OPTIONAL.
+         * or after which the JWT MUST NOT be accepted for processing.  The
+         * processing of the "exp" claim requires that the current date/time
+         * MUST be before the expiration date/time listed in the "exp" claim.
+         * Implementers MAY provide for some small leeway, usually no more than
+         * a few minutes, to account for clock skew.
+         * Its value MUST be a number containing a NumericDate value (unit: seconds).
+         * Use of this claim is OPTIONAL.
          */
         public static final String EXPIRATION = "exp";
 
         /**
          * The "nbf" (not before) claim identifies the time before which the JWT
-         *    MUST NOT be accepted for processing.  The processing of the "nbf"
-         *    claim requires that the current date/time MUST be after or equal to
-         *    the not-before date/time listed in the "nbf" claim.  Implementers MAY
-         *    provide for some small leeway, usually no more than a few minutes, to
-         *    account for clock skew.
-         *    Its value MUST be a number containing a NumericDate value (unit: seconds).
-         *    Use of this claim is OPTIONAL.
+         * MUST NOT be accepted for processing.  The processing of the "nbf"
+         * claim requires that the current date/time MUST be after or equal to
+         * the not-before date/time listed in the "nbf" claim.  Implementers MAY
+         * provide for some small leeway, usually no more than a few minutes, to
+         * account for clock skew.
+         * Its value MUST be a number containing a NumericDate value (unit: seconds).
+         * Use of this claim is OPTIONAL.
          */
         public static final String NOT_BEFORE = "nbf";
 
 
         /**
          * The "iat" (issued at) claim identifies the time at which the JWT was issued.
-         *    This claim can be used to determine the age of the JWT.
-         *    Its value MUST be a number containing a NumericDate value. (unit: seconds)
-         *    Use of this claim is OPTIONAL.
+         * This claim can be used to determine the age of the JWT.
+         * Its value MUST be a number containing a NumericDate value. (unit: seconds)
+         * Use of this claim is OPTIONAL.
          */
         public static final String ISSUED_AT = "iat";
 
         /**
          * The "jti" (JWT ID) claim provides a unique identifier for the JWT.
-         *    The identifier value MUST be assigned in a manner that ensures that
-         *    there is a negligible probability that the same value will be
-         *    accidentally assigned to a different data object;
-         *    if the application uses multiple issuers, collisions MUST be prevented among values
-         *    produced by different issuers as well.
-         *    The "jti" claim can be used to prevent the JWT from being replayed.
-         *    The "jti" value is a case-sensitive string.
-         *    Use of this claim is OPTIONAL.
+         * The identifier value MUST be assigned in a manner that ensures that
+         * there is a negligible probability that the same value will be
+         * accidentally assigned to a different data object;
+         * if the application uses multiple issuers, collisions MUST be prevented among values
+         * produced by different issuers as well.
+         * The "jti" claim can be used to prevent the JWT from being replayed.
+         * The "jti" value is a case-sensitive string.
+         * Use of this claim is OPTIONAL.
          */
         public static final String JWT_ID = "jti";
 
@@ -352,7 +352,7 @@ public class JWTs {
         // EdDSA
         public static final String EdDSA = "EdDSA";
 
-        public static boolean isECDSA(String algorithm){
+        public static boolean isECDSA(String algorithm) {
             return ECDSA.isECJWSAlgorithm(algorithm);
         }
 
@@ -407,7 +407,7 @@ public class JWTs {
     }
 
     public static <T extends JWT> T parse(String token) {
-        return (T)getJWTService().newParser().parse(token);
+        return (T) getJWTService().newParser().parse(token);
     }
 
     public static boolean isPlainToken(String algorithm) {
@@ -418,22 +418,22 @@ public class JWTs {
         return getJWTService().getAlgorithmType(algorithm);
     }
 
-    public static String getJcaHMacAlgorithm(String jwsAlgorithm){
-        AlgorithmType algorithmType=getAlgorithmType(jwsAlgorithm);
-        if(algorithmType!=AlgorithmType.JWS){
-            throw new IllegalArgumentException("not a jws algorithm: "+ jwsAlgorithm);
+    public static String getJcaHMacAlgorithm(String jwsAlgorithm) {
+        AlgorithmType algorithmType = getAlgorithmType(jwsAlgorithm);
+        if (algorithmType != AlgorithmType.JWS) {
+            throw new IllegalArgumentException("not a jws algorithm: " + jwsAlgorithm);
         }
         String jcaAlgorithm = Signs.getJcaHMacAlgorithm(jwsAlgorithm);
         return jcaAlgorithm;
     }
 
-    public static SecretKey newJWSSecretKey(String jwsAlgorithm){
+    public static SecretKey newJWSSecretKey(String jwsAlgorithm) {
         String jcaAlgorithm = getJcaHMacAlgorithm(jwsAlgorithm);
-        Preconditions.checkNotEmpty(jcaAlgorithm,"illegal jws algorithm", jcaAlgorithm);
+        Preconditions.checkNotEmpty(jcaAlgorithm, "illegal jws algorithm", jcaAlgorithm);
         return PKIs.createSecretKey(jcaAlgorithm);
     }
 
-    public static SecretKey toJWSSecretKey(String jwsAlgorithm, String base64SecretKey){
+    public static SecretKey toJWSSecretKey(String jwsAlgorithm, String base64SecretKey) {
         return PKIs.createSecretKey(JWTs.getJcaHMacAlgorithm(jwsAlgorithm), Base64.decodeBase64(base64SecretKey));
     }
 

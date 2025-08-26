@@ -133,7 +133,6 @@ public class JschSftpSession extends AbstractSftpSession {
         }
     }
 
-    @Override
     public void mkdir(String directory, FileAttrs attributes) throws SftpException {
         try {
             channel.mkdir(directory);
@@ -141,7 +140,6 @@ public class JschSftpSession extends AbstractSftpSession {
             throw JschSftps.wrapSftpException(ex);
         }
     }
-
     @Override
     public void rmdir(String directory) throws SftpException {
         try {

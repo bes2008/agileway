@@ -5,23 +5,21 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.bes2008.solution.agileway</groupId>
     <artifactId>agileway</artifactId>
-    <version>5.0.4</version>
+    <version>5.2.6</version>
     <packaging>pom</packaging>
 
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
     <modules>
         <module>agileway-codec</module>
         <module>agileway-httpcontainer-common</module>
-        <module>agileway-web-javaee</module>
         <module>agileway-web-jakarta</module>
         <module>agileway-vfs</module>
         <module>agileway-httpclient</module>
         <module>agileway-aop</module>
         <module>agileway-spring</module>
-        <module>agileway-springboot1_2-web</module>
         <module>agileway-springboot3-web</module>
-        <module>agileway-redis-springdata2</module>
-        <module>agileway-shiro-redis-springdata2</module>
+        <module>agileway-redis-springdata</module>
+        <module>agileway-shiro-redis</module>
         <module>agileway-feign</module>
         <module>agileway-zip</module>
         <module>agileway-dmmq</module>
@@ -35,6 +33,10 @@
         <module>agileway-syslog</module>
         <module>agileway-audit</module>
         <module>agileway-jwt</module>
+        <module>agileway-shell</module>
+        <module>agileway-distributed</module>
+        <module>agileway-zookeeper</module>
+        <module>agileway-oauth2</module>
     </modules>
 
     <description>
@@ -49,13 +51,9 @@
     </developers>
     <distributionManagement>
         <snapshotRepository>
-            <id>sonatype_oss</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <id>central</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
         </snapshotRepository>
-        <repository>
-            <id>sonatype_oss</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-        </repository>
     </distributionManagement>
     <scm>
         <tag>${project.version}</tag>
@@ -73,9 +71,9 @@
 
     <repositories>
         <repository>
-            <id>aliyun</id>
-            <url>https://maven.aliyun.com/repository/central</url>
-            <name>aliyun</name>
+            <id>huawei</id>
+            <url>https://mirrors.huaweicloud.com/repository/maven/</url>
+            <name>huawei</name>
             <layout>default</layout>
             <releases>
                 <enabled>true</enabled>
@@ -99,17 +97,20 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!--commons utils-->
-        <langx.version>5.4.4</langx.version>
+        <langx.version>5.5.6</langx.version>
         <guava.version>33.3.0-jre</guava.version>
-        <commons-compress.version>1.27.1</commons-compress.version>
-        <comomons-text.version>1.12.0</comomons-text.version>
+        <commons-compress.version>1.28.0</commons-compress.version>
+        <commons-io.version>2.20.0</commons-io.version>
+        <commons-text.version>1.12.0</commons-text.version>
+        <commons-codec.version>1.17.1</commons-codec.version>
         <commons-configuration.version>1.10</commons-configuration.version>
         <commons-configuration2.version>2.11.0</commons-configuration2.version>
+        <commons-beanutils.version>1.11.0</commons-beanutils.version>
 
         <!-- JSON, YAML -->
-        <easyjson.version>4.1.5</easyjson.version>
-        <jackson.version>2.13.5</jackson.version>
-        <snakeyaml.version>1.33</snakeyaml.version>
+        <easyjson.version>4.1.7</easyjson.version>
+        <jackson.version>2.15.3</jackson.version>
+        <snakeyaml.version>2.2</snakeyaml.version>
 
         <!-- WebServer-->
         <tomcat.version>8.5.59</tomcat.version>
@@ -120,7 +121,7 @@
 
         <!-- Logging-->
         <slf4j.version>1.7.36</slf4j.version>
-        <logback.version>1.5.0</logback.version>
+        <logback.version>1.5.18</logback.version>
 
         <!--ByteCode Utils-->
         <javassist.version>3.21.0-GA</javassist.version>
@@ -128,26 +129,20 @@
 
         <!-- JavaEE, JakartaEE-->
         <javax.servlet.version>3.0.1</javax.servlet.version>
-        <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
+        <jakarta.servlet.version>5.0.0</jakarta.servlet.version>
 
         <!-- Tests -->
         <junit.version>4.13.1</junit.version>
 
 
         <!-- Security-->
-        <bouncycastle-jdk18on.version>1.78.1</bouncycastle-jdk18on.version>
+        <bouncycastle-jdk18on.version>1.81</bouncycastle-jdk18on.version>
 
-        <!--
-            # spring boot 1.5.x 存在  application.yaml 去注入 string[] 失败的问题
-        -->
 
-        <!-- spring boot 2.x 版本测试 -->
-        <spring5.version>5.3.39</spring5.version>
-        <spring.boot2.version>2.7.18</spring.boot2.version>
         <knife4j.version>3.0.3</knife4j.version>
 
-        <spring6.version>6.0.14</spring6.version>
-        <spring.boot3.version>3.1.6</spring.boot3.version>
+        <spring6.version>6.1.21</spring6.version>
+        <spring.boot3.version>3.3.13</spring.boot3.version>
 
 
         <!-- Maven Plugins-->
@@ -216,6 +211,11 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>io.github.bes2008.solution.agileway</groupId>
+                <artifactId>agileway-shell</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>io.github.bes2008.solution.agileway.metrics</groupId>
                 <artifactId>agileway-metrics-core</artifactId>
                 <version>${project.version}</version>
@@ -235,14 +235,10 @@
                 <artifactId>agileway-feign</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>io.github.bes2008.solution.agileway</groupId>
-                <artifactId>agileway-httpclient</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.bes2008.solution.agileway</groupId>
-                <artifactId>agileway-redis-springdata2</artifactId>
+                <artifactId>agileway-redis-springdata</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -263,11 +259,6 @@
             <dependency>
                 <groupId>io.github.bes2008.solution.agileway.ssh</groupId>
                 <artifactId>agileway-sshclient</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.bes2008.solution.agileway.ssh</groupId>
-                <artifactId>agileway-sshclient-j2ssh</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -327,10 +318,51 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>io.github.bes2008.solution.agileway</groupId>
+                <artifactId>agileway-distributed</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway</groupId>
+                <artifactId>agileway-zookeeper</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>io.github.bes2008.solution.agileway.eipchannel</groupId>
                 <artifactId>agileway-eipchannel-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
+                <artifactId>agileway-httpclient-auth</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
+                <artifactId>agileway-httpclient-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
+                <artifactId>agileway-httpclient-okhttp</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
+                <artifactId>agileway-httpclient-hc4</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
+                <artifactId>agileway-httpclient-hc5</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.bes2008.solution.agileway.oauth2</groupId>
+                <artifactId>agileway-oauth2-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>io.github.bes2008.solution.langx</groupId>
                 <artifactId>langx-java</artifactId>
@@ -349,11 +381,6 @@
             <dependency>
                 <groupId>io.github.bes2008.solution.langx</groupId>
                 <artifactId>langx-java-reflect-aspectj</artifactId>
-                <version>${langx.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.bes2008.solution.langx</groupId>
-                <artifactId>langx-java-distributed</artifactId>
                 <version>${langx.version}</version>
             </dependency>
             <dependency>
@@ -381,11 +408,25 @@
             </dependency>
 
             <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${commons-beanutils.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-text</artifactId>
-                <version>${comomons-text.version}</version>
+                <version>${commons-text.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-compress</artifactId>
@@ -471,6 +512,12 @@
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
                 <version>${logback.version}</version>
                 <optional>true</optional>
             </dependency>
@@ -565,7 +612,11 @@
                 <artifactId>jackson-module-parameter-names</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-blackbird</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
@@ -718,12 +769,6 @@
                 </plugin>
 
                 <plugin>
-                    <groupId>org.sonatype.plugins</groupId>
-                    <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>1.6.14</version>
-                </plugin>
-
-                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
                     <version>2.5.3</version>
@@ -801,6 +846,19 @@
                     </includes>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -810,7 +868,10 @@
         <profile>
             <id>envHome</id>
             <properties>
+                <gpg.executable>D:/Program Files (x86)/GNU/GnuPG/gpg2.exe</gpg.executable>
+                <!--
                 <gpg.executable>D:/Program Files (x86)/GnuPG/bin/gpg</gpg.executable>
+                -->
                 <gpg.homedir>C:/Users/Administrator/AppData/Roaming/gnupg</gpg.homedir>
                 <!--
                 <gpg.passphrase>YOUR GPG PASSPHRASE</gpg.passphrase>
@@ -966,21 +1027,18 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.8.0</version>
                         <extensions>true</extensions>
                         <configuration>
-                            <serverId>sonatype_oss</serverId>
-                            <nexusUrl>https://s01.oss.sonatype.org</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                            <autoDropAfterRelease>true</autoDropAfterRelease>
-                            <keepStagingRepositoryOnFailure>false</keepStagingRepositoryOnFailure>
-                            <keepStagingRepositoryOnCloseRuleFailure>false</keepStagingRepositoryOnCloseRuleFailure>
-                            <sslAllowAll>true</sslAllowAll>
-                            <sslInsecure>false</sslInsecure>
-                            <stagingProgressPauseDurationSeconds>120</stagingProgressPauseDurationSeconds>
-                            <stagingProgressTimeoutMinutes>40</stagingProgressTimeoutMinutes>
-                            <detectBuildFailures>false</detectBuildFailures>
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                            <deploymentName>agileway-${project.version}</deploymentName>
+                            <failOnBuildFailure>true</failOnBuildFailure>
+                            <excludeArtifacts>
+                                <excludeArtifact>agileway-sshclient-tests</excludeArtifact>
+                            </excludeArtifacts>
                         </configuration>
                     </plugin>
                     <plugin>

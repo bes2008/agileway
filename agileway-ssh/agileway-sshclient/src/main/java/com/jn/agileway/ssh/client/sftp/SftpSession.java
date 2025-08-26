@@ -117,7 +117,7 @@ public interface SftpSession extends Closeable {
     List<SftpResourceInfo> listFiles(String directory, Predicate<SftpResourceInfo> predicate) throws SftpException;
 
     /**
-     * 递归创建目录
+     * 只创建一层目录
      *
      * packet:
      * |packet_type|req_id|path|file_attributes_flags_mask|file_attributes|
@@ -129,6 +129,18 @@ public interface SftpSession extends Closeable {
      */
     void mkdir(String directory, FileAttrs attributes) throws SftpException;
 
+    /**
+     * 递归创建目录
+     * <p>
+     * packet:
+     * |packet_type|req_id|path|file_attributes_flags_mask|file_attributes|
+     * <p>
+     * packet_type: MKDIR
+     *
+     * @param directory
+     * @param attributes
+     */
+    void mkdirs(String directory, FileAttrs attributes) throws SftpException;
     /**
      * 移除一个空目录
      *

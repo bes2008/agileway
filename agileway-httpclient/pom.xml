@@ -5,45 +5,24 @@
     <parent>
         <groupId>io.github.bes2008.solution.agileway</groupId>
         <artifactId>agileway</artifactId>
-        <version>5.0.4</version>
+        <version>5.2.6</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
+    <description>httpclient</description>
+    <packaging>pom</packaging>
+    <modules>
+        <module>agileway-httpclient-core</module>
+        <module>agileway-httpclient-hc4</module>
+        <module>agileway-httpclient-okhttp</module>
+        <module>agileway-httpclient-jdk11</module>
+        <module>agileway-httpclient-soap</module>
+        <module>agileway-httpclient-auth</module>
+        <module>agileway-httpclient-jetty</module>
+        <module>agileway-httpclient-protobuf</module>
+        <module>agileway-httpclient-hc5</module>
+    </modules>
 
+    <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
     <artifactId>agileway-httpclient</artifactId>
-
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
-
-    <description>Simplify the use of apache httpclient</description>
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpasyncclient</artifactId>
-            <scope>compile</scope>
-            <optional>true</optional>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <scope>compile</scope>
-            <optional>true</optional>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-    </dependencies>
-
 </project>

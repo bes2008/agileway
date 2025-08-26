@@ -5,12 +5,19 @@
     <parent>
         <artifactId>agileway-ssh</artifactId>
         <groupId>io.github.bes2008.solution.agileway.ssh</groupId>
-        <version>5.0.4</version>
+        <version>5.2.6</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>agileway-sshclient-synergy</artifactId>
     <name>${project.groupId}:${project.artifactId}:${project.version}</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+    </properties>
+
     <dependencies>
 
         <dependency>
@@ -20,7 +27,7 @@
         <dependency>
             <groupId>com.sshtools</groupId>
             <artifactId>maverick-synergy-client</artifactId>
-            <version>3.0.3-FINAL</version>
+            <version>3.1.2</version>
         </dependency>
 
     </dependencies>

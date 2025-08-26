@@ -4,14 +4,13 @@ import com.jn.agileway.ssh.client.sftp.OpenMode;
 import com.jn.agileway.ssh.client.sftp.attrs.FileAttrs;
 import com.jn.agileway.ssh.client.sftp.attrs.FileMode;
 import com.jn.agileway.ssh.client.sftp.attrs.FileType;
-import com.jn.langx.util.Numbers;
+import com.sshtools.common.sftp.PosixPermissions;
 import com.sshtools.common.sftp.SftpFileAttributes;
-import com.sshtools.common.util.UnsignedInteger32;
 import com.sshtools.common.util.UnsignedInteger64;
 
 class SynergySftps {
 
-    public static int toOpenFlags(OpenMode openMode){
+    public static int toOpenFlags(OpenMode openMode) {
         return openMode.getCode();
     }
 
@@ -22,27 +21,23 @@ class SynergySftps {
         FileAttrs attrs = new FileAttrs();
 
         if (attributes.hasSize()) {
-            attrs.setSize(attributes.getSize().longValue());
+            attrs.setSize(attributes.size().longValue());
         }
 
-        if (attributes.hasAccessTime()) {
-            attrs.setAccessTime(attributes.getAccessedTime().bigIntValue().intValue());
+        if (attributes.hasLastAccessTime()) {
+            attrs.setAccessTime((int) attributes.lastAccessTime().toMillis() / 1000);
         }
-        if (attributes.hasModifiedTime()) {
-            attrs.setModifyTime(attributes.getModifiedTime().bigIntValue().intValue());
+        if (attributes.hasLastModifiedTime()) {
+            attrs.setModifyTime((int) attributes.lastModifiedTime().toMillis() / 1000);
         }
 
-        if (attributes.hasUID()) {
-            String uid = attributes.getUID();
-            if (Numbers.isNumber(uid)) {
-                attrs.setUid(Integer.parseInt(uid));
-            }
+        if (attributes.hasUid()) {
+            int uid = attributes.uid();
+            attrs.setUid(uid);
         }
-        if (attributes.hasGID()) {
-            String gid = attributes.getGID();
-            if (Numbers.isNumber(gid)) {
-                attrs.setGid(Integer.parseInt(gid));
-            }
+        if (attributes.hasGid()) {
+            int gid = attributes.gid();
+            attrs.setGid(gid);
         }
 
         FileType fileType = FileType.UNKNOWN;
@@ -62,7 +57,7 @@ class SynergySftps {
             fileType = FileType.SYMBOLIC_LINK;
         }
 
-        int permissions = attributes.getPermissions().intValue();
+        int permissions = attributes.permissions().asInt();
         com.jn.agileway.ssh.client.sftp.attrs.FileMode fileMode = FileMode.createFileMode(fileType, permissions);
         attrs.setFileMode(fileMode);
 
@@ -96,32 +91,34 @@ class SynergySftps {
             default:
                 break;
         }
-        SftpFileAttributes attributes = new SftpFileAttributes(fileType, encoding);
+        SftpFileAttributes.SftpFileAttributesBuilder attributes = SftpFileAttributes.SftpFileAttributesBuilder.ofType(fileType, encoding);
 
         if (attrs.getSize() != null) {
-            attributes.setSize(new UnsignedInteger64(attrs.getSize()));
+            attributes.withSize(new UnsignedInteger64(attrs.getSize()));
         }
 
-        UnsignedInteger64 atime = null;
-        UnsignedInteger64 mtime = null;
         if (attrs.getAccessTime() != null) {
-            atime = new UnsignedInteger64(attrs.getAccessTime());
+            long atime = attrs.getAccessTime();
+            attributes.withLastAccessTime(atime);
         }
         if (attrs.getModifyTime() != null) {
-            mtime = new UnsignedInteger64(attrs.getModifyTime());
+            long mtime = attrs.getModifyTime();
+            attributes.withLastModifiedTime(mtime);
         }
-        attributes.setTimes(atime, mtime);
 
         if (attrs.getGid() != null) {
-            attributes.setGID(attrs.getGid().toString());
+            attributes.withGid(attrs.getGid());
         }
         if (attrs.getUid() != null) {
-            attributes.setUID(attrs.getUid().toString());
+            attributes.withUid(attrs.getUid());
         }
 
 
         FileMode fileMode = attrs.getFileMode();
-        attributes.setPermissions(new UnsignedInteger32(fileMode.getPermissionsMask()));
-        return attributes;
+        PosixPermissions permissions = PosixPermissions.PosixPermissionsBuilder.create()
+                .withBitmaskFlags(fileMode.getPermissionsMask())
+                .build();
+        attributes.withPermissions(permissions);
+        return attributes.build();
     }
 }

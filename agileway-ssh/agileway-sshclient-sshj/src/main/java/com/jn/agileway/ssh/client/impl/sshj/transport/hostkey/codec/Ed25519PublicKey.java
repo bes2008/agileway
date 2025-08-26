@@ -25,11 +25,11 @@ class Ed25519PublicKey extends EdDSAPublicKey {
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof com.hierynomus.sshj.signature.Ed25519PublicKey)) {
+        if (!(other instanceof Ed25519PublicKey)) {
             return false;
         }
 
-        com.hierynomus.sshj.signature.Ed25519PublicKey otherKey = (com.hierynomus.sshj.signature.Ed25519PublicKey) other;
+        Ed25519PublicKey otherKey = (Ed25519PublicKey) other;
         return Arrays.equals(getAbyte(), otherKey.getAbyte());
     }
 

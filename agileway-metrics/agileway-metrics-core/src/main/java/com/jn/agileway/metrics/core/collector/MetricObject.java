@@ -1,10 +1,10 @@
 package com.jn.agileway.metrics.core.collector;
 
-import static com.jn.agileway.metrics.core.Metric.MetricLevel;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.jn.agileway.metrics.core.Metric.MetricLevel;
 
 /**
  * @since 4.1.0
@@ -153,9 +153,7 @@ public class MetricObject {
 
         public Builder withTags(Map<String, String> tags) {
             if (tags != null) {
-                for (Map.Entry<String, String> entry : tags.entrySet()) {
-                    metric.tags.put(entry.getKey(), entry.getValue());
-                }
+                metric.tags.putAll(tags);
             }
             return this;
         }

@@ -1,7 +1,8 @@
 package com.jn.agileway.dmmq.core;
 
 import com.jn.agileway.dmmq.core.allocator.DefaultTopicAllocator;
-import com.jn.langx.lifecycle.*;
+import com.jn.langx.lifecycle.AbstractLifecycle;
+import com.jn.langx.lifecycle.Destroyable;
 import com.jn.langx.util.Emptys;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.function.Function;

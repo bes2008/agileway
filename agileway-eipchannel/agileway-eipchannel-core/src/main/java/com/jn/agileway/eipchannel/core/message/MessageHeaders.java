@@ -1,6 +1,5 @@
 package com.jn.agileway.eipchannel.core.message;
 
-
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.logging.Loggers;
 import org.slf4j.Logger;
@@ -26,8 +25,12 @@ import java.util.*;
  * headers.put("key2", "value2");
  * new GenericMessage("foo", headers);
  * </pre>
+ * <p>
+ * <p>
+ * MessageHeaders本身是一个通用 Headers 集合，它用于框架层面的 Headers。
+ * 它可以包含一个 Protocol Headers 集合，用于存储与底层协议相关的消息头信息。
  */
-public final class MessageHeaders extends LinkedHashMap<String, Object> implements Serializable {
+public class MessageHeaders<H> extends LinkedHashMap<String, Object> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -59,14 +62,31 @@ public final class MessageHeaders extends LinkedHashMap<String, Object> implemen
 
     public static final String SEQUENCE_DETAILS = "sequenceDetails";
 
-
-
-    public MessageHeaders(Map<String, Object> headers) {
-        super(Collects.newHashMap(headers));
-        this.put(ID, UUID.randomUUID());
-        this.put(TIMESTAMP,System.currentTimeMillis());
+    public MessageHeaders() {
+        this(new HashMap<String, Object>());
     }
 
+    public MessageHeaders(Map<String, Object> headers, H protocolHeaders) {
+        super(Collects.newHashMap(headers));
+        this.setId(UUID.randomUUID());
+        this.put(TIMESTAMP, System.currentTimeMillis());
+        this.protocolHeaders = protocolHeaders;
+    }
+
+    public MessageHeaders(Map<String, Object> headers) {
+        this(headers, null);
+    }
+
+
+    private H protocolHeaders;
+
+    public H getProtocolHeaders() {
+        return protocolHeaders;
+    }
+
+    public void setProtocolHeaders(H protocolHeaders) {
+        this.protocolHeaders = protocolHeaders;
+    }
 
     public UUID getId() {
         return this.get(ID, UUID.class);
@@ -107,7 +127,7 @@ public final class MessageHeaders extends LinkedHashMap<String, Object> implemen
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T get(Object key, Class<T> type) {
+    public <T> T get(String key, Class<T> type) {
         Object value = this.get(key);
         if (value == null) {
             return null;
@@ -115,6 +135,14 @@ public final class MessageHeaders extends LinkedHashMap<String, Object> implemen
         if (!type.isAssignableFrom(value.getClass())) {
             throw new IllegalArgumentException("Incorrect type specified for header '" + key + "'. Expected [" + type
                     + "] but actual type is [" + value.getClass() + "]");
+        }
+        return (T) value;
+    }
+
+    public <T> T getIfAbsent(String key, T defaultValue) {
+        Object value = this.get(key);
+        if (value == null) {
+            value = defaultValue;
         }
         return (T) value;
     }
@@ -141,6 +169,10 @@ public final class MessageHeaders extends LinkedHashMap<String, Object> implemen
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
+    }
+
+    public void setId(UUID id) {
+        this.put(ID, id);
     }
 
 }

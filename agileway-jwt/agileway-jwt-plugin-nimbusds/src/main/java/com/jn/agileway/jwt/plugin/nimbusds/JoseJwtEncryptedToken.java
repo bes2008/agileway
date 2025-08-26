@@ -1,13 +1,15 @@
 package com.jn.agileway.jwt.plugin.nimbusds;
 
 import com.jn.agileway.jwt.Header;
-import com.jn.agileway.jwt.jwe.JWEToken;
 import com.jn.agileway.jwt.Payload;
+import com.jn.agileway.jwt.jwe.JWEToken;
+import com.nimbusds.jose.JWEHeader;
 import com.nimbusds.jwt.EncryptedJWT;
 
 public class JoseJwtEncryptedToken implements JWEToken {
     private EncryptedJWT delegate;
-
+    private Header header;
+    private Payload payload;
     public JoseJwtEncryptedToken() {
 
     }
@@ -18,13 +20,20 @@ public class JoseJwtEncryptedToken implements JWEToken {
 
     @Override
     public Header getHeader() {
-        return null;
+        if (header == null) {
+            JWEHeader h = delegate.getHeader();
+            this.header = new Header(h.toJSONObject());
+        }
+        return header;
     }
 
 
     @Override
     public Payload getPayload() {
-        return null;
+        if (payload == null) {
+            this.payload = new Payload(delegate.getPayload().toJSONObject());
+        }
+        return payload;
     }
 
     @Override

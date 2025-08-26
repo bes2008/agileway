@@ -36,7 +36,7 @@ public class SynergySftpSession extends AbstractSftpSession {
                         @Override
                         public SftpResourceInfo apply(com.sshtools.client.sftp.SftpFile sftpFile) {
                             try {
-                                SftpResourceInfo resourceInfo = new SftpResourceInfo(sftpFile.getAbsolutePath(), SynergySftps.fromSftpFileAttributes(sftpFile.getAttributes()));
+                                SftpResourceInfo resourceInfo = new SftpResourceInfo(sftpFile.getAbsolutePath(), SynergySftps.fromSftpFileAttributes(sftpFile.attributes()));
                                 return resourceInfo;
                             } catch (Throwable ex) {
                                 throw new SftpException(ex);
@@ -60,7 +60,7 @@ public class SynergySftpSession extends AbstractSftpSession {
     @Override
     public SftpFile open(String filepath, int openMode, FileAttrs attrs) throws SftpException {
         try {
-            com.sshtools.client.sftp.SftpFile sf = null;
+            com.sshtools.client.sftp.SftpHandle sf = null;
 
             if (!Sftps.exists(this, filepath)) {
                 if (OpenMode.isCreatable(openMode)) {

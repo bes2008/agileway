@@ -1,9 +1,9 @@
 package com.jn.agileway.eipchannel.core.endpoint.pubsub;
 
 
-import com.jn.agileway.eipchannel.core.message.Message;
 import com.jn.agileway.eipchannel.core.channel.OutboundChannel;
 import com.jn.agileway.eipchannel.core.endpoint.mapper.MessageMapper;
+import com.jn.agileway.eipchannel.core.message.Message;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.reflect.Reflects;

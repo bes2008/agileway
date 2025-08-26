@@ -5,7 +5,7 @@
     <parent>
         <groupId>io.github.bes2008.solution.agileway</groupId>
         <artifactId>agileway</artifactId>
-        <version>5.0.4</version>
+        <version>5.2.6</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,29 +16,44 @@
     <description>
         Provide the spring tools and spring boot starter for all moudles in agileway
     </description>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>io.github.bes2008.solution.agileway</groupId>
             <artifactId>agileway-httpcontainer-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.github.bes2008.solution.agileway</groupId>
-            <artifactId>agileway-httpclient</artifactId>
+            <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
+            <artifactId>agileway-httpclient-hc4</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
+            <artifactId>agileway-httpclient-core</artifactId>
         </dependency>
         <dependency>
             <groupId>io.github.bes2008.solution.agileway</groupId>
-            <artifactId>agileway-redis-springdata2</artifactId>
+            <artifactId>agileway-shell</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bes2008.solution.agileway</groupId>
+            <artifactId>agileway-redis-springdata</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
-            <version>${spring5.version}</version>
+            <version>${spring6.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>${spring5.version}</version>
+            <version>${spring6.version}</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -52,13 +67,13 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-            <version>${spring.boot2.version}</version>
+            <version>${spring.boot3.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
-            <version>${spring.boot2.version}</version>
+            <version>${spring.boot3.version}</version>
             <scope>provided</scope>
         </dependency>
 

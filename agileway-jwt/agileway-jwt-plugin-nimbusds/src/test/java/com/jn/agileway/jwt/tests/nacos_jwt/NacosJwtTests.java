@@ -1,10 +1,11 @@
 package com.jn.agileway.jwt.tests.nacos_jwt;
 
-import com.jn.agileway.jwt.*;
+import com.jn.agileway.jwt.HMacVerifier;
+import com.jn.agileway.jwt.JWSToken;
+import com.jn.agileway.jwt.JWSTokenBuilder;
+import com.jn.agileway.jwt.JWTs;
 import com.jn.langx.codec.base64.Base64;
 import org.junit.Test;
-
-import javax.crypto.SecretKey;
 
 public class NacosJwtTests {
 

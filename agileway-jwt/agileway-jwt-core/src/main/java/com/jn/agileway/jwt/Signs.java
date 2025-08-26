@@ -118,26 +118,26 @@ class Signs {
     static {
         Map<String, Supplier<PublicKey, Signature>> map = Maps.newLinkedHashMap();
         // RSA 相关
-        map.put("RS256", new Supplier<PublicKey, Signature>() {
+        map.put(JWTs.JWSAlgorithms.RS256, new Supplier<PublicKey, Signature>() {
             @Override
             public Signature get(PublicKey publicKey) {
                 return Signatures.createSignature("SHA256withRSA", null, publicKey, (AlgorithmParameterSupplier) null);
             }
         });
-        map.put("RS384", new Supplier<PublicKey, Signature>() {
+        map.put(JWTs.JWSAlgorithms.RS384, new Supplier<PublicKey, Signature>() {
             @Override
             public Signature get(PublicKey publicKey) {
-                return Signatures.createSignature("SHA384withRSA", null, publicKey, (AlgorithmParameterSupplier)null);
+                return Signatures.createSignature("SHA384withRSA", null, publicKey, (AlgorithmParameterSupplier) null);
             }
         });
-        map.put("RS512", new Supplier<PublicKey, Signature>() {
+        map.put(JWTs.JWSAlgorithms.RS512, new Supplier<PublicKey, Signature>() {
             @Override
             public Signature get(PublicKey publicKey) {
-                return Signatures.createSignature("SHA512withRSA", null, publicKey, (AlgorithmParameterSupplier)null);
+                return Signatures.createSignature("SHA512withRSA", null, publicKey, (AlgorithmParameterSupplier) null);
             }
         });
 
-        map.put("PS256", new Supplier<PublicKey, Signature>() {
+        map.put(JWTs.JWSAlgorithms.PS256, new Supplier<PublicKey, Signature>() {
             @Override
             public Signature get(PublicKey publicKey) {
                 final AlgorithmParameterSpec parameterSpec = new PSSParameterSpec("SHA-256", "MGF1", new MGF1ParameterSpec("SHA-256"), 32, 1);
@@ -149,7 +149,7 @@ class Signs {
                 });
             }
         });
-        map.put("PS384", new Supplier<PublicKey, Signature>() {
+        map.put(JWTs.JWSAlgorithms.PS384, new Supplier<PublicKey, Signature>() {
             @Override
             public Signature get(PublicKey publicKey) {
                 final AlgorithmParameterSpec parameterSpec = new PSSParameterSpec("SHA-384", "MGF1", new MGF1ParameterSpec("SHA-384"), 48, 1);
@@ -161,7 +161,7 @@ class Signs {
                 });
             }
         });
-        map.put("PS512", new Supplier<PublicKey, Signature>() {
+        map.put(JWTs.JWSAlgorithms.PS512, new Supplier<PublicKey, Signature>() {
             @Override
             public Signature get(PublicKey publicKey) {
                 final AlgorithmParameterSpec parameterSpec = new PSSParameterSpec("SHA-512", "MGF1", new MGF1ParameterSpec("SHA-512"), 64, 1);
@@ -174,32 +174,32 @@ class Signs {
             }
         });
         // EC 相关
-        map.put("ES256", new Supplier<PublicKey, Signature>() {
+        map.put(JWTs.JWSAlgorithms.ES256, new Supplier<PublicKey, Signature>() {
             @Override
             public Signature get(PublicKey publicKey) {
                 return Signatures.createSignature("SHA256withECDSA", null, publicKey);
             }
         });
-        map.put("ES256K", new Supplier<PublicKey, Signature>() {
+        map.put(JWTs.JWSAlgorithms.ES256K, new Supplier<PublicKey, Signature>() {
             @Override
             public Signature get(PublicKey publicKey) {
                 return Signatures.createSignature("SHA256withECDSA", null, publicKey);
             }
         });
-        map.put("ES384", new Supplier<PublicKey, Signature>() {
+        map.put(JWTs.JWSAlgorithms.ES384, new Supplier<PublicKey, Signature>() {
             @Override
             public Signature get(PublicKey publicKey) {
                 return Signatures.createSignature("SHA384withECDSA", null, publicKey);
             }
         });
-        map.put("ES512", new Supplier<PublicKey, Signature>() {
+        map.put(JWTs.JWSAlgorithms.ES512, new Supplier<PublicKey, Signature>() {
             @Override
             public Signature get(PublicKey publicKey) {
                 return Signatures.createSignature("SHA512withECDSA", null, publicKey);
             }
         });
 
-        map.put("EdDSA", new Supplier<PublicKey, Signature>() {
+        map.put(JWTs.JWSAlgorithms.EdDSA, new Supplier<PublicKey, Signature>() {
             @Override
             public Signature get(PublicKey publicKey) {
                 Provider bc = Security.getProvider("BC");
@@ -227,7 +227,7 @@ class Signs {
                 .asList();
     }
 
-    public static String getJcaHMacAlgorithm(String jwsHmacAlgorithm){
+    public static String getJcaHMacAlgorithm(String jwsHmacAlgorithm) {
         return JWT_TO_HMAC_ALGORITHMS.get(Strings.upperCase(jwsHmacAlgorithm));
     }
 

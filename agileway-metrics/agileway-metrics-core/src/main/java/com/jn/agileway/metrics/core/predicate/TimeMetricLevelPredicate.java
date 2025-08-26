@@ -1,9 +1,10 @@
 package com.jn.agileway.metrics.core.predicate;
 
 import com.jn.agileway.metrics.core.Meter;
-import static com.jn.agileway.metrics.core.Metric.MetricLevel;
 import com.jn.agileway.metrics.core.Metric;
 import com.jn.agileway.metrics.core.config.MetricsCollectPeriodConfig;
+
+import static com.jn.agileway.metrics.core.Metric.MetricLevel;
 
 /**
  * 不同Level的Metric有配置不同的report时间间隔。这个Filter用于在report时，
@@ -102,7 +103,7 @@ public class TimeMetricLevelPredicate implements MetricMeterPredicate {
         return levelInfos[name.getMetricLevel().ordinal()].allow;
     }
 
-    class MetricsLevelInfo {
+    static class MetricsLevelInfo {
         /**
          * 是否允许report
          */
@@ -111,6 +112,7 @@ public class TimeMetricLevelPredicate implements MetricMeterPredicate {
          * 上一次report的时间点
          */
         Long lastReportTimeStamp;
+
         public MetricsLevelInfo(boolean allow, long lastReportTimeStamp) {
             this.allow = allow;
             this.lastReportTimeStamp = lastReportTimeStamp;

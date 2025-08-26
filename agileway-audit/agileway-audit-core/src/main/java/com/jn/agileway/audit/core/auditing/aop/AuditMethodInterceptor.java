@@ -29,8 +29,6 @@ public class AuditMethodInterceptor<REQUEST> implements MethodInterceptor {
             // 不存在审计请求时，则直接进行原始调用
             return invocation.proceed();
         }
-        Object ret = null;
-
         AuditRequest wrappedRequest = null;
 
         // start auditing
@@ -42,18 +40,16 @@ public class AuditMethodInterceptor<REQUEST> implements MethodInterceptor {
         }
 
         if (!lazyFinish) {
-            Throwable e = null;
             try {
-                ret = invocation.proceed();
+                Object ret = invocation.proceed();
                 return ret;
             } catch (Throwable ex) {
-                if(wrappedRequest!=null) {
+                if (wrappedRequest != null) {
                     wrappedRequest.setResult(OperationResult.FAIL);
                 }
-                e = ex;
-                throw e;
+                throw ex;
             } finally {
-                if(wrappedRequest!=null){
+                if (wrappedRequest != null) {
                     try {
                         auditor.finishAudit(wrappedRequest);
                     } catch (Throwable ex) {

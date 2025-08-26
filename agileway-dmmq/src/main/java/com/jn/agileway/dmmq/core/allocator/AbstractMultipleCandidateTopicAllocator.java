@@ -1,9 +1,9 @@
 package com.jn.agileway.dmmq.core.allocator;
 
 import com.jn.agileway.dmmq.core.MessageTopic;
+import com.jn.agileway.dmmq.core.TopicAllocator;
 import com.jn.agileway.dmmq.core.event.TopicEvent;
 import com.jn.agileway.dmmq.core.event.TopicEventType;
-import com.jn.agileway.dmmq.core.TopicAllocator;
 import com.jn.langx.util.collection.Collects;
 
 import java.util.List;

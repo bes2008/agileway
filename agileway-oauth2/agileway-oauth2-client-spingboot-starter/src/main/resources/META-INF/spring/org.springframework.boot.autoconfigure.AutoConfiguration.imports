@@ -1,0 +1,2 @@
+com.jn.agileway.oauth2.client.springboot.starter.OAuth2ClientConfiguration
+com.jn.agileway.oauth2.client.springboot.starter.StandardOpenIdOAuth2AutoConfiguration

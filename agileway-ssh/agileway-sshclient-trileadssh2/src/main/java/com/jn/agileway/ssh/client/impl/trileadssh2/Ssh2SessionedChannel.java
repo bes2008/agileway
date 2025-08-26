@@ -2,7 +2,6 @@ package com.jn.agileway.ssh.client.impl.trileadssh2;
 
 import com.jn.agileway.ssh.client.SshException;
 import com.jn.agileway.ssh.client.channel.AbstarctSessionedChannel;
-import com.jn.agileway.ssh.client.channel.ShellExecutor;
 import com.jn.agileway.ssh.client.utils.PTYMode;
 import com.jn.agileway.ssh.client.utils.Signal;
 import com.jn.langx.annotation.NonNull;
