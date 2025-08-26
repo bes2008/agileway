@@ -1,5 +1,17 @@
+## 5.2.6
++ agileway-spring 模块移除自动创建 hc4 的 httpclient
++ 部分代码优化
++ 依赖调整：
+  + 降级 sring-data-redis：3.5.2 => 3.3.13
+  + 升级 mybatis: 3.5.16 => 3.5.19
+  + 升级 mybatis-spring: 2.1.2 => 3.0.5
+  + 升级 sqlhelper: 5.1.0 => 6.0.0
+  + 升级 langx-java: 5.5.5 => 5.5.6
+  + 升级 snakeyaml: 2.0 => 2.2
+
 ## 5.2.5
 + 简化rest result
+
 ## 5.2.4
 + 移除 agileway-sshclient-j2ssh 模块
 + 完善 agileway-sshclient-jsch, 支持默认的 Config
