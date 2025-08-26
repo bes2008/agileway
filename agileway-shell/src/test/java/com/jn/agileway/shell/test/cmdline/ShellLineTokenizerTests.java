@@ -1,7 +1,7 @@
 package com.jn.agileway.shell.test.cmdline;
 
 import com.jn.agileway.shell.cmdline.ShellCmdlines;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 public class ShellLineTokenizerTests {

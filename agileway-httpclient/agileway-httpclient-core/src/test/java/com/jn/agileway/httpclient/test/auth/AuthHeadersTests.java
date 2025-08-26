@@ -2,7 +2,7 @@ package com.jn.agileway.httpclient.test.auth;
 
 import com.jn.agileway.httpclient.auth.WwwAuthenticate;
 import com.jn.agileway.httpclient.auth.WwwAuthenticateUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class AuthHeadersTests {
     @Test

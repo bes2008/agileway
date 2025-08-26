@@ -7,7 +7,7 @@ import com.jn.easyjson.core.util.JSONs;
 import com.jn.langx.util.collection.multivalue.CommonMultiValueMap;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.net.http.HttpHeaders;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 

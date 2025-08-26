@@ -1,7 +1,7 @@
 package com.jn.agileway.test.commandline;
 
 import com.jn.agileway.test.util.os.hardware.cpu.CPUs;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class HardwaresTests {
 

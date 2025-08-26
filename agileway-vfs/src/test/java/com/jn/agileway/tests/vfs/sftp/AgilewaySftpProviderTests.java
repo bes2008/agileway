@@ -9,12 +9,12 @@ import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.Selectors;
 import org.apache.commons.vfs2.VFS;
 import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class AgilewaySftpProviderTests {
 
-    @BeforeClass
+    @BeforeAll
     public static void init() throws Throwable {
         AgilewayVFSManagerBootstrap.startup();
     }

@@ -13,7 +13,7 @@ import com.jn.agileway.ssh.client.impl.jsch.JschLoggerToSlf4jLogger;
 import com.jn.agileway.ssh.test.BaseSshTests;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.logging.Loggers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
 import java.io.IOException;

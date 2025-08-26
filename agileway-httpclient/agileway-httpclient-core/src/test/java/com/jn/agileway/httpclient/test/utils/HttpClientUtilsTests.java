@@ -1,7 +1,7 @@
 package com.jn.agileway.httpclient.test.utils;
 
 import com.jn.agileway.httpclient.util.HttpClientUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class HttpClientUtilsTests {
     @Test

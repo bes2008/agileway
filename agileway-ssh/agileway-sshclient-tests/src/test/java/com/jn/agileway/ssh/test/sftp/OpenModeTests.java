@@ -3,7 +3,7 @@ package com.jn.agileway.ssh.test.sftp;
 import com.jn.agileway.ssh.client.sftp.OpenMode;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Radixs;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class OpenModeTests {
     @Test

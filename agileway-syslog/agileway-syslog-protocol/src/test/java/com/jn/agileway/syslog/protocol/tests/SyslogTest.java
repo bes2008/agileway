@@ -6,7 +6,7 @@ import com.jn.agileway.syslog.protocol.RFC5424MessageParser;
 import com.jn.agileway.syslog.protocol.SyslogMessage;
 import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.datetime.parser.CandidatePatternsDateTimeParser;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
 import java.util.TimeZone;

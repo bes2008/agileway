@@ -22,7 +22,7 @@ import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.JWTParser;
 import com.nimbusds.jwt.SignedJWT;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.crypto.SecretKey;
 import java.security.KeyPair;

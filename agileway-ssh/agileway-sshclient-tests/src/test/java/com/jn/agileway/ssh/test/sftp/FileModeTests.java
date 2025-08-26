@@ -2,8 +2,8 @@ package com.jn.agileway.ssh.test.sftp;
 
 import com.jn.agileway.ssh.client.sftp.attrs.FileMode;
 import com.jn.agileway.ssh.client.sftp.attrs.FileType;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class FileModeTests {
     @Test
@@ -14,7 +14,7 @@ public class FileModeTests {
 
     void test0(FileType fileType, int permissions) {
         FileMode mode = FileMode.createFileMode(fileType, permissions);
-        Assert.assertEquals(fileType, mode.getType());
-        Assert.assertEquals(permissions, mode.getPermissionsMask());
+        Assertions.assertEquals(fileType, mode.getType());
+        Assertions.assertEquals(permissions, mode.getPermissionsMask());
     }
 }

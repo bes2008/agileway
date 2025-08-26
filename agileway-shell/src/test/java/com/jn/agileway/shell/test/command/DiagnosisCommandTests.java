@@ -1,6 +1,7 @@
 package com.jn.agileway.shell.test.command;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import static com.jn.agileway.shell.test.TestUtils.adhocTest;
 

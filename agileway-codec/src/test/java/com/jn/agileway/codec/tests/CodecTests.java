@@ -16,8 +16,8 @@ import com.jn.agileway.codec.serialization.msgpack.MsgPackCodec;
 import com.jn.agileway.codec.serialization.protostuff.ProtostuffCodec;
 import com.jn.agileway.codec.serialization.xson.XsonCodec;
 import com.jn.langx.codec.CodecException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
@@ -42,10 +42,10 @@ public class CodecTests {
     private void testInternal(Pojo pojo, Codec<Pojo> codec) {
         byte[] bytes = codec.encode(pojo);
         Pojo pojo2 = codec.decode(bytes);
-        Assert.assertEquals(pojo, pojo2);
+        Assertions.assertEquals(pojo, pojo2);
 
         Pojo pojo3 = codec.decode(bytes, Pojo.class);
-        Assert.assertEquals(pojo, pojo3);
+        Assertions.assertEquals(pojo, pojo3);
     }
 
 

@@ -12,7 +12,7 @@ import com.jn.agileway.ssh.client.impl.synergy.SynergyConnectionFactory;
 import com.jn.agileway.ssh.client.supports.command.SshCommandResponse;
 import com.jn.agileway.ssh.test.BaseSshTests;
 import com.jn.langx.util.logging.Loggers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
 import java.io.IOException;

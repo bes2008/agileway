@@ -2,7 +2,7 @@ package com.jn.agileway.zip.tests;
 
 import com.jn.agileway.zip.archive.AutowiredArchiveSuiteFactory;
 import com.jn.agileway.zip.archive.Expander;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 

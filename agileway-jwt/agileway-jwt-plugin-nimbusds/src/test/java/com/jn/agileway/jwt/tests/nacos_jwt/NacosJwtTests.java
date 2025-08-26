@@ -5,7 +5,7 @@ import com.jn.agileway.jwt.JWSToken;
 import com.jn.agileway.jwt.JWSTokenBuilder;
 import com.jn.agileway.jwt.JWTs;
 import com.jn.langx.codec.base64.Base64;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class NacosJwtTests {
 

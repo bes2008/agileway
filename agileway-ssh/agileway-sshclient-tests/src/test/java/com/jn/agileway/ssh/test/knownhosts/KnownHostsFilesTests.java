@@ -8,7 +8,7 @@ import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.SystemPropertys;
 import com.jn.langx.util.io.IOs;
 import net.schmizz.sshj.transport.verification.OpenSSHKnownHosts;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;

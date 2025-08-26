@@ -19,7 +19,7 @@ import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.timing.scheduling.PeriodicTrigger;
 import com.jn.langx.util.timing.scheduling.ScheduledExecutors;
 import com.jn.langx.util.timing.scheduling.Trigger;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
 import java.util.concurrent.*;

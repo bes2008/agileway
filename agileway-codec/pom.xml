@@ -104,6 +104,12 @@
                 <groupId>com.jfireframework</groupId>
                 <artifactId>fse</artifactId>
                 <version>${fse.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.xson</groupId>
