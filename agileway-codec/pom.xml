@@ -18,7 +18,7 @@
         <hessian.version>4.0.66</hessian.version>
         <kryo.version>5.6.0</kryo.version>
         <kryo.serializers.version>0.45</kryo.serializers.version>
-        <joda-time.version>2.12.7</joda-time.version>
+        <joda-time.version>2.14.0</joda-time.version>
         <protostuff.version>1.8.0</protostuff.version>
         <fst.version>2.57</fst.version>
         <fse.version>aegean-2.1</fse.version>
