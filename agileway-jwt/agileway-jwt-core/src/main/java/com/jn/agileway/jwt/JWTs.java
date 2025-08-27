@@ -397,7 +397,7 @@ public class JWTs {
         /**
          * RS256, PS256 要求最少 2048 bit，推荐 3072 bit
          * RS384, PS384 要求最少 3072 bit，推荐 4096 bit
-         * RS512, PS512 要求最少 4096 bit，推荐 8192 bit
+         * RS512, PS512 要求最少 4096 bit，推荐 4096 bit
          */
         public static KeyPair newRSAKeyPair(String jwsAlgorithm, int bits) {
             Preconditions.checkArgument(isRSA(jwsAlgorithm), "illegal jws algorithm using RSA", jwsAlgorithm);
