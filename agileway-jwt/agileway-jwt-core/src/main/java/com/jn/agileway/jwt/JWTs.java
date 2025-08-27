@@ -6,6 +6,7 @@ import com.jn.agileway.jwt.ec.ECurves;
 import com.jn.langx.codec.base64.Base64;
 import com.jn.langx.security.SecurityException;
 import com.jn.langx.security.crypto.key.PKIs;
+import com.jn.langx.util.Maths;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Collects;
@@ -386,15 +387,33 @@ public class JWTs {
         }
 
         public static KeyPair newRSAKeyPair(String jwsAlgorithm) {
+            int recommendedBits = 4096;
+            if (Strings.equalsIgnoreCase(jwsAlgorithm, JWSAlgorithms.RS256) || Strings.equalsIgnoreCase(jwsAlgorithm, JWSAlgorithms.PS256)) {
+                recommendedBits = 3072;
+            }
+            return newRSAKeyPair(jwsAlgorithm, recommendedBits);
+        }
+
+        /**
+         * RS256, PS256 要求最少 2048 bit，推荐 3072 bit
+         * RS384, PS384 要求最少 3072 bit，推荐 4096 bit
+         * RS512, PS512 要求最少 4096 bit，推荐 8192 bit
+         */
+        public static KeyPair newRSAKeyPair(String jwsAlgorithm, int bits) {
             Preconditions.checkArgument(isRSA(jwsAlgorithm), "illegal jws algorithm using RSA", jwsAlgorithm);
-            return PKIs.createKeyPair("RSA", null, 2048, null);
+            if (Strings.equalsIgnoreCase(jwsAlgorithm, JWSAlgorithms.RS384) || Strings.equalsIgnoreCase(jwsAlgorithm, JWSAlgorithms.PS384)) {
+                bits = Maths.max(bits, 3072);
+            } else if (Strings.equalsIgnoreCase(jwsAlgorithm, JWSAlgorithms.RS512) || Strings.equalsIgnoreCase(jwsAlgorithm, JWSAlgorithms.PS512)) {
+                bits = Maths.max(bits, 4096);
+            } else {
+                bits = Maths.max(bits, 2048);
+            }
+
+            return PKIs.createKeyPair("RSA", null, bits, null);
         }
 
         public static KeyPair newECDSAKeyPair(String jwsAlgorithm) {
             Preconditions.checkArgument(isECDSA(jwsAlgorithm), "illegal jws algorithm using ECDSA", jwsAlgorithm);
-            if (Strings.equalsIgnoreCase(jwsAlgorithm, JWSAlgorithms.EdDSA)) {
-                return newEd25519KeyPair(jwsAlgorithm);
-            }
             try {
                 ECurve curve = Collects.findFirst(ECurves.forJWSAlgorithm(jwsAlgorithm));
                 KeyPairGenerator keyGen = PKIs.getKeyPairGenerator("EC", null);
@@ -406,11 +425,22 @@ public class JWTs {
             }
         }
 
-        public static KeyPair newEd25519KeyPair(String jwsAlgorithm) {
+        public static KeyPair newEdDSAKeyPair() {
+            return newEdDSAKeyPair(null);
+        }
+
+        public static KeyPair newEdDSAKeyPair(String curveName) {
+            if (Strings.contains(curveName, "448")) {
+                return newEd448KeyPair();
+            }
+            return newEd25519KeyPair();
+        }
+
+        public static KeyPair newEd25519KeyPair() {
             return PKIs.createKeyPair("Ed25519", null);
         }
 
-        public static KeyPair newEd448KeyPair(String jwsAlgorithm) {
+        public static KeyPair newEd448KeyPair() {
             return PKIs.createKeyPair("Ed448", null);
         }
     }
