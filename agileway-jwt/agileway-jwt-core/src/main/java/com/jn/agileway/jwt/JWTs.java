@@ -392,6 +392,9 @@ public class JWTs {
 
         public static KeyPair newECDSAKeyPair(String jwsAlgorithm) {
             Preconditions.checkArgument(isECDSA(jwsAlgorithm), "illegal jws algorithm using ECDSA", jwsAlgorithm);
+            if (Strings.equalsIgnoreCase(jwsAlgorithm, JWSAlgorithms.EdDSA)) {
+                return newEd25519KeyPair(jwsAlgorithm);
+            }
             try {
                 ECurve curve = Collects.findFirst(ECurves.forJWSAlgorithm(jwsAlgorithm));
                 KeyPairGenerator keyGen = PKIs.getKeyPairGenerator("EC", null);
@@ -401,6 +404,14 @@ public class JWTs {
             } catch (Exception ex) {
                 throw new SecurityException(ex);
             }
+        }
+
+        public static KeyPair newEd25519KeyPair(String jwsAlgorithm) {
+            return PKIs.createKeyPair("Ed25519", null);
+        }
+
+        public static KeyPair newEd448KeyPair(String jwsAlgorithm) {
+            return PKIs.createKeyPair("Ed448", null);
         }
     }
 
