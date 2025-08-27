@@ -1,15 +1,22 @@
 package com.jn.agileway.jwt;
 
 import com.jn.agileway.jwt.ec.ECDSA;
+import com.jn.agileway.jwt.ec.ECurve;
+import com.jn.agileway.jwt.ec.ECurves;
 import com.jn.langx.codec.base64.Base64;
+import com.jn.langx.security.SecurityException;
 import com.jn.langx.security.crypto.key.PKIs;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.Collects;
 import com.jn.langx.util.collection.Pipeline;
 import com.jn.langx.util.spi.CommonServiceProvider;
 
 import javax.crypto.SecretKey;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
+import java.security.spec.ECGenParameterSpec;
 import java.util.Map;
 
 /**
@@ -356,7 +363,45 @@ public class JWTs {
             return ECDSA.isECJWSAlgorithm(algorithm);
         }
 
+        public static boolean isRSA(String algorithm) {
+            return Strings.equalsIgnoreCase(algorithm, JWSAlgorithms.RS256) ||
+                    Strings.equalsIgnoreCase(algorithm, JWSAlgorithms.RS384) ||
+                    Strings.equalsIgnoreCase(algorithm, JWSAlgorithms.RS512) ||
+                    Strings.equalsIgnoreCase(algorithm, JWSAlgorithms.PS256) ||
+                    Strings.equalsIgnoreCase(algorithm, JWSAlgorithms.PS384) ||
+                    Strings.equalsIgnoreCase(algorithm, JWSAlgorithms.PS512);
+        }
 
+        public static boolean isHMAC(String algorithm) {
+            return Strings.equalsIgnoreCase(algorithm, JWSAlgorithms.HS256) ||
+                    Strings.equalsIgnoreCase(algorithm, JWSAlgorithms.HS384) ||
+                    Strings.equalsIgnoreCase(algorithm, JWSAlgorithms.HS512);
+        }
+
+
+        public static SecretKey newSecretKey(String jwsAlgorithm) {
+            String jcaAlgorithm = getJcaHMacAlgorithm(jwsAlgorithm);
+            Preconditions.checkNotEmpty(jcaAlgorithm, "illegal jws algorithm using HMAC", jcaAlgorithm);
+            return PKIs.createSecretKey(jcaAlgorithm);
+        }
+
+        public static KeyPair newRSAKeyPair(String jwsAlgorithm) {
+            Preconditions.checkArgument(isRSA(jwsAlgorithm), "illegal jws algorithm using RSA", jwsAlgorithm);
+            return PKIs.createKeyPair("RSA", null, 2048, null);
+        }
+
+        public static KeyPair newECDSAKeyPair(String jwsAlgorithm) {
+            Preconditions.checkArgument(isECDSA(jwsAlgorithm), "illegal jws algorithm using ECDSA", jwsAlgorithm);
+            try {
+                ECurve curve = Collects.findFirst(ECurves.forJWSAlgorithm(jwsAlgorithm));
+                KeyPairGenerator keyGen = PKIs.getKeyPairGenerator("EC", null);
+                ECGenParameterSpec ecSpec = new ECGenParameterSpec(curve.getStdName());
+                keyGen.initialize(ecSpec);
+                return keyGen.generateKeyPair();
+            } catch (Exception ex) {
+                throw new SecurityException(ex);
+            }
+        }
     }
 
     public static JWTService getJWTService() {
@@ -425,12 +470,6 @@ public class JWTs {
         }
         String jcaAlgorithm = Signs.getJcaHMacAlgorithm(jwsAlgorithm);
         return jcaAlgorithm;
-    }
-
-    public static SecretKey newJWSSecretKey(String jwsAlgorithm) {
-        String jcaAlgorithm = getJcaHMacAlgorithm(jwsAlgorithm);
-        Preconditions.checkNotEmpty(jcaAlgorithm, "illegal jws algorithm", jcaAlgorithm);
-        return PKIs.createSecretKey(jcaAlgorithm);
     }
 
     public static SecretKey toJWSSecretKey(String jwsAlgorithm, String base64SecretKey) {
