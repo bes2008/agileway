@@ -23,7 +23,7 @@
         <fst.version>2.57</fst.version>
         <fse.version>aegean-2.1</fse.version>
         <xson.version>1.0.2</xson.version>
-        <msgpack.version>0.9.8</msgpack.version>
+        <msgpack.version>0.9.10</msgpack.version>
         <mangodb.bson.version>3.12.14</mangodb.bson.version>
         <avro.version>1.11.4</avro.version>
         <activej.serializer.version>5.5</activej.serializer.version>
