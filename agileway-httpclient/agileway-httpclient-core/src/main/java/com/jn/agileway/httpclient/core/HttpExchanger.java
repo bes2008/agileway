@@ -146,7 +146,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
         HttpRequestPayloadTransformer marshallingHttpRequestPayloadTransformer = new MarshallingHttpRequestPayloadTransformer(this.requestPayloadWriters);
         TransformerOutboundMessageInterceptor transformerOutboundMessageInterceptor = new TransformerOutboundMessageInterceptor();
         transformerOutboundMessageInterceptor.setTransformer(marshallingHttpRequestPayloadTransformer);
-        outboundChannelPipeline.addFirst(transformerOutboundMessageInterceptor);
+        outboundChannelPipeline.addLast(transformerOutboundMessageInterceptor);
 
         // requestPayloadTransformers，通常很少用到，目前可能用到的是 WS-Security 部分，因为要在 请求payload 的 xml 中添加 Security 相关的 header信息
         for (HttpRequestPayloadTransformer transformer : this.requestPayloadTransformers) {

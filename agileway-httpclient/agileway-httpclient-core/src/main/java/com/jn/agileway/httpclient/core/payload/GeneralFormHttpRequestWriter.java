@@ -4,6 +4,7 @@ import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.error.exception.BadHttpRequestException;
 import com.jn.agileway.httpclient.util.HttpClientUtils;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
+import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.net.uri.component.UriComponentUtils;
 import com.jn.langx.util.reflect.Reflects;
@@ -29,7 +30,10 @@ public class GeneralFormHttpRequestWriter implements HttpRequestPayloadWriter {
         Object body = request.getPayload();
         MediaType contentType = request.getHttpHeaders().getContentType();
         Charset charset = contentType.getCharset();
-        String formString = serializeSimpleForm(request, body, contentType.getCharset());
+        if (charset == null) {
+            charset = Charsets.UTF_8;
+        }
+        String formString = serializeSimpleForm(request, body, charset);
         output.write(formString.getBytes(charset));
     }
 
