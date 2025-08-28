@@ -34,6 +34,9 @@ public class SoapHeaderElement {
      */
     private boolean relay = false;
 
+
+    private final Map<String, String> propertySet = new HashMap<String, String>();
+
     public SoapHeaderElement() {
 
     }
@@ -58,7 +61,6 @@ public class SoapHeaderElement {
         setPropertySet(propertySet);
     }
 
-    private final Map<String, String> propertySet = new HashMap<String, String>();
 
     public QName getName() {
         return name;
