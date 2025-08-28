@@ -10,7 +10,8 @@ import java.nio.charset.Charset;
 public class GeneralTextHttpResponseReader extends CustomMediaTypesHttpResponseReader<String> {
 
     public GeneralTextHttpResponseReader() {
-        addSupportedMediaTypes(MediaType.parseMediaTypes("application/rss+xml, application/atom+xml, application/xml, application/javascript"));
+        addSupportedMediaTypes(
+                MediaType.parseMediaTypes("application/rss+xml, application/atom+xml, application/xml, application/javascript, application/ecmascript, application/x-javascript, application/x-ecmascript"));
     }
 
     @Override
