@@ -26,10 +26,10 @@
         </dependency>
 
         <!--
-        安全传输时需要引入它
+        安全传输时需要引入它，并且要以 HttpRequestPayloadTransformer 方式来处理 SOAP消息
         <dependency>
             <groupId>org.apache.wss4j</groupId>
-            <artifactId>wss4j-ws-security-common</artifactId>
+            <artifactId>wss4j-ws-security-dom</artifactId>
             <version>${wss4j.version}</version>
         </dependency>
         -->
