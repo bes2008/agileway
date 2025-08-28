@@ -81,6 +81,8 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
      */
     private List<HttpRequestPayloadWriter> requestPayloadWriters = Lists.newArrayList();
 
+    private List<HttpRequestPayloadTransformer> requestPayloadTransformers = Lists.newArrayList();
+
     /**
      * 对正常响应进行反序列化
      */
@@ -140,10 +142,19 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
         }
         this.requestPayloadWriters.add(new GeneralFormHttpRequestWriter());
         this.requestPayloadWriters.add(new GeneralMultiPartsFormHttpRequestWriter());
-        HttpRequestPayloadTransformer requestTransformer = new HttpRequestPayloadTransformer(this.requestPayloadWriters);
+
+        HttpRequestPayloadTransformer marshallingHttpRequestPayloadTransformer = new MarshallingHttpRequestPayloadTransformer(this.requestPayloadWriters);
         TransformerOutboundMessageInterceptor transformerOutboundMessageInterceptor = new TransformerOutboundMessageInterceptor();
-        transformerOutboundMessageInterceptor.setTransformer(requestTransformer);
-        outboundChannelPipeline.addLast(transformerOutboundMessageInterceptor);
+        transformerOutboundMessageInterceptor.setTransformer(marshallingHttpRequestPayloadTransformer);
+        outboundChannelPipeline.addFirst(transformerOutboundMessageInterceptor);
+
+        // requestPayloadTransformers，通常很少用到，目前可能用到的是 WS-Security 部分，因为要在 请求payload 的 xml 中添加 Security 相关的 header信息
+        for (HttpRequestPayloadTransformer transformer : this.requestPayloadTransformers) {
+            TransformerOutboundMessageInterceptor interceptor = new TransformerOutboundMessageInterceptor();
+            interceptor.setTransformer(transformer);
+            outboundChannelPipeline.addLast(interceptor);
+        }
+
         // request logging
         outboundChannelPipeline.addLast(new HttpRequestInterceptorAdapter(new HttpRequestLoggingInterceptor()));
 
@@ -335,6 +346,15 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
         }
         if (writer != null) {
             this.requestPayloadWriters.add(writer);
+        }
+    }
+
+    public void addRequestPayloadTransformer(HttpRequestPayloadTransformer transformer) {
+        if (!inited) {
+            return;
+        }
+        if (transformer != null) {
+            this.requestPayloadTransformers.add(transformer);
         }
     }
 
