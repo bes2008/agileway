@@ -125,17 +125,14 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
         for (HttpMessageProtocolPlugin plugin : plugins) {
             this.requestInterceptors.add(new PluginBasedHttpRequestInterceptor(plugin));
         }
-        this.requestInterceptors.add(new HttpRequestMultiPartsFormInterceptor());
-        this.requestInterceptors.add(new HttpRequestHeadersInterceptor(configuration.getFixedHeaders()));
-
-        this.requestInterceptors.add(0, new HttpRequestUriInterceptor(configuration.getAllowedSchemes(), configuration.getAllowedAuthorities(), configuration.getNotAllowedAuthorities()));
-        this.requestInterceptors.add(0, new HttpRequestMethodInterceptor(configuration.getAllowedMethods(), configuration.getNotAllowedMethods()));
-
         ChannelMessageInterceptorPipeline outboundChannelPipeline = new ChannelMessageInterceptorPipeline();
+        outboundChannelPipeline.addLast(new HttpRequestInterceptorAdapter(new HttpRequestMethodInterceptor(configuration.getAllowedMethods(), configuration.getNotAllowedMethods())));
+        outboundChannelPipeline.addLast(new HttpRequestInterceptorAdapter(new HttpRequestUriInterceptor(configuration.getAllowedSchemes(), configuration.getAllowedAuthorities(), configuration.getNotAllowedAuthorities())));
         for (HttpRequestInterceptor requestInterceptor : this.requestInterceptors) {
             outboundChannelPipeline.addLast(new HttpRequestInterceptorAdapter(requestInterceptor));
         }
-
+        outboundChannelPipeline.addLast(new HttpRequestInterceptorAdapter(new HttpRequestMultiPartsFormInterceptor()));
+        outboundChannelPipeline.addLast(new HttpRequestInterceptorAdapter(new HttpRequestHeadersInterceptor(configuration.getFixedHeaders())));
         // 组织 requestBodyWriters ，并转换为 transformer, 作为 TransformerOutboundInterceptor 添加到拦截器链中
         for (HttpMessageProtocolPlugin plugin : plugins) {
             this.requestPayloadWriters.add(new PluginBasedHttpRequestPayloadWriter(plugin));
