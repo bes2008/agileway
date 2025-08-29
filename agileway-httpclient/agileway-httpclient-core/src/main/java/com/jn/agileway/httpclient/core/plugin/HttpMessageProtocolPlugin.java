@@ -14,10 +14,8 @@ import java.util.List;
 
 public abstract class HttpMessageProtocolPlugin extends AbstractInitializable implements Plugin<HttpMessage> {
     protected final List<HttpRequestInterceptor> requestInterceptors = Lists.newArrayList();
-
-    protected final List<HttpResponseInterceptor> responseInterceptors = Lists.newArrayList();
-
     protected final List<HttpRequestPayloadWriter> requestPayloadWriters = Lists.newArrayList();
+    protected final List<HttpResponseInterceptor> responseInterceptors = Lists.newArrayList();
     protected final List<HttpResponsePayloadReader> responsePayloadReaders = Lists.newArrayList();
 
     List<HttpRequestPayloadWriter> getRequestPayloadWriters() {
