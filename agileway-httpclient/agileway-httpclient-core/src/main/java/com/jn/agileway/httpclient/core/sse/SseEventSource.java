@@ -101,7 +101,9 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         if (Strings.isBlank(eventTypeOrName)) {
             throw new IllegalArgumentException("eventTypeOrName is blank");
         }
-        eventListeners.add(eventTypeOrName, listener);
+        if (!inited) {
+            eventListeners.add(eventTypeOrName, listener);
+        }
     }
 
     public void registerOpenEventListener(SseEventListener listener) {
