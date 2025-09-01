@@ -32,6 +32,11 @@ public class SseEventSource implements Closeable {
     private String lastEventId;
 
     /**
+     * A number representing the number of milliseconds to wait between messages before retrying the connection.
+     */
+    private long reconnectInterval;
+
+    /**
      * The connection has not yet been established, or it was closed and the user agent is reconnecting.
      */
     private static final int READY_STATE_CONNECTING = 0;
@@ -59,11 +64,20 @@ public class SseEventSource implements Closeable {
 
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public SseEventSource(String url) {
+        this(url, false);
+    }
+
+    public SseEventSource(String url, boolean withCredentials) {
+        this(null, url, withCredentials);
+    }
+
     public SseEventSource(HttpExchanger httpExchanger, String url, boolean withCredentials) {
 
     }
 
-    public String getUrl() {
-        return url;
-    }
 }
