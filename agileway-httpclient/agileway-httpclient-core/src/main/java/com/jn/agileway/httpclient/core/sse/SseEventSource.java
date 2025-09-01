@@ -130,6 +130,10 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
             case MESSAGE:
                 SseMessageEvent messageEvent = (SseMessageEvent) event;
                 this.lastEventId = messageEvent.getLastEventId();
+                long retryDelay = messageEvent.retry();
+                if (retryDelay > 0) {
+                    this.reconnectInterval = retryDelay;
+                }
 
                 String name = messageEvent.getName();
 

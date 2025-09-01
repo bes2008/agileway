@@ -13,7 +13,7 @@ public class SseMessage {
     /**
      * 重试时间，单位毫秒
      */
-    private int retry;
+    private long retry;
 
     public String getEvent() {
         return event;
@@ -27,7 +27,7 @@ public class SseMessage {
         return id;
     }
 
-    public int getRetry() {
+    public long getRetry() {
         return retry;
     }
 }

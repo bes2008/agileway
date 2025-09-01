@@ -13,7 +13,7 @@ public class SseMessageEvent extends SseEvent {
     /**
      * 重试时间，单位毫秒
      */
-    private long retry;
+    private long retry = -1L;
 
     public SseMessageEvent(SseEventSource source, String name, String data, String lastEventId, long retry) {
         super(source, SseEventType.MESSAGE);
