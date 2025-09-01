@@ -5,7 +5,7 @@ import com.jn.langx.event.DomainEvent;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 
-public class SseEvents {
+public class SSE {
 
     public static enum SseEventType {
         /**

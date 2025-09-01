@@ -145,8 +145,8 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
     }
 
     @Override
-    public void on(SseEvents.SseEvent event) {
-        SseEvents.SseEventType eventType = event.getType();
+    public void on(SSE.SseEvent event) {
+        SSE.SseEventType eventType = event.getType();
         switch (eventType) {
             case OPEN:
                 this.readyState = READY_STATE_OPEN;
@@ -160,7 +160,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                 }
                 break;
             case MESSAGE:
-                SseEvents.SseMessageEvent messageEvent = (SseEvents.SseMessageEvent) event;
+                SSE.SseMessageEvent messageEvent = (SSE.SseMessageEvent) event;
                 this.lastEventId = messageEvent.getLastEventId();
                 long retryDelay = messageEvent.retry();
                 if (retryDelay > 0) {
@@ -205,7 +205,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         LOGGER.info("The sse event source is reconnecting for domain: {}", eventDomain);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.ACCEPT, "text/event-stream");
+        headers.add(HttpHeaders.ACCEPT, MediaType.TEXT_EVENT_STREAM_VALUE);
         if (withCredentials) {
             //
         }
@@ -219,30 +219,30 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
             response = httpExchanger.exchange(request);
         } catch (Throwable ex) {
             LOGGER.warn("The sse event source is connect failed for domain: {}, will not to reconnect, exception: {}", eventDomain, ex.getMessage(), ex);
-            eventPublisher.publish(new SseEvents.SseErrorEvent(this, -1, ex.getMessage()));
+            eventPublisher.publish(new SSE.SseErrorEvent(this, -1, ex.getMessage()));
             return;
         }
-        SseEvents.SseErrorEvent errorEvent = errorEventIfInvalidResponse(response);
+        SSE.SseErrorEvent errorEvent = errorEventIfInvalidResponse(response);
         if (errorEvent != null) {
             eventPublisher.publish(errorEvent);
         }
         readyState = READY_STATE_OPEN;
         try {
-            eventPublisher.publish(SseEvents.SseMessageEvent.ofOpen(this));
+            eventPublisher.publish(SSE.SseMessageEvent.ofOpen(this));
 
             // 读取数据
-            while (READY_STATE_OPEN == readyState) {
-                final Holder<SseEvents.SseMessageEventBuilder> builderHolder = new Holder<>();
+            if (READY_STATE_OPEN == readyState) {
+                final Holder<SSE.SseMessageEventBuilder> builderHolder = new Holder<>();
                 Resources.readLines(Resources.asInputStreamResource(response.getPayload(), "the sse event stream"), Charsets.UTF_8, new Consumer<String>() {
                     @Override
                     public void accept(String line) {
-                        SseEvents.SseMessageEventBuilder builder = builderHolder.get();
+                        SSE.SseMessageEventBuilder builder = builderHolder.get();
                         if (builder == null) {
-                            builder = SseEvents.SseMessageEventBuilder.newBuilder(SseEventSource.this);
+                            builder = SSE.SseMessageEventBuilder.newBuilder(SseEventSource.this);
                             builderHolder.set(builder);
                         }
                         if (Strings.isBlank(line)) {
-                            SseEvents.SseMessageEvent event = builder.build();
+                            SSE.SseMessageEvent event = builder.build();
                             builderHolder.set(null);
                             if (event != null) {
                                 eventPublisher.publish(event);
@@ -267,25 +267,37 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                         }
                     }
                 });
+                SSE.SseMessageEventBuilder builder = builderHolder.get();
+                if (builder != null) {
+                    SSE.SseMessageEvent event = builder.build();
+                    builderHolder.set(null);
+                    if (event != null) {
+                        eventPublisher.publish(event);
+                    }
+                }
+
+                if (READY_STATE_OPEN == readyState) {
+                    Thread.sleep(reconnectInterval);
+                }
             }
 
         } catch (Throwable ex) {
-            eventPublisher.publish(new SseEvents.SseErrorEvent(this, response.getStatusCode(), ex.getMessage()));
+            eventPublisher.publish(new SSE.SseErrorEvent(this, response.getStatusCode(), ex.getMessage()));
         }
 
     }
 
-    private SseEvents.SseErrorEvent errorEventIfInvalidResponse(HttpResponse response) {
+    private SSE.SseErrorEvent errorEventIfInvalidResponse(HttpResponse response) {
         if (response.getStatusCode() == 204) {
-            return new SseEvents.SseErrorEvent(this, 204, StringTemplates.formatWithPlaceholder("sse closed by server"));
+            return new SSE.SseErrorEvent(this, 204, StringTemplates.formatWithPlaceholder("sse closed by server"));
         }
         if (response.hasError() || response.getStatusCode() != 200) {
-            return new SseEvents.SseErrorEvent(this, response.getStatusCode(), response.getErrorMessage());
+            return new SSE.SseErrorEvent(this, response.getStatusCode(), response.getErrorMessage());
         }
 
         MediaType contentType = response.getHttpHeaders().getContentType();
         if (contentType == null || !MediaType.TEXT_EVENT_STREAM.equalsTypeAndSubtype(contentType)) {
-            return new SseEvents.SseErrorEvent(this, response.getStatusCode(), StringTemplates.formatWithPlaceholder("invalid content-type in response: {}", contentType));
+            return new SSE.SseErrorEvent(this, response.getStatusCode(), StringTemplates.formatWithPlaceholder("invalid content-type in response: {}", contentType));
         }
         return null;
     }
