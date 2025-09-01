@@ -7,19 +7,24 @@ import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.event.EventPublisher;
+import com.jn.langx.io.resource.Resources;
 import com.jn.langx.lifecycle.AbstractLifecycle;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.multivalue.CommonMultiValueMap;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
+import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 import com.jn.langx.util.net.mime.MediaType;
+import com.jn.langx.util.struct.Holder;
 import org.slf4j.Logger;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 
 import static com.jn.agileway.httpclient.core.MessageHeaderConstants.SSE_UNDERLYING_RESPONSE;
@@ -72,7 +77,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
 
     private static final String EVENT_NAME_OPEN = "open";
     private static final String EVENT_NAME_ERROR = "error";
-    private static final String EVENT_NAME_MESSAGE = "message";
+    static final String EVENT_NAME_MESSAGE = "message";
 
     /**
      * 如果客户端想要终止重新连接，则需要调用此方法。
@@ -209,7 +214,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         }
         // do re-connect
         HttpRequest request = HttpRequest.create(HttpMethod.GET, url, null, null, null, headers, null);
-        HttpResponse response = null;
+        HttpResponse<InputStream> response = null;
         try {
             response = httpExchanger.exchange(request);
         } catch (Throwable ex) {
@@ -227,7 +232,41 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
 
             // 读取数据
             while (READY_STATE_OPEN == readyState) {
-                
+                final Holder<SseMessageEventBuilder> builderHolder = new Holder<>();
+                Resources.readLines(Resources.asInputStreamResource(response.getPayload(), "the sse event stream"), Charsets.UTF_8, new Consumer<String>() {
+                    @Override
+                    public void accept(String line) {
+                        SseMessageEventBuilder builder = builderHolder.get();
+                        if (builder == null) {
+                            builder = SseMessageEventBuilder.newBuilder(SseEventSource.this);
+                            builderHolder.set(builder);
+                        }
+                        if (Strings.isBlank(line)) {
+                            SseMessageEvent event = builder.build();
+                            builderHolder.set(null);
+                            if (event != null) {
+                                eventPublisher.publish(event);
+                            }
+                        } else {
+                            if (line.startsWith(":")) {
+                                // comment line, ignore it
+                                return;
+                            }
+                            if (line.startsWith("event:")) {
+                                builder.withEventName(Strings.substring(line, 6));
+                            } else if (line.startsWith("data:")) {
+                                builder.appendData(Strings.substring(line, 5));
+                            } else if (line.startsWith("id:")) {
+                                builder.withLastEventId(Strings.substring(line, 3));
+                            } else if (line.startsWith("retry:")) {
+                                builder.withRetry(Long.parseLong(Strings.substring(line, 6).trim()));
+                            } else {
+                                // illegal line
+                                throw new IllegalArgumentException("illegal line for sse event stream: " + line);
+                            }
+                        }
+                    }
+                });
             }
 
         } catch (Throwable ex) {

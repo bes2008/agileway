@@ -27,6 +27,9 @@ public class GeneralResourceHttpResponseReader extends CustomMediaTypesHttpRespo
 
     @Override
     public boolean canRead(HttpResponse<byte[]> response, MediaType contentType, Type expectedContentType) {
+        if (MediaType.TEXT_EVENT_STREAM.equalsTypeAndSubtype(contentType)) {
+            return false;
+        }
         if (expectedContentType == Resource.class) {
             return true;
         }

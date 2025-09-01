@@ -16,7 +16,7 @@ public class GeneralTextHttpResponseReader extends CustomMediaTypesHttpResponseR
 
     @Override
     public boolean canRead(HttpResponse<byte[]> response, MediaType contentType, Type expectedContentType) {
-        if ("text".equals(contentType.getType())) {
+        if ("text".equals(contentType.getType()) && !MediaType.TEXT_EVENT_STREAM.equalsTypeAndSubtype(contentType)) {
             return true;
         }
         return super.canRead(response, contentType, expectedContentType);
