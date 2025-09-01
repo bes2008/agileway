@@ -4,14 +4,18 @@ import com.jn.agileway.httpclient.core.HttpExchanger;
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.HttpResponse;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
+import com.jn.langx.annotation.NonNull;
+import com.jn.langx.annotation.Nullable;
 import com.jn.langx.event.EventPublisher;
 import com.jn.langx.lifecycle.AbstractLifecycle;
+import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.multivalue.CommonMultiValueMap;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
+import com.jn.langx.util.net.mime.MediaType;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -77,12 +81,16 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
      */
 
     private MultiValueMap<String, SseEventListener> eventListeners = new CommonMultiValueMap<>();
+    @NonNull
     private EventPublisher eventPublisher;
 
+    @NonNull
     private String eventDomain;
 
+    @Nullable
     private HttpResponse response;
 
+    @NonNull
     private HttpExchanger httpExchanger;
 
     public void registerEventListener(String eventTypeOrName, SseEventListener listener) {
@@ -117,7 +125,11 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
     }
 
     public SseEventSource(HttpExchanger httpExchanger, EventPublisher eventPublisher, String eventDomain, String url, boolean withCredentials) {
-        this.eventDomain = eventDomain;
+        this.httpExchanger = httpExchanger;
+        this.eventDomain = Objs.useValueIfEmpty(eventDomain, "SSE");
+        this.url = url;
+        this.withCredentials = withCredentials;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -163,6 +175,15 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         return eventDomain;
     }
 
+    private void closeUnderlyingResponse(HttpResponse response) {
+        if (response != null) {
+            UnderlyingHttpResponse underlyingHttpResponse = (UnderlyingHttpResponse) response.getHeaders().get(SSE_UNDERLYING_RESPONSE);
+            if (underlyingHttpResponse == null) {
+                throw new IllegalStateException("The underlying http response is null");
+            }
+            underlyingHttpResponse.close();
+        }
+    }
 
     void reconnect() {
         if (READY_STATE_CLOSED == readyState) {
@@ -171,15 +192,14 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         }
         // 关闭 response
         if (response != null) {
-            UnderlyingHttpResponse underlyingHttpResponse = (UnderlyingHttpResponse) response.getHeaders().get(SSE_UNDERLYING_RESPONSE);
-            if (underlyingHttpResponse == null) {
-                throw new IllegalStateException("The underlying http response is null");
-            }
-            underlyingHttpResponse.close();
+            closeUnderlyingResponse(response);
         }
 
+        readyState = READY_STATE_CONNECTING;
+        LOGGER.info("The sse event source is reconnecting for domain: {}", eventDomain);
+
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.ACCEPT, "text/event-stream, application/json");
+        headers.add(HttpHeaders.ACCEPT, "text/event-stream");
         if (withCredentials) {
             //
         }
@@ -188,7 +208,34 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         }
         // do re-connect
         HttpRequest request = HttpRequest.create(HttpMethod.GET, url, null, null, null, headers, null);
-        this.response = httpExchanger.exchange(request);
+        HttpResponse response = httpExchanger.exchange(request);
 
+        if (response.getStatusCode() != 204) {
+            this.readyState = READY_STATE_CLOSED;
+            closeUnderlyingResponse(response);
+            LOGGER.warn("The sse event source is connect success for domain: {}, will close it, the status code:{} ", eventDomain, response.getStatusCode());
+            return;
+        }
+        if (response.hasError()) {
+            this.readyState = READY_STATE_CLOSED;
+            closeUnderlyingResponse(response);
+            LOGGER.warn("The sse event source is connect failed for domain: {}, will not to reconnect, the status code: {}, error: {}", eventDomain, response.getStatusCode(), response.getErrorMessage());
+            return;
+        }
+        if (response.getStatusCode() != 200) {
+            this.readyState = READY_STATE_CLOSED;
+            closeUnderlyingResponse(response);
+            LOGGER.warn("The sse event source is connect failed for domain: {}, will not to reconnect, the status code:{} ", eventDomain, response.getStatusCode());
+            return;
+        }
+
+        MediaType contentType = response.getHttpHeaders().getContentType();
+        if (contentType == null) {
+            this.readyState = READY_STATE_CLOSED;
+            closeUnderlyingResponse(response);
+            LOGGER.warn("The sse event source is connect failed for domain: {}, will not to reconnect, the status code:{} ", eventDomain, response.getStatusCode());
+            return;
+        }
+        readyState = READY_STATE_OPEN;
     }
 }
