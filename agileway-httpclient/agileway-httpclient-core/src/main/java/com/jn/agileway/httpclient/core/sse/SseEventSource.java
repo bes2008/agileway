@@ -7,14 +7,18 @@ import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.event.EventPublisher;
+import com.jn.langx.event.local.SimpleEventPublisher;
 import com.jn.langx.io.resource.Resources;
 import com.jn.langx.lifecycle.AbstractLifecycle;
+import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
+import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.multivalue.CommonMultiValueMap;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.function.Supplier;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.net.http.HttpHeaders;
@@ -23,7 +27,6 @@ import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.struct.Holder;
 import org.slf4j.Logger;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 
@@ -52,14 +55,18 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
     /**
      * A boolean value indicating whether the EventSource object was instantiated with cross-origin (CORS) credentials set (true), or not (false, the default).
      */
-    private boolean withCredentials;
+    private boolean withCredentials = false;
 
     private String lastEventId;
 
     /**
      * A number representing the number of milliseconds to wait between messages before retrying the connection.
      */
-    private long reconnectInterval;
+    private long reconnectInterval = -1L;
+    /**
+     * A number representing the number of milliseconds since the last message was received.
+     */
+    private long lastReceivedTimeInMills = -1L;
 
     /**
      * The connection has not yet been established, or it was closed and the user agent is reconnecting.
@@ -74,18 +81,9 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
      */
     private static final int READY_STATE_CLOSED = 2;
 
-
     private static final String EVENT_NAME_OPEN = "open";
     private static final String EVENT_NAME_ERROR = "error";
     static final String EVENT_NAME_MESSAGE = "message";
-
-    /**
-     * 如果客户端想要终止重新连接，则需要调用此方法。
-     * 如果服务器想要终止重新连接，则需要返回 http status 204
-     *
-     * @throws IOException
-     */
-
     private MultiValueMap<String, SseEventListener> eventListeners = new CommonMultiValueMap<>();
     @NonNull
     private EventPublisher eventPublisher;
@@ -98,7 +96,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
 
     @NonNull
     private HttpExchanger httpExchanger;
-
+    private Object lock = new Object();
     public void registerEventListener(String eventTypeOrName, SseEventListener listener) {
         if (Strings.isBlank(eventTypeOrName)) {
             throw new IllegalArgumentException("eventTypeOrName is blank");
@@ -122,26 +120,44 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         return url;
     }
 
+
     public SseEventSource(String url) {
-        this(url, false);
+        this(url, null, null, null);
     }
 
-    public SseEventSource(String url, boolean withCredentials) {
-        this(null, null, "SSE", url, withCredentials);
+    public SseEventSource(@NonNull String url,
+                          @NonNull String eventDomain,
+                          @NonNull HttpExchanger httpExchanger,
+                          @Nullable EventPublisher eventPublisher) {
+        this.url = Preconditions.checkNotNull(url, "the sse url is required");
+        this.eventDomain = Objs.useValueIfEmpty(eventDomain, "SSE-" + System.currentTimeMillis());
+        this.httpExchanger = Preconditions.checkNotNull(httpExchanger);
+        this.eventPublisher = Objs.useValueIfNull(eventPublisher, new Supplier<EventPublisher, EventPublisher>() {
+            @Override
+            public EventPublisher get(EventPublisher input) {
+                return new SimpleEventPublisher();
+            }
+        });
     }
 
-    public SseEventSource(HttpExchanger httpExchanger, EventPublisher eventPublisher, String eventDomain, String url, boolean withCredentials) {
-        this.httpExchanger = httpExchanger;
-        this.eventDomain = Objs.useValueIfEmpty(eventDomain, "SSE");
-        this.url = url;
+    public void setReconnectInterval(long reconnectInterval) {
+        this.reconnectInterval = reconnectInterval;
+    }
+
+    public void setWithCredentials(boolean withCredentials) {
         this.withCredentials = withCredentials;
-        this.eventPublisher = eventPublisher;
+    }
+
+    @Override
+    protected void doInit() throws InitializationException {
+        super.doInit();
+        this.eventPublisher.addEventListener(this.eventDomain, this);
     }
 
     @Override
     protected void doStart() {
         super.doStart();
-        this.eventPublisher.addEventListener(this.eventDomain, this);
+        pullAndHandleEvents();
     }
 
     @Override
@@ -158,6 +174,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                 for (SseEventListener listener : eventListeners.get(EVENT_NAME_ERROR)) {
                     listener.on(event);
                 }
+                shutdown();
                 break;
             case MESSAGE:
                 SSE.SseMessageEvent messageEvent = (SSE.SseMessageEvent) event;
@@ -191,7 +208,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         }
     }
 
-    void reconnect() {
+    void pullAndHandleEvents() {
         if (READY_STATE_CLOSED == readyState) {
             LOGGER.warn("The sse event source is closed for domain: {}, will not to reconnect", eventDomain);
             return;
@@ -217,6 +234,8 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         HttpResponse<InputStream> response = null;
         try {
             response = httpExchanger.exchange(request);
+            this.response = response;
+            this.lastReceivedTimeInMills = System.currentTimeMillis();
         } catch (Throwable ex) {
             LOGGER.warn("The sse event source is connect failed for domain: {}, will not to reconnect, exception: {}", eventDomain, ex.getMessage(), ex);
             eventPublisher.publish(new SSE.SseErrorEvent(this, -1, ex.getMessage()));
@@ -225,8 +244,10 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         SSE.SseErrorEvent errorEvent = errorEventIfInvalidResponse(response);
         if (errorEvent != null) {
             eventPublisher.publish(errorEvent);
+            return;
         }
         readyState = READY_STATE_OPEN;
+        this.lastReceivedTimeInMills = System.currentTimeMillis();
         try {
             eventPublisher.publish(SSE.SseMessageEvent.ofOpen(this));
 
@@ -277,7 +298,18 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                 }
 
                 if (READY_STATE_OPEN == readyState) {
-                    Thread.sleep(reconnectInterval);
+                    if (this.reconnectInterval > 0) {
+                        long waitTime = lastReceivedTimeInMills + this.reconnectInterval - System.currentTimeMillis();
+                        if (waitTime > 0) {
+                            synchronized (this.lock) {
+                                try {
+                                    this.wait(waitTime);
+                                } catch (InterruptedException e) {
+                                    // ignore
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
@@ -300,5 +332,10 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
             return new SSE.SseErrorEvent(this, response.getStatusCode(), StringTemplates.formatWithPlaceholder("invalid content-type in response: {}", contentType));
         }
         return null;
+    }
+
+    @Override
+    protected void doStop() {
+        super.doStop();
     }
 }
