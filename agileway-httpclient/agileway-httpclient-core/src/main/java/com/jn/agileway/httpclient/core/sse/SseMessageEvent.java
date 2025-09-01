@@ -10,12 +10,17 @@ public class SseMessageEvent extends SseEvent {
     private String name = "message";
     private String data;
     private String lastEventId;
+    /**
+     * 重试时间，单位毫秒
+     */
+    private long retry;
 
-    public SseMessageEvent(SseEventSource source, String name, String data, String lastEventId) {
+    public SseMessageEvent(SseEventSource source, String name, String data, String lastEventId, long retry) {
         super(source, SseEventType.MESSAGE);
         this.name = name;
         this.data = data;
         this.lastEventId = lastEventId;
+        this.retry = retry;
     }
 
     public String getName() {
@@ -36,5 +41,9 @@ public class SseMessageEvent extends SseEvent {
 
     public String getOrigin() {
         return getSource().getUrl();
+    }
+
+    long retry() {
+        return retry;
     }
 }

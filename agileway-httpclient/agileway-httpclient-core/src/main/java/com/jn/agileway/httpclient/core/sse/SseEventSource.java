@@ -130,8 +130,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
             case MESSAGE:
                 SseMessageEvent messageEvent = (SseMessageEvent) event;
                 this.lastEventId = messageEvent.getLastEventId();
-                messageEvent.setSource(this);
-                messageEvent.setDomain(this.eventDomain);
+
                 String name = messageEvent.getName();
 
                 Collection<SseEventListener> listeners = eventListeners.containsKey(name) ? eventListeners.get(name) : eventListeners.get(EVENT_NAME_MESSAGE);
@@ -140,5 +139,9 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                 }
                 break;
         }
+    }
+
+    public String getEventDomain() {
+        return eventDomain;
     }
 }
