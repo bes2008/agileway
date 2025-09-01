@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.sse;
+package com.jn.agileway.httpclient.core.sse;
 
 /**
  * SSE Message Event，要通常 Listener 交给用户使用的 Event

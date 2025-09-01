@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.sse;
+package com.jn.agileway.httpclient.core.sse;
 
 /**
  * SSE 推送的消息，这个是服务端推送给客户端的消息，只在框架内部使用

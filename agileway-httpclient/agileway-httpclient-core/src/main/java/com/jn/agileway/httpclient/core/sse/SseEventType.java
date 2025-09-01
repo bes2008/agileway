@@ -1,4 +1,4 @@
-package com.jn.agileway.httpclient.sse;
+package com.jn.agileway.httpclient.core.sse;
 
 public enum SseEventType {
     /**
