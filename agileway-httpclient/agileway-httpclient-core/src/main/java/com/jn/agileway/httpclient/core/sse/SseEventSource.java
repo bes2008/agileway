@@ -179,6 +179,13 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         }
 
         HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.ACCEPT, "text/event-stream, application/json");
+        if (withCredentials) {
+            //
+        }
+        if (Strings.isNotBlank(lastEventId)) {
+            headers.add("Last-Event-ID", lastEventId);
+        }
         // do re-connect
         HttpRequest request = HttpRequest.create(HttpMethod.GET, url, null, null, null, headers, null);
         this.response = httpExchanger.exchange(request);
