@@ -10,6 +10,7 @@ import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.langx.util.Throwables;
 import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.net.http.HttpMethod;
+import com.jn.langx.util.net.mime.MediaType;
 import com.jn.langx.util.retry.RetryConfig;
 import com.jn.langx.util.retry.Retryer;
 
@@ -87,6 +88,17 @@ final class InternalHttpRequestExecutor extends RequestReplyExecutor {
 
         clearRequestMessage();
         HttpResponse response = null;
+        MediaType contentType = underlyingHttpResponse.getHttpHeaders().getContentType();
+        int statusCode = underlyingHttpResponse.getStatusCode();
+        if (statusCode == 200 && HttpMethod.GET.equals(request.getMethod()) && MediaType.TEXT_EVENT_STREAM.equalsTypeAndSubtype(contentType)) {
+            return new HttpResponse<>(underlyingHttpResponse.getMethod(),
+                    underlyingHttpResponse.getUri(),
+                    underlyingHttpResponse.getStatusCode(),
+                    underlyingHttpResponse.getHeaders(),
+                    null,
+                    underlyingHttpResponse.getPayload());
+        }
+
         try {
             boolean needReadBody = needReadBody(underlyingHttpResponse);
 
