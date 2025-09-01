@@ -19,7 +19,4 @@ public class SseEvent extends DomainEvent<SseEventSource> {
         return new SseEvent(source, SseEventType.OPEN);
     }
 
-    public static SseEvent ofError(SseEventSource source) {
-        return new SseEvent(source, SseEventType.ERROR);
-    }
 }

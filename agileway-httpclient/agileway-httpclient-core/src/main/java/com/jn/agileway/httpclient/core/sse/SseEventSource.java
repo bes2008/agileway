@@ -8,6 +8,7 @@ import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.event.EventPublisher;
 import com.jn.langx.lifecycle.AbstractLifecycle;
+import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.multivalue.CommonMultiValueMap;
@@ -41,7 +42,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
     /**
      * A number representing the state of the connection. Possible values are CONNECTING (0), OPEN (1), or CLOSED (2).
      */
-    private int readyState;
+    private volatile int readyState;
 
     /**
      * A boolean value indicating whether the EventSource object was instantiated with cross-origin (CORS) credentials set (true), or not (false, the default).
@@ -208,34 +209,45 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         }
         // do re-connect
         HttpRequest request = HttpRequest.create(HttpMethod.GET, url, null, null, null, headers, null);
-        HttpResponse response = httpExchanger.exchange(request);
+        HttpResponse response = null;
+        try {
+            response = httpExchanger.exchange(request);
+        } catch (Throwable ex) {
+            LOGGER.warn("The sse event source is connect failed for domain: {}, will not to reconnect, exception: {}", eventDomain, ex.getMessage(), ex);
+            eventPublisher.publish(new SseErrorEvent(this, -1, ex.getMessage()));
+            return;
+        }
+        SseErrorEvent errorEvent = errorEventIfInvalidResponse(response);
+        if (errorEvent != null) {
+            eventPublisher.publish(errorEvent);
+        }
+        readyState = READY_STATE_OPEN;
+        try {
+            eventPublisher.publish(SseMessageEvent.ofOpen(this));
 
-        if (response.getStatusCode() != 204) {
-            this.readyState = READY_STATE_CLOSED;
-            closeUnderlyingResponse(response);
-            LOGGER.warn("The sse event source is connect success for domain: {}, will close it, the status code:{} ", eventDomain, response.getStatusCode());
-            return;
+            // 读取数据
+            while (READY_STATE_OPEN == readyState) {
+                
+            }
+
+        } catch (Throwable ex) {
+            eventPublisher.publish(new SseErrorEvent(this, response.getStatusCode(), ex.getMessage()));
         }
-        if (response.hasError()) {
-            this.readyState = READY_STATE_CLOSED;
-            closeUnderlyingResponse(response);
-            LOGGER.warn("The sse event source is connect failed for domain: {}, will not to reconnect, the status code: {}, error: {}", eventDomain, response.getStatusCode(), response.getErrorMessage());
-            return;
+
+    }
+
+    private SseErrorEvent errorEventIfInvalidResponse(HttpResponse response) {
+        if (response.getStatusCode() == 204) {
+            return new SseErrorEvent(this, 204, StringTemplates.formatWithPlaceholder("sse closed by server"));
         }
-        if (response.getStatusCode() != 200) {
-            this.readyState = READY_STATE_CLOSED;
-            closeUnderlyingResponse(response);
-            LOGGER.warn("The sse event source is connect failed for domain: {}, will not to reconnect, the status code:{} ", eventDomain, response.getStatusCode());
-            return;
+        if (response.hasError() || response.getStatusCode() != 200) {
+            return new SseErrorEvent(this, response.getStatusCode(), response.getErrorMessage());
         }
 
         MediaType contentType = response.getHttpHeaders().getContentType();
-        if (contentType == null) {
-            this.readyState = READY_STATE_CLOSED;
-            closeUnderlyingResponse(response);
-            LOGGER.warn("The sse event source is connect failed for domain: {}, will not to reconnect, the status code:{} ", eventDomain, response.getStatusCode());
-            return;
+        if (contentType == null || !MediaType.TEXT_EVENT_STREAM.equalsTypeAndSubtype(contentType)) {
+            return new SseErrorEvent(this, response.getStatusCode(), StringTemplates.formatWithPlaceholder("invalid content-type in response: {}", contentType));
         }
-        readyState = READY_STATE_OPEN;
+        return null;
     }
 }
