@@ -21,5 +21,4 @@ public interface UnderlyingHttpExecutor<TARGET> {
      */
     UnderlyingHttpResponse executeAttachmentUploadRequest(HttpRequest<?> request, HttpRequestPayloadWriter payloadWriter) throws Exception;
 
-    void executeSseRequest(HttpRequest request) throws Exception;
 }

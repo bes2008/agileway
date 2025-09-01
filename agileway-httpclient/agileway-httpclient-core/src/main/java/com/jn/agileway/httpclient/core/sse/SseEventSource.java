@@ -1,9 +1,14 @@
 package com.jn.agileway.httpclient.core.sse;
 
 import com.jn.agileway.httpclient.core.HttpExchanger;
+import com.jn.langx.event.EventPublisher;
+import com.jn.langx.lifecycle.AbstractLifecycle;
+import com.jn.langx.util.Strings;
+import com.jn.langx.util.collection.multivalue.CommonMultiValueMap;
+import com.jn.langx.util.collection.multivalue.MultiValueMap;
 
-import java.io.Closeable;
 import java.io.IOException;
+import java.util.Collection;
 
 /**
  * Http Status Code 处理：
@@ -12,7 +17,7 @@ import java.io.IOException;
  * 3）204， 代表响应成功，但不再有消息了
  * 4）其他，代表错误。直接 调用 close()
  */
-public class SseEventSource implements Closeable {
+public class SseEventSource extends AbstractLifecycle implements SseEventListener {
     /**
      * A string representing the URL of the source.
      */
@@ -49,19 +54,40 @@ public class SseEventSource implements Closeable {
      */
     private static final int READY_STATE_CLOSED = 2;
 
+
+    private static final String EVENT_NAME_OPEN = "open";
+    private static final String EVENT_NAME_ERROR = "error";
+    private static final String EVENT_NAME_MESSAGE = "message";
+
     /**
      * 如果客户端想要终止重新连接，则需要调用此方法。
      * 如果服务器想要终止重新连接，则需要返回 http status 204
      *
      * @throws IOException
      */
-    @Override
-    public void close() throws IOException {
 
+    private MultiValueMap<String, SseEventListener> eventListeners = new CommonMultiValueMap<>();
+    private EventPublisher eventPublisher;
+
+    private String eventDomain;
+
+    public void registerEventListener(String eventTypeOrName, SseEventListener listener) {
+        if (Strings.isBlank(eventTypeOrName)) {
+            throw new IllegalArgumentException("eventTypeOrName is blank");
+        }
+        eventListeners.add(eventTypeOrName, listener);
     }
 
-    public void addEventListener(String eventTypeOrName, SseEventListener listener) {
+    public void registerOpenEventListener(SseEventListener listener) {
+        registerEventListener(EVENT_NAME_OPEN, listener);
+    }
 
+    public void registerErrorEventListener(SseEventListener listener) {
+        registerEventListener(EVENT_NAME_ERROR, listener);
+    }
+
+    public void registerMessageEventListener(SseEventListener listener) {
+        registerEventListener(EVENT_NAME_MESSAGE, listener);
     }
 
     public String getUrl() {
@@ -73,11 +99,46 @@ public class SseEventSource implements Closeable {
     }
 
     public SseEventSource(String url, boolean withCredentials) {
-        this(null, url, withCredentials);
+        this(null, null, "SSE", url, withCredentials);
     }
 
-    public SseEventSource(HttpExchanger httpExchanger, String url, boolean withCredentials) {
-
+    public SseEventSource(HttpExchanger httpExchanger, EventPublisher eventPublisher, String eventDomain, String url, boolean withCredentials) {
+        this.eventDomain = eventDomain;
     }
 
+    @Override
+    protected void doStart() {
+        super.doStart();
+        this.eventPublisher.addEventListener(this.eventDomain, this);
+    }
+
+    @Override
+    public void on(SseEvent event) {
+        SseEventType eventType = event.getType();
+        switch (eventType) {
+            case OPEN:
+                this.readyState = READY_STATE_OPEN;
+                for (SseEventListener listener : eventListeners.get(EVENT_NAME_OPEN)) {
+                    listener.on(event);
+                }
+                break;
+            case ERROR:
+                for (SseEventListener listener : eventListeners.get(EVENT_NAME_ERROR)) {
+                    listener.on(event);
+                }
+                break;
+            case MESSAGE:
+                SseMessageEvent messageEvent = (SseMessageEvent) event;
+                this.lastEventId = messageEvent.getLastEventId();
+                messageEvent.setSource(this);
+                messageEvent.setDomain(this.eventDomain);
+                String name = messageEvent.getName();
+
+                Collection<SseEventListener> listeners = eventListeners.containsKey(name) ? eventListeners.get(name) : eventListeners.get(EVENT_NAME_MESSAGE);
+                for (SseEventListener listener : listeners) {
+                    listener.on(event);
+                }
+                break;
+        }
+    }
 }
