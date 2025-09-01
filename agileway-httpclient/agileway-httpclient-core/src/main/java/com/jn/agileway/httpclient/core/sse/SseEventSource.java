@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.concurrent.Executor;
 
 import static com.jn.agileway.httpclient.core.MessageHeaderConstants.SSE_UNDERLYING_RESPONSE;
 
@@ -162,6 +163,16 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         pullAndHandleEvents();
     }
 
+    public void startupAsync(Executor executor) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                startup();
+            }
+        });
+
+    }
+
     @Override
     public void on(SSE.SseEvent event) {
         SSE.SseEventType eventType = event.getType();
@@ -243,7 +254,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
             eventPublisher.publish(new SSE.SseErrorEvent(this, -1, ex.getMessage()));
             return;
         }
-        SSE.SseErrorEvent errorEvent = errorEventIfInvalidResponse(response);
+        SSE.SseErrorEvent errorEvent = createErrorEventIfInvalidResponse(response);
         if (errorEvent != null) {
             eventPublisher.publish(errorEvent);
             return;
@@ -321,7 +332,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
 
     }
 
-    private SSE.SseErrorEvent errorEventIfInvalidResponse(HttpResponse response) {
+    private SSE.SseErrorEvent createErrorEventIfInvalidResponse(HttpResponse response) {
         if (response.getStatusCode() == 204) {
             return new SSE.SseErrorEvent(this, 204, StringTemplates.formatWithPlaceholder("sse closed by server"));
         }
@@ -339,5 +350,8 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
     @Override
     protected void doStop() {
         super.doStop();
+        this.readyState = READY_STATE_CLOSED;
+        this.eventListeners.clear();
+        closeUnderlyingResponse(this.response);
     }
 }
