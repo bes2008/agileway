@@ -145,8 +145,8 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
     }
 
     @Override
-    public void on(SseEvent event) {
-        SseEventType eventType = event.getType();
+    public void on(SseEvents.SseEvent event) {
+        SseEvents.SseEventType eventType = event.getType();
         switch (eventType) {
             case OPEN:
                 this.readyState = READY_STATE_OPEN;
@@ -160,7 +160,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                 }
                 break;
             case MESSAGE:
-                SseMessageEvent messageEvent = (SseMessageEvent) event;
+                SseEvents.SseMessageEvent messageEvent = (SseEvents.SseMessageEvent) event;
                 this.lastEventId = messageEvent.getLastEventId();
                 long retryDelay = messageEvent.retry();
                 if (retryDelay > 0) {
@@ -219,30 +219,30 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
             response = httpExchanger.exchange(request);
         } catch (Throwable ex) {
             LOGGER.warn("The sse event source is connect failed for domain: {}, will not to reconnect, exception: {}", eventDomain, ex.getMessage(), ex);
-            eventPublisher.publish(new SseErrorEvent(this, -1, ex.getMessage()));
+            eventPublisher.publish(new SseEvents.SseErrorEvent(this, -1, ex.getMessage()));
             return;
         }
-        SseErrorEvent errorEvent = errorEventIfInvalidResponse(response);
+        SseEvents.SseErrorEvent errorEvent = errorEventIfInvalidResponse(response);
         if (errorEvent != null) {
             eventPublisher.publish(errorEvent);
         }
         readyState = READY_STATE_OPEN;
         try {
-            eventPublisher.publish(SseMessageEvent.ofOpen(this));
+            eventPublisher.publish(SseEvents.SseMessageEvent.ofOpen(this));
 
             // 读取数据
             while (READY_STATE_OPEN == readyState) {
-                final Holder<SseMessageEventBuilder> builderHolder = new Holder<>();
+                final Holder<SseEvents.SseMessageEventBuilder> builderHolder = new Holder<>();
                 Resources.readLines(Resources.asInputStreamResource(response.getPayload(), "the sse event stream"), Charsets.UTF_8, new Consumer<String>() {
                     @Override
                     public void accept(String line) {
-                        SseMessageEventBuilder builder = builderHolder.get();
+                        SseEvents.SseMessageEventBuilder builder = builderHolder.get();
                         if (builder == null) {
-                            builder = SseMessageEventBuilder.newBuilder(SseEventSource.this);
+                            builder = SseEvents.SseMessageEventBuilder.newBuilder(SseEventSource.this);
                             builderHolder.set(builder);
                         }
                         if (Strings.isBlank(line)) {
-                            SseMessageEvent event = builder.build();
+                            SseEvents.SseMessageEvent event = builder.build();
                             builderHolder.set(null);
                             if (event != null) {
                                 eventPublisher.publish(event);
@@ -270,22 +270,22 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
             }
 
         } catch (Throwable ex) {
-            eventPublisher.publish(new SseErrorEvent(this, response.getStatusCode(), ex.getMessage()));
+            eventPublisher.publish(new SseEvents.SseErrorEvent(this, response.getStatusCode(), ex.getMessage()));
         }
 
     }
 
-    private SseErrorEvent errorEventIfInvalidResponse(HttpResponse response) {
+    private SseEvents.SseErrorEvent errorEventIfInvalidResponse(HttpResponse response) {
         if (response.getStatusCode() == 204) {
-            return new SseErrorEvent(this, 204, StringTemplates.formatWithPlaceholder("sse closed by server"));
+            return new SseEvents.SseErrorEvent(this, 204, StringTemplates.formatWithPlaceholder("sse closed by server"));
         }
         if (response.hasError() || response.getStatusCode() != 200) {
-            return new SseErrorEvent(this, response.getStatusCode(), response.getErrorMessage());
+            return new SseEvents.SseErrorEvent(this, response.getStatusCode(), response.getErrorMessage());
         }
 
         MediaType contentType = response.getHttpHeaders().getContentType();
         if (contentType == null || !MediaType.TEXT_EVENT_STREAM.equalsTypeAndSubtype(contentType)) {
-            return new SseErrorEvent(this, response.getStatusCode(), StringTemplates.formatWithPlaceholder("invalid content-type in response: {}", contentType));
+            return new SseEvents.SseErrorEvent(this, response.getStatusCode(), StringTemplates.formatWithPlaceholder("invalid content-type in response: {}", contentType));
         }
         return null;
     }
