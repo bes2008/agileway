@@ -51,4 +51,10 @@ public class MessageHeaderConstants {
      */
     public static final String RESPONSE_KEY_REPLY_PAYLOAD_TYPE = RESPONSE_HEADER_KEY_PREFIX + "payload_type";
 
+    //*********************************************************************************************************
+
+    /**
+     * 在 SSE Message Header中 存储 underlying response
+     */
+    public static String SSE_UNDERLYING_RESPONSE = "agileway_http_sse_underlying_response";
 }

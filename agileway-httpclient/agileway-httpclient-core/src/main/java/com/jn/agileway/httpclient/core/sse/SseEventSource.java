@@ -1,14 +1,23 @@
 package com.jn.agileway.httpclient.core.sse;
 
 import com.jn.agileway.httpclient.core.HttpExchanger;
+import com.jn.agileway.httpclient.core.HttpRequest;
+import com.jn.agileway.httpclient.core.HttpResponse;
+import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.langx.event.EventPublisher;
 import com.jn.langx.lifecycle.AbstractLifecycle;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.multivalue.CommonMultiValueMap;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
+import com.jn.langx.util.logging.Loggers;
+import com.jn.langx.util.net.http.HttpHeaders;
+import com.jn.langx.util.net.http.HttpMethod;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.util.Collection;
+
+import static com.jn.agileway.httpclient.core.MessageHeaderConstants.SSE_UNDERLYING_RESPONSE;
 
 /**
  * Http Status Code 处理：
@@ -18,6 +27,7 @@ import java.util.Collection;
  * 4）其他，代表错误。直接 调用 close()
  */
 public class SseEventSource extends AbstractLifecycle implements SseEventListener {
+    private static final Logger LOGGER = Loggers.getLogger(SseEventSource.class);
     /**
      * A string representing the URL of the source.
      */
@@ -70,6 +80,10 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
     private EventPublisher eventPublisher;
 
     private String eventDomain;
+
+    private HttpResponse response;
+
+    private HttpExchanger httpExchanger;
 
     public void registerEventListener(String eventTypeOrName, SseEventListener listener) {
         if (Strings.isBlank(eventTypeOrName)) {
@@ -147,5 +161,27 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
 
     public String getEventDomain() {
         return eventDomain;
+    }
+
+
+    void reconnect() {
+        if (READY_STATE_CLOSED == readyState) {
+            LOGGER.warn("The sse event source is closed for domain: {}, will not to reconnect", eventDomain);
+            return;
+        }
+        // 关闭 response
+        if (response != null) {
+            UnderlyingHttpResponse underlyingHttpResponse = (UnderlyingHttpResponse) response.getHeaders().get(SSE_UNDERLYING_RESPONSE);
+            if (underlyingHttpResponse == null) {
+                throw new IllegalStateException("The underlying http response is null");
+            }
+            underlyingHttpResponse.close();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        // do re-connect
+        HttpRequest request = HttpRequest.create(HttpMethod.GET, url, null, null, null, headers, null);
+        this.response = httpExchanger.exchange(request);
+
     }
 }
