@@ -63,7 +63,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
     /**
      * A number representing the number of milliseconds to wait between messages before retrying the connection.
      */
-    private long reconnectInterval = -1L;
+    private long reconnectInterval = 3 * 1000L;
     /**
      * A number representing the number of milliseconds since the last message was received.
      */
@@ -98,6 +98,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
     @NonNull
     private HttpExchanger httpExchanger;
     private Object lock = new Object();
+
     public void registerEventListener(String eventTypeOrName, SseEventListener listener) {
         if (Strings.isBlank(eventTypeOrName)) {
             throw new IllegalArgumentException("eventTypeOrName is blank");
@@ -187,9 +188,14 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                 for (SseEventListener listener : eventListeners.get(EVENT_NAME_ERROR)) {
                     listener.on(event);
                 }
-                shutdown();
+                if (this.readyState == READY_STATE_OPEN) {
+                    // reconnect if connection is closed
+                } else {
+                    shutdown();
+                }
                 break;
             case MESSAGE:
+            default:
                 SSE.SseMessageEvent messageEvent = (SSE.SseMessageEvent) event;
                 this.lastEventId = messageEvent.getLastEventId();
                 long retryDelay = messageEvent.retry();
@@ -310,7 +316,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                     }
                 }
 
-                if (READY_STATE_OPEN == readyState) {
+                if (READY_STATE_CLOSED != readyState) {
                     if (this.reconnectInterval > 0) {
                         long waitTime = lastReceivedTimeInMills + this.reconnectInterval - System.currentTimeMillis();
                         if (waitTime > 0) {
