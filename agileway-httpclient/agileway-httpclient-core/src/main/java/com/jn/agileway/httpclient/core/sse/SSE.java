@@ -59,7 +59,8 @@ public class SSE {
             if (response != null) {
                 this.statusCode = response.getStatusCode();
                 this.errorMessage = response.getErrorMessage();
-            } else if (ex != null) {
+            }
+            if (ex != null) {
                 this.errorMessage = ex.getMessage();
                 this.cause = ex;
             }
