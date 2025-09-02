@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.core.sse;
 
+import com.jn.agileway.httpclient.core.HttpResponse;
 import com.jn.langx.Builder;
 import com.jn.langx.event.DomainEvent;
 import com.jn.langx.text.StringTemplates;
@@ -45,11 +46,23 @@ public class SSE {
     public static class SseErrorEvent extends SseEvent {
         private int statusCode = -1;
         private String errorMessage;
+        private Throwable cause;
 
         SseErrorEvent(SseEventSource source, int statusCode, String errorMessage) {
             super(source, SseEventType.ERROR);
             this.statusCode = statusCode;
             this.errorMessage = errorMessage;
+        }
+
+        SseErrorEvent(SseEventSource source, HttpResponse response, Throwable ex) {
+            super(source, SseEventType.ERROR);
+            if (response != null) {
+                this.statusCode = response.getStatusCode();
+                this.errorMessage = response.getErrorMessage();
+            } else if (ex != null) {
+                this.errorMessage = ex.getMessage();
+                this.cause = ex;
+            }
         }
 
         public int getStatusCode() {
@@ -58,6 +71,10 @@ public class SSE {
 
         public String getErrorMessage() {
             return errorMessage;
+        }
+
+        public Throwable getCause() {
+            return cause;
         }
     }
 

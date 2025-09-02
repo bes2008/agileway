@@ -359,7 +359,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
             }
 
         } catch (Throwable ex) {
-            eventPublisher.publish(new SSE.SseErrorEvent(this, response.getStatusCode(), ex.getMessage()));
+            eventPublisher.publish(new SSE.SseErrorEvent(this, response, ex));
         }
 
     }
