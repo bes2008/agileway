@@ -91,12 +91,14 @@ final class InternalHttpRequestExecutor extends RequestReplyExecutor {
         MediaType contentType = underlyingHttpResponse.getHttpHeaders().getContentType();
         int statusCode = underlyingHttpResponse.getStatusCode();
         if (statusCode == 200 && HttpMethod.GET.equals(request.getMethod()) && MediaType.TEXT_EVENT_STREAM.equalsTypeAndSubtype(contentType)) {
-            return new HttpResponse<>(underlyingHttpResponse.getMethod(),
+            response = new HttpResponse<>(underlyingHttpResponse.getMethod(),
                     underlyingHttpResponse.getUri(),
                     underlyingHttpResponse.getStatusCode(),
                     underlyingHttpResponse.getHeaders(),
                     null,
                     underlyingHttpResponse.getPayload());
+            response.getHeaders().put(MessageHeaderConstants.SSE_UNDERLYING_RESPONSE, underlyingHttpResponse);
+            return response;
         }
 
         try {

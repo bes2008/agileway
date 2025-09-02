@@ -306,6 +306,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                         } else {
                             if (line.startsWith(":")) {
                                 // comment line, ignore it
+                                LOGGER.debug("Sse {} ignored comment: {}", url, line);
                                 return;
                             }
                             if (line.startsWith("event:")) {
@@ -336,6 +337,15 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                     if (this.reconnectInterval > 0) {
                         long waitTime = lastReceivedTimeInMills + this.reconnectInterval - System.currentTimeMillis();
                         if (waitTime > 0) {
+                            if (waitTime > 10) {
+                                synchronized (this.lock) {
+                                    try {
+                                        this.wait(10);
+                                    } catch (InterruptedException e) {
+                                        // ignore
+                                    }
+                                }
+                            }
                             synchronized (this.lock) {
                                 try {
                                     this.wait(waitTime);
