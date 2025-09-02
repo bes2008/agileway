@@ -2,6 +2,7 @@ package com.jn.agileway.httpclient.core.sse;
 
 import com.jn.langx.Builder;
 import com.jn.langx.event.DomainEvent;
+import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 
@@ -70,17 +71,17 @@ public class SSE {
          */
         private String name;
         private String data;
-        private String lastEventId;
+        private String id;
         /**
          * 重试时间，单位毫秒
          */
         private long retry;
 
-        public SseMessageEvent(SseEventSource source, String name, String data, String lastEventId, long retry) {
+        public SseMessageEvent(SseEventSource source, String name, String data, String id, long retry) {
             super(source, SseEventType.MESSAGE);
             this.name = Objs.useValueIfEmpty(name, SseEventSource.EVENT_NAME_MESSAGE);
             this.data = data;
-            this.lastEventId = lastEventId;
+            this.id = id;
             this.retry = retry;
         }
 
@@ -96,8 +97,8 @@ public class SSE {
             return data;
         }
 
-        public String getLastEventId() {
-            return lastEventId;
+        public String getId() {
+            return id;
         }
 
         public String getOrigin() {
@@ -106,6 +107,10 @@ public class SSE {
 
         long retry() {
             return retry;
+        }
+
+        public String toString() {
+            return StringTemplates.formatWithPlaceholder("origin: {}, name: {}, data: {}, id: {}, retry: {}", getOrigin(), name, data, id, retry);
         }
     }
 

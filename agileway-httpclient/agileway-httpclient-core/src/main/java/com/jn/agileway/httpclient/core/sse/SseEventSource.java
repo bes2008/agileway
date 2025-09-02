@@ -18,7 +18,9 @@ import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.multivalue.CommonMultiValueMap;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.function.Consumer;
+import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.function.Supplier;
+import com.jn.langx.util.id.uuidv7.UUIDv7Factory;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.net.http.HttpHeaders;
@@ -99,6 +101,19 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
     private HttpExchanger httpExchanger;
     private Object lock = new Object();
 
+    private Predicate<SSE.SseErrorEvent> reconnectPredicate = new Predicate<SSE.SseErrorEvent>() {
+        @Override
+        public boolean test(SSE.SseErrorEvent event) {
+            return true;
+        }
+    };
+
+    public void setReconnectPredicate(Predicate<SSE.SseErrorEvent> reconnectPredicate) {
+        if (reconnectPredicate != null) {
+            this.reconnectPredicate = reconnectPredicate;
+        }
+    }
+
     public void registerEventListener(String eventTypeOrName, SseEventListener listener) {
         if (Strings.isBlank(eventTypeOrName)) {
             throw new IllegalArgumentException("eventTypeOrName is blank");
@@ -125,8 +140,8 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
     }
 
 
-    public SseEventSource(String url) {
-        this(url, null, null, null);
+    public SseEventSource(String url, HttpExchanger httpExchanger) {
+        this(url, null, httpExchanger, null);
     }
 
     public SseEventSource(@NonNull String url,
@@ -134,7 +149,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                           @NonNull HttpExchanger httpExchanger,
                           @Nullable EventPublisher eventPublisher) {
         this.url = Preconditions.checkNotNull(url, "the sse url is required");
-        this.eventDomain = Objs.useValueIfEmpty(eventDomain, "SSE-" + System.currentTimeMillis());
+        this.eventDomain = Objs.useValueIfEmpty(eventDomain, "SSE-" + UUIDv7Factory.builder().build().create());
         this.httpExchanger = Preconditions.checkNotNull(httpExchanger);
         this.eventPublisher = Objs.useValueIfNull(eventPublisher, new Supplier<EventPublisher, EventPublisher>() {
             @Override
@@ -188,16 +203,17 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                 for (SseEventListener listener : eventListeners.get(EVENT_NAME_ERROR)) {
                     listener.on(event);
                 }
-                if (this.readyState == READY_STATE_OPEN) {
-                    // reconnect if connection is closed
+                if (this.readyState == READY_STATE_OPEN && reconnectPredicate.test((SSE.SseErrorEvent) event)) {
+                    pullAndHandleEvents();
                 } else {
+                    this.readyState = READY_STATE_CLOSED;
                     shutdown();
                 }
                 break;
             case MESSAGE:
             default:
                 SSE.SseMessageEvent messageEvent = (SSE.SseMessageEvent) event;
-                this.lastEventId = messageEvent.getLastEventId();
+                this.lastEventId = messageEvent.getId();
                 long retryDelay = messageEvent.retry();
                 if (retryDelay > 0) {
                     this.reconnectInterval = retryDelay;
