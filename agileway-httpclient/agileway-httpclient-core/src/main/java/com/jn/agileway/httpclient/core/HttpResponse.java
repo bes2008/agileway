@@ -57,4 +57,18 @@ public class HttpResponse<T> extends BaseHttpMessage<T> implements HttpResponseM
     public boolean hasError() {
         return statusCode >= 400 || Strings.isNotEmpty(errorMessage);
     }
+
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(method + " " + statusCode);
+        HttpHeaders headers = getHttpHeaders();
+        if (headers != null && !headers.isEmpty()) {
+            builder.append("\n");
+            for (String name : headers.keySet()) {
+                builder.append(name + ": " + headers.get(name) + "\n");
+            }
+        }
+        builder.append("\n");
+        return builder.toString();
+    }
 }
