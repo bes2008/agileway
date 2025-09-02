@@ -1,6 +1,8 @@
 ## 5.3.1
-+ agileway-httpclient：支持 SSE
-+ agileway-spring: fix spring.factories
++ Features:
+  + agileway-httpclient：支持 SSE
++ BugFix:
+  + agileway-spring: fix spring.factories
 
 ## 5.3.0
 + 移除 agileway-feign，不再支持 feign，由 agileway-httpclient 替代
