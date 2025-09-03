@@ -2,6 +2,7 @@ package com.jn.agileway.httpclient.core.sse;
 
 import com.jn.agileway.httpclient.core.HttpExchanger;
 import com.jn.agileway.httpclient.core.HttpRequest;
+import com.jn.agileway.httpclient.core.HttpRequestBuilder;
 import com.jn.agileway.httpclient.core.HttpResponse;
 import com.jn.agileway.httpclient.core.error.exception.HttpRequestClientErrorException;
 import com.jn.agileway.httpclient.core.error.exception.HttpRequestServerErrorException;
@@ -37,6 +38,7 @@ import java.util.concurrent.Executor;
 
 import static com.jn.agileway.httpclient.core.MessageHeaderConstants.SSE_UNDERLYING_RESPONSE;
 
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class SseEventSource extends AbstractLifecycle implements SseEventListener {
     private static final Logger LOGGER = Loggers.getLogger(SseEventSource.class);
     /**
@@ -94,12 +96,16 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
 
     @NonNull
     private HttpExchanger httpExchanger;
-
+    private HttpRequestBuilder sseRequestBuilder;
     private Predicate<SSE.SseErrorEvent> reconnectPredicate = new Predicate<SSE.SseErrorEvent>() {
         @Override
         public boolean test(SSE.SseErrorEvent event) {
             SSE.SseErrorType type = event.getErrorType();
-            if (type == SSE.SseErrorType.NO_CONTENT || type == SSE.SseErrorType.UNSUPPORTED_CONTENT_TYPE || type == SSE.SseErrorType.CLIENT_READ_ERROR) {
+            if (type == SSE.SseErrorType.NO_CONTENT
+                    || type == SSE.SseErrorType.UNSUPPORTED_CONTENT_TYPE
+                    || type == SSE.SseErrorType.CLIENT_READ_ERROR
+                    || type == SSE.SseErrorType.REQUEST_ERROR
+            ) {
                 return false;
             }
             return true;
@@ -107,7 +113,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
     };
 
     public void setReconnectPredicate(Predicate<SSE.SseErrorEvent> reconnectPredicate) {
-        if (reconnectPredicate != null) {
+        if (!inited && reconnectPredicate != null) {
             this.reconnectPredicate = reconnectPredicate;
         }
     }
@@ -116,7 +122,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         if (Strings.isBlank(eventTypeOrName)) {
             throw new IllegalArgumentException("eventTypeOrName is blank");
         }
-        if (!inited) {
+        if (!inited && listener != null) {
             eventListeners.add(eventTypeOrName, listener);
         }
     }
@@ -155,14 +161,17 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                 return new SimpleEventPublisher();
             }
         });
-    }
-
-    public void setReconnectInterval(long reconnectInterval) {
-        this.reconnectInterval = reconnectInterval;
+        this.sseRequestBuilder = new HttpRequestBuilder(HttpMethod.GET, url);
     }
 
     public void setWithCredentials(boolean withCredentials) {
         this.withCredentials = withCredentials;
+    }
+
+    public void setRequestBuilder(HttpRequestBuilder requestBuilder) {
+        if (requestBuilder != null && !inited) {
+            this.sseRequestBuilder = requestBuilder;
+        }
     }
 
     @Override
@@ -270,16 +279,15 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         readyState = READY_STATE_CONNECTING;
         LOGGER.info("The sse event source is reconnecting for domain: {}", eventDomain);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.ACCEPT, MediaType.TEXT_EVENT_STREAM_VALUE);
         if (withCredentials) {
             //
         }
         if (Strings.isNotBlank(lastEventId)) {
-            headers.add("Last-Event-ID", lastEventId);
+            this.sseRequestBuilder.withHeader("Last-Event-ID", lastEventId);
         }
+        this.sseRequestBuilder.withHeader(HttpHeaders.ACCEPT, MediaType.TEXT_EVENT_STREAM_VALUE);
         // do re-connect
-        HttpRequest request = HttpRequest.create(HttpMethod.GET, url, null, null, null, headers, null);
+        HttpRequest request = this.sseRequestBuilder.build();
         HttpResponse<InputStream> response = null;
         try {
             response = httpExchanger.exchange(request);

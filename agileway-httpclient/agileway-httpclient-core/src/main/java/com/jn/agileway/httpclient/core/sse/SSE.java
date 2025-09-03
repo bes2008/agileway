@@ -69,7 +69,7 @@ public class SSE {
          * <pre>
          * 触发时机：获取到的 Http Response 的 status >= 500
          * 连接状态：已关闭
-         * 默认重连：是
+         * 默认重连：否
          * </pre>
          */
         SERVER_ERROR(2, "SERVER_ERROR", "Server error"),
