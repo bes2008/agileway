@@ -139,9 +139,9 @@ public class Jdk11UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
         builder.timeout(Duration.ofMillis(requestTimeout.toMillis()));
         HttpRequest underlyingRequest = builder.build();
 
-        java.net.http.HttpResponse<byte[]> underlyingHttpResponse = null;
+        java.net.http.HttpResponse<InputStream> underlyingHttpResponse = null;
         try {
-            underlyingHttpResponse = this.httpClient.send(underlyingRequest, java.net.http.HttpResponse.BodyHandlers.ofByteArray());
+            underlyingHttpResponse = this.httpClient.send(underlyingRequest, java.net.http.HttpResponse.BodyHandlers.ofInputStream());
             underlyingHttpResponse.statusCode();
             java.net.http.HttpHeaders headers = underlyingHttpResponse.headers();
             HttpHeaders responseHeaders = new HttpHeaders();
@@ -150,7 +150,7 @@ public class Jdk11UnderlyingHttpExecutor extends AbstractUnderlyingHttpExecutor<
                     responseHeaders.add(name, value);
                 }
             }
-            Jdk11UnderlyingHttpResponse response = new Jdk11UnderlyingHttpResponse(request.getMethod(), request.getUri(), responseHeaders, underlyingHttpResponse.statusCode(), new ByteArrayInputStream(underlyingHttpResponse.body()));
+            Jdk11UnderlyingHttpResponse response = new Jdk11UnderlyingHttpResponse(request.getMethod(), request.getUri(), responseHeaders, underlyingHttpResponse.statusCode(), underlyingHttpResponse.body());
             return response;
         } catch (InterruptedException e) {
             throw Throwables.wrapAsRuntimeException(e);

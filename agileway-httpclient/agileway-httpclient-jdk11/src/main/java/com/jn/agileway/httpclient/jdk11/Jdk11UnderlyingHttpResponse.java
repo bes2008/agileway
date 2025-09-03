@@ -6,14 +6,13 @@ import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
 
 class Jdk11UnderlyingHttpResponse extends BaseHttpMessage<InputStream> implements UnderlyingHttpResponse {
     private int statusCode;
 
-    Jdk11UnderlyingHttpResponse(HttpMethod method, URI uri, HttpHeaders headers, int statusCode, ByteArrayInputStream payload) {
+    Jdk11UnderlyingHttpResponse(HttpMethod method, URI uri, HttpHeaders headers, int statusCode, InputStream payload) {
         this.uri = uri;
         this.method = method;
         this.headers = new MessageHeaders<HttpHeaders>(null, headers);
