@@ -172,11 +172,6 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         this.eventPublisher.addEventListener(this.eventDomain, this);
     }
 
-    @Override
-    protected void doStart() {
-        super.doStart();
-        pullAndHandleEvents();
-    }
 
     public void startupAsync(Executor executor) {
         executor.execute(new Runnable() {
@@ -212,6 +207,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                 }
                 if (this.readyState != READY_STATE_CLOSED) {
                     if (reconnectPredicate.test((SSE.SseErrorEvent) event)) {
+                        waitForReconnect();
                         pullAndHandleEvents();
                     } else {
                         this.readyState = READY_STATE_CLOSED;
@@ -311,8 +307,8 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
             eventPublisher.publish(SSE.SseEvent.ofOpen(this));
         } catch (Throwable ex) {
             eventPublisher.publish(new SSE.SseErrorEvent(this, SSE.SseErrorType.UNKNOWN_ERROR, response, ex));
+            return;
         }
-
 
         // 读取数据
         if (READY_STATE_OPEN == readyState) {
@@ -371,32 +367,26 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
             } catch (Throwable ex) {
                 eventPublisher.publish(new SSE.SseErrorEvent(this, SSE.SseErrorType.UNKNOWN_ERROR, response, ex));
             }
+        }
 
-            if (READY_STATE_CLOSED != readyState) {
-                if (this.reconnectInterval > 0) {
-                    long waitTime = lastReceivedTimeInMills + this.reconnectInterval - System.currentTimeMillis();
-                    if (waitTime > 0) {
-                        if (waitTime > 10) {
-                            synchronized (this.lock) {
-                                try {
-                                    this.wait(10);
-                                } catch (InterruptedException e) {
-                                    // ignore
-                                }
-                            }
-                        }
-                        synchronized (this.lock) {
-                            try {
-                                this.wait(waitTime);
-                            } catch (InterruptedException e) {
-                                // ignore
-                            }
+    }
+
+    private void waitForReconnect() {
+        if (READY_STATE_CLOSED != readyState) {
+            if (this.reconnectInterval > 0) {
+                long waitTime = lastReceivedTimeInMills + this.reconnectInterval - System.currentTimeMillis();
+                while (READY_STATE_CLOSED != readyState && waitTime > 0) {
+                    synchronized (this.lock) {
+                        try {
+                            this.wait(10);
+                        } catch (InterruptedException e) {
+                            // ignore
                         }
                     }
+                    waitTime = lastReceivedTimeInMills + this.reconnectInterval - System.currentTimeMillis();
                 }
             }
         }
-
     }
 
     private SSE.SseErrorEvent createErrorEventIfInvalidResponse(HttpResponse response) {
@@ -416,6 +406,12 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
             return new SSE.SseErrorEvent(this, SSE.SseErrorType.UNSUPPORTED_CONTENT_TYPE, response, null);
         }
         return null;
+    }
+
+    @Override
+    protected void doStart() {
+        super.doStart();
+        pullAndHandleEvents();
     }
 
     @Override
