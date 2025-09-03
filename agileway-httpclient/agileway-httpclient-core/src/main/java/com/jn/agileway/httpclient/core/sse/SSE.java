@@ -1,6 +1,7 @@
 package com.jn.agileway.httpclient.core.sse;
 
 import com.jn.agileway.httpclient.core.HttpResponse;
+import com.jn.agileway.httpclient.core.error.exception.HttpRequestServerErrorException;
 import com.jn.langx.Builder;
 import com.jn.langx.event.DomainEvent;
 import com.jn.langx.text.StringTemplates;
@@ -45,25 +46,24 @@ public class SSE {
 
     public static class SseErrorEvent extends SseEvent {
         private int statusCode = -1;
+        private boolean clientError = false;
         private String errorMessage;
         private Throwable cause;
 
-        SseErrorEvent(SseEventSource source, int statusCode, String errorMessage) {
-            super(source, SseEventType.ERROR);
-            this.statusCode = statusCode;
-            this.errorMessage = errorMessage;
-        }
-
         SseErrorEvent(SseEventSource source, HttpResponse response, Throwable ex) {
             super(source, SseEventType.ERROR);
-            if (response != null) {
-                this.statusCode = response.getStatusCode();
+            if (response != null && response.hasError()) {
+                if (response.getStatusCode() >= 400 && response.getStatusCode() < 500) {
+                    this.clientError = true;
+                }
                 this.errorMessage = response.getErrorMessage();
             }
             if (ex != null) {
                 this.errorMessage = ex.getMessage();
                 this.cause = ex;
+                this.clientError = !(ex instanceof HttpRequestServerErrorException);
             }
+
         }
 
         public int getStatusCode() {

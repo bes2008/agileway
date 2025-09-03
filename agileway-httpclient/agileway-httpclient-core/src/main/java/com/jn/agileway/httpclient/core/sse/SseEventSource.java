@@ -69,7 +69,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
     /**
      * A number representing the number of milliseconds since the last message was received.
      */
-    private long lastReceivedTimeInMills = -1L;
+    private volatile long lastReceivedTimeInMills = -1L;
 
     /**
      * The connection has not yet been established, or it was closed and the user agent is reconnecting.
@@ -289,6 +289,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
             // 读取数据
             if (READY_STATE_OPEN == readyState) {
                 final Holder<SSE.SseMessageEventBuilder> builderHolder = new Holder<>();
+                // 这是一个阻塞流，只要服务端在写数据，这里就会阻塞，直到服务端写完数据或者异常
                 Resources.readLines(Resources.asInputStreamResource(response.getPayload(), "the sse event stream"), Charsets.UTF_8, new Consumer<String>() {
                     @Override
                     public void accept(String line) {
@@ -301,6 +302,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                             SSE.SseMessageEvent event = builder.build();
                             builderHolder.set(null);
                             if (event != null) {
+                                SseEventSource.this.lastReceivedTimeInMills = System.currentTimeMillis();
                                 eventPublisher.publish(event);
                             }
                         } else {
@@ -329,9 +331,11 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                     SSE.SseMessageEvent event = builder.build();
                     builderHolder.set(null);
                     if (event != null) {
+                        this.lastReceivedTimeInMills = System.currentTimeMillis();
                         eventPublisher.publish(event);
                     }
                 }
+                // 走到这里，说明读取数据已经结束，原因是 server 端主动关闭了连接
 
                 if (READY_STATE_CLOSED != readyState) {
                     if (this.reconnectInterval > 0) {
