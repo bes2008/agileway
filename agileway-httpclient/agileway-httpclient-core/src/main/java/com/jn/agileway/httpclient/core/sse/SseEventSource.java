@@ -37,13 +37,6 @@ import java.util.concurrent.Executor;
 
 import static com.jn.agileway.httpclient.core.MessageHeaderConstants.SSE_UNDERLYING_RESPONSE;
 
-/**
- * Http Status Code 处理：
- * 1）301， 307 由底层 Http Client处理
- * 2）200， 代表连接成功，消息接收成功
- * 3）204， 代表响应成功，但不再有消息了
- * 4）其他，代表错误。直接 调用 close()
- */
 public class SseEventSource extends AbstractLifecycle implements SseEventListener {
     private static final Logger LOGGER = Loggers.getLogger(SseEventSource.class);
     /**
@@ -106,7 +99,11 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
     private Predicate<SSE.SseErrorEvent> reconnectPredicate = new Predicate<SSE.SseErrorEvent>() {
         @Override
         public boolean test(SSE.SseErrorEvent event) {
-            return true;
+            SSE.SseErrorType type = event.getErrorType();
+            if (type == SSE.SseErrorType.NO_CONTENT || type == SSE.SseErrorType.UNSUPPORTED_CONTENT_TYPE || type == SSE.SseErrorType.CLIENT_READ_ERROR) {
+                return true;
+            }
+            return false;
         }
     };
 
@@ -197,8 +194,12 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         switch (eventType) {
             case OPEN:
                 this.readyState = READY_STATE_OPEN;
-                for (SseEventListener listener : eventListeners.get(EVENT_NAME_OPEN)) {
-                    listener.on(event);
+                try {
+                    for (SseEventListener listener : eventListeners.get(EVENT_NAME_OPEN)) {
+                        listener.on(event);
+                    }
+                } catch (Throwable ex) {
+                    LOGGER.error("error when handle sse open event: {}, error:{},", event, ex.getMessage(), ex);
                 }
                 break;
             case ERROR:
@@ -207,7 +208,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                         listener.on(event);
                     }
                 } catch (Throwable ex) {
-                    LOGGER.error("error when handle error event: {}, error:{},", event, ex.getMessage(), ex);
+                    LOGGER.error("error when handle sse error event: {}, error:{},", event, ex.getMessage(), ex);
                 }
                 if (this.readyState != READY_STATE_CLOSED) {
                     if (reconnectPredicate.test((SSE.SseErrorEvent) event)) {
@@ -231,9 +232,17 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
 
                 String name = messageEvent.getName();
 
-                Collection<SseEventListener> listeners = eventListeners.containsKey(name) ? eventListeners.get(name) : eventListeners.get(EVENT_NAME_MESSAGE);
-                for (SseEventListener listener : listeners) {
-                    listener.on(event);
+                try {
+                    Collection<SseEventListener> listeners = eventListeners.containsKey(name) ? eventListeners.get(name) : eventListeners.get(EVENT_NAME_MESSAGE);
+                    if (Objs.isEmpty(listeners)) {
+                        LOGGER.warn("No sse listener for sse event: {}", event);
+                    } else {
+                        for (SseEventListener listener : listeners) {
+                            listener.on(event);
+                        }
+                    }
+                } catch (Throwable ex) {
+                    LOGGER.error("error when handle sse message event: {}, error:{},", event, ex.getMessage(), ex);
                 }
                 break;
         }

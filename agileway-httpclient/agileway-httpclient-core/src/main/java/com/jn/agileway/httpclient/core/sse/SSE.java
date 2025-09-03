@@ -143,21 +143,21 @@ public class SSE {
     }
 
     public static class SseErrorEvent extends SseEvent {
-        private SseErrorType type;
+        private SseErrorType errorType;
         private int statusCode = -1;
         private String errorMessage;
         private Throwable cause;
 
         SseErrorEvent(SseEventSource source, SseErrorType type, int statusCode, String errorMessage) {
             super(source, SseEventType.ERROR);
-            this.type = Objs.useValueIfEmpty(type, SseErrorType.UNKNOWN_ERROR);
+            this.errorType = Objs.useValueIfEmpty(type, SseErrorType.UNKNOWN_ERROR);
             this.statusCode = statusCode;
             this.errorMessage = errorMessage;
         }
 
         SseErrorEvent(SseEventSource source, SseErrorType type, HttpResponse response, Throwable ex) {
             super(source, SseEventType.ERROR);
-            this.type = Objs.useValueIfEmpty(type, SseErrorType.UNKNOWN_ERROR);
+            this.errorType = Objs.useValueIfEmpty(type, SseErrorType.UNKNOWN_ERROR);
             if (response != null) {
                 this.statusCode = response.getStatusCode();
                 this.errorMessage = response.getErrorMessage();
@@ -166,6 +166,10 @@ public class SSE {
                 this.errorMessage = ex.getMessage();
                 this.cause = ex;
             }
+        }
+
+        public SseErrorType getErrorType() {
+            return errorType;
         }
 
         public int getStatusCode() {
