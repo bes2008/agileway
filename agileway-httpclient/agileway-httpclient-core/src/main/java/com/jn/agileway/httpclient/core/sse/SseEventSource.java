@@ -94,7 +94,6 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
 
     @NonNull
     private HttpExchanger httpExchanger;
-    private Object lock = new Object();
 
     private Predicate<SSE.SseErrorEvent> reconnectPredicate = new Predicate<SSE.SseErrorEvent>() {
         @Override
@@ -376,7 +375,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
             if (this.reconnectInterval > 0) {
                 long waitTime = lastReceivedTimeInMills + this.reconnectInterval - System.currentTimeMillis();
                 while (READY_STATE_CLOSED != readyState && waitTime > 0) {
-                    synchronized (this.lock) {
+                    synchronized (this) {
                         try {
                             this.wait(10);
                         } catch (InterruptedException e) {
