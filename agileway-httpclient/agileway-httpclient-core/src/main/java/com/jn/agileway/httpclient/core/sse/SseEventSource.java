@@ -101,9 +101,9 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         public boolean test(SSE.SseErrorEvent event) {
             SSE.SseErrorType type = event.getErrorType();
             if (type == SSE.SseErrorType.NO_CONTENT || type == SSE.SseErrorType.UNSUPPORTED_CONTENT_TYPE || type == SSE.SseErrorType.CLIENT_READ_ERROR) {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
     };
 
@@ -292,7 +292,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
             eventPublisher.publish(new SSE.SseErrorEvent(this, SSE.SseErrorType.SERVER_ERROR, null, ex));
             return;
         } catch (Throwable ex) {
-            LOGGER.warn("The sse event source is connect failed for domain: {}, will not to reconnect, exception: {}", eventDomain, ex.getMessage(), ex);
+            LOGGER.warn("The sse event source is connect failed for domain: {}, exception: {}", eventDomain, ex.getMessage(), ex);
             eventPublisher.publish(new SSE.SseErrorEvent(this, SSE.SseErrorType.CONNECT_FAILED, null, ex));
             return;
         }
