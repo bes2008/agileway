@@ -3,15 +3,17 @@ package com.jn.agileway.httpclient.core.sse;
 import com.jn.agileway.httpclient.core.HttpExchanger;
 import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.HttpResponse;
+import com.jn.agileway.httpclient.core.error.exception.HttpRequestClientErrorException;
+import com.jn.agileway.httpclient.core.error.exception.HttpRequestServerErrorException;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
 import com.jn.langx.annotation.NonNull;
 import com.jn.langx.annotation.Nullable;
 import com.jn.langx.event.EventPublisher;
 import com.jn.langx.event.local.SimpleEventPublisher;
+import com.jn.langx.exception.ParseException;
 import com.jn.langx.io.resource.Resources;
 import com.jn.langx.lifecycle.AbstractLifecycle;
 import com.jn.langx.lifecycle.InitializationException;
-import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Preconditions;
 import com.jn.langx.util.Strings;
@@ -200,13 +202,21 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                 }
                 break;
             case ERROR:
-                for (SseEventListener listener : eventListeners.get(EVENT_NAME_ERROR)) {
-                    listener.on(event);
+                try {
+                    for (SseEventListener listener : eventListeners.get(EVENT_NAME_ERROR)) {
+                        listener.on(event);
+                    }
+                } catch (Throwable ex) {
+                    LOGGER.error("error when handle error event: {}, error:{},", event, ex.getMessage(), ex);
                 }
-                if (this.readyState == READY_STATE_OPEN && reconnectPredicate.test((SSE.SseErrorEvent) event)) {
-                    pullAndHandleEvents();
+                if (this.readyState != READY_STATE_CLOSED) {
+                    if (reconnectPredicate.test((SSE.SseErrorEvent) event)) {
+                        pullAndHandleEvents();
+                    } else {
+                        this.readyState = READY_STATE_CLOSED;
+                        shutdown();
+                    }
                 } else {
-                    this.readyState = READY_STATE_CLOSED;
                     shutdown();
                 }
                 break;
@@ -270,10 +280,15 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         try {
             response = httpExchanger.exchange(request);
             this.response = response;
-            this.lastReceivedTimeInMills = System.currentTimeMillis();
+        } catch (HttpRequestClientErrorException ex) {
+            eventPublisher.publish(new SSE.SseErrorEvent(this, SSE.SseErrorType.REQUEST_ERROR, null, ex));
+            return;
+        } catch (HttpRequestServerErrorException ex) {
+            eventPublisher.publish(new SSE.SseErrorEvent(this, SSE.SseErrorType.SERVER_ERROR, null, ex));
+            return;
         } catch (Throwable ex) {
             LOGGER.warn("The sse event source is connect failed for domain: {}, will not to reconnect, exception: {}", eventDomain, ex.getMessage(), ex);
-            eventPublisher.publish(new SSE.SseErrorEvent(this, -1, ex.getMessage()));
+            eventPublisher.publish(new SSE.SseErrorEvent(this, SSE.SseErrorType.CONNECT_FAILED, null, ex));
             return;
         }
         SSE.SseErrorEvent errorEvent = createErrorEventIfInvalidResponse(response);
@@ -284,12 +299,17 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         readyState = READY_STATE_OPEN;
         this.lastReceivedTimeInMills = System.currentTimeMillis();
         try {
-            eventPublisher.publish(SSE.SseMessageEvent.ofOpen(this));
+            eventPublisher.publish(SSE.SseEvent.ofOpen(this));
+        } catch (Throwable ex) {
+            eventPublisher.publish(new SSE.SseErrorEvent(this, SSE.SseErrorType.UNKNOWN_ERROR, response, ex));
+        }
 
-            // 读取数据
-            if (READY_STATE_OPEN == readyState) {
+
+        // 读取数据
+        if (READY_STATE_OPEN == readyState) {
+            // 这是一个阻塞流，只要服务端在写数据，这里就会阻塞，直到服务端写完数据或者异常
+            try {
                 final Holder<SSE.SseMessageEventBuilder> builderHolder = new Holder<>();
-                // 这是一个阻塞流，只要服务端在写数据，这里就会阻塞，直到服务端写完数据或者异常
                 Resources.readLines(Resources.asInputStreamResource(response.getPayload(), "the sse event stream"), Charsets.UTF_8, new Consumer<String>() {
                     @Override
                     public void accept(String line) {
@@ -321,7 +341,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                                 builder.withRetry(Long.parseLong(Strings.substring(line, 6).trim()));
                             } else {
                                 // illegal line
-                                throw new IllegalArgumentException("illegal line for sse event stream: " + line);
+                                throw new ParseException("illegal line for sse event stream: " + line);
                             }
                         }
                     }
@@ -336,49 +356,55 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                     }
                 }
                 // 走到这里，说明读取数据已经结束，原因是 server 端主动关闭了连接
+                eventPublisher.publish(new SSE.SseErrorEvent(this, SSE.SseErrorType.CONNECTION_CLOSED_BY_PEER, response, null));
+            } catch (ParseException ex) {
+                eventPublisher.publish(new SSE.SseErrorEvent(this, SSE.SseErrorType.DATA_MALFORMED_ERROR, response, ex));
+            } catch (Throwable ex) {
+                eventPublisher.publish(new SSE.SseErrorEvent(this, SSE.SseErrorType.UNKNOWN_ERROR, response, ex));
+            }
 
-                if (READY_STATE_CLOSED != readyState) {
-                    if (this.reconnectInterval > 0) {
-                        long waitTime = lastReceivedTimeInMills + this.reconnectInterval - System.currentTimeMillis();
-                        if (waitTime > 0) {
-                            if (waitTime > 10) {
-                                synchronized (this.lock) {
-                                    try {
-                                        this.wait(10);
-                                    } catch (InterruptedException e) {
-                                        // ignore
-                                    }
-                                }
-                            }
+            if (READY_STATE_CLOSED != readyState) {
+                if (this.reconnectInterval > 0) {
+                    long waitTime = lastReceivedTimeInMills + this.reconnectInterval - System.currentTimeMillis();
+                    if (waitTime > 0) {
+                        if (waitTime > 10) {
                             synchronized (this.lock) {
                                 try {
-                                    this.wait(waitTime);
+                                    this.wait(10);
                                 } catch (InterruptedException e) {
                                     // ignore
                                 }
                             }
                         }
+                        synchronized (this.lock) {
+                            try {
+                                this.wait(waitTime);
+                            } catch (InterruptedException e) {
+                                // ignore
+                            }
+                        }
                     }
                 }
             }
-
-        } catch (Throwable ex) {
-            eventPublisher.publish(new SSE.SseErrorEvent(this, response, ex));
         }
 
     }
 
     private SSE.SseErrorEvent createErrorEventIfInvalidResponse(HttpResponse response) {
+        Preconditions.checkNotNull(response, "the response is null");
         if (response.getStatusCode() == 204) {
-            return new SSE.SseErrorEvent(this, 204, StringTemplates.formatWithPlaceholder("sse closed by server"));
+            return new SSE.SseErrorEvent(this, SSE.SseErrorType.NO_CONTENT, response, null);
         }
-        if (response.hasError() || response.getStatusCode() != 200) {
-            return new SSE.SseErrorEvent(this, response.getStatusCode(), response.getErrorMessage());
+        int statusCode = response.getStatusCode();
+        if (statusCode >= 500) {
+            return new SSE.SseErrorEvent(this, SSE.SseErrorType.SERVER_ERROR, response, null);
         }
-
+        if (statusCode >= 400) {
+            return new SSE.SseErrorEvent(this, SSE.SseErrorType.REQUEST_ERROR, response, null);
+        }
         MediaType contentType = response.getHttpHeaders().getContentType();
         if (contentType == null || !MediaType.TEXT_EVENT_STREAM.equalsTypeAndSubtype(contentType)) {
-            return new SSE.SseErrorEvent(this, response.getStatusCode(), StringTemplates.formatWithPlaceholder("invalid content-type in response: {}", contentType));
+            return new SSE.SseErrorEvent(this, SSE.SseErrorType.UNSUPPORTED_CONTENT_TYPE, response, null);
         }
         return null;
     }
