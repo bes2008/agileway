@@ -42,6 +42,10 @@ public class HttpRequest<T> extends BaseHttpMessage<T> {
         return this;
     }
 
+    public static HttpRequestBuilder newBuilder() {
+        return new HttpRequestBuilder();
+    }
+
     public static HttpRequest create(
             @NonNull HttpMethod method,
             @NonNull String uriTemplate,
