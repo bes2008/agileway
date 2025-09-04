@@ -113,31 +113,33 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         }
     };
 
-    public void setReconnectPredicate(Predicate<SSE.SseErrorEvent> reconnectPredicate) {
+    public SseEventSource reconnectPredicate(Predicate<SSE.SseErrorEvent> reconnectPredicate) {
         if (!inited && reconnectPredicate != null) {
             this.reconnectPredicate = reconnectPredicate;
         }
+        return this;
     }
 
-    public void registerEventListener(String eventTypeOrName, SseEventListener listener) {
+    public SseEventSource registerEventListener(String eventTypeOrName, SseEventListener listener) {
         if (Strings.isBlank(eventTypeOrName)) {
             throw new IllegalArgumentException("eventTypeOrName is blank");
         }
         if (!inited && listener != null) {
             eventListeners.add(eventTypeOrName, listener);
         }
+        return this;
     }
 
-    public void registerOpenEventListener(SseEventListener listener) {
-        registerEventListener(EVENT_NAME_OPEN, listener);
+    public SseEventSource registerOpenEventListener(SseEventListener listener) {
+        return registerEventListener(EVENT_NAME_OPEN, listener);
     }
 
-    public void registerErrorEventListener(SseEventListener listener) {
-        registerEventListener(EVENT_NAME_ERROR, listener);
+    public SseEventSource registerErrorEventListener(SseEventListener listener) {
+        return registerEventListener(EVENT_NAME_ERROR, listener);
     }
 
-    public void registerMessageEventListener(SseEventListener listener) {
-        registerEventListener(EVENT_NAME_MESSAGE, listener);
+    public SseEventSource registerMessageEventListener(SseEventListener listener) {
+        return registerEventListener(EVENT_NAME_MESSAGE, listener);
     }
 
     public String getUrl() {
@@ -165,14 +167,25 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         this.sseRequestBuilder = new HttpRequestBuilder(HttpMethod.GET, url);
     }
 
-    public void setWithCredentials(boolean withCredentials) {
-        this.withCredentials = withCredentials;
+    public SseEventSource withCredentials(boolean withCredentials) {
+        if (!inited) {
+            this.withCredentials = withCredentials;
+        }
+        return this;
     }
 
-    public void setRequestBuilder(HttpRequestBuilder requestBuilder) {
+    public SseEventSource requestBuilder(HttpRequestBuilder requestBuilder) {
         if (requestBuilder != null && !inited) {
             this.sseRequestBuilder = requestBuilder;
         }
+        return this;
+    }
+
+    public SseEventSource reconnectInterval(long reconnectIntervalMills) {
+        if (!inited && reconnectIntervalMills > 0L) {
+            this.reconnectInterval = reconnectIntervalMills;
+        }
+        return this;
     }
 
     @Override
@@ -287,7 +300,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
             this.sseRequestBuilder.setHeader("Last-Event-ID", lastEventId);
         }
         // do re-connect
-        HttpRequest request = this.sseRequestBuilder.addHeader(HttpHeaders.ACCEPT, MediaType.TEXT_EVENT_STREAM_VALUE)
+        HttpRequest request = this.sseRequestBuilder.setHeader(HttpHeaders.ACCEPT, MediaType.TEXT_EVENT_STREAM_VALUE)
                 .uriTemplate(this.url).build();
         HttpResponse<InputStream> response;
         try {
