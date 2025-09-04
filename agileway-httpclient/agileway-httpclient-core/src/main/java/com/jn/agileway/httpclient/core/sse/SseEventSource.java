@@ -66,7 +66,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
     /**
      * A number representing the number of milliseconds since the last message was received.
      */
-    private volatile long lastReceivedTimeInMills = -1L;
+    private volatile long lastTrafficTimeInMills = -1L;
 
     /**
      * The connection has not yet been established, or it was closed and the user agent is reconnecting.
@@ -303,15 +303,20 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
         HttpRequest request = this.sseRequestBuilder.uriTemplate(this.url).build();
         HttpResponse<InputStream> response;
         try {
+            this.lastTrafficTimeInMills = System.currentTimeMillis();
             response = httpExchanger.exchange(request);
             this.response = response;
+            this.lastTrafficTimeInMills = System.currentTimeMillis();
         } catch (HttpRequestClientErrorException ex) {
+            this.lastTrafficTimeInMills = System.currentTimeMillis();
             eventPublisher.publish(new SSE.SseErrorEvent(this, SSE.SseErrorType.REQUEST_ERROR, null, ex));
             return;
         } catch (HttpRequestServerErrorException ex) {
+            this.lastTrafficTimeInMills = System.currentTimeMillis();
             eventPublisher.publish(new SSE.SseErrorEvent(this, SSE.SseErrorType.SERVER_ERROR, null, ex));
             return;
         } catch (Throwable ex) {
+            this.lastTrafficTimeInMills = System.currentTimeMillis();
             LOGGER.warn("The sse event source is connect failed for domain: {}, exception: {}", eventDomain, ex.getMessage(), ex);
             eventPublisher.publish(new SSE.SseErrorEvent(this, SSE.SseErrorType.CONNECT_FAILED, null, ex));
             return;
@@ -322,7 +327,6 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
             return;
         }
         readyState = READY_STATE_OPEN;
-        this.lastReceivedTimeInMills = System.currentTimeMillis();
         try {
             eventPublisher.publish(SSE.SseEvent.ofOpen(this));
         } catch (Throwable ex) {
@@ -347,7 +351,6 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                             SSE.SseMessageEvent event = builder.build();
                             builderHolder.set(null);
                             if (event != null) {
-                                SseEventSource.this.lastReceivedTimeInMills = System.currentTimeMillis();
                                 eventPublisher.publish(event);
                             }
                         } else {
@@ -376,7 +379,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                     SSE.SseMessageEvent event = builder.build();
                     builderHolder.set(null);
                     if (event != null) {
-                        this.lastReceivedTimeInMills = System.currentTimeMillis();
+                        this.lastTrafficTimeInMills = System.currentTimeMillis();
                         eventPublisher.publish(event);
                     }
                 }
@@ -394,7 +397,10 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
     private void waitForReconnect() {
         if (READY_STATE_CLOSED != readyState) {
             if (this.reconnectInterval > 0) {
-                long waitTime = lastReceivedTimeInMills + this.reconnectInterval - System.currentTimeMillis();
+                if (lastTrafficTimeInMills <= 0) {
+                    lastTrafficTimeInMills = System.currentTimeMillis();
+                }
+                long waitTime = lastTrafficTimeInMills + this.reconnectInterval - System.currentTimeMillis();
                 while (READY_STATE_CLOSED != readyState && waitTime > 0) {
                     synchronized (this) {
                         try {
@@ -403,7 +409,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                             // ignore
                         }
                     }
-                    waitTime = lastReceivedTimeInMills + this.reconnectInterval - System.currentTimeMillis();
+                    waitTime = lastTrafficTimeInMills + this.reconnectInterval - System.currentTimeMillis();
                 }
             }
         }
