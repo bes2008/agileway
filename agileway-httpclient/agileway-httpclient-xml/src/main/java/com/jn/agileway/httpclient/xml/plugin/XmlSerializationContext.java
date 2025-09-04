@@ -6,8 +6,11 @@ import com.jn.agileway.httpclient.xml.XmlSerializationConstants;
 import com.jn.langx.annotation.Singleton;
 import com.jn.langx.util.logging.Loggers;
 import com.jn.langx.util.spi.CommonServiceProvider;
+import com.jn.langx.util.struct.Holder;
 import org.slf4j.Logger;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,10 +18,10 @@ import java.util.concurrent.ConcurrentHashMap;
 class XmlSerializationContext {
     private static final Logger LOGGER = Loggers.getLogger(XmlSerializationContext.class);
 
-    private Map<Class<?>, String> beanClassUsedXmlFrameworkMap = new ConcurrentHashMap<>();
+    private static final Map<Class<?>, Holder<String>> beanClassUsedXmlFrameworkMap = new ConcurrentHashMap<>();
 
-    private static Map<String, InternalXmlHttpRequestWriter> writerMap = new ConcurrentHashMap<>();
-    private static Map<String, InternalXmlHttpResponseReader> readerMap = new ConcurrentHashMap<>();
+    private static final Map<String, InternalXmlHttpRequestWriter> writerMap = new LinkedHashMap<>();
+    private static final Map<String, InternalXmlHttpResponseReader> readerMap = new LinkedHashMap<>();
 
     private XmlSerializationContext() {
 
@@ -31,6 +34,9 @@ class XmlSerializationContext {
     }
 
     static {
+        Map<String, InternalXmlHttpResponseReader> readerMap = new HashMap<>();
+        Map<String, InternalXmlHttpRequestWriter> writerMap = new HashMap<>();
+
         for (InternalXmlHttpResponseReader reader : CommonServiceProvider.loadService(InternalXmlHttpResponseReader.class)) {
             readerMap.put(reader.getName(), reader);
         }
@@ -59,7 +65,29 @@ class XmlSerializationContext {
         if (!readerMap.containsKey(XmlSerializationConstants.XSTREAM) && !writerMap.containsKey(XmlSerializationConstants.XSTREAM)) {
             LOGGER.warn("No simpleframework xml framework found in the classpath, package url: {}", XmlSerializationConstants.XSTREAM_PACKAGE_URL);
         }
+        XmlSerializationContext.writerMap.putAll(writerMap);
+        XmlSerializationContext.readerMap.putAll(readerMap);
+    }
 
+    public static InternalXmlHttpRequestWriter getWriter(Class beanClass) {
+        return writerMap.get(name);
+    }
+
+    private static String getXmlFrameworkName(Class beanClass) {
+        if (beanClass == null) {
+            return null;
+        }
+        Holder<String> nameHolder = beanClassUsedXmlFrameworkMap.get(beanClass);
+        if (nameHolder != null) {
+            return nameHolder.get();
+        }
+        for (Map.Entry<String, InternalXmlHttpRequestWriter> entry : writerMap.entrySet()) {
+            if (entry.getValue().canWrite(beanClass)) {
+                nameHolder = new Holder<String>(entry.getKey());
+                beanClassUsedXmlFrameworkMap.put(beanClass, nameHolder);
+                return nameHolder.get();
+            }
+        }
     }
 }
 
