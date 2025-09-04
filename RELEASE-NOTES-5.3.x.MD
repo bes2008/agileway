@@ -1,8 +1,10 @@
 ## 5.3.2
-1. Features:
++ Features:
   + agileway-httpclient: 
     + 提供 HttpRequestBuilder
     + SSE 支持自定义 HttpRequest，例如可自定义为 POST请求
++ BugFix:
+  + agileway-httpclient: fix sse reconnect interval invalid
 
 ## 5.3.1
 + Features:
