@@ -20,6 +20,7 @@
         <module>agileway-httpclient-jetty</module>
         <module>agileway-httpclient-protobuf</module>
         <module>agileway-httpclient-hc5</module>
+        <module>agileway-httpclient-xml</module>
     </modules>
 
     <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>

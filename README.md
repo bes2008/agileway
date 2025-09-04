@@ -44,6 +44,7 @@ Java、Web开发工具套件，尽量避免996
         + SOAP
         + Protobuf
         + Form
+        + Text
     + 提供基于Annotation声明式开发能力（可替换 feign, forest, spring @HttpExchanger等）
     + 支持 SSE
 + agileway-jwt：提供JWT功能
