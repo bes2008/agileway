@@ -4,6 +4,7 @@ import com.jn.agileway.httpclient.core.ssl.DefaultHostnameVerifier;
 import com.jn.langx.security.ssl.SSLContextBuilder;
 import com.jn.langx.util.collection.multivalue.MultiValueMap;
 import com.jn.langx.util.concurrent.CommonThreadFactory;
+import com.jn.langx.util.net.mime.MediaType;
 
 import javax.net.ssl.HostnameVerifier;
 import java.net.Proxy;
@@ -30,6 +31,8 @@ public class HttpExchangerConfiguration {
      */
     private List<String> allowedMethods;
     private List<String> notAllowedMethods;
+
+    private List<MediaType> textMediaTypes = MediaType.parseMediaTypes("application/rss+xml, application/atom+xml, application/xml, application/javascript, application/ecmascript, application/x-javascript, application/x-ecmascript");
     /**
      * 固定 header
      */
@@ -62,6 +65,22 @@ public class HttpExchangerConfiguration {
      */
     private int workerThreads = 8;
     private ExecutorService executor;
+
+    public List<MediaType> getTextMediaTypes() {
+        return textMediaTypes;
+    }
+
+    public void setTextMediaTypes(List<MediaType> textMediaTypes) {
+        if (textMediaTypes != null) {
+            this.textMediaTypes = textMediaTypes;
+        }
+    }
+
+    public void addMediaType(MediaType mediaType) {
+        if (mediaType != null) {
+            textMediaTypes.add(mediaType);
+        }
+    }
 
     public int getConnectTimeoutMillis() {
         return connectTimeoutMillis;

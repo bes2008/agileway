@@ -1,17 +1,19 @@
 package com.jn.agileway.httpclient.core.payload;
 
 import com.jn.agileway.httpclient.core.HttpResponse;
+import com.jn.langx.util.Objs;
+import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.net.mime.MediaType;
 
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.util.List;
 
 public class GeneralTextHttpResponseReader extends CustomMediaTypesHttpResponseReader<String> {
 
-    public GeneralTextHttpResponseReader() {
-        addSupportedMediaTypes(
-                MediaType.parseMediaTypes("application/rss+xml, application/atom+xml, application/xml, application/javascript, application/ecmascript, application/x-javascript, application/x-ecmascript"));
+    public GeneralTextHttpResponseReader(List<MediaType> textMediaTypes) {
+        addSupportedMediaTypes(Objs.useValueIfNull(textMediaTypes, Lists.immutableList()));
     }
 
     @Override

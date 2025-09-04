@@ -139,6 +139,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
         }
         this.requestPayloadWriters.add(new GeneralFormHttpRequestWriter());
         this.requestPayloadWriters.add(new GeneralMultiPartsFormHttpRequestWriter());
+        this.requestPayloadWriters.add(new GeneralTextHttpRequestWriter(configuration.getTextMediaTypes()));
 
         HttpRequestPayloadTransformer marshallingHttpRequestPayloadTransformer = new MarshallingHttpRequestPayloadTransformer(this.requestPayloadWriters);
         TransformerOutboundMessageInterceptor transformerOutboundMessageInterceptor = new TransformerOutboundMessageInterceptor();
@@ -172,7 +173,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
             responsePayloadReaders.add(new PluginBasedHttpResponsePayloadReader(plugin));
         }
         this.responsePayloadReaders.add(new GeneralAttachmentReader());
-        this.responsePayloadReaders.add(new GeneralTextHttpResponseReader());
+        this.responsePayloadReaders.add(new GeneralTextHttpResponseReader(configuration.getTextMediaTypes()));
         this.responsePayloadReaders.add(new GeneralResourceHttpResponseReader());
 
         HttpResponsePayloadTransformer responsePayloadTransformer = new HttpResponsePayloadTransformer(responsePayloadReaders);
