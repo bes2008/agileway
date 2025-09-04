@@ -61,7 +61,7 @@ public class SSE {
          * <pre>
          * 触发时机：获取到的 Http Response 的 status >= 400 ,且 < 500时，则会触发这个错误
          * 连接状态：已关闭
-         * 默认重连：是
+         * 默认重连：否
          * </pre>
          */
         REQUEST_ERROR(1, "REQUEST_ERROR", "Request error"),
@@ -77,7 +77,7 @@ public class SSE {
          * <pre>
          * 触发时机：获取到的 Http Response 的 status ==200, 读取数据过程正常退出时，则会触发这个错误
          * 连接状态：已关闭
-         * 默认重连：是
+         * 默认重连：否
          * </pre>
          */
         CONNECTION_CLOSED_BY_PEER(3, "CONNECTION_CLOSED_BY_PEER", "Connection closed by peer"),

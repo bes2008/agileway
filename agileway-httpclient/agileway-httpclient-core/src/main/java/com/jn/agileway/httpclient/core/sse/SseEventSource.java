@@ -105,6 +105,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
                     || type == SSE.SseErrorType.UNSUPPORTED_CONTENT_TYPE
                     || type == SSE.SseErrorType.CLIENT_READ_ERROR
                     || type == SSE.SseErrorType.REQUEST_ERROR
+                    || type == SSE.SseErrorType.SERVER_ERROR
             ) {
                 return false;
             }
