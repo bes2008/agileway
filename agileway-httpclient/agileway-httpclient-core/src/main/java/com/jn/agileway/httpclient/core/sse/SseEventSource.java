@@ -286,7 +286,7 @@ public class SseEventSource extends AbstractLifecycle implements SseEventListene
             this.sseRequestBuilder.setHeader("Last-Event-ID", lastEventId);
         }
         // do re-connect
-        HttpRequest request = this.sseRequestBuilder.setHeader(HttpHeaders.ACCEPT, MediaType.TEXT_EVENT_STREAM_VALUE)
+        HttpRequest request = this.sseRequestBuilder.addHeader(HttpHeaders.ACCEPT, MediaType.TEXT_EVENT_STREAM_VALUE)
                 .uriTemplate(this.url).build();
         HttpResponse<InputStream> response;
         try {
