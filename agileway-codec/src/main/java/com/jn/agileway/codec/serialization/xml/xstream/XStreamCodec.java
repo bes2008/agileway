@@ -1,9 +1,9 @@
 package com.jn.agileway.codec.serialization.xml.xstream;
 
-import com.jn.agileway.codec.AbstractCodec;
+import com.jn.agileway.codec.serialization.xml.AbstractOXMCodec;
 import com.jn.langx.codec.CodecException;
 
-public class XStreamCodec<T> extends AbstractCodec<T> {
+public class XStreamCodec<T> extends AbstractOXMCodec<T> {
     public XStreamCodec() {
 
     }

@@ -1,9 +1,9 @@
 package com.jn.agileway.codec.serialization.xml.simplexml;
 
-import com.jn.agileway.codec.AbstractCodec;
+import com.jn.agileway.codec.serialization.xml.AbstractOXMCodec;
 import com.jn.langx.codec.CodecException;
 
-public class SimpleXmlCodec<T> extends AbstractCodec<T> {
+public class SimpleXmlCodec<T> extends AbstractOXMCodec<T> {
     public SimpleXmlCodec() {
     }
 

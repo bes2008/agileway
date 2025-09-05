@@ -23,6 +23,7 @@ public enum CodecType implements CommonEnum {
     SMIPLEXML(160, "simplexml"),
     JAXB(170, "JAXB"),
     JAXB3(180, "JAXB3"),
+    XML(190, "xml")
     ;
     private EnumDelegate delegate;
 
