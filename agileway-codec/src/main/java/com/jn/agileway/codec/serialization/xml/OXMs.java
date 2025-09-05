@@ -12,9 +12,12 @@ import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.reflect.Reflects;
+import com.jn.langx.util.reflect.type.Primitives;
 import com.jn.langx.util.spi.CommonServiceProvider;
 import com.jn.langx.util.struct.Holder;
 
+import java.io.OutputStream;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -70,12 +73,18 @@ public class OXMs {
         }
     }
 
+
     public static byte[] marshal(Object javaBean) throws Exception {
         AbstractOXMCodec oxmCodec = getCodec(javaBean.getClass());
         if (oxmCodec == null) {
             throw new CodecException(StringTemplates.formatWithPlaceholder("An OXM codec for marshal class {} was not found", Reflects.getFQNClassName(javaBean.getClass())));
         }
         return oxmCodec.encode(javaBean);
+    }
+
+    public static void marshal(Object javaBean, OutputStream out) throws Exception {
+        byte[] bs = marshal(javaBean);
+        out.write(bs);
     }
 
     public static <T> T unmarshal(byte[] xml, Class<T> expectedClazz) throws Exception {
@@ -94,5 +103,18 @@ public class OXMs {
             return null;
         }
         return unmarshal(xml.getBytes(Charsets.UTF_8), expectedClazz);
+    }
+
+    public static boolean isCanSerialize(Class clazz) {
+        if (Primitives.isPrimitiveOrPrimitiveWrapperType(clazz)) {
+            return false;
+        }
+        if (Reflects.isSubClassOrEquals(CharSequence.class, clazz)) {
+            return false;
+        }
+        if (Reflects.isSubClassOrEquals(Date.class, clazz)) {
+            return false;
+        }
+        return true;
     }
 }
