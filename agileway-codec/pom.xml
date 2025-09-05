@@ -28,6 +28,7 @@
         <avro.version>1.11.4</avro.version>
         <activej.serializer.version>5.5</activej.serializer.version>
         <asm.version>9.7</asm.version>
+        <xstream.version>1.4.21</xstream.version>
     </properties>
 
     <dependencyManagement>
@@ -131,6 +132,12 @@
                 <groupId>org.mongodb</groupId>
                 <artifactId>bson</artifactId>
                 <version>${mangodb.bson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.thoughtworks.xstream</groupId>
+                <artifactId>xstream</artifactId>
+                <version>${xstream.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -258,6 +265,11 @@
             <groupId>org.msgpack</groupId>
             <artifactId>jackson-dataformat-msgpack</artifactId>
             <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
         </dependency>
     </dependencies>
 </project>

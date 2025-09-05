@@ -18,7 +18,12 @@ public enum CodecType implements CommonEnum {
     MSGPACK(110, "msgpack"),
     PROTOSTUFF(120, "protostuff"),
     JAVABEANS_XML(130, "javabeans_xml"),
-    XSON(140, "xson");
+    XSON(140, "xson"),
+    XSTREAM(150, "xstream"),
+    SMIPLEXML(160, "simplexml"),
+    JAXB(170, "JAXB"),
+    JAXB3(180, "JAXB3"),
+    ;
     private EnumDelegate delegate;
 
     CodecType(int code, String name) {
