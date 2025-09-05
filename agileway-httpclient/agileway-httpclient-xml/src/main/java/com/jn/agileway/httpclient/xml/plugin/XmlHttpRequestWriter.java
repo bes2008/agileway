@@ -6,7 +6,6 @@ import com.jn.agileway.httpclient.core.payload.HttpRequestPayloadWriter;
 import java.io.OutputStream;
 
 public class XmlHttpRequestWriter implements HttpRequestPayloadWriter {
-    private XmlSerializationContext context;
 
     @Override
     public boolean canWrite(HttpRequest<?> request) {
