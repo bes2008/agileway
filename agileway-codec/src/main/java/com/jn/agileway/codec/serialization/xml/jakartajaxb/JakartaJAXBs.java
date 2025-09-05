@@ -1,17 +1,17 @@
-package com.jn.agileway.codec.serialization.xml.jaxb;
+package com.jn.agileway.codec.serialization.xml.jakartajaxb;
 
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.io.Charsets;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
-public class JavaxJAXBs {
-    private JavaxJAXBs() {
+public class JakartaJAXBs {
+    private JakartaJAXBs() {
     }
 
     public static byte[] serialize(Object javaBean) throws Exception {
