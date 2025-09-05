@@ -29,6 +29,7 @@
         <activej.serializer.version>5.5</activej.serializer.version>
         <asm.version>9.7</asm.version>
         <xstream.version>1.4.21</xstream.version>
+        <simple-xml.version>2.7.1</simple-xml.version>
     </properties>
 
     <dependencyManagement>
@@ -138,6 +139,12 @@
                 <groupId>com.thoughtworks.xstream</groupId>
                 <artifactId>xstream</artifactId>
                 <version>${xstream.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.simpleframework</groupId>
+                <artifactId>simple-xml</artifactId>
+                <version>${simple-xml.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -270,6 +277,11 @@
         <dependency>
             <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.simpleframework</groupId>
+            <artifactId>simple-xml</artifactId>
         </dependency>
     </dependencies>
 </project>

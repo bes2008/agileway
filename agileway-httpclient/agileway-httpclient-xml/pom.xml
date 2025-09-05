@@ -19,11 +19,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.simpleframework</groupId>
-            <artifactId>simple-xml</artifactId>
-            <version>2.7.1</version>
-        </dependency>
-        <dependency>
             <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
             <artifactId>agileway-httpclient-core</artifactId>
         </dependency>
