@@ -167,6 +167,11 @@ public class Fses {
         fseCustomizerRegistry.put(name, customizer);
     }
 
+    public static void registerCustomizer(FseCustomizer customizer) {
+        fseCustomizerRegistry.put(customizer.getName(), customizer);
+    }
+
+
     public static FseCustomizer getCustomizer(String name) {
         return fseCustomizerRegistry.get(name);
     }
