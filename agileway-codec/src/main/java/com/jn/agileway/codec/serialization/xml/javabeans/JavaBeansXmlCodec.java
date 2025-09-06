@@ -1,6 +1,6 @@
 package com.jn.agileway.codec.serialization.xml.javabeans;
 
-import com.jn.agileway.codec.AbstractCodec;
+import com.jn.agileway.codec.serialization.xml.AbstractOXMCodec;
 import com.jn.langx.codec.CodecException;
 
 import java.beans.XMLDecoder;
@@ -22,11 +22,11 @@ import java.io.ByteArrayOutputStream;
  * This class should not be used directly because of unsecure XMLEncoder/XMLDecoder usage.
  */
 
-public class JavaBeansXmlCodec<T> extends AbstractCodec<T> {
+public class JavaBeansXmlCodec<T> extends AbstractOXMCodec<T> {
 
     @Override
     protected byte[] doEncode(T t, boolean withSchema) throws CodecException {
-          ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
         XMLEncoder encoder = new XMLEncoder(new BufferedOutputStream(bos));
         encoder.writeObject(t);
         encoder.close();

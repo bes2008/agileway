@@ -11,5 +11,9 @@ com.jn.agileway.codec.serialization.json.JacksonCodecFactory
 com.jn.agileway.codec.serialization.kryo.KryoCodecFactory
 com.jn.agileway.codec.serialization.msgpack.MsgPackCodecFactory
 com.jn.agileway.codec.serialization.protostuff.ProtostuffCodecFactory
-com.jn.agileway.codec.serialization.xml.javabeans.JavaBeansXmlCodecFactory
 com.jn.agileway.codec.serialization.xson.XsonCodecFactory
+com.jn.agileway.codec.serialization.xml.jakartajaxb.JakartaJaxbCodecFactory
+com.jn.agileway.codec.serialization.xml.javaxjaxb.JavaxJaxbCodecFactory
+com.jn.agileway.codec.serialization.xml.simplexml.SimpleXmlCodecFactory
+com.jn.agileway.codec.serialization.xml.xstream.XStreamCodecFactory
+com.jn.agileway.codec.serialization.xml.javabeans.JavaBeansXmlCodecFactory

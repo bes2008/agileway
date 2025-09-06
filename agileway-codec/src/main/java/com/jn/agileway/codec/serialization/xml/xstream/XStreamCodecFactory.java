@@ -17,6 +17,6 @@ public class XStreamCodecFactory extends AbstractOXMCodecFactory {
 
     @Override
     public int getOrder() {
-        return 50;
+        return 40;
     }
 }

@@ -1,17 +1,22 @@
 package com.jn.agileway.codec.serialization.xml.javabeans;
 
-import com.jn.agileway.codec.AbstractCodec;
-import com.jn.agileway.codec.AbstractCodecFactory;
 import com.jn.agileway.codec.CodecType;
+import com.jn.agileway.codec.serialization.xml.AbstractOXMCodec;
+import com.jn.agileway.codec.serialization.xml.AbstractOXMCodecFactory;
 
-public class JavaBeansXmlCodecFactory extends AbstractCodecFactory {
+public class JavaBeansXmlCodecFactory extends AbstractOXMCodecFactory {
     @Override
-    protected AbstractCodec newCodec() {
+    protected AbstractOXMCodec newCodec() {
         return new JavaBeansXmlCodec();
     }
 
     @Override
     public CodecType applyTo() {
         return CodecType.JAVABEANS_XML;
+    }
+
+    @Override
+    public int getOrder() {
+        return 50;
     }
 }
