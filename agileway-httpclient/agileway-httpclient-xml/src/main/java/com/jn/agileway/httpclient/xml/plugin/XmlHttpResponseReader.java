@@ -9,10 +9,10 @@ import com.jn.langx.util.reflect.type.Types;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-public class XmlHttpResponseReader implements HttpResponsePayloadReader {
+public class XmlHttpResponseReader implements HttpResponsePayloadReader<Object> {
 
     @Override
-    public boolean canRead(HttpResponse response, MediaType contentType, Type expectedContentType) {
+    public boolean canRead(HttpResponse<byte[]> response, MediaType contentType, Type expectedContentType) {
         if (contentType == null) {
             return false;
         }
@@ -26,7 +26,7 @@ public class XmlHttpResponseReader implements HttpResponsePayloadReader {
     }
 
     @Override
-    public Object read(HttpResponse response, MediaType contentType, Type expectedContentType) throws Exception {
-        return null;
+    public Object read(HttpResponse<byte[]> response, MediaType contentType, Type expectedContentType) throws Exception {
+        return OXMs.unmarshal(response.getPayload(), Types.toClass(expectedContentType));
     }
 }

@@ -24,6 +24,10 @@
             <groupId>io.github.bes2008.solution.agileway.httpclient</groupId>
             <artifactId>agileway-httpclient-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.github.bes2008.solution.agileway</groupId>
+            <artifactId>agileway-codec</artifactId>
+        </dependency>
 
         <!--
         安全传输时需要引入它，并且要以 HttpRequestPayloadTransformer 方式来处理 SOAP消息

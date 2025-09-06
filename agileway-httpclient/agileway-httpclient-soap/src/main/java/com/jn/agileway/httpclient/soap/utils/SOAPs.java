@@ -1,5 +1,6 @@
 package com.jn.agileway.httpclient.soap.utils;
 
+import com.jn.agileway.codec.serialization.xml.OXMs;
 import com.jn.agileway.httpclient.soap.entity.*;
 import com.jn.agileway.httpclient.soap.exception.MalformedSoapMessageException;
 import com.jn.langx.text.StringTemplates;
@@ -167,7 +168,7 @@ public class SOAPs {
 
     private static String marshalSoapPayload(Object soapPayload) throws Exception {
         // payload
-        byte[] bytes = JAXBs.marshal(soapPayload);
+        byte[] bytes = OXMs.marshal(soapPayload);
         List<String> lines = IOs.readLines(new ByteArrayInputStream(bytes));
         StringBuilder payloadBuilder = new StringBuilder();
 
@@ -230,7 +231,7 @@ public class SOAPs {
         if (Strings.isBlank(soapPayloadXml)) {
             throw new RuntimeException("illegal soap body payload: it is blank");
         }
-        return JAXBs.unmarshal(soapPayloadXml, expectedClazz);
+        return OXMs.unmarshal(soapPayloadXml, expectedClazz);
     }
 
 
