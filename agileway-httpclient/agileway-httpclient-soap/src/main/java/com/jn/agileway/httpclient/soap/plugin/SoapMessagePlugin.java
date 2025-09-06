@@ -5,7 +5,7 @@ import com.jn.agileway.httpclient.core.plugin.HttpMessageProtocolPlugin;
 import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.util.net.mime.MediaType;
 
-public class HttpSoapMessagePlugin extends HttpMessageProtocolPlugin {
+public class SoapMessagePlugin extends HttpMessageProtocolPlugin {
     @Override
     public boolean availableFor(HttpMessage httpMessage) {
         return isSoapContentType(httpMessage.getHttpHeaders().getContentType());

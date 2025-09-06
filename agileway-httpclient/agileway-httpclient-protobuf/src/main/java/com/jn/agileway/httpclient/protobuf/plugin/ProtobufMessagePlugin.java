@@ -6,7 +6,7 @@ import com.jn.agileway.httpclient.core.HttpRequest;
 import com.jn.agileway.httpclient.core.plugin.HttpMessageProtocolPlugin;
 import com.jn.langx.util.net.mime.MediaType;
 
-public class HttpProtobufMessagePlugin extends HttpMessageProtocolPlugin {
+public class ProtobufMessagePlugin extends HttpMessageProtocolPlugin {
 
     @Override
     protected void initInternal() {
