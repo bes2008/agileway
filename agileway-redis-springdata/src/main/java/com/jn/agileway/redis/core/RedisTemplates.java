@@ -24,11 +24,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisTemplates {
 
     public static final StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-    private static final CodecFactoryRegistry codecFactoryRegistry;
-    static {
-        codecFactoryRegistry = new CodecFactoryRegistry();
-        codecFactoryRegistry.init();
-    }
+
     public static RedisTemplate<String, ?> createBeanJsonRedisTemplate(
             @NonNull RedisConnectionFactory connectionFactory,
             @Nullable String keyPrefix,
@@ -41,7 +37,7 @@ public class RedisTemplates {
     ) {
         Preconditions.checkNotNull(beanClass, "the target class is null");
         Codec easyjsonRedisSerializer = newCodec(CodecType.JSON);
-        ((EasyjsonCodec)easyjsonRedisSerializer).setJsonFactory(JsonFactorys.getJSONFactory(JsonScope.SINGLETON));
+        ((EasyjsonCodec) easyjsonRedisSerializer).setJsonFactory(JsonFactorys.getJSONFactory(JsonScope.SINGLETON));
         easyjsonRedisSerializer.setTargetType(beanClass);
         return createRedisTemplate(connectionFactory, keyPrefix, new DelegatableRedisSerializer(easyjsonRedisSerializer), beanClass.getClassLoader(), null, hashKeySerializer, hashValueSerializer, redisLuaScriptRepository, enableTx, initIt);
     }
@@ -185,7 +181,7 @@ public class RedisTemplates {
 
     public static Codec newCodec(CodecType codecType) {
         codecType = codecType == null ? CodecType.JSON : codecType;
-        CodecFactory codecFactory = codecFactoryRegistry.get(codecType.getName());
+        CodecFactory codecFactory = CodecFactoryRegistry.getInstance().get(codecType.getName());
         Codec codec = codecFactory.get(null);
         return codec;
 
