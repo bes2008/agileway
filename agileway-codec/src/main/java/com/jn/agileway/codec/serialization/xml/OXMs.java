@@ -1,19 +1,21 @@
 package com.jn.agileway.codec.serialization.xml;
 
+import com.jn.agileway.codec.CodecFactory;
 import com.jn.agileway.codec.CodecFactoryRegistry;
 import com.jn.langx.codec.CodecException;
 import com.jn.langx.spec.purl.PackageURLBuilder;
+import com.jn.langx.spec.purl.PackageURLs;
 import com.jn.langx.text.StringTemplates;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.comparator.OrderedComparator;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.io.Charsets;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.type.Primitives;
-import com.jn.langx.util.spi.CommonServiceProvider;
 import com.jn.langx.util.struct.Holder;
 
 import java.io.OutputStream;
@@ -25,20 +27,29 @@ import java.util.concurrent.ConcurrentHashMap;
 public class OXMs {
 
     private static final List<String> xmlMarshallerPackages = Lists.immutableList(
-            new PackageURLBuilder().withNamespace("jakarta.xml.bind").withName("jakarta.xml.bind-api").withVersion("3.0.x-or-4.0.x").build().toPURLString(),
-            new PackageURLBuilder().withNamespace("javax.xml.bind").withName("jaxb-api").withVersion("2.x").build().toPURLString(),
-            new PackageURLBuilder().withNamespace("org.simpleframework").withName("simple-xml").withVersion("2.x").build().toPURLString(),
-            new PackageURLBuilder().withNamespace("com.thoughtworks.xstream").withName("xstream").withVersion("1.x").build().toPURLString()
+            new PackageURLBuilder().withType(PackageURLs.KnownTypes.MAVEN).withNamespace("jakarta.xml.bind").withName("jakarta.xml.bind-api").withVersion("3.0.x-or-4.0.x").build().toPURLString(),
+            new PackageURLBuilder().withType(PackageURLs.KnownTypes.MAVEN).withNamespace("javax.xml.bind").withName("jaxb-api").withVersion("2.x").build().toPURLString(),
+            new PackageURLBuilder().withType(PackageURLs.KnownTypes.MAVEN).withNamespace("org.simpleframework").withName("simple-xml").withVersion("2.x").build().toPURLString(),
+            new PackageURLBuilder().withType(PackageURLs.KnownTypes.MAVEN).withNamespace("com.thoughtworks.xstream").withName("xstream").withVersion("1.x").build().toPURLString()
     );
 
     private static final List<String> oxmCodecFactories = Lists.immutableList(
-            Pipeline.of(CommonServiceProvider.loadService(AbstractOXMCodecFactory.class))
-                    .map(new Function<AbstractOXMCodecFactory, String>() {
+            Pipeline.of(CodecFactoryRegistry.getInstance().instances())
+                    .filter(new Predicate<CodecFactory>() {
                         @Override
-                        public String apply(AbstractOXMCodecFactory factory) {
-                            return factory.getName();
+                        public boolean test(CodecFactory codecFactory) {
+                            return codecFactory instanceof AbstractOXMCodecFactory;
                         }
-                    }).asList());
+                    })
+                    .sort(new OrderedComparator<>())
+                    .map(new Function<CodecFactory, String>() {
+                        @Override
+                        public String apply(CodecFactory input) {
+                            return input.getName();
+                        }
+                    })
+                    .asList()
+    );
 
     private OXMs() {
     }
@@ -67,7 +78,9 @@ public class OXMs {
             }
         });
         if (Strings.isNotBlank(codecFactoryName)) {
-            return (AbstractOXMCodec) CodecFactoryRegistry.getInstance().get(codecFactoryName).get(expectedType);
+            AbstractOXMCodec oxmCodec = (AbstractOXMCodec) CodecFactoryRegistry.getInstance().get(codecFactoryName).get(expectedType);
+            holder.set(oxmCodec);
+            return oxmCodec;
         } else {
             return null;
         }
