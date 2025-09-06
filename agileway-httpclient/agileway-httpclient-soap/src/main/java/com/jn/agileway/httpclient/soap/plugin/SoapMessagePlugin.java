@@ -38,11 +38,6 @@ public class SoapMessagePlugin extends HttpMessageProtocolPlugin {
     }
 
     @Override
-    public void destroy() {
-
-    }
-
-    @Override
     public void initInternal() throws InitializationException {
         this.requestInterceptors.add(new SoapHttpRequestInterceptor());
 

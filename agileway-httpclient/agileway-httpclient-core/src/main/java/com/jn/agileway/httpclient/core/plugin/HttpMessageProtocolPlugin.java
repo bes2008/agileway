@@ -40,4 +40,10 @@ public abstract class HttpMessageProtocolPlugin extends AbstractInitializable im
     }
 
     protected abstract void initInternal();
+
+    @Override
+    public void destroy() {
+
+    }
+
 }

@@ -27,11 +27,6 @@ public class RestfulHttpMessagePlugin extends HttpMessageProtocolPlugin {
     }
 
     @Override
-    public void destroy() {
-
-    }
-
-    @Override
     public void initInternal() {
         this.requestPayloadWriters.add(new GeneralJsonHttpRequestWriter());
         this.responsePayloadReaders.add(new GeneralJsonHttpResponseReader());

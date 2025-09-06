@@ -46,8 +46,4 @@ public class ProtobufMessagePlugin extends HttpMessageProtocolPlugin {
         return Integer.MAX_VALUE - 100;
     }
 
-    @Override
-    public void destroy() {
-
-    }
 }
