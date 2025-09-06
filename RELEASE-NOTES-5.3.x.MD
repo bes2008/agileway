@@ -1,9 +1,12 @@
 ## 5.3.2
 + Features:
+  + agileway-codec
+    + 支持多种 xml 编排： jaxb, simple-xml, xstream 等
   + agileway-httpclient: 
     + 提供 HttpRequestBuilder
     + SSE 支持自定义 HttpRequest，例如可自定义为 POST请求
     + 提供通用的 text 类型的请求响应读写转换
+    + 提供通用的 application/xml 类型的请求响应读写转换
 + BugFix:
   + agileway-httpclient: fix sse reconnect interval invalid
 
