@@ -1,8 +1,10 @@
 package com.jn.agileway.codec.serialization.xml.jakartajaxb;
 
+import com.jn.langx.Factory;
 import com.jn.langx.codec.CodecException;
 import com.jn.langx.util.Objs;
 import com.jn.langx.util.Strings;
+import com.jn.langx.util.concurrent.threadlocal.ThreadLocalFactory;
 import com.jn.langx.util.io.Charsets;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Marshaller;
@@ -17,6 +19,37 @@ public class JakartaJAXBs {
     private JakartaJAXBs() {
     }
 
+
+    private static final ThreadLocalFactory<Class, Marshaller> marshallerFactory = new ThreadLocalFactory<Class, Marshaller>(new Factory<Class, Marshaller>() {
+        @Override
+        public Marshaller get(Class clazz) {
+            try {
+                JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
+                Marshaller marshaller = jaxbContext.createMarshaller();
+                marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8");
+                // 自动换行、缩进
+                marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+                return marshaller;
+            } catch (Exception ex) {
+                throw new CodecException(ex);
+            }
+        }
+    });
+
+    private static final ThreadLocalFactory<Class, Unmarshaller> unmarshallerFactory = new ThreadLocalFactory<Class, Unmarshaller>(new Factory<Class, Unmarshaller>() {
+        @Override
+        public Unmarshaller get(Class clazz) {
+            try {
+                JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
+                Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+                return unmarshaller;
+            } catch (Exception ex) {
+                throw new CodecException(ex);
+            }
+        }
+    });
+
+
     public static byte[] marshal(Object javaBean) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         marshal(javaBean, outputStream);
@@ -25,13 +58,7 @@ public class JakartaJAXBs {
 
     public static void marshal(Object javaBean, OutputStream out) throws CodecException {
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(javaBean.getClass());
-            Marshaller marshaller = jaxbContext.createMarshaller();
-            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8");
-            // 自动换行、缩进
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-            marshaller.marshal(javaBean, out);
+            marshallerFactory.get(javaBean.getClass()).marshal(javaBean, out);
         } catch (Exception ex) {
             throw new CodecException(ex);
         }
@@ -53,9 +80,7 @@ public class JakartaJAXBs {
 
     public static <T> T unmarshal(InputStream xml, Class<T> expectedClazz) {
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(expectedClazz);
-            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            return (T) unmarshaller.unmarshal(xml);
+            return (T) unmarshallerFactory.get(expectedClazz).unmarshal(xml);
         } catch (Exception ex) {
             throw new CodecException(ex);
         }
