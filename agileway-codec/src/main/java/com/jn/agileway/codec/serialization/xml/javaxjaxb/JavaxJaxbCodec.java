@@ -2,6 +2,9 @@ package com.jn.agileway.codec.serialization.xml.javaxjaxb;
 
 import com.jn.agileway.codec.serialization.xml.AbstractOXMCodec;
 import com.jn.langx.codec.CodecException;
+import com.jn.langx.util.reflect.Reflects;
+
+import javax.xml.bind.annotation.XmlRootElement;
 
 public class JavaxJaxbCodec<T> extends AbstractOXMCodec<T> {
     @Override
@@ -12,5 +15,10 @@ public class JavaxJaxbCodec<T> extends AbstractOXMCodec<T> {
     @Override
     protected T doDecode(byte[] bytes, boolean withSchema, Class<T> targetType) throws CodecException {
         return JavaxJAXBs.unmarshal(bytes, targetType);
+    }
+
+    @Override
+    protected boolean canSerializeIt(Class type) {
+        return Reflects.hasAnnotation(type, XmlRootElement.class);
     }
 }
