@@ -1,22 +1,22 @@
-package com.jn.agileway.codec.serialization.xml.simplexml;
+package com.jn.agileway.codec.serialization.xml.javaxjaxb;
 
 import com.jn.agileway.codec.CodecType;
 import com.jn.agileway.codec.serialization.xml.AbstractOXMCodec;
 import com.jn.agileway.codec.serialization.xml.AbstractOXMCodecFactory;
 
-public class SimpleXmlCodecFactory extends AbstractOXMCodecFactory {
+public class JavaxJaxbCodecFactory extends AbstractOXMCodecFactory {
     @Override
     protected AbstractOXMCodec newCodec() {
-        return new SimpleXmlCodec();
+        return new JavaxJaxbCodec();
     }
 
     @Override
     public CodecType applyTo() {
-        return CodecType.SMIPLE_XML;
+        return CodecType.JAVAX_JAXB;
     }
 
     @Override
     public int getOrder() {
-        return 30;
+        return 20;
     }
 }

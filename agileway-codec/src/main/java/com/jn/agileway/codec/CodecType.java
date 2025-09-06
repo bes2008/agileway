@@ -5,7 +5,7 @@ import com.jn.langx.util.enums.base.EnumDelegate;
 
 public enum CodecType implements CommonEnum {
     ACTIVEJ(0, "activej"),
-    AVRO(10,"avro"),
+    AVRO(10, "avro"),
     BSON(20, "bson"),
     CBOR(30, "cbor"),
     FSE(40, "fse"),
@@ -20,11 +20,10 @@ public enum CodecType implements CommonEnum {
     JAVABEANS_XML(130, "javabeans_xml"),
     XSON(140, "xson"),
     XSTREAM(150, "xstream"),
-    SMIPLEXML(160, "simplexml"),
-    JAXB(170, "JAXB"),
-    JAXB3(180, "JAXB3"),
-    XML(190, "xml")
-    ;
+    SMIPLE_XML(160, "simple_xml"),
+    JAVAX_JAXB(170, "javax_jaxb"),
+    JAKARTA_JAXB(180, "jakart_jaxb"),
+    XML(190, "xml");
     private EnumDelegate delegate;
 
     CodecType(int code, String name) {
