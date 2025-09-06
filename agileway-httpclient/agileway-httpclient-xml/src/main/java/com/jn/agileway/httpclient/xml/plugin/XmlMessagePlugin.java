@@ -36,6 +36,7 @@ public class XmlMessagePlugin extends HttpMessageProtocolPlugin {
 
     @Override
     protected void initInternal() {
+        this.requestInterceptors.add(new XmlHttpRequestInterceptor());
         this.requestPayloadWriters.add(new XmlHttpRequestWriter());
         this.responsePayloadReaders.add(new XmlHttpResponseReader());
     }
