@@ -14,10 +14,13 @@ import com.jn.langx.util.comparator.OrderedComparator;
 import com.jn.langx.util.function.Function;
 import com.jn.langx.util.function.Predicate;
 import com.jn.langx.util.io.Charsets;
+import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.reflect.Reflects;
 import com.jn.langx.util.reflect.type.Primitives;
 import com.jn.langx.util.struct.Holder;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
@@ -99,6 +102,16 @@ public class OXMs {
         byte[] bs = marshal(javaBean);
         out.write(bs);
     }
+
+    public static <T> T unmarshal(InputStream xml, Class<T> expectedClazz) throws Exception {
+        if (null == xml) {
+            return null;
+        }
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        IOs.copy(xml, out);
+        return unmarshal(out.toByteArray(), expectedClazz);
+    }
+
 
     public static <T> T unmarshal(byte[] xml, Class<T> expectedClazz) throws Exception {
         if (Objs.isEmpty(xml)) {

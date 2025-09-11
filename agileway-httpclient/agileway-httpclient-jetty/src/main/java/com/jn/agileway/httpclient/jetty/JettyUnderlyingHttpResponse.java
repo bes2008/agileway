@@ -3,6 +3,7 @@ package com.jn.agileway.httpclient.jetty;
 import com.jn.agileway.eipchannel.core.message.MessageHeaders;
 import com.jn.agileway.httpclient.core.BaseHttpMessage;
 import com.jn.agileway.httpclient.core.underlying.UnderlyingHttpResponse;
+import com.jn.langx.util.io.IOs;
 import com.jn.langx.util.net.http.HttpHeaders;
 import com.jn.langx.util.net.http.HttpMethod;
 
@@ -27,6 +28,6 @@ class JettyUnderlyingHttpResponse extends BaseHttpMessage<InputStream> implement
 
     @Override
     public void close() {
-
+        IOs.close(this.payload);
     }
 }

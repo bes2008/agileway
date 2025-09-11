@@ -155,10 +155,10 @@ public class HttpClientUtils {
             return false;
         }
 
-        if (!contentDisposition.isAttachment()) {
-            return false;
+        if (contentDisposition.isAttachment()) {
+            return true;
         }
-        return true;
+        return false;
     }
 
 }
