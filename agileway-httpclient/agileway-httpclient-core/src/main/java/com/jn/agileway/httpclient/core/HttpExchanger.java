@@ -8,6 +8,7 @@ import com.jn.agileway.eipchannel.core.endpoint.exchange.RequestReplyExchanger;
 import com.jn.agileway.eipchannel.core.transformer.TransformerInboundMessageInterceptor;
 import com.jn.agileway.eipchannel.core.transformer.TransformerOutboundMessageInterceptor;
 import com.jn.agileway.httpclient.Exchanger;
+import com.jn.agileway.httpclient.core.auth.AuthCredentialsInjector;
 import com.jn.agileway.httpclient.core.error.DefaultHttpResponseErrorHandler;
 import com.jn.agileway.httpclient.core.error.HttpResponseErrorHandler;
 import com.jn.agileway.httpclient.core.error.exception.HttpRequestClientErrorException;
@@ -25,6 +26,7 @@ import com.jn.langx.lifecycle.InitializationException;
 import com.jn.langx.plugin.PluginRegistry;
 import com.jn.langx.plugin.SimpleLoadablePluginRegistry;
 import com.jn.langx.plugin.SpiPluginLoader;
+import com.jn.langx.registry.GenericRegistry;
 import com.jn.langx.util.Strings;
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.concurrent.promise.AsyncCallback;
@@ -101,6 +103,8 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
 
     private InternalHttpRequestExecutor internalHttpRequestExecutor;
 
+    private final GenericRegistry<AuthCredentialsInjector> authCredentialsInjectorRegistry = new GenericRegistry<AuthCredentialsInjector>();
+
     @Override
     protected void doInit() throws InitializationException {
         if (configuration == null) {
@@ -133,6 +137,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
         }
         outboundChannelPipeline.addLast(new HttpRequestInterceptorAdapter(new HttpRequestMultiPartsFormInterceptor()));
         outboundChannelPipeline.addLast(new HttpRequestInterceptorAdapter(new HttpRequestHeadersInterceptor(configuration.getFixedHeaders())));
+        outboundChannelPipeline.addLast(new HttpRequestInterceptorAdapter(new HttpRequestAuthInterceptor(authCredentialsInjectorRegistry)));
         // 组织 requestBodyWriters ，并转换为 transformer, 作为 TransformerOutboundInterceptor 添加到拦截器链中
         for (HttpMessageProtocolPlugin plugin : plugins) {
             this.requestPayloadWriters.add(new PluginBasedHttpRequestPayloadWriter(plugin));
@@ -372,5 +377,9 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
         if (httpMessagePluginRegistry != null) {
             this.httpMessagePluginRegistry = httpMessagePluginRegistry;
         }
+    }
+
+    public GenericRegistry<AuthCredentialsInjector> getAuthCredentialsInjectorsRegistry() {
+        return authCredentialsInjectorRegistry;
     }
 }

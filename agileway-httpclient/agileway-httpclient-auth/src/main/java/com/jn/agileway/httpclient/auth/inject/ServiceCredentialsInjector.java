@@ -9,12 +9,12 @@ import java.util.List;
 public class ServiceCredentialsInjector<R> implements CredentialsInjector<R> {
     private String serviceName;
     private String baseUri;
-    private RequestUrlGetter urlGetter;
+    private RequestUrlGetter<R> urlGetter;
 
-    private RequestMatcher matcher;
+    private RequestMatcher<R> matcher;
     private List<CredentialsInjector<R>> injectors = Lists.newArrayList();
 
-    public ServiceCredentialsInjector(String name, String baseUri, RequestUrlGetter urlGetter, CredentialsInjector<R>... injectors) {
+    public ServiceCredentialsInjector(String name, String baseUri, RequestUrlGetter<R> urlGetter, CredentialsInjector<R>... injectors) {
         this.serviceName = name;
         this.baseUri = baseUri;
         this.urlGetter = urlGetter;
