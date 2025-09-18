@@ -8,16 +8,13 @@ import java.util.List;
 
 public class ServiceCredentialsInjector<R> implements CredentialsInjector<R> {
     private String serviceName;
-    private String baseUri;
-    private RequestUrlGetter<R> urlGetter;
+    private CredentialsInjectionContext context;
 
     private RequestMatcher<R> matcher;
     private List<CredentialsInjector<R>> injectors = Lists.newArrayList();
 
     public ServiceCredentialsInjector(String name, String baseUri, RequestUrlGetter<R> urlGetter, CredentialsInjector<R>... injectors) {
         this.serviceName = name;
-        this.baseUri = baseUri;
-        this.urlGetter = urlGetter;
         this.matcher = new BaseUriMatcher();
         Pipeline.of(injectors).addTo(this.injectors);
     }
@@ -30,7 +27,7 @@ public class ServiceCredentialsInjector<R> implements CredentialsInjector<R> {
     @Override
     public void inject(R httpRequest) {
 
-        if (!this.matcher.matches(httpRequest) || injectors.isEmpty()) {
+        if (Boolean.FALSE.equals(this.matcher.matches(httpRequest)) || injectors.isEmpty()) {
             return;
         }
         CredentialsInjector<R> injector = Pipeline.of(injectors).findFirst(new Predicate<CredentialsInjector<R>>() {
@@ -55,5 +52,15 @@ public class ServiceCredentialsInjector<R> implements CredentialsInjector<R> {
             String url = urlGetter.getUrl(httpRequest);
             return url.startsWith(baseUri);
         }
+    }
+
+    @Override
+    public CredentialsInjectionContext getContext() {
+        return context;
+    }
+
+    @Override
+    public void setContext(CredentialsInjectionContext context) {
+        this.context = context;
     }
 }
