@@ -7,8 +7,11 @@
     + SSE 支持自定义 HttpRequest，例如可自定义为 POST请求
     + 提供通用的 text 类型的请求响应读写转换
     + 提供通用的 application/xml 类型的请求响应读写转换
+    + 支持自定义 CredentialsInjector
 + BugFix:
-  + agileway-httpclient: fix sse reconnect interval invalid
+  + agileway-httpclient: 
+    + fix sse reconnect interval invalid
+    + avoid customized transformer failed
 
 ## 5.3.1
 + Features:
