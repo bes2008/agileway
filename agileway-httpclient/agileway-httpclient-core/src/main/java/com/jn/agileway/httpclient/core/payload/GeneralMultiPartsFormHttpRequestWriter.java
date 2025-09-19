@@ -78,7 +78,9 @@ public class GeneralMultiPartsFormHttpRequestWriter implements HttpRequestPayloa
         String contentDisposition = part.getContentDisposition().asString();
         output.write((contentDisposition + Strings.CRLF).getBytes(Charsets.US_ASCII));
         Charset charset = part.getCharset() == null ? formCharset : part.getCharset();
-        output.write(("Content-Type: " + part.getContentType() + "; charset=" + charset.name() + Strings.CRLF).getBytes(Charsets.US_ASCII));
+        if (part.getContentType() != null) {
+            output.write(("Content-Type: " + part.getContentType() + "; charset=" + charset.name() + Strings.CRLF).getBytes(Charsets.US_ASCII));
+        }
         output.write(("Content-Transfer-Encoding: 8bit" + Strings.CRLF).getBytes(Charsets.US_ASCII));
         output.write(Strings.CRLF.getBytes(StandardCharsets.US_ASCII));
         output.write(part.getContent().getBytes(charset));

@@ -317,7 +317,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
     }
 
     public void setUnderlyingHttpExecutor(UnderlyingHttpExecutor underlyingHttpExecutor) {
-        if (!inited) {
+        if (inited) {
             return;
         }
         if (underlyingHttpExecutor != null) {
@@ -326,7 +326,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
     }
 
     public void addRequestInterceptor(HttpRequestInterceptor interceptor) {
-        if (!inited) {
+        if (inited) {
             return;
         }
         if (interceptor != null) {
@@ -335,7 +335,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
     }
 
     public void addResponseInterceptor(HttpResponseInterceptor interceptor) {
-        if (!inited) {
+        if (inited) {
             return;
         }
         if (interceptor != null) {
@@ -344,7 +344,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
     }
 
     public void addRequestPayloadWriter(HttpRequestPayloadWriter writer) {
-        if (!inited) {
+        if (inited) {
             return;
         }
         if (writer != null) {
@@ -353,7 +353,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
     }
 
     public void addRequestPayloadTransformer(HttpRequestPayloadTransformer transformer) {
-        if (!inited) {
+        if (inited) {
             return;
         }
         if (transformer != null) {
@@ -362,7 +362,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
     }
 
     public void addResponsePayloadReader(HttpResponsePayloadReader reader) {
-        if (!inited) {
+        if (inited) {
             return;
         }
         if (reader != null) {
@@ -371,7 +371,7 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
     }
 
     public void setHttpMessagePluginRegistry(PluginRegistry httpMessagePluginRegistry) {
-        if (!inited) {
+        if (inited) {
             return;
         }
         if (httpMessagePluginRegistry != null) {
@@ -379,7 +379,13 @@ public class HttpExchanger extends AbstractLifecycle implements RequestReplyExch
         }
     }
 
-    public GenericRegistry<AuthCredentialsInjector> getAuthCredentialsInjectorsRegistry() {
-        return authCredentialsInjectorRegistry;
+    public AuthCredentialsInjector getServiceCredentialsInjector(String serviceName) {
+        return authCredentialsInjectorRegistry.get(serviceName);
+    }
+
+    public void registerServiceCredentialsInjector(AuthCredentialsInjector injector) {
+        if (injector != null) {
+            this.authCredentialsInjectorRegistry.register(injector);
+        }
     }
 }

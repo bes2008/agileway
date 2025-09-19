@@ -4,6 +4,11 @@ public class CredentialsInjectionContext {
     private String baseUri;
     private RequestUrlGetter urlGetter;
 
+    public CredentialsInjectionContext(String baseUri, RequestUrlGetter urlGetter) {
+        this.baseUri = baseUri;
+        this.urlGetter = urlGetter;
+    }
+
     public String getBaseUri() {
         return baseUri;
     }

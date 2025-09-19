@@ -2,6 +2,7 @@ package com.jn.agileway.httpclient.auth.inject;
 
 import com.jn.langx.util.collection.Lists;
 import com.jn.langx.util.collection.Pipeline;
+import com.jn.langx.util.function.Consumer;
 import com.jn.langx.util.function.Predicate;
 
 import java.util.List;
@@ -14,9 +15,14 @@ public class ServiceCredentialsInjector<R> implements CredentialsInjector<R> {
     private List<CredentialsInjector<R>> injectors = Lists.newArrayList();
 
     public ServiceCredentialsInjector(String name, String baseUri, RequestUrlGetter<R> urlGetter, CredentialsInjector<R>... injectors) {
+        this(name, new CredentialsInjectionContext(baseUri, urlGetter), injectors);
+    }
+
+    public ServiceCredentialsInjector(String name, CredentialsInjectionContext context, CredentialsInjector<R>... injectors) {
         this.serviceName = name;
         this.matcher = new BaseUriMatcher();
-        Pipeline.of(injectors).addTo(this.injectors);
+        Pipeline.of(injectors).clearEmptys().addTo(this.injectors);
+        setContext(context);
     }
 
     @Override
@@ -49,8 +55,8 @@ public class ServiceCredentialsInjector<R> implements CredentialsInjector<R> {
     class BaseUriMatcher implements RequestMatcher<R> {
         @Override
         public Boolean matches(R httpRequest) {
-            String url = urlGetter.getUrl(httpRequest);
-            return url.startsWith(baseUri);
+            String url = getContext().getUrlGetter().getUrl(httpRequest);
+            return url.startsWith(getContext().getBaseUri());
         }
     }
 
@@ -61,6 +67,15 @@ public class ServiceCredentialsInjector<R> implements CredentialsInjector<R> {
 
     @Override
     public void setContext(CredentialsInjectionContext context) {
+        if (context == null) {
+            return;
+        }
         this.context = context;
+        Pipeline.of(this.injectors).forEach(new Consumer<CredentialsInjector<R>>() {
+            @Override
+            public void accept(CredentialsInjector<R> injector) {
+                injector.setContext(context);
+            }
+        });
     }
 }

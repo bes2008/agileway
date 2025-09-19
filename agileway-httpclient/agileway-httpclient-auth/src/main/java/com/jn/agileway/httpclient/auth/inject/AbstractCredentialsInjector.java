@@ -2,12 +2,20 @@ package com.jn.agileway.httpclient.auth.inject;
 
 import com.jn.agileway.httpclient.auth.Credentials;
 import com.jn.agileway.httpclient.auth.CredentialsProvider;
+import com.jn.langx.AbstractNameable;
+import com.jn.langx.annotation.NonNull;
 
-public abstract class AbstractCredentialsInjector<R> implements CredentialsInjector<R> {
+public abstract class AbstractCredentialsInjector<R> extends AbstractNameable implements CredentialsInjector<R> {
+    @NonNull
     protected RequestMatcher<R> matcher;
+
+    @NonNull
+    protected CredentialsInjectionContext context;
+    @NonNull
     protected CredentialsProvider credentialsProvider;
 
-    protected AbstractCredentialsInjector(RequestMatcher matcher, CredentialsProvider credentialsProvider) {
+    protected AbstractCredentialsInjector(String name, RequestMatcher matcher, CredentialsProvider credentialsProvider) {
+        setName(name);
         this.matcher = matcher;
         this.credentialsProvider = credentialsProvider;
     }
@@ -32,5 +40,18 @@ public abstract class AbstractCredentialsInjector<R> implements CredentialsInjec
 
     protected boolean credentialsAbsent(R httpRequest) {
         return true;
+    }
+
+    @Override
+    public CredentialsInjectionContext getContext() {
+        return this.context;
+    }
+
+    @Override
+    public void setContext(CredentialsInjectionContext context) {
+        this.context = context;
+        if (this.matcher instanceof PathRequestMatcher) {
+            ((PathRequestMatcher) this.matcher).setContext(context);
+        }
     }
 }

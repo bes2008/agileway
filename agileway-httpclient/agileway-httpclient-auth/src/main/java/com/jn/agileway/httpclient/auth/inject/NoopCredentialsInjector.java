@@ -4,7 +4,7 @@ import com.jn.agileway.httpclient.auth.Credentials;
 
 public class NoopCredentialsInjector<R> extends AbstractCredentialsInjector<R> {
     public NoopCredentialsInjector(RequestMatcher matcher) {
-        super(matcher, new NullCredentialsProvider());
+        super("NOOP", matcher, new NullCredentialsProvider());
     }
 
     @Override
