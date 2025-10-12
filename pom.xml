@@ -142,7 +142,7 @@
         <knife4j.version>3.0.3</knife4j.version>
 
         <spring6.version>6.1.21</spring6.version>
-        <spring.boot3.version>3.3.13</spring.boot3.version>
+        <spring.boot3.version>3.5.6</spring.boot3.version>
 
 
         <!-- Maven Plugins-->
